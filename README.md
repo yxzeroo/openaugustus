@@ -15,6 +15,14 @@ All runtime bytecode, JNIC native methods (`client_jnic.dll` and `launcher_jnic.
 
 Join the Discord for future updates, discussion, and more deobfuscated clients: https://discord.adjust.wtf
 
+## Quick Start (Prebuilt Release)
+
+You do not need to build from source to run OpenAugustus — grab the prebuilt Prism Launcher package (`OpenAugustus-b4.23.3-Prism.zip`) from the **Releases** page:
+
+1. Download the prebuilt `.zip` from **Releases**.
+2. Open **Prism Launcher** → click **Add Instance** → **Import** → select the `.zip` (or drag and drop it into Prism).
+3. Ensure **Java 8** is selected for the instance (Prism auto-selects/offers Java 8) and click **Launch** — Prism automatically fetches vanilla 1.8 assets and OS-appropriate LWJGL natives on Windows, macOS, and Linux.
+
 ---
 
 ## Project Layout
