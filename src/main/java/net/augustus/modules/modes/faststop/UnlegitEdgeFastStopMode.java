@@ -3,12 +3,12 @@ package net.augustus.modules.modes.faststop;
 import net.augustus.events.EventMoveInput;
 import net.augustus.events.EventSafeWalk;
 import net.augustus.modules.movement.FastStop;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class UnlegitEdgeFastStopMode extends FastStopMode {
    private boolean safeWalkActive = false;
 
-   public UnlegitEdgeFastStopMode(FastStop fastStop, DoubleValue doubleValue) {
+   public UnlegitEdgeFastStopMode(FastStop fastStop, SettingGroup doubleValue) {
       super(fastStop, doubleValue, "UnlegitEdge");
    }
 
@@ -40,8 +40,7 @@ public class UnlegitEdgeFastStopMode extends FastStopMode {
          }
 
          if (this.safeWalkActive) {
-            boolean flag = true;
-            event.setSafeWalk(flag);
+            event.setSafeWalk(true);
          }
       } else {
          this.safeWalkActive = false;

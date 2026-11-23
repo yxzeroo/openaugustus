@@ -46,9 +46,8 @@ public class GeoModelRenderer {
       MATRIX_STACK.moveToPivot2(geoCube);
       MATRIX_STACK.rotate2(geoCube);
       MATRIX_STACK.moveBackFromPivot2(geoCube);
-      GeoQuad[] quads = geoCube.quads;
 
-      for (GeoQuad geoQuad : quads) {
+      for (GeoQuad geoQuad : geoCube.quads) {
          MATRIX_STACK.transformNormal(geoQuad);
          GeoVector3f transformedNormal = geoQuad.transformedNormal;
          if ((geoCube.size.y == 0.0F || geoCube.size.z == 0.0F) && transformedNormal.getX() < 0.0F) {
@@ -63,9 +62,8 @@ public class GeoModelRenderer {
             transformedNormal.z *= -1.0F;
          }
 
-         GeoVertex[] vertices = geoQuad.vertices;
 
-         for (GeoVertex geoVertex : vertices) {
+         for (GeoVertex geoVertex : geoQuad.vertices) {
             MATRIX_STACK.transformVertex(geoVertex);
             GeoVector3f transformedPosition = geoVertex.transformedPosition;
             worldRenderer.pos((double)transformedPosition.getX(), (double)transformedPosition.getY(), (double)transformedPosition.getZ())
@@ -88,9 +86,8 @@ public class GeoModelRenderer {
 
          MatrixTransformBridge matrixbridge = PlayerCosmeticRenderer.MATRIX_BRIDGE;
          matrixbridge.push();
-         boolean flag = true;
          ModelPlayer playerModel2 = this.playerModel;
-         float f5 = this.playerCosmeticRenderer.applyBodyPartTransform((AbstractCosmeticPart)cosmeticSubModel, playerModel2, flag, matrixbridge);
+         float f5 = this.playerCosmeticRenderer.applyBodyPartTransform((AbstractCosmeticPart)cosmeticSubModel, playerModel2, true, matrixbridge);
          this.playerCosmeticRenderer.applyPartTransform((AbstractCosmeticPart)cosmeticSubModel, f5, settingOverlay, matrixbridge);
          float verticalMotion2 = this.verticalMotion;
          float backwardMotion2 = this.backwardMotion;
@@ -106,16 +103,7 @@ public class GeoModelRenderer {
             float backwardMotion3 = this.backwardMotion;
             float verticalMotion3 = this.verticalMotion;
             String name = this.cosmeticModel.getName();
-            boolean flag2 = false;
-            String str = name;
-            float f6 = verticalMotion3;
-            float f7 = backwardMotion3;
-            float f8 = forwardMotion3;
-            float f9 = ageInTicks3;
-            Object obj = null;
-            ModelData modelData3 = modelData2;
-            List list = boundTextures;
-            playerCosmeticRenderer2.renderTextureOverlays(list, modelData3, (ModelPlayer)obj, f9, f8, f7, f6, str, flag2);
+            playerCosmeticRenderer2.renderTextureOverlays(boundTextures, modelData2, (ModelPlayer)null, ageInTicks3, forwardMotion3, backwardMotion3, verticalMotion3, name, false);
             Minecraft.getMinecraft().getTextureManager().bindTexture((ResourceLocation)PlayerCosmeticRenderer.MODEL_TEXTURES.get(this.cosmeticModel.getTextureName()));
          }
 
@@ -160,8 +148,7 @@ public class GeoModelRenderer {
 
       MATRIX_STACK.pop();
       if (subModelIndex != -1) {
-         SettingOverlay settingOverlay2 = this.modelData.model[subModelIndex] != null ? this.modelData.model[subModelIndex] : PlayerCosmeticRenderer.DEFAULT_OVERLAY;
-         if (settingOverlay2.illum) {
+         if ((this.modelData.model[subModelIndex] != null ? this.modelData.model[subModelIndex] : PlayerCosmeticRenderer.DEFAULT_OVERLAY).illum) {
             GlStateManager.enableLighting();
             Minecraft.getMinecraft().entityRenderer.enableLightmap();
          }
@@ -189,8 +176,7 @@ public class GeoModelRenderer {
          float f5 = 1.0F;
          float f6 = 1.0F;
          float f7 = 1.0F;
-         float f8 = 1.0F;
-         this.renderRecursively(geoBone, f8, f7, f6, f5);
+         this.renderRecursively(geoBone, 1.0F, f7, f6, f5);
       }
 
       GlStateManager.disableRescaleNormal();

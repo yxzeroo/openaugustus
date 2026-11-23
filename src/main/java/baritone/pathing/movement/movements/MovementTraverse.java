@@ -57,10 +57,9 @@ public class MovementTraverse extends Movement {
          } else if (MovementHelper.avoidWalkingInto(state2.getBlock())) {
             return movementState;
          } else {
-            double d = Math.max(
+            if (Math.max(
                Math.abs(this.ctx.player().posX - ((double)this.dest.getX() + 0.5)), Math.abs(this.ctx.player().posZ - ((double)this.dest.getZ() + 0.5))
-            );
-            if (d < 0.83) {
+            ) < 0.83) {
                return movementState;
             } else if (!movementState.getTarget().getRotation().isPresent()) {
                return movementState;
@@ -152,10 +151,9 @@ public class MovementTraverse extends Movement {
             this.wasTheBridgeBlockAlwaysThere = false;
             Block block6 = BlockStateInterface.get(this.ctx, betterBlockPos2.down()).getBlock();
             if (block6.equals(Blocks.soul_sand) || block6 instanceof BlockSlab) {
-               double d2 = Math.max(
+               if (Math.max(
                   Math.abs((double)this.dest.getX() + 0.5 - this.ctx.player().posX), Math.abs((double)this.dest.getZ() + 0.5 - this.ctx.player().posZ)
-               );
-               if (d2 < 0.85) {
+               ) < 0.85) {
                   MovementHelper.moveTowards(this.ctx, movementState, this.dest);
                   return movementState.setInput(Input.MOVE_FORWARD, false).setInput(Input.MOVE_BACK, true);
                }
@@ -195,8 +193,7 @@ public class MovementTraverse extends Movement {
                      BetterBlockPos betterBlockPos3 = this.src.down2();
                      Rotation rotation = RotationUtils.calcRotationFromVec3d(this.ctx.playerHead(), new Vec3(d4, d5, d6), this.ctx.playerRotations());
                      float pitch2 = rotation.getPitch();
-                     double d7 = Math.max(Math.abs(this.ctx.player().posX - d4), Math.abs(this.ctx.player().posZ - d6));
-                     if (d7 < 0.29) {
+                     if (Math.max(Math.abs(this.ctx.player().posX - d4), Math.abs(this.ctx.player().posZ - d6)) < 0.29) {
                         float yaw3 = RotationUtils.calcRotationFromVec3d(VecUtils.getBlockPosCenter(this.dest), this.ctx.playerHead(), this.ctx.playerRotations()).getYaw();
                         movementState.setTarget(new MovementTarget(new Rotation(yaw3, pitch2), true));
                         movementState.setInput(Input.MOVE_BACK, true);

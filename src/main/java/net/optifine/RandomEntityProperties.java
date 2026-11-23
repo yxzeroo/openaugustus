@@ -37,8 +37,7 @@ public class RandomEntityProperties {
       } else {
          if (this.rules != null) {
             for (int i = 0; i < this.rules.length; i++) {
-               RandomEntityRule randomEntityRule = this.rules[i];
-               if (!randomEntityRule.isValid(str)) {
+               if (!this.rules[i].isValid(str)) {
                   return false;
                }
             }
@@ -69,8 +68,7 @@ public class RandomEntityProperties {
       }
 
       if (this.resourceLocations != null) {
-         int id = randomEntity.getId();
-         int n = id % this.resourceLocations.length;
+         int n = randomEntity.getId() % this.resourceLocations.length;
          return this.resourceLocations[n];
       } else {
          return location;

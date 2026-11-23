@@ -35,11 +35,7 @@ public class CatmullRomRotationSmoother {
       if (list.size() >= 4 && list2.size() >= 4) {
          Rotation[] rotations = (Rotation[])list.subList(Math.max(0, list.size() - 4), list.size()).toArray(new Rotation[0]);
          Rotation[] rotations2 = (Rotation[])list2.subList(Math.max(0, list2.size() - 4), list2.size()).toArray(new Rotation[0]);
-         float f = 0.5F;
-         Rotation rotation3 = this.evaluateCatmullRom(rotations, f);
-         float f2 = 0.5F;
-         Rotation rotation4 = this.evaluateCatmullRom(rotations2, f2);
-         return this.blendWithTarget(rotation3, rotation4, rotation);
+         return this.blendWithTarget(this.evaluateCatmullRom(rotations, 0.5F), this.evaluateCatmullRom(rotations2, 0.5F), rotation);
       } else {
          return rotation2;
       }
@@ -55,23 +51,17 @@ public class CatmullRomRotationSmoother {
 
    private Rotation blendWithTarget(Rotation rotation, Rotation rotation2, Rotation rotation3) {
       float f = 0.2F;
-      float f2 = rotation2.yaw - rotation.yaw;
-      float f3 = this.wrapAngleDelta(f2);
-      float f4 = rotation2.pitch - rotation.pitch;
-      float f5 = this.wrapAngleDelta(f4);
-      float f6 = rotation3.yaw - rotation2.yaw;
-      float f7 = this.wrapAngleDelta(f6);
-      float f8 = rotation3.pitch - rotation2.pitch;
-      float f9 = this.wrapAngleDelta(f8);
+      float f3 = this.wrapAngleDelta(rotation2.yaw - rotation.yaw);
+      float f5 = this.wrapAngleDelta(rotation2.pitch - rotation.pitch);
+      float f7 = this.wrapAngleDelta(rotation3.yaw - rotation2.yaw);
+      float f9 = this.wrapAngleDelta(rotation3.pitch - rotation2.pitch);
       f3 += f7;
       f5 += f9;
       float f10 = f3 + this.previousYawDelta;
       float f11 = f5 + this.previousPitchDelta;
       Rotation rotation4 = new Rotation(rotation.yaw + f10 * f + this.randomMicroJitter(), rotation.pitch + f11 * f + this.randomMicroJitter());
-      float yaw = rotation4.yaw;
-      rotation4.yaw = this.wrapYaw360(yaw);
-      float pitch = rotation4.pitch;
-      rotation4.pitch = this.clampPitch(pitch);
+      rotation4.yaw = this.wrapYaw360(rotation4.yaw);
+      rotation4.pitch = this.clampPitch(rotation4.pitch);
       this.previousYawDelta = f3;
       this.previousPitchDelta = f5;
       return rotation4;

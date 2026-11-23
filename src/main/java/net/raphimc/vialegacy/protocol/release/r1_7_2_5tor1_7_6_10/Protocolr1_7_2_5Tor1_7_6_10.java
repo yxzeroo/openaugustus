@@ -92,8 +92,7 @@ public class Protocolr1_7_2_5Tor1_7_6_10
                short type = (Short)wrapper.get(Types.UNSIGNED_BYTE, 0);
                CompoundTag tag = (CompoundTag)wrapper.get(Types1_7_6.NBT, 0);
                if (type == 4) {
-                  byte skullType = tag.getByte("SkullType");
-                  if (skullType == 3) {
+                  if (tag.getByte("SkullType") == 3) {
                      StringTag extraType = (StringTag)tag.removeUnchecked("ExtraType");
                      if (extraType != null && !extraType.getValue().isEmpty()) {
                         if (ViaLegacy.getConfig().isLegacySkullLoading()) {

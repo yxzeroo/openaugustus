@@ -253,8 +253,7 @@ public class CustomItems {
                            Blender.setupBlend(customItemProperties.blend, 1.0F);
                            GlStateManager.pushMatrix();
                            GlStateManager.scale(textureWidth / 2.0F, textureWidth / 2.0F, textureWidth / 2.0F);
-                           float f = customItemProperties.speed * (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
-                           GlStateManager.translate(f, 0.0F, 0.0F);
+                           GlStateManager.translate(customItemProperties.speed * (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F, 0.0F, 0.0F);
                            GlStateManager.rotate(customItemProperties.rotation, 0.0F, 0.0F, 1.0F);
                            renderItem.renderModel(bakedModel, -1);
                            GlStateManager.popMatrix();
@@ -287,8 +286,7 @@ public class CustomItems {
       } else if (stack == null) {
          return null;
       } else {
-         Item item = stack.getItem();
-         int idFromItem = Item.getIdFromItem(item);
+         int idFromItem = Item.getIdFromItem(stack.getItem());
          if (idFromItem >= 0 && idFromItem < itemProperties.length) {
             CustomItemProperties[] customItemPropertiesArr = itemProperties[idFromItem];
             if (customItemPropertiesArr != null) {
@@ -320,8 +318,7 @@ public class CustomItems {
          IResourcePack[] resourcePacks = Config.getResourcePacks();
 
          for (int i = resourcePacks.length - 1; i >= 0; i--) {
-            IResourcePack resourcePack = resourcePacks[i];
-            update(resourcePack);
+            update(resourcePacks[i]);
          }
 
          update(Config.getDefaultResourcePack());
@@ -379,8 +376,7 @@ public class CustomItems {
       for (int i = 0; i < potionTypes.length; i++) {
          Potion potion = potionTypes[i];
          if (potion != null) {
-            String name = potion.getName();
-            if (str2.equals(name)) {
+            if (str2.equals(potion.getName())) {
                return potion.getId();
             }
          }
@@ -392,8 +388,7 @@ public class CustomItems {
    public static void updateModels() {
       for (CustomItemProperties customItemProperties : (Iterable<CustomItemProperties>)(getAllProperties())) {
          if (customItemProperties.type == 1) {
-            TextureMap textureMapBlocks = Minecraft.getMinecraft().getTextureMapBlocks();
-            customItemProperties.updateModelTexture(textureMapBlocks, itemModelGenerator);
+            customItemProperties.updateModelTexture(Minecraft.getMinecraft().getTextureMapBlocks(), itemModelGenerator);
             customItemProperties.updateModelsFull();
          }
       }
@@ -408,12 +403,10 @@ public class CustomItems {
 
       for (int i = 0; i < strings3.length; i++) {
          String str3 = strings3[i];
-         String str4 = StrUtils.removePrefixSuffix2(str3, strings, strings2);
-         Properties properties = makePotionProperties(str4, str, n, str3);
+         Properties properties = makePotionProperties(StrUtils.removePrefixSuffix2(str3, strings, strings2), str, n, str3);
          if (properties != null) {
             String str5 = StrUtils.removeSuffix(str3, strings2) + ".properties";
-            CustomItemProperties customItemProperties = new CustomItemProperties(properties, str5);
-            map.put(str5, customItemProperties);
+            map.put(str5, new CustomItemProperties(properties, str5));
          }
       }
 
@@ -429,8 +422,7 @@ public class CustomItems {
          }
 
          if (customItemProperties.damagePercent) {
-            int maxDamage = item.getMaxDamage();
-            itemDamage = (int)((double)(itemDamage * 100) / (double)maxDamage);
+            itemDamage = (int)((double)(itemDamage * 100) / (double)item.getMaxDamage());
          }
 
          if (!customItemProperties.damage.isInRange(itemDamage)) {
@@ -486,8 +478,7 @@ public class CustomItems {
             NBTTagCompound tagCompound = stack.getTagCompound();
 
             for (int k = 0; k < customItemProperties.nbtTagValues.length; k++) {
-               NbtTagValue nbtTagValue = customItemProperties.nbtTagValues[k];
-               if (!nbtTagValue.matches(tagCompound)) {
+               if (!customItemProperties.nbtTagValues[k].matches(tagCompound)) {
                   return false;
                }
             }
@@ -535,8 +526,7 @@ public class CustomItems {
          if (!(item instanceof ItemArmor)) {
             return null;
          } else {
-            ItemArmor itemArmor = (ItemArmor)item;
-            String name = itemArmor.getArmorMaterial().getName();
+            String name = ((ItemArmor)item).getArmorMaterial().getName();
             StringBuffer sb = new StringBuffer();
             sb.append("texture.");
             sb.append(name);
@@ -561,8 +551,7 @@ public class CustomItems {
    }
 
    private static int[][] getEnchantmentIdLevels(ItemStack stack) {
-      Item item = stack.getItem();
-      NBTTagList tagList = item == Items.enchanted_book ? Items.enchanted_book.getEnchantments(stack) : stack.getEnchantmentTagList();
+      NBTTagList tagList = stack.getItem() == Items.enchanted_book ? Items.enchanted_book.getEnchantments(stack) : stack.getEnchantmentTagList();
       if (tagList != null && tagList.tagCount() > 0) {
          int[][] intsArr = new int[tagList.tagCount()][2];
 
@@ -600,8 +589,7 @@ public class CustomItems {
       Map map = makeAutoImageProperties(resourcePack);
       if (map.size() > 0) {
          Set keys = map.keySet();
-         String[] strings2 = (String[])keys.toArray(new String[keys.size()]);
-         strings = (String[])Config.addObjectsToArray(strings, strings2);
+         strings = (String[])Config.addObjectsToArray(strings, (String[])keys.toArray(new String[keys.size()]));
       }
 
       Arrays.sort(strings);
@@ -619,8 +607,7 @@ public class CustomItems {
             }
 
             if (customItemProperties == null) {
-               ResourceLocation location = new ResourceLocation(str);
-               InputStream inputStream = resourcePack.getInputStream(location);
+               InputStream inputStream = resourcePack.getInputStream(new ResourceLocation(str));
                if (inputStream == null) {
                   Config.warn("CustomItems file not found: " + str);
                   continue;
@@ -664,8 +651,7 @@ public class CustomItems {
 
    private static void readCitProperties(String str) {
       try {
-         ResourceLocation location = new ResourceLocation(str);
-         InputStream resourceStream = Config.getResourceStream(location);
+         InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
          if (resourceStream == null) {
             return;
          }

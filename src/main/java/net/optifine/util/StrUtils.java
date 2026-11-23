@@ -28,8 +28,7 @@ public class StrUtils {
          if (str.length() < str2.length()) {
             return false;
          } else {
-            String str3 = str.substring(0, str2.length());
-            return equalsMaskSingle(str3, str2, ch);
+            return equalsMaskSingle(str.substring(0, str2.length()), str2, ch);
          }
       } else {
          return str == str2;
@@ -89,12 +88,10 @@ public class StrUtils {
                list.add("");
             }
 
-            String str4 = (String)list.get(0);
-            if (!startsWithMaskSingle(str, str4, ch2)) {
+            if (!startsWithMaskSingle(str, (String)list.get(0), ch2)) {
                return false;
             } else {
-               String str5 = (String)list.get(list.size() - 1);
-               if (!endsWithMaskSingle(str, str5, ch2)) {
+               if (!endsWithMaskSingle(str, (String)list.get(list.size() - 1), ch2)) {
                   return false;
                } else {
                   int n = 0;
@@ -141,8 +138,7 @@ public class StrUtils {
 
          int n;
          for (n = length; n > 0; n--) {
-            char ch = str.charAt(n - 1);
-            if (str2.indexOf(ch) < 0) {
+            if (str2.indexOf(str.charAt(n - 1)) < 0) {
                break;
             }
          }
@@ -170,8 +166,7 @@ public class StrUtils {
       if (n == -1) {
          return "";
       } else {
-         String str2 = "" + ++n;
-         return str2.length() > str.length() ? "" : fillLeft("" + n, str.length(), '0');
+         return ("" + ++n).length() > str.length() ? "" : fillLeft("" + n, str.length(), '0');
       }
    }
 
@@ -180,8 +175,7 @@ public class StrUtils {
          int length = str.length();
 
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            str = removeSuffix2(str, str2);
+            str = removeSuffix2(str, strings[i]);
             if (str.length() != length) {
                break;
             }
@@ -202,8 +196,7 @@ public class StrUtils {
          if (str.length() < str2.length()) {
             return false;
          } else {
-            String str3 = str.substring(str.length() - str2.length(), str.length());
-            return equalsMaskSingle(str3, str2, ch);
+            return equalsMaskSingle(str.substring(str.length() - str2.length(), str.length()), str2, ch);
          }
       } else {
          return str == str2;
@@ -233,8 +226,7 @@ public class StrUtils {
             int n = 0;
 
             for (int i = 0; i < str.length(); i++) {
-               char ch = str.charAt(i);
-               if (equals(ch, str2)) {
+               if (equals(str.charAt(i), str2)) {
                   list.add(str.substring(n, i));
                   n = i + 1;
                }
@@ -250,8 +242,7 @@ public class StrUtils {
 
    public static boolean equalsMask(String str, String[] strings, char ch) {
       for (int i = 0; i < strings.length; i++) {
-         String str2 = strings[i];
-         if (equalsMask2(str, str2, ch)) {
+         if (equalsMask2(str, strings[i], ch)) {
             return true;
          }
       }
@@ -262,8 +253,7 @@ public class StrUtils {
    public static int findPrefix(String[] strings, String str) {
       if (strings != null && str != null) {
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            if (str2.startsWith(str)) {
+            if (strings[i].startsWith(str)) {
                return i;
             }
          }
@@ -325,8 +315,7 @@ public class StrUtils {
          int length = str.length();
 
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            str = removePrefix(str, str2);
+            str = removePrefix(str, strings[i]);
             if (str.length() != length) {
                break;
             }
@@ -361,8 +350,7 @@ public class StrUtils {
          return false;
       } else {
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            if (str.endsWith(str2)) {
+            if (str.endsWith(strings[i])) {
                return true;
             }
          }
@@ -392,12 +380,10 @@ public class StrUtils {
                list.add("");
             }
 
-            String str4 = (String)list.get(0);
-            if (!str.startsWith(str4)) {
+            if (!str.startsWith((String)list.get(0))) {
                return false;
             } else {
-               String str5 = (String)list.get(list.size() - 1);
-               if (!str.endsWith(str5)) {
+               if (!str.endsWith((String)list.get(list.size() - 1))) {
                   return false;
                } else {
                   int n = 0;
@@ -440,8 +426,7 @@ public class StrUtils {
          return false;
       } else {
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            if (str.startsWith(str2)) {
+            if (str.startsWith(strings[i])) {
                return true;
             }
          }
@@ -470,8 +455,7 @@ public class StrUtils {
    public static int findSuffix(String[] strings, String str) {
       if (strings != null && str != null) {
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            if (str2.endsWith(str)) {
+            if (strings[i].endsWith(str)) {
                return i;
             }
          }
@@ -501,8 +485,7 @@ public class StrUtils {
                return -1;
             } else {
                for (int i = n; i + str2.length() <= str.length(); i++) {
-                  String str3 = str.substring(i, i + str2.length());
-                  if (equalsMaskSingle(str3, str2, ch)) {
+                  if (equalsMaskSingle(str.substring(i, i + str2.length()), str2, ch)) {
                      return i;
                   }
                }
@@ -541,8 +524,7 @@ public class StrUtils {
          int length = str.length();
 
          for (int i = 0; i < length; i++) {
-            char ch = str.charAt(i);
-            if (str2.indexOf(ch) < 0) {
+            if (str2.indexOf(str.charAt(i)) < 0) {
                return str.substring(i);
             }
          }

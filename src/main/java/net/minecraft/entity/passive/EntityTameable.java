@@ -78,8 +78,7 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
       if (tag.hasKey("OwnerUUID", 8)) {
          str = tag.getString("OwnerUUID");
       } else {
-         String string = tag.getString("Owner");
-         str = PreYggdrasilConverter.getStringUUIDFromName(string);
+         str = PreYggdrasilConverter.getStringUUIDFromName(tag.getString("Owner"));
       }
 
       if (str.length() > 0) {

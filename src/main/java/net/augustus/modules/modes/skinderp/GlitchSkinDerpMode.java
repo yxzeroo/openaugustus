@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
@@ -16,23 +16,21 @@ public class GlitchSkinDerpMode extends SkinDerpMode implements TickListener {
    private final Map partStates = new HashMap();
    private int stepCounter = 0;
 
-   public GlitchSkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue) {
+   public GlitchSkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue) {
       super(skinDerp, doubleValue, "Glitch");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onEnable() {
       this.timeHelper.reset();
       this.stepCounter = 0;
-      EnumPlayerModelParts[] modelParts = this.getModelParts();
 
-      for (EnumPlayerModelParts enumPlayerModelParts : modelParts) {
+      for (EnumPlayerModelParts enumPlayerModelParts : this.getModelParts()) {
          this.partStates.put(enumPlayerModelParts, true);
       }
    }
@@ -63,8 +61,7 @@ public class GlitchSkinDerpMode extends SkinDerpMode implements TickListener {
             if (this.stepCounter % 10 == 0) {
                for (EnumPlayerModelParts enumPlayerModelParts2 : this.getModelParts()) {
                   if (this.isPartEnabled(enumPlayerModelParts2)) {
-                     boolean flag2 = true;
-                     this.setModelPartEnabled(enumPlayerModelParts2, flag2);
+                     this.setModelPartEnabled(enumPlayerModelParts2, true);
                      this.partStates.put(enumPlayerModelParts2, true);
                   }
                }
@@ -74,7 +71,7 @@ public class GlitchSkinDerpMode extends SkinDerpMode implements TickListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new GlitchSkinDerpMode((SkinDerp)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new GlitchSkinDerpMode((SkinDerp)obj, (SettingGroup)obj2);
    }
 
 }

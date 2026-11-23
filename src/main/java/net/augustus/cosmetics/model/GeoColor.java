@@ -8,7 +8,6 @@ public final class GeoColor {
    }
 
    public GeoColor darker(double d, long l) {
-      int[] flowState = GeoFunctionMemoizer.getFlowState();
       return ofRGBA(
          Math.max((int)((double)this.getRed() * (1.0 / d)), 0),
          Math.max((int)((double)this.getGreen() * (1.0 / d)), 0),
@@ -29,7 +28,6 @@ public final class GeoColor {
       int red = this.getRed();
       int green = this.getGreen();
       int blue = this.getBlue();
-      GeoFunctionMemoizer.getFlowState();
       int n = (int)(1.0 / (1.0 - 1.0 / d));
       if (red == 0 && green == 0 && blue == 0) {
          return ofRGBA(n, n, n, this.getAlpha());
@@ -69,7 +67,6 @@ public final class GeoColor {
 
    @Override
    public boolean equals(Object obj) {
-      int[] flowState = GeoFunctionMemoizer.getFlowState();
       if (this == obj) {
          return true;
       } else {
@@ -88,7 +85,6 @@ public final class GeoColor {
 
    public static int HSBtoRGB(float f, float f2, float f3) {
       int n = 0;
-      GeoFunctionMemoizer.getFlowState();
       int n2 = 0;
       int n3 = 0;
       if (f2 == 0.0F) {

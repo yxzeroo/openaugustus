@@ -43,8 +43,7 @@ public class EventItemPos extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      ItemPosListener listener = (ItemPosListener)obj;
-      this.call2(listener);
+      this.call2((ItemPosListener)obj);
    }
 
    public void setBlockY(double d) {

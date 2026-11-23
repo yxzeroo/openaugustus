@@ -34,8 +34,7 @@ public class SimpleClickPatternSimulator {
                }
             }
 
-            double d8 = (double)n2;
-            int n6 = (int)(d8 * DefaultRandomGenerator.instance.nextDouble(d, d2));
+            int n6 = (int)(((double)n2) * DefaultRandomGenerator.instance.nextDouble(d, d2));
             n3++;
             this.releaseTimeMs = this.nextClickTimeMs;
             this.releaseTimeMs += (long)n6;

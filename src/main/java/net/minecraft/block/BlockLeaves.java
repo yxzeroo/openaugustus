@@ -209,8 +209,7 @@ public abstract class BlockLeaves extends BlockLeavesBase {
             }
          }
 
-         int n4 = this.surroundings[n3 * n2 + n3 * b2 + n3];
-         if (n4 >= 0) {
+         if (this.surroundings[n3 * n2 + n3 * b2 + n3] >= 0) {
             world.setBlockState(pos, state.withProperty(CHECK_DECAY, Boolean.FALSE), 4);
          } else {
             this.destroy(world, pos);

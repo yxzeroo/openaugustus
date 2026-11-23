@@ -63,8 +63,7 @@ public class GuiShaderOptions extends GuiScreenOF {
             ShaderOption[] changedOptions = Shaders.getChangedOptions(Shaders.getShaderPackOptions());
 
             for (int i = 0; i < changedOptions.length; i++) {
-               ShaderOption shaderOption2 = changedOptions[i];
-               shaderOption2.resetValue();
+               changedOptions[i].resetValue();
                this.changed = true;
             }
 
@@ -129,8 +128,6 @@ public class GuiShaderOptions extends GuiScreenOF {
       this.title = I18n.format("of.options.shaderOptionsTitle", new Object[0]);
       byte b = 100;
       int n = 0;
-      byte b2 = 30;
-      byte b3 = 20;
       byte b4 = 120;
       byte b5 = 20;
       int shaderPackColumns = Shaders.getShaderPackColumns(this.screenName, 2);
@@ -149,7 +146,7 @@ public class GuiShaderOptions extends GuiScreenOF {
                int n5 = Math.min(this.width / shaderPackColumns, 200);
                n = (this.width - n5 * shaderPackColumns) / 2;
                int n6 = n3 * n5 + 5 + n;
-               int n7 = b2 + n4 * b3;
+               int n7 = ((byte)30) + n4 * ((byte)20);
                int n8 = n5 - 10;
                String buttonText = getButtonText(shaderOption, n8);
                Object obj;
@@ -175,8 +172,7 @@ public class GuiShaderOptions extends GuiScreenOF {
             GuiButtonShaderOption guiButtonShaderOption = (GuiButtonShaderOption)button;
             ShaderOption shaderOption = guiButtonShaderOption.getShaderOption();
             if (shaderOption instanceof ShaderOptionProfile) {
-               ShaderOptionProfile shaderOptionProfile = (ShaderOptionProfile)shaderOption;
-               shaderOptionProfile.updateProfile();
+               ((ShaderOptionProfile)shaderOption).updateProfile();
             }
 
             guiButtonShaderOption.displayString = getButtonText(shaderOption, guiButtonShaderOption.getButtonWidth());

@@ -51,8 +51,7 @@ public class GuiFurnace extends GuiContainer {
          this.drawTexturedModalRect(n3 + 56, n4 + 36 + 12 - burnLeftScaled, 176, 12 - burnLeftScaled, 14, burnLeftScaled + 1);
       }
 
-      int cookProgressScaled = this.getCookProgressScaled(24);
-      this.drawTexturedModalRect(n3 + 79, n4 + 34, 176, 14, cookProgressScaled + 1, 16);
+      this.drawTexturedModalRect(n3 + 79, n4 + 34, 176, 14, this.getCookProgressScaled(24) + 1, 16);
    }
 
    public GuiFurnace(InventoryPlayer inventoryPlayer, IInventory inventory) {

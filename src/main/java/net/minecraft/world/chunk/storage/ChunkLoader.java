@@ -52,8 +52,7 @@ public class ChunkLoader {
             for (int m = 0; m < 16 && flag; m++) {
                for (int idx = 0; idx < 16; idx++) {
                   int n = k << 11 | idx << 7 | m + (j << 4);
-                  byte b = anvilConverterData.blocks[n];
-                  if (b != 0) {
+                  if (anvilConverterData.blocks[n] != 0) {
                      flag = false;
                      break;
                   }
@@ -71,8 +70,7 @@ public class ChunkLoader {
                for (int i2 = 0; i2 < 16; i2++) {
                   for (int i3 = 0; i3 < 16; i3++) {
                      int n2 = index << 11 | i3 << 7 | i2 + (j << 4);
-                     byte b2 = anvilConverterData.blocks[n2];
-                     bytes[i2 << 8 | i3 << 4 | index] = (byte)(b2 & 255);
+                     bytes[i2 << 8 | i3 << 4 | index] = (byte)(anvilConverterData.blocks[n2] & 255);
                      nibbleArray.set(index, i2, i3, anvilConverterData.data.get(index, i2 + (j << 4), i3));
                      nibbleArray2.set(index, i2, i3, anvilConverterData.skyLight.get(index, i2 + (j << 4), i3));
                      nibbleArray3.set(index, i2, i3, anvilConverterData.blockLight.get(index, i2 + (j << 4), i3));

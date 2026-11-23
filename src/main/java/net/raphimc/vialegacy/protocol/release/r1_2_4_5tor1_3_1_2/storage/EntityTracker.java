@@ -68,8 +68,7 @@ public class EntityTracker extends StoredObject {
    public void updateEntityDataList(int entityId, List<EntityData> entityDataList) {
       AbstractTrackedEntity entity = this.entityMap.get(entityId);
       if (entity instanceof TrackedLivingEntity) {
-         TrackedLivingEntity livingEntity = (TrackedLivingEntity)entity;
-         livingEntity.updateEntityData(entityDataList);
+         ((TrackedLivingEntity)entity).updateEntityData(entityDataList);
       }
    }
 
@@ -86,8 +85,7 @@ public class EntityTracker extends StoredObject {
    public void tick() {
       for (AbstractTrackedEntity entity : this.entityMap.values()) {
          if (entity instanceof TrackedLivingEntity) {
-            TrackedLivingEntity livingEntity = (TrackedLivingEntity)entity;
-            livingEntity.tick(this);
+            ((TrackedLivingEntity)entity).tick(this);
          }
       }
    }
@@ -125,8 +123,7 @@ public class EntityTracker extends StoredObject {
    }
 
    public void playSoundAt(Location entityLocation, Sound sound, float volume, float pitch) {
-      Location playerLocation = this.entityMap.get(this.playerID).getLocation();
-      this.playSoundAt(entityLocation, playerLocation, new ConfiguredSound(sound, volume, pitch));
+      this.playSoundAt(entityLocation, this.entityMap.get(this.playerID).getLocation(), new ConfiguredSound(sound, volume, pitch));
    }
 
    public static short constrainToRange(short value, short min, short max) {

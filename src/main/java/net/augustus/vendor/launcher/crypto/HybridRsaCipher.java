@@ -20,10 +20,7 @@ public class HybridRsaCipher {
       int n = (shadedBigInteger.bitLength() + 7) / 8;
 
       try {
-         byte[] bytes2 = Pkcs1Padding.pad(bytes, n);
-         ShadedBigInteger shadedBigInteger3 = bytesToBigInteger(bytes2);
-         ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.modPow(shadedBigInteger2, shadedBigInteger);
-         return bigIntegerToBytes(shadedBigInteger4, n);
+         return bigIntegerToBytes(bytesToBigInteger(Pkcs1Padding.pad(bytes, n)).modPow(shadedBigInteger2, shadedBigInteger), n);
       } catch (Exception e) {
          throw new Exception("Symmetric key encryption failed: " + e.getMessage());
       }
@@ -37,16 +34,11 @@ public class HybridRsaCipher {
 
       try {
          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-         ShadedBigInteger modulus = rsaCrtKeyPair.getModulus();
-         writeBigInteger(byteArrayOutputStream, modulus);
-         ShadedBigInteger publicExponent = rsaCrtKeyPair.getPublicExponent();
-         writeBigInteger(byteArrayOutputStream, publicExponent);
-         ShadedBigInteger privateExponent = rsaCrtKeyPair.getPrivateExponent();
-         writeBigInteger(byteArrayOutputStream, privateExponent);
-         ShadedBigInteger primeP = rsaCrtKeyPair.getPrimeP();
-         writeBigInteger(byteArrayOutputStream, primeP);
-         ShadedBigInteger primeQ = rsaCrtKeyPair.getPrimeQ();
-         writeBigInteger(byteArrayOutputStream, primeQ);
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getModulus());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPublicExponent());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrivateExponent());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrimeP());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrimeQ());
          byte[] bytes = byteArrayOutputStream.toByteArray();
          byteArrayOutputStream.close();
          return Base64Codec.getRfc46482().encodeToString(bytes);
@@ -59,10 +51,8 @@ public class HybridRsaCipher {
 
       try {
          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-         ShadedBigInteger modulus = rsaCrtKeyPair.getModulus();
-         writeBigInteger(byteArrayOutputStream, modulus);
-         ShadedBigInteger publicExponent = rsaCrtKeyPair.getPublicExponent();
-         writeBigInteger(byteArrayOutputStream, publicExponent);
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getModulus());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPublicExponent());
          byte[] bytes = byteArrayOutputStream.toByteArray();
          byteArrayOutputStream.close();
          return bytes;
@@ -72,39 +62,20 @@ public class HybridRsaCipher {
    }
 
    public static byte[] encryptWithPrivateKey(byte[] bytes, RsaCrtKeyPair rsaCrtKeyPair) throws Exception {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
       int n = (rsaCrtKeyPair.getModulus().bitLength() + 7) / 8;
       if (bytes.length > 245) {
          throw new Exception("Data to encrypt with private key too long");
       } else {
          try {
-            byte[] bytes2 = Pkcs1Padding.pad(bytes, n);
-            ShadedBigInteger shadedBigInteger = bytesToBigInteger(bytes2);
-            ShadedBigInteger primeExponentP = rsaCrtKeyPair.getPrimeExponentP();
-            ShadedBigInteger primeP = rsaCrtKeyPair.getPrimeP();
-            ShadedBigInteger shadedBigInteger2 = primeExponentP;
-            ShadedBigInteger shadedBigInteger3 = shadedBigInteger.modPow(shadedBigInteger2, primeP);
-            ShadedBigInteger primeExponentQ = rsaCrtKeyPair.getPrimeExponentQ();
-            ShadedBigInteger primeQ = rsaCrtKeyPair.getPrimeQ();
-            ShadedBigInteger shadedBigInteger4 = primeExponentQ;
-            ShadedBigInteger shadedBigInteger5 = shadedBigInteger.modPow(shadedBigInteger4, primeQ);
+            ShadedBigInteger shadedBigInteger = bytesToBigInteger(Pkcs1Padding.pad(bytes, n));
+            ShadedBigInteger shadedBigInteger3 = shadedBigInteger.modPow(rsaCrtKeyPair.getPrimeExponentP(), rsaCrtKeyPair.getPrimeP());
+            ShadedBigInteger shadedBigInteger5 = shadedBigInteger.modPow(rsaCrtKeyPair.getPrimeExponentQ(), rsaCrtKeyPair.getPrimeQ());
             ShadedBigInteger crtCoefficient = rsaCrtKeyPair.getCrtCoefficient();
-            ShadedBigInteger shadedBigInteger6 = shadedBigInteger3.subtract(shadedBigInteger5);
-            ShadedBigInteger primeP2 = rsaCrtKeyPair.getPrimeP();
-            ShadedBigInteger shadedBigInteger7 = primeP2;
-            ShadedBigInteger shadedBigInteger8 = shadedBigInteger6.mod(shadedBigInteger7);
-            crtCoefficient = crtCoefficient.multiply(shadedBigInteger8);
-            ShadedBigInteger primeP3 = rsaCrtKeyPair.getPrimeP();
-            ShadedBigInteger shadedBigInteger9 = primeP3;
-            ShadedBigInteger shadedBigInteger10 = crtCoefficient.mod(shadedBigInteger9);
-            ShadedBigInteger primeQ2 = rsaCrtKeyPair.getPrimeQ();
-            ShadedBigInteger shadedBigInteger11 = shadedBigInteger10.multiply(primeQ2);
-            ShadedBigInteger shadedBigInteger12 = shadedBigInteger11;
-            ShadedBigInteger shadedBigInteger13 = shadedBigInteger5.add(shadedBigInteger12);
+            crtCoefficient = crtCoefficient.multiply(shadedBigInteger3.subtract(shadedBigInteger5).mod(rsaCrtKeyPair.getPrimeP()));
+            ShadedBigInteger shadedBigInteger13 = shadedBigInteger5.add(crtCoefficient.mod(rsaCrtKeyPair.getPrimeP()).multiply(rsaCrtKeyPair.getPrimeQ()));
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             byteArrayOutputStream.write(1);
-            byte[] bytes3 = bigIntegerToBytes(shadedBigInteger13, n);
-            byteArrayOutputStream.write(bytes3);
+            byteArrayOutputStream.write(bigIntegerToBytes(shadedBigInteger13, n));
             return byteArrayOutputStream.toByteArray();
          } catch (Exception e) {
             throw new Exception("Private key encryption failed: " + e.getMessage());
@@ -118,14 +89,11 @@ public class HybridRsaCipher {
 
    public static byte[] encryptWithPublicKey(byte[] bytes, ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
       int n = (shadedBigInteger.bitLength() + 7) / 8;
-      Pkcs1Padding.getFlowState();
       byte[] bytes2 = Pkcs1Padding.pad(bytes, n);
       if (bytes2 == null) {
          return new byte[1];
       } else {
-         ShadedBigInteger shadedBigInteger3 = bytesToBigInteger(bytes2);
-         ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.modPow(shadedBigInteger2, shadedBigInteger);
-         byte[] bytes3 = bigIntegerToBytes(shadedBigInteger4, n);
+         byte[] bytes3 = bigIntegerToBytes(bytesToBigInteger(bytes2).modPow(shadedBigInteger2, shadedBigInteger), n);
          ByteBuffer buf = ByteBuffer.allocate(1 + bytes3.length);
          buf.put((byte)1);
          buf.put(bytes3);
@@ -134,7 +102,6 @@ public class HybridRsaCipher {
    }
 
    private static byte[] bigIntegerToBytes(ShadedBigInteger shadedBigInteger, int n) {
-      int flowState = Pkcs1Padding.getFlowState();
       byte[] bytes = shadedBigInteger.toByteArray();
       if (bytes[0] == 0 && bytes.length > n) {
          byte[] bytes2 = new byte[bytes.length - 1];
@@ -154,8 +121,7 @@ public class HybridRsaCipher {
    public static ShadedBigInteger[] importPublicKeyFromBase64(String str) {
 
       try {
-         Base64Decoder rfc4648 = Base64Codec.getRfc4648();
-         ByteBuffer buf = ByteBuffer.wrap(rfc4648.decode3(str));
+         ByteBuffer buf = ByteBuffer.wrap(Base64Codec.getRfc4648().decode3(str));
          ShadedBigInteger shadedBigInteger = readBigInteger(buf);
          ShadedBigInteger shadedBigInteger2 = readBigInteger(buf);
          return new ShadedBigInteger[]{shadedBigInteger, shadedBigInteger2};
@@ -176,45 +142,25 @@ public class HybridRsaCipher {
 
             try {
                ShadedBigInteger shadedBigInteger = bytesToBigInteger(bytes2);
-               ShadedBigInteger primeExponentP = rsaCrtKeyPair.getPrimeExponentP();
-               ShadedBigInteger primeP = rsaCrtKeyPair.getPrimeP();
-               ShadedBigInteger shadedBigInteger2 = primeExponentP;
-               ShadedBigInteger shadedBigInteger3 = shadedBigInteger.modPow(shadedBigInteger2, primeP);
-               ShadedBigInteger primeExponentQ = rsaCrtKeyPair.getPrimeExponentQ();
-               ShadedBigInteger primeQ = rsaCrtKeyPair.getPrimeQ();
-               ShadedBigInteger shadedBigInteger4 = primeExponentQ;
-               ShadedBigInteger shadedBigInteger5 = shadedBigInteger.modPow(shadedBigInteger4, primeQ);
+               ShadedBigInteger shadedBigInteger3 = shadedBigInteger.modPow(rsaCrtKeyPair.getPrimeExponentP(), rsaCrtKeyPair.getPrimeP());
+               ShadedBigInteger shadedBigInteger5 = shadedBigInteger.modPow(rsaCrtKeyPair.getPrimeExponentQ(), rsaCrtKeyPair.getPrimeQ());
                ShadedBigInteger crtCoefficient = rsaCrtKeyPair.getCrtCoefficient();
-               ShadedBigInteger shadedBigInteger6 = shadedBigInteger3.subtract(shadedBigInteger5);
-               ShadedBigInteger primeP2 = rsaCrtKeyPair.getPrimeP();
-               ShadedBigInteger shadedBigInteger7 = primeP2;
-               ShadedBigInteger shadedBigInteger8 = shadedBigInteger6.mod(shadedBigInteger7);
-               crtCoefficient = crtCoefficient.multiply(shadedBigInteger8);
-               ShadedBigInteger primeP3 = rsaCrtKeyPair.getPrimeP();
-               ShadedBigInteger shadedBigInteger9 = primeP3;
-               ShadedBigInteger shadedBigInteger10 = crtCoefficient.mod(shadedBigInteger9);
-               ShadedBigInteger primeQ2 = rsaCrtKeyPair.getPrimeQ();
-               ShadedBigInteger shadedBigInteger11 = shadedBigInteger10.multiply(primeQ2);
-               ShadedBigInteger shadedBigInteger12 = shadedBigInteger11;
-               ShadedBigInteger shadedBigInteger13 = shadedBigInteger5.add(shadedBigInteger12);
-               byte[] bytes3 = bigIntegerToBytes(shadedBigInteger13, n);
-               return Pkcs1Padding.unpad(bytes3);
+               crtCoefficient = crtCoefficient.multiply(shadedBigInteger3.subtract(shadedBigInteger5).mod(rsaCrtKeyPair.getPrimeP()));
+               return Pkcs1Padding.unpad(bigIntegerToBytes(shadedBigInteger5.add(crtCoefficient.mod(rsaCrtKeyPair.getPrimeP()).multiply(rsaCrtKeyPair.getPrimeQ())), n));
             } catch (Exception e) {
                throw new Exception("Decryption failed: " + e.getMessage());
             }
          } else if (b == 2) {
             ByteBuffer buf = ByteBuffer.wrap(bytes);
             buf.get();
-            int n2 = (buf.get() & 255) << 8 | buf.get() & 255;
-            byte[] bytes4 = new byte[n2];
+            byte[] bytes4 = new byte[(buf.get() & 255) << 8 | buf.get() & 255];
             buf.get(bytes4);
             byte[] bytes5 = new byte[buf.remaining()];
             buf.get(bytes5);
             byte[] bytes6 = new byte[bytes4.length + 1];
             bytes6[0] = 1;
             System.arraycopy(bytes4, 0, bytes6, 1, bytes4.length);
-            byte[] bytes7 = decryptWithPrivateKey(bytes6, rsaCrtKeyPair);
-            return SymmetricStreamCipher.decrypt(bytes5, bytes7);
+            return SymmetricStreamCipher.decrypt(bytes5, decryptWithPrivateKey(bytes6, rsaCrtKeyPair));
          } else {
             throw new Exception("Unknown encryption mode: " + b);
          }
@@ -225,16 +171,11 @@ public class HybridRsaCipher {
 
       try {
          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-         ShadedBigInteger modulus = rsaCrtKeyPair.getModulus();
-         writeBigInteger(byteArrayOutputStream, modulus);
-         ShadedBigInteger publicExponent = rsaCrtKeyPair.getPublicExponent();
-         writeBigInteger(byteArrayOutputStream, publicExponent);
-         ShadedBigInteger privateExponent = rsaCrtKeyPair.getPrivateExponent();
-         writeBigInteger(byteArrayOutputStream, privateExponent);
-         ShadedBigInteger primeP = rsaCrtKeyPair.getPrimeP();
-         writeBigInteger(byteArrayOutputStream, primeP);
-         ShadedBigInteger primeQ = rsaCrtKeyPair.getPrimeQ();
-         writeBigInteger(byteArrayOutputStream, primeQ);
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getModulus());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPublicExponent());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrivateExponent());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrimeP());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPrimeQ());
          byte[] bytes = byteArrayOutputStream.toByteArray();
          byteArrayOutputStream.close();
          return bytes;
@@ -248,7 +189,6 @@ public class HybridRsaCipher {
    }
 
    public static boolean verifySignature(byte[] bytes, byte[] bytes2, ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) throws Exception {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
 
       try {
          byte[] bytes3 = decrypt(bytes, shadedBigInteger, shadedBigInteger2);
@@ -271,8 +211,7 @@ public class HybridRsaCipher {
    public static RsaCrtKeyPair importKeyPairFromBase64(String str) {
 
       try {
-         Base64Decoder rfc4648 = Base64Codec.getRfc4648();
-         ByteBuffer buf = ByteBuffer.wrap(rfc4648.decode3(str));
+         ByteBuffer buf = ByteBuffer.wrap(Base64Codec.getRfc4648().decode3(str));
          ShadedBigInteger shadedBigInteger = readBigInteger(buf);
          ShadedBigInteger shadedBigInteger2 = readBigInteger(buf);
          ShadedBigInteger shadedBigInteger3 = readBigInteger(buf);
@@ -285,8 +224,7 @@ public class HybridRsaCipher {
    }
 
    private static ShadedBigInteger readBigInteger(ByteBuffer buf) {
-      int n = (buf.get() & 255) << 24 | (buf.get() & 255) << 16 | (buf.get() & 255) << 8 | buf.get() & 255;
-      byte[] bytes = new byte[n];
+      byte[] bytes = new byte[(buf.get() & 255) << 24 | (buf.get() & 255) << 16 | (buf.get() & 255) << 8 | buf.get() & 255];
       buf.get(bytes);
       return new ShadedBigInteger(bytes);
    }
@@ -321,10 +259,8 @@ public class HybridRsaCipher {
 
       try {
          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-         ShadedBigInteger modulus = rsaCrtKeyPair.getModulus();
-         writeBigInteger(byteArrayOutputStream, modulus);
-         ShadedBigInteger publicExponent = rsaCrtKeyPair.getPublicExponent();
-         writeBigInteger(byteArrayOutputStream, publicExponent);
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getModulus());
+         writeBigInteger(byteArrayOutputStream, rsaCrtKeyPair.getPublicExponent());
          byte[] bytes = byteArrayOutputStream.toByteArray();
          byteArrayOutputStream.close();
          return Base64Codec.getRfc46482().encodeToString(bytes);
@@ -358,19 +294,14 @@ public class HybridRsaCipher {
    }
 
    public static byte[] decryptWithPublicKey(byte[] bytes, ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) throws Exception {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
       if (bytes.length < 2) {
          throw new Exception("Invalid encrypted data format");
       } else {
-         byte b = bytes[0];
-         if (b == 1) {
+         if (bytes[0] == 1) {
             byte[] bytes2 = new byte[bytes.length - 1];
             System.arraycopy(bytes, 1, bytes2, 0, bytes2.length);
             int n = (shadedBigInteger.bitLength() + 7) / 8;
-            ShadedBigInteger shadedBigInteger3 = bytesToBigInteger(bytes2);
-            ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.modPow(shadedBigInteger2, shadedBigInteger);
-            byte[] bytes3 = bigIntegerToBytes(shadedBigInteger4, n);
-            return Pkcs1Padding.unpad(bytes3);
+            return Pkcs1Padding.unpad(bigIntegerToBytes(bytesToBigInteger(bytes2).modPow(shadedBigInteger2, shadedBigInteger), n));
          } else {
             throw new Exception("Hybrid encryption not supported for public key decryption");
          }

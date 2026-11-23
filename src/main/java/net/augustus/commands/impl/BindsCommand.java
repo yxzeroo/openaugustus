@@ -13,8 +13,7 @@ public class BindsCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (See all bound modules)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (See all bound modules)");
    }
 
    public void commandAction(String[] strings, String str) {
@@ -29,8 +28,7 @@ public class BindsCommand extends Command {
                str2 = Keyboard.getKeyName(module.getKeyCode());
             }
 
-            String str3 = sb.append(str2).toString();
-            this.sendChat(str3);
+            this.sendChat(sb.append(str2).toString());
          }
       }
    }

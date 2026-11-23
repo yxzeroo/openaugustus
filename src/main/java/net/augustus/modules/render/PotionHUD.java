@@ -18,7 +18,7 @@ import net.augustus.render.RenderUtil;
 import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,10 +28,10 @@ import net.minecraft.potion.PotionEffect;
 import org.lwjgl.opengl.GL11;
 
 public class PotionHUD extends Module implements RenderListener {
-   private final StringValue xCoord;
-   private final StringValue yCoord;
-   private final StringValue scale;
-   private final StringValue margin;
+   private final DoubleValue xCoord;
+   private final DoubleValue yCoord;
+   private final DoubleValue scale;
+   private final DoubleValue margin;
    private final ColorSetting backgroundColor;
    private final BooleanValue potionIcon;
    private final BlurShadowSettings blurShadowSettings;
@@ -40,15 +40,13 @@ public class PotionHUD extends Module implements RenderListener {
 
    public PotionHUD() {
        super("PotionHUD", "Tränke-ÜberlagerungsElemente", new Color(123, 252, 3), Categorys.RENDER);
-      this.xCoord = new StringValue(this, "X-Coord", 0.0, 0.0, 100.0, 2);
-      this.yCoord = new StringValue(this, "Y-Coord", 0.0, 0.0, 100.0, 2);
-      this.scale = new StringValue(this, "Scale", 2.0, 0.5, 4.0, 2);
-      this.margin = new StringValue(this, "Margin", 1.0, 0.0, 10.0, 0);
+      this.xCoord = new DoubleValue(this, "X-Coord", 0.0, 0.0, 100.0, 2);
+      this.yCoord = new DoubleValue(this, "Y-Coord", 0.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 0.5, 4.0, 2);
+      this.margin = new DoubleValue(this, "Margin", 1.0, 0.0, 10.0, 0);
       this.backgroundColor = new ColorSetting(this, "BackgroundColor", new Color(0, 0, 0, 150));
       this.potionIcon = new BooleanValue(this, "PotionIcon", true);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
       this.potionOptionMap = new HashMap();
       List list = PotionHudEffectOption.createAllOptions();
       this.potionsToDisplay = new MultiOptionSetting(this, "PotionsToDisplay", (SelectableOption[])list.toArray(new PotionHudEffectOption[0]));
@@ -68,8 +66,7 @@ public class PotionHUD extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -89,8 +86,7 @@ public class PotionHUD extends Module implements RenderListener {
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          GlStateManager.disableLighting();
          GlStateManager.enableAlpha();
-         byte b2 = 0;
-         int colorInt = this.backgroundColor.getColorInt(b2);
+         int colorInt = this.backgroundColor.getColorInt((byte)0);
          int n4 = this.potionIcon.getValue() ? 23 : 0;
          int n5 = 119 + n4;
 
@@ -101,8 +97,7 @@ public class PotionHUD extends Module implements RenderListener {
                if (potionHudEffectOption == null || potionHudEffectOption.isSelected()) {
                   int n6 = n3;
                   int n7 = n3;
-                  boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-                  BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+                  BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
                   BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderEntryBackgroundPass(n2, n6, n5, n7, b, colorInt, shaderRenderPass));
                   GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                   if (this.potionIcon.getValue() && potion.hasStatusIcon()) {
@@ -134,11 +129,7 @@ public class PotionHUD extends Module implements RenderListener {
    }
 
    private void renderEntryBackgroundPass(int n, int n2, int n3, int n4, int n5, int n6, ShaderRenderPass shaderRenderPass) {
-      int n7 = n + n3;
-      int n8 = n4 + n5;
-      BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-      int n9 = ColorUtil.resolvePassColor(shaderRenderPass, n6);
-      RenderUtil.drawRect3(n, n2, n7, n8, blurShadowSettings2.resolvePassColor(shaderRenderPass, n9));
+      RenderUtil.drawRect3(n, n2, n + n3, n4 + n5, this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n6)));
    }
 
 }

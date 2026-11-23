@@ -32,12 +32,9 @@ public class FlyDebug extends Module implements ClickListener, TickListener, Mov
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
    }
 
    public void onClick(EventClick event) {
@@ -62,12 +59,9 @@ public class FlyDebug extends Module implements ClickListener, TickListener, Mov
    public void onTick5() {
       int n = 2147483647;
       if (!Augustus.getInstance().getModuleManager().fly.isToggled() && (n = this.getMinIntersectingWaterLevel()) > 0 && n < 10 && mc.thePlayer.onGround) {
-         boolean flag = true;
-         Augustus.getInstance().getModuleManager().fly.setToggled(flag);
-         String str = mc.thePlayer.motionX + " " + mc.thePlayer.motionY + " " + mc.thePlayer.motionZ;
-         this.sendChatMessage2(str);
-         double d = (double)n;
-         this.sendChatMessage(d);
+         Augustus.getInstance().getModuleManager().fly.setToggled(true);
+         this.sendChatMessage2(mc.thePlayer.motionX + " " + mc.thePlayer.motionY + " " + mc.thePlayer.motionZ);
+         this.sendChatMessage((double)n);
       }
    }
 
@@ -86,8 +80,7 @@ public class FlyDebug extends Module implements ClickListener, TickListener, Mov
          for (int j = n3; j < n4; j++) {
             for (int k = n5; k < n6; k++) {
                IBlockState blockState = mc.theWorld.getBlockState(pos.set(i, j, k));
-               Block block = blockState.getBlock();
-               if (block.getMaterial() == Material.water) {
+               if (blockState.getBlock().getMaterial() == Material.water) {
                   int value = (Integer)blockState.getValue(BlockLiquid.LEVEL);
                   double d = (double)(j + 1);
                   if (value < 8) {

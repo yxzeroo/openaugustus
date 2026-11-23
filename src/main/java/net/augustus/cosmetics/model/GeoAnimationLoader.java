@@ -15,8 +15,7 @@ public class GeoAnimationLoader {
          String key = (String)entry.getKey();
 
          try {
-            GeoAnimation geoAnimation = GeoAnimationJsonParser.deserializeJsonToAnimation(GeoAnimationJsonParser.getAnimation(json, key), molangParser);
-            geoAnimationFile.putAnimation(key, geoAnimation);
+            geoAnimationFile.putAnimation(key, GeoAnimationJsonParser.deserializeJsonToAnimation(GeoAnimationJsonParser.getAnimation(json, key), molangParser));
          } catch (JsonParseException e) {
             MoreCosmeticsCore.LOGGER.error("Could not load animation: {}", new Object[]{key, e});
             throw new RuntimeException(e);

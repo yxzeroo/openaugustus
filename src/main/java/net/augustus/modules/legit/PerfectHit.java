@@ -11,13 +11,13 @@ import net.augustus.ClientManagers;
 import net.augustus.events.EventClick;
 import net.augustus.utils.TickCounter;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 
 public class PerfectHit extends Module implements ClickListener {
-   private final StringValue maxDelaySinceLastHit;
+   private final DoubleValue maxDelaySinceLastHit;
    private final RandomizedRangeSettings cps;
    private final RandomizedRangeSettings cpsRecalculateDelay;
    private final RandomizedRangeSettings dcps;
@@ -32,7 +32,7 @@ public class PerfectHit extends Module implements ClickListener {
 
    public PerfectHit() {
        super("PerfectHit", "PerfekterSchlag", new Color(240, 115, 186), Categorys.LEGIT);
-      this.maxDelaySinceLastHit = new StringValue(this, "MaxDelaySinceLastHit", 300.0, 100.0, 1000.0, 0);
+      this.maxDelaySinceLastHit = new DoubleValue(this, "MaxDelaySinceLastHit", 300.0, 100.0, 1000.0, 0);
       this.cps = new RandomizedRangeSettings(this, "CPS", 20.0, 20.0, 0.0, 20.0, 0);
       this.cpsRecalculateDelay = (new RandomizedRangeSettings(this, "CPSRecalculateDelay", 3.0, 8.0, 0.0, 60.0, 0)).withoutNotInARow();
       this.dcps = new RandomizedRangeSettings(this, "DCPS", 0.0, 0.0, 0.0, 20.0, 0);
@@ -53,16 +53,12 @@ public class PerfectHit extends Module implements ClickListener {
    }
 
    public void updateEventSubscriptions() {
-      int n = 99999;
-      byte b = 7;
-      this.toggleEventSubscription(b, n);
+      this.toggleEventSubscription((byte)7, 99999);
    }
 
    public boolean canPerfectHit() {
       if (ClientManagers.moduleManager.perfectHit.isToggled() && mc.isNotInGui()) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double value = this.maxDelaySinceLastHit.getValue();
-         if (!timeHelper2.reached(value)
+         if (!this.timeHelper.reached(this.maxDelaySinceLastHit.getValue())
             && mc.objectMouseOver != null
             && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
             && mc.objectMouseOver.entityHit instanceof EntityLivingBase
@@ -88,29 +84,23 @@ public class PerfectHit extends Module implements ClickListener {
          }
 
          TickCounter cpsRecalculateCounter2 = this.cpsRecalculateCounter;
-         int lastIntValue = this.cpsRecalculateDelay.getLastIntValue();
-         if (cpsRecalculateCounter2.hasReached2(lastIntValue)) {
+         if (cpsRecalculateCounter2.hasReached2(this.cpsRecalculateDelay.getLastIntValue())) {
             this.cpsRecalculateCounter.reset();
             this.cpsRecalculateDelay.nextSecureValue();
             this.cps.nextSecureValue();
          }
 
          cpsRecalculateCounter2 = this.dcpsRecalculateCounter;
-         int lastIntValue2 = this.dcpsRecalculateDelay.getLastIntValue();
-         if (cpsRecalculateCounter2.hasReached2(lastIntValue2)) {
+         if (cpsRecalculateCounter2.hasReached2(this.dcpsRecalculateDelay.getLastIntValue())) {
             this.dcpsRecalculateCounter.reset();
             this.dcpsRecalculateDelay.nextSecureValue();
             this.dcps.nextSecureValue();
          }
 
-         ActionRateAccumulator cpsAccumulator2 = this.cpsAccumulator;
-         int lastIntValue3 = this.cps.getLastIntValue();
-         int n = this.adjustClickCount(lastIntValue3);
-         int n2 = cpsAccumulator2.accumulate(n);
+         int n2 = this.cpsAccumulator.accumulate(this.adjustClickCount(this.cps.getLastIntValue()));
          if (n2 > 0) {
             ActionRateAccumulator dcpsAccumulator2 = this.dcpsAccumulator;
-            int lastIntValue4 = this.dcps.getLastIntValue();
-            int n3 = this.adjustClickCount(lastIntValue4);
+            int n3 = this.adjustClickCount(this.dcps.getLastIntValue());
             n2 += dcpsAccumulator2.accumulate(n3);
          }
 

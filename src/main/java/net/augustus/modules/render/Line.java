@@ -17,8 +17,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -31,19 +31,19 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 public class Line extends Module implements RenderListener, TickListener, PacketListener {
-   private final DoubleValue moveLine;
+   private final SettingGroup moveLine;
    public final BooleanValue activateMoveLine;
    public final ColorSetting moveLineColor;
-   public final StringValue lineWidth;
-   public final StringValue lineTime;
+   public final DoubleValue lineWidth;
+   public final DoubleValue lineTime;
    public final BooleanValue resetOnTeleportMoveLine;
-   private final DoubleValue auraLine;
+   private final SettingGroup auraLine;
    public final BooleanValue activateAuraLine;
    public final BooleanValue displayLegitimateRotations;
    public final BooleanValue displayRotationsAtCurrentPosition;
    public final ColorSetting color2;
-   public final StringValue auraLineWidth;
-   public final StringValue auraLineTime;
+   public final DoubleValue auraLineWidth;
+   public final DoubleValue auraLineTime;
    public final BooleanValue resetOnTeleportAuraLine;
    public BlurShadowSettings blurShadowSettings;
    private java.util.ArrayList moveLinePoints;
@@ -58,92 +58,65 @@ public class Line extends Module implements RenderListener, TickListener, Packet
 
    public Line() {
        super("Line", "Linie", new Color(10, 20, 15), Categorys.RENDER);
-      this.moveLine = new DoubleValue(this, "MoveLine", true);
-      BooleanValue booleanValue = new BooleanValue(this, "ActivateMoveLine", true, this.moveLine);
-      String str = "Activate";
-      this.activateMoveLine = (BooleanValue)booleanValue.withDisplayName(str);
+      this.moveLine = new SettingGroup(this, "MoveLine", true);
+      this.activateMoveLine = (BooleanValue)new BooleanValue(this, "ActivateMoveLine", true, this.moveLine).withDisplayName("Activate");
       Color color3 = new Color(77, 0, 255, 255);
-      DoubleValue moveLine2 = this.moveLine;
+      SettingGroup moveLine2 = this.moveLine;
       Color color4 = color3;
       String str2 = "Color";
       ColorSetting colorSetting = new ColorSetting(this, str2, color4, moveLine2);
       BooleanValue activateMoveLine2 = this.activateMoveLine;
       this.activateMoveLine.getClass();
       BooleanValue booleanValue2 = activateMoveLine2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.moveLineColor = (ColorSetting)colorSetting.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "LineWidth", 2.0, 0.1, 4.0, 2, this.moveLine);
+      this.moveLineColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue2.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "LineWidth", 2.0, 0.1, 4.0, 2, this.moveLine);
       activateMoveLine2 = this.activateMoveLine;
       this.activateMoveLine.getClass();
       BooleanValue booleanValue3 = activateMoveLine2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.lineWidth = stringValue.visibleWhen(condition2);
-      StringValue stringValue2 = new StringValue(this, "LineTime", 3000.0, 500.0, 20000.0, 0, this.moveLine);
+      this.lineWidth = stringValue.visibleWhen(() -> booleanValue3.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "LineTime", 3000.0, 500.0, 20000.0, 0, this.moveLine);
       activateMoveLine2 = this.activateMoveLine;
       this.activateMoveLine.getClass();
       BooleanValue booleanValue4 = activateMoveLine2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.lineTime = stringValue2.visibleWhen(condition3);
-      BooleanValue booleanValue5 = new BooleanValue(this, "ResetOnTeleportMoveLine", false, this.moveLine);
-      String str3 = "ResetOnTeleport";
-      BooleanValue booleanValue6 = (BooleanValue)booleanValue5.withDisplayName(str3);
+      this.lineTime = stringValue2.visibleWhen(() -> booleanValue4.getValue());
+      BooleanValue booleanValue6 = (BooleanValue)new BooleanValue(this, "ResetOnTeleportMoveLine", false, this.moveLine).withDisplayName("ResetOnTeleport");
       activateMoveLine2 = this.activateMoveLine;
       this.activateMoveLine.getClass();
       BooleanValue booleanValue7 = activateMoveLine2;
-      SettingVisibilityCondition condition4 = () -> booleanValue7.getValue();
-      this.resetOnTeleportMoveLine = (BooleanValue)booleanValue6.withVisibility(condition4);
-      this.auraLine = new DoubleValue(this, "AuraLine", true);
-      BooleanValue booleanValue8 = new BooleanValue(this, "ActivateAuraLine", false, this.auraLine);
-      String str4 = "Activate";
-      this.activateAuraLine = (BooleanValue)booleanValue8.withDisplayName(str4);
+      this.resetOnTeleportMoveLine = (BooleanValue)booleanValue6.withVisibility(() -> booleanValue7.getValue());
+      this.auraLine = new SettingGroup(this, "AuraLine", true);
+      this.activateAuraLine = (BooleanValue)new BooleanValue(this, "ActivateAuraLine", false, this.auraLine).withDisplayName("Activate");
       BooleanValue booleanValue9 = new BooleanValue(this, "Display legitimate rotations", false, this.auraLine);
       activateMoveLine2 = this.activateAuraLine;
       this.activateAuraLine.getClass();
       BooleanValue booleanValue10 = activateMoveLine2;
-      SettingVisibilityCondition condition5 = () -> booleanValue10.getValue();
-      this.displayLegitimateRotations = (BooleanValue)booleanValue9.withVisibility(condition5);
-      BooleanValue booleanValue11 = new BooleanValue(this, "Display rotations at current position", false, this.auraLine);
-      SettingVisibilityCondition condition6 = () -> this.isDisplayAtCurrentPosVisible();
-      this.displayRotationsAtCurrentPosition = (BooleanValue)booleanValue11.withVisibility(condition6);
+      this.displayLegitimateRotations = (BooleanValue)booleanValue9.withVisibility(() -> booleanValue10.getValue());
+      this.displayRotationsAtCurrentPosition = (BooleanValue)new BooleanValue(this, "Display rotations at current position", false, this.auraLine).withVisibility(() -> this.isDisplayAtCurrentPosVisible());
       color3 = new Color(77, 0, 255, 255);
       moveLine2 = this.auraLine;
       color4 = color3;
       str2 = "AuraColor";
-      ColorSetting colorSetting2 = new ColorSetting(this, str2, color4, moveLine2);
-      String str5 = "Color";
-      ColorSetting colorSetting3 = (ColorSetting)colorSetting2.withDisplayName(str5);
+      ColorSetting colorSetting3 = (ColorSetting)new ColorSetting(this, str2, color4, moveLine2).withDisplayName("Color");
       activateMoveLine2 = this.activateAuraLine;
       this.activateAuraLine.getClass();
       BooleanValue booleanValue12 = activateMoveLine2;
-      SettingVisibilityCondition condition7 = () -> booleanValue12.getValue();
-      this.color2 = (ColorSetting)colorSetting3.withVisibility(condition7);
-      StringValue stringValue3 = new StringValue(this, "AuraLineWidth", 2.0, 0.1, 4.0, 2, this.auraLine);
-      String str6 = "LineWidth";
-      StringValue stringValue4 = stringValue3.named(str6);
+      this.color2 = (ColorSetting)colorSetting3.withVisibility(() -> booleanValue12.getValue());
+      DoubleValue stringValue4 = new DoubleValue(this, "AuraLineWidth", 2.0, 0.1, 4.0, 2, this.auraLine).named("LineWidth");
       activateMoveLine2 = this.activateAuraLine;
       this.activateAuraLine.getClass();
       BooleanValue booleanValue13 = activateMoveLine2;
-      SettingVisibilityCondition condition8 = () -> booleanValue13.getValue();
-      this.auraLineWidth = stringValue4.visibleWhen(condition8);
-      StringValue stringValue5 = new StringValue(this, "AuraLineTime", 3000.0, 500.0, 20000.0, 0, this.auraLine);
-      String str7 = "LineTime";
-      StringValue stringValue6 = stringValue5.named(str7);
+      this.auraLineWidth = stringValue4.visibleWhen(() -> booleanValue13.getValue());
+      DoubleValue stringValue6 = new DoubleValue(this, "AuraLineTime", 3000.0, 500.0, 20000.0, 0, this.auraLine).named("LineTime");
       activateMoveLine2 = this.activateAuraLine;
       this.activateAuraLine.getClass();
       BooleanValue booleanValue14 = activateMoveLine2;
-      SettingVisibilityCondition condition9 = () -> booleanValue14.getValue();
-      this.auraLineTime = stringValue6.visibleWhen(condition9);
-      BooleanValue booleanValue15 = new BooleanValue(this, "ResetOnTeleportAuraLine", false, this.auraLine);
-      String str8 = "ResetOnTeleport";
-      BooleanValue booleanValue16 = (BooleanValue)booleanValue15.withDisplayName(str8);
+      this.auraLineTime = stringValue6.visibleWhen(() -> booleanValue14.getValue());
+      BooleanValue booleanValue16 = (BooleanValue)new BooleanValue(this, "ResetOnTeleportAuraLine", false, this.auraLine).withDisplayName("ResetOnTeleport");
       activateMoveLine2 = this.activateAuraLine;
       this.activateAuraLine.getClass();
       BooleanValue booleanValue17 = activateMoveLine2;
-      SettingVisibilityCondition condition10 = () -> booleanValue17.getValue();
-      this.resetOnTeleportAuraLine = (BooleanValue)booleanValue16.withVisibility(condition10);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black).disableBothByDefault();
+      this.resetOnTeleportAuraLine = (BooleanValue)booleanValue16.withVisibility(() -> booleanValue17.getValue());
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black).disableBothByDefault();
       this.moveLinePoints = new java.util.ArrayList();
       this.rotationLineTimestamps = new java.util.ArrayList();
       this.tickRotationTimestamps = new java.util.ArrayList();
@@ -166,12 +139,9 @@ public class Line extends Module implements RenderListener, TickListener, Packet
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -202,8 +172,7 @@ public class Line extends Module implements RenderListener, TickListener, Packet
          RenderUtil.begin3DRender();
          GL11.glLineWidth((float)this.lineWidth.getValue());
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderMoveLinePass(f, shaderRenderPass));
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          RenderUtil.end3DRender();
@@ -212,8 +181,7 @@ public class Line extends Module implements RenderListener, TickListener, Packet
 
       if (this.activateAuraLine.getValue() && this.displayLegitimateRotations.getValue()) {
          RenderUtil.begin3DRender();
-         byte b = 0;
-         RenderUtil.setGlColor(this.moveLineColor.getColorInt(b));
+         RenderUtil.setGlColor(this.moveLineColor.getColorInt((byte)0));
          GL11.glLineWidth((float)this.lineWidth.getValue());
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
          if (!this.hasKillAuraTarget()) {
@@ -250,8 +218,7 @@ public class Line extends Module implements RenderListener, TickListener, Packet
          long l2 = (Long)this.rotationLineTimestamps.get(i);
          double d = (double)(l2 - l);
          if (i > 0) {
-            byte b = 0;
-            this.color2.getColorInt(b);
+            this.color2.getColorInt((byte)0);
          }
 
          float f = MathHelper.cos(-floats[0] * (float) (Math.PI / 180.0) - (float) Math.PI);
@@ -329,8 +296,7 @@ public class Line extends Module implements RenderListener, TickListener, Packet
 
          for (int i = 0; i < this.moveLinePoints.size(); i++) {
             double[] doubles2 = (double[])this.moveLinePoints.get(i);
-            double d = doubles2[3];
-            if (!this.isMovePointExpired(d)) {
+            if (!this.isMovePointExpired(doubles2[3])) {
                break;
             }
 
@@ -378,10 +344,7 @@ public class Line extends Module implements RenderListener, TickListener, Packet
 
    public void renderMoveLine(ShaderRenderPass shaderRenderPass, float f) {
       if (this.moveLinePoints.size() >= 2) {
-         BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-         byte b = 0;
-         int colorInt = this.moveLineColor.getColorInt(b);
-         RenderUtil.setGlColor(blurShadowSettings2.resolvePassColor(shaderRenderPass, colorInt));
+         RenderUtil.setGlColor(this.blurShadowSettings.resolvePassColor(shaderRenderPass, this.moveLineColor.getColorInt((byte)0)));
          Tessellator instance = Tessellator.getInstance();
          WorldRenderer worldRenderer = instance.getWorldRenderer();
          worldRenderer.begin(3, DefaultVertexFormats.POSITION);

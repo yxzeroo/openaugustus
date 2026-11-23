@@ -15,8 +15,7 @@ public class BigRationalFraction {
    public BigRationalFraction(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2) {
       this.numerator = customBigInteger;
       this.denominator = customBigInteger2;
-      CustomBigInteger zero = CustomBigInteger.ZERO;
-      if (customBigInteger2.equals(zero)) {
+      if (customBigInteger2.equals(CustomBigInteger.ZERO)) {
          throw new ArithmeticException("Created impossible fraction");
       }
    }
@@ -101,9 +100,7 @@ public class BigRationalFraction {
    }
 
    public String toDecimalString(ShadedMathContext shadedMathContext) {
-      ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      return shadedBigDecimal.divide(shadedBigDecimal2, shadedMathContext).toPlainString();
+      return new ShadedBigDecimal(this.numerator).divide(new ShadedBigDecimal(this.denominator), shadedMathContext).toPlainString();
    }
 
    public BigRationalFraction(long l, long l2) {
@@ -112,9 +109,7 @@ public class BigRationalFraction {
 
    public BigRationalFraction addInt(int n) {
       CustomBigInteger numerator2 = this.numerator;
-      CustomBigInteger denominator2 = this.denominator;
-      CustomBigInteger customBigInteger = CustomBigInteger.valueOf((long)n);
-      CustomBigInteger customBigInteger2 = denominator2.multiply2(customBigInteger);
+      CustomBigInteger customBigInteger2 = this.denominator.multiply2(CustomBigInteger.valueOf((long)n));
       return (new BigRationalFraction(numerator2.add2(customBigInteger2), this.denominator)).simplify();
    }
 
@@ -295,15 +290,11 @@ public class BigRationalFraction {
    }
 
    public ShadedBigDecimal toBigDecimal(ShadedMathContext shadedMathContext) {
-      ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      return shadedBigDecimal.divide(shadedBigDecimal2, shadedMathContext);
+      return new ShadedBigDecimal(this.numerator).divide(new ShadedBigDecimal(this.denominator), shadedMathContext);
    }
 
    public BigRationalFraction multiply(BigRationalFraction bigRationalFraction) {
-      CustomBigInteger numerator2 = bigRationalFraction.getNumerator();
-      CustomBigInteger numerator3 = this.numerator;
-      CustomBigInteger customBigInteger = numerator2.multiply2(numerator3);
+      CustomBigInteger customBigInteger = bigRationalFraction.getNumerator().multiply2(this.numerator);
       CustomBigInteger denominator2 = bigRationalFraction.getDenominator();
       CustomBigInteger denominator3 = this.denominator;
       return (new BigRationalFraction(customBigInteger, denominator2.multiply2(denominator3))).simplify();
@@ -317,21 +308,16 @@ public class BigRationalFraction {
    }
 
    public BigRationalFraction subtractInt(int n) {
-      CustomBigInteger denominator2 = this.denominator;
-      CustomBigInteger customBigInteger = CustomBigInteger.valueOf((long)n);
-      CustomBigInteger customBigInteger2 = denominator2.multiply2(customBigInteger);
+      CustomBigInteger customBigInteger2 = this.denominator.multiply2(CustomBigInteger.valueOf((long)n));
       return (new BigRationalFraction(this.numerator.subtract(customBigInteger2), this.denominator)).simplify();
    }
 
    public static CustomBigInteger lcm(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2) {
-      CustomBigInteger customBigInteger3 = customBigInteger.multiply2(customBigInteger2);
-      CustomBigInteger customBigInteger4 = customBigInteger.gcd(customBigInteger2);
-      return customBigInteger3.divide(customBigInteger4);
+      return customBigInteger.multiply2(customBigInteger2).divide(customBigInteger.gcd(customBigInteger2));
    }
 
    public ShadedBigDecimal toBigDecimal() {
-      ShadedMathContext shadedMathContext = defaultMathContext;
-      return this.toBigDecimal(shadedMathContext);
+      return this.toBigDecimal(defaultMathContext);
    }
 
    public BigRationalFraction abs() {
@@ -488,11 +474,7 @@ public class BigRationalFraction {
 
    @Override
    public String toString() {
-      ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      ShadedMathContext shadedMathContext = defaultMathContext;
-      ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-      return shadedBigDecimal.divide(shadedBigDecimal3, shadedMathContext).toPlainString();
+      return new ShadedBigDecimal(this.numerator).divide(new ShadedBigDecimal(this.denominator), defaultMathContext).toPlainString();
    }
 
    public CustomBigInteger getNumerator() {

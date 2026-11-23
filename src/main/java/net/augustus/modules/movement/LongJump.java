@@ -34,12 +34,8 @@ public class LongJump extends Module implements MotionListener {
          MinemenLongJumpMode.factory(),
          IntaveBoatLongJumpMode.factory()
       };
-      ModeSetting modeSetting = new ModeSetting(this, "Modes", "NCP", biFunctions);
-      CustomSubModeFactory customSubModeFactory = MotionModifierLongJumpMode.factory();
-      this.modes = modeSetting.enableCustomModes(customSubModeFactory);
-      BooleanValue booleanValue = new BooleanValue(this, "AutoDisable", true);
-      SettingVisibilityCondition condition = () -> this.isAutoDisableVisible();
-      this.autoDisable = (BooleanValue)booleanValue.withVisibility(condition);
+      this.modes = new ModeSetting(this, "Modes", "NCP", biFunctions).enableCustomModes(MotionModifierLongJumpMode.factory());
+      this.autoDisable = (BooleanValue)new BooleanValue(this, "AutoDisable", true).withVisibility(() -> this.isAutoDisableVisible());
       this.groundTicks = 0;
    }
 
@@ -56,20 +52,16 @@ public class LongJump extends Module implements MotionListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
    public void onMotion(EventMotion event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String selectedValue = this.modes.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.modes.getSelectedValue());
       if (!this.modes.getSelectedValue().equals("IntaveBoat") && mc.thePlayer.onGround) {
          if (this.groundTicks > 0) {
             if (this.isLicenseTimestampValid() && this.autoDisable.getValue()) {
-               boolean flag = false;
-               this.setToggled(flag);
+               this.setToggled(false);
                return;
             }
          }
@@ -82,13 +74,11 @@ public class LongJump extends Module implements MotionListener {
    }
 
    private boolean isAutoDisableVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.modes.getSelectedValue().equals("IntaveBoat");
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

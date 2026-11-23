@@ -6,10 +6,8 @@ public class LauncherStopwatch {
    private static final long b = 2000L;
 
    public LauncherStopwatch() {
-      long l = 0L;
-      this.lastCheckMs = l;
-      long l2 = System.currentTimeMillis() - b;
-      this.lastResetMs = l2;
+      this.lastCheckMs = 0L;
+      this.lastResetMs = System.currentTimeMillis() - b;
    }
 
    public boolean hasReached(long l) {
@@ -29,14 +27,12 @@ public class LauncherStopwatch {
    }
 
    public void reset() {
-      long l = System.currentTimeMillis();
-      this.lastResetMs = l;
+      this.lastResetMs = System.currentTimeMillis();
    }
 
    public boolean hasElapsed(long l, boolean flag) {
       if (this.lastCheckMs > System.currentTimeMillis()) {
-         long l2 = System.currentTimeMillis();
-         this.lastCheckMs = l2;
+         this.lastCheckMs = System.currentTimeMillis();
       }
 
       if (System.currentTimeMillis() - this.lastCheckMs > l) {

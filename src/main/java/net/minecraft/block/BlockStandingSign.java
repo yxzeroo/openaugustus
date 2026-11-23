@@ -11,8 +11,7 @@ public class BlockStandingSign extends BlockSign {
    public static final PropertyInteger ROTATION;
 
    static {
-      String str = "rotation";
-      ROTATION = PropertyInteger.create(str, 0, 15);
+      ROTATION = PropertyInteger.create("rotation", 0, 15);
    }
 
    @Override

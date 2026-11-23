@@ -40,7 +40,7 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -55,10 +55,10 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
    private final BooleanValue recordPredictions;
    private final BooleanValue recordAura;
    private final BooleanValue killAuraTarget;
-   private final StringValue searchReach;
+   private final DoubleValue searchReach;
    private final BooleanValue onlyOnClick;
-   private final StringValue yawFov;
-   private final StringValue pitchFov;
+   private final DoubleValue yawFov;
+   private final DoubleValue pitchFov;
    private final MultiOptionSetting targets;
    private final TimeHelper timeHelper;
    private DataOutputStream outputStream;
@@ -74,27 +74,17 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
        super("RotationRecorder", "DrehungsAufzeichner", new Color(252, 186, 3), Categorys.MISC);
       this.createNewDatasetIfTargetIsNull = new BooleanValue(this, "Create new dataset if target is null", true);
       this.frameRecording = new BooleanValue(this, "FrameRecording", true);
-      BooleanValue booleanValue = new BooleanValue(this, "Record Predictions", false);
-      SettingVisibilityCondition condition = () -> this.isRecordPredictionsVisible();
-      this.recordPredictions = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue2 = new BooleanValue(this, "Record Aura", false);
-      SettingVisibilityCondition condition2 = () -> this.isRecordAuraVisible();
-      this.recordAura = (BooleanValue)booleanValue2.withVisibility(condition2);
+      this.recordPredictions = (BooleanValue)new BooleanValue(this, "Record Predictions", false).withVisibility(() -> this.isRecordPredictionsVisible());
+      this.recordAura = (BooleanValue)new BooleanValue(this, "Record Aura", false).withVisibility(() -> this.isRecordAuraVisible());
       this.killAuraTarget = new BooleanValue(this, "KillAuraTarget", true);
-      StringValue stringValue = new StringValue(this, "SearchReach", 7.0, 3.0, 10.0, 1);
-      SettingVisibilityCondition condition3 = () -> this.isSearchReachVisible();
-      this.searchReach = stringValue.visibleWhen(condition3);
+      this.searchReach = new DoubleValue(this, "SearchReach", 7.0, 3.0, 10.0, 1).visibleWhen(() -> this.isSearchReachVisible());
       BooleanValue booleanValue3 = new BooleanValue(this, "OnlyOnClick", true);
       SettingVisibilityCondition condition4 = () -> {
          return !this.killAuraTarget.getValue();
       };
       this.onlyOnClick = (BooleanValue)booleanValue3.withVisibility(condition4);
-      StringValue stringValue2 = new StringValue(this, "YawFov", 90.0, 0.0, 180.0, 0);
-      SettingVisibilityCondition condition5 = () -> this.isYawFovVisible();
-      this.yawFov = stringValue2.visibleWhen(condition5);
-      StringValue stringValue3 = new StringValue(this, "PitchFov", 90.0, 0.0, 180.0, 0);
-      SettingVisibilityCondition condition6 = () -> this.isPitchFovVisible();
-      this.pitchFov = stringValue3.visibleWhen(condition6);
+      this.yawFov = new DoubleValue(this, "YawFov", 90.0, 0.0, 180.0, 0).visibleWhen(() -> this.isYawFovVisible());
+      this.pitchFov = new DoubleValue(this, "PitchFov", 90.0, 0.0, 180.0, 0).visibleWhen(() -> this.isPitchFovVisible());
       MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "Targets", RotationRecorderTargetOption.values());
       SettingVisibilityCondition condition7 = () -> {
          return !this.killAuraTarget.getValue();
@@ -132,21 +122,16 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 19;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onTick2() {
       if (!this.frameRecording.getValue()) {
-         boolean value = this.frameRecording.getValue();
-         this.recordTickOrFrame(value);
+         this.recordTickOrFrame(this.frameRecording.getValue());
       }
    }
 
@@ -164,8 +149,7 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
    @Override
    public void onMouseMove() {
       if (this.frameRecording.getValue()) {
-         boolean value = this.frameRecording.getValue();
-         this.recordTickOrFrame(value);
+         this.recordTickOrFrame(this.frameRecording.getValue());
       }
    }
 
@@ -207,8 +191,7 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
       byte[] bytes2 = new byte[1024];
 
       while (!deflater.finished()) {
-         int n = deflater.deflate(bytes2);
-         byteArrayOutputStream.write(bytes2, 0, n);
+         byteArrayOutputStream.write(bytes2, 0, deflater.deflate(bytes2));
       }
 
       return byteArrayOutputStream.toByteArray();
@@ -257,13 +240,10 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
          json.addProperty("motionY", mc.thePlayer.motionY);
          json.addProperty("motionZ", mc.thePlayer.motionZ);
          json.addProperty("isSprinting", mc.thePlayer.isSprinting());
-         byte b = 0;
-         json.add("entityState", this.gson.toJsonTree(entity.motionSnapshotHistory.getFromEnd(b)));
+         json.add("entityState", this.gson.toJsonTree(entity.motionSnapshotHistory.getFromEnd((byte)0)));
          json.add("movementInput", this.gson.toJsonTree(mc.thePlayer.movementInput));
-         byte b2 = 0;
-         json.add("playerState", this.gson.toJsonTree(mc.thePlayer.extraSnapshotHistory.getFromEnd(b2)));
-         byte b3 = 0;
-         json.add("targetState", this.gson.toJsonTree(entity.positionHistory.getFromEnd(b3)));
+         json.add("playerState", this.gson.toJsonTree(mc.thePlayer.extraSnapshotHistory.getFromEnd((byte)0)));
+         json.add("targetState", this.gson.toJsonTree(entity.positionHistory.getFromEnd((byte)0)));
          this.recordedFrames.add(json);
          this.velocityReceived = false;
       }
@@ -272,8 +252,7 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
    @Override
    public void onPacket(EventPacket event) {
       if (event.getPacket() instanceof S12PacketEntityVelocity) {
-         S12PacketEntityVelocity packet = (S12PacketEntityVelocity)event.getPacket();
-         if (packet.getEntityID() == mc.thePlayer.getEntityId()) {
+         if (((S12PacketEntityVelocity)event.getPacket()).getEntityID() == mc.thePlayer.getEntityId()) {
             this.velocityReceived = true;
          }
       } else if (event.getPacket() instanceof S27PacketExplosion) {
@@ -310,8 +289,7 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
 
    private EntityLivingBase findTargetEntity() {
       if (mc.isNotInGui()) {
-         long l = 1000L;
-         if (!this.timeHelper.reached2(l) || !this.onlyOnClick.getValue()) {
+         if (!this.timeHelper.reached2(1000L) || !this.onlyOnClick.getValue()) {
             Stream stream = mc.theWorld.loadedEntityList.stream();
             stream = stream.filter(
                obj -> {
@@ -323,22 +301,10 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
                      boolean isSelected5 = RotationRecorderTargetOption.ARMOR_STAND.isSelected();
                      boolean isSelected6 = RotationRecorderTargetOption.INVISIBLE.isSelected();
                      boolean isSelected7 = RotationRecorderTargetOption.DEAD.isSelected();
-                     boolean flag = true;
-                     boolean flag2 = isSelected7;
-                     boolean flag3 = true;
-                     boolean flag4 = true;
-                     boolean flag5 = true;
-                     boolean flag6 = isSelected6;
-                     boolean flag7 = isSelected5;
-                     boolean flag8 = isSelected4;
-                     boolean flag9 = isSelected3;
-                     boolean flag10 = isSelected2;
-                     boolean flag11 = isSelected;
-                     if (CombatTargetUtil.isValidTarget((Entity)obj, flag11, flag10, flag9, flag8, flag7, flag6, flag5, flag4, flag3, flag2, flag)) {
+                     if (CombatTargetUtil.isValidTarget((Entity)obj, isSelected, isSelected2, isSelected3, isSelected4, isSelected5, isSelected6, true, true, true, isSelected7, true)) {
                         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
                         float realPitch = Augustus.getInstance().getYawPitchHelper().realPitch;
-                        float f = realYaw;
-                        float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint((Entity)obj, f, realPitch);
+                        float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint((Entity)obj, realYaw, realPitch);
                         return !(obj instanceof EntityPlayerSP)
                            && (double)mc.thePlayer.getDistanceToEntityBox((Entity)obj) < this.searchReach.getValue()
                            && (double)Math.abs(floats[0]) <= this.yawFov.getValue()
@@ -388,8 +354,7 @@ public class RotationRecorder extends Module implements TickListener, ClickListe
          byte[] bytes2 = new byte[1024];
 
          while (!inflater.finished()) {
-            int n = inflater.inflate(bytes2);
-            byteArrayOutputStream.write(bytes2, 0, n);
+            byteArrayOutputStream.write(bytes2, 0, inflater.inflate(bytes2));
          }
 
          inflater.end();

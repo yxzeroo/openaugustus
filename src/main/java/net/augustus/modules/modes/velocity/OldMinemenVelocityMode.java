@@ -5,19 +5,18 @@ import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.utils.MoveUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class OldMinemenVelocityMode extends VelocityMode implements MoveInputListener {
    private int hurtCounter = 0;
 
-   public OldMinemenVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public OldMinemenVelocityMode(Velocity velocity, SettingGroup doubleValue) {
       super(velocity, doubleValue, "OldMinemen");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -30,7 +29,7 @@ public class OldMinemenVelocityMode extends VelocityMode implements MoveInputLis
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new OldMinemenVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new OldMinemenVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override

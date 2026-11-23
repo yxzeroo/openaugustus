@@ -35,8 +35,7 @@ public class ModelAdapterSquid extends ModelAdapter {
                return null;
             } else {
                ModelRenderer[] squidTentacles = modelSquid.squidTentacles;
-               String str3 = str.substring(str2.length());
-               int n = Config.parseInt(str3, -1);
+               int n = Config.parseInt(str.substring(str2.length()), -1);
                n--;
                return n >= 0 && n < squidTentacles.length ? squidTentacles[n] : null;
             }

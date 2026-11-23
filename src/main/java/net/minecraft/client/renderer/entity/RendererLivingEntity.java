@@ -110,14 +110,12 @@ public abstract class RendererLivingEntity extends Render {
       float f4 = 1.0F;
       if (ClientManagers.moduleManager.esp.isToggled()) {
          if (ClientManagers.moduleManager.esp.vanillaHitColorBool.getValue() && entity.hurtTime > 0) {
-            byte b = 0;
-            int colorInt = ClientManagers.moduleManager.esp.hitColor5.getColorInt(b);
+            int colorInt = ClientManagers.moduleManager.esp.hitColor5.getColorInt((byte)0);
             f = ColorUtil.getRedFloat(colorInt);
             f2 = ColorUtil.getGreenFloat(colorInt);
             f3 = ColorUtil.getBlueFloat(colorInt);
          } else if (!ClientManagers.moduleManager.esp.vanillaTeamColor.getValue()) {
-            byte b2 = 0;
-            int colorInt2 = ClientManagers.moduleManager.esp.vanillaColor.getColorInt(b2);
+            int colorInt2 = ClientManagers.moduleManager.esp.vanillaColor.getColorInt((byte)0);
             f = ColorUtil.getRedFloat(colorInt2);
             f2 = ColorUtil.getGreenFloat(colorInt2);
             f3 = ColorUtil.getBlueFloat(colorInt2);
@@ -140,10 +138,8 @@ public abstract class RendererLivingEntity extends Render {
       float f2 = 0.3F;
       float f3 = 0.0F;
       float f4 = 0.0F;
-      float f5 = 1.0F;
-      EventEntityColor event = EntityColorListener.onEntityColor(entity, f5, f4, f3, f2);
-      float brightness = entity.getBrightness(f);
-      int colorMultiplier = this.getColorMultiplier(entity, brightness, f);
+      EventEntityColor event = EntityColorListener.onEntityColor(entity, 1.0F, f4, f3, f2);
+      int colorMultiplier = this.getColorMultiplier(entity, entity.getBrightness(f), f);
       boolean flag2 = (colorMultiplier >> 24 & 0xFF) > 0;
       boolean flag3 = entity.hurtTime > 0 || entity.deathTime > 0;
       if (!flag2 && !flag3 && !event.isOverrideColor()) {
@@ -526,8 +522,7 @@ public abstract class RendererLivingEntity extends Render {
                GlStateManager.tryBlendFuncSeparate(770, 771, 0, 0);
                GlStateManager.disableLighting();
                GlStateManager.disableDepth();
-               byte b = 0;
-               RenderUtil.setGlColor(ClientManagers.moduleManager.chams.entityColor.getColorInt(b));
+               RenderUtil.setGlColor(ClientManagers.moduleManager.chams.entityColor.getColorInt((byte)0));
                GlStateManager.disableTexture2D();
                this.renderModel(
                   entity, f11, f10, f8, f5, f7, 0.0625F, ClientManagers.moduleManager.antiInvisibles.isToggled() && ClientManagers.moduleManager.antiInvisibles.shouldRevealEntity(entity), false
@@ -864,8 +859,7 @@ public abstract class RendererLivingEntity extends Render {
             String displayNameString = entity.getDisplayNameString();
             if (entity instanceof AbstractClientPlayer) {
                String name = ((EntityPlayer)entity).getGameProfile().getName();
-               boolean flag2 = true;
-               if (ClientManagers.moduleManager.midClick.isFriend(name, flag2) && ClientManagers.moduleManager.midClick.isToggled()) {
+               if (ClientManagers.moduleManager.midClick.isFriend(name, true) && ClientManagers.moduleManager.midClick.isToggled()) {
                   String str = StringUtils.replace(displayNameString, name, (ClientManagers.moduleManager.midClick.simple.getValue() ? "§l" : "§a§l") + name);
                   if (!ClientManagers.moduleManager.midClick.simple.getValue()) {
                      displayNameString = "§7[§2§lFriend§7]§9 " + str;

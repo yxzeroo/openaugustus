@@ -132,8 +132,7 @@ public class CommandFill extends CommandBase {
                         entityWorld.setBlockState(pos5, Blocks.barrier.getDefaultState(), blockByText == Blocks.barrier ? 2 : 4);
                      }
 
-                     IBlockState stateFromMeta = blockByText.getStateFromMeta(n);
-                     if (entityWorld.setBlockState(pos5, stateFromMeta, 2)) {
+                     if (entityWorld.setBlockState(pos5, blockByText.getStateFromMeta(n), 2)) {
                         list.add(pos5);
                         n2++;
                         if (flag) {
@@ -151,8 +150,7 @@ public class CommandFill extends CommandBase {
             }
 
             for (BlockPos pos6 : (Iterable<BlockPos>)(list)) {
-               Block block = entityWorld.getBlockState(pos6).getBlock();
-               entityWorld.notifyNeighborsRespectDebug(pos6, block);
+               entityWorld.notifyNeighborsRespectDebug(pos6, entityWorld.getBlockState(pos6).getBlock());
             }
 
             if (n2 <= 0) {

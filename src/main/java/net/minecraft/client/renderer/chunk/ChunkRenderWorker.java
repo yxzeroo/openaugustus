@@ -141,9 +141,7 @@ public class ChunkRenderWorker implements Runnable {
             return;
          } catch (Throwable e2) {
             CrashReport crashReport = CrashReport.makeCrashReport(e2, "Batching chunks");
-            Minecraft minecraft = Minecraft.getMinecraft();
-            CrashReport crashReport2 = Minecraft.getMinecraft().addGraphicsAndWorldToCrashReport(crashReport);
-            minecraft.crashed(crashReport2);
+            Minecraft.getMinecraft().crashed(Minecraft.getMinecraft().addGraphicsAndWorldToCrashReport(crashReport));
             return;
          }
       }
@@ -168,9 +166,7 @@ public class ChunkRenderWorker implements Runnable {
       public void onFailure(Throwable t) {
          ChunkRenderWorker.invokeFreeRenderBuilder(this.chunkRenderWorker, this.compileTask);
          if (!(t instanceof CancellationException) && !(t instanceof InterruptedException)) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            CrashReport crashReport = CrashReport.makeCrashReport(t, "Rendering chunk");
-            minecraft.crashed(crashReport);
+            Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(t, "Rendering chunk"));
          }
       }
 

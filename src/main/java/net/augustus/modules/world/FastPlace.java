@@ -18,7 +18,7 @@ import net.augustus.utils.player.PlayerUtil;
 import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -49,24 +49,16 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
       this.placedBlockThisTick = false;
       this.initialClickPending = false;
       this.remainingPostEdgeTicks = 0;
-      byte b = 2;
-      byte b2 = 0;
-      this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
-      byte b3 = 2;
-      byte b4 = 0;
-      this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+      this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)2);
+      this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)2);
 
       for (FastPlaceItemOption fastPlaceItemOption : FastPlaceItemOption.values()) {
-         DoubleValue doubleValue = new DoubleValue(this, fastPlaceItemOption.getName());
-         SettingVisibilityCondition condition = () -> fastPlaceItemOption.selected;
-         DoubleValue doubleValue2 = (DoubleValue)doubleValue.visibleWhen(condition).markVisualOnly();
+         SettingGroup doubleValue2 = (SettingGroup)new SettingGroup(this, fastPlaceItemOption.getName()).visibleWhen(() -> fastPlaceItemOption.selected).markVisualOnly();
          RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, fastPlaceItemOption.name + "CPS", 10.0, 20.0, 0.0, 60.0, 0, doubleValue2)).withoutNotInARow();
-         String str = "CPS";
-         fastPlaceItemOption.cpsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str)).markAllVisualOnly();
+         fastPlaceItemOption.cpsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("CPS")).markAllVisualOnly();
          fastPlaceItemOption.cpsRange.nextValue();
          randomizedRangeSettings = (new RandomizedRangeSettings(this, fastPlaceItemOption.name + "DCPS", 2.0, 4.0, 0.0, 20.0, 0, doubleValue2)).withoutNotInARow();
-         String str2 = "DCPS";
-         fastPlaceItemOption.doubleClickCpsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2)).markAllVisualOnly();
+         fastPlaceItemOption.doubleClickCpsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("DCPS")).markAllVisualOnly();
          fastPlaceItemOption.doubleClickCpsRange.nextValue();
          if (fastPlaceItemOption == FastPlaceItemOption.BLOCKS) {
             this.alwaysPlaceWhenPossible = (BooleanValue)(new BooleanValue(this, "AlwaysPlaceWhenPossible", false, doubleValue2)).markVisualOnly();
@@ -77,9 +69,7 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
             BooleanValue booleanValue = new BooleanValue(this, "OnlyIfMotionIsPositive", false, doubleValue2);
             BooleanValue onlyInAir2 = this.onlyInAir;
             this.onlyInAir.getClass();
-            BooleanValue booleanValue2 = onlyInAir2;
-            SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-            this.onlyIfMotionIsPositive = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition2)).markVisualOnly();
+            this.onlyIfMotionIsPositive = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> onlyInAir2.getValue())).markVisualOnly();
          }
       }
    }
@@ -95,22 +85,16 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 2;
-      byte b2 = 7;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7, (byte)2);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
    public void onSilentSlot() {
       if (this.autoSwap.getValue() && FastPlaceItemOption.BLOCKS.isSelected() && this.placedBlockThisTick) {
          for (int i = 0; i < 9; i++) {
-            ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i + 36).getStack();
-            if (BlockUtil.isValidScaffoldBlock(stack)) {
-               boolean flag = true;
-               byte b = -2;
-               SilentSlotManager.requestSlot(this, b, i, flag);
+            if (BlockUtil.isValidScaffoldBlock(mc.thePlayer.inventoryContainer.getSlot(i + 36).getStack())) {
+               SilentSlotManager.requestSlot(this, (byte)-2, i, true);
                SilentSlotManager.realHotbarSlot = i;
                break;
             }
@@ -132,14 +116,12 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
 
                if (!(item instanceof ItemBlock)) {
                   ActionRateAccumulator cpsAccumulator = fastPlaceItemOption.cpsAccumulator;
-                  int lastIntValue = fastPlaceItemOption.cpsRange.getLastIntValue();
-                  int n = cpsAccumulator.accumulate(lastIntValue);
+                  int n = cpsAccumulator.accumulate(fastPlaceItemOption.cpsRange.getLastIntValue());
                   boolean flag = n > 0;
 
                   boolean flag2;
                   for (flag2 = false; n > 0; flag2 = true) {
-                     byte b = 1;
-                     event.addRightClicks(b);
+                     event.addRightClicks((byte)1);
                      n--;
                   }
 
@@ -148,8 +130,7 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                      int lastIntValue2 = fastPlaceItemOption.doubleClickCpsRange.getLastIntValue();
 
                      for (int i = cpsAccumulator.accumulate(lastIntValue2); i > 0; i--) {
-                        byte b2 = 1;
-                        event.addRightClicks(b2);
+                        event.addRightClicks((byte)1);
                         flag2 = true;
                      }
 
@@ -157,14 +138,11 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                   }
 
                   if (this.initialClickPending && !flag2) {
-                     byte b3 = 1;
-                     event.addRightClicks(b3);
+                     event.addRightClicks((byte)1);
                   }
 
-                  boolean flag3 = true;
-                  event.setIgnoreVanillaClicks(flag3);
-                  boolean flag4 = false;
-                  event.setRightMouseDown(flag4);
+                  event.setIgnoreVanillaClicks(true);
+                  event.setRightMouseDown(false);
                   this.initialClickPending = false;
                   break;
                }
@@ -172,12 +150,8 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                if ((!this.onlyInAir.getValue() || !mc.thePlayer.onGround) && (!this.onlyInAir.getValue() || !this.onlyIfMotionIsPositive.getValue() || !(mc.thePlayer.motionY <= 0.0))) {
                   boolean isFullBlock = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().isFullBlock();
                   if (isFullBlock && !this.wasOnFullBlock) {
-                     byte b4 = 1;
-                     byte b5 = 0;
-                     this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2(b5, b4);
-                     byte b6 = 1;
-                     byte b7 = 0;
-                     this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2(b7, b6);
+                     this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)1);
+                     this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)1);
                   }
 
                   if (!isFullBlock && this.wasOnFullBlock) {
@@ -202,19 +176,14 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                         ItemStack currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
                         BlockPos blockPos = mc.objectMouseOver.getBlockPos();
                         Vec3 hitVec = mc.objectMouseOver.hitVec;
-                        EnumFacing sideHit = mc.objectMouseOver.sideHit;
-                        BlockPos pos = blockPos;
-                        boolean flag7 = PlayerUtil.canPlaceBlockAt(currentEquippedItem2, pos, sideHit, hitVec);
+                        boolean flag7 = PlayerUtil.canPlaceBlockAt(currentEquippedItem2, blockPos, mc.objectMouseOver.sideHit, hitVec);
                         ActionRateAccumulator cpsAccumulator2 = fastPlaceItemOption.cpsAccumulator;
-                        int lastIntValue3 = fastPlaceItemOption.cpsRange.getLastIntValue();
-                        int n2 = cpsAccumulator2.accumulate(lastIntValue3);
+                        int n2 = cpsAccumulator2.accumulate(fastPlaceItemOption.cpsRange.getLastIntValue());
                         boolean flag8 = n2 > 0 && !this.oneClick.getValue() || flag7 && (this.oneClick.getValue() || this.alwaysPlaceWhenPossible.getValue());
 
                         while (n2 > 0 && !this.oneClick.getValue() || flag7 && (this.oneClick.getValue() || this.alwaysPlaceWhenPossible.getValue())) {
-                           byte b8 = 1;
-                           event.addRightClicks(b8);
-                           boolean flag9 = this.oneClick.getValue() || this.alwaysPlaceWhenPossible.getValue();
-                           event.setAllowMultiRightClick(flag9);
+                           event.addRightClicks((byte)1);
+                           event.setAllowMultiRightClick(this.oneClick.getValue() || this.alwaysPlaceWhenPossible.getValue());
                            flag7 = false;
                            flag6 = true;
                            if (--n2 < -30) {
@@ -227,8 +196,7 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                            int lastIntValue4 = fastPlaceItemOption.doubleClickCpsRange.getLastIntValue();
 
                            for (int j = cpsAccumulator2.accumulate(lastIntValue4); j > 0; flag6 = true) {
-                              byte b9 = 1;
-                              event.addRightClicks(b9);
+                              event.addRightClicks((byte)1);
                               j--;
                            }
 
@@ -237,14 +205,11 @@ public class FastPlace extends Module implements ClickListener, SilentSlotListen
                      }
 
                      if (this.initialClickPending && !flag6) {
-                        byte b10 = 1;
-                        event.addRightClicks(b10);
+                        event.addRightClicks((byte)1);
                      }
 
-                     boolean flag10 = true;
-                     event.setIgnoreVanillaClicks(flag10);
-                     boolean flag11 = false;
-                     event.setRightMouseDown(flag11);
+                     event.setIgnoreVanillaClicks(true);
+                     event.setRightMouseDown(false);
                      this.placedBlockThisTick = true;
                      this.initialClickPending = false;
                   }

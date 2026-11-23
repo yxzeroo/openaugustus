@@ -282,10 +282,8 @@ public abstract class BlockLiquid extends Block {
    public boolean hasOpenNeighbor(IBlockAccess world, int n, int n2, int n3) {
       for (int i = -1; i <= 1; i++) {
          for (int j = -1; j <= 1; j++) {
-            IBlockState blockState2 = world.getBlockState2(n + i, n2, n3 + j);
-            Block block = blockState2.getBlock();
-            Material material = block.getMaterial();
-            if (material != this.blockMaterial && !block.isFullBlock()) {
+            Block block = world.getBlockState2(n + i, n2, n3 + j).getBlock();
+            if (block.getMaterial() != this.blockMaterial && !block.isFullBlock()) {
                return true;
             }
          }

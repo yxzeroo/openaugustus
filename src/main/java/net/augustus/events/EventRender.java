@@ -25,25 +25,21 @@ public class EventRender extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      RenderListener listener = (RenderListener)obj;
-      this.call2(listener);
+      this.call2((RenderListener)obj);
    }
 
    public void call2(RenderListener listener) {
       switch (EventRenderSwitchMap.ORDINAL_MAP[this.passType.ordinal()]) {
          case 1:
-            float partialTicks2 = this.partialTicks;
-            listener.onRender(partialTicks2);
+            listener.onRender(this.partialTicks);
             break;
          case 2:
             ScaledResolution scaledResolution2 = this.scaledResolution;
-            float partialTicks3 = this.partialTicks;
-            listener.onRender2(partialTicks3, scaledResolution2);
+            listener.onRender2(this.partialTicks, scaledResolution2);
             break;
          case 3:
             ScaledResolution scaledResolution3 = this.scaledResolution;
-            float partialTicks4 = this.partialTicks;
-            listener.onRender(partialTicks4, scaledResolution3);
+            listener.onRender(this.partialTicks, scaledResolution3);
       }
    }
 }

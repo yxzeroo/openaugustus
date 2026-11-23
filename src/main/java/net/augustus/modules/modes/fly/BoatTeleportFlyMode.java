@@ -37,10 +37,8 @@ public class BoatTeleportFlyMode extends FlyMode {
 
    public void onClick(EventClick event) {
       if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit instanceof EntityBoat && this.teleportTicks > 2) {
-         byte b = 1;
-         event.addRightClicks(b);
-         byte b2 = 2;
-         event.addLeftClicks(b2);
+         event.addRightClicks((byte)1);
+         event.addLeftClicks((byte)2);
       }
    }
 
@@ -66,8 +64,7 @@ public class BoatTeleportFlyMode extends FlyMode {
    public void onReadPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof S1BPacketEntityAttach) {
-         S1BPacketEntityAttach packet2 = (S1BPacketEntityAttach)packet;
-         if (packet2.getEntityId() == mc.thePlayer.getEntityId()) {
+         if (((S1BPacketEntityAttach)packet).getEntityId() == mc.thePlayer.getEntityId()) {
             event.cancel();
             this.attachedToBoat = true;
          }

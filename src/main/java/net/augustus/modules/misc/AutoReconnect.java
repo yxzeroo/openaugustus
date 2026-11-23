@@ -10,7 +10,7 @@ import net.augustus.events.listeners.DisconnectListener;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDisconnected;
@@ -19,7 +19,7 @@ import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 
 public class AutoReconnect extends Module implements TickListener, DisconnectListener {
-   private final BooleansSetting mode;
+   private final StringValue mode;
    private final TextInputSetting serverIP;
    private final BooleanValue reconnectOnManualDisconnect;
    private final BooleanValue reconnectMessage;
@@ -33,10 +33,8 @@ public class AutoReconnect extends Module implements TickListener, DisconnectLis
 
    public AutoReconnect() {
        super("AutoReconnect", "AutoReconnect", Color.CYAN, Categorys.MISC);
-      this.mode = (BooleansSetting)(new BooleansSetting(this, "Mode", "LastServer", new String[]{"LastServer", "CustomServer"})).markVisualOnly();
-      TextInputSetting textInputSetting = new TextInputSetting(this, "ServerIP", "localhost:25565");
-      SettingVisibilityCondition condition = () -> this.isCustomServerMode();
-      this.serverIP = (TextInputSetting)((TextInputSetting)textInputSetting.withVisibility(condition)).markVisualOnly();
+      this.mode = (StringValue)(new StringValue(this, "Mode", "LastServer", new String[]{"LastServer", "CustomServer"})).markVisualOnly();
+      this.serverIP = (TextInputSetting)((TextInputSetting)new TextInputSetting(this, "ServerIP", "localhost:25565").withVisibility(() -> this.isCustomServerMode())).markVisualOnly();
       this.reconnectOnManualDisconnect = (BooleanValue)(new BooleanValue(this, "ReconnectOnManualDisconnect", false)).markVisualOnly();
       this.reconnectMessage = (BooleanValue)(new BooleanValue(this, "ReconnectMessage", true)).markVisualOnly();
       this.abortReconnectProcessAtJoin = (BooleanValue)(new BooleanValue(this, "AbortReconnectProcessAtJoin", true)).markVisualOnly();
@@ -61,10 +59,8 @@ public class AutoReconnect extends Module implements TickListener, DisconnectLis
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 62;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)62);
    }
 
    @Override
@@ -85,8 +81,7 @@ public class AutoReconnect extends Module implements TickListener, DisconnectLis
       }
 
       if (mc.theWorld != null && mc.thePlayer != null && this.reconnectedFlag && this.reconnectMessage.getValue()) {
-         String str = "Automatic reconnect successfully :)";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("Automatic reconnect successfully :)");
          this.reconnectedFlag = false;
       }
 
@@ -129,9 +124,7 @@ public class AutoReconnect extends Module implements TickListener, DisconnectLis
       if (str != null && !str.isEmpty()) {
          String str2 = str + ":" + n;
          ServerData serverData = new ServerData(str2, str2, false);
-         Minecraft mc2 = mc;
-         GuiConnecting guiConnecting = new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), mc, serverData);
-         mc2.displayGuiScreen(guiConnecting);
+         mc.displayGuiScreen(new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), mc, serverData));
          this.reconnectDelay.nextValue();
          this.reconnectedFlag = true;
       }

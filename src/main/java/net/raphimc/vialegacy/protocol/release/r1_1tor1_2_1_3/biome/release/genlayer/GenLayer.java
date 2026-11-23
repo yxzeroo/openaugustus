@@ -48,8 +48,7 @@ public abstract class GenLayer {
 
       byte byte0 = 4;
       GenLayer obj1 = GenLayerZoom.magnify(1000L, obj, 0);
-      GenLayer genLayer = new GenLayerRiverInit(100L, obj1);
-      obj1 = GenLayerZoom.magnify(1000L, genLayer, byte0 + 2);
+      obj1 = GenLayerZoom.magnify(1000L, new GenLayerRiverInit(100L, obj1), byte0 + 2);
       GenLayer genLayer2 = new GenLayerRiver(1L, obj1);
       GenLayer genLayer3 = new GenLayerSmooth(1000L, genLayer2);
       GenLayer obj2 = GenLayerZoom.magnify(1000L, obj, 0);

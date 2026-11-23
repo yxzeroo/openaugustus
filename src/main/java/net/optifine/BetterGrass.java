@@ -93,8 +93,7 @@ public class BetterGrass {
                   return modelCubeSnow.getFaceQuads(facing);
                }
             } else if (betterPodzol) {
-               BlockPos pos2 = pos.down().offset(facing);
-               IBlockState blockState = world.getBlockState(pos2);
+               IBlockState blockState = world.getBlockState(pos.down().offset(facing));
                if (blockState.getBlock() == Blocks.dirt && blockState.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.PODZOL) {
                   return modelCubePodzol.getFaceQuads(facing);
                }
@@ -129,8 +128,7 @@ public class BetterGrass {
          property = str2;
       }
 
-      ResourceLocation location2 = new ResourceLocation(property);
-      return textureMap.registerSprite(location2);
+      return textureMap.registerSprite(new ResourceLocation(property));
    }
 
    private static List getFaceQuadsGrass(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing, List list) {
@@ -156,16 +154,14 @@ public class BetterGrass {
    }
 
    private static Block getBlockAt(BlockPos pos, EnumFacing facing, IBlockAccess world) {
-      BlockPos pos2 = pos.offset(facing);
-      return world.getBlockState(pos2).getBlock();
+      return world.getBlockState(pos.offset(facing)).getBlock();
    }
 
    public static void update() {
       if (spritesLoaded) {
          modelCubeGrass = BlockModelUtils.makeModelCube(spriteGrass, 0);
          if (grassMultilayer) {
-            IBakedModel bakedModel = BlockModelUtils.makeModelCube(spriteGrassSide, -1);
-            modelCubeGrass = BlockModelUtils.joinModelsCube(bakedModel, modelCubeGrass);
+            modelCubeGrass = BlockModelUtils.joinModelsCube(BlockModelUtils.makeModelCube(spriteGrassSide, -1), modelCubeGrass);
          }
 
          modelCubeMycelium = BlockModelUtils.makeModelCube(spriteMycelium, -1);
@@ -201,8 +197,7 @@ public class BetterGrass {
             return;
          }
 
-         boolean flag = Config.isFromDefaultResourcePack(location);
-         if (flag) {
+         if (Config.isFromDefaultResourcePack(location)) {
             Config.dbg("BetterGrass: Parsing default configuration " + str);
          } else {
             Config.dbg("BetterGrass: Parsing configuration " + str);

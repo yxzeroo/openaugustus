@@ -20,11 +20,9 @@ public class PacketThreadUtil {
       }
 
       if (packet instanceof S07PacketRespawn) {
-         S07PacketRespawn packet2 = (S07PacketRespawn)packet;
-         lastDimensionId = packet2.getDimensionID();
+         lastDimensionId = ((S07PacketRespawn)packet).getDimensionID();
       } else if (packet instanceof S01PacketJoinGame) {
-         S01PacketJoinGame packet3 = (S01PacketJoinGame)packet;
-         lastDimensionId = packet3.getDimension();
+         lastDimensionId = ((S01PacketJoinGame)packet).getDimension();
       } else {
          lastDimensionId = Integer.MIN_VALUE;
       }
@@ -54,9 +52,7 @@ public class PacketThreadUtil {
                   boolean flag = false;
                }
 
-               PacketStage read = PacketStage.READ;
-               EventPacket event = PacketListener.onPacket(packet, read);
-               if (event.isCancelled()) {
+               if (PacketListener.onPacket(packet, PacketStage.READ).isCancelled()) {
                   return;
                }
             }

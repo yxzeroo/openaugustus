@@ -31,14 +31,12 @@ public class CraftingRecipePlanner {
    public static List planCraftingSteps(Item item, CraftingInventorySnapshot snapshot) {
       SimulatedCraftingInventory inventory = new SimulatedCraftingInventory(snapshot);
       ArrayList list = new ArrayList();
-      HashSet set = new HashSet();
-      if (!resolveCraftRecursive(item, inventory, list, set)) {
+      if (!resolveCraftRecursive(item, inventory, list, new HashSet())) {
          return null;
       } else {
          CraftingRecipePlan craftingRecipePlan = findRecipePlan(item);
          if (craftingRecipePlan != null) {
-            int stackSize = craftingRecipePlan.output.stackSize;
-            if (!inventory.canFitItem(item, stackSize)) {
+            if (!inventory.canFitItem(item, craftingRecipePlan.output.stackSize)) {
                return null;
             }
          }
@@ -75,8 +73,7 @@ public class CraftingRecipePlanner {
                   }
 
                   int stackSize = craftingRecipePlan2.output.stackSize;
-                  HashSet set2 = new HashSet(set);
-                  if (!resolveCraftRecursive(key, inventory, list, set2)) {
+                  if (!resolveCraftRecursive(key, inventory, list, new HashSet(set))) {
                      set.remove(item);
                      return false;
                   }
@@ -172,9 +169,7 @@ public class CraftingRecipePlanner {
 
       for (int i = 0; i < recipeItems.length; i++) {
          if (recipeItems[i] != null) {
-            int n4 = i / recipeWidth + n3;
-            int n5 = i % recipeWidth + n2;
-            int n6 = n4 * 3 + n5 + 1;
+            int n6 = (i / recipeWidth + n3) * 3 + (i % recipeWidth + n2) + 1;
             list.add(new RecipeIngredientSlot(n6, recipeItems[i].getItem()));
          }
       }

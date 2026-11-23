@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
@@ -15,14 +15,13 @@ public class SequentialSkinDerpMode extends SkinDerpMode implements TickListener
    private boolean enablingPhase = false;
    private List enabledParts = new ArrayList();
 
-   public SequentialSkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue) {
+   public SequentialSkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue) {
       super(skinDerp, doubleValue, "Sequential");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -42,15 +41,11 @@ public class SequentialSkinDerpMode extends SkinDerpMode implements TickListener
    @Override
    public void onTick3() {
       if (mc.thePlayer != null && mc.theWorld != null) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double delayMs = this.getDelayMs();
-         if (timeHelper2.reached(delayMs)) {
+         if (this.timeHelper.reached(this.getDelayMs())) {
             this.timeHelper.reset();
             this.refreshEnabledParts();
             if (!this.enabledParts.isEmpty()) {
-               EnumPlayerModelParts enumPlayerModelParts = (EnumPlayerModelParts)this.enabledParts.get(this.currentPartIndex);
-               boolean enablingPhase2 = this.enablingPhase;
-               this.setModelPartEnabled(enumPlayerModelParts, enablingPhase2);
+               this.setModelPartEnabled((EnumPlayerModelParts)this.enabledParts.get(this.currentPartIndex), this.enablingPhase);
                this.currentPartIndex++;
                if (this.currentPartIndex >= this.enabledParts.size()) {
                   this.currentPartIndex = 0;
@@ -75,7 +70,7 @@ public class SequentialSkinDerpMode extends SkinDerpMode implements TickListener
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new SequentialSkinDerpMode((SkinDerp)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new SequentialSkinDerpMode((SkinDerp)obj, (SettingGroup)obj2);
    }
 
 }

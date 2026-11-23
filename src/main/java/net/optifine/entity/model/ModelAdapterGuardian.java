@@ -66,8 +66,7 @@ public class ModelAdapterGuardian extends ModelAdapter {
             String str2 = "spine";
             if (str.startsWith(str2)) {
                ModelRenderer[] guardianSpines = modelGuardian.guardianSpines;
-               String str3 = str.substring(str2.length());
-               int n = Config.parseInt(str3, -1);
+               int n = Config.parseInt(str.substring(str2.length()), -1);
                n--;
                return n >= 0 && n < guardianSpines.length ? guardianSpines[n] : null;
             } else {
@@ -76,8 +75,7 @@ public class ModelAdapterGuardian extends ModelAdapter {
                   return null;
                } else {
                   ModelRenderer[] guardianTail = modelGuardian.guardianTail;
-                  String str5 = str.substring(str4.length());
-                  int n2 = Config.parseInt(str5, -1);
+                  int n2 = Config.parseInt(str.substring(str4.length()), -1);
                   n2--;
                   return n2 >= 0 && n2 < guardianTail.length ? guardianTail[n2] : null;
                }

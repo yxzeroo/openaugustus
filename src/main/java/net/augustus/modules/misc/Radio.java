@@ -10,12 +10,12 @@ import net.augustus.events.listeners.ClickGuiListener;
 import net.augustus.utils.RadioStreamThread;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class Radio extends Module implements ClickGuiListener, TickListener {
-   public final StringValue volume;
-   public final BooleansSetting radioChannels;
+   public final DoubleValue volume;
+   public final StringValue radioChannels;
    public final BooleanValue onlyIngame;
    private final RadioStreamThread streamThread;
    private String currentChannel;
@@ -23,8 +23,8 @@ public class Radio extends Module implements ClickGuiListener, TickListener {
 
    public Radio() {
        super("Radio", "Radio", Color.orange, Categorys.MISC);
-      this.volume = (StringValue)(new StringValue(this, "Volume", 50.0, 0.0, 100.0, 0)).markVisualOnly();
-      this.radioChannels = (BooleansSetting)(new BooleansSetting(
+      this.volume = (DoubleValue)(new DoubleValue(this, "Volume", 50.0, 0.0, 100.0, 0)).markVisualOnly();
+      this.radioChannels = (StringValue)(new StringValue(
             this,
             "RadioChannels",
             "I love Radio",
@@ -55,8 +55,7 @@ public class Radio extends Module implements ClickGuiListener, TickListener {
       this.currentChannel = "";
       this.isPlayingIngame = true;
       this.streamThread.start();
-      boolean flag = false;
-      this.setLoadFromConfig(flag);
+      this.setLoadFromConfig(false);
    }
 
    public void onEnable() {
@@ -75,10 +74,8 @@ public class Radio extends Module implements ClickGuiListener, TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 6;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)6);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick3() {
@@ -96,13 +93,10 @@ public class Radio extends Module implements ClickGuiListener, TickListener {
    }
 
    public void onClickGui2() {
-      String selectedValue = this.radioChannels.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.radioChannels.getSelectedValue());
       this.switchRadioChannel();
       if (RadioStreamThread.getPlayer(this.streamThread) != null) {
-         Player player = RadioStreamThread.getPlayer(this.streamThread);
-         boolean flag = true;
-         player.setGain((float)(this.volume.getValue(flag) * 0.8600000143051147 - 80.0));
+         RadioStreamThread.getPlayer(this.streamThread).setGain((float)(this.volume.getValue(true) * 0.8600000143051147 - 80.0));
       }
    }
 
@@ -110,79 +104,60 @@ public class Radio extends Module implements ClickGuiListener, TickListener {
 
       try {
          if (!this.currentChannel.equals(this.radioChannels.getSelectedValue())) {
-            String selectedValue = this.radioChannels.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.radioChannels.getSelectedValue()) {
                case "I love Radio":
-                  String str = "https://streams.ilovemusic.de/iloveradio1.mp3";
-                  this.playStreamUrl(str);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio1.mp3");
                   break;
                case "I love 2 Dance":
-                  String str2 = "https://streams.ilovemusic.de/iloveradio2.mp3";
-                  this.playStreamUrl(str2);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio2.mp3");
                   break;
                case "I love ChillHop":
-                  String str3 = "https://streams.ilovemusic.de/iloveradio17.mp3";
-                  this.playStreamUrl(str3);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio17.mp3");
                   break;
                case "I l Deutschrap":
-                  String str4 = "https://streams.ilovemusic.de/iloveradio6.mp3";
-                  this.playStreamUrl(str4);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio6.mp3");
                   break;
                case "I l Greatest Hits":
-                  String str5 = "https://streams.ilovemusic.de/iloveradio16.mp3";
-                  this.playStreamUrl(str5);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio16.mp3");
                   break;
                case "I love Hardstyle":
-                  String str6 = "https://streams.ilovemusic.de/iloveradio21.mp3";
-                  this.playStreamUrl(str6);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio21.mp3");
                   break;
                case "I love Hip Hop":
-                  String str7 = "https://streams.ilovemusic.de/iloveradio3.mp3";
-                  this.playStreamUrl(str7);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio3.mp3");
                   break;
                case "I love Mashup":
-                  String str8 = "https://streams.ilovemusic.de/iloveradio5.mp3";
-                  this.playStreamUrl(str8);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio5.mp3");
                   break;
                case "I love The Club":
-                  String str9 = "https://streams.ilovemusic.de/iloveradio20.mp3";
-                  this.playStreamUrl(str9);
+                  this.playStreamUrl("https://streams.ilovemusic.de/iloveradio20.mp3");
                   break;
                case "SWR3":
-                  String str10 = "https://liveradio.swr.de/sw282p3/swr3/play.mp3";
-                  this.playStreamUrl(str10);
+                  this.playStreamUrl("https://liveradio.swr.de/sw282p3/swr3/play.mp3");
                   break;
                case "DasDing":
-                  String str11 = "https://liveradio.swr.de/d9zadj3/dasding/";
-                  this.playStreamUrl(str11);
+                  this.playStreamUrl("https://liveradio.swr.de/d9zadj3/dasding/");
                   break;
                case "BigFM":
-                  String str12 = "https://stream.bigfm.de/deutschland/mp3-128/homepage";
-                  this.playStreamUrl(str12);
+                  this.playStreamUrl("https://stream.bigfm.de/deutschland/mp3-128/homepage");
                   break;
                case "Bayern3":
-                  String str13 = "https://dispatcher.rndfnk.com/br/br3/live/mp3/mid";
-                  this.playStreamUrl(str13);
+                  this.playStreamUrl("https://dispatcher.rndfnk.com/br/br3/live/mp3/mid");
                   break;
                case "Sunshine Live":
-                  String str14 = "https://stream.laut.fm/sunshinelive";
-                  this.playStreamUrl(str14);
+                  this.playStreamUrl("https://stream.laut.fm/sunshinelive");
                   break;
                case "Ö1":
-                  String str15 = "https://orf-live.ors-shoutcast.at/oe1-q1a";
-                  this.playStreamUrl(str15);
+                  this.playStreamUrl("https://orf-live.ors-shoutcast.at/oe1-q1a");
                   break;
                case "Hitradio Ö3":
-                  String str16 = "https://orf-live.ors-shoutcast.at/oe3-q1a";
-                  this.playStreamUrl(str16);
+                  this.playStreamUrl("https://orf-live.ors-shoutcast.at/oe3-q1a");
                   break;
                case "Kronehit":
-                  String str17 = "https://secureonair.krone.at/kronehit-hp.mp3";
-                  this.playStreamUrl(str17);
+                  this.playStreamUrl("https://secureonair.krone.at/kronehit-hp.mp3");
                   break;
                case "ORF Tirol":
-                  String str18 = "https://orf-live.ors-shoutcast.at/tir-q1a";
-                  this.playStreamUrl(str18);
+                  this.playStreamUrl("https://orf-live.ors-shoutcast.at/tir-q1a");
             }
          }
       } catch (JavaLayerException | IOException e) {

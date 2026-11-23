@@ -182,8 +182,7 @@ public abstract class RenderLiving extends RendererLivingEntity {
       if (super.shouldRender(entityLiving, camera, d, d2, d3)) {
          return true;
       } else if (entityLiving.getLeashed() && entityLiving.getLeashedToEntity() != null) {
-         Entity leashedToEntity = entityLiving.getLeashedToEntity();
-         return camera.isBoundingBoxInFrustum(leashedToEntity.getEntityBoundingBox());
+         return camera.isBoundingBoxInFrustum(entityLiving.getLeashedToEntity().getEntityBoundingBox());
       } else {
          return false;
       }

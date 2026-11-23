@@ -8,8 +8,7 @@ public class BreakingFour extends BakedQuad {
    private final TextureAtlasSprite texture;
 
    private void remapVert(int n) {
-      int n2 = this.vertexData.length / 4;
-      int n3 = n2 * n;
+      int n3 = (this.vertexData.length / 4) * n;
       float f = Float.intBitsToFloat(this.vertexData[n3]);
       float f2 = Float.intBitsToFloat(this.vertexData[n3 + 1]);
       float f3 = Float.intBitsToFloat(this.vertexData[n3 + 2]);

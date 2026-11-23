@@ -125,8 +125,7 @@ public class ProxyHandler {
          case SOCKS4:
             try {
                Class<?> clazz = Class.forName("sun.net.SocksProxy");
-               Method createMethod = clazz.getDeclaredMethod("create", SocketAddress.class, int.class);
-               return (Proxy)createMethod.invoke(null, this.address, 4);
+               return (Proxy)clazz.getDeclaredMethod("create", SocketAddress.class, int.class).invoke(null, this.address, 4);
             } catch (Throwable e) {
                throw new UnsupportedOperationException("SOCKS4 proxy type is not supported", e);
             }

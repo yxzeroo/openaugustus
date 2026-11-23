@@ -135,8 +135,7 @@ public class CommandSpreadPlayers extends CommandBase {
 
          for (int j = 0; j < positions.length; j++) {
             if (position != positions[j]) {
-               double distance = position.getDistance(positions[j]);
-               maxvalue = Math.min(distance, maxvalue);
+               maxvalue = Math.min(position.getDistance(positions[j]), maxvalue);
             }
          }
 
@@ -209,8 +208,7 @@ public class CommandSpreadPlayers extends CommandBase {
             if (n2 > 0) {
                position3.x /= (double)n2;
                position3.z /= (double)n2;
-               double length = (double)position3.getLength();
-               if (length > 0.0) {
+               if (((double)position3.getLength()) > 0.0) {
                   position3.normalize();
                   position2.moveAway(position3);
                } else {

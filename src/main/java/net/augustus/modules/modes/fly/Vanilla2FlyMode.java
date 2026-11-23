@@ -35,8 +35,7 @@ public class Vanilla2FlyMode extends FlyMode {
 
       if (this.damageReceived || !ClientManagers.moduleManager.fly.waitForDamage.getValue()) {
          if (MoveUtil.isMoving()) {
-            float f = (float)(0.2 * this.fly.vanillaSpeedHorizontal.getValue());
-            MoveUtil.setSpeed2(f);
+            MoveUtil.setSpeed2((float)(0.2 * this.fly.vanillaSpeedHorizontal.getValue()));
          } else {
             MoveUtil.setSpeed2(0.0F);
          }

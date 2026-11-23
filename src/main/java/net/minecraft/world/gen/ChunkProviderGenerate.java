@@ -126,8 +126,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 
       for (int i = 0; i < 16; i++) {
          for (int j = 0; j < 16; j++) {
-            BiomeGenBase biomeGenBase = biomeGenBases[j + i * 16];
-            biomeGenBase.genTerrainBlocks(this.worldObj, this.rand, chunkPrimer, n * 16 + i, n2 * 16 + j, this.stoneNoise[j + i * 16]);
+            biomeGenBases[j + i * 16].genTerrainBlocks(this.worldObj, this.rand, chunkPrimer, n * 16 + i, n2 * 16 + j, this.stoneNoise[j + i * 16]);
          }
       }
    }
@@ -338,10 +337,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
                   d5 *= 4.0;
                }
 
-               double d6 = this.minLimitRegion[n4] / (double)this.settings.lowerLimitScale;
-               double d7 = this.maxLimitRegion[n4] / (double)this.settings.upperLimitScale;
-               double d8 = (this.mainNoiseRegion[n4] / 10.0 + 1.0) / 2.0;
-               double d9 = MathHelper.denormalizeClamp(d6, d7, d8) - d5;
+               double d9 = MathHelper.denormalizeClamp(this.minLimitRegion[n4] / (double)this.settings.lowerLimitScale, this.maxLimitRegion[n4] / (double)this.settings.upperLimitScale, (this.mainNoiseRegion[n4] / 10.0 + 1.0) / 2.0) - d5;
                if (idx > 29) {
                   double d10 = (double)((float)(idx - 29) / 3.0F);
                   d9 = d9 * (1.0 - d10) + -10.0 * d10;

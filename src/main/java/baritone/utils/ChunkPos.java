@@ -56,9 +56,7 @@ public class ChunkPos {
 
    @Override
    public int hashCode() {
-      int n = 1664525 * this.x + 1013904223;
-      int n2 = 1664525 * (this.z ^ -559038737) + 1013904223;
-      return n ^ n2;
+      return (1664525 * this.x + 1013904223) ^ (1664525 * (this.z ^ -559038737) + 1013904223);
    }
 
    public BlockPos getBlock(int n, int n2, int n3) {

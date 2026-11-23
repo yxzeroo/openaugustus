@@ -27,10 +27,7 @@ public class ConnectedTexturesCompact {
    private static BakedQuad[] getQuadsCompact(
       ConnectedTexturesDir connectedTexturesDir, int n, ConnectedTexturesDir connectedTexturesDir2, int n2, ConnectedTexturesDir connectedTexturesDir3, int n3, TextureAtlasSprite[] textureAtlasSprites, int n4, BakedQuad bakedQuad, RenderEnv renderEnv
    ) {
-      BakedQuad quadCompact = getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n4, bakedQuad, renderEnv);
-      BakedQuad quadCompact2 = getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n4, bakedQuad, renderEnv);
-      BakedQuad quadCompact3 = getQuadCompact(textureAtlasSprites[n3], connectedTexturesDir3, n4, bakedQuad, renderEnv);
-      return renderEnv.getArrayQuadsCtm(quadCompact, quadCompact2, quadCompact3);
+      return renderEnv.getArrayQuadsCtm(getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n4, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n4, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n3], connectedTexturesDir3, n4, bakedQuad, renderEnv));
    }
 
    private static BakedQuad getQuadCompact(TextureAtlasSprite textureAtlasSprite, ConnectedTexturesDir connectedTexturesDir, int n, BakedQuad bakedQuad, RenderEnv renderEnv) {
@@ -57,8 +54,7 @@ public class ConnectedTexturesCompact {
    }
 
    private static BakedQuad[] getQuadsCompact(int n, TextureAtlasSprite[] textureAtlasSprites, BakedQuad bakedQuad, RenderEnv renderEnv) {
-      TextureAtlasSprite textureAtlasSprite = textureAtlasSprites[n];
-      return ConnectedTextures.getQuads(textureAtlasSprite, bakedQuad, renderEnv);
+      return ConnectedTextures.getQuads(textureAtlasSprites[n], bakedQuad, renderEnv);
    }
 
    private static BakedQuad[] getQuadsCompactV(int n, int n2, TextureAtlasSprite[] textureAtlasSprites, int n3, BakedQuad bakedQuad, RenderEnv renderEnv) {
@@ -172,8 +168,7 @@ public class ConnectedTexturesCompact {
    }
 
    private static void makeSpriteQuadCompactVertex(int[] ints, int n, TextureAtlasSprite textureAtlasSprite, TextureAtlasSprite textureAtlasSprite2, int n2, int n3, int n4, int n5, int n6) {
-      int n7 = ints.length / 4;
-      int n8 = n7 * n;
+      int n8 = (ints.length / 4) * n;
       float f = Float.intBitsToFloat(ints[n8 + 4]);
       float f2 = Float.intBitsToFloat(ints[n8 + 4 + 1]);
       double spriteU16 = textureAtlasSprite.getSpriteU16(f);
@@ -271,9 +266,7 @@ public class ConnectedTexturesCompact {
    }
 
    private static BakedQuad[] getQuadsCompact(ConnectedTexturesDir connectedTexturesDir, int n, ConnectedTexturesDir connectedTexturesDir2, int n2, TextureAtlasSprite[] textureAtlasSprites, int n3, BakedQuad bakedQuad, RenderEnv renderEnv) {
-      BakedQuad quadCompact = getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n3, bakedQuad, renderEnv);
-      BakedQuad quadCompact2 = getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n3, bakedQuad, renderEnv);
-      return renderEnv.getArrayQuadsCtm(quadCompact, quadCompact2);
+      return renderEnv.getArrayQuadsCtm(getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n3, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n3, bakedQuad, renderEnv));
    }
 
    private static BakedQuad getQuadCompact(TextureAtlasSprite textureAtlasSprite, ConnectedTexturesDir connectedTexturesDir, int n, int n2, int n3, int n4, int n5, BakedQuad bakedQuad, RenderEnv renderEnv) {
@@ -326,11 +319,7 @@ public class ConnectedTexturesCompact {
       BakedQuad bakedQuad,
       RenderEnv renderEnv
    ) {
-      BakedQuad quadCompact = getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n5, bakedQuad, renderEnv);
-      BakedQuad quadCompact2 = getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n5, bakedQuad, renderEnv);
-      BakedQuad quadCompact3 = getQuadCompact(textureAtlasSprites[n3], connectedTexturesDir3, n5, bakedQuad, renderEnv);
-      BakedQuad quadCompact4 = getQuadCompact(textureAtlasSprites[n4], connectedTexturesDir4, n5, bakedQuad, renderEnv);
-      return renderEnv.getArrayQuadsCtm(quadCompact, quadCompact2, quadCompact3, quadCompact4);
+      return renderEnv.getArrayQuadsCtm(getQuadCompact(textureAtlasSprites[n], connectedTexturesDir, n5, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n2], connectedTexturesDir2, n5, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n3], connectedTexturesDir3, n5, bakedQuad, renderEnv), getQuadCompact(textureAtlasSprites[n4], connectedTexturesDir4, n5, bakedQuad, renderEnv));
    }
 
    private static BakedQuad[] getQuadsCompact4(int n, int n2, int n3, int n4, TextureAtlasSprite[] textureAtlasSprites, int n5, BakedQuad bakedQuad, RenderEnv renderEnv) {

@@ -29,9 +29,7 @@ public class PlayerNameReplacerTrie {
          if (stringTrieNode2 == null) {
             return false;
          } else {
-            int n2 = n + 1;
-            boolean flag = this.removeRecursive(stringTrieNode2, str, n2);
-            if (!flag) {
+            if (!this.removeRecursive(stringTrieNode2, str, n + 1)) {
                return false;
             } else {
                stringTrieNode.children.remove(ch);
@@ -49,13 +47,7 @@ public class PlayerNameReplacerTrie {
             OnlineUserEntry onlineUserEntry = (OnlineUserEntry)OnlineUserRegistry.usersByIngameName.get(str);
             if (onlineUserEntry != null && onlineUserEntry.getClientUsername() != null) {
                String str2 = onlineUserEntry.getClientUsername() + IrcPlayerTagFormatter.getRelationTag(str);
-               String selectedValue = Augustus.getInstance().getModuleManager().irc.ircFormatting.getSelectedValue();
-               String formattedRank = onlineUserEntry.getFormattedRank();
-               int level = onlineUserEntry.getLevel();
-               String str3 = "";
-               int n = level;
-               String str4 = formattedRank;
-               return OnlineUserRegistry.formatUserTag(selectedValue, str, str2, str4, n, str3);
+               return OnlineUserRegistry.formatUserTag(Augustus.getInstance().getModuleManager().irc.ircFormatting.getSelectedValue(), str, str2, onlineUserEntry.getFormattedRank(), onlineUserEntry.getLevel(), "");
             } else {
                return str;
             }
@@ -108,9 +100,8 @@ public class PlayerNameReplacerTrie {
 
    public void insert(String str) {
       StringTrieNode root2 = this.root;
-      char[] chars = str.toCharArray();
 
-      for (char ch : chars) {
+      for (char ch : str.toCharArray()) {
          root2.children.putIfAbsent(ch, new StringTrieNode());
          root2 = (StringTrieNode)root2.children.get(ch);
       }
@@ -120,8 +111,6 @@ public class PlayerNameReplacerTrie {
    }
 
    public boolean remove(String str) {
-      byte b = 0;
-      StringTrieNode root2 = this.root;
-      return this.removeRecursive(root2, str, b);
+      return this.removeRecursive(this.root, str, (byte)0);
    }
 }

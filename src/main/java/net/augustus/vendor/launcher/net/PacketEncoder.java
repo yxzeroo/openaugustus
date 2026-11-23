@@ -18,16 +18,12 @@ public class PacketEncoder extends MessageToByteEncoder {
    public void encodePacket(ChannelHandlerContext ctx, LauncherPacket packet, ByteBuf buf) throws IOException, Exception {
       int n = 0;
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       this.stageGuard.enterStage1();
       n = LauncherNetworkClient.getInstance().c2sPacketTypes.indexOf(packet.getClass());
       if (n != -1) {
          obj = new NettyPacketBuf(buf);
          ((NettyPacketBuf)obj).writeInt(n);
-         LauncherPacket packet2 = packet;
-         NettyPacketBuf nettyPacketBuf = (NettyPacketBuf)obj;
-         NettyPacketBuf nettyPacketBuf2 = nettyPacketBuf;
-         packet2.write(nettyPacketBuf2);
+         packet.write((NettyPacketBuf)obj);
       } else {
          throw new NullPointerException("Couldn't find id of packet " + packet.getClass().getSimpleName());
       }

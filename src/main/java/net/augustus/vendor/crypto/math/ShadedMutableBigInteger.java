@@ -15,14 +15,11 @@ public class ShadedMutableBigInteger {
       int n = 0;
       boolean flag = false;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj = null;
       int n2 = 0;
       Object obj2 = null;
       obj = this;
-      ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-      n2 = shadedMutableBigInteger2.compare(shadedMutableBigInteger3);
+      n2 = ((ShadedMutableBigInteger)obj).compare(shadedMutableBigInteger);
       if (n2 == 0) {
          return 0;
       } else {
@@ -56,7 +53,6 @@ public class ShadedMutableBigInteger {
 
    public final int compareHalf(ShadedMutableBigInteger shadedMutableBigInteger) {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       int n = 0;
       int n2 = 0;
       int n3 = 0;
@@ -125,7 +121,6 @@ public class ShadedMutableBigInteger {
       int n4 = 0;
       Object obj = null;
       int n5 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag2 = false;
       if (this.intLen != 0) {
          n4 = n >>> 5;
@@ -160,40 +155,32 @@ public class ShadedMutableBigInteger {
                   ((int[])obj)[m] = this.value[this.offset + m];
                }
 
-               ShadedMutableBigInteger shadedMutableBigInteger = this;
-               int[] ints = (int[])obj;
-               shadedMutableBigInteger.setValue(ints, n5);
+               this.setValue((int[])obj, n5);
             }
 
             this.intLen = n5;
             if (n3 != 0) {
                if (n3 > 32 - n2) {
-                  ShadedMutableBigInteger shadedMutableBigInteger2 = this;
-                  int n6 = 32 - n3;
-                  shadedMutableBigInteger2.primitiveRightShift(n6);
+                  this.primitiveRightShift(32 - n3);
                } else {
-                  ShadedMutableBigInteger shadedMutableBigInteger3 = this;
-                  shadedMutableBigInteger3.primitiveLeftShift(n3);
+                  this.primitiveLeftShift(n3);
                }
             }
          } else {
-            ShadedMutableBigInteger shadedMutableBigInteger4 = this;
-            shadedMutableBigInteger4.primitiveLeftShift(n3);
+            this.primitiveLeftShift(n3);
          }
       }
    }
 
    public ShadedMutableBigInteger divideKnuth(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2, boolean flag) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj = null;
       int n2 = 0;
       Object obj2 = null;
       if (shadedMutableBigInteger.intLen != 0) {
          if (this.intLen != 0) {
             ShadedMutableBigInteger shadedMutableBigInteger3 = this;
-            ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-            n = shadedMutableBigInteger3.compare(shadedMutableBigInteger4);
+            n = shadedMutableBigInteger3.compare(shadedMutableBigInteger);
             if (n < 0) {
                shadedMutableBigInteger2.intLen = shadedMutableBigInteger2.offset = 0;
                return flag ? new ShadedMutableBigInteger(this) : null;
@@ -208,9 +195,7 @@ public class ShadedMutableBigInteger {
                if (shadedMutableBigInteger.intLen == 1) {
                   shadedMutableBigInteger3 = this;
                   n3 = shadedMutableBigInteger.value[shadedMutableBigInteger.offset];
-                  ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger2;
-                  int n4 = n3;
-                  n2 = shadedMutableBigInteger3.divideOneWord(n4, shadedMutableBigInteger5);
+                  n2 = shadedMutableBigInteger3.divideOneWord(n3, shadedMutableBigInteger2);
                   if (flag) {
                      return n2 == 0 ? new ShadedMutableBigInteger() : new ShadedMutableBigInteger(n2);
                   } else {
@@ -225,20 +210,14 @@ public class ShadedMutableBigInteger {
                         ((ShadedMutableBigInteger)obj2).rightShift(n2);
                         shadedMutableBigInteger.rightShift(n2);
                         shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-                        ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger;
-                        ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger2;
-                        ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger6;
-                        obj = shadedMutableBigInteger3.divideKnuth(shadedMutableBigInteger8, shadedMutableBigInteger7);
+                        obj = shadedMutableBigInteger3.divideKnuth(shadedMutableBigInteger, shadedMutableBigInteger2);
                         ((ShadedMutableBigInteger)obj).leftShift(n2);
                         return (ShadedMutableBigInteger)obj;
                      }
                   }
 
                   shadedMutableBigInteger3 = this;
-                  ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger;
-                  ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger2;
-                  ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger9;
-                  return shadedMutableBigInteger3.divideMagnitude(shadedMutableBigInteger11, shadedMutableBigInteger10, flag);
+                  return shadedMutableBigInteger3.divideMagnitude(shadedMutableBigInteger, shadedMutableBigInteger2, flag);
                }
             }
          } else {
@@ -256,7 +235,6 @@ public class ShadedMutableBigInteger {
       long l3 = 0L;
       long l4 = 0L;
       long l5 = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       l3 = (long)n & 4294967295L;
       l2 = 0L;
       n3 += n2;
@@ -271,7 +249,6 @@ public class ShadedMutableBigInteger {
    }
 
    public boolean isZero() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intLen == 0;
    }
 
@@ -283,7 +260,6 @@ public class ShadedMutableBigInteger {
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj2 = null;
       int n6 = 0;
       if (!shadedMutableBigInteger.isZero()) {
@@ -340,7 +316,6 @@ public class ShadedMutableBigInteger {
    }
 
    public boolean isNormal(long l) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.intLen + this.offset <= this.value.length) {
          return this.intLen != 0 ? this.value[this.offset] != 0 : true;
       } else {
@@ -349,7 +324,6 @@ public class ShadedMutableBigInteger {
    }
 
    private final void ensureCapacity(long l, int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.value.length < n) {
          this.value = new int[n];
          this.offset = 0;
@@ -358,7 +332,6 @@ public class ShadedMutableBigInteger {
    }
 
    private void keepLower(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.intLen >= n) {
          this.offset = this.offset + (this.intLen - n);
          this.intLen = n;
@@ -369,7 +342,6 @@ public class ShadedMutableBigInteger {
       int n2 = 0;
       long l = 0L;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       long l3 = 0L;
       int n4 = 0;
@@ -427,7 +399,6 @@ public class ShadedMutableBigInteger {
    private static void copyAndShift(int[] ints, int n, int n2, long l, int[] ints2, int n3, int n4) {
       boolean flag = false;
       int n5 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n6 = 0;
       int n7 = 0;
       n6 = 32 - n4;
@@ -445,7 +416,6 @@ public class ShadedMutableBigInteger {
    public void rightShift(int n) {
       int n2 = 0;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       if (this.intLen != 0) {
          n4 = n >>> 5;
@@ -456,10 +426,7 @@ public class ShadedMutableBigInteger {
             if (n3 < n2) {
                this.primitiveRightShift(n3);
             } else {
-               ShadedMutableBigInteger shadedMutableBigInteger = this;
-               int n5 = 32 - n3;
-               int n6 = n5;
-               shadedMutableBigInteger.primitiveLeftShift(n6);
+               this.primitiveLeftShift(32 - n3);
                this.intLen--;
             }
          }
@@ -474,7 +441,6 @@ public class ShadedMutableBigInteger {
       int n5 = 0;
       int n6 = 0;
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (!shadedMutableBigInteger.isZero()) {
          n4 = this.intLen;
          n5 = shadedMutableBigInteger.intLen + n;
@@ -504,14 +470,11 @@ public class ShadedMutableBigInteger {
    }
 
    public static ShadedMutableBigInteger modInverseBP2(ShadedMutableBigInteger shadedMutableBigInteger, int n) {
-      ShadedMutableBigInteger shadedMutableBigInteger2 = new ShadedMutableBigInteger(1);
-      ShadedMutableBigInteger shadedMutableBigInteger3 = new ShadedMutableBigInteger(shadedMutableBigInteger);
-      return fixup(shadedMutableBigInteger2, shadedMutableBigInteger3, n);
+      return fixup(new ShadedMutableBigInteger(1), new ShadedMutableBigInteger(shadedMutableBigInteger), n);
    }
 
    public ShadedMutableBigInteger hybridGCD(ShadedMutableBigInteger shadedMutableBigInteger) {
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       obj3 = this;
@@ -519,16 +482,10 @@ public class ShadedMutableBigInteger {
 
       while (shadedMutableBigInteger.intLen != 0) {
          if (Math.abs(((ShadedMutableBigInteger)obj3).intLen - shadedMutableBigInteger.intLen) < 2) {
-            ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj3;
-            ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-            return shadedMutableBigInteger2.binaryGCD(shadedMutableBigInteger3);
+            return ((ShadedMutableBigInteger)obj3).binaryGCD(shadedMutableBigInteger);
          }
 
-         ShadedMutableBigInteger shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj3;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger5;
-         obj2 = shadedMutableBigInteger4.divide2(shadedMutableBigInteger7, shadedMutableBigInteger6);
+         obj2 = ((ShadedMutableBigInteger)obj3).divide2(shadedMutableBigInteger, (ShadedMutableBigInteger)obj);
          obj3 = shadedMutableBigInteger;
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj2;
       }
@@ -537,14 +494,12 @@ public class ShadedMutableBigInteger {
    }
 
    private boolean unsignedLongCompare(long l, long l2) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return l + Long.MIN_VALUE > l2 + Long.MIN_VALUE;
    }
 
    public int[] toIntArray() {
       boolean flag = false;
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       obj = new int[this.intLen];
 
       for (int i = 0; i < this.intLen; i++) {
@@ -556,7 +511,6 @@ public class ShadedMutableBigInteger {
 
    public static int inverseMod32(int n) {
       int n2 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       n2 = n * (2 - n * n);
       n2 *= 2 - n * n2;
       n2 *= 2 - n * n2;
@@ -567,7 +521,6 @@ public class ShadedMutableBigInteger {
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (n2 != 0) {
          if (n != 0) {
             n5 = Integer.numberOfTrailingZeros(n);
@@ -596,7 +549,6 @@ public class ShadedMutableBigInteger {
    }
 
    public long bitLength() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intLen != 0 ? (long)this.intLen * 32L - (long)Integer.numberOfLeadingZeros(this.value[this.offset]) : 0L;
    }
 
@@ -606,7 +558,6 @@ public class ShadedMutableBigInteger {
       Object obj = null;
       int n4 = 0;
       boolean flag = false;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       obj = this.value;
       n2 = 32 - n;
       n3 = this.offset + this.intLen - 1;
@@ -624,46 +575,31 @@ public class ShadedMutableBigInteger {
       int n = 0;
       Object obj = null;
       Object obj2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj3 = null;
       Object obj4 = null;
       n = shadedMutableBigInteger.intLen;
       if (n % 2 == 0 && n >= 80) {
          obj2 = new ShadedMutableBigInteger(this);
          ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-         int n2 = 32 * (n / 2);
-         shadedMutableBigInteger3.safeRightShift(n2);
+         shadedMutableBigInteger3.safeRightShift(32 * (n / 2));
          shadedMutableBigInteger3 = this;
-         int n3 = n / 2;
-         shadedMutableBigInteger3.keepLower(n3);
+         shadedMutableBigInteger3.keepLower(n / 2);
          obj4 = new ShadedMutableBigInteger();
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
          ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj4;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger4;
-         obj3 = shadedMutableBigInteger3.divide3n2n(shadedMutableBigInteger6, shadedMutableBigInteger5);
+         obj3 = shadedMutableBigInteger3.divide3n2n(shadedMutableBigInteger4, (ShadedMutableBigInteger)obj4);
          shadedMutableBigInteger3 = this;
          shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj3;
-         int n4 = n / 2;
-         ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger4;
-         shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger7, n4);
+         shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger4, n / 2);
          shadedMutableBigInteger3 = this;
          shadedMutableBigInteger4 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger4;
-         obj = shadedMutableBigInteger3.divide3n2n(shadedMutableBigInteger9, shadedMutableBigInteger8);
+         obj = shadedMutableBigInteger3.divide3n2n(shadedMutableBigInteger4, shadedMutableBigInteger2);
          shadedMutableBigInteger3 = shadedMutableBigInteger2;
          shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj4;
-         int n5 = n / 2;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger4;
-         shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger10, n5);
+         shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger4, n / 2);
          return (ShadedMutableBigInteger)obj;
       } else {
-         ShadedMutableBigInteger shadedMutableBigInteger11 = this;
-         ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger13 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger14 = shadedMutableBigInteger12;
-         return shadedMutableBigInteger11.divideKnuth(shadedMutableBigInteger14, shadedMutableBigInteger13);
+         return this.divideKnuth(shadedMutableBigInteger, shadedMutableBigInteger2);
       }
    }
 
@@ -672,7 +608,6 @@ public class ShadedMutableBigInteger {
       int n3 = 0;
       int n4 = 0;
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.intLen != 0 && n != 0) {
          obj = this.getMagnitudeArray();
          n3 = ((int[])obj).length;
@@ -691,7 +626,6 @@ public class ShadedMutableBigInteger {
    private final void primitiveLeftShift(int n) {
       int n2 = 0;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag = false;
       int n4 = 0;
       Object obj = null;
@@ -711,7 +645,6 @@ public class ShadedMutableBigInteger {
    }
 
    public boolean isOdd() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.isZero() ? false : (this.value[this.offset + this.intLen - 1] & 1) == 1;
    }
 
@@ -722,7 +655,6 @@ public class ShadedMutableBigInteger {
       int n3 = 0;
       int n4 = 0;
       int[] ints = null;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       int n5 = 0;
       int[] ints2 = null;
@@ -1253,7 +1185,6 @@ public class ShadedMutableBigInteger {
       long l3 = 0L;
       long l4 = 0L;
       long l5 = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       l2 = (long)n & 4294967295L;
       l4 = 0L;
       n3 += n2;
@@ -1274,15 +1205,12 @@ public class ShadedMutableBigInteger {
    }
 
    public CustomBigInteger toBigInteger() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       this.normalize();
-      int n = this.isZero() ? 0 : 1;
-      return this.toBigInteger(n);
+      return this.toBigInteger(this.isZero() ? 0 : 1);
    }
 
    private long toLong() {
       long l = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       assert this.intLen <= 2 : "this MutableBigInteger exceeds the range of long";
 
@@ -1295,7 +1223,6 @@ public class ShadedMutableBigInteger {
    }
 
    public boolean isOne() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intLen == 1 && this.value[this.offset] == 1;
    }
 
@@ -1303,7 +1230,6 @@ public class ShadedMutableBigInteger {
       int n2 = 0;
       long l = 0L;
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       int n3 = 0;
       if (this.intLen != 0 && n != 0) {
          obj = this.getMagnitudeArray();
@@ -1325,14 +1251,12 @@ public class ShadedMutableBigInteger {
       long l2 = 0L;
       long l3 = 0L;
       long l4 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l5 = 0L;
       l5 = 2484664554430144237L ^ (long)"\ue8ff\ue1be凜\ud883讼\ue361命橅\uecf7뷋뛳\ue925㮠ض푀㵮쟩砻\uf706摹濩⠽\ud810鿑\uf7c6\ueeaa\ue81bꪮ".hashCode();
       l = (long)n3 & 4294967295L;
       l5 = l5 - -4035052412970583846L ^ -2460892004960439107L;
       n4 += 2;
-      long l6 = l5 ^ 6206445481497164908L;
-      l5 = l6 + -2360163040030251449L;
+      l5 = (l5 ^ 6206445481497164908L) + -2360163040030251449L;
       l4 = ((long)n2 & 4294967295L) * l;
       l5 = l5 + -874881185414545493L ^ -8085989392107538695L;
       l3 = (long)ints[n4] - l4;
@@ -1349,7 +1273,6 @@ public class ShadedMutableBigInteger {
 
    public ShadedMutableBigInteger divideAndRemainderBurnikelZiegler(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2) {
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj2 = null;
       int n = 0;
       Object obj3 = null;
@@ -1387,49 +1310,34 @@ public class ShadedMutableBigInteger {
          }
 
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-         int n8 = n2 - 1;
-         int n9 = n8;
-         obj5 = shadedMutableBigInteger3.getBlock(n9, n2, n6);
+         obj5 = shadedMutableBigInteger3.getBlock(n2 - 1, n2, n6);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-         int n10 = n2 - 2;
-         int n11 = n10;
-         obj = shadedMutableBigInteger3.getBlock(n11, n2, n6);
+         obj = shadedMutableBigInteger3.getBlock(n2 - 2, n2, n6);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj5;
-         shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger4, n6);
+         shadedMutableBigInteger3.addDisjoint((ShadedMutableBigInteger)obj5, n6);
          obj6 = new ShadedMutableBigInteger();
 
          for (int i = n2 - 2; i > 0; i--) {
             shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
             ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj4;
             ShadedMutableBigInteger shadedMutableBigInteger6 = (ShadedMutableBigInteger)obj6;
-            ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger6;
-            ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger5;
-            obj3 = shadedMutableBigInteger3.divide2n1n(shadedMutableBigInteger8, shadedMutableBigInteger7);
+            obj3 = shadedMutableBigInteger3.divide2n1n(shadedMutableBigInteger5, shadedMutableBigInteger6);
             shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-            int n12 = i - 1;
-            int n13 = n12;
-            obj = shadedMutableBigInteger3.getBlock(n13, n2, n6);
+            obj = shadedMutableBigInteger3.getBlock(i - 1, n2, n6);
             shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-            ShadedMutableBigInteger shadedMutableBigInteger9 = (ShadedMutableBigInteger)obj3;
-            shadedMutableBigInteger3.addDisjoint(shadedMutableBigInteger9, n6);
+            shadedMutableBigInteger3.addDisjoint((ShadedMutableBigInteger)obj3, n6);
             shadedMutableBigInteger3 = shadedMutableBigInteger2;
             shadedMutableBigInteger6 = (ShadedMutableBigInteger)obj6;
-            int n14 = i * n6;
-            ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger6;
-            shadedMutableBigInteger3.addShifted(shadedMutableBigInteger10, n14);
+            shadedMutableBigInteger3.addShifted(shadedMutableBigInteger6, i * n6);
          }
 
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
          ShadedMutableBigInteger shadedMutableBigInteger11 = (ShadedMutableBigInteger)obj4;
          ShadedMutableBigInteger shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj6;
-         ShadedMutableBigInteger shadedMutableBigInteger13 = shadedMutableBigInteger12;
-         ShadedMutableBigInteger shadedMutableBigInteger14 = shadedMutableBigInteger11;
-         obj3 = shadedMutableBigInteger3.divide2n1n(shadedMutableBigInteger14, shadedMutableBigInteger13);
+         obj3 = shadedMutableBigInteger3.divide2n1n(shadedMutableBigInteger11, shadedMutableBigInteger12);
          shadedMutableBigInteger3 = shadedMutableBigInteger2;
          shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj6;
-         ShadedMutableBigInteger shadedMutableBigInteger15 = shadedMutableBigInteger12;
-         shadedMutableBigInteger3.add(shadedMutableBigInteger15);
+         shadedMutableBigInteger3.add(shadedMutableBigInteger12);
          ((ShadedMutableBigInteger)obj3).rightShift(n3);
          return (ShadedMutableBigInteger)obj3;
       }
@@ -1441,7 +1349,6 @@ public class ShadedMutableBigInteger {
       int n2 = 0;
       Object obj = null;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj2 = null;
       long l2 = 0L;
       int n4 = 0;
@@ -1493,7 +1400,6 @@ public class ShadedMutableBigInteger {
 
    public final void normalize() {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n2 = 0;
       int n3 = 0;
       if (this.intLen == 0) {
@@ -1517,26 +1423,15 @@ public class ShadedMutableBigInteger {
    }
 
    public ShadedMutableBigInteger divide(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2, boolean flag) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (shadedMutableBigInteger.intLen >= 80 && this.intLen - shadedMutableBigInteger.intLen >= 40) {
-         ShadedMutableBigInteger shadedMutableBigInteger3 = this;
-         ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger5;
-         ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger4;
-         return shadedMutableBigInteger3.divideAndRemainderBurnikelZiegler(shadedMutableBigInteger7, shadedMutableBigInteger6);
+         return this.divideAndRemainderBurnikelZiegler(shadedMutableBigInteger, shadedMutableBigInteger2);
       } else {
-         ShadedMutableBigInteger shadedMutableBigInteger8 = this;
-         ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger9;
-         return shadedMutableBigInteger8.divideKnuth(shadedMutableBigInteger11, shadedMutableBigInteger10, flag);
+         return this.divideKnuth(shadedMutableBigInteger, shadedMutableBigInteger2, flag);
       }
    }
 
    private ShadedMutableBigInteger modInverse(ShadedMutableBigInteger shadedMutableBigInteger) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
@@ -1567,8 +1462,7 @@ public class ShadedMutableBigInteger {
          }
 
          ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj5;
-         ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj8;
-         if (shadedMutableBigInteger2.compare(shadedMutableBigInteger3) < 0) {
+         if (shadedMutableBigInteger2.compare((ShadedMutableBigInteger)obj8) < 0) {
             obj4 = (ShadedMutableBigInteger)obj5;
             obj5 = (ShadedMutableBigInteger)obj8;
             obj8 = (ShadedMutableBigInteger)obj4;
@@ -1586,19 +1480,12 @@ public class ShadedMutableBigInteger {
             )
             != 0) {
             shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj5;
-            ShadedMutableBigInteger shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj8;
-            ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger4;
-            shadedMutableBigInteger2.add(shadedMutableBigInteger5);
-            ShadedSignedMutableBigInteger integer = (ShadedSignedMutableBigInteger)obj2;
-            ShadedSignedMutableBigInteger integer2 = (ShadedSignedMutableBigInteger)obj7;
-            integer.signedAdd(integer2);
+            shadedMutableBigInteger2.add((ShadedMutableBigInteger)obj8);
+            ((ShadedSignedMutableBigInteger)obj2).signedAdd((ShadedSignedMutableBigInteger)obj7);
          } else {
             shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj5;
-            ShadedMutableBigInteger shadedMutableBigInteger6 = (ShadedMutableBigInteger)obj8;
-            shadedMutableBigInteger2.subtract(shadedMutableBigInteger6);
-            ShadedSignedMutableBigInteger integer3 = (ShadedSignedMutableBigInteger)obj2;
-            ShadedSignedMutableBigInteger integer4 = (ShadedSignedMutableBigInteger)obj7;
-            integer3.signedSubtract(integer4);
+            shadedMutableBigInteger2.subtract((ShadedMutableBigInteger)obj8);
+            ((ShadedSignedMutableBigInteger)obj2).signedSubtract((ShadedSignedMutableBigInteger)obj7);
          }
 
          n2 = ((ShadedMutableBigInteger)obj5).getLowestSetBit();
@@ -1608,32 +1495,23 @@ public class ShadedMutableBigInteger {
       }
 
       ShadedSignedMutableBigInteger integer5 = (ShadedSignedMutableBigInteger)obj2;
-      ShadedMutableBigInteger shadedMutableBigInteger7 = (ShadedMutableBigInteger)obj;
-      if (integer5.compare(shadedMutableBigInteger7) >= 0) {
+      if (integer5.compare((ShadedMutableBigInteger)obj) >= 0) {
          integer5 = (ShadedSignedMutableBigInteger)obj2;
-         ShadedMutableBigInteger shadedMutableBigInteger8 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger9 = new ShadedMutableBigInteger();
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger8;
-         obj3 = integer5.divide2(shadedMutableBigInteger10, shadedMutableBigInteger9);
+         obj3 = integer5.divide2((ShadedMutableBigInteger)obj, new ShadedMutableBigInteger());
          integer5 = (ShadedSignedMutableBigInteger)obj2;
-         ShadedMutableBigInteger shadedMutableBigInteger11 = (ShadedMutableBigInteger)obj3;
-         integer5.copyValue(shadedMutableBigInteger11);
+         integer5.copyValue((ShadedMutableBigInteger)obj3);
       }
 
       if (((ShadedSignedMutableBigInteger)obj2).sign < 0) {
          integer5 = (ShadedSignedMutableBigInteger)obj2;
-         ShadedMutableBigInteger shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj;
-         integer5.signedAdd2(shadedMutableBigInteger12);
+         integer5.signedAdd2((ShadedMutableBigInteger)obj);
       }
 
       integer5 = (ShadedSignedMutableBigInteger)obj2;
-      ShadedMutableBigInteger shadedMutableBigInteger13 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger14 = shadedMutableBigInteger13;
-      return fixup(integer5, shadedMutableBigInteger14, n);
+      return fixup(integer5, (ShadedMutableBigInteger)obj, n);
    }
 
    public CustomBigInteger toBigInteger(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intLen != 0 && n != 0 ? new CustomBigInteger(this.getMagnitudeArray(), n) : CustomBigInteger.ZERO;
    }
 
@@ -1642,80 +1520,58 @@ public class ShadedMutableBigInteger {
       int n = 0;
       Object obj2 = null;
       Object obj3 = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj4 = null;
       Object obj5 = null;
       n = shadedMutableBigInteger.intLen / 2;
       obj4 = new ShadedMutableBigInteger(this);
       ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj4;
-      int n2 = 32 * n;
-      shadedMutableBigInteger3.safeRightShift(n2);
+      shadedMutableBigInteger3.safeRightShift(32 * n);
       obj5 = new ShadedMutableBigInteger(shadedMutableBigInteger);
       shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj5;
-      int n3 = n * 32;
-      shadedMutableBigInteger3.safeRightShift(n3);
+      shadedMutableBigInteger3.safeRightShift(n * 32);
       shadedMutableBigInteger3 = shadedMutableBigInteger;
       obj3 = shadedMutableBigInteger3.getLower(n);
       shadedMutableBigInteger3 = this;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-      if (shadedMutableBigInteger3.compareShifted(shadedMutableBigInteger4, n) >= 0) {
+      if (shadedMutableBigInteger3.compareShifted(shadedMutableBigInteger, n) >= 0) {
          shadedMutableBigInteger3 = shadedMutableBigInteger2;
          shadedMutableBigInteger3.ones(n);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj4;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj5;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger5;
-         shadedMutableBigInteger3.add(shadedMutableBigInteger6);
+         shadedMutableBigInteger3.add((ShadedMutableBigInteger)obj5);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj5;
-         int n4 = 32 * n;
-         shadedMutableBigInteger3.leftShift(n4);
+         shadedMutableBigInteger3.leftShift(32 * n);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj4;
-         ShadedMutableBigInteger shadedMutableBigInteger7 = (ShadedMutableBigInteger)obj5;
-         shadedMutableBigInteger3.subtract(shadedMutableBigInteger7);
+         shadedMutableBigInteger3.subtract((ShadedMutableBigInteger)obj5);
          obj = (ShadedMutableBigInteger)obj4;
          obj2 = new ShadedMutableBigInteger((CustomBigInteger)obj3);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-         int n5 = 32 * n;
-         shadedMutableBigInteger3.leftShift(n5);
+         shadedMutableBigInteger3.leftShift(32 * n);
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-         ShadedMutableBigInteger shadedMutableBigInteger8 = new ShadedMutableBigInteger((CustomBigInteger)obj3);
-         shadedMutableBigInteger3.subtract(shadedMutableBigInteger8);
+         shadedMutableBigInteger3.subtract(new ShadedMutableBigInteger((CustomBigInteger)obj3));
       } else {
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj4;
-         ShadedMutableBigInteger shadedMutableBigInteger9 = (ShadedMutableBigInteger)obj5;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger10;
-         ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger9;
-         obj = shadedMutableBigInteger3.divide2n1n(shadedMutableBigInteger12, shadedMutableBigInteger11);
-         ShadedMutableBigInteger shadedMutableBigInteger13 = shadedMutableBigInteger2;
-         CustomBigInteger customBigInteger = shadedMutableBigInteger13.toBigInteger();
+         obj = shadedMutableBigInteger3.divide2n1n((ShadedMutableBigInteger)obj5, shadedMutableBigInteger2);
+         CustomBigInteger customBigInteger = shadedMutableBigInteger2.toBigInteger();
          CustomBigInteger customBigInteger2 = (CustomBigInteger)obj3;
          obj2 = new ShadedMutableBigInteger(customBigInteger.multiply2(customBigInteger2));
       }
 
       shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-      int n6 = 32 * n;
-      shadedMutableBigInteger3.leftShift(n6);
+      shadedMutableBigInteger3.leftShift(32 * n);
       shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger14 = this;
-      shadedMutableBigInteger3.addLower(shadedMutableBigInteger14, n);
+      shadedMutableBigInteger3.addLower(this, n);
 
       while (true) {
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger15 = (ShadedMutableBigInteger)obj2;
-         if (shadedMutableBigInteger3.compare(shadedMutableBigInteger15) >= 0) {
+         if (shadedMutableBigInteger3.compare((ShadedMutableBigInteger)obj2) >= 0) {
             shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-            ShadedMutableBigInteger shadedMutableBigInteger16 = (ShadedMutableBigInteger)obj2;
-            shadedMutableBigInteger3.subtract(shadedMutableBigInteger16);
+            shadedMutableBigInteger3.subtract((ShadedMutableBigInteger)obj2);
             return (ShadedMutableBigInteger)obj;
          }
 
          shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger17 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger18 = shadedMutableBigInteger17;
-         shadedMutableBigInteger3.add(shadedMutableBigInteger18);
+         shadedMutableBigInteger3.add(shadedMutableBigInteger);
          shadedMutableBigInteger3 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger19 = ONE;
-         shadedMutableBigInteger3.subtract(shadedMutableBigInteger19);
+         shadedMutableBigInteger3.subtract(ONE);
       }
    }
 
@@ -1723,7 +1579,6 @@ public class ShadedMutableBigInteger {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj4 = null;
       Object obj5 = null;
       Object obj6 = null;
@@ -1736,10 +1591,7 @@ public class ShadedMutableBigInteger {
       obj9 = new ShadedMutableBigInteger(this);
       obj8 = new ShadedMutableBigInteger();
       ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj3;
-      ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj9;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj8;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-      obj2 = shadedMutableBigInteger.divide2(shadedMutableBigInteger4, shadedMutableBigInteger3);
+      obj2 = shadedMutableBigInteger.divide2((ShadedMutableBigInteger)obj9, (ShadedMutableBigInteger)obj8);
       obj = (ShadedMutableBigInteger)obj3;
       obj3 = (ShadedMutableBigInteger)obj2;
       obj2 = (ShadedMutableBigInteger)obj;
@@ -1749,10 +1601,7 @@ public class ShadedMutableBigInteger {
 
       while (!((ShadedMutableBigInteger)obj3).isOne()) {
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj9;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj3;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = (ShadedMutableBigInteger)obj8;
-         ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger5;
-         obj2 = shadedMutableBigInteger.divide2(shadedMutableBigInteger7, shadedMutableBigInteger6);
+         obj2 = shadedMutableBigInteger.divide2((ShadedMutableBigInteger)obj3, (ShadedMutableBigInteger)obj8);
          if (((ShadedMutableBigInteger)obj2).intLen == 0) {
             throw new ArithmeticException("BigInteger not invertible.");
          }
@@ -1761,16 +1610,10 @@ public class ShadedMutableBigInteger {
          obj9 = (ShadedMutableBigInteger)obj;
          if (((ShadedMutableBigInteger)obj8).intLen != 1) {
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj8;
-            ShadedMutableBigInteger shadedMutableBigInteger8 = (ShadedMutableBigInteger)obj4;
-            ShadedMutableBigInteger shadedMutableBigInteger9 = (ShadedMutableBigInteger)obj7;
-            ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger8;
-            shadedMutableBigInteger.multiply(shadedMutableBigInteger10, shadedMutableBigInteger9);
+            shadedMutableBigInteger.multiply((ShadedMutableBigInteger)obj4, (ShadedMutableBigInteger)obj7);
          } else {
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj4;
-            int n2 = ((ShadedMutableBigInteger)obj8).value[((ShadedMutableBigInteger)obj8).offset];
-            ShadedMutableBigInteger shadedMutableBigInteger11 = (ShadedMutableBigInteger)obj7;
-            int n3 = n2;
-            shadedMutableBigInteger.mul(n3, shadedMutableBigInteger11);
+            shadedMutableBigInteger.mul(((ShadedMutableBigInteger)obj8).value[((ShadedMutableBigInteger)obj8).offset], (ShadedMutableBigInteger)obj7);
          }
 
          obj = (ShadedMutableBigInteger)obj8;
@@ -1778,17 +1621,13 @@ public class ShadedMutableBigInteger {
          obj7 = (ShadedMutableBigInteger)obj;
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj6;
          ShadedMutableBigInteger shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj8;
-         ShadedMutableBigInteger shadedMutableBigInteger13 = shadedMutableBigInteger12;
-         shadedMutableBigInteger.add(shadedMutableBigInteger13);
+         shadedMutableBigInteger.add(shadedMutableBigInteger12);
          if (((ShadedMutableBigInteger)obj9).isOne()) {
             return (ShadedMutableBigInteger)obj6;
          }
 
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj3;
-         ShadedMutableBigInteger shadedMutableBigInteger14 = (ShadedMutableBigInteger)obj9;
-         ShadedMutableBigInteger shadedMutableBigInteger15 = (ShadedMutableBigInteger)obj8;
-         ShadedMutableBigInteger shadedMutableBigInteger16 = shadedMutableBigInteger14;
-         obj2 = shadedMutableBigInteger.divide2(shadedMutableBigInteger16, shadedMutableBigInteger15);
+         obj2 = shadedMutableBigInteger.divide2((ShadedMutableBigInteger)obj9, (ShadedMutableBigInteger)obj8);
          if (((ShadedMutableBigInteger)obj2).intLen == 0) {
             throw new ArithmeticException("BigInteger not invertible.");
          }
@@ -1797,16 +1636,10 @@ public class ShadedMutableBigInteger {
          obj3 = (ShadedMutableBigInteger)obj2;
          if (((ShadedMutableBigInteger)obj8).intLen != 1) {
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj8;
-            ShadedMutableBigInteger shadedMutableBigInteger17 = (ShadedMutableBigInteger)obj6;
-            ShadedMutableBigInteger shadedMutableBigInteger18 = (ShadedMutableBigInteger)obj7;
-            ShadedMutableBigInteger shadedMutableBigInteger19 = shadedMutableBigInteger17;
-            shadedMutableBigInteger.multiply(shadedMutableBigInteger19, shadedMutableBigInteger18);
+            shadedMutableBigInteger.multiply((ShadedMutableBigInteger)obj6, (ShadedMutableBigInteger)obj7);
          } else {
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj6;
-            int n4 = ((ShadedMutableBigInteger)obj8).value[((ShadedMutableBigInteger)obj8).offset];
-            ShadedMutableBigInteger shadedMutableBigInteger20 = (ShadedMutableBigInteger)obj7;
-            int n5 = n4;
-            shadedMutableBigInteger.mul(n5, shadedMutableBigInteger20);
+            shadedMutableBigInteger.mul(((ShadedMutableBigInteger)obj8).value[((ShadedMutableBigInteger)obj8).offset], (ShadedMutableBigInteger)obj7);
          }
 
          obj = (ShadedMutableBigInteger)obj8;
@@ -1814,19 +1647,16 @@ public class ShadedMutableBigInteger {
          obj7 = (ShadedMutableBigInteger)obj;
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj4;
          shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj8;
-         ShadedMutableBigInteger shadedMutableBigInteger21 = shadedMutableBigInteger12;
-         shadedMutableBigInteger.add(shadedMutableBigInteger21);
+         shadedMutableBigInteger.add(shadedMutableBigInteger12);
       }
 
       shadedMutableBigInteger = (ShadedMutableBigInteger)obj5;
-      ShadedMutableBigInteger shadedMutableBigInteger22 = (ShadedMutableBigInteger)obj4;
-      shadedMutableBigInteger.subtract(shadedMutableBigInteger22);
+      shadedMutableBigInteger.subtract((ShadedMutableBigInteger)obj4);
       return (ShadedMutableBigInteger)obj5;
    }
 
    public long divide(long l, ShadedMutableBigInteger shadedMutableBigInteger) {
       int n = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = 5023878396925911683L ^ (long)"랮㎸\ue376Ⲵ㕟ꔌ龳ᠾ蘝犂\ud9c8젫㵏댗㻎ⱞ꼛붌ꙁ\uf54b\uebc3\ue81a롩㩁⯰".hashCode();
       if (l != 0L) {
@@ -1850,15 +1680,12 @@ public class ShadedMutableBigInteger {
             if (n != 0) {
                l2 = l2 - 6259013886753795060L ^ -5650259026567949064L;
                shadedMutableBigInteger2 = this;
-               ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-               return shadedMutableBigInteger2.divideLongMagnitude(l, shadedMutableBigInteger3).toLong();
+               return shadedMutableBigInteger2.divideLongMagnitude(l, shadedMutableBigInteger).toLong();
             } else {
                l2 = (l2 ^ 3302326221788493892L) - -3994065272474596065L;
                shadedMutableBigInteger2 = this;
                n2 = (int)l;
-               ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-               int n3 = n2;
-               return (long)shadedMutableBigInteger2.divideOneWord(n3, shadedMutableBigInteger4) & 4294967295L;
+               return (long)shadedMutableBigInteger2.divideOneWord(n2, shadedMutableBigInteger) & 4294967295L;
             }
          } else {
             l2 = l2 - 5630995321108430766L ^ 7922786344159331308L;
@@ -1874,7 +1701,6 @@ public class ShadedMutableBigInteger {
 
    public void copyValue(int[] ints, long l) {
       int n = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       n = ints.length;
       if (this.value.length < n) {
          this.value = new int[n];
@@ -1892,13 +1718,11 @@ public class ShadedMutableBigInteger {
    }
 
    public ShadedMutableBigInteger divide2(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2) {
-      boolean flag = true;
-      return this.divide(shadedMutableBigInteger, shadedMutableBigInteger2, flag);
+      return this.divide(shadedMutableBigInteger, shadedMutableBigInteger2, true);
    }
 
    public final int compare(ShadedMutableBigInteger shadedMutableBigInteger) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n2 = 0;
       int n3 = 0;
       int n4 = 0;
@@ -1932,31 +1756,25 @@ public class ShadedMutableBigInteger {
    }
 
    private int[] getMagnitudeArray() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.offset <= 0 && ((int[])this.value).length == this.intLen ? this.value : Arrays.copyOfRange(this.value, this.offset, this.offset + this.intLen);
    }
 
    @Override
    public String toString() {
-      byte b = 1;
-      CustomBigInteger customBigInteger = this.toBigInteger(b);
-      return customBigInteger.toString();
+      return this.toBigInteger((byte)1).toString();
    }
 
    public boolean isEven() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intLen == 0 || (this.value[this.offset + this.intLen - 1] & 1) == 0;
    }
 
    public ShadedMutableBigInteger divideKnuth(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2) {
-      boolean flag = true;
-      return this.divideKnuth(shadedMutableBigInteger, shadedMutableBigInteger2, flag);
+      return this.divideKnuth(shadedMutableBigInteger, shadedMutableBigInteger2, true);
    }
 
    public static long divWord(long l, int n) {
       long l2 = 0L;
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       long l5 = 0L;
       l5 = 2981210311007121467L ^ (long)"⫵蒶☦苴\uf346笓↥磻᫆\ue35d箲㊫쿍Ꭿ㶇\uf152５逼魭ᖳኦ嗟뿚㱠쑒曩䵰\udf9f\udecd".hashCode();
@@ -2003,7 +1821,6 @@ public class ShadedMutableBigInteger {
 
    public void clear() {
       boolean flag = false;
-      CustomBigInteger.getOpaqueStateTag();
       int n = 0;
       this.offset = this.intLen = 0;
       n = 0;
@@ -2014,7 +1831,6 @@ public class ShadedMutableBigInteger {
    }
 
    private void ones(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (n > this.value.length) {
          this.value = new int[n];
       }
@@ -2026,7 +1842,6 @@ public class ShadedMutableBigInteger {
 
    public void addLower(ShadedMutableBigInteger shadedMutableBigInteger, int n) {
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       obj = new ShadedMutableBigInteger(shadedMutableBigInteger);
       if (((ShadedMutableBigInteger)obj).offset + ((ShadedMutableBigInteger)obj).intLen >= n) {
          ((ShadedMutableBigInteger)obj).offset = ((ShadedMutableBigInteger)obj).offset + ((ShadedMutableBigInteger)obj).intLen - n;
@@ -2034,10 +1849,7 @@ public class ShadedMutableBigInteger {
       }
 
       ((ShadedMutableBigInteger)obj).normalize();
-      ShadedMutableBigInteger shadedMutableBigInteger2 = this;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger3;
-      shadedMutableBigInteger2.add(shadedMutableBigInteger4);
+      this.add((ShadedMutableBigInteger)obj);
    }
 
    public ShadedMutableBigInteger(int[] ints) {
@@ -2051,7 +1863,6 @@ public class ShadedMutableBigInteger {
 
    public static long inverseMod64(long l) {
       long l2 = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       l3 = 5232722629226796958L ^ (long)"̠锬촛淧ꁩ펳殽휵\u0a0bಆ蚰㪇苰০赃䀎ၾ㑑饶\uda0a䙶뫲⤿댒槅\uee75".hashCode();
       l3 = l3 - -8470237594473095735L ^ -1289222812500204533L;
@@ -2087,7 +1898,6 @@ public class ShadedMutableBigInteger {
       int n3 = 0;
       Object obj2 = null;
       boolean flag = false;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       int n5 = 0;
       Object obj3 = null;
@@ -2128,9 +1938,7 @@ public class ShadedMutableBigInteger {
             return (ShadedMutableBigInteger)obj3;
          }
 
-         ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj2;
-         ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-         if ((i = shadedMutableBigInteger2.difference(shadedMutableBigInteger3)) == 0) {
+         if ((i = ((ShadedMutableBigInteger)obj2).difference(shadedMutableBigInteger)) == 0) {
             break;
          }
       }
@@ -2143,7 +1951,6 @@ public class ShadedMutableBigInteger {
    }
 
    public void safeRightShift(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (n / 32 < this.intLen) {
          this.rightShift(n);
       } else {
@@ -2152,7 +1959,6 @@ public class ShadedMutableBigInteger {
    }
 
    public void safeLeftShift(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (n > 0) {
          this.leftShift(n);
       }
@@ -2162,7 +1968,6 @@ public class ShadedMutableBigInteger {
       Object obj = null;
       int n4 = 0;
       int n5 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       n4 = n * n3;
       if (n4 < this.intLen) {
          if (n != n2 - 1) {
@@ -2192,7 +1997,6 @@ public class ShadedMutableBigInteger {
       boolean flag = false;
       long l2 = 0L;
       int n6 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       long l4 = 0L;
       boolean flag2 = false;
@@ -2276,13 +2080,11 @@ public class ShadedMutableBigInteger {
             ((ShadedMutableBigInteger)obj2).value[i + ((ShadedMutableBigInteger)obj2).offset] = 0;
             ShadedMutableBigInteger shadedMutableBigInteger2 = this;
             int n11 = i + ((ShadedMutableBigInteger)obj2).offset;
-            int[] value2 = ((ShadedMutableBigInteger)obj2).value;
-            n2 = shadedMutableBigInteger2.mulsubLong(value2, n9, n3, n5, n11);
+            n2 = shadedMutableBigInteger2.mulsubLong(((ShadedMutableBigInteger)obj2).value, n9, n3, n5, n11);
             if (n2 + Integer.MIN_VALUE > n7) {
                shadedMutableBigInteger2 = this;
                int n12 = i + 1 + ((ShadedMutableBigInteger)obj2).offset;
-               int[] value3 = ((ShadedMutableBigInteger)obj2).value;
-               shadedMutableBigInteger2.divaddLong(n9, n3, value3, n12);
+               shadedMutableBigInteger2.divaddLong(n9, n3, ((ShadedMutableBigInteger)obj2).value, n12);
                n5--;
             }
 
@@ -2307,7 +2109,6 @@ public class ShadedMutableBigInteger {
       long l2 = 0L;
       int n2 = 0;
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = -5886630035406777291L ^ (long)"揋㥂쇇芞鑯\ue2ba샴￥។\ue829⹖표ꮨ뛪\udf24\udda4삿ừﳣ㏭康ᾬ".hashCode();
       l2 = 0L;
@@ -2337,15 +2138,11 @@ public class ShadedMutableBigInteger {
       long l = 0L;
       Object obj = null;
       long l2 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       if (n == 1) {
-         ShadedMutableBigInteger shadedMutableBigInteger2 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger3 = this;
-         shadedMutableBigInteger2.copyValue(shadedMutableBigInteger3);
+         shadedMutableBigInteger.copyValue(this);
       } else if (n == 0) {
-         ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-         shadedMutableBigInteger4.clear();
+         shadedMutableBigInteger.clear();
       } else {
          l = (long)n & 4294967295L;
          obj = ((int[])shadedMutableBigInteger.value).length >= this.intLen + 1 ? shadedMutableBigInteger.value : new int[this.intLen + 1];
@@ -2375,7 +2172,6 @@ public class ShadedMutableBigInteger {
       long l2 = 0L;
       Object obj = null;
       int n2 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (!this.isEven()) {
          if (n <= 64) {
             n2 = inverseMod32(this.value[this.offset + this.intLen - 1]);
@@ -2410,7 +2206,6 @@ public class ShadedMutableBigInteger {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj4 = null;
       Object obj5 = null;
       Object obj6 = null;
@@ -2424,8 +2219,7 @@ public class ShadedMutableBigInteger {
             ((ShadedMutableBigInteger)obj2).rightShift(n);
             if (!((ShadedMutableBigInteger)obj2).isOne()) {
                ShadedMutableBigInteger shadedMutableBigInteger2 = this;
-               ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-               obj7 = shadedMutableBigInteger2.modInverse(shadedMutableBigInteger3);
+               obj7 = shadedMutableBigInteger2.modInverse((ShadedMutableBigInteger)obj2);
                obj8 = this.modInverseMP2(n);
                obj = modInverseBP2((ShadedMutableBigInteger)obj2, n);
                obj3 = ((ShadedMutableBigInteger)obj2).modInverseMP2(n);
@@ -2434,29 +2228,15 @@ public class ShadedMutableBigInteger {
                obj4 = new ShadedMutableBigInteger();
                ((ShadedMutableBigInteger)obj7).leftShift(n);
                shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj7;
-               ShadedMutableBigInteger shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj;
-               ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj4;
-               ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger4;
-               shadedMutableBigInteger2.multiply(shadedMutableBigInteger6, shadedMutableBigInteger5);
+               shadedMutableBigInteger2.multiply((ShadedMutableBigInteger)obj, (ShadedMutableBigInteger)obj4);
                shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj8;
-               ShadedMutableBigInteger shadedMutableBigInteger7 = (ShadedMutableBigInteger)obj2;
-               ShadedMutableBigInteger shadedMutableBigInteger8 = (ShadedMutableBigInteger)obj6;
-               ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger7;
-               shadedMutableBigInteger2.multiply(shadedMutableBigInteger9, shadedMutableBigInteger8);
+               shadedMutableBigInteger2.multiply((ShadedMutableBigInteger)obj2, (ShadedMutableBigInteger)obj6);
                shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj6;
-               ShadedMutableBigInteger shadedMutableBigInteger10 = (ShadedMutableBigInteger)obj3;
-               ShadedMutableBigInteger shadedMutableBigInteger11 = (ShadedMutableBigInteger)obj5;
-               ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger10;
-               shadedMutableBigInteger2.multiply(shadedMutableBigInteger12, shadedMutableBigInteger11);
+               shadedMutableBigInteger2.multiply((ShadedMutableBigInteger)obj3, (ShadedMutableBigInteger)obj5);
                shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj4;
-               ShadedMutableBigInteger shadedMutableBigInteger13 = (ShadedMutableBigInteger)obj5;
-               ShadedMutableBigInteger shadedMutableBigInteger14 = shadedMutableBigInteger13;
-               shadedMutableBigInteger2.add(shadedMutableBigInteger14);
+               shadedMutableBigInteger2.add((ShadedMutableBigInteger)obj5);
                shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj4;
-               ShadedMutableBigInteger shadedMutableBigInteger15 = shadedMutableBigInteger;
-               ShadedMutableBigInteger shadedMutableBigInteger16 = (ShadedMutableBigInteger)obj6;
-               ShadedMutableBigInteger shadedMutableBigInteger17 = shadedMutableBigInteger15;
-               return shadedMutableBigInteger2.divide2(shadedMutableBigInteger17, shadedMutableBigInteger16);
+               return shadedMutableBigInteger2.divide2(shadedMutableBigInteger, (ShadedMutableBigInteger)obj6);
             } else {
                return this.modInverseMP2(n);
             }
@@ -2464,9 +2244,7 @@ public class ShadedMutableBigInteger {
             throw new ArithmeticException("BigInteger not invertible.");
          }
       } else {
-         ShadedMutableBigInteger shadedMutableBigInteger18 = this;
-         ShadedMutableBigInteger shadedMutableBigInteger19 = shadedMutableBigInteger;
-         return shadedMutableBigInteger18.modInverse(shadedMutableBigInteger19);
+         return this.modInverse(shadedMutableBigInteger);
       }
    }
 
@@ -2477,15 +2255,12 @@ public class ShadedMutableBigInteger {
       int n2 = 0;
       int n3 = 0;
       Object obj3 = null;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       int n4 = 0;
       int n5 = 0;
       obj3 = this;
       obj2 = this.value;
-      ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj3;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-      n4 = shadedMutableBigInteger2.compare(shadedMutableBigInteger3);
+      n4 = ((ShadedMutableBigInteger)obj3).compare(shadedMutableBigInteger);
       if (n4 == 0) {
          this.reset();
          return 0;
@@ -2528,7 +2303,6 @@ public class ShadedMutableBigInteger {
    }
 
    public void setValue(int[] ints, int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       this.value = ints;
       this.intLen = n;
       this.offset = 0;
@@ -2537,7 +2311,6 @@ public class ShadedMutableBigInteger {
    private final int getLowestSetBit() {
       int n = 0;
       int n2 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.intLen == 0) {
          return -1;
       } else {
@@ -2555,7 +2328,6 @@ public class ShadedMutableBigInteger {
    private int divaddLong(int n, int n2, int[] ints, int n3) {
       long l = 0L;
       long l2 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       l3 = -7990517267222312539L ^ (long)"\ue0ba⽂匡ᰛ瓼㛄퍀\uf2e6薗蕉嵩끠矂⊆\u0d53䤹ꕜ⎴ย麰\uaaf9Ð甪詜\ud927\uf8c1콘獍ᇻ".hashCode();
       l2 = 0L;
@@ -2575,7 +2347,6 @@ public class ShadedMutableBigInteger {
 
    public void multiply(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2) {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag = false;
       long l2 = 0L;
       int n = 0;
@@ -2630,7 +2401,6 @@ public class ShadedMutableBigInteger {
 
    private int compareShifted(ShadedMutableBigInteger shadedMutableBigInteger, int n) {
       int n2 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n3 = 0;
       boolean flag = false;
       int n4 = 0;
@@ -2667,7 +2437,6 @@ public class ShadedMutableBigInteger {
 
    public void copyValue(ShadedMutableBigInteger shadedMutableBigInteger) {
       int n = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       n = shadedMutableBigInteger.intLen;
       if (this.value.length < n) {
          this.value = new int[n];
@@ -2681,13 +2450,10 @@ public class ShadedMutableBigInteger {
    private CustomBigInteger getLower(int n) {
       int n2 = 0;
       int n3 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (this.isZero()) {
          return CustomBigInteger.ZERO;
       } else if (this.intLen < n) {
-         ShadedMutableBigInteger shadedMutableBigInteger = this;
-         byte b = 1;
-         return shadedMutableBigInteger.toBigInteger(b);
+         return this.toBigInteger((byte)1);
       } else {
          n3 = n;
 
@@ -2703,7 +2469,6 @@ public class ShadedMutableBigInteger {
    public static ShadedMutableBigInteger fixup(ShadedMutableBigInteger shadedMutableBigInteger, ShadedMutableBigInteger shadedMutableBigInteger2, int n) {
       int n2 = 0;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       int n5 = 0;
       Object obj = null;
@@ -2714,12 +2479,9 @@ public class ShadedMutableBigInteger {
       for (int i = n >> 5; n3 < i; n3++) {
          n2 = n5 * shadedMutableBigInteger.value[shadedMutableBigInteger.offset + shadedMutableBigInteger.intLen - 1];
          ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger4 = (ShadedMutableBigInteger)obj;
-         shadedMutableBigInteger3.mul(n2, shadedMutableBigInteger4);
+         shadedMutableBigInteger3.mul(n2, (ShadedMutableBigInteger)obj);
          shadedMutableBigInteger3 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger5;
-         shadedMutableBigInteger3.add(shadedMutableBigInteger6);
+         shadedMutableBigInteger3.add((ShadedMutableBigInteger)obj);
          shadedMutableBigInteger.intLen--;
       }
 
@@ -2728,23 +2490,16 @@ public class ShadedMutableBigInteger {
          n4 = n5 * shadedMutableBigInteger.value[shadedMutableBigInteger.offset + shadedMutableBigInteger.intLen - 1];
          n4 &= (1 << n3) - 1;
          ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger8 = (ShadedMutableBigInteger)obj;
-         shadedMutableBigInteger7.mul(n4, shadedMutableBigInteger8);
+         shadedMutableBigInteger7.mul(n4, (ShadedMutableBigInteger)obj);
          shadedMutableBigInteger7 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger9 = (ShadedMutableBigInteger)obj;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger9;
-         shadedMutableBigInteger7.add(shadedMutableBigInteger10);
+         shadedMutableBigInteger7.add((ShadedMutableBigInteger)obj);
          shadedMutableBigInteger.rightShift(n3);
       }
 
       ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger;
-      ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger2;
-      if (shadedMutableBigInteger11.compare(shadedMutableBigInteger12) >= 0) {
+      if (shadedMutableBigInteger11.compare(shadedMutableBigInteger2) >= 0) {
          shadedMutableBigInteger11 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger13 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger14 = new ShadedMutableBigInteger();
-         ShadedMutableBigInteger shadedMutableBigInteger15 = shadedMutableBigInteger13;
-         shadedMutableBigInteger = shadedMutableBigInteger11.divide2(shadedMutableBigInteger15, shadedMutableBigInteger14);
+         shadedMutableBigInteger = shadedMutableBigInteger11.divide2(shadedMutableBigInteger2, new ShadedMutableBigInteger());
       }
 
       return shadedMutableBigInteger;

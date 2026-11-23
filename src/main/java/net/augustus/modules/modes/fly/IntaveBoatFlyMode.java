@@ -71,8 +71,7 @@ public class IntaveBoatFlyMode extends FlyMode {
 
    public void onMoveInput(EventMoveInput event) {
       if (this.blinkActive && this.blinkTicks > 20) {
-         boolean flag = false;
-         ClientManagers.moduleManager.fly.setToggled(flag);
+         ClientManagers.moduleManager.fly.setToggled(false);
       }
    }
 
@@ -81,16 +80,14 @@ public class IntaveBoatFlyMode extends FlyMode {
 
    public void onIncomingPacketDelay(EventPacketDelay event) {
       if (this.blinkActive) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    public void onReadPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof S1BPacketEntityAttach) {
-         S1BPacketEntityAttach packet2 = (S1BPacketEntityAttach)packet;
-         if (packet2.getEntityId() == mc.thePlayer.getEntityId()) {
+         if (((S1BPacketEntityAttach)packet).getEntityId() == mc.thePlayer.getEntityId()) {
             this.attachedToBoat = true;
             event.cancel();
             this.justAttached = true;

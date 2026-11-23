@@ -84,8 +84,7 @@ public class BlockRailDetector extends BlockRailBase {
    private void updatePoweredState(World world, BlockPos pos, IBlockState state) {
       boolean value = (Boolean)state.getValue(POWERED);
       boolean flag = false;
-      List list = this.findMinecarts(world, pos, EntityMinecart.class, new Predicate[0]);
-      if (!list.isEmpty()) {
+      if (!this.findMinecarts(world, pos, EntityMinecart.class, new Predicate[0]).isEmpty()) {
          flag = true;
       }
 

@@ -28,12 +28,8 @@ public class ProxyEntry extends AbstractFeature {
 
    public ProxyEntry(ProxyEntry proxyEntry) {
        this(proxyEntry.getHost(), proxyEntry.getPort(), proxyEntry.getUsername(), proxyEntry.getPassword());
-      int ping2 = proxyEntry.getPing();
-      this.setPing(ping2);
-      StringProperty proxyType2 = this.proxyType;
-      String proxyType3 = proxyEntry.getProxyType();
-      String str = proxyType3;
-      proxyType2.setValue(str);
+      this.setPing(proxyEntry.getPing());
+      this.proxyType.setValue(proxyEntry.getProxyType());
    }
 
    public boolean matches(ProxyEntry proxyEntry) {
@@ -114,10 +110,7 @@ public class ProxyEntry extends AbstractFeature {
 
    public ProxyEntry(String str, int n, String str2, String str3, ProxyProtocolType proxyProtocolType) {
        this(str, n, str2, str3);
-      StringProperty proxyType2 = this.proxyType;
-      String displayName = proxyProtocolType.getDisplayName();
-      String str4 = displayName;
-      proxyType2.setValue(str4);
+      this.proxyType.setValue(proxyProtocolType.getDisplayName());
    }
 
    public String getProxyType() {
@@ -138,8 +131,7 @@ public class ProxyEntry extends AbstractFeature {
       this.ip.setValue(str);
       IntegerProperty port2 = this.port;
       Integer num = n;
-      Integer num2 = num;
-      port2.setValue(num2);
+      port2.setValue(num);
       this.username.setValue(str2);
       this.password.setValue(str3);
 
@@ -156,8 +148,7 @@ public class ProxyEntry extends AbstractFeature {
    public void setMarked(boolean flag) {
       BooleanProperty marked2 = this.marked;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      marked2.setValue(bool2);
+      marked2.setValue(bool);
    }
 
    private boolean hasCredentials() {
@@ -166,8 +157,7 @@ public class ProxyEntry extends AbstractFeature {
 
    public void applyToChannel(Channel channel) {
       if (this.socketAddress != null) {
-         String proxyType2 = this.getProxyType();
-         switch (proxyType2) {
+         switch (this.getProxyType()) {
             case "Socks 4":
                channel.pipeline()
                   .addFirst(
@@ -187,14 +177,12 @@ public class ProxyEntry extends AbstractFeature {
    public void setPing(int n) {
       IntegerProperty ping2 = this.ping;
       Integer num = n;
-      Integer num2 = num;
-      ping2.setValue(num2);
+      ping2.setValue(num);
    }
 
    public boolean equals(Object obj) {
       if (obj instanceof ProxyEntry) {
-         ProxyEntry proxyEntry = (ProxyEntry)obj;
-         return this.matches(proxyEntry);
+         return this.matches((ProxyEntry)obj);
       } else {
          return super.equals(obj);
       }

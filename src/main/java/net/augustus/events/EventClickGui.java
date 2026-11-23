@@ -12,8 +12,7 @@ public class EventClickGui extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      ClickGuiListener listener = (ClickGuiListener)obj;
-      this.call2(listener);
+      this.call2((ClickGuiListener)obj);
    }
 
    public void call2(ClickGuiListener listener) {

@@ -102,8 +102,7 @@ public String[] getIndexNames1() {
             switch (ShaderParameterFloatSwitchMap.ORDINAL_MAP[this.ordinal()]) {
                case 1:
                   BlockPos cameraPosition = Shaders.getCameraPosition();
-                  BiomeGenBase biomeGenForCoords = Shaders.getCurrentWorld().getBiomeGenForCoords(cameraPosition);
-                  return (float)biomeGenForCoords.biomeID;
+                  return (float)Shaders.getCurrentWorld().getBiomeGenForCoords(cameraPosition).biomeID;
                case 2:
                   BlockPos cameraPosition2 = Shaders.getCameraPosition();
                   BiomeGenBase biomeGenForCoords2 = Shaders.getCurrentWorld().getBiomeGenForCoords(cameraPosition2);
@@ -148,8 +147,7 @@ public String[] getIndexNames1() {
          Class clazz = obj.getClass();
 
          for (int i = 0; i < clazzs.length; i++) {
-            Class clazz2 = clazzs[i];
-            if (clazz2.isAssignableFrom(clazz)) {
+            if (clazzs[i].isAssignableFrom(clazz)) {
                return true;
             }
          }

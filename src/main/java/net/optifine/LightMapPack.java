@@ -40,10 +40,7 @@ public class LightMapPack {
             int n10 = n9 >> 16 & 0xFF;
             int n11 = n9 >> 8 & 0xFF;
             int n12 = n9 & 0xFF;
-            int n13 = (int)((float)n2 * f + (float)n6 * f2 + (float)n10 * f3);
-            int n14 = (int)((float)n3 * f + (float)n7 * f2 + (float)n11 * f3);
-            int n15 = (int)((float)n4 * f + (float)n8 * f2 + (float)n12 * f3);
-            ints[i] = 0xFF000000 | n13 << 16 | n14 << 8 | n15;
+            ints[i] = 0xFF000000 | ((int)((float)n2 * f + (float)n6 * f2 + (float)n10 * f3)) << 16 | ((int)((float)n3 * f + (float)n7 * f2 + (float)n11 * f3)) << 8 | ((int)((float)n4 * f + (float)n8 * f2 + (float)n12 * f3));
          }
 
          return true;
@@ -118,10 +115,7 @@ public class LightMapPack {
             int n6 = n5 >> 16 & 0xFF;
             int n7 = n5 >> 8 & 0xFF;
             int n8 = n5 & 0xFF;
-            int n9 = (int)((float)n2 * f + (float)n6 * f2);
-            int n10 = (int)((float)n3 * f + (float)n7 * f2);
-            int n11 = (int)((float)n4 * f + (float)n8 * f2);
-            ints[i] = 0xFF000000 | n9 << 16 | n10 << 8 | n11;
+            ints[i] = 0xFF000000 | ((int)((float)n2 * f + (float)n6 * f2)) << 16 | ((int)((float)n3 * f + (float)n7 * f2)) << 8 | ((int)((float)n4 * f + (float)n8 * f2));
          }
 
          return true;

@@ -14,28 +14,28 @@ import net.augustus.utils.rotation.RotationUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 
 public class LegitVelocityMode extends VelocityMode implements MoveInputListener {
    private final BooleanValue jumpInInv;
-   public final BooleansSetting legitJumpDelayMode;
+   public final StringValue legitJumpDelayMode;
    private final RandomizedRangeSettings jumpInterval;
    private final RandomizedRangeSettings tickDelayBetweenJumps;
-   public final StringValue jumpChanceLegit;
+   public final DoubleValue jumpChanceLegit;
    public final IntervalNoiseSetting dynamicChance;
-   private final DoubleValue legitJumpFailGroup;
+   private final SettingGroup legitJumpFailGroup;
    private final BooleanValue legitFailJump;
    private final RandomizedRangeSettings failJumpDelay;
    private final RandomizedRangeSettings inReachDistance;
    private final RandomizedRangeSettings targetInReachTickOffset;
    public final BooleanValue checkFallDamageLegit;
-   public final StringValue fallDistanceLegit;
-   public final StringValue fallDistanceBufferSizeLegit;
+   public final DoubleValue fallDistanceLegit;
+   public final DoubleValue fallDistanceBufferSizeLegit;
    public final BooleanValue notWhileSpeedLegit;
    public final BooleanValue notWhileJumpBoostLegit;
    public final BooleanValue debug;
@@ -45,110 +45,51 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
    private DoubleSampleWindow fallDistanceHistory;
    private final TickCounter tickCounter;
 
-   public LegitVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public LegitVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Legit");
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "JumpInInv", false, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.jumpInInv = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.jumpInInv = (BooleanValue)new BooleanValue(this.parentModule, "JumpInInv", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      StringValue booleansSetting = new StringValue(
          this.parentModule, "LegitJumpDelayMode", "IntervalDelay", new String[]{"IntervalDelay", "Chance", "DynamicChance"}, this.modeSetting
       );
-      String str = "JumpDelayMode";
-      booleansSetting = (BooleansSetting)booleansSetting.withDisplayName(str);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.legitJumpDelayMode = (BooleansSetting)booleansSetting.withVisibility(condition2);
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(this.parentModule, "JumpInterval", 0.0, 0.0, 0.0, 5.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isJumpIntervalVisible();
-      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition3);
-      boolean flag = false;
+      booleansSetting = (StringValue)booleansSetting.withDisplayName("JumpDelayMode");
+      this.legitJumpDelayMode = (StringValue)booleansSetting.withVisibility(() -> this.isSelected());
+      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)new RandomizedRangeSettings(this.parentModule, "JumpInterval", 0.0, 0.0, 0.0, 5.0, 0, this.modeSetting).withVisibility(() -> this.isJumpIntervalVisible());
       double d = 30.0;
       double d2 = 0.0;
       double d3 = 5.0;
       double d4 = 0.0;
       double d5 = 3.0;
-      double d6 = 0.0;
-      RandomizedRangeSettings randomizedRangeSettings3 = randomizedRangeSettings2.withOutliers(d6, d5, d4, d3, d2, d, flag);
-      boolean flag2 = false;
+      RandomizedRangeSettings randomizedRangeSettings3 = randomizedRangeSettings2.withOutliers(0.0, d5, d4, d3, d2, d, false);
       double d7 = 5.0;
       double d8 = 0.5;
-      double d9 = 1.0;
-      this.jumpInterval = randomizedRangeSettings3.withNormalDistribution(d9, d8, d7, flag2);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this.parentModule, "TickDelayBetweenJumps", 10.0, 10.0, 0.0, 100.0, 0, this.modeSetting)).withoutNotInARow();
-      SettingVisibilityCondition condition4 = () -> this.isTickDelayBetweenJumpsVisible();
-      this.tickDelayBetweenJumps = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition4);
-      StringValue stringValue = new StringValue(this.parentModule, "JumpChanceLegit", 50.0, 0.0, 100.0, 0, this.modeSetting);
-      String str2 = "JumpChance";
-      StringValue stringValue2 = stringValue.named(str2);
-      SettingVisibilityCondition condition5 = () -> this.isJumpChanceVisible();
-      this.jumpChanceLegit = stringValue2.visibleWhen(condition5);
+      this.jumpInterval = randomizedRangeSettings3.withNormalDistribution(1.0, d8, d7, false);
+      this.tickDelayBetweenJumps = (RandomizedRangeSettings)(new RandomizedRangeSettings(this.parentModule, "TickDelayBetweenJumps", 10.0, 10.0, 0.0, 100.0, 0, this.modeSetting)).withoutNotInARow().withVisibility(() -> this.isTickDelayBetweenJumpsVisible());
+      this.jumpChanceLegit = new DoubleValue(this.parentModule, "JumpChanceLegit", 50.0, 0.0, 100.0, 0, this.modeSetting).named("JumpChance").visibleWhen(() -> this.isJumpChanceVisible());
       IntervalNoiseSetting intervalNoiseSetting = new IntervalNoiseSetting(this.parentModule, "Dynamic Chance", this.modeSetting, false);
-      byte b = 1;
       double d10 = 69.0;
       double d11 = 67.0;
       double d12 = 100.0;
-      double d13 = 0.0;
-      IntervalNoiseSetting intervalNoiseSetting2 = intervalNoiseSetting.withInterval(d13, d12, d11, d10, b);
-      SettingVisibilityCondition condition6 = () -> this.isDynamicChanceVisible();
-      SettingVisibilityCondition condition7 = condition6;
-      this.dynamicChance = intervalNoiseSetting2.visibleWhen(condition7);
-      DoubleValue doubleValue2 = new DoubleValue(this.parentModule, "LegitJumpFailGroup", this.modeSetting);
-      SettingVisibilityCondition condition8 = () -> this.isSelected();
-      DoubleValue doubleValue3 = doubleValue2.visibleWhen(condition8);
-      String str3 = "Fail Jump";
-      this.legitJumpFailGroup = (DoubleValue)doubleValue3.withDisplayName(str3);
-      BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "LegitFailJump", false, this.legitJumpFailGroup);
-      SettingVisibilityCondition condition9 = () -> this.isSelected();
-      BooleanValue booleanValue3 = (BooleanValue)booleanValue2.withVisibility(condition9);
-      String str4 = "Fail jump";
-      this.legitFailJump = (BooleanValue)booleanValue3.withDisplayName(str4);
+      this.dynamicChance = intervalNoiseSetting.withInterval(0.0, d12, d11, d10, (byte)1).visibleWhen(() -> this.isDynamicChanceVisible());
+      this.legitJumpFailGroup = (SettingGroup)new SettingGroup(this.parentModule, "LegitJumpFailGroup", this.modeSetting).visibleWhen(() -> this.isSelected()).withDisplayName("Fail Jump");
+      this.legitFailJump = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "LegitFailJump", false, this.legitJumpFailGroup).withVisibility(() -> this.isSelected())).withDisplayName("Fail jump");
       RandomizedRangeSettings randomizedRangeSettings5 = new RandomizedRangeSettings(this.parentModule, "FailJumpDelay", 10.0, 20.0, 0.0, 100.0, 0, this.legitJumpFailGroup);
       BooleanValue legitFailJump2 = this.legitFailJump;
       this.legitFailJump.getClass();
-      BooleanValue booleanValue4 = legitFailJump2;
-      SettingVisibilityCondition condition10 = () -> booleanValue4.getValue();
-      this.failJumpDelay = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(condition10);
+      this.failJumpDelay = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(() -> legitFailJump2.getValue());
       RandomizedRangeSettings randomizedRangeSettings6 = (new RandomizedRangeSettings(this.parentModule, "In reach distance", 3.0, 3.0, 2.0, 4.0, 2, this.legitJumpFailGroup)).withoutNotInARow();
       BooleanValue legitFailJump3 = this.legitFailJump;
       this.legitFailJump.getClass();
-      BooleanValue booleanValue5 = legitFailJump3;
-      SettingVisibilityCondition condition11 = () -> booleanValue5.getValue();
-      this.inReachDistance = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition11);
+      this.inReachDistance = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(() -> legitFailJump3.getValue());
       RandomizedRangeSettings randomizedRangeSettings7 = new RandomizedRangeSettings(this.parentModule, "Target in reach tick offset", 0.0, 0.0, 0.0, 20.0, 0, this.legitJumpFailGroup);
       BooleanValue legitFailJump4 = this.legitFailJump;
       this.legitFailJump.getClass();
-      BooleanValue booleanValue6 = legitFailJump4;
-      SettingVisibilityCondition condition12 = () -> booleanValue6.getValue();
-      this.targetInReachTickOffset = (RandomizedRangeSettings)randomizedRangeSettings7.withVisibility(condition12);
-      BooleanValue booleanValue7 = new BooleanValue(this.parentModule, "CheckFallDamageLegit", true, this.modeSetting);
-      String str5 = "CheckFallDamage";
-      BooleanValue booleanValue8 = (BooleanValue)booleanValue7.withDisplayName(str5);
-      SettingVisibilityCondition condition13 = () -> this.isSelected();
-      this.checkFallDamageLegit = (BooleanValue)booleanValue8.withVisibility(condition13);
-      StringValue stringValue3 = new StringValue(this.parentModule, "FallDistanceLegit", 3.0, 1.0, 10.0, 2, this.modeSetting);
-      String str6 = "FallDistance";
-      StringValue stringValue4 = stringValue3.named(str6);
-      SettingVisibilityCondition condition14 = () -> this.isFallDistanceVisible();
-      this.fallDistanceLegit = stringValue4.visibleWhen(condition14);
-      StringValue stringValue5 = new StringValue(this.parentModule, "FallDistanceBufferSizeLegit", 2.0, 1.0, 5.0, 0, this.modeSetting);
-      String str7 = "FallDistanceBufferSize";
-      StringValue stringValue6 = stringValue5.named(str7);
-      SettingVisibilityCondition condition15 = () -> this.isFallDistanceBufferVisible();
-      this.fallDistanceBufferSizeLegit = stringValue6.visibleWhen(condition15);
-      BooleanValue booleanValue9 = new BooleanValue(this.parentModule, "NotWhileSpeedLegit", true, this.modeSetting);
-      String str8 = "NotWhileSpeed";
-      BooleanValue booleanValue10 = (BooleanValue)booleanValue9.withDisplayName(str8);
-      SettingVisibilityCondition condition16 = () -> this.isSelected();
-      this.notWhileSpeedLegit = (BooleanValue)booleanValue10.withVisibility(condition16);
-      BooleanValue booleanValue11 = new BooleanValue(this.parentModule, "NotWhileJumpBoostLegit", true, this.modeSetting);
-      String str9 = "NotWhileJumpBoost";
-      BooleanValue booleanValue12 = (BooleanValue)booleanValue11.withDisplayName(str9);
-      SettingVisibilityCondition condition17 = () -> this.isSelected();
-      this.notWhileJumpBoostLegit = (BooleanValue)booleanValue12.withVisibility(condition17);
-      BooleanValue booleanValue13 = new BooleanValue(this.parentModule, "Debug", false, this.modeSetting);
-      String str10 = "Debug";
-      BooleanValue booleanValue14 = (BooleanValue)booleanValue13.withDisplayName(str10);
-      SettingVisibilityCondition condition18 = () -> this.isSelected();
-      this.debug = (BooleanValue)booleanValue14.withVisibility(condition18);
+      this.targetInReachTickOffset = (RandomizedRangeSettings)randomizedRangeSettings7.withVisibility(() -> legitFailJump4.getValue());
+      this.checkFallDamageLegit = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "CheckFallDamageLegit", true, this.modeSetting).withDisplayName("CheckFallDamage")).withVisibility(() -> this.isSelected());
+      this.fallDistanceLegit = new DoubleValue(this.parentModule, "FallDistanceLegit", 3.0, 1.0, 10.0, 2, this.modeSetting).named("FallDistance").visibleWhen(() -> this.isFallDistanceVisible());
+      this.fallDistanceBufferSizeLegit = new DoubleValue(this.parentModule, "FallDistanceBufferSizeLegit", 2.0, 1.0, 5.0, 0, this.modeSetting).named("FallDistanceBufferSize").visibleWhen(() -> this.isFallDistanceBufferVisible());
+      this.notWhileSpeedLegit = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "NotWhileSpeedLegit", true, this.modeSetting).withDisplayName("NotWhileSpeed")).withVisibility(() -> this.isSelected());
+      this.notWhileJumpBoostLegit = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "NotWhileJumpBoostLegit", true, this.modeSetting).withDisplayName("NotWhileJumpBoost")).withVisibility(() -> this.isSelected());
+      this.debug = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "Debug", false, this.modeSetting).withDisplayName("Debug")).withVisibility(() -> this.isSelected());
       this.hitsSinceLastJump = 0;
       this.targetInReachTicks = 0;
       this.successfulJumpCount = 0;
@@ -159,8 +100,7 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -173,7 +113,7 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new LegitVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new LegitVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -182,11 +122,8 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
 
    @Override
    public void onMoveInput2(EventMoveInput event) {
-      int maxSize = this.fallDistanceHistory.getMaxSize();
-      boolean flag = true;
-      if (maxSize != (int)this.fallDistanceBufferSizeLegit.getValue(flag)) {
-         boolean flag2 = true;
-         this.fallDistanceHistory = new DoubleSampleWindow((int)this.fallDistanceBufferSizeLegit.getValue(flag2));
+      if (this.fallDistanceHistory.getMaxSize() != (int)this.fallDistanceBufferSizeLegit.getValue(true)) {
+         this.fallDistanceHistory = new DoubleSampleWindow((int)this.fallDistanceBufferSizeLegit.getValue(true));
       }
 
       this.tickCounter.increment();
@@ -198,9 +135,7 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
             && !mc.thePlayer.onGround
             && mc.thePlayer.hurtTime >= 9
             && (!this.checkFallDamageLegit.getValue() || this.fallDistanceHistory.max() < this.fallDistanceLegit.getValue())) {
-            Velocity parentModule2 = (Velocity)this.parentModule;
-            String str = "Currently in air, not jumping even though i got hit tE=" + mc.thePlayer.ticksExisted;
-            parentModule2.sendChatMessage2(str);
+            ((Velocity)this.parentModule).sendChatMessage2("Currently in air, not jumping even though i got hit tE=" + mc.thePlayer.ticksExisted);
          }
 
          if (this.canPerformLegitJump()) {
@@ -208,42 +143,33 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
                if (this.shouldJumpThisHit()) {
                   this.successfulJumpCount++;
                   if (this.debug.getValue()) {
-                     Velocity parentModule3 = (Velocity)this.parentModule;
-                     String str2 = "Jumped! tE=" + mc.thePlayer.ticksExisted;
-                     parentModule3.sendChatMessage2(str2);
+                     ((Velocity)this.parentModule).sendChatMessage2("Jumped! tE=" + mc.thePlayer.ticksExisted);
                   }
 
-                  boolean flag3 = true;
-                  event.setJump(flag3);
+                  event.setJump(true);
                   this.resetJumpDelays();
                   this.hitsSinceLastJump++;
                   return;
                }
 
                if (this.debug.getValue()) {
-                  Velocity parentModule4 = (Velocity)this.parentModule;
-                  String str3 = "No jump because of randomization tE=" + mc.thePlayer.ticksExisted;
-                  parentModule4.sendChatMessage2(str3);
+                  ((Velocity)this.parentModule).sendChatMessage2("No jump because of randomization tE=" + mc.thePlayer.ticksExisted);
                }
 
                this.hitsSinceLastJump++;
             } else if (mc.thePlayer.hurtTime == 0) {
                if (CombatTargetUtil.getActiveTarget() != null) {
                   EntityLivingBase activeTarget = CombatTargetUtil.getActiveTarget();
-                  EntityPlayerSP thePlayer = mc.thePlayer;
-                  if (RotationUtil.getNearestPointFromEntity(activeTarget, thePlayer).distanceTo(activeTarget.getPositionEyes(1.0F)) <= this.inReachDistance.getLastValue()) {
+                  if (RotationUtil.getNearestPointFromEntity(activeTarget, mc.thePlayer).distanceTo(activeTarget.getPositionEyes(1.0F)) <= this.inReachDistance.getLastValue()) {
                      this.targetInReachTicks++;
                      if (this.targetInReachTicks >= this.targetInReachTickOffset.getLastIntValue() && this.failJumpDelay.getLastIntValue() <= this.successfulJumpCount) {
                         if (this.debug.getValue()) {
-                           Velocity parentModule5 = (Velocity)this.parentModule;
-                           String str4 = "Jumping too early... tE=" + mc.thePlayer.ticksExisted;
-                           parentModule5.sendChatMessage2(str4);
+                           ((Velocity)this.parentModule).sendChatMessage2("Jumping too early... tE=" + mc.thePlayer.ticksExisted);
                         }
 
                         this.successfulJumpCount = 0;
                         this.failJumpDelay.nextInt();
-                        boolean flag4 = true;
-                        event.setJump(flag4);
+                        event.setJump(true);
                      }
                   } else {
                      this.targetInReachTicks = 0;
@@ -271,16 +197,11 @@ public class LegitVelocityMode extends VelocityMode implements MoveInputListener
    }
 
    private boolean shouldJumpThisHit() {
-      String selectedValue = this.legitJumpDelayMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.legitJumpDelayMode.getSelectedValue()) {
          case "IntervalDelay":
-            TickCounter tickCounter2 = this.tickCounter;
-            int lastIntValue = this.tickDelayBetweenJumps.getLastIntValue();
-            return tickCounter2.hasReached2(lastIntValue) && this.hitsSinceLastJump > this.jumpInterval.getLastIntValue();
+            return this.tickCounter.hasReached2(this.tickDelayBetweenJumps.getLastIntValue()) && this.hitsSinceLastJump > this.jumpInterval.getLastIntValue();
          case "Chance":
-            byte b = 99;
-            byte b2 = 0;
-            return (double)DefaultRandomGenerator.instance.nextInt2(b2, b) < this.jumpChanceLegit.getValue();
+            return (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)99) < this.jumpChanceLegit.getValue();
          case "DynamicChance":
             this.dynamicChance.update();
             double d = this.dynamicChance.sample();

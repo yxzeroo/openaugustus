@@ -12,13 +12,13 @@ import net.augustus.modules.movement.helper.FastLadderMotionModifier;
 import net.augustus.modules.movement.helper.MotionModifierProvider;
 import net.augustus.modules.misc.Dummy;
 import net.augustus.modules.movement.FastLadder;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class MotionModifierFastLadderMode extends FastLadderMode implements MotionModifierProvider, UpdateListener, MoveEntityListener, MoveInputListener, PacketListener {
    private final Dummy dummy;
    private final MotionModifierEngine motionModifierEngine;
 
-   public MotionModifierFastLadderMode(FastLadder fastLadder, DoubleValue doubleValue, String str) {
+   public MotionModifierFastLadderMode(FastLadder fastLadder, SettingGroup doubleValue, String str) {
        super(fastLadder, doubleValue, str);
       this.dummy = new Dummy();
       this.motionModifierEngine = new FastLadderMotionModifier(this, this.dummy, fastLadder);
@@ -27,14 +27,10 @@ public class MotionModifierFastLadderMode extends FastLadderMode implements Moti
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override

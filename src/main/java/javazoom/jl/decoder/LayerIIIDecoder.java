@@ -1599,10 +1599,9 @@ public final class LayerIIIDecoder implements FrameDecoder {
                }
             }
 
-            byte b = 12;
 
             for (int i2 = 0; i2 < 3; i2++) {
-               this.scalefac[n].s[i2][b] = 0;
+               this.scalefac[n].s[i2][(byte)12] = 0;
             }
          } else {
             this.scalefac[n].s[0][0] = this.br.hgetbits(n3);

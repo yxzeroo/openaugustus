@@ -34,8 +34,7 @@ public class PlaceBlocksQuestObjective extends QuestObjective implements PacketL
             && packet2.getPlacedBlockOffsetX() != 0.0F
             && packet2.getPlacedBlockOffsetY() != 0.0F
             && packet2.getPlacedBlockOffsetZ() != 0.0F) {
-            double d = 1.0;
-            this.addProgress(d);
+            this.addProgress(1.0);
          }
       }
    }

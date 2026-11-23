@@ -37,9 +37,7 @@ public class DoubleArraySetting extends AbstractArraySetting {
 
    @Override
    public void setValues(Object[] array) {
-      Double[] doubles = (Double[])array;
-      Double[] doubles2 = doubles;
-      this.setDoubleValues(doubles2);
+      this.setDoubleValues((Double[])array);
    }
 
    public DoubleArraySetting(Module module, String str) {

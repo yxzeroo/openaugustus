@@ -4,12 +4,12 @@ import net.augustus.modules.modes.AbstractSubMode;
 import java.util.ArrayList;
 import java.util.List;
 import net.augustus.modules.movement.MovementRecorder;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.util.MathHelper;
 
 public abstract class AbstractMovementRecorderMode extends AbstractSubMode {
 
-   public AbstractMovementRecorderMode(MovementRecorder movementRecorder, DoubleValue doubleValue, String str) {
+   public AbstractMovementRecorderMode(MovementRecorder movementRecorder, SettingGroup doubleValue, String str) {
       super(movementRecorder, doubleValue, str);
    }
 

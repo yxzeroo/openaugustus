@@ -30,8 +30,7 @@ public class KeccakSqueezer {
       long l = longsArr[n2][n3];
 
       for (int i = b - 1; i >= 0; i--) {
-         byte b2 = (byte)((int)(l & e));
-         bytes[n4 + (b - 1 - i)] = b2;
+         bytes[n4 + (b - 1 - i)] = (byte)((int)(l & e));
          l >>= 8;
       }
    }
@@ -41,8 +40,7 @@ public class KeccakSqueezer {
       int n = 0;
 
       do {
-         int n2 = Math.min(KeccakParameters.getRate(this.sha3Type), digestBitLength - n);
-         this.extractBlock(longsArr, bytes, n, n2);
+         this.extractBlock(longsArr, bytes, n, Math.min(KeccakParameters.getRate(this.sha3Type), digestBitLength - n));
          n += KeccakParameters.getRate(this.sha3Type);
       } while (n < digestBitLength);
 

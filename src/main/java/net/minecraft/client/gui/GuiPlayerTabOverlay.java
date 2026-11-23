@@ -277,7 +277,6 @@ public class GuiPlayerTabOverlay extends Gui {
          this.mc.fontRendererObj.drawString(networkPlayerInfo.getResponseTime() + "", n2 + n - this.mc.fontRendererObj.getStringWidth(networkPlayerInfo.getResponseTime() + ""), n3, rgb);
       } else {
          this.mc.getTextureManager().bindTexture(icons);
-         byte b = 0;
          byte b2 = 0;
          if (networkPlayerInfo.getResponseTime() < 0) {
             b2 = 5;
@@ -294,7 +293,7 @@ public class GuiPlayerTabOverlay extends Gui {
          }
 
          this.zLevel += 100.0F;
-         this.drawTexturedModalRect(n2 + n - 11, n3, 0 + b * 10, 176 + b2 * 8, 10, 8);
+         this.drawTexturedModalRect(n2 + n - 11, n3, 0 + ((byte)0) * 10, 176 + b2 * 8, 10, 8);
          this.zLevel -= 100.0F;
       }
    }
@@ -311,11 +310,7 @@ public class GuiPlayerTabOverlay extends Gui {
       String str = networkPlayerInfo.getDisplayName() != null
          ? networkPlayerInfo.getDisplayName().getFormattedText()
          : ScorePlayerTeam.formatPlayerName(networkPlayerInfo.getPlayerTeam(), networkPlayerInfo.getGameProfile().getName());
-      MidClick midClick = ClientManagers.moduleManager.midClick;
-      String name = networkPlayerInfo.getGameProfile().getName();
-      boolean flag = true;
-      String str2 = name;
-      if (midClick.isFriend(str2, flag) && ClientManagers.moduleManager.midClick.isToggled()) {
+      if (ClientManagers.moduleManager.midClick.isFriend(networkPlayerInfo.getGameProfile().getName(), true) && ClientManagers.moduleManager.midClick.isToggled()) {
          String name2 = networkPlayerInfo.getGameProfile().getName();
          String str3 = str.replace(name2, (ClientManagers.moduleManager.midClick.simple.getValue() ? "§l" : "§a§l") + name2);
          if (!ClientManagers.moduleManager.midClick.simple.getValue()) {
@@ -325,10 +320,7 @@ public class GuiPlayerTabOverlay extends Gui {
          }
       }
 
-      MurdererFinder murdererFinder = ClientManagers.moduleManager.murdererFinder;
-      String name3 = networkPlayerInfo.getGameProfile().getName();
-      String str4 = murdererFinder.isMurderer(name3) ? " §7[§4Murderer§7]§9" : "";
-      return str + str4;
+      return str + (ClientManagers.moduleManager.murdererFinder.isMurderer(networkPlayerInfo.getGameProfile().getName()) ? " §7[§4Murderer§7]§9" : "");
    }
 
    public void resetFooterHeader() {

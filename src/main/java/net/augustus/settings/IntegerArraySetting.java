@@ -38,7 +38,6 @@ public class IntegerArraySetting extends AbstractArraySetting {
 
    @Override
    public void setValues(Object[] array) {
-      Integer[] nums = (Integer[])array;
-      this.setIntegerValues(nums);
+      this.setIntegerValues((Integer[])array);
    }
 }

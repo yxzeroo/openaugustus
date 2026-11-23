@@ -39,23 +39,19 @@ public class BackgroundShader implements MC {
             ShaderProgram shaderProgram2 = this.shaderProgram;
             float f3 = (float)(-Mouse.getY());
             float x = (float)Mouse.getX();
-            String str3 = "mouse";
-            shaderProgram2.setUniform2f(str3, x, f3);
+            shaderProgram2.setUniform2f("mouse", x, f3);
          }
 
          float displayWidth = (float)mc.displayWidth;
          float displayHeight = (float)mc.displayHeight;
-         float f4 = displayWidth;
          String str4 = "resolution";
-         this.shaderProgram.setUniform2f(str4, f4, displayHeight);
-         boolean flag = false;
-         this.glStateSaver.setAlpha(flag);
+         this.shaderProgram.setUniform2f(str4, displayWidth, displayHeight);
+         this.glStateSaver.setAlpha(false);
          float displayWidth2 = (float)mc.displayWidth;
          float displayHeight2 = (float)mc.displayHeight;
-         float f5 = displayWidth2;
          float f6 = 0.0F;
          float f7 = 0.0F;
-         this.shaderProgram.drawQuad(f7, f6, f5, displayHeight2);
+         this.shaderProgram.drawQuad(f7, f6, displayWidth2, displayHeight2);
          this.glStateSaver.restoreAlpha();
          this.shaderProgram.unbind();
       }
@@ -117,8 +113,7 @@ public class BackgroundShader implements MC {
    }
 
    public BackgroundShader() {
-      String str = "/assets/augustus/shaders/shader.vert";
-      this.vertexShaderSource = this.loadResourceSource(str);
+      this.vertexShaderSource = this.loadResourceSource("/assets/augustus/shaders/shader.vert");
    }
 
 

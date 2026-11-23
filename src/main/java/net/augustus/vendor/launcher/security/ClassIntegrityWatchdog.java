@@ -45,8 +45,7 @@ public class ClassIntegrityWatchdog {
          }
          is.close();
          byte[] bytes = baos.toByteArray();
-         byte[] hash = verifyHasher.digest(bytes);
-         return Arrays.equals(expected, hash);
+         return Arrays.equals(expected, verifyHasher.digest(bytes));
       } catch (Throwable t) {
          return false;
       }
@@ -76,8 +75,7 @@ public class ClassIntegrityWatchdog {
    }
 
    private static void checkRuntimeIntegrity() {
-      ClassLoader parent = ClassIntegrityWatchdog.class.getClassLoader().getParent();
-      if (parent != expectedParentClassLoader) {
+      if (ClassIntegrityWatchdog.class.getClassLoader().getParent() != expectedParentClassLoader) {
          LauncherClientHandler.getInstance().sendPacket(new C2SRemoteClassRequestPacket(LauncherClientHandler.getInstance().sessionToken, "net/c/"));
          return;
       }

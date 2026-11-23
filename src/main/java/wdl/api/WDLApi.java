@@ -113,9 +113,8 @@ public class WDLApi {
    }
 
    private static void logStackTrace() {
-      StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
-      for (StackTraceElement stackTraceElement : stackTrace) {
+      for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
          logger.warn(stackTraceElement.toString());
       }
    }

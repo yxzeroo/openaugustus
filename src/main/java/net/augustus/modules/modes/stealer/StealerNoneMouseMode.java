@@ -4,12 +4,12 @@ import net.augustus.utils.math.Vec2d;
 import net.augustus.utils.player.ContainerUtil;
 import java.util.List;
 import net.augustus.modules.player.Stealer;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
 public class StealerNoneMouseMode extends AbstractStealerMouseMode {
-   public StealerNoneMouseMode(Stealer stealer, DoubleValue doubleValue) {
+   public StealerNoneMouseMode(Stealer stealer, SettingGroup doubleValue) {
       super(stealer, doubleValue, "None");
    }
 

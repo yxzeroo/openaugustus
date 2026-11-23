@@ -9,8 +9,7 @@ public abstract class BlockDirectional extends Block {
    public static final PropertyDirection FACING;
 
    static {
-      String str = "facing";
-      FACING = PropertyDirection.create(str, EnumFacing.Plane.HORIZONTAL);
+      FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
    }
 
    public BlockDirectional(Material material, MapColor mapColor) {

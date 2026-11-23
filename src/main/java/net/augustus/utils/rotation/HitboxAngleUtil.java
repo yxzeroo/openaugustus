@@ -19,12 +19,10 @@ public class HitboxAngleUtil {
       double[] doubles = new double[8];
 
       for (int i = 0; i < vecs.length; i++) {
-         Vec3 vec2 = vecs[i];
-         Vec3 vec3 = vec2.subtract(vec);
-         double d = MathHelper.clamp_double(
+         Vec3 vec3 = vecs[i].subtract(vec);
+         doubles[i] = MathHelper.clamp_double(
             -Math.toDegrees(Math.atan2(vec3.yCoord, Math.sqrt(vec3.xCoord * vec3.xCoord + vec3.zCoord * vec3.zCoord))), -90.0, 90.0
          );
-         doubles[i] = d;
       }
 
       return findMinMaxWithIndices(doubles);
@@ -37,8 +35,7 @@ public class HitboxAngleUtil {
 
    public static double[] getYawRange(Vec3 vec, AxisAlignedBB box) {
       double d = 0.0 / 0.0;
-      double d2 = 0.0;
-      return getExpandedYawRange(vec, box, d2, d);
+      return getExpandedYawRange(vec, box, 0.0, d);
    }
 
    public static double getNormalizedYawInExpandedBox(AxisAlignedBB box, Vec3 vec, double d, double d2, double d3) {
@@ -59,10 +56,8 @@ public class HitboxAngleUtil {
       double[] doubles = new double[4];
 
       for (int i = 0; i < vecs.length; i++) {
-         Vec3 vec2 = vecs[i];
-         Vec3 vec3 = vec2.subtract(vec);
-         double d = Math.toDegrees(Math.atan2(vec3.zCoord, vec3.xCoord));
-         doubles[i] = d;
+         Vec3 vec3 = vecs[i].subtract(vec);
+         doubles[i] = Math.toDegrees(Math.atan2(vec3.zCoord, vec3.xCoord));
       }
 
       double d2 = 0.0;
@@ -97,8 +92,7 @@ public class HitboxAngleUtil {
    public static double[] normalizeYawInterval(double d, double d2) {
       double d3 = normalizeAngle360(d);
       double d4 = normalizeAngle360(d2);
-      double d5 = Math.abs(d3 - d4);
-      if (d5 > 180.0) {
+      if (Math.abs(d3 - d4) > 180.0) {
          if (d3 < d4) {
             d3 += 360.0;
          } else {
@@ -112,9 +106,7 @@ public class HitboxAngleUtil {
    }
 
    public static final double inverseLerpRange(double[] doubles, double d) {
-      double d2 = d - doubles[0];
-      double d3 = doubles[1] - doubles[0];
-      return d2 / d3;
+      return (d - doubles[0]) / (doubles[1] - doubles[0]);
    }
 
    public static double getNormalizedYawPosition(double d, double d2, double d3) {
@@ -122,8 +114,7 @@ public class HitboxAngleUtil {
       double d5 = getShortestAngularDistance(d4, normalizeAngle360(d));
       double d6 = getShortestAngularDistance(normalizeAngle360(d), normalizeAngle360(d2));
       double d7 = getShortestAngularDistance(normalizeAngle360(d2), d4);
-      double d8 = d2 - d;
-      double d9 = d5 / d8;
+      double d9 = d5 / (d2 - d);
       if (!Double.isFinite(d9)) {
          d9 = 0.5;
       }
@@ -184,17 +175,14 @@ public class HitboxAngleUtil {
 
    public static final double getNormalizedPitchInBox(AxisAlignedBB box, Vec3 vec, double d) {
       double[] pitchRange = getPitchRange(vec, box);
-      double d2 = d - pitchRange[0];
-      double d3 = pitchRange[1] - pitchRange[0];
-      return d2 / d3;
+      return (d - pitchRange[0]) / (pitchRange[1] - pitchRange[0]);
    }
 
    public static double[] getExpandedYawRange(Vec3 vec, AxisAlignedBB box, double d, double d2) {
       double[] extremeYawAngles = getExtremeYawAngles(vec, box);
       double d3 = normalizeAngle360(extremeYawAngles[0]);
       double d4 = normalizeAngle360(extremeYawAngles[1]);
-      double d5 = Math.abs(d3 - d4);
-      if (d5 > 180.0) {
+      if (Math.abs(d3 - d4) > 180.0) {
          if (d3 < d4) {
             d3 += 360.0;
          } else {

@@ -62,22 +62,15 @@ public class Session {
             && Minecraft.getMinecraft().getCurrentServerData() != null
             && Minecraft.getMinecraft().getCurrentServerData().serverIP != null
             && !Minecraft.getMinecraft().isSingleplayer()) {
-            AccountEntry accountEntry2 = this.accountEntry;
-            String serverIP = Minecraft.getMinecraft().getCurrentServerData().serverIP;
-            accountEntry2.markUnbannedOnServer(serverIP);
+            this.accountEntry.markUnbannedOnServer(Minecraft.getMinecraft().getCurrentServerData().serverIP);
          }
 
          if (flag && this.accountEntry.getSessionStartTime() <= 0L) {
-            AccountEntry accountEntry3 = this.accountEntry;
-            long l = System.currentTimeMillis();
-            accountEntry3.setSessionStartTime(l);
+            this.accountEntry.setSessionStartTime(System.currentTimeMillis());
          } else {
             if (!flag && this.accountEntry.getSessionStartTime() > 0L) {
-               AccountEntry accountEntry4 = this.accountEntry;
-               long l2 = System.currentTimeMillis() - this.accountEntry.getSessionStartTime();
-               accountEntry4.addPlayTime(l2);
-               long l3 = -1L;
-               this.accountEntry.setSessionStartTime(l3);
+               this.accountEntry.addPlayTime(System.currentTimeMillis() - this.accountEntry.getSessionStartTime());
+               this.accountEntry.setSessionStartTime(-1L);
             }
          }
       }

@@ -8,7 +8,7 @@ public class TextLabelSetting extends Setting {
    private int renderedHeight;
    private String text;
 
-   public TextLabelSetting(Module module, DoubleValue doubleValue, String str) {
+   public TextLabelSetting(Module module, SettingGroup doubleValue, String str) {
        super(module, doubleValue, str);
       this.renderedHeight = 27;
    }
@@ -16,13 +16,10 @@ public class TextLabelSetting extends Setting {
    @Override
    public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
       if (flag) {
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          double d = (double)n3;
          double d2 = (double)n4;
-         double d3 = d;
-         String text2 = this.text;
-         customFontUtil.drawString(text2, d3, d2, colorInt);
+         customFontUtil.drawString(this.text, d, d2, colorInt);
       }
    }
 

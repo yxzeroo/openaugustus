@@ -169,8 +169,7 @@ public class BlockSkull extends BlockContainer {
 
             for (int j = 0; j < witherPattern2.getPalmLength(); j++) {
                for (int k = 0; k < witherPattern2.getThumbLength(); k++) {
-                  BlockWorldState blockWorldState2 = patternHelper.translateOffset(j, k, 0);
-                  world.setBlockState(blockWorldState2.getPos(), Blocks.air.getDefaultState(), 2);
+                  world.setBlockState(patternHelper.translateOffset(j, k, 0).getPos(), Blocks.air.getDefaultState(), 2);
                }
             }
 
@@ -208,8 +207,7 @@ public class BlockSkull extends BlockContainer {
 
             for (int idx = 0; idx < witherPattern2.getPalmLength(); idx++) {
                for (int index = 0; index < witherPattern2.getThumbLength(); index++) {
-                  BlockWorldState blockWorldState3 = patternHelper.translateOffset(idx, index, 0);
-                  world.notifyNeighborsRespectDebug(blockWorldState3.getPos(), Blocks.air);
+                  world.notifyNeighborsRespectDebug(patternHelper.translateOffset(idx, index, 0).getPos(), Blocks.air);
                }
             }
          }

@@ -20,8 +20,7 @@ public class EventGameLoop extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      GameLoopListener listener = (GameLoopListener)obj;
-      this.call2(listener);
+      this.call2((GameLoopListener)obj);
    }
 
    public void call2(GameLoopListener listener) {

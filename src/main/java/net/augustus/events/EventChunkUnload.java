@@ -9,8 +9,7 @@ public class EventChunkUnload extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      ChunkUnloadListener listener = (ChunkUnloadListener)obj;
-      this.call2(listener);
+      this.call2((ChunkUnloadListener)obj);
    }
 
    private void setChunkKey(long l) {
@@ -22,7 +21,6 @@ public class EventChunkUnload extends AbstractEvent {
    }
 
    public void call2(ChunkUnloadListener listener) {
-      long chunkKey2 = this.chunkKey;
-      listener.onChunkUnload2(chunkKey2);
+      listener.onChunkUnload2(this.chunkKey);
    }
 }

@@ -112,8 +112,7 @@ public abstract class GuiSlot {
                int n7 = this.mouseY - this.top - this.headerPadding + (int)this.amountScrolled - 4;
                int n8 = n7 / this.slotHeight;
                if (n8 < this.getSize() && this.mouseX >= n5 && this.mouseX <= n6 && n8 >= 0 && n7 >= 0) {
-                  boolean flag2 = n8 == this.selectedElement && Minecraft.getSystemTime() - this.lastClicked < 250L;
-                  this.elementClicked(n8, flag2, this.mouseX, this.mouseY);
+                  this.elementClicked(n8, n8 == this.selectedElement && Minecraft.getSystemTime() - this.lastClicked < 250L, this.mouseX, this.mouseY);
                   this.selectedElement = n8;
                   this.lastClicked = Minecraft.getSystemTime();
                } else if (this.mouseX >= n5 && this.mouseX <= n6 && n7 < 0) {
@@ -240,9 +239,7 @@ public abstract class GuiSlot {
    public void drawScreen(int mouseX2, int mouseY2, float partialTicks) {
       if (this.visible) {
          if (Minecraft.getMinecraft().currentScreen instanceof GuiMultiplayer) {
-            int n = this.left + (this.width / 2 - this.getListWidth() / 2);
-            int n2 = this.left + this.width / 2 + this.getListWidth() / 2;
-            RenderUtil.drawRect3(n - 2, 0, n2 + 2, this.height, Integer.MIN_VALUE);
+            RenderUtil.drawRect3((this.left + (this.width / 2 - this.getListWidth() / 2)) - 2, 0, (this.left + this.width / 2 + this.getListWidth() / 2) + 2, this.height, Integer.MIN_VALUE);
          }
 
          this.mouseX = mouseX2;
@@ -350,12 +347,9 @@ public abstract class GuiSlot {
          GlStateManager.shadeModel(7424);
          GlStateManager.enableAlpha();
          GlStateManager.disableBlend();
-         ScaledResolution sr = new ScaledResolution(this.mc);
-         boolean flag = true;
-         BlurShadowManager.flushRenderQueues(sr, flag);
+         BlurShadowManager.flushRenderQueues(new ScaledResolution(this.mc), true);
          if (Augustus.getInstance().getModuleManager().notifications.isToggled()) {
-            boolean flag2 = true;
-            Augustus.getInstance().getModuleManager().notifications.renderNotifications(flag2);
+            Augustus.getInstance().getModuleManager().notifications.renderNotifications(true);
          }
       }
    }

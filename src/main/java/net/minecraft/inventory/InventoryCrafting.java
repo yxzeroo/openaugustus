@@ -126,8 +126,7 @@ public class InventoryCrafting implements IInventory {
    }
 
    public InventoryCrafting(Container container, int n, int n2) {
-      int n3 = n * n2;
-      this.stackList = new ItemStack[n3];
+      this.stackList = new ItemStack[n * n2];
       this.eventHandler = container;
       this.inventoryWidth = n;
       this.inventoryHeight = n2;

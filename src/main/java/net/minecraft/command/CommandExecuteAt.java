@@ -50,8 +50,7 @@ public class CommandExecuteAt extends CommandBase {
             double d6 = parseDouble(d3, strings[7], false);
             Block blockByText = getBlockByText(commandSender, strings[8]);
             int n = parseInt(strings[9], -1, 15);
-            BlockPos pos2 = new BlockPos(d4, d5, d6);
-            IBlockState blockState = entityWorld.getBlockState(pos2);
+            IBlockState blockState = entityWorld.getBlockState(new BlockPos(d4, d5, d6));
             if (blockState.getBlock() != blockByText || n >= 0 && blockState.getBlock().getMetaFromState(blockState) != n) {
                throw new CommandException("commands.execute.failed", new Object[]{"detect", entity.getName()});
             }
@@ -64,8 +63,7 @@ public class CommandExecuteAt extends CommandBase {
          ICommandManager commandManager = MinecraftServer.getServer().getCommandManager();
 
          try {
-            int n2 = commandManager.executeCommand(obj, str);
-            if (n2 < 1) {
+            if (commandManager.executeCommand(obj, str) < 1) {
                throw new CommandException("commands.execute.allInvocationsFailed", new Object[]{str});
             }
          } catch (Throwable e) {

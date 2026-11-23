@@ -48,8 +48,7 @@ public class DynamicLights {
    private static boolean initialized;
 
    public static int getCombinedLight(int n, int n2, int n3, int n4) {
-      double lightLevel = getLightLevel(n, n2, n3);
-      return getCombinedLight(lightLevel, n4);
+      return getCombinedLight(getLightLevel(n, n2, n3), n4);
    }
 
    public static void removeLights(RenderGlobal renderGlobal) {
@@ -57,8 +56,7 @@ public class DynamicLights {
          List list = mapDynamicLights.valueList();
 
          for (int i = 0; i < list.size(); i++) {
-            DynamicLight dynamicLight = (DynamicLight)list.get(i);
-            dynamicLight.updateLitChunks(renderGlobal);
+            ((DynamicLight)list.get(i)).updateLitChunks(renderGlobal);
          }
 
          mapDynamicLights.clear();
@@ -69,8 +67,7 @@ public class DynamicLights {
       WorldClient theWorld = renderGlobal.getTheWorld();
       if (theWorld != null) {
          for (Entity entity : (Iterable<Entity>)(theWorld.getLoadedEntityList())) {
-            int lightLevel = getLightLevel(entity);
-            if (lightLevel > 0) {
+            if (getLightLevel(entity) > 0) {
                int entityId = entity.getEntityId();
                DynamicLight dynamicLight = mapDynamicLights.get(entityId);
                if (dynamicLight == null) {
@@ -107,8 +104,7 @@ public class DynamicLights {
       } else {
          Item item = stack.getItem();
          if (item instanceof ItemBlock) {
-            ItemBlock itemBlock = (ItemBlock)item;
-            Block block = itemBlock.getBlock();
+            Block block = ((ItemBlock)item).getBlock();
             if (block != null) {
                return block.getLightValue();
             }
@@ -175,8 +171,7 @@ public class DynamicLights {
    public static int getCombinedLight(double d, int n) {
       if (d > 0.0) {
          int n2 = (int)(d * 16.0);
-         int n3 = n & 0xFF;
-         if (n2 > n3) {
+         if (n2 > (n & 0xFF)) {
             n &= -256;
             n |= n2;
          }
@@ -202,8 +197,7 @@ public class DynamicLights {
                List list = mapDynamicLights.valueList();
 
                for (int i = 0; i < list.size(); i++) {
-                  DynamicLight dynamicLight = (DynamicLight)list.get(i);
-                  dynamicLight.update(renderGlobal);
+                  ((DynamicLight)list.get(i)).update(renderGlobal);
                }
             }
          }
@@ -211,8 +205,7 @@ public class DynamicLights {
    }
 
    public static int getCombinedLight2(Entity entity, int n) {
-      double lightLevel = (double)getLightLevel(entity);
-      return getCombinedLight(lightLevel, n);
+      return getCombinedLight((double)getLightLevel(entity), n);
    }
 
    public static double getLightLevel(int n, int n2, int n3) {
@@ -239,8 +232,7 @@ public class DynamicLights {
 
                if (d5 <= 56.25) {
                   double d6 = Math.sqrt(d5);
-                  double d7 = 1.0 - d6 / 7.5;
-                  double d8 = d7 * (double)lastLightLevel;
+                  double d8 = (1.0 - d6 / 7.5) * (double)lastLightLevel;
                   if (d8 > d) {
                      d = d8;
                   }
@@ -269,8 +261,7 @@ public class DynamicLights {
          return 0;
       } else {
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isSpectator()) {
+            if (((EntityPlayer)entity).isSpectator()) {
                return 0;
             }
          }
@@ -290,30 +281,21 @@ public class DynamicLights {
             } else if (entity instanceof EntityTNTPrimed) {
                return 15;
             } else if (entity instanceof EntityBlaze) {
-               EntityBlaze entityBlaze = (EntityBlaze)entity;
-               return entityBlaze.isCharged() ? 15 : 10;
+               return ((EntityBlaze)entity).isCharged() ? 15 : 10;
             } else if (entity instanceof EntityMagmaCube) {
-               EntityMagmaCube entityMagmaCube = (EntityMagmaCube)entity;
-               return (double)entityMagmaCube.squishFactor > 0.6 ? 13 : 8;
+               return (double)((EntityMagmaCube)entity).squishFactor > 0.6 ? 13 : 8;
             } else {
                if (entity instanceof EntityCreeper) {
-                  EntityCreeper entityCreeper = (EntityCreeper)entity;
-                  if ((double)entityCreeper.getCreeperFlashIntensity(0.0F) > 0.001) {
+                  if ((double)((EntityCreeper)entity).getCreeperFlashIntensity(0.0F) > 0.001) {
                      return 15;
                   }
                }
 
                if (entity instanceof EntityLivingBase) {
                   EntityLivingBase entity2 = (EntityLivingBase)entity;
-                  ItemStack heldItem = entity2.getHeldItem();
-                  int lightLevel2 = getLightLevel2(heldItem);
-                  ItemStack equipmentInSlot = entity2.getEquipmentInSlot(4);
-                  int lightLevel22 = getLightLevel2(equipmentInSlot);
-                  return Math.max(lightLevel2, lightLevel22);
+                  return Math.max(getLightLevel2(entity2.getHeldItem()), getLightLevel2(entity2.getEquipmentInSlot(4)));
                } else if (entity instanceof EntityItem) {
-                  EntityItem entityItem = (EntityItem)entity;
-                  ItemStack itemStack = getItemStack(entityItem);
-                  return getLightLevel2(itemStack);
+                  return getLightLevel2(getItemStack((EntityItem)entity));
                } else {
                   return 0;
                }
@@ -335,8 +317,7 @@ public class DynamicLights {
                String str5 = strings2[0];
                String str6 = strings2[1];
                String str7 = str3 + ":" + str5;
-               ResourceLocation location = new ResourceLocation(str7);
-               Object object = objectLocator.getObject(location);
+               Object object = objectLocator.getObject(new ResourceLocation(str7));
                if (object == null) {
                   connectedParser.warn("Object not found: " + str7);
                } else {

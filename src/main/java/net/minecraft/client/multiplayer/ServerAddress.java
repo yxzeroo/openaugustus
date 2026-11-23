@@ -52,9 +52,7 @@ public class ServerAddress {
          hashtable.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
          hashtable.put("java.naming.provider.url", "dns:");
          hashtable.put("com.sun.jndi.dns.timeout.retries", "1");
-         InitialDirContext initialDirContext = new InitialDirContext(hashtable);
-         Attributes attributes = initialDirContext.getAttributes("_minecraft._tcp." + str, new String[]{"SRV"});
-         String[] strings = attributes.get("srv").get().toString().split(" ", 4);
+         String[] strings = new InitialDirContext(hashtable).getAttributes("_minecraft._tcp." + str, new String[]{"SRV"}).get("srv").get().toString().split(" ", 4);
          return new String[]{strings[3], strings[2]};
       } catch (Throwable e) {
          return new String[]{str, Integer.toString(25565)};

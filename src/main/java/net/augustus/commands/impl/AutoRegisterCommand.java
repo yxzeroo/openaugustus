@@ -9,42 +9,32 @@ public class AutoRegisterCommand extends Command {
    public void commandAction(String[] strings, String str) {
       if (strings.length > 1) {
          if (strings[1].equalsIgnoreCase("set") && strings.length >= 3) {
-            String str2 = strings[2];
-            String str3 = str2;
+            String str3 = strings[2];
             ClientManagers.moduleManager.autoRegister.customPassword.setValue(str3);
-            String str4 = "Set CustomPassword to §2" + strings[2];
-            this.sendChat(str4);
+            this.sendChat("Set CustomPassword to §2" + strings[2]);
             return;
          }
 
          if (strings[1].equalsIgnoreCase("get")) {
             if (strings.length >= 3) {
-               String str5 = strings[2].toLowerCase();
-               switch (str5) {
+               switch (strings[2].toLowerCase()) {
                   case "custom":
-                     String str6 = "The CustomPassword is §2 " + ClientManagers.moduleManager.autoRegister.customPassword.getValue();
-                     this.sendChat(str6);
+                     this.sendChat("The CustomPassword is §2 " + ClientManagers.moduleManager.autoRegister.customPassword.getValue());
                      break;
                   case "generated":
                      StringBuilder sb = new StringBuilder().append("The generated password for ").append(mc.getSession().getUsername()).append(" is ");
-                     boolean flag = false;
                      String str7 = "generated";
-                     String str8 = sb.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str7, flag)).toString();
-                     this.sendChat(str8);
+                     this.sendChat(sb.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str7, false)).toString());
                      break;
                   case "private":
                      StringBuilder sb2 = new StringBuilder().append("The private password for ").append(mc.getSession().getUsername()).append(" is ");
-                     boolean flag2 = false;
                      String str9 = "private";
-                     String str10 = sb2.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str9, flag2)).toString();
-                     this.sendChat(str10);
+                     this.sendChat(sb2.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str9, false)).toString());
                      break;
                   case "private2":
                      StringBuilder sb3 = new StringBuilder().append("The private2 password for ").append(mc.getSession().getUsername()).append(" is ");
-                     boolean flag3 = false;
                      String str11 = "private2";
-                     String str12 = sb3.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str11, flag3)).toString();
-                     this.sendChat(str12);
+                     this.sendChat(sb3.append(ClientManagers.moduleManager.autoRegister.resolvePassword(str11, false)).toString());
                      break;
                   default:
                      this.sendUsageMessage();
@@ -53,8 +43,7 @@ public class AutoRegisterCommand extends Command {
                return;
             }
 
-            String str13 = "The CustomPassword is §2" + ClientManagers.moduleManager.autoRegister.customPassword.getValue();
-            this.sendChat(str13);
+            this.sendChat("The CustomPassword is §2" + ClientManagers.moduleManager.autoRegister.customPassword.getValue());
             return;
          }
       }
@@ -67,15 +56,12 @@ public class AutoRegisterCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (set or get password)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (set or get password)");
    }
 
    public void sendUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§cset§7] [§2Password§7]";
-      this.sendChat(str);
-      String str2 = "§7" + this.getCommand() + " [§cget§7] <custom/generated/private/private2>";
-      this.sendChat(str2);
+      this.sendChat("§7" + this.getCommand() + " [§cset§7] [§2Password§7]");
+      this.sendChat("§7" + this.getCommand() + " [§cget§7] <custom/generated/private/private2>");
    }
 
 }

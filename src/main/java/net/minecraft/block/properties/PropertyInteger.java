@@ -20,8 +20,7 @@ public class PropertyInteger extends PropertyHelper {
 
    @Override
    public int hashCode() {
-      int n = super.hashCode();
-      return 31 * n + this.allowedValues.hashCode();
+      return 31 * super.hashCode() + this.allowedValues.hashCode();
    }
 
    @Override

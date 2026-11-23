@@ -33,14 +33,10 @@ public class DefaultGeoModelBuilder implements GeoModelBuilder {
       geoBone2.reset = selfBone.getReset();
       geoBone2.inflate = selfBone.getInflate();
       geoBone2.parent = geoBone;
-      String name = selfBone.getName();
-      geoBone2.setName(name);
-      float f = (float)Math.toRadians((double)geoVector3f.getX());
-      geoBone2.setRotationX(f);
-      float f2 = (float)Math.toRadians((double)geoVector3f.getY());
-      geoBone2.setRotationY(f2);
-      float f3 = (float)Math.toRadians((double)geoVector3f.getZ());
-      geoBone2.setRotationZ(f3);
+      geoBone2.setName(selfBone.getName());
+      geoBone2.setRotationX((float)Math.toRadians((double)geoVector3f.getX()));
+      geoBone2.setRotationY((float)Math.toRadians((double)geoVector3f.getY()));
+      geoBone2.setRotationZ((float)Math.toRadians((double)geoVector3f.getZ()));
       geoBone2.rotationPointX = -geoVector3f2.getX();
       geoBone2.rotationPointY = geoVector3f2.getY();
       geoBone2.rotationPointZ = geoVector3f2.getZ();
@@ -48,8 +44,7 @@ public class DefaultGeoModelBuilder implements GeoModelBuilder {
          for (Cube cube : selfBone.getCubes()) {
             Double d = geoBone2.inflate == null ? null : geoBone2.inflate / 16.0;
             Boolean mirror = geoBone2.mirror;
-            Double d2 = d;
-            geoBone2.childCubes.add(GeoCube.createFromPojoCube(cube, modelProperties, d2, mirror));
+            geoBone2.childCubes.add(GeoCube.createFromPojoCube(cube, modelProperties, d, mirror));
          }
       }
 

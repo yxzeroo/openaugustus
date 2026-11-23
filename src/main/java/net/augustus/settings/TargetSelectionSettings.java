@@ -24,13 +24,8 @@ public class TargetSelectionSettings extends ModuleSettingGroupBase {
             this.getParentModule(), this.namePrefix + "TargetSorting", TargetSortMode.DISTANCE, TargetSortMode.values(), this.getParentGroup()
          ))
          .markVisualOnly();
-      String str = "TargetSorting";
-      this.targetSortingSetting = (NamedOptionSetting)namedOptionSetting.withDisplayName(str);
-      BooleanValue booleanValue = (BooleanValue)(new BooleanValue(this.getParentModule(), this.namePrefix + "SwitchOnlyToTargetsInRange", false, this.getParentGroup())).markVisualOnly();
-      SettingVisibilityCondition condition = () -> this.isSwitchInRangeVisible();
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withVisibility(condition);
-      String str2 = "SwitchOnlyToTargetsInRange";
-      this.switchOnlyToTargetsInRange = (BooleanValue)((BooleanValue)booleanValue2.withDisplayName(str2)).markVisualOnly();
+      this.targetSortingSetting = (NamedOptionSetting)namedOptionSetting.withDisplayName("TargetSorting");
+      this.switchOnlyToTargetsInRange = (BooleanValue)((BooleanValue)((BooleanValue)((BooleanValue)(new BooleanValue(this.getParentModule(), this.namePrefix + "SwitchOnlyToTargetsInRange", false, this.getParentGroup())).markVisualOnly()).withVisibility(() -> this.isSwitchInRangeVisible())).withDisplayName("SwitchOnlyToTargetsInRange")).markVisualOnly();
       return this;
    }
 
@@ -48,10 +43,7 @@ public class TargetSelectionSettings extends ModuleSettingGroupBase {
 
    public ToDoubleFunction createTargetComparatorKey(TargetSortMode targetSortMode, Rotation rotation, double d) {
       if (targetSortMode != null) {
-         Entity currentTarget2 = this.currentTarget;
-         boolean value = this.switchOnlyToTargetsInRange.getValue();
-         Entity entity = currentTarget2;
-         return targetSortMode.createComparatorKey(rotation, entity, d, value);
+         return targetSortMode.createComparatorKey(rotation, this.currentTarget, d, this.switchOnlyToTargetsInRange.getValue());
       } else {
          return obj -> 100000.0;
       }
@@ -61,11 +53,9 @@ public class TargetSelectionSettings extends ModuleSettingGroupBase {
       return this.targetFilter;
    }
 
-   public TargetSelectionSettings(Module module, String str, EntityTargetFilter entityTargetFilter, DoubleValue doubleValue) {
+   public TargetSelectionSettings(Module module, String str, EntityTargetFilter entityTargetFilter, SettingGroup doubleValue) {
        super(module, doubleValue);
-      MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this.getParentModule(), str + "Targets", entityTargetFilter.getOptions(), doubleValue);
-      String str2 = "Targets";
-      this.targets = (MultiOptionSetting)multiOptionSetting.named(str2).markVisualOnly();
+      this.targets = (MultiOptionSetting)new MultiOptionSetting(this.getParentModule(), str + "Targets", entityTargetFilter.getOptions(), doubleValue).named("Targets").markVisualOnly();
       this.namePrefix = str;
       this.targetFilter = entityTargetFilter;
    }
@@ -79,8 +69,7 @@ public class TargetSelectionSettings extends ModuleSettingGroupBase {
       if (this.targetSortingSetting == null) {
          throw new UnsupportedOperationException("Sorting not activated in the target selection");
       } else {
-         TargetSortMode selectedOption = (TargetSortMode)this.targetSortingSetting.getSelectedOption();
-         return this.createTargetComparatorKey(selectedOption, rotation, d);
+         return this.createTargetComparatorKey((TargetSortMode)this.targetSortingSetting.getSelectedOption(), rotation, d);
       }
    }
 
@@ -93,7 +82,7 @@ public class TargetSelectionSettings extends ModuleSettingGroupBase {
       return this;
    }
 
-   public TargetSelectionSettings(Module module, EntityTargetFilter entityTargetFilter, DoubleValue doubleValue) {
+   public TargetSelectionSettings(Module module, EntityTargetFilter entityTargetFilter, SettingGroup doubleValue) {
        this(module, "", entityTargetFilter, doubleValue);
    }
 

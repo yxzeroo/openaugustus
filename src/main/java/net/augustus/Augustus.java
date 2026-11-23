@@ -295,7 +295,6 @@ public class Augustus {
 
    public static byte[] readAllBytes(InputStream in, int n, long l) throws IOException {
       int n2 = 2147483639;
-      int n3 = 8192;
       int n4 = n;
       byte[] bytes = new byte[n];
       int n5 = 0;
@@ -311,7 +310,7 @@ public class Augustus {
          }
 
          if (n4 <= n2 - n4) {
-            n4 = Math.max(n4 << 1, n3);
+            n4 = Math.max(n4 << 1, 8192);
          } else {
             if (n4 == n2) {
                throw new OutOfMemoryError("Required array size too large");

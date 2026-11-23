@@ -188,8 +188,7 @@ public class RenderChunk {
             return this.compileTask;
          }
 
-         Object obj2 = null;
-         obj = obj2;
+         obj = null;
       } finally {
          this.lockCompileTask.unlock();
       }
@@ -222,16 +221,14 @@ public class RenderChunk {
 
    private boolean isWorldPlayerUpdate() {
       if (this.world instanceof WorldClient) {
-         WorldClient world2 = (WorldClient)this.world;
-         return world2.isPlayerUpdate();
+         return ((WorldClient)this.world).isPlayerUpdate();
       } else {
          return false;
       }
    }
 
    private void postRenderOverlay(EnumWorldBlockLayer enumWorldBlockLayer, RegionRenderCacheBuilder regionRenderCacheBuilder, CompiledChunk compiledChunk2, boolean[] flags) {
-      WorldRenderer worldRendererByLayer = regionRenderCacheBuilder.getWorldRendererByLayer(enumWorldBlockLayer);
-      if (worldRendererByLayer.isDrawing()) {
+      if (regionRenderCacheBuilder.getWorldRendererByLayer(enumWorldBlockLayer).isDrawing()) {
          compiledChunk2.setLayerStarted(enumWorldBlockLayer);
          flags[enumWorldBlockLayer.ordinal()] = true;
       }
@@ -520,8 +517,7 @@ public class RenderChunk {
    public RenderChunk getRenderChunkOffset16(ViewFrustum viewFrustum, EnumFacing facing) {
       if (!this.renderChunksOffset16Updated) {
          for (int i = 0; i < EnumFacing.VALUES.length; i++) {
-            EnumFacing facing2 = EnumFacing.VALUES[i];
-            BlockPos blockPosOffset16 = this.getBlockPosOffset16(facing2);
+            BlockPos blockPosOffset16 = this.getBlockPosOffset16(EnumFacing.VALUES[i]);
             this.renderChunksOffset16[i] = viewFrustum.getRenderChunk(blockPosOffset16);
          }
 

@@ -73,8 +73,7 @@ public class GenLayerHills extends GenLayer {
                } else if (biomesEqualOrMesaPlateau(n5, BiomeGenBase.mesaPlateau_F.biomeID)) {
                   n7 = BiomeGenBase.mesa.biomeID;
                } else if (n5 == BiomeGenBase.deepOcean.biomeID && this.nextInt(3) == 0) {
-                  int n8 = this.nextInt(2);
-                  if (n8 == 0) {
+                  if (this.nextInt(2) == 0) {
                      n7 = BiomeGenBase.plains.biomeID;
                   } else {
                      n7 = BiomeGenBase.forest.biomeID;

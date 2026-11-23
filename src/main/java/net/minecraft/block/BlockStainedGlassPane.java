@@ -36,8 +36,7 @@ public class BlockStainedGlassPane extends BlockPane {
    }
 
    static {
-      String str = "color";
-      COLOR = PropertyEnum.create(str, EnumDyeColor.class);
+      COLOR = PropertyEnum.create("color", EnumDyeColor.class);
    }
 
    @Override

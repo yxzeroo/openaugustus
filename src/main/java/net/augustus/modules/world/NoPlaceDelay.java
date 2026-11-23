@@ -21,9 +21,7 @@ public class NoPlaceDelay extends Module {
          FACING_OPTIONS.put(EnumFacing.getValues()[i], noPlaceDelayFacingOptions[i]);
       }
 
-      NoPlaceDelayFacingOption noPlaceDelayFacingOption = (NoPlaceDelayFacingOption)FACING_OPTIONS.get(EnumFacing.UP);
-      boolean flag = false;
-      noPlaceDelayFacingOption.setSelected(flag);
+      ((NoPlaceDelayFacingOption)FACING_OPTIONS.get(EnumFacing.UP)).setSelected(false);
       this.onlyOnTheseBlockFaces = new MultiOptionSetting(this, "Only on these block faces", noPlaceDelayFacingOptions);
    }
 

@@ -29,20 +29,15 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    private final Random random;
 
    public float drawFormattedString(String str, float f, float f2, int n, boolean flag, boolean flag2) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       if (str == null) {
          return 0.0F;
       } else {
          GL11.glPushMatrix();
          GL11.glScalef(1.0F / this.scaleFactor, 1.0F / this.scaleFactor, 1.0F);
-         boolean flag3 = true;
-         this.glStateSaver.setBlend(flag3);
-         boolean flag4 = false;
-         this.glStateSaver.setLighting(flag4);
-         boolean flag5 = true;
-         this.glStateSaver.setTexture2D(flag5);
-         boolean flag6 = false;
-         this.glStateSaver.setAlpha(flag6);
+         this.glStateSaver.setBlend(true);
+         this.glStateSaver.setLighting(false);
+         this.glStateSaver.setTexture2D(true);
+         this.glStateSaver.setAlpha(false);
          GlStateManager.enableBlend();
          GlStateManager.blendFunc(770, 771);
          GlStateManager.disableLighting();
@@ -158,18 +153,12 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
       this.shadowOffset = 0.5F;
       this.baseFont = font;
       this.scaleFactor = f;
-      CustomFontUtil.getFontStateFlags();
       float f2 = (float)font.getSize() / 2.0F * this.scaleFactor;
-      Font font2 = font.deriveFont(0, f2);
-      this.regularFont = this.createUnicodeFont(font2);
-      Font font3 = font.deriveFont(1, f2);
-      this.boldFont = this.createUnicodeFont(font3);
-      Font font4 = font.deriveFont(2, f2);
-      this.italicFont = this.createUnicodeFont(font4);
-      Font font5 = font.deriveFont(3, f2);
-      this.boldItalicFont = this.createUnicodeFont(font5);
-      boolean flag = false;
-      this.initColorCodeTable(flag);
+      this.regularFont = this.createUnicodeFont(font.deriveFont(0, f2));
+      this.boldFont = this.createUnicodeFont(font.deriveFont(1, f2));
+      this.italicFont = this.createUnicodeFont(font.deriveFont(2, f2));
+      this.boldItalicFont = this.createUnicodeFont(font.deriveFont(3, f2));
+      this.initColorCodeTable(false);
       this.fontHeight = (float)this.regularFont.getHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") / this.scaleFactor;
    }
 
@@ -182,13 +171,10 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    public int drawString2(String str, float f, float f2, int n) {
-      boolean flag = false;
-      boolean flag2 = false;
-      return (int)Math.ceil((double)this.drawFormattedString(str, f, f2, n, flag2, flag));
+      return (int)Math.ceil((double)this.drawFormattedString(str, f, f2, n, false, false));
    }
 
    private static boolean isColorCodeChar(char ch) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f';
    }
 
@@ -201,22 +187,11 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    public float drawStringWithShadow(String str, float f, float f2, int n) {
-      float f3 = f + 1.0F;
-      float f4 = f2 + 1.0F;
-      int n2 = darkenColorForShadow(n);
-      boolean flag = true;
-      boolean flag2 = false;
-      int n3 = n2;
-      float f5 = f4;
-      float f6 = f3;
-      this.drawFormattedString(str, f6, f5, n3, flag2, flag);
-      boolean flag3 = false;
-      boolean flag4 = false;
-      return this.drawFormattedString(str, f, f2, n, flag4, flag3);
+      this.drawFormattedString(str, f + 1.0F, f2 + 1.0F, darkenColorForShadow(n), false, true);
+      return this.drawFormattedString(str, f, f2, n, false, false);
    }
 
    private static int colorCodeToIndex(char ch) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       ch = Character.toLowerCase(ch);
       return ch >= 48 && ch <= 57 ? ch - 48 : 10 + (ch - 97);
    }
@@ -230,16 +205,12 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    public int measureSegmentWidth(UnicodeFont unicodeFont, String str) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       if (str == null || str.isEmpty()) {
          return 0;
       } else if (!str.endsWith(" ")) {
          return unicodeFont.getWidth(str);
       } else {
-         String str2 = str + ".";
-         int width = unicodeFont.getWidth(str2);
-         int width2 = unicodeFont.getWidth(".");
-         return width - width2;
+         return unicodeFont.getWidth(str + ".") - unicodeFont.getWidth(".");
       }
    }
 
@@ -248,7 +219,6 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    private void initColorCodeTable(boolean flag) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
 
       for (int i = 0; i < 32; i++) {
          int n = (i >> 3 & 1) * 85;
@@ -279,7 +249,6 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    public float getStringWidthFloat(String str) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       if (str != null && !str.isEmpty()) {
          boolean flag = false;
          boolean flag2 = false;
@@ -356,7 +325,6 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    private UnicodeFont getStyledFont(boolean flag, boolean flag2) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       if (flag && flag2) {
          return this.boldItalicFont;
       } else if (flag) {
@@ -367,12 +335,10 @@ public class FormattedUnicodeFontRenderer implements IFontRenderer {
    }
 
    public float drawString(String str, float f, float f2, int n, boolean flag) {
-      boolean flag2 = false;
-      return this.drawFormattedString(str, f, f2, n, flag, flag2);
+      return this.drawFormattedString(str, f, f2, n, flag, false);
    }
 
    private int resolveColorCode(int n, int n2, boolean flag) {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       int n3 = this.colorCodeTable[n2 + (flag ? 16 : 0)];
       int n4 = n >>> 24 & 0xFF;
       if (n4 == 0) {

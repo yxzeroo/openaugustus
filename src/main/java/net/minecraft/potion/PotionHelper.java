@@ -194,7 +194,6 @@ public class PotionHelper {
    }
 
    public static int applyIngredient(int n, String str) {
-      byte b = 0;
       int length = str.length();
       boolean flag = false;
       boolean flag2 = false;
@@ -202,7 +201,7 @@ public class PotionHelper {
       boolean flag4 = false;
       int n2 = 0;
 
-      for (int i = b; i < length; i++) {
+      for (int i = (byte)0; i < length; i++) {
          char ch = str.charAt(i);
          if (ch >= '0' && ch <= '9') {
             n2 *= 10;

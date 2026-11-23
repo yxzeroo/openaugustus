@@ -57,10 +57,7 @@ public class Teleporter {
                      for (int idx = 0; idx < 3; idx++) {
                         for (int index = 0; index < 4; index++) {
                            for (int i2 = -1; i2 < 4; i2++) {
-                              int n11 = i + (index - 1) * n9 + idx * n10;
-                              int n12 = k + i2;
-                              int n13 = j + (index - 1) * n10 - idx * n9;
-                              pos.set(n11, n12, n13);
+                              pos.set(i + (index - 1) * n9 + idx * n10, k + i2, j + (index - 1) * n10 - idx * n9);
                               if (i2 < 0 && !this.worldServerInstance.getBlockState(pos).getBlock().getMaterial().isSolid()
                                  || i2 >= 0 && !this.worldServerInstance.isAirBlock(pos)) {
                                  continue outerLoop;
@@ -104,10 +101,7 @@ public class Teleporter {
 
                         for (int i7 = 0; i7 < 4; i7++) {
                            for (int i8 = -1; i8 < 4; i8++) {
-                              int n16 = i3 + (i7 - 1) * n14;
-                              int n17 = i5 + i8;
-                              int n18 = i4 + (i7 - 1) * n15;
-                              pos.set(n16, n17, n18);
+                              pos.set(i3 + (i7 - 1) * n14, i5 + i8, i4 + (i7 - 1) * n15);
                               if (i8 < 0 && !this.worldServerInstance.getBlockState(pos).getBlock().getMaterial().isSolid()
                                  || i8 >= 0 && !this.worldServerInstance.isAirBlock(pos)) {
                                  continue outerLoop2;

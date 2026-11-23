@@ -137,8 +137,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
 
    public void drawWorldBackground(int n) {
       if (this.mc.theWorld != null) {
-         EventRenderGuiBackground event = RenderGuiBackgroundListener.onRenderGuiBackground2(this);
-         if (!event.isCancelled()) {
+         if (!RenderGuiBackgroundListener.onRenderGuiBackground2(this).isCancelled()) {
             this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
          }
       } else {
@@ -174,9 +173,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
 
                   if (this.mc.gameSettings.chatLinksPrompt) {
                      this.clickedLinkURI = uri;
-                     Minecraft mc2 = this.mc;
-                     GuiConfirmOpenLink guiConfirmOpenLink = new GuiConfirmOpenLink(this, chatClickEvent.getValue(), 31102009, false);
-                     mc2.displayGuiScreen((GuiScreen)guiConfirmOpenLink);
+                     this.mc.displayGuiScreen((GuiScreen)new GuiConfirmOpenLink(this, chatClickEvent.getValue(), 31102009, false));
                   } else {
                      this.openWebLink(uri);
                   }
@@ -184,8 +181,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
                   LOGGER.error("Can't open url for " + chatClickEvent, e);
                }
             } else if (chatClickEvent.getAction() == ClickEvent.Action.OPEN_FILE) {
-               URI uri2 = new File(chatClickEvent.getValue()).toURI();
-               this.openWebLink(uri2);
+               this.openWebLink(new File(chatClickEvent.getValue()).toURI());
             } else if (chatClickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND) {
                this.setText(chatClickEvent.getValue(), true);
             } else if (chatClickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
@@ -428,17 +424,12 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
    }
 
    public void drawBackground(int n) {
-      boolean flag = false;
-      this.glStateSaver.setCull(flag);
-      boolean flag2 = true;
-      this.glStateSaver.setTexture2D(flag2);
-      boolean flag3 = false;
-      this.glStateSaver.setBlend(flag3);
+      this.glStateSaver.setCull(false);
+      this.glStateSaver.setTexture2D(true);
+      this.glStateSaver.setBlend(false);
       AugustusServer augustusServer = Augustus.getInstance().getModuleManager().augustusServer;
       if (augustusServer.isToggled() && augustusServer.customBackground.getValue()) {
-         BackgroundShader currentShader = Augustus.getInstance().getBackgroundShaderManager().getCurrentShader();
-         float f = 1800.0F;
-         currentShader.render(f);
+         Augustus.getInstance().getBackgroundShaderManager().getCurrentShader().render(1800.0F);
       } else {
          GlStateManager.disableLighting();
          GlStateManager.disableFog();

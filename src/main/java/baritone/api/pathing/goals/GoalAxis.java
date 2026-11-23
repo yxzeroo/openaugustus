@@ -15,10 +15,7 @@ public class GoalAxis implements Goal {
       int n4 = Math.abs(n);
       int n5 = Math.abs(n3);
       int n6 = Math.min(n4, n5);
-      int n7 = Math.max(n4, n5);
-      int n8 = n7 - n6;
-      double d = Math.min((double)n4, Math.min((double)n5, (double)n8 * SQRT_2_OVER_2));
-      return d * (Double)BaritoneAPI.getSettings().costHeuristic.value + GoalYLevel.calculate((Integer)BaritoneAPI.getSettings().axisHeight.value, n2);
+      return Math.min((double)n4, Math.min((double)n5, (double)(Math.max(n4, n5) - n6) * SQRT_2_OVER_2)) * (Double)BaritoneAPI.getSettings().costHeuristic.value + GoalYLevel.calculate((Integer)BaritoneAPI.getSettings().axisHeight.value, n2);
    }
 
    @Override

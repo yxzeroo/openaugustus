@@ -49,9 +49,7 @@ public final class RotationUtils {
 
    @Deprecated
    public static Optional reachable(EntityPlayerSP player, BlockPos pos, double d, boolean flag) {
-      IBaritone baritoneForPlayer = BaritoneAPI.getProvider().getBaritoneForPlayer(player);
-      IPlayerContext playerContext = baritoneForPlayer.getPlayerContext();
-      return reachable2(playerContext, pos, d, flag);
+      return reachable2(BaritoneAPI.getProvider().getBaritoneForPlayer(player).getPlayerContext(), pos, d, flag);
    }
 
    public static Vec3 calcLookDirectionFromRotation(Rotation rotation) {
@@ -68,8 +66,7 @@ public final class RotationUtils {
 
    @Deprecated
    public static Optional reachableOffset(Entity entity, BlockPos pos, Vec3 vec, double d, boolean flag) {
-      Vec3 vec2 = flag ? RayTraceUtils.inferSneakingEyePosition(entity) : entity.getPositionEyes(1.0F);
-      Rotation rotation = calcRotationFromVec3d(vec2, vec, new Rotation(entity.rotationYaw, entity.rotationPitch));
+      Rotation rotation = calcRotationFromVec3d(flag ? RayTraceUtils.inferSneakingEyePosition(entity) : entity.getPositionEyes(1.0F), vec, new Rotation(entity.rotationYaw, entity.rotationPitch));
       MovingObjectPosition hit = RayTraceUtils.rayTraceTowards(entity, rotation, d, flag);
       if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
          if (hit.getBlockPos().equals(pos)) {
@@ -98,8 +95,7 @@ public final class RotationUtils {
       if (optional.isPresent()) {
          return optional;
       } else {
-         IBlockState blockState = playerContext.world().getBlockState(pos);
-         AxisAlignedBB selectedBoundingBox = blockState.getBlock().getSelectedBoundingBox(playerContext.world(), pos);
+         AxisAlignedBB selectedBoundingBox = playerContext.world().getBlockState(pos).getBlock().getSelectedBoundingBox(playerContext.world(), pos);
 
          for (Vec3 vec : BLOCK_SIDE_MULTIPLIERS) {
             double d2 = (selectedBoundingBox.minX - (double)pos.getX()) * vec.xCoord + (selectedBoundingBox.maxX - (double)pos.getX()) * (1.0 - vec.xCoord);
@@ -128,8 +124,7 @@ public final class RotationUtils {
    }
 
    public static Optional reachableOffset2(IPlayerContext playerContext, BlockPos pos, Vec3 vec, double d, boolean flag) {
-      Vec3 vec2 = flag ? RayTraceUtils.inferSneakingEyePosition(playerContext.player()) : playerContext.player().getPositionEyes(1.0F);
-      Rotation rotation = calcRotationFromVec3d(vec2, vec, playerContext.playerRotations());
+      Rotation rotation = calcRotationFromVec3d(flag ? RayTraceUtils.inferSneakingEyePosition(playerContext.player()) : playerContext.player().getPositionEyes(1.0F), vec, playerContext.playerRotations());
       Rotation rotation2 = BaritoneAPI.getProvider().getBaritoneForPlayer(playerContext.player()).getLookBehavior().getAimProcessor().peekRotation(rotation);
       MovingObjectPosition hit = RayTraceUtils.rayTraceTowards(playerContext.player(), rotation2, d, flag);
       if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {

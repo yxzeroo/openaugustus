@@ -52,8 +52,7 @@ public class BlockStoneBrick extends Block {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockStoneBrick.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockStoneBrick.EnumType.class);
    }
 
 

@@ -26,8 +26,7 @@ public class ZipArchiveExtractor {
             if (!i.isDirectory()) {
                extractEntryToFile(zipInputStream, str2);
             } else {
-               File file2 = new File(str2);
-               file2.mkdirs();
+               new File(str2).mkdirs();
             }
 
             zipInputStream.closeEntry();

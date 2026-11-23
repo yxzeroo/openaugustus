@@ -13,7 +13,7 @@ import net.augustus.settings.ColorSetting;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.listeners.ItemGlintListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class CustomGlint extends Module implements ItemGlintListener, RenderListener {
    public final BooleanValue remove;
@@ -22,7 +22,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
    public final BooleanValue customColor;
    public final ColorSetting color2;
    private final MultiOptionSetting fakeEnchant;
-   public final StringValue speed;
+   public final DoubleValue speed;
    private int glintColorIndex;
 
    public CustomGlint() {
@@ -31,9 +31,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
       MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "ItemsToRemove", CustomGlintRemoveItemOption.values());
       BooleanValue remove2 = this.remove;
       this.remove.getClass();
-      BooleanValue booleanValue = remove2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.itemsToRemove = multiOptionSetting.visibleWhen(condition);
+      this.itemsToRemove = multiOptionSetting.visibleWhen(() -> remove2.getValue());
       BooleanValue booleanValue2 = new BooleanValue(this, "BrighterEnchantments", false);
       SettingVisibilityCondition condition2 = () -> {
          return !this.remove.getValue() || Arrays.stream(CustomGlintRemoveItemOption.values()).anyMatch(option -> {
@@ -48,9 +46,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
          });
       };
       this.customColor = (BooleanValue)booleanValue3.withVisibility(condition3);
-      ColorSetting colorSetting = new ColorSetting(this, "Color", new Color(128, 64, 204));
-      SettingVisibilityCondition condition4 = () -> this.isColorSettingVisible();
-      this.color2 = (ColorSetting)colorSetting.withVisibility(condition4);
+      this.color2 = (ColorSetting)new ColorSetting(this, "Color", new Color(128, 64, 204)).withVisibility(() -> this.isColorSettingVisible());
       MultiOptionSetting multiOptionSetting2 = new MultiOptionSetting(this, "FakeEnchant", CustomGlintFakeEnchantOption.values());
       SettingVisibilityCondition condition5 = () -> {
          return !this.remove.getValue() || Arrays.stream(CustomGlintRemoveItemOption.values()).anyMatch(option3 -> {
@@ -58,7 +54,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
          });
       };
       this.fakeEnchant = multiOptionSetting2.visibleWhen(condition5);
-      StringValue stringValue = new StringValue(this, "Speed", 1.0, 0.01, 10.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "Speed", 1.0, 0.01, 10.0, 2);
       SettingVisibilityCondition condition6 = () -> {
          return !this.remove.getValue() || Arrays.stream(CustomGlintRemoveItemOption.values()).anyMatch(option4 -> {
             return !option4.isSelected();
@@ -78,10 +74,8 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 12;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)12);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -93,8 +87,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
    public void onItemGlint(EventItemGlint event) {
       if (this.customColor.getValue()) {
          int glintColorIndex2 = this.glintColorIndex;
-         int colorInt = this.color2.getColorInt(glintColorIndex2);
-         event.setColor(colorInt);
+         event.setColor(this.color2.getColorInt(glintColorIndex2));
          this.glintColorIndex++;
       }
 
@@ -102,8 +95,7 @@ public class CustomGlint extends Module implements ItemGlintListener, RenderList
          event.cancel();
       }
 
-      double value = this.speed.getValue();
-      event.setSpeed(value);
+      event.setSpeed(this.speed.getValue());
    }
 
    private boolean isColorSettingVisible() {

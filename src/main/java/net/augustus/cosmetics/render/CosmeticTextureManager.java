@@ -23,12 +23,7 @@ public class CosmeticTextureManager {
    private void downloadGifTask(String str, String str2, BufferedImage image, CosmeticImageProcessor cosmeticImageProcessor) {
 
       try {
-         Object[] array = new Object[0];
-         short s = 5000;
-         InputStream in = CosmeticsHttpUtil.openUrlStream(str, s, array);
-         CosmeticGifFrame[] cosmeticGifFrames = CosmeticGifDecoder.decodeGifFrames(in);
-         CosmeticGifFrame[] cosmeticGifFrames2 = cosmeticGifFrames;
-         this.registerGifFrames(str2, cosmeticGifFrames2, image, cosmeticImageProcessor);
+         this.registerGifFrames(str2, CosmeticGifDecoder.decodeGifFrames(CosmeticsHttpUtil.openUrlStream(str, (short)5000, new Object[0])), image, cosmeticImageProcessor);
       } catch (Exception e) {
          MoreCosmeticsCore.logInfo("Failed to load " + str + ": " + e.toString());
       }
@@ -37,17 +32,14 @@ public class CosmeticTextureManager {
    private void readLocalImageTask(String str, ResourceLocation location, CosmeticImageProcessor cosmeticImageProcessor, File file, BufferedImage image, String str2) {
 
       try {
-         BufferedImage image2 = ImageIO.read(file);
-         BufferedImage image3 = cosmeticImageProcessor.processImage(image2);
-         this.registerStaticTexture(str, location, image3, image);
+         this.registerStaticTexture(str, location, cosmeticImageProcessor.processImage(ImageIO.read(file)), image);
       } catch (IOException e) {
          MoreCosmeticsCore.logInfo("Failed to load " + str2 + ": " + e.toString());
       }
    }
 
    public ResourceLocation getTextureLocation(String str, String str2) {
-      BufferedImage image = (BufferedImage)null;
-      CosmeticBufferedTexture orLoadTexture = this.getOrLoadTexture(str, str2, image);
+      CosmeticBufferedTexture orLoadTexture = this.getOrLoadTexture(str, str2, (BufferedImage)null);
       return orLoadTexture != null ? orLoadTexture.getTextureLocation() : null;
    }
 
@@ -83,9 +75,7 @@ public class CosmeticTextureManager {
          MoreCosmeticsCore.EXECUTOR.execute(() -> {
 
             try {
-               CosmeticGifFrame[] cosmeticGifFrames = CosmeticGifDecoder.decodeGifFrames(FileUtils.openInputStream(file));
-               CosmeticGifFrame[] cosmeticGifFrames2 = cosmeticGifFrames;
-               this.registerGifFrames(str, cosmeticGifFrames2, image, cosmeticImageProcessor);
+               this.registerGifFrames(str, CosmeticGifDecoder.decodeGifFrames(FileUtils.openInputStream(file)), image, cosmeticImageProcessor);
             } catch (IOException e) {
                MoreCosmeticsCore.logInfo("Failed to load " + str2 + ": " + e.toString());
             }
@@ -103,28 +93,19 @@ public class CosmeticTextureManager {
    private void downloadImageTask(String str, String str2, ResourceLocation location, CosmeticImageProcessor cosmeticImageProcessor, BufferedImage image) {
 
       try {
-         Object[] array = new Object[0];
-         short s = 5000;
-         InputStream in = CosmeticsHttpUtil.openUrlStream(str, s, array);
-         BufferedImage image2 = ImageIO.read(in);
-         BufferedImage image3 = cosmeticImageProcessor.processImage(image2);
-         BufferedImage image4 = TrustedHostWhitelist.isOfficialHost(str) ? null : image;
-         BufferedImage image5 = image3;
-         this.registerStaticTexture(str2, location, image5, image4);
+         this.registerStaticTexture(str2, location, cosmeticImageProcessor.processImage(ImageIO.read(CosmeticsHttpUtil.openUrlStream(str, (short)5000, new Object[0]))), TrustedHostWhitelist.isOfficialHost(str) ? null : image);
       } catch (Exception e) {
          MoreCosmeticsCore.logInfo("Failed to load " + str + ": " + e.toString());
       }
    }
 
    public CosmeticBufferedTexture getOrLoadTexture(String str, String str2, BufferedImage image) {
-      CosmeticImageProcessor identity = CosmeticImageProcessor.IDENTITY;
-      return this.getOrLoadTexture(str, str2, image, identity);
+      return this.getOrLoadTexture(str, str2, image, CosmeticImageProcessor.IDENTITY);
    }
 
    public CosmeticBufferedTexture getOrLoadTexture(String str, String str2, BufferedImage image, CosmeticImageProcessor cosmeticImageProcessor) {
       if (this.animatedTextures.containsKey(str)) {
-         AnimatedCosmeticTexture animatedCosmeticTexture = (AnimatedCosmeticTexture)this.animatedTextures.get(str);
-         return animatedCosmeticTexture.getCurrentFrame();
+         return ((AnimatedCosmeticTexture)this.animatedTextures.get(str)).getCurrentFrame();
       } else if (this.staticTextures.containsKey(str)) {
          return (CosmeticBufferedTexture)this.staticTextures.get(str);
       } else {
@@ -161,8 +142,7 @@ public class CosmeticTextureManager {
 
       for (int i = 0; i < length; i++) {
          CosmeticGifFrame cosmeticGifFrame = cosmeticGifFrames[i];
-         BufferedImage image2 = cosmeticGifFrame.getImage();
-         BufferedImage image3 = cosmeticImageProcessor.processImage(image2);
+         BufferedImage image3 = cosmeticImageProcessor.processImage(cosmeticGifFrame.getImage());
          if (i == 0 && image != null) {
             cosmeticTextureAlphaMask = new CosmeticTextureAlphaMask(image, image3.getWidth(), image3.getHeight());
          }
@@ -173,8 +153,7 @@ public class CosmeticTextureManager {
          image3 = cosmeticTextureAlphaMask == null ? image3 : cosmeticTextureAlphaMask.applyMask(image3);
          CosmeticBufferedTexture cosmeticBufferedTexture = cosmeticBufferedTextures[i] = new CosmeticBufferedTexture(location, image3);
          if (image != null) {
-            float f = (float)image.getWidth() / (float)image.getHeight();
-            cosmeticBufferedTexture.setAspectRatio(f);
+            cosmeticBufferedTexture.setAspectRatio((float)image.getWidth() / (float)image.getHeight());
          }
 
          Minecraft.getMinecraft().getTextureManager().loadTexture(location, cosmeticBufferedTexture);
@@ -189,17 +168,11 @@ public class CosmeticTextureManager {
 
          try {
             String[] strings = new String[1];
-            Object[] array = (Object[])null;
-            short s = 5000;
-            InputStream in = CosmeticsHttpUtil.openUrlStream(str2, s, strings, array);
+            InputStream in = CosmeticsHttpUtil.openUrlStream(str2, (short)5000, strings, (Object[])null);
             if (strings[0].contains("jpeg") || strings[0].contains("png")) {
-               BufferedImage image2 = ImageIO.read(in);
-               BufferedImage image3 = cosmeticImageProcessor.processImage(image2);
-               this.registerStaticTexture(str, location, image3, image);
+               this.registerStaticTexture(str, location, cosmeticImageProcessor.processImage(ImageIO.read(in)), image);
             } else if (strings[0].contains("gif")) {
-               CosmeticGifFrame[] cosmeticGifFrames = CosmeticGifDecoder.decodeGifFrames(in);
-               CosmeticGifFrame[] cosmeticGifFrames2 = cosmeticGifFrames;
-               this.registerGifFrames(str, cosmeticGifFrames2, image, cosmeticImageProcessor);
+               this.registerGifFrames(str, CosmeticGifDecoder.decodeGifFrames(in), image, cosmeticImageProcessor);
             }
          } catch (Exception e) {
             MoreCosmeticsCore.logInfo("Failed to load " + str2 + ": " + e.toString());
@@ -208,10 +181,9 @@ public class CosmeticTextureManager {
    }
 
    public ResourceLocation getOrCreateResourceLocation(String str, int n, char ch, short s, String str2) {
-      Object obj = null;
       ResourceLocation location = (ResourceLocation)this.resourceLocations.get(str);
       ResourceLocation location2 = location;
-      if (obj != null) {
+      if (null != null) {
          if (location == null) {
             this.resourceLocations.put(str, location = new ResourceLocation(str2));
          }
@@ -239,14 +211,12 @@ public class CosmeticTextureManager {
 
    private void registerStaticTexture(String str, ResourceLocation location, BufferedImage image, BufferedImage image2) {
       if (image2 != null) {
-         CosmeticTextureAlphaMask cosmeticTextureAlphaMask = new CosmeticTextureAlphaMask(image2, image.getWidth(), image.getHeight(), true);
-         image = cosmeticTextureAlphaMask.applyMask(image);
+         image = new CosmeticTextureAlphaMask(image2, image.getWidth(), image.getHeight(), true).applyMask(image);
       }
 
       CosmeticBufferedTexture cosmeticBufferedTexture = new CosmeticBufferedTexture(location, image);
       if (image2 != null) {
-         float f = (float)image2.getWidth() / (float)image2.getHeight();
-         cosmeticBufferedTexture.setAspectRatio(f);
+         cosmeticBufferedTexture.setAspectRatio((float)image2.getWidth() / (float)image2.getHeight());
       }
 
       this.staticTextures.put(str, cosmeticBufferedTexture);

@@ -8,12 +8,10 @@ public enum Weather {
    THUNDER;
 
 public static Weather getWeather(World world, float f) {
-      float thunderStrength = world.getThunderStrength(f);
-      if (thunderStrength > 0.5F) {
+      if (world.getThunderStrength(f) > 0.5F) {
          return THUNDER;
       } else {
-         float rainStrength = world.getRainStrength(f);
-         return rainStrength > 0.5F ? RAIN : CLEAR;
+         return world.getRainStrength(f) > 0.5F ? RAIN : CLEAR;
       }
    }
 }

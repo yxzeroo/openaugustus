@@ -11,15 +11,13 @@ public class CustomUniforms {
 
    public void reset() {
       for (int i = 0; i < this.uniforms.length; i++) {
-         CustomUniform customUniform = this.uniforms[i];
-         customUniform.reset();
+         this.uniforms[i].reset();
       }
    }
 
    private void resetCache() {
       for (int i = 0; i < this.expressionsCached.length; i++) {
-         IExpressionCached expressionCached = this.expressionsCached[i];
-         expressionCached.reset();
+         this.expressionsCached[i].reset();
       }
    }
 
@@ -27,8 +25,7 @@ public class CustomUniforms {
       this.resetCache();
 
       for (int i = 0; i < this.uniforms.length; i++) {
-         CustomUniform customUniform = this.uniforms[i];
-         customUniform.update();
+         this.uniforms[i].update();
       }
    }
 
@@ -39,8 +36,7 @@ public class CustomUniforms {
       for (String str : (Iterable<String>)(map.keySet())) {
          IExpression expression = (IExpression)map.get(str);
          if (expression instanceof IExpressionCached) {
-            IExpressionCached expressionCached = (IExpressionCached)expression;
-            list.add(expressionCached);
+            list.add((IExpressionCached)expression);
          }
       }
 
@@ -49,8 +45,7 @@ public class CustomUniforms {
 
    public void setProgram(int n) {
       for (int i = 0; i < this.uniforms.length; i++) {
-         CustomUniform customUniform = this.uniforms[i];
-         customUniform.setProgram(n);
+         this.uniforms[i].setProgram(n);
       }
    }
 }

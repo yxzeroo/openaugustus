@@ -44,8 +44,7 @@ public class ShadedRsaKeyFactory extends KeyFactorySpi {
       if (keySpec instanceof X509EncodedKeySpec) {
          X509EncodedKeySpec x509EncodedKeySpec = (X509EncodedKeySpec)keySpec;
          ShadedRsaPublicKeyImpl shadedRsaPublicKeyImpl = new ShadedRsaPublicKeyImpl(l3, x509EncodedKeySpec.getEncoded());
-         String keyAlgo = this.type.getKeyAlgo();
-         checkKeyAlgo(shadedRsaPublicKeyImpl, keyAlgo);
+         checkKeyAlgo(shadedRsaPublicKeyImpl, this.type.getKeyAlgo());
          return shadedRsaPublicKeyImpl;
       } else if (keySpec instanceof ShadedRsaPublicKeySpec) {
          ShadedRsaPublicKeySpec shadedRsaPublicKeySpec = (ShadedRsaPublicKeySpec)keySpec;
@@ -63,10 +62,7 @@ public class ShadedRsaKeyFactory extends KeyFactorySpi {
    }
 
    public static void checkRSAProviderKeyLengths(int n, ShadedBigInteger shadedBigInteger) throws InvalidKeyException {
-      int n2 = n + 7 & -8;
-      int n3 = 2147483647;
-      short s = 512;
-      checkKeyLengths(n2, shadedBigInteger, s, n3);
+      checkKeyLengths(n + 7 & -8, shadedBigInteger, (short)512, 2147483647);
    }
 
    @Override
@@ -102,8 +98,7 @@ public class ShadedRsaKeyFactory extends KeyFactorySpi {
 
    @Override
    public PublicKey engineGeneratePublic(KeySpec keySpec) throws InvalidKeySpecException {
-      long l = a ^ 94568921859109L;
-      long l2 = l ^ 99366112174318L;
+      long l2 = (a ^ 94568921859109L) ^ 99366112174318L;
 
       try {
          return this.generatePublic(l2, keySpec);

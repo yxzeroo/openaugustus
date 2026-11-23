@@ -181,8 +181,7 @@ public class ModelBlockDefinition {
 
       @Override
       public int hashCode() {
-         int n = this.name.hashCode();
-         return 31 * n + this.listVariants.hashCode();
+         return 31 * this.name.hashCode() + this.listVariants.hashCode();
       }
 
       public Variants(String str, List list) {
@@ -201,8 +200,7 @@ public class ModelBlockDefinition {
 
    public static class Deserializer implements JsonDeserializer {
       public ModelBlockDefinition deserializeModelBlockDefinition(JsonElement elem, Type type, JsonDeserializationContext context) throws JsonParseException {
-         JsonObject asJsonObject = elem.getAsJsonObject();
-         List list = this.parseVariantsList(context, asJsonObject);
+         List list = this.parseVariantsList(context, elem.getAsJsonObject());
          return new ModelBlockDefinition((Collection)list);
       }
 

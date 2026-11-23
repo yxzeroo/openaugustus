@@ -88,7 +88,6 @@ public class BetterSnow {
    }
 
    public static boolean shouldRender(IBlockAccess world, IBlockState state, BlockPos pos) {
-      Block block = state.getBlock();
-      return !checkBlock(block, state) ? false : hasSnowNeighbours(world, pos);
+      return !checkBlock(state.getBlock(), state) ? false : hasSnowNeighbours(world, pos);
    }
 }

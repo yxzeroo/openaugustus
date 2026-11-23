@@ -4,8 +4,8 @@ import net.augustus.settings.SelectableOption;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.Module;
 import net.augustus.modules.player.InvManager;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.potion.Potion;
 
 public enum AutoUsePotionTriggerOption implements SelectableOption {
@@ -34,7 +34,7 @@ public enum AutoUsePotionTriggerOption implements SelectableOption {
    private final String name;
    private final Potion potion;
    private boolean selected;
-   private StringValue minDurationSetting;
+   private DoubleValue minDurationSetting;
 
    private AutoUsePotionTriggerOption(String str, Potion potion2) {
       this.name = str;
@@ -60,15 +60,10 @@ public enum AutoUsePotionTriggerOption implements SelectableOption {
    }
 
    public static void initSettings(Module module) {
-      AutoUsePotionTriggerOption[] values = values();
 
-      for (AutoUsePotionTriggerOption option : values) {
-         DoubleValue doubleValue = new DoubleValue(module, option.getName(), true);
-         SettingVisibilityCondition condition = option::isSelected;
-         DoubleValue doubleValue2 = doubleValue.visibleWhen(condition);
-         StringValue stringValue = new StringValue(module, option.getName() + "Minimum effect duration left in seconds", 5.0, 0.0, 100.0, 0, doubleValue2);
-         String str = "Minimum effect duration left";
-         option.minDurationSetting = stringValue.named(str);
+      for (AutoUsePotionTriggerOption option : values()) {
+         SettingGroup doubleValue2 = new SettingGroup(module, option.getName(), true).visibleWhen(option::isSelected);
+         option.minDurationSetting = new DoubleValue(module, option.getName() + "Minimum effect duration left in seconds", 5.0, 0.0, 100.0, 0, doubleValue2).named("Minimum effect duration left");
       }
    }
 
@@ -76,7 +71,7 @@ public enum AutoUsePotionTriggerOption implements SelectableOption {
       return option.potion;
    }
 
-   public static StringValue getMinDurationSetting(AutoUsePotionTriggerOption option) {
+   public static DoubleValue getMinDurationSetting(AutoUsePotionTriggerOption option) {
       return option.minDurationSetting;
    }
 

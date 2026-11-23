@@ -194,9 +194,8 @@ public class CommandClone extends CommandBase {
                      if (pendingBlockUpdates2 != null) {
                         for (NextTickListEntry nextTickListEntry : (Iterable<NextTickListEntry>)(pendingBlockUpdates2)) {
                            if (structureBoundingBox.isVecInside(nextTickListEntry.position)) {
-                              BlockPos pos9 = nextTickListEntry.position.add(pos4);
                               entityWorld.scheduleBlockUpdate(
-                                 pos9, nextTickListEntry.getBlock(), (int)(nextTickListEntry.scheduledTime - entityWorld.getWorldInfo().getWorldTotalTime()), nextTickListEntry.priority
+                                 nextTickListEntry.position.add(pos4), nextTickListEntry.getBlock(), (int)(nextTickListEntry.scheduledTime - entityWorld.getWorldInfo().getWorldTotalTime()), nextTickListEntry.priority
                               );
                            }
                         }

@@ -13,8 +13,7 @@ public class DemoWorldServer extends WorldServer {
    public static final WorldSettings demoWorldSettings;
 
    static {
-      String str = "North Carolina";
-      demoWorldSeed = (long)str.hashCode();
+      demoWorldSeed = (long)"North Carolina".hashCode();
       demoWorldSettings = new WorldSettings(demoWorldSeed, WorldSettings.GameType.SURVIVAL, true, false, WorldType.DEFAULT).enableBonusChest();
    }
 

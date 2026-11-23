@@ -191,9 +191,8 @@ public class ModelBlock {
       private Map getTextures(JsonObject json) {
          HashMap map = Maps.newHashMap();
          if (json.has("textures")) {
-            JsonObject asJsonObject = json.getAsJsonObject("textures");
 
-            for (Entry entry : asJsonObject.entrySet()) {
+            for (Entry entry : json.getAsJsonObject("textures").entrySet()) {
                map.put(entry.getKey(), ((JsonElement)entry.getValue()).getAsString());
             }
          }
@@ -235,8 +234,7 @@ public class ModelBlock {
             boolean flag = this.getAmbientOcclusionEnabled(asJsonObject);
             ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
             if (asJsonObject.has("display")) {
-               JsonObject jsonObject = JsonUtils.getJsonObject(asJsonObject, "display");
-               itemCameraTransforms = (ItemCameraTransforms)context.deserialize(jsonObject, ItemCameraTransforms.class);
+               itemCameraTransforms = (ItemCameraTransforms)context.deserialize(JsonUtils.getJsonObject(asJsonObject, "display"), ItemCameraTransforms.class);
             }
 
             return isEmpty2 ? new ModelBlock(new ResourceLocation(parent), textures, flag, true, itemCameraTransforms) : new ModelBlock(modelElements, textures, flag, true, itemCameraTransforms);

@@ -39,7 +39,6 @@ public class EventTimerUpdate extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      TimerUpdateListener listener = (TimerUpdateListener)obj;
-      this.call2(listener);
+      this.call2((TimerUpdateListener)obj);
    }
 }

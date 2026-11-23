@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 import net.augustus.modules.Module;
 import net.augustus.modules.legit.AutoEagle;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 
@@ -35,17 +35,13 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
    private int lastTickDurationMs;
    private int pitchMouseDelta;
 
-   public UnlegitAutoEagleMode(AutoEagle autoEagle, DoubleValue doubleValue) {
+   public UnlegitAutoEagleMode(AutoEagle autoEagle, SettingGroup doubleValue) {
        super(autoEagle, doubleValue, "UnLegit");
       BooleanValue booleanValue = new BooleanValue(this.parentModule, "SilentRotation", true, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.silentRotation = (BooleanValue)booleanValue.withVisibility(condition);
+      this.silentRotation = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       booleanValue = new BooleanValue(this.parentModule, "Intave", false, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.intave = (BooleanValue)booleanValue.withVisibility(condition2);
-      BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "MidRotation", false, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.midRotation = (BooleanValue)booleanValue2.withVisibility(condition3);
+      this.intave = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
+      this.midRotation = (BooleanValue)new BooleanValue(this.parentModule, "MidRotation", false, this.modeSetting).withVisibility(() -> this.isSelected());
       this.targetBlockRayHit = null;
       this.isSneakingInput = false;
       this.lastMouseMoveTime = 0L;
@@ -56,14 +52,10 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 19;
-      this.toggleEventSubscription(b3);
-      byte b4 = 29;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)29);
    }
 
    @Override
@@ -124,9 +116,8 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
             }
 
             Module parentModule2 = this.parentModule;
-            byte b = -2;
             float pitch = scaffoldRaycastResult.pitch;
-            ClientManagers.rotationController.requestPitch(pitch, b, parentModule2);
+            ClientManagers.rotationController.requestPitch(pitch, (byte)-2, parentModule2);
             this.pitchMouseDelta = RotationUtil.computeMouseDeltas(0.0F, scaffoldRaycastResult.pitch, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)[1];
             this.targetBlockRayHit = scaffoldRaycastResult.hitResult;
          }
@@ -155,8 +146,7 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
             int n = (int)(System.currentTimeMillis() - this.lastMouseMoveTime);
             double d = (double)this.pitchMouseDelta / (double)this.lastTickDurationMs * (double)n;
             if (this.pitchMouseDelta != 0) {
-               int n2 = (int)d;
-               event.setDeltaY(n2);
+               event.setDeltaY((int)d);
             }
          }
       }
@@ -170,8 +160,7 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
          ((AutoEagle)this.parentModule).eagling = false;
       } else {
          if (!((AutoEagle)this.parentModule).onlyWhileSneak.getValue()) {
-            boolean flag = true;
-            event.setSneak(flag);
+            event.setSneak(true);
          }
 
          this.isSneakingInput = event.isSneak();
@@ -184,8 +173,7 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
 
    private void unsneakWhileMoving(EventMoveInput event) {
       if (MoveUtil.isMoving() && ((AutoEagle)this.parentModule).isPitchAboveMinimum()) {
-         boolean flag = false;
-         event.setSneak(flag);
+         event.setSneak(false);
       }
    }
 
@@ -200,7 +188,7 @@ public class UnlegitAutoEagleMode extends AutoEagleMode implements MoveInputList
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new UnlegitAutoEagleMode((AutoEagle)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new UnlegitAutoEagleMode((AutoEagle)obj, (SettingGroup)obj2);
    }
 
    private double evaluateRaycastCandidate(float f, ScaffoldRaycastResult scaffoldRaycastResult) {

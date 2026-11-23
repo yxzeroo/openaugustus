@@ -75,11 +75,7 @@ public class CustomGuiProperties {
    }
 
    private boolean matchesChest(TileEntityChest tileEntityChest, BlockPos pos, IBlockAccess world) {
-      boolean flag = tileEntityChest.adjacentChestXNeg != null || tileEntityChest.adjacentChestXPos != null || tileEntityChest.adjacentChestZNeg != null || tileEntityChest.adjacentChestZPos != null;
-      boolean flag2 = tileEntityChest.getChestType() == 1;
-      boolean isChristmas = CustomGuis.isChristmas;
-      boolean flag3 = false;
-      return this.matchesChest(flag, flag2, isChristmas, flag3);
+      return this.matchesChest(tileEntityChest.adjacentChestXNeg != null || tileEntityChest.adjacentChestXPos != null || tileEntityChest.adjacentChestZNeg != null || tileEntityChest.adjacentChestZPos != null, tileEntityChest.getChestType() == 1, CustomGuis.isChristmas, false);
    }
 
    private static ResourceLocation parseTextureLocation(String str, String str2) {
@@ -140,9 +136,7 @@ public class CustomGuiProperties {
             str6 = StrUtils.removePrefixSuffix(str6, "/", ".png");
             String str7 = str2 + str6 + ".png";
             String property2 = properties.getProperty(str5);
-            ResourceLocation location2 = new ResourceLocation(str7);
-            ResourceLocation location3 = parseTextureLocation(property2, str3);
-            map.put(location2, location3);
+            map.put(new ResourceLocation(str7), parseTextureLocation(property2, str3));
          }
       }
 
@@ -182,11 +176,9 @@ public class CustomGuiProperties {
    private boolean matchesChest(BlockPos pos, IBlockAccess world) {
       TileEntity tileEntity = world.getTileEntity(pos);
       if (tileEntity instanceof TileEntityChest) {
-         TileEntityChest tileEntityChest = (TileEntityChest)tileEntity;
-         return this.matchesChest(tileEntityChest, pos, world);
+         return this.matchesChest((TileEntityChest)tileEntity, pos, world);
       } else if (tileEntity instanceof TileEntityEnderChest) {
-         TileEntityEnderChest tileEntityEnderChest = (TileEntityEnderChest)tileEntity;
-         return this.matchesEnderChest(tileEntityEnderChest, pos, world);
+         return this.matchesEnderChest((TileEntityEnderChest)tileEntity, pos, world);
       } else {
          return false;
       }
@@ -207,8 +199,7 @@ public class CustomGuiProperties {
             boolean flag = false;
 
             for (int i = 0; i < this.professions.length; i++) {
-               VillagerProfession villagerProfession = this.professions[i];
-               if (villagerProfession.matches(profession, careerId)) {
+               if (this.professions[i].matches(profession, careerId)) {
                   flag = true;
                   break;
                }
@@ -270,8 +261,7 @@ public class CustomGuiProperties {
          return false;
       } else {
          if (this.biomes != null) {
-            BiomeGenBase biomeGenForCoords = world.getBiomeGenForCoords(pos);
-            if (!Matches.biome(biomeGenForCoords, this.biomes)) {
+            if (!Matches.biome(world.getBiomeGenForCoords(pos), this.biomes)) {
                return false;
             }
          }
@@ -325,8 +315,7 @@ public class CustomGuiProperties {
    }
 
    private EnumGuiVariant getHorseVariant(EntityHorse entityHorse) {
-      int horseType = entityHorse.getHorseType();
-      switch (horseType) {
+      switch (entityHorse.getHorseType()) {
          case 0:
             return EnumGuiVariant.HORSE;
          case 1:
@@ -344,8 +333,7 @@ public class CustomGuiProperties {
       } else {
          EntityHorse entityHorse = (EntityHorse)entity;
          if (this.variants != null) {
-            EnumGuiVariant horseVariant = this.getHorseVariant(entityHorse);
-            if (!Config.equalsOne2(horseVariant, this.variants)) {
+            if (!Config.equalsOne2(this.getHorseVariant(entityHorse), this.variants)) {
                return false;
             }
          }
@@ -365,8 +353,7 @@ public class CustomGuiProperties {
       } else {
          TileEntityDispenser tileEntityDispenser = (TileEntityDispenser)tileEntity;
          if (this.variants != null) {
-            EnumGuiVariant dispenserVariant = this.getDispenserVariant(tileEntityDispenser);
-            if (!Config.equalsOne2(dispenserVariant, this.variants)) {
+            if (!Config.equalsOne2(this.getDispenserVariant(tileEntityDispenser), this.variants)) {
                return false;
             }
          }

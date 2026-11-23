@@ -22,8 +22,7 @@ public class HttpUtils {
 
       String str2;
       try {
-         URL url = new URL(str);
-         conn = (HttpURLConnection)url.openConnection(Minecraft.getMinecraft().getProxy());
+         conn = (HttpURLConnection)new URL(str).openConnection(Minecraft.getMinecraft().getProxy());
          conn.setRequestMethod("POST");
          if (map != null) {
             for (Object obj : map.keySet()) {
@@ -69,8 +68,7 @@ public class HttpUtils {
 
       byte[] bytes;
       try {
-         URL url = new URL(str);
-         conn = (HttpURLConnection)url.openConnection(Minecraft.getMinecraft().getProxy());
+         conn = (HttpURLConnection)new URL(str).openConnection(Minecraft.getMinecraft().getProxy());
          conn.setDoInput(true);
          conn.setDoOutput(false);
          conn.connect();
@@ -108,11 +106,9 @@ public class HttpUtils {
    public static synchronized String getPlayerItemsUrl() {
       if (playerItemsUrl == null) {
          try {
-            boolean flag = Config.parseBoolean2(System.getProperty("player.models.local"), false);
-            if (flag) {
+            if (Config.parseBoolean2(System.getProperty("player.models.local"), false)) {
                File mcDataDir = Minecraft.getMinecraft().mcDataDir;
-               File file = new File(mcDataDir, "playermodels");
-               playerItemsUrl = file.toURI().toURL().toExternalForm();
+               playerItemsUrl = new File(mcDataDir, "playermodels").toURI().toURL().toExternalForm();
             }
          } catch (Exception e) {
             Config.warn("" + e.getClass().getName() + ": " + e.getMessage());

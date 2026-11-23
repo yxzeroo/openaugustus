@@ -107,8 +107,7 @@ public class ConnectedTextures {
    }
 
    private static boolean isNeighbour(ConnectedProperties connectedProperties, IBlockAccess world, IBlockState state, BlockPos pos, int n, TextureAtlasSprite textureAtlasSprite, int n2) {
-      IBlockState blockState = world.getBlockState(pos);
-      return isNeighbour(connectedProperties, world, state, pos, blockState, n, textureAtlasSprite, n2);
+      return isNeighbour(connectedProperties, world, state, pos, world.getBlockState(pos), n, textureAtlasSprite, n2);
    }
 
    public static Map[][] getSpriteQuadCompactMaps() {
@@ -183,8 +182,7 @@ public class ConnectedTextures {
             return null;
          } else {
             if (connectedProperties.biomes != null) {
-               BiomeGenBase biomeGenForCoords = world.getBiomeGenForCoords(pos);
-               if (!connectedProperties.matchesBiome(biomeGenForCoords)) {
+               if (!connectedProperties.matchesBiome(world.getBiomeGenForCoords(pos))) {
                   return null;
                }
             }
@@ -528,8 +526,7 @@ public class ConnectedTextures {
    }
 
    private static int getWoodAxis(int n, int n2) {
-      int n3 = (n2 & 12) >> 2;
-      switch (n3) {
+      switch ((n2 & 12) >> 2) {
          case 1:
             return 2;
          case 2:
@@ -730,8 +727,7 @@ public class ConnectedTextures {
          List listQuadsCtmMultipass = renderEnv.getListQuadsCtmMultipass(connectedTextureSingle);
 
          for (int i = 0; i < listQuadsCtmMultipass.size(); i++) {
-            BakedQuad bakedQuad2 = (BakedQuad)listQuadsCtmMultipass.get(i);
-            BakedQuad bakedQuad3 = bakedQuad2;
+            BakedQuad bakedQuad3 = (BakedQuad)listQuadsCtmMultipass.get(i);
 
             for (int j = 0; j < 3; j++) {
                BakedQuad[] connectedTextureSingle2 = getConnectedTextureSingle(world, state, pos, facing, bakedQuad3, false, j + 1, renderEnv);
@@ -754,8 +750,7 @@ public class ConnectedTextures {
    }
 
    public static BakedQuad[] getConnectedTexture(IBlockAccess world, IBlockState state, BlockPos pos, BakedQuad bakedQuad, RenderEnv renderEnv) {
-      TextureAtlasSprite sprite = bakedQuad.getSprite();
-      if (sprite == null) {
+      if (bakedQuad.getSprite() == null) {
          return renderEnv.getArrayQuadsCtm(bakedQuad);
       } else {
          Block block = state.getBlock();
@@ -763,8 +758,7 @@ public class ConnectedTextures {
             bakedQuad = getQuad(emptySprite, bakedQuad);
             return renderEnv.getArrayQuadsCtm(bakedQuad);
          } else {
-            EnumFacing face = bakedQuad.getFace();
-            return getConnectedTextureMultiPass(world, state, pos, face, bakedQuad, renderEnv);
+            return getConnectedTextureMultiPass(world, state, pos, bakedQuad.getFace(), bakedQuad, renderEnv);
          }
       }
    }
@@ -807,8 +801,7 @@ public class ConnectedTextures {
          }
 
          if (connectedProperties.matchTileIcons != null) {
-            TextureAtlasSprite neighbourIcon = getNeighbourIcon(world, state, pos, blockState, n);
-            if (neighbourIcon != textureAtlasSprite) {
+            if (getNeighbourIcon(world, state, pos, blockState, n) != textureAtlasSprite) {
                return false;
             }
          }
@@ -911,8 +904,7 @@ public class ConnectedTextures {
                      listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[16], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
                   }
 
-                  Object obj2 = null;
-                  return (BakedQuad[])obj2;
+                  return (BakedQuad[])null;
                }
 
                if (borderFlags[0] && borderFlags[2]) {
@@ -921,8 +913,7 @@ public class ConnectedTextures {
                      listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[14], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
                   }
 
-                  Object obj3 = null;
-                  return (BakedQuad[])obj3;
+                  return (BakedQuad[])null;
                }
 
                if (borderFlags[1] && borderFlags[3]) {
@@ -931,8 +922,7 @@ public class ConnectedTextures {
                      listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[2], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
                   }
 
-                  Object obj4 = null;
-                  return (BakedQuad[])obj4;
+                  return (BakedQuad[])null;
                }
 
                if (borderFlags[0] && borderFlags[3]) {
@@ -941,8 +931,7 @@ public class ConnectedTextures {
                      listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[0], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
                   }
 
-                  Object obj5 = null;
-                  return (BakedQuad[])obj5;
+                  return (BakedQuad[])null;
                }
 
                boolean[] borderFlags3 = renderEnv.getBorderFlags3();
@@ -983,8 +972,7 @@ public class ConnectedTextures {
                   listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[16], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
                }
 
-               Object obj6 = null;
-               return (BakedQuad[])obj6;
+               return (BakedQuad[])null;
             }
 
             listQuadsOverlay.addQuad(getQuadFull(connectedProperties.tileIcons[8], bakedQuad, connectedProperties.tintIndex), connectedProperties.tintBlockState);
@@ -1363,13 +1351,11 @@ public class ConnectedTextures {
          IResourcePack[] resourcePacks = Config.getResourcePacks();
 
          for (int i = resourcePacks.length - 1; i >= 0; i--) {
-            IResourcePack resourcePack = resourcePacks[i];
-            updateIcons(textureMap, resourcePack);
+            updateIcons(textureMap, resourcePacks[i]);
          }
 
          updateIcons(textureMap, Config.getDefaultResourcePack());
-         ResourceLocation location = new ResourceLocation("mcpatcher/ctm/default/empty");
-         emptySprite = textureMap.registerSprite(location);
+         emptySprite = textureMap.registerSprite(new ResourceLocation("mcpatcher/ctm/default/empty"));
          spriteQuadMaps = new Map[textureMap.getCountRegisteredSprites() + 1];
          spriteQuadFullMaps = new Map[textureMap.getCountRegisteredSprites() + 1];
          spriteQuadCompactMaps = new Map[textureMap.getCountRegisteredSprites() + 1][];
@@ -1426,8 +1412,7 @@ public class ConnectedTextures {
    }
 
    private static void remapVertexUv(int[] ints, int n, TextureAtlasSprite textureAtlasSprite, TextureAtlasSprite textureAtlasSprite2) {
-      int n2 = ints.length / 4;
-      int n3 = n2 * n;
+      int n3 = (ints.length / 4) * n;
       float f = Float.intBitsToFloat(ints[n3 + 4]);
       float f2 = Float.intBitsToFloat(ints[n3 + 4 + 1]);
       double spriteU16 = textureAtlasSprite.getSpriteU16(f);
@@ -1442,10 +1427,8 @@ public class ConnectedTextures {
    private static boolean isHideGlassPane(IBlockAccess world, IBlockState state, BlockPos pos, BakedQuad bakedQuad, RenderEnv renderEnv) {
       Block block = state.getBlock();
       if (block instanceof BlockPane) {
-         TextureAtlasSprite sprite = bakedQuad.getSprite();
-         if (sprite.getIconName().startsWith("minecraft:blocks/glass_pane_top")) {
-            IBlockState blockState = world.getBlockState(pos.offset(bakedQuad.getFace()));
-            return blockState == state;
+         if (bakedQuad.getSprite().getIconName().startsWith("minecraft:blocks/glass_pane_top")) {
+            return world.getBlockState(pos.offset(bakedQuad.getFace())) == state;
          }
       }
 
@@ -1542,8 +1525,7 @@ public class ConnectedTextures {
          Config.dbg("ConnectedTextures: " + str);
 
          try {
-            ResourceLocation location = new ResourceLocation(str);
-            InputStream inputStream = resourcePack.getInputStream(location);
+            InputStream inputStream = resourcePack.getInputStream(new ResourceLocation(str));
             if (inputStream == null) {
                Config.warn("ConnectedTextures file not found: " + str);
             } else {
@@ -1573,9 +1555,7 @@ public class ConnectedTextures {
    private static synchronized BakedQuad[] getConnectedTextureCtmCompact(
       ConnectedProperties connectedProperties, IBlockAccess world, IBlockState state, BlockPos pos, int n, int n2, BakedQuad bakedQuad, int n3, RenderEnv renderEnv
    ) {
-      TextureAtlasSprite sprite = bakedQuad.getSprite();
-      int n4 = getConnectedTextureCtmIndex(connectedProperties, world, state, pos, n, n2, sprite, n3, renderEnv);
-      return ConnectedTexturesCompact.getConnectedTextureCtmCompact(n4, connectedProperties, n2, bakedQuad, renderEnv);
+      return ConnectedTexturesCompact.getConnectedTextureCtmCompact(getConnectedTextureCtmIndex(connectedProperties, world, state, pos, n, n2, bakedQuad.getSprite(), n3, renderEnv), connectedProperties, n2, bakedQuad, renderEnv);
    }
 
    private static TextureAtlasSprite getConnectedTextureRandom(ConnectedProperties connectedProperties, IBlockAccess world, BlockStateBase blockStateBase, BlockPos pos, int n) {
@@ -1636,8 +1616,7 @@ public class ConnectedTextures {
             }
 
             if (faceQuads.size() > 0) {
-               BakedQuad bakedQuad = (BakedQuad)faceQuads.get(0);
-               return bakedQuad.getSprite();
+               return ((BakedQuad)faceQuads.get(0)).getSprite();
             } else {
                List generalQuads = modelForState.getGeneralQuads();
                if (generalQuads == null) {
@@ -1694,8 +1673,7 @@ public class ConnectedTextures {
          }
 
          if (connectedProperties.connectTileIcons != null) {
-            TextureAtlasSprite neighbourIcon = getNeighbourIcon(world, state, pos, blockState, n);
-            if (!Config.isSameOne(neighbourIcon, connectedProperties.connectTileIcons)) {
+            if (!Config.isSameOne(getNeighbourIcon(world, state, pos, blockState, n), connectedProperties.connectTileIcons)) {
                return false;
             }
          }
@@ -1719,8 +1697,7 @@ public class ConnectedTextures {
       for (int i = 0; i < list.size(); i++) {
          List list2 = (List)list.get(i);
          if (list2 != null) {
-            ConnectedProperties[] connectedPropertiesArr = (ConnectedProperties[])list2.toArray(new ConnectedProperties[list2.size()]);
-            connectedPropertiesArrs[i] = connectedPropertiesArr;
+            connectedPropertiesArrs[i] = (ConnectedProperties[])list2.toArray(new ConnectedProperties[list2.size()]);
          }
       }
 
@@ -1738,8 +1715,7 @@ public class ConnectedTextures {
          } else if (state2 == AIR_DEFAULT_STATE) {
             return false;
          } else {
-            TextureAtlasSprite neighbourIcon = getNeighbourIcon(world, state, pos, state2, n);
-            return neighbourIcon == textureAtlasSprite;
+            return getNeighbourIcon(world, state, pos, state2, n) == textureAtlasSprite;
          }
       } else if (connectedProperties.connect == 3) {
          return state2 == null ? false : (state2 == AIR_DEFAULT_STATE ? false : state2.getBlock().getMaterial() == state.getBlock().getMaterial());
@@ -1759,8 +1735,7 @@ public class ConnectedTextures {
       } else if (textureAtlasSprite == SPRITE_DEFAULT) {
          return renderEnv.getArrayQuadsCtm(bakedQuad);
       } else {
-         BakedQuad quad = getQuad(textureAtlasSprite, bakedQuad);
-         return renderEnv.getArrayQuadsCtm(quad);
+         return renderEnv.getArrayQuadsCtm(getQuad(textureAtlasSprite, bakedQuad));
       }
    }
 

@@ -11,7 +11,7 @@ import net.augustus.events.EventAttackEntity;
 import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.util.EnumParticleTypes;
 
 public class AttackEffects extends Module implements AttackEntityListener {
@@ -45,13 +45,11 @@ public class AttackEffects extends Module implements AttackEntityListener {
          BooleanValue booleanValue = new BooleanValue(this, sb.append(this.formatEnumName(str)).toString(), false);
          sb = new StringBuilder();
          String str2 = enumParticleTypes.name();
-         StringValue stringValue = new StringValue(
+         DoubleValue stringValue = new DoubleValue(
             this, sb.append(this.formatEnumName(str2)).append(" Count").toString(), 1.0, 1.0, 20.0, 0
          );
          booleanValue.getClass();
-         BooleanValue booleanValue2 = booleanValue;
-         SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-         StringValue stringValue2 = stringValue.visibleWhen(condition);
+         DoubleValue stringValue2 = stringValue.visibleWhen(() -> booleanValue.getValue());
          this.particleSettingsMap.put(enumParticleTypes, new TuplePair(booleanValue, stringValue2));
       }
 
@@ -64,7 +62,7 @@ public class AttackEffects extends Module implements AttackEntityListener {
          for (Entry entry : (Iterable<Entry>)(this.particleSettingsMap.entrySet())) {
             if (((BooleanValue)((TuplePair)entry.getValue()).getFirst()).getValue()) {
                try {
-                  for (int i = 0; (double)i < ((StringValue)((TuplePair)entry.getValue()).getSecond()).getValue(); i++) {
+                  for (int i = 0; (double)i < ((DoubleValue)((TuplePair)entry.getValue()).getSecond()).getValue(); i++) {
                      mc.effectRenderer.emitParticleAtEntity(event.getTarget(), (EnumParticleTypes)entry.getKey());
                   }
                } catch (Exception e) {

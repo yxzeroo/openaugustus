@@ -101,18 +101,12 @@ public class LauncherNetworkClient extends Thread {
             System.exit(0);
          }
 
-         LauncherNetworkClient launcherNetworkClient = this;
-         boolean flag = false;
-         launcherNetworkClient.connected = flag;
+         this.connected = false;
       } else {
-         LauncherNetworkClient launcherNetworkClient2 = this;
-         boolean flag2 = true;
-         launcherNetworkClient2.connected = flag2;
+         this.connected = true;
          obj = channelFuture.channel();
          ((Channel)obj).closeFuture().addListener(future -> {
-            LauncherNetworkClient launcherNetworkClient3 = this;
-            boolean flag3 = false;
-            launcherNetworkClient3.connected = flag3;
+            this.connected = false;
             event.shutdownGracefully();
          });
       }
@@ -219,8 +213,7 @@ public class LauncherNetworkClient extends Thread {
       );
       this.launcherDataDir = System.getenv("APPDATA") + File.separator + "ElectricLauncher";
       this.proxyConfigFileName = "proxy.txt";
-      boolean flag = false;
-      this.connected = flag;
+      this.connected = false;
       instance = this;
       this.ensureDefaultProxyConfigFile();
    }
@@ -278,8 +271,7 @@ public class LauncherNetworkClient extends Thread {
       } catch (Exception e) {
       } finally {
          ((EventLoopGroup)obj).shutdownGracefully();
-         boolean flag = false;
-         this.connected = flag;
+         this.connected = false;
       }
    }
 

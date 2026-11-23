@@ -42,10 +42,8 @@ public class AutoWater extends Module implements ClickListener, SilentSlotListen
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 34;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
    }
 
    public void onSilentSlot() {
@@ -71,9 +69,7 @@ public class AutoWater extends Module implements ClickListener, SilentSlotListen
             if (this.autoSlot.getValue()) {
                n = this.findBucketHotbarSlot();
             } else {
-               int n2 = mc.thePlayer.inventory.currentItem + 36;
-               int n3 = n2;
-               n = this.checkBucketSlot(n3);
+               n = this.checkBucketSlot(mc.thePlayer.inventory.currentItem + 36);
             }
 
             this.bucketHotbarSlot = n;
@@ -81,8 +77,7 @@ public class AutoWater extends Module implements ClickListener, SilentSlotListen
 
          boolean flag = false;
          IBlockState blockState = mc.theWorld.getBlockState(pos);
-         Block block = blockState.getBlock();
-         if (block instanceof BlockLiquid) {
+         if (blockState.getBlock() instanceof BlockLiquid) {
             flag = (Integer)blockState.getValue(BlockLiquid.LEVEL) == 0;
          }
 
@@ -105,9 +100,7 @@ public class AutoWater extends Module implements ClickListener, SilentSlotListen
             if (this.autoSlot.getValue()) {
                n4 = this.findBucketHotbarSlot();
             } else {
-               int n5 = mc.thePlayer.inventory.currentItem + 36;
-               int n6 = n5;
-               n4 = this.checkBucketSlot(n6);
+               n4 = this.checkBucketSlot(mc.thePlayer.inventory.currentItem + 36);
             }
 
             this.bucketHotbarSlot = n4;
@@ -116,18 +109,13 @@ public class AutoWater extends Module implements ClickListener, SilentSlotListen
 
       this.lastAimedBlockPos = mc.objectMouseOver == null ? null : mc.objectMouseOver.getBlockPos();
       if (this.autoSlot.getValue() && this.bucketHotbarSlot != -1) {
-         int bucketHotbarSlot2 = this.bucketHotbarSlot;
-         boolean value = this.silentSlotSwitching.getValue();
-         int n7 = bucketHotbarSlot2;
-         byte b = 5;
-         SilentSlotManager.requestSlot(this, b, n7, value);
+         SilentSlotManager.requestSlot(this, (byte)5, this.bucketHotbarSlot, this.silentSlotSwitching.getValue());
       }
    }
 
    public void onClick(EventClick event) {
       if (this.bucketHotbarSlot != -1 && this.ticksSinceLastUse > 2) {
-         byte b = 1;
-         event.addRightClicks(b);
+         event.addRightClicks((byte)1);
          this.ticksSinceLastUse = 0;
       }
    }

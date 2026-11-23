@@ -116,10 +116,7 @@ public class ChunkProviderEnd implements IChunkProvider {
                            state = Blocks.end_stone.getDefaultState();
                         }
 
-                        int n5 = idx + i * 8;
-                        int n6 = m + k * 4;
-                        int n7 = index + j * 8;
-                        chunkPrimer.setBlockState(n5, n6, n7, state);
+                        chunkPrimer.setBlockState(idx + i * 8, m + k * 4, index + j * 8, state);
                         d16 += d17;
                      }
 

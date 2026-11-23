@@ -219,9 +219,8 @@ public class StepMsaDeviceCode extends InitialPreparationStep<StepMsaDeviceCode.
       @Override
       public int hashCode() {
          int PRIME = 59;
-         int result = 1;
          Object $callback = this.getCallback();
-         return result * 59 + ($callback == null ? 43 : $callback.hashCode());
+         return 1 * 59 + ($callback == null ? 43 : $callback.hashCode());
       }
    }
 }

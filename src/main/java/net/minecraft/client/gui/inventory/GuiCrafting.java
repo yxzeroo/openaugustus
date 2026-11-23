@@ -27,9 +27,7 @@ public class GuiCrafting extends GuiContainer {
    public void drawGuiContainerBackgroundLayer(float f, int n, int n2) {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       this.mc.getTextureManager().bindTexture(craftingTableGuiTextures);
-      int n3 = (this.width - this.xSize) / 2;
-      int n4 = (this.height - this.ySize) / 2;
-      this.drawTexturedModalRect(n3, n4, 0, 0, this.xSize, this.ySize);
+      this.drawTexturedModalRect((this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, this.xSize, this.ySize);
    }
 
    public GuiCrafting(InventoryPlayer inventoryPlayer, World world) {

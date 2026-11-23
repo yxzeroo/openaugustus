@@ -57,12 +57,9 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
@@ -95,19 +92,15 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
                double yCoord = nearestPointInBox.yCoord;
                double zCoord = nearestPointInBox.zCoord;
                Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag = false;
                float f = 180.0F;
-               float f2 = 180.0F;
-               Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, f2, f, flag);
-               Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, previousRotation2);
+               Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, 180.0F, f, false);
+               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, ClientManagers.rotationController.getPreviousRotation());
                rotationsToPos = this.findValidBlockRotation(rotationsToPos);
                if (rotationsToPos == null) {
                   return;
                }
 
-               byte b = -10;
-               ClientManagers.rotationController.requestRotation(rotationsToPos, b, this);
+               ClientManagers.rotationController.requestRotation(rotationsToPos, (byte)-10, this);
             }
          }
       }
@@ -117,14 +110,10 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
    public void onSilentSlot() {
       if (this.target != null && ClientManagers.rotationController.isOwnedBy(this)) {
          ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         byte b = 36;
-         containerSlotQuery = containerSlotQuery.fromSlot(b);
-         Item itemById = Item.getItemById(this.lavaPlaced ? 325 : 327);
-         OptionalInt optionalInt = containerSlotQuery.filterItemExact(itemById).findFirstSlotIndex();
+         containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+         OptionalInt optionalInt = containerSlotQuery.filterItemExact(Item.getItemById(this.lavaPlaced ? 325 : 327)).findFirstSlotIndex();
          if (optionalInt.isPresent()) {
-            int n = optionalInt.getAsInt() - 36;
-            byte b2 = -10;
-            SilentSlotManager.requestSlot(this, b2, n);
+            SilentSlotManager.requestSlot(this, (byte)-10, optionalInt.getAsInt() - 36);
          }
       }
    }
@@ -142,10 +131,8 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
          && mc.previousObjectMouseOver != null
          && mc.previousObjectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
          && mc.previousObjectMouseOver.getBlockPos().equals(this.targetBlockPos)) {
-         byte b = 1;
-         event.addRightClicks(b);
-         boolean flag = true;
-         event.setRightMouseDown(flag);
+         event.addRightClicks((byte)1);
+         event.setRightMouseDown(true);
          if (this.lavaPlaced) {
             this.toggle();
          }
@@ -168,12 +155,9 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
                double d2 = (double)(this.targetBlockPos.getY() + 1);
                double d3 = (double)j;
                Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag = false;
                float f = 180.0F;
-               float f2 = 180.0F;
-               Rotation rotationsToPos = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation, f2, f, flag);
-               Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, previousRotation2);
+               Rotation rotationsToPos = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation, 180.0F, f, false);
+               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, ClientManagers.rotationController.getPreviousRotation());
                hit = RayTraceUtil.rayTraceDefaultReach(1.0F, rotationsToPos.yaw, rotationsToPos.pitch);
                if (hit != null && hit.getBlockPos() != null && hit.getBlockPos().equals(this.targetBlockPos)) {
                   return rotationsToPos;
@@ -186,8 +170,7 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
    }
 
    private EntityLivingBase findTarget() {
-      Stream stream = mc.theWorld.loadedEntityList.stream();
-      return (EntityLivingBase)stream.filter(obj -> {
+      return (EntityLivingBase)mc.theWorld.loadedEntityList.stream().filter(obj -> {
          if (obj instanceof EntityLivingBase && !(obj instanceof EntityPlayerSP) && mc.thePlayer != null && mc.thePlayer.getDistanceToEntity((Entity)obj) < 8.0F) {
             boolean isOptionSelected = TestModuleTargetOption.isOptionSelected(TestModuleTargetOption.PLAYER);
             boolean isOptionSelected2 = TestModuleTargetOption.isOptionSelected(TestModuleTargetOption.MOB);
@@ -195,18 +178,7 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
             boolean isOptionSelected3 = TestModuleTargetOption.isOptionSelected(TestModuleTargetOption.VILLAGER);
             boolean isOptionSelected4 = TestModuleTargetOption.isOptionSelected(TestModuleTargetOption.INVISIBLE);
             boolean isOptionSelected5 = TestModuleTargetOption.isOptionSelected(TestModuleTargetOption.DEAD);
-            boolean flag = true;
-            boolean flag2 = isOptionSelected5;
-            boolean flag3 = true;
-            boolean flag4 = true;
-            boolean flag5 = true;
-            boolean flag6 = isOptionSelected4;
-            boolean flag7 = false;
-            boolean flag8 = isOptionSelected3;
-            boolean flag9 = isSelected;
-            boolean flag10 = isOptionSelected2;
-            boolean flag11 = isOptionSelected;
-            if (CombatTargetUtil.isValidTarget((Entity)obj, flag11, flag10, flag9, flag8, flag7, flag6, flag5, flag4, flag3, flag2, flag)) {
+            if (CombatTargetUtil.isValidTarget((Entity)obj, isOptionSelected, isOptionSelected2, isSelected, isOptionSelected3, false, isOptionSelected4, true, true, true, isOptionSelected5, true)) {
                return true;
             }
          }
@@ -217,10 +189,8 @@ public class Test extends Module implements TickListener, ClickListener, SilentS
 
    private boolean hasRequiredBucket() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      Item itemById = Item.getItemById(this.lavaPlaced ? 325 : 327);
-      return containerSlotQuery.hasAnyOfItem(itemById);
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      return containerSlotQuery.hasAnyOfItem(Item.getItemById(this.lavaPlaced ? 325 : 327));
    }
 
 }

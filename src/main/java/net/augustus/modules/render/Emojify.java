@@ -10,8 +10,8 @@ import net.augustus.events.EventAttackEntity;
 import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.render.EmojifyRenderer;
 import net.augustus.events.listeners.PacketListener;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,18 +19,18 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S19PacketEntityStatus;
 
 public class Emojify extends Module implements PacketListener, AttackEntityListener, RenderEntityListener {
-   public final BooleansSetting modes;
-   public final StringValue comboHits;
-   public final StringValue comboTime;
+   public final StringValue modes;
+   public final DoubleValue comboHits;
+   public final DoubleValue comboTime;
    private final EmojifyRenderer renderer;
 
    public Emojify() {
        super("Emojify", "Emojify", new Color(66, 135, 245), Categorys.RENDER);
-      this.modes = new BooleansSetting(
+      this.modes = new StringValue(
          this, "Modes", "default1", new String[]{"default1", "default2", "default3", "angry", "pogchamp", "prettygood", "trashmeme"}
       );
-      this.comboHits = new StringValue(this, "ComboHits", 2.0, 0.0, 5.0, 0);
-      this.comboTime = new StringValue(this, "ComboTime", 2.0, 0.0, 5.0, 0);
+      this.comboHits = new DoubleValue(this, "ComboHits", 2.0, 0.0, 5.0, 0);
+      this.comboTime = new DoubleValue(this, "ComboTime", 2.0, 0.0, 5.0, 0);
       this.renderer = new EmojifyRenderer();
    }
 
@@ -44,9 +44,7 @@ public class Emojify extends Module implements PacketListener, AttackEntityListe
    public void updateEventSubscriptions() {
       this.onAttackEntity();
       this.onAttackEntity();
-      byte b = 100;
-      byte b2 = 31;
-      this.toggleEventSubscription(b2, b);
+      this.toggleEventSubscription((byte)31, (byte)100);
    }
 
    public void onPacket(EventPacket event) {
@@ -71,10 +69,7 @@ public class Emojify extends Module implements PacketListener, AttackEntityListe
    }
 
    public void onAttackEntity(EventAttackEntity event) {
-      EmojifyRenderer renderer2 = this.renderer;
-      Entity target = event.getTarget();
-      Entity entity = target;
-      renderer2.onAttackEntity(entity);
+      this.renderer.onAttackEntity(event.getTarget());
    }
 
    public void onRenderEntity(EventRenderEntity event) {
@@ -84,10 +79,7 @@ public class Emojify extends Module implements PacketListener, AttackEntityListe
          EntityPlayer player = (EntityPlayer)entity;
          double x = event.getX();
          double z = event.getZ();
-         double y = event.getY();
-         double d = x;
-         EntityPlayer player2 = player;
-         renderer2.renderEmoji(player2, d, y, z);
+         renderer2.renderEmoji(player, x, event.getY(), z);
       }
    }
 

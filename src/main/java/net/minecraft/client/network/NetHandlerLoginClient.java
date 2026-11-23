@@ -99,9 +99,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient {
    }
 
    public void onDisconnect(IChatComponent component) {
-      Minecraft mc2 = this.mc;
-      GuiDisconnected guiDisconnected = new GuiDisconnected(this.previousGuiScreen, "connect.failed", component);
-      mc2.displayGuiScreen(guiDisconnected);
+      this.mc.displayGuiScreen(new GuiDisconnected(this.previousGuiScreen, "connect.failed", component));
    }
 
    public NetHandlerLoginClient(NetworkManager networkManager2, Minecraft mc2, GuiScreen screen) {

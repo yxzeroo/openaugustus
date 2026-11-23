@@ -88,8 +88,7 @@ public class BlockTallGrass extends BlockBush implements IGrowable {
    }
 
    static {
-      String str = "type";
-      TYPE = PropertyEnum.create(str, BlockTallGrass.EnumType.class);
+      TYPE = PropertyEnum.create("type", BlockTallGrass.EnumType.class);
    }
 
    @Override
@@ -97,8 +96,7 @@ public class BlockTallGrass extends BlockBush implements IGrowable {
       if (state.getBlock() != this) {
          return super.getRenderColor(state);
       } else {
-         BlockTallGrass.EnumType value = (BlockTallGrass.EnumType)state.getValue(TYPE);
-         return value == BlockTallGrass.EnumType.DEAD_BUSH ? 16777215 : ColorizerGrass.getGrassColor(0.5, 1.0);
+         return ((BlockTallGrass.EnumType)state.getValue(TYPE)) == BlockTallGrass.EnumType.DEAD_BUSH ? 16777215 : ColorizerGrass.getGrassColor(0.5, 1.0);
       }
    }
 

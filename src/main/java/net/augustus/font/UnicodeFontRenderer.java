@@ -27,18 +27,12 @@ public class UnicodeFontRenderer {
    }
 
    public float drawStringWithShadow(String str, float f, float f2, int n) {
-      float f3 = f + 1.0F;
-      float f4 = f2 + 1.0F;
-      int n2 = -16777216;
-      float f5 = f4;
-      float f6 = f3;
-      this.drawString(str, f6, f5, n2);
+      this.drawString(str, f + 1.0F, f2 + 1.0F, -16777216);
       return this.drawString(str, f, f2, n);
    }
 
    public int getCharWidth(long l, char ch) {
-      String str = Character.toString(ch);
-      return (int)((float)this.getStringWidth(str) / this.scaleFactor);
+      return (int)((float)this.getStringWidth(Character.toString(ch)) / this.scaleFactor);
    }
 
    public Font getAwtFont() {
@@ -46,8 +40,7 @@ public class UnicodeFontRenderer {
    }
 
    public void drawCenteredString(String str, float f, float f2, int n) {
-      float f3 = f - (float)(this.getStringWidth(str) / 2);
-      this.drawString(str, f3, f2, n);
+      this.drawString(str, f - (float)(this.getStringWidth(str) / 2), f2, n);
    }
 
    public int getStringHeight(String str) {
@@ -59,8 +52,7 @@ public class UnicodeFontRenderer {
    }
 
    public UnicodeFontRenderer(Font font) {
-      ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-      this.scaleFactor = (float)sr.getScaleFactor();
+      this.scaleFactor = (float)new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
       this.unicodeFont = new UnicodeFont(font.deriveFont(0, (float)font.getSize() / 2.0F * this.scaleFactor));
       this.awtFont = font;
       this.unicodeFont.addGlyphs(0, 8303);
@@ -85,14 +77,10 @@ public class UnicodeFontRenderer {
       } else {
          GL11.glPushMatrix();
          GL11.glScaled((double)(1.0F / this.scaleFactor), (double)(1.0F / this.scaleFactor), 1.0);
-         boolean flag = true;
-         this.glStateSaver.setBlend(flag);
-         boolean flag2 = false;
-         this.glStateSaver.setLighting(flag2);
-         boolean flag3 = false;
-         this.glStateSaver.setTexture2D(flag3);
-         boolean flag4 = false;
-         this.glStateSaver.setAlpha(flag4);
+         this.glStateSaver.setBlend(true);
+         this.glStateSaver.setLighting(false);
+         this.glStateSaver.setTexture2D(false);
+         this.glStateSaver.setAlpha(false);
          f *= this.scaleFactor;
          f2 *= this.scaleFactor;
          this.unicodeFont.drawString(f, f2, str, new org.newdawn.slick.Color(n));

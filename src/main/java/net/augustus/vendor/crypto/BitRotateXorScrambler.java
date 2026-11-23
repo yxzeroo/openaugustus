@@ -6,7 +6,6 @@ public class BitRotateXorScrambler {
    private static final byte POSITION_XOR_BASE = 93;
    private static final byte FINAL_XOR_KEY = -61;
    private static final int LOW_BYTE_ROTATE_RIGHT = 2;
-   private static String scrambleTag = "jkLImb";
 
    public static byte[] scramble(byte[] bytes) {
       byte[] bytes2 = (byte[])bytes.clone();
@@ -28,11 +27,5 @@ public class BitRotateXorScrambler {
       return NibbleSortByteMixer.mix(bytes2);
    }
 
-   public static void setScrambleTag(String str) {
-      scrambleTag = str;
-   }
 
-   public static String getScrambleTag() {
-      return scrambleTag;
-   }
 }

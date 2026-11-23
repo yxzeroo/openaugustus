@@ -27,10 +27,8 @@ public class BezierRotationStepper implements MC {
    public RotationKinematicState step(RotationKinematicState rotationKinematicState, BezierCurve2D bezierCurve2D, double d) {
       this.stepPhase += 0.05F;
       Vec2d angularVelocity = rotationKinematicState.getAngularVelocity();
-      double d2 = MathHelper.clamp_double(bezierCurve2D.getProgress(), 0.0, 1.0);
-      Vec2d vec2d = bezierCurve2D.evaluate(d2);
-      double d3 = 1.0;
-      Vec2d vec2d2 = bezierCurve2D.evaluate(d3);
+      Vec2d vec2d = bezierCurve2D.evaluate(MathHelper.clamp_double(bezierCurve2D.getProgress(), 0.0, 1.0));
+      Vec2d vec2d2 = bezierCurve2D.evaluate(1.0);
       double d4 = 1000.0;
       double progress = bezierCurve2D.getProgress();
 
@@ -47,8 +45,7 @@ public class BezierRotationStepper implements MC {
       }
 
       if (this.adaptCurveIfNeeded) {
-         double d8 = progress + 1.0 / (double)(bezierCurve2D.durationTicks + 1);
-         bezierCurve2D.setProgress(d8);
+         bezierCurve2D.setProgress(progress + 1.0 / (double)(bezierCurve2D.durationTicks + 1));
       }
 
       d4 = 1.0;
@@ -135,10 +132,7 @@ public class BezierRotationStepper implements MC {
 
          Vec2d vec2d7 = new Vec2d(angularVelocity.x, angularVelocity.y);
          vec2d7 = new Vec2d(vec2d7.x + (flag ? 0.0 : vec2d6.x), vec2d7.y + (flag2 ? 0.0 : vec2d6.y));
-         double d27 = 1.0 - d4;
-         Vec2d vec2d8 = angularVelocity.scale(d27);
-         Vec2d vec2d9 = vec2d7.scale(d4);
-         angularVelocity = vec2d8.add(vec2d9);
+         angularVelocity = angularVelocity.scale(1.0 - d4).add(vec2d7.scale(d4));
          if (!flag) {
             progress = MathHelper.wrapAngleTo180_double(progress + angularVelocity.x * 0.15 * d4);
          }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
@@ -14,14 +14,13 @@ public class WaveSkinDerpMode extends SkinDerpMode implements TickListener {
    private int currentPartIndex = 0;
    private List enabledParts = new ArrayList();
 
-   public WaveSkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue) {
+   public WaveSkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue) {
       super(skinDerp, doubleValue, "Wave");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -40,20 +39,15 @@ public class WaveSkinDerpMode extends SkinDerpMode implements TickListener {
    @Override
    public void onTick3() {
       if (mc.thePlayer != null && mc.theWorld != null) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double delayMs = this.getDelayMs();
-         if (timeHelper2.reached(delayMs)) {
+         if (this.timeHelper.reached(this.getDelayMs())) {
             this.timeHelper.reset();
             this.refreshEnabledParts();
             if (!this.enabledParts.isEmpty()) {
                for (EnumPlayerModelParts enumPlayerModelParts : (Iterable<EnumPlayerModelParts>)(this.enabledParts)) {
-                  boolean flag = false;
-                  this.setModelPartEnabled(enumPlayerModelParts, flag);
+                  this.setModelPartEnabled(enumPlayerModelParts, false);
                }
 
-               EnumPlayerModelParts enumPlayerModelParts2 = (EnumPlayerModelParts)this.enabledParts.get(this.currentPartIndex);
-               boolean flag2 = true;
-               this.setModelPartEnabled(enumPlayerModelParts2, flag2);
+               this.setModelPartEnabled((EnumPlayerModelParts)this.enabledParts.get(this.currentPartIndex), true);
                this.currentPartIndex = (this.currentPartIndex + 1) % this.enabledParts.size();
             }
          }
@@ -62,9 +56,8 @@ public class WaveSkinDerpMode extends SkinDerpMode implements TickListener {
 
    private void refreshEnabledParts() {
       this.enabledParts.clear();
-      EnumPlayerModelParts[] modelParts = this.getModelParts();
 
-      for (EnumPlayerModelParts enumPlayerModelParts : modelParts) {
+      for (EnumPlayerModelParts enumPlayerModelParts : this.getModelParts()) {
          if (this.isPartEnabled(enumPlayerModelParts)) {
             this.enabledParts.add(enumPlayerModelParts);
          }
@@ -72,7 +65,7 @@ public class WaveSkinDerpMode extends SkinDerpMode implements TickListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new WaveSkinDerpMode((SkinDerp)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new WaveSkinDerpMode((SkinDerp)obj, (SettingGroup)obj2);
    }
 
 }

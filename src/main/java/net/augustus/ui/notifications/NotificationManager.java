@@ -21,11 +21,9 @@ public class NotificationManager {
       for (HudNotification hudNotification : (Iterable<HudNotification>)(ACTIVE_NOTIFICATIONS)) {
          if (hudNotification.stackCount > 0) {
             TimeHelper elapsedTimer = hudNotification.elapsedTimer;
-            long l = System.currentTimeMillis() - 750L;
-            elapsedTimer.setLastTime(l);
+            elapsedTimer.setLastTime(System.currentTimeMillis() - 750L);
             elapsedTimer = hudNotification.stackDecayTimer;
-            long l2 = (long)(notifications.duplicateTime.getValue() * 1000.0);
-            if (elapsedTimer.reached2(l2)) {
+            if (elapsedTimer.reached2((long)(notifications.duplicateTime.getValue() * 1000.0))) {
                if (hudNotification.stackCount > 10000) {
                   hudNotification.stackCount -= 1000;
                } else if (hudNotification.stackCount > 1000) {
@@ -53,8 +51,7 @@ public class NotificationManager {
    public static void renderNotifications() {
 
       for (int i = 0; i < ACTIVE_NOTIFICATIONS.size(); i++) {
-         HudNotification hudNotification = (HudNotification)ACTIVE_NOTIFICATIONS.get(i);
-         hudNotification.render(i);
+         ((HudNotification)ACTIVE_NOTIFICATIONS.get(i)).render(i);
       }
    }
 

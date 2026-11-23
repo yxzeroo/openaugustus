@@ -100,24 +100,19 @@ public class MotionSpeedMode extends SpeedMode {
    public void onMoveEntity(EventMoveEntity event) {
       if (KeyboardInputUtil.isPureForward(this.moveForwardInput, this.moveStrafeInput)) {
          RandomizedRangeSettings randomizedRangeSettings = this.multiplierGroundForward;
-         RandomizedRangeSettings multiplierAirForward2 = this.multiplierAirForward;
-         this.applyDirectionalMultiplier(event, multiplierAirForward2, randomizedRangeSettings);
+         this.applyDirectionalMultiplier(event, this.multiplierAirForward, randomizedRangeSettings);
       } else if (KeyboardInputUtil.isPureBackward(this.moveForwardInput, this.moveStrafeInput)) {
          RandomizedRangeSettings randomizedRangeSettings2 = this.multiplierGroundBackward;
-         RandomizedRangeSettings multiplierAirBackward2 = this.multiplierAirBackward;
-         this.applyDirectionalMultiplier(event, multiplierAirBackward2, randomizedRangeSettings2);
+         this.applyDirectionalMultiplier(event, this.multiplierAirBackward, randomizedRangeSettings2);
       } else if (KeyboardInputUtil.isForwardDiagonal(this.moveForwardInput, this.moveStrafeInput)) {
          RandomizedRangeSettings randomizedRangeSettings3 = this.multiplierGroundForwardSideways;
-         RandomizedRangeSettings randomizedRangeSettings4 = this.multiplierAirForwardSideways;
-         this.applyDirectionalMultiplier(event, randomizedRangeSettings4, randomizedRangeSettings3);
+         this.applyDirectionalMultiplier(event, this.multiplierAirForwardSideways, randomizedRangeSettings3);
       } else if (KeyboardInputUtil.isBackwardDiagonal(this.moveForwardInput, this.moveStrafeInput)) {
          RandomizedRangeSettings randomizedRangeSettings5 = this.multiplierGroundBackwardSideways;
-         RandomizedRangeSettings randomizedRangeSettings6 = this.multiplierAirBackwardSideways;
-         this.applyDirectionalMultiplier(event, randomizedRangeSettings6, randomizedRangeSettings5);
+         this.applyDirectionalMultiplier(event, this.multiplierAirBackwardSideways, randomizedRangeSettings5);
       } else if (KeyboardInputUtil.isPureStrafe(this.moveForwardInput, this.moveStrafeInput)) {
          RandomizedRangeSettings randomizedRangeSettings7 = this.multiplierGroundSideways;
-         RandomizedRangeSettings multiplierAirSideways2 = this.multiplierAirSideways;
-         this.applyDirectionalMultiplier(event, multiplierAirSideways2, randomizedRangeSettings7);
+         this.applyDirectionalMultiplier(event, this.multiplierAirSideways, randomizedRangeSettings7);
       }
    }
 
@@ -133,10 +128,8 @@ public class MotionSpeedMode extends SpeedMode {
 
    private void applyDirectionalMultiplier(EventMoveEntity event, RandomizedRangeSettings randomizedRangeSettings, RandomizedRangeSettings randomizedRangeSettings2) {
       double d = mc.thePlayer.onGround ? randomizedRangeSettings2.nextValue() : randomizedRangeSettings.nextValue();
-      double d2 = event.getX() * d;
-      event.setX(d2);
-      double d3 = event.getZ() * d;
-      event.setZ(d3);
+      event.setX(event.getX() * d);
+      event.setZ(event.getZ() * d);
    }
 
 }

@@ -200,8 +200,7 @@ public class Sha256Digest {
 
    public static int[] padMessage(byte[] bytes) {
       int n = bytes.length % 64;
-      int n2 = bytes.length / 64 + (n + 1 + 8 > 64 ? 2 : 1);
-      IntBuffer intBuffer = IntBuffer.allocate(n2 * 16);
+      IntBuffer intBuffer = IntBuffer.allocate((bytes.length / 64 + (n + 1 + 8 > 64 ? 2 : 1)) * 16);
       ByteBuffer buf = ByteBuffer.wrap(bytes);
       int n3 = 0;
 

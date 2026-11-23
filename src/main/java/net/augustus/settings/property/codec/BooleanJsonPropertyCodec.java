@@ -11,8 +11,7 @@ public final class BooleanJsonPropertyCodec implements PrimitivePropertySerializ
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      Boolean bool = (Boolean)obj;
-      this.writeBoolean(str, bool, json);
+      this.writeBoolean(str, (Boolean)obj, json);
    }
 
    public Boolean readBoolean(JsonPrimitive primitive) {

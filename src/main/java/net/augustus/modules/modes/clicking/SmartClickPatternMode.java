@@ -8,32 +8,32 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.ActionRateAccumulator;
 import net.augustus.utils.TickCounter;
 import net.augustus.modules.Module;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MovingObjectPosition;
 
 public class SmartClickPatternMode extends AbstractClickPatternMode {
-   private final BooleansSetting smartMode;
-   private final BooleansSetting smartClickMode;
-   private final BooleansSetting smartDoubleClickModeS;
-   private final DoubleValue cpsSettings;
-   private final DoubleValue inAir;
+   private final StringValue smartMode;
+   private final StringValue smartClickMode;
+   private final StringValue smartDoubleClickModeS;
+   private final SettingGroup cpsSettings;
+   private final SettingGroup inAir;
    private final RandomizedRangeSettings smartCPSInAir;
    private final RandomizedRangeSettings smartCPSInAirRecalculateTickDelay;
    private final RandomizedRangeSettings smartDCPSInAir;
    private final RandomizedRangeSettings dcpsInAirRecalculateTickDelay;
-   private final DoubleValue onWall;
+   private final SettingGroup onWall;
    private final RandomizedRangeSettings smartCPSOnWall;
    private final RandomizedRangeSettings smartCPSOnWallRecalculateTickDelay;
    private final RandomizedRangeSettings smartDCPSOnWall;
    private final RandomizedRangeSettings dcpsOnWallRecalculateTickDelay;
-   private final DoubleValue onFirstHit;
+   private final SettingGroup onFirstHit;
    private final RandomizedRangeSettings smartCPSFirstHit;
    private final RandomizedRangeSettings smartCPSFirstHitRecalculateTickDelay;
    private final RandomizedRangeSettings smartDCPSFirstHit;
    private final RandomizedRangeSettings smartDCPSFirstHitRecalculateTickDelay;
-   private final DoubleValue onTarget;
+   private final SettingGroup onTarget;
    private final RandomizedRangeSettings smartCPS;
    private final RandomizedRangeSettings cpsRecalculateTickDelay;
    private final RandomizedRangeSettings smartDCPS;
@@ -54,7 +54,7 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
    private int consecutiveTargetClickTicks;
    private int lastTargetHurtTime;
 
-   public SmartClickPatternMode(Module module, DoubleValue doubleValue) {
+   public SmartClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "Smart");
       this.hurtTimeRecalcCounters = new TickCounter[22];
       this.separateRateAccumulators = new ActionRateAccumulator[28];
@@ -71,110 +71,49 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
       this.combinedDoubleClickAccumulator = new ActionRateAccumulator(20, 5.0);
       this.consecutiveTargetClickTicks = 0;
       this.lastTargetHurtTime = 0;
-      BooleansSetting booleansSetting = new BooleansSetting(module, "SmartMode", "Recommended", new String[]{"Recommended", "Overengineered"}, doubleValue);
-      String str = "Mode";
-      booleansSetting = (BooleansSetting)booleansSetting.withDisplayName(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.smartMode = (BooleansSetting)booleansSetting.withVisibility(condition);
-      booleansSetting = new BooleansSetting(module, "SmartClickMode", "Combined", new String[]{"Combined", "Default", "Separate"}, doubleValue);
-      String str2 = "ClickMode";
-      booleansSetting = (BooleansSetting)booleansSetting.withDisplayName(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.smartClickMode = (BooleansSetting)booleansSetting.withVisibility(condition2);
-      booleansSetting = new BooleansSetting(module, "SmartDoubleClickModeS", "Default", new String[]{"Combined", "Default", "Separate"}, doubleValue);
-      String str3 = "DoubleClickMode";
-      booleansSetting = (BooleansSetting)booleansSetting.withDisplayName(str3);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.smartDoubleClickModeS = (BooleansSetting)booleansSetting.withVisibility(condition3);
-      DoubleValue doubleValue2 = new DoubleValue(module, "CPS Settings", true, doubleValue);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.cpsSettings = doubleValue2.visibleWhen(condition4);
-      DoubleValue doubleValue3 = new DoubleValue(module, "In Air", true, this.cpsSettings);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.inAir = doubleValue3.visibleWhen(condition5);
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(module, "SmartCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, this.inAir);
-      String str4 = "CPSInAir";
-      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str4);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.smartCPSInAir = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition6);
-      RandomizedRangeSettings randomizedRangeSettings3 = new RandomizedRangeSettings(module, "SmartCPSInAirRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.inAir);
-      String str5 = "CPSInAirRecalculateTickDelay";
-      RandomizedRangeSettings randomizedRangeSettings4 = ((RandomizedRangeSettings)randomizedRangeSettings3.withDisplayNamePrefix(str5)).withoutNotInARow();
-      SettingVisibilityCondition condition7 = () -> this.isSelected();
-      this.smartCPSInAirRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition7);
-      RandomizedRangeSettings randomizedRangeSettings5 = new RandomizedRangeSettings(module, "SmartDCPSInAir", 0.0, 0.0, 0.0, 20.0, 0, this.inAir);
-      String str6 = "DoubleClicksPerSecondInAir";
-      RandomizedRangeSettings randomizedRangeSettings6 = (RandomizedRangeSettings)randomizedRangeSettings5.withDisplayNamePrefix(str6);
-      SettingVisibilityCondition condition8 = () -> this.isSelected();
-      this.smartDCPSInAir = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition8);
-      RandomizedRangeSettings randomizedRangeSettings7 = (new RandomizedRangeSettings(module, "DCPSInAirRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.inAir)).withoutNotInARow();
-      SettingVisibilityCondition condition9 = () -> this.isSelected();
-      this.dcpsInAirRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings7.withVisibility(condition9);
-      DoubleValue doubleValue4 = new DoubleValue(module, "On wall", true, this.cpsSettings);
-      SettingVisibilityCondition condition10 = () -> this.isSelected();
-      this.onWall = doubleValue4.visibleWhen(condition10);
-      RandomizedRangeSettings randomizedRangeSettings8 = new RandomizedRangeSettings(module, "SmartCPSOnWall", 8.0, 12.0, 0.0, 20.0, 0, this.onWall);
-      String str7 = "CPSOnWall";
-      RandomizedRangeSettings randomizedRangeSettings9 = (RandomizedRangeSettings)randomizedRangeSettings8.withDisplayNamePrefix(str7);
-      SettingVisibilityCondition condition11 = () -> this.isSelected();
-      this.smartCPSOnWall = (RandomizedRangeSettings)randomizedRangeSettings9.withVisibility(condition11);
-      RandomizedRangeSettings randomizedRangeSettings10 = new RandomizedRangeSettings(module, "SmartCPSOnWallRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.onWall);
-      String str8 = "CPSOnWallRecalculateTickDelay";
-      RandomizedRangeSettings randomizedRangeSettings11 = ((RandomizedRangeSettings)randomizedRangeSettings10.withDisplayNamePrefix(str8)).withoutNotInARow();
-      SettingVisibilityCondition condition12 = () -> this.isSelected();
-      this.smartCPSOnWallRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings11.withVisibility(condition12);
-      RandomizedRangeSettings randomizedRangeSettings12 = new RandomizedRangeSettings(module, "SmartDCPSOnWall", 2.0, 4.0, 0.0, 20.0, 0, this.onWall);
-      String str9 = "DCPSOnWall";
-      RandomizedRangeSettings randomizedRangeSettings13 = (RandomizedRangeSettings)randomizedRangeSettings12.withDisplayNamePrefix(str9);
-      SettingVisibilityCondition condition13 = () -> this.isSelected();
-      this.smartDCPSOnWall = (RandomizedRangeSettings)randomizedRangeSettings13.withVisibility(condition13);
-      RandomizedRangeSettings randomizedRangeSettings14 = (new RandomizedRangeSettings(module, "DCPSOnWallRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.onWall)).withoutNotInARow();
-      SettingVisibilityCondition condition14 = () -> this.isSelected();
-      this.dcpsOnWallRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings14.withVisibility(condition14);
-      DoubleValue doubleValue5 = new DoubleValue(module, "On first Hit", true, this.cpsSettings);
-      SettingVisibilityCondition condition15 = () -> this.isSelected();
-      this.onFirstHit = doubleValue5.visibleWhen(condition15);
-      RandomizedRangeSettings randomizedRangeSettings15 = new RandomizedRangeSettings(module, "SmartCPSFirstHit", 20.0, 20.0, 0.0, 40.0, 0, this.onFirstHit);
-      String str10 = "CPSFirstHit";
-      RandomizedRangeSettings randomizedRangeSettings16 = (RandomizedRangeSettings)randomizedRangeSettings15.withDisplayNamePrefix(str10);
-      SettingVisibilityCondition condition16 = () -> this.isSelected();
-      this.smartCPSFirstHit = (RandomizedRangeSettings)randomizedRangeSettings16.withVisibility(condition16);
-      RandomizedRangeSettings randomizedRangeSettings17 = new RandomizedRangeSettings(module, "SmartCPSFirstHitRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.onFirstHit);
-      String str11 = "CPSFirstHitRecalculateTickDelay";
-      RandomizedRangeSettings randomizedRangeSettings18 = ((RandomizedRangeSettings)randomizedRangeSettings17.withDisplayNamePrefix(str11)).withoutNotInARow();
-      SettingVisibilityCondition condition17 = () -> this.isSelected();
-      this.smartCPSFirstHitRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings18.withVisibility(condition17);
+      StringValue booleansSetting = new StringValue(module, "SmartMode", "Recommended", new String[]{"Recommended", "Overengineered"}, doubleValue);
+      booleansSetting = (StringValue)booleansSetting.withDisplayName("Mode");
+      this.smartMode = (StringValue)booleansSetting.withVisibility(() -> this.isSelected());
+      booleansSetting = new StringValue(module, "SmartClickMode", "Combined", new String[]{"Combined", "Default", "Separate"}, doubleValue);
+      booleansSetting = (StringValue)booleansSetting.withDisplayName("ClickMode");
+      this.smartClickMode = (StringValue)booleansSetting.withVisibility(() -> this.isSelected());
+      booleansSetting = new StringValue(module, "SmartDoubleClickModeS", "Default", new String[]{"Combined", "Default", "Separate"}, doubleValue);
+      booleansSetting = (StringValue)booleansSetting.withDisplayName("DoubleClickMode");
+      this.smartDoubleClickModeS = (StringValue)booleansSetting.withVisibility(() -> this.isSelected());
+      this.cpsSettings = new SettingGroup(module, "CPS Settings", true, doubleValue).visibleWhen(() -> this.isSelected());
+      this.inAir = new SettingGroup(module, "In Air", true, this.cpsSettings).visibleWhen(() -> this.isSelected());
+      this.smartCPSInAir = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, this.inAir).withDisplayNamePrefix("CPSInAir")).withVisibility(() -> this.isSelected());
+      this.smartCPSInAirRecalculateTickDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSInAirRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.inAir).withDisplayNamePrefix("CPSInAirRecalculateTickDelay")).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.smartDCPSInAir = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartDCPSInAir", 0.0, 0.0, 0.0, 20.0, 0, this.inAir).withDisplayNamePrefix("DoubleClicksPerSecondInAir")).withVisibility(() -> this.isSelected());
+      this.dcpsInAirRecalculateTickDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(module, "DCPSInAirRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.inAir)).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.onWall = new SettingGroup(module, "On wall", true, this.cpsSettings).visibleWhen(() -> this.isSelected());
+      this.smartCPSOnWall = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSOnWall", 8.0, 12.0, 0.0, 20.0, 0, this.onWall).withDisplayNamePrefix("CPSOnWall")).withVisibility(() -> this.isSelected());
+      this.smartCPSOnWallRecalculateTickDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSOnWallRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.onWall).withDisplayNamePrefix("CPSOnWallRecalculateTickDelay")).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.smartDCPSOnWall = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartDCPSOnWall", 2.0, 4.0, 0.0, 20.0, 0, this.onWall).withDisplayNamePrefix("DCPSOnWall")).withVisibility(() -> this.isSelected());
+      this.dcpsOnWallRecalculateTickDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(module, "DCPSOnWallRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.onWall)).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.onFirstHit = new SettingGroup(module, "On first Hit", true, this.cpsSettings).visibleWhen(() -> this.isSelected());
+      this.smartCPSFirstHit = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSFirstHit", 20.0, 20.0, 0.0, 40.0, 0, this.onFirstHit).withDisplayNamePrefix("CPSFirstHit")).withVisibility(() -> this.isSelected());
+      this.smartCPSFirstHitRecalculateTickDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "SmartCPSFirstHitRecalculateTickDelay", 3.0, 8.0, 0.0, 60.0, 0, this.onFirstHit).withDisplayNamePrefix("CPSFirstHitRecalculateTickDelay")).withoutNotInARow().withVisibility(() -> this.isSelected());
       RandomizedRangeSettings randomizedRangeSettings19 = new RandomizedRangeSettings(module, "SmartDCPSFirstHit", 4.0, 5.0, 0.0, 20.0, 0, this.onFirstHit);
-      String str12 = "DoubleClicksPerSecondFirstHit";
-      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix(str12);
-      SettingVisibilityCondition condition18 = () -> this.isFirstHitDcpsVisible();
-      this.smartDCPSFirstHit = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition18);
+      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix("DoubleClicksPerSecondFirstHit");
+      this.smartDCPSFirstHit = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> this.isFirstHitDcpsVisible());
       randomizedRangeSettings19 = new RandomizedRangeSettings(module, "SmartDCPSFirstHitRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.onFirstHit);
-      String str13 = "DCPSFirstHitRecalculateTickDelay";
-      randomizedRangeSettings19 = ((RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix(str13)).withoutNotInARow();
-      SettingVisibilityCondition condition19 = () -> this.isFirstHitDcpsRecalcDelayVisible();
-      this.smartDCPSFirstHitRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition19);
-      DoubleValue doubleValue6 = new DoubleValue(module, "On Target", true, this.cpsSettings);
-      SettingVisibilityCondition condition20 = () -> this.isOnTargetGroupVisible();
-      this.onTarget = doubleValue6.visibleWhen(condition20);
+      randomizedRangeSettings19 = ((RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix("DCPSFirstHitRecalculateTickDelay")).withoutNotInARow();
+      this.smartDCPSFirstHitRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> this.isFirstHitDcpsRecalcDelayVisible());
+      this.onTarget = new SettingGroup(module, "On Target", true, this.cpsSettings).visibleWhen(() -> this.isOnTargetGroupVisible());
       randomizedRangeSettings19 = new RandomizedRangeSettings(module, "SmartCPS", 17.0, 19.0, 1.0, 40.0, 0, this.onTarget);
-      String str14 = "CPS";
-      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix(str14);
+      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix("CPS");
       SettingVisibilityCondition condition21 = () -> {
          return this.isSelected() && this.smartMode.getSelectedValue().equals("Recommended");
       };
       this.smartCPS = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition21);
       randomizedRangeSettings19 = (new RandomizedRangeSettings(module, "CPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.onTarget)).withoutNotInARow();
-      SettingVisibilityCondition condition22 = () -> this.isRecommendedCpsRecalcDelayVisible();
-      this.cpsRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition22);
+      this.cpsRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> this.isRecommendedCpsRecalcDelayVisible());
       randomizedRangeSettings19 = new RandomizedRangeSettings(module, "SmartDCPS", 4.0, 5.0, 0.0, 20.0, 0, this.onTarget);
-      String str15 = "DoubleClicksPerSecond";
-      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix(str15);
-      SettingVisibilityCondition condition23 = () -> this.isRecommendedDcpsVisible();
-      this.smartDCPS = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition23);
+      randomizedRangeSettings19 = (RandomizedRangeSettings)randomizedRangeSettings19.withDisplayNamePrefix("DoubleClicksPerSecond");
+      this.smartDCPS = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> this.isRecommendedDcpsVisible());
       randomizedRangeSettings19 = (new RandomizedRangeSettings(module, "DCPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.onTarget)).withoutNotInARow();
-      SettingVisibilityCondition condition24 = () -> this.isRecommendedDcpsRecalcDelayVisible();
-      this.dcpsRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition24);
+      this.dcpsRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> this.isRecommendedDcpsRecalcDelayVisible());
       this.initHurtTimeSettings(module);
    }
 
@@ -190,50 +129,31 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
          if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks()) {
             n = 0;
          } else if (n2 != this.lastTargetHurtTime) {
-            ActionRateAccumulator clickAccumulator = this.getClickAccumulator(n2);
-            ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-            int n3 = n2 * 4;
-            int cpsForHurtTimeIndex = this.getCpsForHurtTimeIndex(n3);
-            int n4 = parentModule2.applyHitReduction(cpsForHurtTimeIndex);
-            n = clickAccumulator.accumulate(n4);
+            n = this.getClickAccumulator(n2).accumulate(((ClickModuleContext)this.parentModule).applyHitReduction(this.getCpsForHurtTimeIndex(n2 * 4)));
             if (n > 0) {
-               int n5 = n2 + 11;
-               ActionRateAccumulator doubleClickAccumulator = this.getDoubleClickAccumulator(n5);
-               ClickModuleContext parentModule3 = (ClickModuleContext)this.parentModule;
-               int n6 = n2 * 4 + 2;
-               int dcpsForHurtTimeIndex = this.getDcpsForHurtTimeIndex(n6);
-               int n7 = parentModule3.applyHitReduction(dcpsForHurtTimeIndex);
+               ActionRateAccumulator doubleClickAccumulator = this.getDoubleClickAccumulator(n2 + 11);
+               int n7 = ((ClickModuleContext)this.parentModule).applyHitReduction(this.getDcpsForHurtTimeIndex(n2 * 4 + 2));
                n += doubleClickAccumulator.accumulate(n7);
             }
          } else {
             TickCounter tickCounter = this.firstHitCpsRecalcCounter;
-            int lastIntValue = this.smartCPSFirstHitRecalculateTickDelay.getLastIntValue();
-            if (tickCounter.hasReached2(lastIntValue)) {
+            if (tickCounter.hasReached2(this.smartCPSFirstHitRecalculateTickDelay.getLastIntValue())) {
                this.firstHitCpsRecalcCounter.reset();
                this.smartCPSFirstHitRecalculateTickDelay.nextSecureValue();
                this.smartCPSFirstHit.nextSecureValue();
             }
 
             tickCounter = this.firstHitDcpsRecalcCounter;
-            int lastIntValue2 = this.smartDCPSFirstHitRecalculateTickDelay.getLastIntValue();
-            if (tickCounter.hasReached2(lastIntValue2)) {
+            if (tickCounter.hasReached2(this.smartDCPSFirstHitRecalculateTickDelay.getLastIntValue())) {
                this.firstHitDcpsRecalcCounter.reset();
                this.smartDCPSFirstHitRecalculateTickDelay.nextSecureValue();
                this.smartDCPSFirstHit.nextSecureValue();
             }
 
-            byte b = 22;
-            ActionRateAccumulator clickAccumulator2 = this.getClickAccumulator(b);
-            ClickModuleContext parentModule4 = (ClickModuleContext)this.parentModule;
-            int lastIntValue3 = this.smartCPSFirstHit.getLastIntValue();
-            int n8 = parentModule4.applyHitReduction(lastIntValue3);
-            n = clickAccumulator2.accumulate(n8);
+            n = this.getClickAccumulator((byte)22).accumulate(((ClickModuleContext)this.parentModule).applyHitReduction(this.smartCPSFirstHit.getLastIntValue()));
             if (n > 0) {
-               byte b2 = 23;
-               ActionRateAccumulator doubleClickAccumulator2 = this.getDoubleClickAccumulator(b2);
-               ClickModuleContext parentModule5 = (ClickModuleContext)this.parentModule;
-               int n9 = this.smartMode.getSelectedValue().equals("Recommended") ? this.smartDCPS.getLastIntValue() : this.smartDCPSFirstHit.getLastIntValue();
-               int n10 = parentModule5.applyHitReduction(n9);
+               ActionRateAccumulator doubleClickAccumulator2 = this.getDoubleClickAccumulator((byte)23);
+               int n10 = ((ClickModuleContext)this.parentModule).applyHitReduction(this.smartMode.getSelectedValue().equals("Recommended") ? this.smartDCPS.getLastIntValue() : this.smartDCPSFirstHit.getLastIntValue());
                n += doubleClickAccumulator2.accumulate(n10);
             }
          }
@@ -241,55 +161,43 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
          this.consecutiveTargetClickTicks = n > 0 ? ++this.consecutiveTargetClickTicks : 0;
       } else if (objectMouseOver != null && objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.MISS) {
          TickCounter wallCpsRecalcCounter2 = this.wallCpsRecalcCounter;
-         int lastIntValue4 = this.smartCPSOnWallRecalculateTickDelay.getLastIntValue();
-         if (wallCpsRecalcCounter2.hasReached2(lastIntValue4)) {
+         if (wallCpsRecalcCounter2.hasReached2(this.smartCPSOnWallRecalculateTickDelay.getLastIntValue())) {
             this.wallCpsRecalcCounter.reset();
             this.smartCPSOnWallRecalculateTickDelay.nextSecureValue();
             this.smartCPSOnWall.nextSecureValue();
          }
 
          wallCpsRecalcCounter2 = this.wallDcpsRecalcCounter;
-         int lastIntValue5 = this.dcpsOnWallRecalculateTickDelay.getLastIntValue();
-         if (wallCpsRecalcCounter2.hasReached2(lastIntValue5)) {
+         if (wallCpsRecalcCounter2.hasReached2(this.dcpsOnWallRecalculateTickDelay.getLastIntValue())) {
             this.wallDcpsRecalcCounter.reset();
             this.dcpsOnWallRecalculateTickDelay.nextSecureValue();
             this.smartDCPSOnWall.nextSecureValue();
          }
 
-         byte b3 = 26;
-         ActionRateAccumulator clickAccumulator3 = this.getClickAccumulator(b3);
-         int lastIntValue6 = this.smartCPSOnWall.getLastIntValue();
-         n = clickAccumulator3.accumulate(lastIntValue6);
+         n = this.getClickAccumulator((byte)26).accumulate(this.smartCPSOnWall.getLastIntValue());
          if (n > 0) {
-            byte b4 = 27;
-            ActionRateAccumulator doubleClickAccumulator3 = this.getDoubleClickAccumulator(b4);
+            ActionRateAccumulator doubleClickAccumulator3 = this.getDoubleClickAccumulator((byte)27);
             int lastIntValue7 = this.smartDCPSOnWall.getLastIntValue();
             n += doubleClickAccumulator3.accumulate(lastIntValue7);
          }
       } else {
          TickCounter airCpsRecalcCounter2 = this.airCpsRecalcCounter;
-         int lastIntValue8 = this.smartCPSInAirRecalculateTickDelay.getLastIntValue();
-         if (airCpsRecalcCounter2.hasReached2(lastIntValue8)) {
+         if (airCpsRecalcCounter2.hasReached2(this.smartCPSInAirRecalculateTickDelay.getLastIntValue())) {
             this.airCpsRecalcCounter.reset();
             this.smartCPSInAirRecalculateTickDelay.nextSecureValue();
             this.smartCPSInAir.nextSecureValue();
          }
 
          airCpsRecalcCounter2 = this.airDcpsRecalcCounter;
-         int lastIntValue9 = this.dcpsInAirRecalculateTickDelay.getLastIntValue();
-         if (airCpsRecalcCounter2.hasReached2(lastIntValue9)) {
+         if (airCpsRecalcCounter2.hasReached2(this.dcpsInAirRecalculateTickDelay.getLastIntValue())) {
             this.airDcpsRecalcCounter.reset();
             this.dcpsInAirRecalculateTickDelay.nextSecureValue();
             this.smartDCPSInAir.nextSecureValue();
          }
 
-         byte b5 = 24;
-         ActionRateAccumulator clickAccumulator4 = this.getClickAccumulator(b5);
-         int lastIntValue10 = this.smartCPSInAir.getLastIntValue();
-         n = clickAccumulator4.accumulate(lastIntValue10);
+         n = this.getClickAccumulator((byte)24).accumulate(this.smartCPSInAir.getLastIntValue());
          if (n > 0) {
-            byte b6 = 25;
-            ActionRateAccumulator doubleClickAccumulator4 = this.getDoubleClickAccumulator(b6);
+            ActionRateAccumulator doubleClickAccumulator4 = this.getDoubleClickAccumulator((byte)25);
             int lastIntValue11 = this.smartDCPSInAir.getLastIntValue();
             n += doubleClickAccumulator4.accumulate(lastIntValue11);
          }
@@ -315,8 +223,7 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
    }
 
    private ActionRateAccumulator getClickAccumulator(int n) {
-      String selectedValue = this.smartClickMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.smartClickMode.getSelectedValue()) {
          case "Combined":
             return this.combinedClickAccumulator;
          case "Default":
@@ -329,8 +236,7 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
    }
 
    private ActionRateAccumulator getDoubleClickAccumulator(int n) {
-      String selectedValue = this.smartDoubleClickModeS.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.smartDoubleClickModeS.getSelectedValue()) {
          case "Combined":
             return this.combinedDoubleClickAccumulator;
          case "Default":
@@ -345,16 +251,14 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
    private void updateRecalcTimers() {
       if (this.smartMode.getSelectedValue().equals("Recommended")) {
          TickCounter targetCpsRecalcCounter2 = this.targetCpsRecalcCounter;
-         int lastIntValue = this.cpsRecalculateTickDelay.getLastIntValue();
-         if (targetCpsRecalcCounter2.hasReached2(lastIntValue)) {
+         if (targetCpsRecalcCounter2.hasReached2(this.cpsRecalculateTickDelay.getLastIntValue())) {
             this.targetCpsRecalcCounter.reset();
             this.cpsRecalculateTickDelay.nextSecureValue();
             this.smartCPS.nextSecureValue();
          }
 
          targetCpsRecalcCounter2 = this.targetDcpsRecalcCounter;
-         int lastIntValue2 = this.dcpsRecalculateTickDelay.getLastIntValue();
-         if (targetCpsRecalcCounter2.hasReached2(lastIntValue2)) {
+         if (targetCpsRecalcCounter2.hasReached2(this.dcpsRecalculateTickDelay.getLastIntValue())) {
             this.targetDcpsRecalcCounter.reset();
             this.dcpsRecalculateTickDelay.nextSecureValue();
             this.smartDCPS.nextSecureValue();
@@ -362,9 +266,7 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
       } else {
          for (int i = 0; i < 22; i++) {
             int n = i * 2;
-            TickCounter tickCounter = this.hurtTimeRecalcCounters[i];
-            int lastIntValue3 = this.hurtTimeRangeSettings[n].getLastIntValue();
-            if (tickCounter.hasReached2(lastIntValue3)) {
+            if (this.hurtTimeRecalcCounters[i].hasReached2(this.hurtTimeRangeSettings[n].getLastIntValue())) {
                this.hurtTimeRecalcCounters[i].reset();
                this.hurtTimeRangeSettings[n + 1].nextSecureValue();
                this.hurtTimeRangeSettings[n].nextSecureValue();
@@ -379,8 +281,7 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
       int length = hurtTimeRecalcCounters2.length;
 
       for (int i = 0; i < length; i++) {
-         TickCounter tickCounter = hurtTimeRecalcCounters2[i];
-         tickCounter.increment();
+         hurtTimeRecalcCounters2[i].increment();
       }
 
       this.airCpsRecalcCounter.increment();
@@ -420,37 +321,27 @@ public class SmartClickPatternMode extends AbstractClickPatternMode {
       }
 
       for (int k = 0; k < 11; k++) {
-         DoubleValue doubleValue = new DoubleValue(module, "HurtTime " + k, this.cpsSettings);
-         SettingVisibilityCondition condition = () -> this.isHurtTimeGroupVisible();
-         DoubleValue doubleValue2 = doubleValue.visibleWhen(condition);
+         SettingGroup doubleValue2 = new SettingGroup(module, "HurtTime " + k, this.cpsSettings).visibleWhen(() -> this.isHurtTimeGroupVisible());
          RandomizedRangeSettings[] hurtTimeRangeSettings2 = this.hurtTimeRangeSettings;
          int n = k * 4;
          RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(module, "SmartCPSHurt" + k, 17.0, 19.0, 1.0, 40.0, 0, doubleValue2);
-         String str = "CPS";
-         randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
-         SettingVisibilityCondition condition2 = () -> this.isHurtCpsVisible();
-         hurtTimeRangeSettings2[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
+         randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("CPS");
+         hurtTimeRangeSettings2[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isHurtCpsVisible());
          RandomizedRangeSettings[] hurtTimeRangeSettings3 = this.hurtTimeRangeSettings;
          n = k * 4 + 1;
          randomizedRangeSettings = new RandomizedRangeSettings(module, "Hurt" + k + "SmartCPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, doubleValue2);
-         String str2 = "CPSRecalculateTickDelay";
-         randomizedRangeSettings = ((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2)).withoutNotInARow();
-         SettingVisibilityCondition condition3 = () -> this.isHurtCpsRecalcDelayVisible();
-         hurtTimeRangeSettings3[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition3);
+         randomizedRangeSettings = ((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("CPSRecalculateTickDelay")).withoutNotInARow();
+         hurtTimeRangeSettings3[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isHurtCpsRecalcDelayVisible());
          RandomizedRangeSettings[] hurtTimeRangeSettings4 = this.hurtTimeRangeSettings;
          n = k * 4 + 2;
          randomizedRangeSettings = new RandomizedRangeSettings(module, "SmartDCPSHurt" + k, 4.0, 5.0, 0.0, 20.0, 0, doubleValue2);
-         String str3 = "DoubleClicksPerSecond";
-         randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str3);
-         SettingVisibilityCondition condition4 = () -> this.isHurtDcpsVisible();
-         hurtTimeRangeSettings4[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition4);
+         randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("DoubleClicksPerSecond");
+         hurtTimeRangeSettings4[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isHurtDcpsVisible());
          RandomizedRangeSettings[] hurtTimeRangeSettings5 = this.hurtTimeRangeSettings;
          n = k * 4 + 3;
          randomizedRangeSettings = new RandomizedRangeSettings(module, "DCPSRecalculateTickDelayHurt" + k, 3.0, 8.0, 1.0, 40.0, 0, doubleValue2);
-         String str4 = "DoubleClicksPerSecondRecalculateTickDelay";
-         randomizedRangeSettings = ((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str4)).withoutNotInARow();
-         SettingVisibilityCondition condition5 = () -> this.isHurtDcpsRecalcDelayVisible();
-         hurtTimeRangeSettings5[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition5);
+         randomizedRangeSettings = ((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("DoubleClicksPerSecondRecalculateTickDelay")).withoutNotInARow();
+         hurtTimeRangeSettings5[n] = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isHurtDcpsRecalcDelayVisible());
       }
    }
 

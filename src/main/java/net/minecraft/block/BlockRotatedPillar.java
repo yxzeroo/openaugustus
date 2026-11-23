@@ -9,8 +9,7 @@ public abstract class BlockRotatedPillar extends Block {
    public static final PropertyEnum AXIS;
 
    static {
-      String str = "axis";
-      AXIS = PropertyEnum.create(str, EnumFacing.Axis.class);
+      AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
    }
 
    public BlockRotatedPillar(Material material) {

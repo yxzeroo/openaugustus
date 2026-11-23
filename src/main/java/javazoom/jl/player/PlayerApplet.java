@@ -108,14 +108,11 @@ public class PlayerApplet extends Applet implements Runnable {
       String audioFileName = this.getAudioFileName();
 
       try {
-         InputStream audioStream = this.getAudioStream();
-         AudioDevice audioDevice = this.getAudioDevice();
-         this.play(audioStream, audioDevice);
+         this.play(this.getAudioStream(), this.getAudioDevice());
       } catch (JavaLayerException e) {
-         JavaLayerException ex = e;
          synchronized (System.err) {
             System.err.println("Unable to play " + audioFileName);
-            ex.printStackTrace(System.err);
+            e.printStackTrace(System.err);
          }
       }
    }

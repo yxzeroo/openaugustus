@@ -8,7 +8,7 @@ import net.augustus.ClientManagers;
 import net.augustus.utils.rotation.RayCastUtil;
 import net.augustus.events.listeners.RayCastListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,16 +16,16 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class HitBox extends Module implements RayCastListener {
-   public final StringValue expandXZ;
-   public final StringValue expandY;
+   public final DoubleValue expandXZ;
+   public final DoubleValue expandY;
    public final BooleanValue serverHitBox;
    public final BooleanValue n18Hitbox;
    public final BooleanValue optifineHitbox;
 
    public HitBox() {
        super("HitBox", "SchlagBox", new Color(180, 207, 130), Categorys.LEGIT);
-      this.expandXZ = new StringValue(this, "ExpandXZ", 0.0, 0.0, 1.0, 2);
-      this.expandY = new StringValue(this, "ExpandY", 0.0, 0.0, 1.0, 2);
+      this.expandXZ = new DoubleValue(this, "ExpandXZ", 0.0, 0.0, 1.0, 2);
+      this.expandY = new DoubleValue(this, "ExpandY", 0.0, 0.0, 1.0, 2);
       this.serverHitBox = new BooleanValue(this, "ServerHitBox", false);
       this.n18Hitbox = new BooleanValue(this, "1.8 Hitbox", true);
       this.optifineHitbox = new BooleanValue(this, "OptifineHitbox", false);
@@ -38,8 +38,7 @@ public class HitBox extends Module implements RayCastListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 29;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)29);
    }
 
    public void onRayCast() {

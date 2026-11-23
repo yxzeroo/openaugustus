@@ -12,7 +12,6 @@ public class EventDownloadTerrain extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      DownloadTerrainListener listener = (DownloadTerrainListener)obj;
-      this.call2(listener);
+      this.call2((DownloadTerrainListener)obj);
    }
 }

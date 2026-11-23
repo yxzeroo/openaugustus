@@ -53,9 +53,7 @@ public class Lang {
          if (!str.isEmpty() && str.charAt(0) != '#') {
             String[] strings = (String[])Iterables.toArray(splitter.split(str), String.class);
             if (strings != null && strings.length == 2) {
-               String str2 = strings[0];
-               String str3 = pattern.matcher(strings[1]).replaceAll("%$1s");
-               map.put(str2, str3);
+               map.put(strings[0], pattern.matcher(strings[1]).replaceAll("%$1s"));
             }
          }
       }
@@ -98,8 +96,7 @@ public class Lang {
       IResourcePack[] resourcePacks = Config.getResourcePacks();
 
       for (int i = 0; i < resourcePacks.length; i++) {
-         IResourcePack resourcePack = resourcePacks[i];
-         loadResources(resourcePack, strings, localeProperties);
+         loadResources(resourcePacks[i], strings, localeProperties);
       }
    }
 }

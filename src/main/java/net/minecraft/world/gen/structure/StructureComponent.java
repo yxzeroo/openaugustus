@@ -570,8 +570,7 @@ public abstract class StructureComponent {
             for (int k = n3; k <= n6; k++) {
                float f8 = ((float)k - f5) / (f3 * 0.5F);
                if (!flag || this.getBlockStateFromPos(world, j, i, k, structureBoundingBox).getBlock().getMaterial() != Material.air) {
-                  float f9 = f7 * f7 + f6 * f6 + f8 * f8;
-                  if (f9 <= 1.05F) {
+                  if ((f7 * f7 + f6 * f6 + f8 * f8) <= 1.05F) {
                      this.setBlockState(world, state, j, i, k, structureBoundingBox);
                   }
                }

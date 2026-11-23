@@ -10,12 +10,7 @@ public class ClampFunction extends MolangFunction {
    }
 
    public double get() {
-      byte b = 0;
-      double arg = this.getArg(b);
-      byte b2 = 1;
-      double arg2 = this.getArg(b2);
-      byte b3 = 2;
-      return MolangMathUtil.clamp(arg, arg2, this.getArg(b3));
+      return MolangMathUtil.clamp(this.getArg((byte)0), this.getArg((byte)1), this.getArg((byte)2));
    }
 
    @Override

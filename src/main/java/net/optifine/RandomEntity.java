@@ -21,9 +21,7 @@ public class RandomEntity implements IRandomEntity {
 
    @Override
    public int getId() {
-      UUID uniqueID = this.entity.getUniqueID();
-      long leastSignificantBits = uniqueID.getLeastSignificantBits();
-      return (int)(leastSignificantBits & 2147483647L);
+      return (int)(this.entity.getUniqueID().getLeastSignificantBits() & 2147483647L);
    }
 
    @Override
@@ -31,8 +29,7 @@ public class RandomEntity implements IRandomEntity {
       if (!(this.entity instanceof EntityLiving)) {
          return 0;
       } else {
-         EntityLiving entity2 = (EntityLiving)this.entity;
-         return (int)entity2.getCurrentHealth();
+         return (int)((EntityLiving)this.entity).getCurrentHealth();
       }
    }
 
@@ -45,8 +42,7 @@ public class RandomEntity implements IRandomEntity {
       if (!(this.entity instanceof EntityLiving)) {
          return 0;
       } else {
-         EntityLiving entity2 = (EntityLiving)this.entity;
-         return (int)entity2.getMaxHealth();
+         return (int)((EntityLiving)this.entity).getMaxHealth();
       }
    }
 

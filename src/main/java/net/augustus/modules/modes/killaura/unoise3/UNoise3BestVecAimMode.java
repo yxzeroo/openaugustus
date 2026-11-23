@@ -9,22 +9,17 @@ public class UNoise3BestVecAimMode extends UNoise3AimMode {
 
    public UNoise3BestVecAimMode(UNoise3SettingContext uNoise3SettingContext2, boolean flag) {
        super(uNoise3SettingContext2, "BestVec", UNoise3AimConstraintType.POINT, true, flag);
-      BooleanValue booleanValue = new BooleanValue(uNoise3SettingContext2.getModule(), this.getSettingsGroup().getName() + "_onlyifnotaimingatcorner", false, this.getSettingsGroup());
-      String str = "Only if not aiming at a corner";
-      this.onlyifnotaimingatcorner = (BooleanValue)booleanValue.withDisplayName(str);
+      this.onlyifnotaimingatcorner = (BooleanValue)new BooleanValue(uNoise3SettingContext2.getModule(), this.getSettingsGroup().getName() + "_onlyifnotaimingatcorner", false, this.getSettingsGroup()).withDisplayName("Only if not aiming at a corner");
    }
 
    @Override
    public double sampleWeight(UNoise3AimContext uNoise3AimContext) {
       double d = super.sampleWeight(uNoise3AimContext);
-      UNoise3CircleAimMode.getControlFlowState();
-      double d2 = this.computeTargetAngle(uNoise3AimContext);
-      return Double.isFinite(d2) ? d : 0.0;
+      return Double.isFinite(this.computeTargetAngle(uNoise3AimContext)) ? d : 0.0;
    }
 
    @Override
    public double computeTargetAngle(UNoise3AimContext uNoise3AimContext) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       Vec3 vec = uNoise3AimContext.closestTargetPoint.subtract(uNoise3AimContext.playerEyePos);
       if (uNoise3AimContext.vertical) {
          double d = -Math.atan2(vec.yCoord, vec.horizontalLength()) / 3.141592653589793 * 180.0;

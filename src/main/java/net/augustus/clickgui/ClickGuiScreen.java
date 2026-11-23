@@ -6,7 +6,6 @@ import net.augustus.events.listeners.GuiScaleListener;
 import net.augustus.events.listeners.RenderGuiBackgroundListener;
 import net.augustus.render.RenderUtil;
 import net.augustus.settings.BlurShadowSettings;
-import net.augustus.settings.SettingVisibilityRegistry;
 import net.augustus.ui.UiIconResources;
 import net.augustus.ui.config.ConfigSystemPanel;
 import net.augustus.utils.audio.ClientSounds;
@@ -35,7 +34,6 @@ public class ClickGuiScreen extends GuiScreen {
    public static boolean protectedConfigCreator = false;
 
    private boolean isMouseOver(int n, int n2, int n3, int n4, int n5, int n6) {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       return n5 >= n && n6 >= n2 && n5 < n + n3 && n6 < n2 + n4;
    }
 
@@ -48,7 +46,6 @@ public class ClickGuiScreen extends GuiScreen {
 
    @Override
    public void keyTyped(char typedChar, int keyCode) throws IOException {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       if ((!this.mainWindow.selectedModule.isBindingKey() || keyCode != 1) && (keyCode != 28 && keyCode != 156 && keyCode != 1 || !this.mainWindow.getSettingsPanel().isAnySettingFocused())) {
          super.keyTyped(typedChar, keyCode);
       }
@@ -68,17 +65,11 @@ public class ClickGuiScreen extends GuiScreen {
    @Override
    public void initGui() {
       super.initGui();
-      SettingVisibilityRegistry.getControlFlowState();
       this.allowUserInput = true;
       if (this.mainWindow.getX() < 0 || this.mainWindow.getY() < 0 || this.configPanel.getX() < 0 || this.configPanel.getY() < 0) {
-         MainClickGuiWindow mainWindow2 = this.mainWindow;
-         String name = this.mainWindow.getName();
-         mainWindow2.resetWindow(name);
-         ConfigSystemPanel configPanel2 = this.configPanel;
-         String name2 = this.configPanel.getName();
-         configPanel2.resetWindow(name2);
-         boolean flag = false;
-         this.configPanel.setVisible(flag);
+         this.mainWindow.resetWindow(this.mainWindow.getName());
+         this.configPanel.resetWindow(this.configPanel.getName());
+         this.configPanel.setVisible(false);
       }
 
       this.configPanel.onPanelOpened();
@@ -88,9 +79,7 @@ public class ClickGuiScreen extends GuiScreen {
 
    @Override
    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-      boolean flag = false;
-      this.glStateSaver2.setAlpha(flag);
-      SettingVisibilityRegistry.getControlFlowState();
+      this.glStateSaver2.setAlpha(false);
       TextFieldComponent.anyFieldFocused = false;
       BlurShadowManager.disableGuiLayer();
       ScaledResolution sr = new ScaledResolution(this.mc);
@@ -110,32 +99,18 @@ public class ClickGuiScreen extends GuiScreen {
       this.centerY = (int)((float)this.framebufferHeight / 2.0F);
       byte b = 6;
       if (!this.mainWindow.isFullScreen() && !this.configPanel.isFullScreen()) {
-         boolean isBlurActive = ClientManagers.moduleManager.clickGui.clickGui.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, ClientManagers.moduleManager.clickGui.clickGui.isShadowActive());
+         BlurShadowManager.enableOneShotPass(ClientManagers.moduleManager.clickGui.clickGui.isBlurActive(), ClientManagers.moduleManager.clickGui.clickGui.isShadowActive());
          Color color = new Color(40, 39, 39, MathHelper.clamp_int((int)ClientManagers.moduleManager.clickGui.alpha.getValue(), 0, 255));
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderDockBackgroundPass(b, shaderRenderPass));
-         int n3 = this.centerX - 43 - b;
-         int n4 = 37 + b;
-         byte b2 = 42;
-         byte b3 = 0;
-         int n5 = n3;
-         if (this.isMouseOver(n5, b3, b2, n4, mouseX, mouseY)) {
+         if (this.isMouseOver(this.centerX - 43 - b, (byte)0, (byte)42, 37 + b, mouseX, mouseY)) {
             int x = this.configPanel.getX();
             int y = this.configPanel.getY();
             int width2 = this.configPanel.getWidth();
-            int height2 = this.configPanel.getHeight();
-            int n6 = width2;
-            int n7 = y;
-            int n8 = x;
-            if (!this.isMouseOver(n8, n7, n6, height2, mouseX, mouseY) || !this.configPanel.isVisible()) {
+            if (!this.isMouseOver(x, y, width2, this.configPanel.getHeight(), mouseX, mouseY) || !this.configPanel.isVisible()) {
                int x2 = this.mainWindow.getX();
                y = this.mainWindow.getY();
                width2 = this.mainWindow.getWidth();
-               int height3 = this.mainWindow.getHeight();
-               int n9 = width2;
-               int n10 = y;
-               int n11 = x2;
-               if (!this.isMouseOver(n11, n10, n9, height3, mouseX, mouseY) || !this.mainWindow.isVisible()) {
+               if (!this.isMouseOver(x2, y, width2, this.mainWindow.getHeight(), mouseX, mouseY) || !this.mainWindow.isVisible()) {
                   RenderUtil.drawRoundedRect2(
                      (float)(this.centerX - 43 - b),
                      0.0F,
@@ -153,28 +128,15 @@ public class ClickGuiScreen extends GuiScreen {
             }
          }
 
-         int n12 = this.centerX + 1;
-         int n13 = 37 + b;
-         byte b4 = 42;
-         byte b5 = 0;
-         int n14 = n12;
-         if (this.isMouseOver(n14, b5, b4, n13, mouseX, mouseY)) {
+         if (this.isMouseOver(this.centerX + 1, (byte)0, (byte)42, 37 + b, mouseX, mouseY)) {
             int x3 = this.configPanel.getX();
             int y2 = this.configPanel.getY();
             int width3 = this.configPanel.getWidth();
-            int height4 = this.configPanel.getHeight();
-            int n15 = width3;
-            int n16 = y2;
-            int n17 = x3;
-            if (!this.isMouseOver(n17, n16, n15, height4, mouseX, mouseY) || !this.configPanel.isVisible()) {
+            if (!this.isMouseOver(x3, y2, width3, this.configPanel.getHeight(), mouseX, mouseY) || !this.configPanel.isVisible()) {
                int x4 = this.mainWindow.getX();
                y2 = this.mainWindow.getY();
                width3 = this.mainWindow.getWidth();
-               int height5 = this.mainWindow.getHeight();
-               int n18 = width3;
-               int n19 = y2;
-               int n20 = x4;
-               if (!this.isMouseOver(n20, n19, n18, height5, mouseX, mouseY) || !this.mainWindow.isVisible()) {
+               if (!this.isMouseOver(x4, y2, width3, this.mainWindow.getHeight(), mouseX, mouseY) || !this.mainWindow.isVisible()) {
                   RenderUtil.drawRoundedRect2(
                      (float)(this.centerX + 1),
                      0.0F,
@@ -207,18 +169,10 @@ public class ClickGuiScreen extends GuiScreen {
 
          int n21 = this.centerX - 36 - 7;
          double d = 1.0;
-         byte b6 = 36;
-         byte b7 = 36;
-         byte b8 = 2;
-         int n22 = n21;
-         UiIconResources.drawIcon(UiIconResources.AUGUSTUS_TEXTURE3, n22, b8, b7, b6, d);
+         UiIconResources.drawIcon(UiIconResources.AUGUSTUS_TEXTURE3, n21, (byte)2, (byte)36, (byte)36, d);
          int n23 = this.centerX + 7;
          double d2 = 1.0;
-         byte b9 = 36;
-         byte b10 = 36;
-         byte b11 = 2;
-         int n24 = n23;
-         UiIconResources.drawIcon(UiIconResources.AUGUSTUS_TEXTURE4, n24, b11, b10, b9, d2);
+         UiIconResources.drawIcon(UiIconResources.AUGUSTUS_TEXTURE4, n23, (byte)2, (byte)36, (byte)36, d2);
       }
 
       GlStateManager.popMatrix();
@@ -254,16 +208,8 @@ public class ClickGuiScreen extends GuiScreen {
    }
 
    private void renderDockBackgroundPass(int n, ShaderRenderPass shaderRenderPass) {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       if (shaderRenderPass == ShaderRenderPass.SHADOW) {
-         float f = (float)(this.centerX - 43 - n);
-         float f2 = (float)(-n);
-         float f3 = (float)(this.centerX + 43 + n);
-         float f4 = (float)(37 + n);
-         float f5 = (float)n;
-         BlurShadowSettings clickGui = ClientManagers.moduleManager.clickGui.clickGui;
-         int rgb = Color.black.getRGB();
-         RenderUtil.drawRoundedRect(f, f2, f3, f4, f5, 1, clickGui.resolveShadowColor(rgb));
+         RenderUtil.drawRoundedRect((float)(this.centerX - 43 - n), (float)(-n), (float)(this.centerX + 43 + n), (float)(37 + n), (float)n, 1, ClientManagers.moduleManager.clickGui.clickGui.resolveShadowColor(Color.black.getRGB()));
       } else {
          RenderUtil.drawRoundedRect2(
             (float)(this.centerX - 43 - n), (float)(-n), (float)(this.centerX + 43 + n), (float)(37 + n), (float)n, 1, new Color(40, 39, 39)
@@ -284,7 +230,6 @@ public class ClickGuiScreen extends GuiScreen {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       int n = mouseX;
       int n2 = mouseY;
-      SettingVisibilityRegistry.getControlFlowState();
       ScaledResolution sr = new ScaledResolution(this.mc);
       mouseX *= sr.getScaleFactor();
       mouseY *= sr.getScaleFactor();
@@ -335,28 +280,15 @@ public class ClickGuiScreen extends GuiScreen {
 
       if (mouseButton == 0 && (!this.configPanel.isFullScreen() || !this.configPanel.isVisible()) && (!this.mainWindow.isFullScreen() || !this.mainWindow.isVisible())) {
          byte b = 6;
-         int n3 = this.centerX - 43 - b;
-         int n4 = 37 + b;
-         byte b2 = 42;
-         byte b3 = 0;
-         int n5 = n3;
-         if (this.isMouseOver(n5, b3, b2, n4, mouseX, mouseY)) {
+         if (this.isMouseOver(this.centerX - 43 - b, (byte)0, (byte)42, 37 + b, mouseX, mouseY)) {
             int x = this.configPanel.getX();
             int y = this.configPanel.getY();
             int width2 = this.configPanel.getWidth();
-            int height2 = this.configPanel.getHeight();
-            int n6 = width2;
-            int n7 = y;
-            int n8 = x;
-            if (!this.isMouseOver(n8, n7, n6, height2, mouseX, mouseY) || !this.configPanel.isVisible()) {
+            if (!this.isMouseOver(x, y, width2, this.configPanel.getHeight(), mouseX, mouseY) || !this.configPanel.isVisible()) {
                int x2 = this.mainWindow.getX();
                y = this.mainWindow.getY();
                width2 = this.mainWindow.getWidth();
-               int height3 = this.mainWindow.getHeight();
-               int n9 = width2;
-               int n10 = y;
-               int n11 = x2;
-               if (!this.isMouseOver(n11, n10, n9, height3, mouseX, mouseY) || !this.mainWindow.isVisible()) {
+               if (!this.isMouseOver(x2, y, width2, this.mainWindow.getHeight(), mouseX, mouseY) || !this.mainWindow.isVisible()) {
                   if (!this.mainWindow.isVisible() && this.mainWindow.closed) {
                      this.activeWindow = this.mainWindow;
                   }
@@ -369,28 +301,15 @@ public class ClickGuiScreen extends GuiScreen {
             }
          }
 
-         int n12 = this.centerX + 1;
-         int n13 = 37 + b;
-         byte b4 = 42;
-         byte b5 = 0;
-         int n14 = n12;
-         if (this.isMouseOver(n14, b5, b4, n13, mouseX, mouseY)) {
+         if (this.isMouseOver(this.centerX + 1, (byte)0, (byte)42, 37 + b, mouseX, mouseY)) {
             int x3 = this.configPanel.getX();
             int y2 = this.configPanel.getY();
             int width3 = this.configPanel.getWidth();
-            int height4 = this.configPanel.getHeight();
-            int n15 = width3;
-            int n16 = y2;
-            int n17 = x3;
-            if (!this.isMouseOver(n17, n16, n15, height4, mouseX, mouseY) || !this.configPanel.isVisible()) {
+            if (!this.isMouseOver(x3, y2, width3, this.configPanel.getHeight(), mouseX, mouseY) || !this.configPanel.isVisible()) {
                int x4 = this.mainWindow.getX();
                y2 = this.mainWindow.getY();
                width3 = this.mainWindow.getWidth();
-               int height5 = this.mainWindow.getHeight();
-               int n18 = width3;
-               int n19 = y2;
-               int n20 = x4;
-               if (!this.isMouseOver(n20, n19, n18, height5, mouseX, mouseY) || !this.mainWindow.isVisible()) {
+               if (!this.isMouseOver(x4, y2, width3, this.mainWindow.getHeight(), mouseX, mouseY) || !this.mainWindow.isVisible()) {
                   if (!this.configPanel.isVisible() && this.configPanel.closed) {
                      this.activeWindow = this.configPanel;
                   }

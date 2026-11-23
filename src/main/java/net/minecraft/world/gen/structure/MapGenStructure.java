@@ -83,8 +83,7 @@ public abstract class MapGenStructure extends MapGenBase {
 
       for (StructureStart structureStart : (Iterable<StructureStart>)(this.structureMap.values())) {
          if (structureStart.isSizeableStructure()) {
-            StructureComponent structureComponent = (StructureComponent)structureStart.getComponents().get(0);
-            BlockPos boundingBoxCenter = structureComponent.getBoundingBoxCenter();
+            BlockPos boundingBoxCenter = ((StructureComponent)structureStart.getComponents().get(0)).getBoundingBoxCenter();
             double d = boundingBoxCenter.distanceSq(pos);
             if (d < maxvalue) {
                maxvalue = d;

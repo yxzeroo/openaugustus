@@ -44,9 +44,7 @@ public class CombatOptimizationUtil implements MC {
       Vec3 vec = PlayerUtil.predictNextTickWithAttack(true, entity, f).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
       Vec3 vec2 = PlayerUtil.predictNextTickWithAttack(false, entity, f).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
       float collisionBorderSize = entity.getCollisionBorderSize();
-      Vec3 vec3 = getPredictedEntityPosition(entity);
-      boolean flag = false;
-      AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec3, flag).expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
+      AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(getPredictedEntityPosition(entity), false).expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
       Vec3 vec4 = new Vec3(
          MathHelper.clamp_double(vec.xCoord, box.minX, box.maxX),
          MathHelper.clamp_double(vec.yCoord, box.minY, box.maxY),

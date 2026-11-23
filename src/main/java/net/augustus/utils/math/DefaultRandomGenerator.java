@@ -25,10 +25,7 @@ public class DefaultRandomGenerator implements RandomNumberGenerator {
 
    @Override
    public float nextFloat2(double d, double d2) {
-      float f = (float)d;
-      float f2 = (float)d2;
-      float f3 = f;
-      return this.nextFloat(f3, f2);
+      return this.nextFloat((float)d, (float)d2);
    }
 
    @Override
@@ -65,19 +62,13 @@ public class DefaultRandomGenerator implements RandomNumberGenerator {
    public long nextLong(double d, double d2) {
       long l;
       l = (long)d;
-      long l2 = (long)d2;
-      long l3 = l2;
-      long l4 = l;
-      return this.nextLong2(l4, l3);
+      return this.nextLong2(l, (long)d2);
    }
 
 
    @Override
    public int nextInt(double d, double d2) {
-      int n = (int)d;
-      int n2 = (int)d2;
-      int n3 = n;
-      return this.nextInt2(n3, n2);
+      return this.nextInt2((int)d, (int)d2);
    }
 
    @Override
@@ -127,11 +118,7 @@ public class DefaultRandomGenerator implements RandomNumberGenerator {
 
    @Override
    public double nextSecureIntAsDouble(double d, double d2) {
-      int n = (int)d;
-      int n2 = (int)d2;
-      int n3 = n2;
-      int n4 = n;
-      return (double)this.nextSecureInt(n4, n3);
+      return (double)this.nextSecureInt((int)d, (int)d2);
    }
 
    @Override
@@ -145,9 +132,7 @@ public class DefaultRandomGenerator implements RandomNumberGenerator {
             n2 = n3;
          }
 
-         SecureRandom rand = new SecureRandom();
-         int n4 = n2 - n;
-         return n + rand.nextInt(n4 + 1);
+         return n + new SecureRandom().nextInt((n2 - n) + 1);
       }
    }
 

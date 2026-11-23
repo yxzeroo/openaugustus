@@ -28,8 +28,7 @@ public class TextureAnimations {
       GameSettings gameSettings = Config.getGameSettings();
 
       try {
-         ResourceLocation location = new ResourceLocation(str);
-         InputStream resourceStream = Config.getResourceStream(location);
+         InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
          if (resourceStream == null) {
             return null;
          } else {
@@ -39,9 +38,7 @@ public class TextureAnimations {
                return null;
             } else {
                if (n > 0 && image.getWidth() != n) {
-                  double d = (double)(image.getHeight() / image.getWidth());
-                  int n2 = (int)((double)n * d);
-                  image = scaleBufferedImage(image, n, n2);
+                  image = scaleBufferedImage(image, n, (int)((double)n * ((double)(image.getHeight() / image.getWidth()))));
                }
 
                int width = image.getWidth();
@@ -100,8 +97,7 @@ public class TextureAnimations {
                inputStream.close();
                TextureAnimation textureAnimation = makeTextureAnimation(propertiesOrdered, location);
                if (textureAnimation != null) {
-                  ResourceLocation location2 = new ResourceLocation(textureAnimation.getDstTex());
-                  if (Config.getDefiningResourcePack(location2) != resourcePack) {
+                  if (Config.getDefiningResourcePack(new ResourceLocation(textureAnimation.getDstTex())) != resourcePack) {
                      Config.dbg("Skipped: " + str + ", target texture not loaded from same resource pack");
                   } else {
                      list.add(textureAnimation);
@@ -166,9 +162,7 @@ public class TextureAnimations {
             return null;
          } else {
             int n5 = bytes.length / 4;
-            int n6 = n5 / (n3 * n4);
-            int n7 = n6 * n3 * n4;
-            if (n5 != n7) {
+            if (n5 != ((n5 / (n3 * n4)) * n3 * n4)) {
                Config.warn("TextureAnimation: Source texture has invalid number of frames: " + property + ", frames: " + (float)n5 / (float)(n3 * n4));
                return null;
             } else {
@@ -238,8 +232,7 @@ public class TextureAnimations {
    public static void update() {
       textureAnimations = null;
       countAnimationsActive = 0;
-      IResourcePack[] resourcePacks = Config.getResourcePacks();
-      textureAnimations = getTextureAnimations2(resourcePacks);
+      textureAnimations = getTextureAnimations2(Config.getResourcePacks());
       updateAnimations();
    }
 
@@ -247,8 +240,7 @@ public class TextureAnimations {
       ArrayList list = new ArrayList();
 
       for (int i = 0; i < resourcePacks.length; i++) {
-         IResourcePack resourcePack = resourcePacks[i];
-         TextureAnimation[] textureAnimations2 = getTextureAnimations(resourcePack);
+         TextureAnimation[] textureAnimations2 = getTextureAnimations(resourcePacks[i]);
          if (textureAnimations2 != null) {
             list.addAll(Arrays.asList(textureAnimations2));
          }

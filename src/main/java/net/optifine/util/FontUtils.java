@@ -14,11 +14,9 @@ public class FontUtils {
          String str = (String)obj;
          String str2 = "width.";
          if (str.startsWith(str2)) {
-            String str3 = str.substring(str2.length());
-            int n = Config.parseInt(str3, -1);
+            int n = Config.parseInt(str.substring(str2.length()), -1);
             if (n >= 0 && n < floats.length) {
-               String property = properties.getProperty(str);
-               float f = Config.parseFloat(property, -1.0F);
+               float f = Config.parseFloat(properties.getProperty(str), -1.0F);
                if (f >= 0.0F) {
                   floats[n] = f;
                }

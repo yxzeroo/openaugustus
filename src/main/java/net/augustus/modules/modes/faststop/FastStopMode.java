@@ -6,13 +6,13 @@ import net.augustus.events.EventSafeWalk;
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.utils.MoveUtil;
 import net.augustus.modules.movement.FastStop;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public abstract class FastStopMode extends AbstractSubMode {
    public boolean isMovingInput;
    public boolean wasMovingInput;
 
-   public FastStopMode(FastStop fastStop, DoubleValue doubleValue, String str) {
+   public FastStopMode(FastStop fastStop, SettingGroup doubleValue, String str) {
       super(fastStop, doubleValue, str);
    }
 

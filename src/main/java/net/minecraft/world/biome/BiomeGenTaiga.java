@@ -58,9 +58,7 @@ public class BiomeGenTaiga extends BiomeGenBase {
          int n = rand.nextInt(3);
 
          for (int i = 0; i < n; i++) {
-            int n2 = rand.nextInt(16) + 8;
-            int n3 = rand.nextInt(16) + 8;
-            BlockPos height = world.getHeight(pos.add(n2, 0, n3));
+            BlockPos height = world.getHeight(pos.add(rand.nextInt(16) + 8, 0, rand.nextInt(16) + 8));
             FOREST_ROCK_GENERATOR.generate(world, rand, height);
          }
       }

@@ -30,23 +30,14 @@ public class AutoRespawn extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
       if (mc.currentScreen instanceof GuiGameOver) {
          if (mc.thePlayer.isDead) {
-            TimeHelper deathScreenTimer2 = this.deathScreenTimer;
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.delay.getMinValue();
-            double maxValue = this.delay.getMaxValue();
-            double d = maxValue;
-            double d2 = minValue;
-            long l = (long)instance.nextInt(d2, d);
-            if (deathScreenTimer2.reached2(l)) {
-               long l2 = 10000L;
-               if (this.respawnCooldownTimer.reached2(l2)) {
+            if (this.deathScreenTimer.reached2((long)DefaultRandomGenerator.instance.nextInt(this.delay.getMinValue(), this.delay.getMaxValue()))) {
+               if (this.respawnCooldownTimer.reached2(10000L)) {
                   mc.thePlayer.respawnPlayer();
                   GuiScreen screen = (GuiScreen)null;
                   mc.displayGuiScreen(screen);

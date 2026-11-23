@@ -20,8 +20,7 @@ public class EmojiResourcePack implements IResourcePack {
    }
 
    public InputStream getInputStream(ResourceLocation location) throws IOException {
-      File file = new File(this.baseDirectory, location.getResourcePath());
-      return Files.newInputStream(file.toPath());
+      return Files.newInputStream(new File(this.baseDirectory, location.getResourcePath()).toPath());
    }
 
    public EmojiResourcePack(File file) {

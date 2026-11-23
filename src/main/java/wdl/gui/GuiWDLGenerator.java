@@ -28,13 +28,9 @@ public class GuiWDLGenerator extends GuiScreen {
             this.cycleGenerateStructures();
          } else if (button.id == 3) {
             if (WDL.worldProps.getProperty("MapGenerator", "").equals("flat")) {
-               Minecraft mc2 = this.mc;
-               GuiFlatPresets guiFlatPresets = new GuiFlatPresets(new GuiWDLGeneratorFlatProxy(this));
-               mc2.displayGuiScreen(guiFlatPresets);
+               this.mc.displayGuiScreen(new GuiFlatPresets(new GuiWDLGeneratorFlatProxy(this)));
             } else if (WDL.worldProps.getProperty("MapGenerator", "").equals("custom")) {
-               Minecraft mc3 = this.mc;
-               GuiCustomizeWorldScreen guiCustomizeWorldScreen = new GuiCustomizeWorldScreen(new GuiWDLGeneratorCustomizeProxy(this), WDL.worldProps.getProperty("GeneratorOptions", ""));
-               mc3.displayGuiScreen(guiCustomizeWorldScreen);
+               this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(new GuiWDLGeneratorCustomizeProxy(this), WDL.worldProps.getProperty("GeneratorOptions", "")));
             }
          } else if (button.id == 100) {
             GuiScreen parent2 = this.parent;

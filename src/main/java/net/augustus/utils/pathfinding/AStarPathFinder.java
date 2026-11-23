@@ -62,7 +62,6 @@ public class AStarPathFinder implements MC, RenderListener {
    private boolean useCachedChunk;
 
    private boolean hasSolidFloorAlongSegment(Vec3 vec, Vec3 vec2, int n) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (n == 0) {
          return true;
       } else {
@@ -86,7 +85,6 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    private void evaluateNeighbor(PathNode pathNode, int n, int n2, int n3, boolean flag) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (n2 >= 0 && n2 <= 255 && !this.chunkEmptyAbort) {
          long l;
          PathNode pathNode2 = (PathNode)this.allNodes.get(l = packBlockKey(n, n2, n3));
@@ -103,16 +101,14 @@ public class AStarPathFinder implements MC, RenderListener {
                   PathBlockPos pos = pathNode.getPos();
                   PathBlockPos pathBlockPos;
                   if (pathNode.getParent() != null) {
-                     PathNode parent = pathNode.getParent();
-                     pathBlockPos = parent.getPos();
+                     pathBlockPos = pathNode.getParent().getPos();
                   } else {
                      pathBlockPos = null;
                   }
 
                   PathBlockPos pathBlockPos2 = pathBlockPos;
-                  PathBlockPos pathBlockPos3 = pos;
                   double d2;
-                  if ((d2 = this.evaluateMoveSpeed(n, n2, n3, pathBlockPos3, pathBlockPos2, flag)) > 0.0
+                  if ((d2 = this.evaluateMoveSpeed(n, n2, n3, pos, pathBlockPos2, flag)) > 0.0
                      && pathNode2.getGCost() > pathNode.getGCost() + pathNode.getPos().distanceTo(n, n2, n3) / d2) {
                      pathNode2.setParent(pathNode);
                      pathNode2.setGCost(d);
@@ -151,7 +147,6 @@ public class AStarPathFinder implements MC, RenderListener {
 
    private int findFurthestVisibleIndex(ArrayList list, Vec3 vec, int n, boolean flag, boolean flag2) {
       Vec3 vec2 = new Vec3(vec.xCoord + 0.5, vec.yCoord, vec.zCoord + 0.5);
-      PathBlockPos.getStateFlags();
       int n2 = n;
 
       while (true) {
@@ -159,16 +154,13 @@ public class AStarPathFinder implements MC, RenderListener {
             return list.size() - 1;
          }
 
-         PathNode pathNode = (PathNode)list.get(n2);
-         PathBlockPos pos = pathNode.getPos();
-         Vec3 vec3 = pos.toVec3();
+         Vec3 vec3 = ((PathNode)list.get(n2)).getPos().toVec3();
          Vec3 vec4 = vec3.addVector(0.5, 0.0, 0.5);
          if (vec4.yCoord != vec.yCoord) {
             break;
          }
 
-         int n3 = n2 - n;
-         if (!this.hasSolidFloorAlongSegment(vec2, vec4, n3)) {
+         if (!this.hasSolidFloorAlongSegment(vec2, vec4, n2 - n)) {
             break;
          }
 
@@ -199,7 +191,6 @@ public class AStarPathFinder implements MC, RenderListener {
       this.borderMinZ = -3.0E7;
       this.borderMaxZ = 3.0E7;
       this.groundCheckResult = new PathfinderResultRef(false);
-      PathBlockPos.getStateFlags();
       this.groundCheckCached = new PathfinderResultRef(false);
       this.chunkEmptyAbort = false;
       Block block = mc.theWorld.getBlockState2(pathBlockPos.x, pathBlockPos.y, pathBlockPos.z).getBlock();
@@ -230,7 +221,6 @@ public class AStarPathFinder implements MC, RenderListener {
 
    public void onRender(float f) {
       GL11.glPushMatrix();
-      PathBlockPos.getStateFlags();
       GlStateManager.enableBlend();
       GlStateManager.blendFunc(770, 771);
       GL11.glEnable(2848);
@@ -272,7 +262,6 @@ public class AStarPathFinder implements MC, RenderListener {
 
    private static void collectSubtreeNodes(List list, PathNode pathNode) {
       list.add(pathNode);
-      PathBlockPos.getStateFlags();
 
       for (PathNode pathNode2 : (Iterable<PathNode>)(pathNode.getChildren())) {
          collectSubtreeNodes(list, pathNode2);
@@ -280,7 +269,6 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    public ArrayList simplifyPath(ArrayList list, boolean flag, boolean flag2) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (list.isEmpty()) {
          return list;
       } else {
@@ -291,8 +279,7 @@ public class AStarPathFinder implements MC, RenderListener {
          int n = 1;
 
          while (list.size() > n + 1) {
-            int n2 = n + 1;
-            n = this.findFurthestVisibleIndex(list, vec, n2, flag, flag2);
+            n = this.findFurthestVisibleIndex(list, vec, n + 1, flag, flag2);
             pos = ((PathNode)list.get(n)).getPos();
             vec = pos.toVec3();
             list2.add(list.get(n));
@@ -304,7 +291,6 @@ public class AStarPathFinder implements MC, RenderListener {
 
    public boolean isSegmentObstructed(Vec3 vec, Vec3 vec2) {
       Vec3[][] vecsArr = new Vec3[6][];
-      PathBlockPos.getStateFlags();
       Vec3 vec3 = vec2.subtract(vec).crossProduct(0.0, 1.0, 0.0).normalize().scale(0.6);
       vecsArr[0] = new Vec3[]{vec, vec2};
       vecsArr[1] = new Vec3[]{vec.addVector(0.0, 1.5, 0.0), vec2.addVector(0.0, 1.5, 0.0)};
@@ -318,8 +304,7 @@ public class AStarPathFinder implements MC, RenderListener {
          Vec3 vec5 = vecs[1];
          MovingObjectPosition hit = mc.theWorld
             .rayTraceBlocksCustom(vec4.xCoord + 0.5, vec4.yCoord, vec4.zCoord + 0.5, vec5.xCoord + 0.5, vec5.yCoord, vec5.zCoord + 0.5, false, true, false);
-         boolean flag = hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK;
-         if (flag) {
+         if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             return true;
          }
 
@@ -337,14 +322,10 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    public static long packBlockKey(int n, int n2, int n3) {
-      long l = (long)n + 30000000L;
-      long l2 = (long)n2;
-      long l3 = (long)n3 + 30000000L;
-      return l & 67108863L | (l2 & 255L) << 26 | (l3 & 67108863L) << 34;
+      return ((long)n + 30000000L) & 67108863L | (((long)n2) & 255L) << 26 | (((long)n3 + 30000000L) & 67108863L) << 34;
    }
 
    public void expandNode(PathNode pathNode) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       this.closedSet.put(pathNode.packedKey, pathNode);
       if ((pathNode.getPos().x & 15) != 15 && (pathNode.getPos().x & 15) != 0 && (pathNode.getPos().z & 15) != 15 && (pathNode.getPos().z & 15) != 0) {
          this.cachedChunk.value = null;
@@ -359,56 +340,36 @@ public class AStarPathFinder implements MC, RenderListener {
       int n = pathNode.getPos().x;
       int n2 = pathNode.getPos().y;
       int n3 = pathNode.getPos().z;
-      int n4 = n3 + 1;
-      this.evaluateCardinalNeighbor(pathNode, n, n2, n4);
-      int n5 = n3 - 1;
-      this.evaluateCardinalNeighbor(pathNode, n, n2, n5);
-      int n6 = n + 1;
-      this.evaluateCardinalNeighbor(pathNode, n6, n2, n3);
-      int n7 = n - 1;
-      this.evaluateCardinalNeighbor(pathNode, n7, n2, n3);
+      this.evaluateCardinalNeighbor(pathNode, n, n2, n3 + 1);
+      this.evaluateCardinalNeighbor(pathNode, n, n2, n3 - 1);
+      this.evaluateCardinalNeighbor(pathNode, n + 1, n2, n3);
+      this.evaluateCardinalNeighbor(pathNode, n - 1, n2, n3);
       if (this.allowDiagonals) {
          int n8 = n + 1;
          int n9 = n3 + 1;
-         boolean flag = true;
-         int n10 = n9;
-         int n11 = n8;
-         this.evaluateNeighbor(pathNode, n11, n2, n10, flag);
+         this.evaluateNeighbor(pathNode, n8, n2, n9, true);
          n8 = n + 1;
          n9 = n3 - 1;
-         boolean flag2 = true;
-         int n12 = n9;
-         int n13 = n8;
-         this.evaluateNeighbor(pathNode, n13, n2, n12, flag2);
+         this.evaluateNeighbor(pathNode, n8, n2, n9, true);
          n8 = n - 1;
          n9 = n3 + 1;
-         boolean flag3 = true;
-         int n14 = n9;
-         int n15 = n8;
-         this.evaluateNeighbor(pathNode, n15, n2, n14, flag3);
+         this.evaluateNeighbor(pathNode, n8, n2, n9, true);
          n8 = n - 1;
          n9 = n3 - 1;
-         boolean flag4 = true;
-         int n16 = n9;
-         int n17 = n8;
-         this.evaluateNeighbor(pathNode, n17, n2, n16, flag4);
+         this.evaluateNeighbor(pathNode, n8, n2, n9, true);
       }
 
       this.useCachedChunk = true;
-      int n18 = n2 + 1;
-      this.evaluateCardinalNeighbor(pathNode, n, n18, n3);
-      int n19 = n2 - 1;
-      this.evaluateCardinalNeighbor(pathNode, n, n19, n3);
+      this.evaluateCardinalNeighbor(pathNode, n, n2 + 1, n3);
+      this.evaluateCardinalNeighbor(pathNode, n, n2 - 1, n3);
    }
 
    private void evaluateCardinalNeighbor(PathNode pathNode, int n, int n2, int n3) {
-      boolean flag = false;
-      this.evaluateNeighbor(pathNode, n, n2, n3, flag);
+      this.evaluateNeighbor(pathNode, n, n2, n3, false);
    }
 
    public ArrayList reconstructPath(PathNode pathNode) {
       ArrayList list = new ArrayList();
-      PathBlockPos.getStateFlags();
       list.add(pathNode);
 
       for (PathNode i = pathNode.getParent(); i != null; i = i.getParent()) {
@@ -431,7 +392,6 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    public ArrayList computePath(boolean flag, long l) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (AntiSamplerGuard.isGuardActive(6)) {
          return null;
       } else if (!mc.theWorld.isChunkLoaded(this.goalPos.x >> 4, this.goalPos.z >> 4, false)) {
@@ -442,13 +402,7 @@ public class AStarPathFinder implements MC, RenderListener {
          int n2 = this.startPos.y;
          int n3 = this.startPos.z;
          long l3 = packBlockKey(this.startPos.x, this.startPos.y, this.startPos.z);
-         boolean flag2 = false;
-         long l4 = l3;
-         int n4 = n3;
-         int n5 = n2;
-         int n6 = n;
-         Object obj = null;
-         this.createAndQueueNode((PathNode)obj, n6, n5, n4, l4, flag2);
+         this.createAndQueueNode((PathNode)null, n, n2, n3, l3, false);
 
          while (!flag || System.currentTimeMillis() - l2 <= l) {
             if (this.openSet.isEmpty()) {
@@ -466,8 +420,7 @@ public class AStarPathFinder implements MC, RenderListener {
                ArrayList list = this.reconstructPath(pathNode);
                if (this.smoothPath) {
                   boolean walkOnWater2 = this.walkOnWater;
-                  boolean allowSwimming2 = this.allowSwimming;
-                  list = this.simplifyPath(list, allowSwimming2, walkOnWater2);
+                  list = this.simplifyPath(list, this.allowSwimming, walkOnWater2);
                }
 
                return list;
@@ -486,14 +439,12 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    private boolean isWithinWorldBorder(int n, int n2) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       return mc.theWorld.getWorldBorder() == null
          ? true
          : this.borderMinX <= (double)n && this.borderMaxX >= (double)n && this.borderMinZ <= (double)n2 && this.borderMaxZ >= (double)n2;
    }
 
    private double evaluateMoveSpeed(int n, int n2, int n3, PathBlockPos pathBlockPos, PathBlockPos pathBlockPos2, boolean flag) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (!this.isWithinWorldBorder(n, n3)) {
          return -1.0;
       } else {
@@ -537,8 +488,7 @@ public class AStarPathFinder implements MC, RenderListener {
             }
 
             Vec3i vec = new Vec3i(n4 - n, 0, n6 - n3);
-            EnumFacing value = (EnumFacing)blockState.getValue(BlockLadder.FACING);
-            if (value.getDirectionVec().compareTo(vec) == 0) {
+            if (((EnumFacing)blockState.getValue(BlockLadder.FACING)).getDirectionVec().compareTo(vec) == 0) {
                return d;
             }
          }
@@ -640,16 +590,7 @@ public class AStarPathFinder implements MC, RenderListener {
                                     WorldClient theWorld = mc.theWorld;
                                     int n10 = pathBlockPos2.x;
                                     n7 = pathBlockPos2.y - 1;
-                                    int n11 = pathBlockPos2.z;
-                                    boolean walkOnWater6 = this.walkOnWater;
-                                    boolean allowSwimming6 = this.allowSwimming;
-                                    IBlockState state3 = state2 = mc.theWorld.getBlockState2(pathBlockPos2.x, pathBlockPos2.y - 1, pathBlockPos2.z);
-                                    boolean flag7 = allowSwimming6;
-                                    boolean flag8 = walkOnWater6;
-                                    int n12 = n11;
-                                    int n13 = n7;
-                                    int n14 = n10;
-                                    if (!PathBlockValidator.isStandableBlock(theWorld, n14, n13, n12, flag8, flag7, state3)) {
+                                    if (!PathBlockValidator.isStandableBlock(theWorld, n10, n7, pathBlockPos2.z, this.walkOnWater, this.allowSwimming, state2 = mc.theWorld.getBlockState2(pathBlockPos2.x, pathBlockPos2.y - 1, pathBlockPos2.z))) {
                                        break exitBlock2;
                                     }
                                  }
@@ -661,9 +602,7 @@ public class AStarPathFinder implements MC, RenderListener {
                                     double d3 = (double)pathBlockPos2.y;
                                     int n16 = pathBlockPos2.y - 1;
                                     int n17 = pathBlockPos2.z;
-                                    int n18 = n16;
-                                    int n19 = pathBlockPos2.x;
-                                    if (d2 - (d3 + this.getBlockTopY(state2, n19, n18, n17)) <= 1.0) {
+                                    if (d2 - (d3 + this.getBlockTopY(state2, pathBlockPos2.x, n16, n17)) <= 1.0) {
                                        break exitBlock;
                                     }
                                  }
@@ -677,13 +616,8 @@ public class AStarPathFinder implements MC, RenderListener {
                                     boolean walkOnWater7 = this.walkOnWater;
                                     boolean allowSwimming7 = this.allowSwimming;
                                     IBlockState state4;
-                                    IBlockState state5 = state4 = value2.getBlockState(n4, n5 - 2, n6);
-                                    boolean flag10 = allowSwimming7;
-                                    boolean flag11 = walkOnWater7;
-                                    int n20 = n7;
-                                    if (PathBlockValidator.isStandableBlock(theWorld2, n4, n20, n6, flag11, flag10, state5)) {
-                                       int n21 = n5 - 2;
-                                       if (this.getBlockTopY(state4, n4, n21, n6) >= 1.0
+                                    if (PathBlockValidator.isStandableBlock(theWorld2, n4, n7, n6, walkOnWater7, allowSwimming7, state4 = value2.getBlockState(n4, n5 - 2, n6))) {
+                                       if (this.getBlockTopY(state4, n4, n5 - 2, n6) >= 1.0
                                           && state.getBlock() != Blocks.web
                                           && state.getBlock().getMaterial() != Material.lava) {
                                           flag9 = true;
@@ -753,10 +687,7 @@ public class AStarPathFinder implements MC, RenderListener {
                               boolean flag12 = !flag2;
                               boolean flag13 = true;
                               boolean walkOnWater10 = this.walkOnWater;
-                              int n28 = n27;
-                              int n29 = n7;
-                              int n30 = n26;
-                              if (PathBlockValidator.canPassThroughCorner(theWorld3, n30, n29, n28, n4, n5, n6, isStandingGroundCached, walkOnWater10, flag13, flag12)) {
+                              if (PathBlockValidator.canPassThroughCorner(theWorld3, n26, n7, n27, n4, n5, n6, isStandingGroundCached, walkOnWater10, flag13, flag12)) {
                                  theWorld3 = mc.theWorld;
                                  int n31 = MathHelper.floor_double((double)pathBlockPos.x);
                                  n7 = MathHelper.floor_double((double)pathBlockPos.y);
@@ -764,10 +695,7 @@ public class AStarPathFinder implements MC, RenderListener {
                                  flag12 = !flag2;
                                  flag13 = true;
                                  walkOnWater10 = this.walkOnWater;
-                                 int n32 = n27;
-                                 int n33 = n7;
-                                 int n34 = n31;
-                                 if (PathBlockValidator.canPassThroughCorner(theWorld3, n34, n33, n32, n4, n5, n6, isStandingGroundCached, walkOnWater10, flag13, flag12)) {
+                                 if (PathBlockValidator.canPassThroughCorner(theWorld3, n31, n7, n27, n4, n5, n6, isStandingGroundCached, walkOnWater10, flag13, flag12)) {
                                     return d;
                                  }
                               }
@@ -790,12 +718,10 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    public static boolean isStandingGroundCached(PathfinderResultRef pathfinderResultRef, PathfinderResultRef pathfinderResultRef2, int n, int n2, int n3, boolean flag, boolean flag2, IBlockState state) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if ((Boolean)pathfinderResultRef2.value) {
          return (Boolean)pathfinderResultRef.value;
       } else {
-         int n4 = n2 - 1;
-         int n5 = n4;
+         int n5 = n2 - 1;
          pathfinderResultRef.value = PathBlockValidator.isStandableBlock(mc.theWorld, n, n5, n3, flag, flag2, state);
          pathfinderResultRef2.value = true;
          return (Boolean)pathfinderResultRef.value;
@@ -803,7 +729,6 @@ public class AStarPathFinder implements MC, RenderListener {
    }
 
    public PathNode createAndQueueNode(PathNode pathNode, int n, int n2, int n3, long l, boolean flag) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (this.closedSet.containsKey(l)) {
          return null;
       } else {
@@ -812,8 +737,7 @@ public class AStarPathFinder implements MC, RenderListener {
             pathBlockPos = pathNode.getPos();
          }
 
-         PathBlockPos pathBlockPos2 = pathNode != null && pathNode.getParent() != null ? pathNode.getParent().getPos() : null;
-         double d = this.evaluateMoveSpeed(n, n2, n3, pathBlockPos, pathBlockPos2, flag);
+         double d = this.evaluateMoveSpeed(n, n2, n3, pathBlockPos, pathNode != null && pathNode.getParent() != null ? pathNode.getParent().getPos() : null, flag);
          if (d == -1.0) {
             return null;
          } else {

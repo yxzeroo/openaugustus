@@ -1231,8 +1231,7 @@ public class StructureStrongholdPieces {
       }
 
       public StructureStrongholdPieces.Stronghold.Door getRandomDoor(Random rand) {
-         int n = rand.nextInt(5);
-         switch (n) {
+         switch (rand.nextInt(5)) {
             case 0:
             case 1:
             default:

@@ -51,17 +51,14 @@ public class PlayerRotationHandler extends YawPitchHelper implements MC {
       }
 
       RotationController rotationController = ClientManagers.rotationController;
-      Rotation rotation = new Rotation(player.prevRotationYaw, player.prevRotationPitch);
-      rotationController.setPreviousRotation(rotation);
+      rotationController.setPreviousRotation(new Rotation(player.prevRotationYaw, player.prevRotationPitch));
       rotationController = ClientManagers.rotationController;
-      Rotation rotation2 = new Rotation(player.rotationYaw, player.rotationPitch);
-      rotationController.setCurrentRotation(rotation2);
+      rotationController.setCurrentRotation(new Rotation(player.rotationYaw, player.rotationPitch));
       float rotationPitch = player.rotationPitch;
       float rotationYaw = player.rotationYaw;
       ClientManagers.rotationController.syncCameraAngles(rotationYaw, rotationPitch);
-      boolean flag2 = false;
       float rotationPitch2 = player.rotationPitch;
       float rotationYaw2 = player.rotationYaw;
-      ClientManagers.moduleManager.killAura.rotationUtil.bezierRotationEngine.syncCurrentRotation(rotationYaw2, rotationPitch2, flag2);
+      ClientManagers.moduleManager.killAura.rotationUtil.bezierRotationEngine.syncCurrentRotation(rotationYaw2, rotationPitch2, false);
    }
 }

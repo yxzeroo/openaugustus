@@ -185,8 +185,7 @@ public class EntityGuardian extends EntityMob {
 
    @Override
    public void addRandomDrop() {
-      ItemStack itemStack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, EntityFishHook.getFish())).getItemStack(this.rand);
-      this.entityDropItem(itemStack, 1.0F);
+      this.entityDropItem(((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, EntityFishHook.getFish())).getItemStack(this.rand), 1.0F);
    }
 
    private void setSyncedFlag(int n, boolean flag) {

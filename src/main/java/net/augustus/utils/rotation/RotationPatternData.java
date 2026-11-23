@@ -10,7 +10,6 @@ public class RotationPatternData {
    private ArrayList pitchSamples;
    private double pitchIndex;
    private double yawIndex;
-   private static int[] patternStateFlags;
 
    public ArrayList getYawSamples() {
       return this.yawSamples;
@@ -18,7 +17,6 @@ public class RotationPatternData {
 
    public double samplePitch(double d, long l) {
       int n = (int)Math.floor(d);
-      getPatternStateFlags();
       int n2 = (int)Math.ceil(d);
       if (n >= this.pitchSamples.size()) {
          n = this.pitchSamples.size() - 1;
@@ -37,7 +35,6 @@ public class RotationPatternData {
    }
 
    public void setPitchIndex(long l, double d) {
-      int[] patternStateFlags2 = getPatternStateFlags();
       if (d >= (double)this.pitchSamples.size()) {
          d = 0.0;
       }
@@ -46,7 +43,6 @@ public class RotationPatternData {
    }
 
    public void setYawIndex(long l, double d) {
-      int[] patternStateFlags2 = getPatternStateFlags();
       if (d >= (double)this.yawSamples.size()) {
          d = 0.0;
       }
@@ -69,7 +65,6 @@ public class RotationPatternData {
 
    public double sampleYaw(double d, long l) {
       int n = (int)Math.floor(d);
-      getPatternStateFlags();
       int n2 = (int)Math.ceil(d);
       if (n >= this.yawSamples.size()) {
          n = this.yawSamples.size() - 1;
@@ -93,17 +88,6 @@ public class RotationPatternData {
       return this.pitchSamples;
    }
 
-   public static void setPatternStateFlags(int[] ints) {
-      patternStateFlags = ints;
-   }
 
-   public static int[] getPatternStateFlags() {
-      return patternStateFlags;
-   }
 
-   static {
-      if (getPatternStateFlags() != null) {
-         setPatternStateFlags(new int[1]);
-      }
-   }
 }

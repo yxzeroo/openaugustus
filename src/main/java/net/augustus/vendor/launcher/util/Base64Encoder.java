@@ -1,6 +1,5 @@
 package net.augustus.vendor.launcher.util;
 
-import net.augustus.vendor.launcher.crypto.Sha256Digest;
 import java.io.OutputStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -151,7 +150,6 @@ public class Base64Encoder {
    public static final Base64Encoder RFC4648_URLSAFE = new Base64Encoder(true, null, -1, true);
 
    private int encode0(byte[] bytes, int n, int n2, byte[] bytes2) {
-      int[] flowState = Sha256Digest.getFlowState();
       char[] chars = this.isURL ? toBase64URL : toBase64;
       int n3 = n;
       int n4 = (n2 - n) / 3 * 3;
@@ -208,7 +206,6 @@ public class Base64Encoder {
    }
 
    private final int outLength(int n) {
-      int[] flowState = Sha256Digest.getFlowState();
       int n2 = 0;
       if (this.doPadding) {
          n2 = 4 * ((n + 2) / 3);
@@ -236,25 +233,17 @@ public class Base64Encoder {
    }
 
    public byte[] encode2(byte[] bytes) {
-      int length = bytes.length;
-      int n = this.outLength(length);
-      byte[] bytes2 = new byte[n];
-      int length2 = bytes.length;
-      byte b = 0;
-      int n2 = this.encode0(bytes, b, length2, bytes2);
+      byte[] bytes2 = new byte[this.outLength(bytes.length)];
+      int n2 = this.encode0(bytes, (byte)0, bytes.length, bytes2);
       return n2 != bytes2.length ? Arrays.copyOf(bytes2, n2) : bytes2;
    }
 
    public int encode(byte[] bytes, byte[] bytes2) {
-      int[] flowState = Sha256Digest.getFlowState();
-      int length = bytes.length;
-      int n = this.outLength(length);
+      int n = this.outLength(bytes.length);
       if (bytes2.length < n) {
          throw new IllegalArgumentException("Output byte array is too small for encoding all input bytes");
       } else {
-         int length2 = bytes.length;
-         byte b = 0;
-         return this.encode0(bytes, b, length2, bytes2);
+         return this.encode0(bytes, (byte)0, bytes.length, bytes2);
       }
    }
 
@@ -263,7 +252,6 @@ public class Base64Encoder {
    }
 
    public Base64Encoder withoutPadding(long l) {
-      int[] flowState = Sha256Digest.getFlowState();
       return !this.doPadding ? this : new Base64Encoder(this.isURL, this.newline, this.linemax, false);
    }
 
@@ -273,24 +261,17 @@ public class Base64Encoder {
    }
 
    public ByteBuffer encode(ByteBuffer buf) {
-      int n = buf.remaining();
-      int n2 = this.outLength(n);
-      Sha256Digest.getFlowState();
-      byte[] bytes = new byte[n2];
+      byte[] bytes = new byte[this.outLength(buf.remaining())];
       int n3 = 0;
       if (buf.hasArray()) {
          byte[] bytes2 = buf.array();
          int n4 = buf.arrayOffset() + buf.limit();
-         int n5 = buf.arrayOffset() + buf.position();
-         byte[] bytes3 = bytes2;
-         n3 = this.encode0(bytes3, n5, n4, bytes);
+         n3 = this.encode0(bytes2, buf.arrayOffset() + buf.position(), n4, bytes);
          ((Buffer)buf).position(buf.limit());
       } else {
          byte[] bytes4 = new byte[buf.remaining()];
          buf.get(bytes4);
-         int length = bytes4.length;
-         byte b = 0;
-         n3 = this.encode0(bytes4, b, length, bytes);
+         n3 = this.encode0(bytes4, (byte)0, bytes4.length, bytes);
       }
 
       if (n3 != bytes.length) {

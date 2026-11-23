@@ -31,8 +31,7 @@ public class EntityAIFollowOwner extends EntityAIBase {
    }
 
    private boolean isEmptyBlock(BlockPos pos) {
-      IBlockState blockState = this.theWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
+      Block block = this.theWorld.getBlockState(pos).getBlock();
       return block == Blocks.air ? true : !block.isFullCube();
    }
 

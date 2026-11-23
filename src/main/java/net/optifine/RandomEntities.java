@@ -85,8 +85,7 @@ public class RandomEntities {
    private static String getHorseTexturePath(String str, int n) {
       if (HORSE_TEXTURES != null && HORSE_TEXTURES_ABBR != null) {
          for (int i = 0; i < HORSE_TEXTURES_ABBR.length; i++) {
-            String str2 = HORSE_TEXTURES_ABBR[i];
-            if (str.startsWith(str2, n)) {
+            if (str.startsWith(HORSE_TEXTURES_ABBR[i], n)) {
                return HORSE_TEXTURES[i];
             }
          }
@@ -194,8 +193,7 @@ public class RandomEntities {
          List loadedEntityList = world2.getLoadedEntityList();
 
          for (int i = 0; i < loadedEntityList.size(); i++) {
-            Entity entity = (Entity)loadedEntityList.get(i);
-            entityLoaded(entity, world2);
+            entityLoaded((Entity)loadedEntityList.get(i), world2);
          }
       }
 
@@ -238,8 +236,7 @@ public class RandomEntities {
          return null;
       } else {
          String resourceDomain = locationRandom.getResourceDomain();
-         String resourcePath = locationRandom.getResourcePath();
-         String str = StrUtils.removeSuffix2(resourcePath, ".png");
+         String str = StrUtils.removeSuffix2(locationRandom.getResourcePath(), ".png");
          String str2 = str + ".properties";
          ResourceLocation location2 = new ResourceLocation(resourceDomain, str2);
          if (Config.hasResource(location2)) {
@@ -260,8 +257,7 @@ public class RandomEntities {
       Entity entity = IntegratedServerUtils.getEntity(uuid);
       if (entity instanceof EntityVillager) {
          EntityVillager entityVillager2 = (EntityVillager)entity;
-         int profession = entityVillager2.getProfession();
-         entityVillager.setProfession(profession);
+         entityVillager.setProfession(entityVillager2.getProfession());
          entityVillager.careerId = entityVillager2.careerId;
          entityVillager.careerLevel = entityVillager2.careerLevel;
       }
@@ -320,8 +316,7 @@ public class RandomEntities {
          return null;
       } else {
          for (int i = 1; i < list.size() + 10; i++) {
-            int n = i + 1;
-            ResourceLocation locationIndexed = getLocationIndexed(locationRandom, n);
+            ResourceLocation locationIndexed = getLocationIndexed(locationRandom, i + 1);
             if (Config.hasResource(locationIndexed)) {
                list.add(locationIndexed);
             }

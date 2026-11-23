@@ -109,9 +109,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
    private void addMultiworld(String str) {
       String str2 = str;
-      char[] chars = "\\/:*?\"<>|.".toCharArray();
 
-      for (char ch : chars) {
+      for (char ch : "\\/:*?\"<>|.".toCharArray()) {
          str2 = str2.replace(ch, '_');
       }
 

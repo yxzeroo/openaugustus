@@ -8,8 +8,7 @@ public class EventGuiScale extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      GuiScaleListener listener = (GuiScaleListener)obj;
-      this.call2(listener);
+      this.call2((GuiScaleListener)obj);
    }
 
    public void call2(GuiScaleListener listener) {

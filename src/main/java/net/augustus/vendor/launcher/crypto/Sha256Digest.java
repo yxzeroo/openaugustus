@@ -77,7 +77,6 @@ public class Sha256Digest {
    private final int[] hashState = new int[8];
    private static final int BLOCK_SIZE_BITS = 512;
    private static final int[] INITIAL_HASH_VALUES = new int[]{1779033703, -1150833019, 1013904242, -1521486534, 1359893119, -1694144372, 528734635, 1541459225};
-   private static int[] flowState;
    private static final long e = 8L;
 
    private int bigSigma1(int n) {
@@ -89,10 +88,8 @@ public class Sha256Digest {
    }
 
    public int[] padMessage(byte[] bytes) {
-      int[] flowState2 = getFlowState();
       int n = bytes.length % 64;
-      int n2 = bytes.length / 64 + (n + 1 + 8 > 64 ? 2 : 1);
-      IntBuffer intBuffer = IntBuffer.allocate(n2 * 16);
+      IntBuffer intBuffer = IntBuffer.allocate((bytes.length / 64 + (n + 1 + 8 > 64 ? 2 : 1)) * 16);
       ByteBuffer buf = ByteBuffer.wrap(bytes);
       int n3 = 0;
 
@@ -110,9 +107,6 @@ public class Sha256Digest {
       return intBuffer.array();
    }
 
-   static {
-      setFlowState(null);
-   }
 
    private int smallSigma1(int n) {
       return Integer.rotateRight(n, 17) ^ Integer.rotateRight(n, 19) ^ n >>> 10;
@@ -124,7 +118,6 @@ public class Sha256Digest {
 
    private byte[] intsToBytes(int[] ints) {
       ByteBuffer buf = ByteBuffer.allocate(ints.length * 4);
-      getFlowState();
 
       for (int n : ints) {
          buf.putInt(n);
@@ -144,19 +137,13 @@ public class Sha256Digest {
    public byte[] digest(byte[] bytes) {
       System.arraycopy(INITIAL_HASH_VALUES, 0, this.hashState, 0, INITIAL_HASH_VALUES.length);
       int[] ints = this.padMessage(bytes);
-      getFlowState();
       int n = 0;
 
       for (int i = ints.length / 16; n < i; n++) {
          System.arraycopy(ints, n * 16, this.messageSchedule, 0, 16);
 
          for (int j = 16; j < this.messageSchedule.length; j++) {
-            int[] messageSchedule2 = this.messageSchedule;
-            int n2 = this.messageSchedule[j - 2];
-            int n3 = n2;
-            int n4 = this.smallSigma1(n3) + this.messageSchedule[j - 7];
-            int n5 = this.messageSchedule[j - 15];
-            messageSchedule2[j] = n4 + this.smallSigma0(n5) + this.messageSchedule[j - 16];
+            this.messageSchedule[j] = (this.smallSigma1(this.messageSchedule[j - 2]) + this.messageSchedule[j - 7]) + this.smallSigma0(this.messageSchedule[j - 15]) + this.messageSchedule[j - 16];
          }
 
          System.arraycopy(this.hashState, 0, this.workingVars, 0, this.hashState.length);
@@ -167,18 +154,11 @@ public class Sha256Digest {
             n6 += this.bigSigma1(n7);
             int n8 = this.workingVars[4];
             int n9 = this.workingVars[5];
-            int n10 = this.workingVars[6];
-            int n11 = n9;
-            int n12 = n8;
-            int n13 = n6 + this.choose(n12, n11, n10) + ROUND_CONSTANTS[k] + this.messageSchedule[k];
-            int n14 = this.workingVars[0];
-            n6 = this.bigSigma0(n14);
+            int n13 = n6 + this.choose(n8, n9, this.workingVars[6]) + ROUND_CONSTANTS[k] + this.messageSchedule[k];
+            n6 = this.bigSigma0(this.workingVars[0]);
             n8 = this.workingVars[0];
             n9 = this.workingVars[1];
-            int n15 = this.workingVars[2];
-            int n16 = n9;
-            int n17 = n8;
-            int n18 = n6 + this.majority(n17, n16, n15);
+            int n18 = n6 + this.majority(n8, n9, this.workingVars[2]);
             System.arraycopy(this.workingVars, 0, this.workingVars, 1, this.workingVars.length - 1);
             this.workingVars[4] = this.workingVars[4] + n13;
             this.workingVars[0] = n13 + n18;
@@ -189,19 +169,12 @@ public class Sha256Digest {
          }
       }
 
-      int[] hashState2 = this.hashState;
-      return this.intsToBytes(hashState2);
+      return this.intsToBytes(this.hashState);
    }
 
    private int smallSigma0(int n) {
       return Integer.rotateRight(n, 7) ^ Integer.rotateRight(n, 18) ^ n >>> 3;
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 }

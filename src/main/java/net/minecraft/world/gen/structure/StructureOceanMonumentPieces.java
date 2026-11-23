@@ -1037,8 +1037,7 @@ public class StructureOceanMonumentPieces {
          for (int i = 1; i <= 6; i++) {
             for (int j = 1; j <= 6; j++) {
                if (rand.nextInt(3) != 0) {
-                  int n = 2 + (rand.nextInt(4) == 0 ? 0 : 1);
-                  this.fillWithBlocks(world, structureBoundingBox, i, n, j, i, 3, j, Blocks.sponge.getStateFromMeta(1), Blocks.sponge.getStateFromMeta(1), false);
+                  this.fillWithBlocks(world, structureBoundingBox, i, 2 + (rand.nextInt(4) == 0 ? 0 : 1), j, i, 3, j, Blocks.sponge.getStateFromMeta(1), Blocks.sponge.getStateFromMeta(1), false);
                }
             }
          }
@@ -1173,8 +1172,7 @@ public class StructureOceanMonumentPieces {
 
       @Override
       public boolean addComponentParts(World world, Random rand, StructureBoundingBox structureBoundingBox) {
-         int n = Math.max(world.getSeaLevel(), 64) - this.boundingBox.minY;
-         this.generateWaterBox(world, structureBoundingBox, 0, 0, 0, 58, n, 58, false);
+         this.generateWaterBox(world, structureBoundingBox, 0, 0, 0, 58, Math.max(world.getSeaLevel(), 64) - this.boundingBox.minY, 58, false);
          this.generateWing(false, 0, world, rand, structureBoundingBox);
          this.generateWing(true, 33, world, rand, structureBoundingBox);
          this.generateEntranceArchs(world, rand, structureBoundingBox);
@@ -1290,24 +1288,21 @@ public class StructureOceanMonumentPieces {
 
          for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 4; j++) {
-               byte b = 0;
-               int roomIndex = getRoomIndex(i, b, j);
+               int roomIndex = getRoomIndex(i, (byte)0, j);
                roomDefinitions[roomIndex] = new StructureOceanMonumentPieces.RoomDefinition(roomIndex);
             }
          }
 
          for (int k = 0; k < 5; k++) {
             for (int m = 0; m < 4; m++) {
-               byte b2 = 1;
-               int roomIndex2 = getRoomIndex(k, b2, m);
+               int roomIndex2 = getRoomIndex(k, (byte)1, m);
                roomDefinitions[roomIndex2] = new StructureOceanMonumentPieces.RoomDefinition(roomIndex2);
             }
          }
 
          for (int idx = 1; idx < 4; idx++) {
             for (int index = 0; index < 2; index++) {
-               byte b3 = 2;
-               int roomIndex3 = getRoomIndex(idx, b3, index);
+               int roomIndex3 = getRoomIndex(idx, (byte)2, index);
                roomDefinitions[roomIndex3] = new StructureOceanMonumentPieces.RoomDefinition(roomIndex3);
             }
          }

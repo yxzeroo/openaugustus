@@ -143,9 +143,8 @@ public class SoundHandler implements ITickable, IResourceManagerReloadListener {
          try {
             for (IResource resource : (Iterable<IResource>)(resourceManager.getAllResources(new ResourceLocation(str, "sounds.json")))) {
                try {
-                  Map soundMap = this.getSoundMap(resource.getInputStream());
 
-                  for (Entry entry : (Iterable<Entry>)(soundMap.entrySet())) {
+                  for (Entry entry : (Iterable<Entry>)(this.getSoundMap(resource.getInputStream()).entrySet())) {
                      this.loadSoundResource(new ResourceLocation(str, (String)entry.getKey()), (SoundList)entry.getValue());
                   }
                } catch (RuntimeException e) {

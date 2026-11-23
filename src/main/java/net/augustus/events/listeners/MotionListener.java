@@ -26,8 +26,7 @@ public interface MotionListener {
       double d3 = 0.0;
       float f = 0.0F;
       float f2 = 0.0F;
-      boolean flag = false;
-      EventMotion.reset(MOTION_EVENT, flag, f2, f, d3, d2, d, post);
+      EventMotion.reset(MOTION_EVENT, false, f2, f, d3, d2, d, post);
       EventManager.getEventBus().post(18, MOTION_EVENT);
    }
 }

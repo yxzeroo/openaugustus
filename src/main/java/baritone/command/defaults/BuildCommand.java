@@ -40,8 +40,7 @@ public class BuildCommand extends Command {
          betterBlockPos2 = betterBlockPos;
       }
 
-      boolean flag = this.baritone.getBuilderProcess().build(absoluteFile.getName(), absoluteFile, betterBlockPos2);
-      if (!flag) {
+      if (!this.baritone.getBuilderProcess().build(absoluteFile.getName(), absoluteFile, betterBlockPos2)) {
          throw new CommandInvalidStateException(
             "Couldn't load the schematic. Make sure to use the FULL file name, including the extension (e.g. blah.schematic)."
          );

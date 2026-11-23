@@ -12,14 +12,12 @@ public interface ClickGuiListener {
    void onClickGui2();
 
    static void onClickGui3() {
-      boolean flag = true;
-      EventClickGui.reset(CLICK_GUI_EVENT, flag);
+      EventClickGui.reset(CLICK_GUI_EVENT, true);
       EventManager.getEventBus().post(6, CLICK_GUI_EVENT);
    }
 
    static void onClickGui4() {
-      boolean flag = false;
-      EventClickGui.reset(CLICK_GUI_EVENT, flag);
+      EventClickGui.reset(CLICK_GUI_EVENT, false);
       EventManager.getEventBus().post(6, CLICK_GUI_EVENT);
    }
 }

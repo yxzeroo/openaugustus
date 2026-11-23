@@ -42,8 +42,7 @@ public enum ClientboundPackets1_4_6 implements ClientboundPacketType, PreNettyPa
    TAKE_ITEM_ENTITY(22, (user, buf) -> buf.skipBytes(8)),
    ADD_ENTITY(23, (user, buf) -> {
       buf.skipBytes(19);
-      int i = buf.readInt();
-      if (i > 0) {
+      if (buf.readInt() > 0) {
          buf.skipBytes(6);
       }
    }),

@@ -74,8 +74,7 @@ public class GuiMultiplayer extends GuiScreen implements ServerListHost, GuiYesN
       MultiplayerProtocolMenu.getSidebar().initSidebar();
       DiscordRpcManager discordRpcManager = Augustus.getInstance().getDiscordRpcManager();
       String str = "Multiplayer Menu";
-      String str2 = "Idle";
-      discordRpcManager.updatePresence(str2, str);
+      discordRpcManager.updatePresence("Idle", str);
       Keyboard.enableRepeatEvents(true);
       this.buttonList.clear();
       if (!this.initialized) {
@@ -228,9 +227,7 @@ public class GuiMultiplayer extends GuiScreen implements ServerListHost, GuiYesN
    }
 
    private void connectToServer(ServerData serverData) {
-      Minecraft mc2 = this.mc;
-      GuiConnecting guiConnecting = new GuiConnecting(this, this.mc, serverData);
-      mc2.displayGuiScreen(guiConnecting);
+      this.mc.displayGuiScreen(new GuiConnecting(this, this.mc, serverData));
    }
 
    @Override
@@ -258,9 +255,7 @@ public class GuiMultiplayer extends GuiScreen implements ServerListHost, GuiYesN
    }
 
    private void refreshServerList() {
-      Minecraft mc2 = this.mc;
-      GuiMultiplayer guiMultiplayer = new GuiMultiplayer(this.parentScreen);
-      mc2.displayGuiScreen(guiMultiplayer);
+      this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
    }
 
    @Override
@@ -282,26 +277,20 @@ public class GuiMultiplayer extends GuiScreen implements ServerListHost, GuiYesN
             this.connectToSelected();
          } else if (button.id == 4) {
             this.directConnect = true;
-            Minecraft mc2 = this.mc;
-            GuiScreenServerList guiScreenServerList = new GuiScreenServerList(
+            this.mc.displayGuiScreen(new GuiScreenServerList(
                this, this.selectedServer = new ServerData(I18n.format("selectServer.defaultName", new Object[0]), "", false)
-            );
-            mc2.displayGuiScreen(guiScreenServerList);
+            ));
          } else if (button.id == 3) {
             this.addingServer = true;
-            Minecraft mc3 = this.mc;
-            GuiScreenAddServer guiScreenAddServer = new GuiScreenAddServer(
+            this.mc.displayGuiScreen((GuiScreen)new GuiScreenAddServer(
                this, this.selectedServer = new ServerData(I18n.format("selectServer.defaultName", new Object[0]), "", false)
-            );
-            mc3.displayGuiScreen((GuiScreen)guiScreenAddServer);
+            ));
          } else if (button.id == 7 && guiListEntry instanceof ServerListEntryNormal) {
             this.editingServer = true;
             ServerData serverData = ((ServerListEntryNormal)guiListEntry).getServerData();
             this.selectedServer = new ServerData(serverData.serverName, serverData.serverIP, false);
             this.selectedServer.copyFrom(serverData);
-            Minecraft mc4 = this.mc;
-            GuiScreenAddServer guiScreenAddServer2 = new GuiScreenAddServer(this, this.selectedServer);
-            mc4.displayGuiScreen((GuiScreen)guiScreenAddServer2);
+            this.mc.displayGuiScreen((GuiScreen)new GuiScreenAddServer(this, this.selectedServer));
          } else if (button.id == 0) {
             GuiScreen parentScreen2 = this.parentScreen;
             this.mc.displayGuiScreen(parentScreen2);
@@ -311,15 +300,12 @@ public class GuiMultiplayer extends GuiScreen implements ServerListHost, GuiYesN
             && guiListEntry instanceof ServerListEntryNormal
             && Minecraft.getMinecraft().getSession() != null
             && Minecraft.getMinecraft().getSession().getAccountEntry() != null) {
-            ServerListEntryNormal serverListEntryNormal = (ServerListEntryNormal)guiListEntry;
-            ServerData serverData2 = serverListEntryNormal.getServerData();
+            ServerData serverData2 = ((ServerListEntryNormal)guiListEntry).getServerData();
             if (serverData2 != null) {
                AccountEntry accountEntry = Minecraft.getMinecraft().getSession().getAccountEntry();
                String serverIP = serverData2.serverIP;
                Long val = 0L;
-               Long val2 = val;
-               String str5 = serverIP;
-               accountEntry.markBannedOnServer(str5, val2);
+               accountEntry.markBannedOnServer(serverIP, val);
             }
          }
       }

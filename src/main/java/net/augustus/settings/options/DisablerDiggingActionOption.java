@@ -4,8 +4,8 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.augustus.settings.RangeSetting;
 import net.augustus.settings.SelectableOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public enum DisablerDiggingActionOption implements SelectableOption {
    START_DESTROY_BLOCK("StartDestroyBlock", C07PacketPlayerDigging.Action.START_DESTROY_BLOCK),
@@ -18,10 +18,10 @@ public enum DisablerDiggingActionOption implements SelectableOption {
 private String name;
    private C07PacketPlayerDigging.Action action;
    private boolean selected;
-   private StringValue intervalSetting;
+   private DoubleValue intervalSetting;
    private BooleanValue invertIntervalSetting;
    private BooleanValue alwaysSetting;
-   private BooleansSetting cancelConditionSetting;
+   private StringValue cancelConditionSetting;
    private RangeSetting tickRangeSetting;
    private int packetCount = 0;
 private DisablerDiggingActionOption(String str, C07PacketPlayerDigging.Action action2) {
@@ -48,7 +48,7 @@ private DisablerDiggingActionOption(String str, C07PacketPlayerDigging.Action ac
       return option.name;
    }
 
-   public static StringValue setIntervalSetting(DisablerDiggingActionOption option, StringValue stringValue) {
+   public static DoubleValue setIntervalSetting(DisablerDiggingActionOption option, DoubleValue stringValue) {
       return option.intervalSetting = stringValue;
    }
 
@@ -64,7 +64,7 @@ private DisablerDiggingActionOption(String str, C07PacketPlayerDigging.Action ac
       return option.tickRangeSetting = rangeSetting;
    }
 
-   public static BooleansSetting setCancelConditionSetting(DisablerDiggingActionOption option, BooleansSetting booleansSetting) {
+   public static StringValue setCancelConditionSetting(DisablerDiggingActionOption option, StringValue booleansSetting) {
       return option.cancelConditionSetting = booleansSetting;
    }
 
@@ -80,11 +80,11 @@ private DisablerDiggingActionOption(String str, C07PacketPlayerDigging.Action ac
       return option.packetCount++;
    }
 
-   public static BooleansSetting getCancelConditionSetting(DisablerDiggingActionOption option) {
+   public static StringValue getCancelConditionSetting(DisablerDiggingActionOption option) {
       return option.cancelConditionSetting;
    }
 
-   public static StringValue getIntervalSetting(DisablerDiggingActionOption option) {
+   public static DoubleValue getIntervalSetting(DisablerDiggingActionOption option) {
       return option.intervalSetting;
    }
 

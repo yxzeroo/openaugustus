@@ -29,13 +29,13 @@ import java.util.stream.Stream;
 import net.augustus.modules.Module;
 import net.augustus.modules.misc.Dummy;
 
-public class ModeSetting extends BooleansSetting implements ModuleToggleListener {
+public class ModeSetting extends StringValue implements ModuleToggleListener {
    private final ConcurrentHashMap modesByName;
    private final Set customModeNames;
    private final HashMap modesByClass;
    private AbstractSubMode abstractSubMode;
    private final List builtInModeNames;
-   private DoubleValue modeValuesGroup;
+   private SettingGroup modeValuesGroup;
    private final HashMap builtInModes;
    private final String customModesDir;
    private static final FeatureListJsonCodec CUSTOM_MODE_CODEC = new FeatureListJsonCodec();
@@ -44,8 +44,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    @Override
    public void resetToDefault() {
       super.resetToDefault();
-      String selectedValue = this.getSelectedValue();
-      this.abstractSubMode = this.resolveSubMode(selectedValue);
+      this.abstractSubMode = this.resolveSubMode(this.getSelectedValue());
    }
 
    public AbstractSubMode getAbstractSubMode() {
@@ -53,7 +52,6 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private AbstractSubMode resolveSubMode(String str) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       AbstractSubMode subMode = (AbstractSubMode)this.modesByName.get(str);
       if (subMode == null) {
          subMode = (AbstractSubMode)this.modesByName.values().stream().findFirst().orElse(null);
@@ -68,21 +66,17 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private boolean isNestedModeGroupVisible() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       return this.modeValuesGroup.hasVisibleChildren() && this.isVisible();
    }
 
    public boolean isSubModeActive(Class clazz) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       AbstractSubMode subMode = (AbstractSubMode)this.modesByClass.get(clazz);
       return subMode != null && subMode.isEnabled();
    }
 
    private void onModeValueChanged() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       if (this.abstractSubMode != null && this.getParentModule().isToggled()) {
-         boolean flag = true;
-         this.abstractSubMode.setEnabled(flag);
+         this.abstractSubMode.setEnabled(true);
       }
 
       if (this.changeListener != null) {
@@ -98,12 +92,8 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
       this.customModeNames = ConcurrentHashMap.newKeySet();
       this.modesByClass = new HashMap();
       this.ownerModule = module;
-      DoubleValue doubleValue = new DoubleValue(module, str + "ModeValuesGroup", true);
-      String str3 = "ModeValues";
-      this.modeValuesGroup = (DoubleValue)doubleValue.withDisplayName(str3);
-      DoubleValue modeValuesGroup2 = this.modeValuesGroup;
-      SettingVisibilityCondition condition = () -> this.isModeGroupVisible();
-      this.modeValuesGroup = modeValuesGroup2.visibleWhen(condition);
+      this.modeValuesGroup = (SettingGroup)new SettingGroup(module, str + "ModeValuesGroup", true).withDisplayName("ModeValues");
+      this.modeValuesGroup = this.modeValuesGroup.visibleWhen(() -> this.isModeGroupVisible());
       Stream<BiFunction> stream = Arrays.stream(biFunctions);
       stream.forEach(biFunction -> {
          AbstractSubMode subMode = (AbstractSubMode)biFunction.apply(module, this.modeValuesGroup);
@@ -116,9 +106,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
          this.builtInModes.put(subMode.getName(), subMode);
          this.modesByClass.put(subMode.getClass(), subMode);
       });
-      AbstractSubMode.getControlFlowState();
-      String[] strings = (String[])this.builtInModeNames.toArray(new String[0]);
-      this.setOptions(strings);
+      this.setOptions((String[])this.builtInModeNames.toArray(new String[0]));
       this.abstractSubMode = this.resolveSubMode(str2);
       module.getToggleListeners().add(this);
       this.customModesDir = ClientFileUtil.WORKING_DIR
@@ -129,33 +117,28 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
          + this.ownerModule.getName().toLowerCase();
    }
 
-   public ModeSetting(Module module, String str, String str2, DoubleValue doubleValue, BiFunction[] biFunctions) {
+   public ModeSetting(Module module, String str, String str2, SettingGroup doubleValue, BiFunction[] biFunctions) {
        super(module, str, str2, new String[0], doubleValue);
       this.builtInModes = new HashMap();
-      AbstractSubMode.getControlFlowState();
       this.builtInModeNames = new ArrayList();
       this.modesByName = new ConcurrentHashMap();
       this.customModeNames = ConcurrentHashMap.newKeySet();
       this.modesByClass = new HashMap();
       this.ownerModule = module;
-      DoubleValue doubleValue2 = new DoubleValue(module, str + "ModeValuesGroup", true, doubleValue);
-      String str3 = "ModeValues";
-      this.modeValuesGroup = (DoubleValue)doubleValue2.withDisplayName(str3);
+      SettingGroup doubleValue2 = new SettingGroup(module, str + "ModeValuesGroup", true, doubleValue);
+      this.modeValuesGroup = (SettingGroup)doubleValue2.withDisplayName("ModeValues");
       doubleValue2 = this.modeValuesGroup;
-      SettingVisibilityCondition condition = () -> this.isNestedModeGroupVisible();
-      this.modeValuesGroup = doubleValue2.visibleWhen(condition);
+      this.modeValuesGroup = doubleValue2.visibleWhen(() -> this.isNestedModeGroupVisible());
       Stream<BiFunction> stream = Arrays.stream(biFunctions);
       stream.forEach(biFunction -> {
          AbstractSubMode subMode = (AbstractSubMode)biFunction.apply(module, this.modeValuesGroup);
-         Supplier supplier = () -> this.isSelectedSubMode(subMode);
-         subMode.setVisibilitySupplier(supplier);
+         subMode.setVisibilitySupplier(() -> this.isSelectedSubMode(subMode));
          this.builtInModeNames.add(subMode.getName());
          this.modesByName.put(subMode.getName(), subMode);
          this.builtInModes.put(subMode.getName(), subMode);
          this.modesByClass.put(subMode.getClass(), subMode);
       });
-      String[] strings = (String[])this.builtInModeNames.toArray(new String[0]);
-      this.setOptions(strings);
+      this.setOptions((String[])this.builtInModeNames.toArray(new String[0]));
       this.abstractSubMode = this.resolveSubMode(str2);
       module.getToggleListeners().add(this);
       this.customModesDir = ClientFileUtil.WORKING_DIR
@@ -167,8 +150,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private void loadCustomModeAndRefresh(File file, CustomSubModeFactory customSubModeFactory) {
-      ConcurrentHashMap modesByName2 = this.modesByName;
-      this.registerCustomModeFromFile(modesByName2, file, customSubModeFactory);
+      this.registerCustomModeFromFile(this.modesByName, file, customSubModeFactory);
       this.refreshModeOptions();
    }
 
@@ -183,9 +165,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
 
    public void reloadCustomModes(CustomSubModeFactory customSubModeFactory) {
       ClientFileUtil.ensureDirectory(this.customModesDir);
-      File file = new File(this.customModesDir);
-      AbstractSubMode.getControlFlowState();
-      File[] files = file.listFiles(File::isFile);
+      File[] files = new File(this.customModesDir).listFiles(File::isFile);
       if (files != null) {
          HashMap map = new HashMap(this.builtInModes);
 
@@ -200,11 +180,8 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private void refreshModeOptions() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
-      boolean flag = this.modesByName.keySet().stream().anyMatch(obj -> this.matchesSelectedMode((String)obj));
-      if (!flag && !this.modesByName.isEmpty()) {
-         String str = (String)this.modesByName.keySet().iterator().next();
-         this.setSelectedValue(str);
+      if (!this.modesByName.keySet().stream().anyMatch(obj -> this.matchesSelectedMode((String)obj)) && !this.modesByName.isEmpty()) {
+         this.setSelectedValue((String)this.modesByName.keySet().iterator().next());
       }
 
       String[] strings = ((Map<String, ?>)this.modesByName).keySet().stream().sorted(Comparator.comparing(String::toLowerCase)).toArray(String[]::new);
@@ -212,28 +189,23 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private void registerCustomModeFromFile(Map map, File file, CustomSubModeFactory customSubModeFactory) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       String name = file.getName();
       short s2 = 28597;
       if (name.endsWith(".json")) {
          String str = name.substring(0, Math.max(name.length() - 5, 0));
          if (!map.containsKey(str) || this.customModeNames.contains(str)) {
             if (this.customModeNames.contains(str)) {
-               AbstractSubMode subMode = (AbstractSubMode)map.get(str);
-               boolean flag = false;
-               subMode.setEnabled(flag);
+               ((AbstractSubMode)map.get(str)).setEnabled(false);
             }
 
-            DoubleValue modeValuesGroup2 = this.modeValuesGroup;
-            Module ownerModule2 = this.ownerModule;
-            MotionModifierProvider motionModifierProvider = (MotionModifierProvider)customSubModeFactory.create(ownerModule2, modeValuesGroup2, str);
+            SettingGroup modeValuesGroup2 = this.modeValuesGroup;
+            MotionModifierProvider motionModifierProvider = (MotionModifierProvider)customSubModeFactory.create(this.ownerModule, modeValuesGroup2, str);
             AbstractSubMode subMode2 = (AbstractSubMode)motionModifierProvider;
             Supplier supplier = () -> {
                return subMode2.getName().equals(this.abstractSubMode.getName());
             };
             subMode2.setVisibilitySupplier(supplier);
-            Dummy dummy = motionModifierProvider.getDummy();
-            this.loadCustomModeConfig(file, dummy);
+            this.loadCustomModeConfig(file, motionModifierProvider.getDummy());
             map.put(str, subMode2);
             this.customModeNames.add(str);
          }
@@ -242,8 +214,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
 
    @Override
    public synchronized void notifyUserChanged() {
-      SettingChangeListener listener = () -> this.onUserModeChanged();
-      this.dispatchUserChangeListener(listener);
+      this.dispatchUserChangeListener(() -> this.onUserModeChanged());
    }
 
    @Override
@@ -252,23 +223,12 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    public boolean loadCustomModeConfig(File file, Dummy dummy) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
-      String absolutePath = file.getParentFile().getAbsolutePath();
-      String name = file.getName();
-      Object obj = null;
-      String str = name;
-      JsonObject json = ClientFileUtil.readJsonObject(absolutePath, str, (Runnable)obj);
+      JsonObject json = ClientFileUtil.readJsonObject(file.getParentFile().getAbsolutePath(), file.getName(), (Runnable)null);
       if (json == null) {
          return false;
       } else {
-         FeatureListJsonCodec featureListJsonCodec = CUSTOM_MODE_CODEC;
-         Module[] modules = new Module[]{dummy};
-         featureListJsonCodec.setFeatures2(modules);
-         FeatureListJsonCodec featureListJsonCodec2 = CUSTOM_MODE_CODEC;
-         UnaryFunction unaryFunction = obj2 -> true;
-         boolean flag = true;
-         boolean flag2 = featureListJsonCodec2.deserializeFromObject(json, flag, unaryFunction);
-         if (!flag2) {
+         CUSTOM_MODE_CODEC.setFeatures2(new Module[]{dummy});
+         if (!CUSTOM_MODE_CODEC.deserializeFromObject(json, true, obj2 -> true)) {
             System.out.println("Failed to read custom mode");
             return false;
          } else {
@@ -278,8 +238,7 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private void onCustomModeFileDeleted(Path path) {
-      File file = path.toFile();
-      this.removeCustomModeFile(file);
+      this.removeCustomModeFile(path.toFile());
    }
 
    public AbstractSubMode getSubMode(String str) {
@@ -294,19 +253,16 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    public ModeSetting enableCustomModes(CustomSubModeFactory customSubModeFactory) {
       this.reloadCustomModes(customSubModeFactory);
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(this.customModesDir);
-      Consumer consumer = obj -> this.onCustomModeFileCreated(customSubModeFactory, (Path)obj);
-      directoryWatcher = directoryWatcher.onCreate(consumer);
+      directoryWatcher = directoryWatcher.onCreate(obj -> this.onCustomModeFileCreated(customSubModeFactory, (Path)obj));
       Consumer consumer2 = obj2 -> {
          File file = ((Path)obj2).toFile();
          CompletableFuture.runAsync(() -> {
-            ConcurrentHashMap modesByName2 = this.modesByName;
-            this.registerCustomModeFromFile(modesByName2, file, customSubModeFactory);
+            this.registerCustomModeFromFile(this.modesByName, file, customSubModeFactory);
             this.refreshModeOptions();
          });
       };
       directoryWatcher = directoryWatcher.onModify(consumer2);
-      Consumer consumer3 = obj3 -> this.onCustomModeFileDeleted((Path)obj3);
-      directoryWatcher.onDelete(consumer3).register();
+      directoryWatcher.onDelete(obj3 -> this.onCustomModeFileDeleted((Path)obj3)).register();
       return this;
    }
 
@@ -315,14 +271,11 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private void removeCustomModeFile(File file) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       String name = file.getName();
       if (name.endsWith(".json")) {
          String str = name.substring(0, Math.max(name.length() - 5, 0));
          if (this.customModeNames.contains(str)) {
-            AbstractSubMode subMode = (AbstractSubMode)this.modesByName.get(str);
-            boolean flag = false;
-            subMode.setEnabled(flag);
+            ((AbstractSubMode)this.modesByName.get(str)).setEnabled(false);
          }
 
          this.customModeNames.remove(str);
@@ -333,17 +286,14 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
 
    @Override
    public void setSelectedValue(String str) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       if (!str.equals(this.getSelectedValue())) {
          if (this.abstractSubMode != null) {
-            boolean flag = false;
-            this.abstractSubMode.setEnabled(flag);
+            this.abstractSubMode.setEnabled(false);
          }
 
          this.abstractSubMode = this.resolveSubMode(str);
          if (this.abstractSubMode != null && this.getParentModule().isToggled()) {
-            boolean flag2 = true;
-            this.abstractSubMode.setEnabled(flag2);
+            this.abstractSubMode.setEnabled(true);
          }
       }
 
@@ -351,21 +301,17 @@ public class ModeSetting extends BooleansSetting implements ModuleToggleListener
    }
 
    private boolean isModeGroupVisible() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       return this.modeValuesGroup.hasVisibleChildren() && this.isVisible();
    }
 
    @Override
    public synchronized void notifyValueChanged() {
-      SettingChangeListener listener = () -> this.onModeValueChanged();
-      this.dispatchChangeListener(listener);
+      this.dispatchChangeListener(() -> this.onModeValueChanged());
    }
 
    private void onUserModeChanged() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       if (this.abstractSubMode != null && this.getParentModule().isToggled()) {
-         boolean flag = true;
-         this.abstractSubMode.setEnabled(flag);
+         this.abstractSubMode.setEnabled(true);
       }
 
       if (this.userChangeListener != null) {

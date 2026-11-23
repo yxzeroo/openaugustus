@@ -8,8 +8,7 @@ import java.util.List;
 public final class FloatArrayJsonCodec implements ArrayPropertySerializer {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Float f = (Float)obj;
-      this.writeFloatElement(array, f);
+      this.writeFloatElement(array, (Float)obj);
    }
 
    @Override

@@ -111,8 +111,7 @@ public class ItemMonsterPlacer extends Item {
          if (blockState.getBlock() == Blocks.mob_spawner) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof TileEntityMobSpawner) {
-               MobSpawnerBaseLogic spawnerBaseLogic = ((TileEntityMobSpawner)tileEntity).getSpawnerBaseLogic();
-               spawnerBaseLogic.setEntityName(EntityList.getStringFromID(stack.getMetadata()));
+               ((TileEntityMobSpawner)tileEntity).getSpawnerBaseLogic().setEntityName(EntityList.getStringFromID(stack.getMetadata()));
                tileEntity.markDirty();
                world.markBlockForUpdate(pos);
                if (!player.capabilities.isCreativeMode) {

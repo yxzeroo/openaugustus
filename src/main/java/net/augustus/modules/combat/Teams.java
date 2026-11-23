@@ -7,14 +7,14 @@ import net.augustus.modules.Module;
 import net.augustus.utils.LicenseTimestampStore;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class Teams extends Module implements TickListener {
-   private final BooleansSetting modes;
+   private final StringValue modes;
    private final BooleanValue autoTeams;
    private final ArrayList teammates;
    private boolean hasMultipleTeams;
@@ -22,7 +22,7 @@ public class Teams extends Module implements TickListener {
 
    public Teams() {
        super("Teams", "Verbündete", Color.red, Categorys.COMBAT);
-      this.modes = (BooleansSetting)(new BooleansSetting(this, "Modes", "Color", new String[]{"Name", "Color", "Clan"})).markVisualOnly();
+      this.modes = (StringValue)(new StringValue(this, "Modes", "Color", new String[]{"Name", "Color", "Clan"})).markVisualOnly();
       this.autoTeams = (BooleanValue)(new BooleanValue(this, "AutoTeams", false)).markVisualOnly();
       this.teammates = new ArrayList();
       this.hasMultipleTeams = false;
@@ -39,8 +39,7 @@ public class Teams extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
@@ -82,8 +81,7 @@ public class Teams extends Module implements TickListener {
                         return false;
                      }
 
-                     String formattedText2 = mc.thePlayer.getDisplayName().getFormattedText();
-                     String[] strings2 = formattedText2.split("§7 \\[§e");
+                     String[] strings2 = mc.thePlayer.getDisplayName().getFormattedText().split("§7 \\[§e");
                      if (strings2.length > 1) {
                         this.localClanTag = strings2[1];
                      } else {

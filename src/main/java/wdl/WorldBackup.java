@@ -81,8 +81,7 @@ public class WorldBackup {
          if (file2.isFile()) {
             String str = file2.getPath().substring(n);
             backupProgressMonitor.onNextFile(str);
-            ZipEntry zipEntry = new ZipEntry(str);
-            zipOutputStream.putNextEntry(zipEntry);
+            zipOutputStream.putNextEntry(new ZipEntry(str));
             FileInputStream fileInputStream = new FileInputStream(file2);
 
             try {

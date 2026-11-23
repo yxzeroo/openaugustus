@@ -40,8 +40,7 @@ public class RenderArrow extends Render {
       GlStateManager.enableRescaleNormal();
       float f12 = (float)entityArrow.arrowShake - f2;
       if (f12 > 0.0F) {
-         float f13 = -MathHelper.sin(f12 * 3.0F) * f12;
-         GlStateManager.rotate(f13, 0.0F, 0.0F, 1.0F);
+         GlStateManager.rotate(-MathHelper.sin(f12 * 3.0F) * f12, 0.0F, 0.0F, 1.0F);
       }
 
       GlStateManager.rotate(45.0F, 1.0F, 0.0F, 0.0F);

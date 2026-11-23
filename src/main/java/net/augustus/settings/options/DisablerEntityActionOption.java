@@ -4,8 +4,8 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.augustus.settings.RangeSetting;
 import net.augustus.settings.SelectableOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public enum DisablerEntityActionOption implements SelectableOption {
    START_SPRINT("StartSprint", C0BPacketEntityAction.Action.START_SPRINTING),
@@ -19,10 +19,10 @@ public enum DisablerEntityActionOption implements SelectableOption {
 private String name;
    private C0BPacketEntityAction.Action action;
    private boolean selected;
-   private StringValue intervalSetting;
+   private DoubleValue intervalSetting;
    private BooleanValue invertIntervalSetting;
    private BooleanValue alwaysSetting;
-   private BooleansSetting cancelConditionSetting;
+   private StringValue cancelConditionSetting;
    private RangeSetting tickRangeSetting;
    private int packetCount = 0;
 private DisablerEntityActionOption(String str, C0BPacketEntityAction.Action action2) {
@@ -49,7 +49,7 @@ private DisablerEntityActionOption(String str, C0BPacketEntityAction.Action acti
       return option.name;
    }
 
-   public static StringValue setIntervalSetting(DisablerEntityActionOption option, StringValue stringValue) {
+   public static DoubleValue setIntervalSetting(DisablerEntityActionOption option, DoubleValue stringValue) {
       return option.intervalSetting = stringValue;
    }
 
@@ -65,7 +65,7 @@ private DisablerEntityActionOption(String str, C0BPacketEntityAction.Action acti
       return option.tickRangeSetting = rangeSetting;
    }
 
-   public static BooleansSetting setCancelConditionSetting(DisablerEntityActionOption option, BooleansSetting booleansSetting) {
+   public static StringValue setCancelConditionSetting(DisablerEntityActionOption option, StringValue booleansSetting) {
       return option.cancelConditionSetting = booleansSetting;
    }
 
@@ -81,11 +81,11 @@ private DisablerEntityActionOption(String str, C0BPacketEntityAction.Action acti
       return option.packetCount++;
    }
 
-   public static BooleansSetting getCancelConditionSetting(DisablerEntityActionOption option) {
+   public static StringValue getCancelConditionSetting(DisablerEntityActionOption option) {
       return option.cancelConditionSetting;
    }
 
-   public static StringValue getIntervalSetting(DisablerEntityActionOption option) {
+   public static DoubleValue getIntervalSetting(DisablerEntityActionOption option) {
       return option.intervalSetting;
    }
 

@@ -74,8 +74,7 @@ public class BlockQuartz extends Block {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockQuartz.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockQuartz.EnumType.class);
    }
 
    @Override

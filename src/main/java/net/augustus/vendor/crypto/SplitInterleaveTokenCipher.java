@@ -123,44 +123,23 @@ public class SplitInterleaveTokenCipher {
          }
 
          for (int j = 0; j < ((byte[])obj).length; j++) {
-            byte[] bytes3 = (byte[])obj;
-            SplitInterleaveTokenCipher cipher = this;
-            byte b2 = ((byte[])obj)[j];
-            byte b3 = bytes2[j % ((byte[])bytes2).length];
-            byte b4 = b3;
-            byte b5 = b2;
-            bytes3[j] = cipher.mixByte(b5, j, b4);
+            ((byte[])obj)[j] = this.mixByte(((byte[])obj)[j], j, bytes2[j % ((byte[])bytes2).length]);
          }
 
          SplitInterleaveTokenCipher cipher2 = this;
-         byte[] bytes4 = (byte[])obj;
-         int n2 = (int)(this.streamState & 255L);
-         byte[] bytes5 = bytes4;
-         obj = cipher2.applyThresholdMask(bytes5, n2);
+         obj = cipher2.applyThresholdMask((byte[])obj, (int)(this.streamState & 255L));
          cipher2 = this;
-         byte[] bytes6 = (byte[])obj;
-         byte[] bytes7 = bytes2;
-         int n3 = this.keyMix & 0xFF;
-         byte[] bytes8 = bytes7;
-         byte[] bytes9 = bytes6;
-         obj = cipher2.applyKeyedSwap(bytes9, bytes8, n3);
+         obj = cipher2.applyKeyedSwap((byte[])obj, bytes2, this.keyMix & 0xFF);
 
          for (int k = 0; k < 2; k++) {
             cipher2 = this;
-            byte[] bytes10 = (byte[])obj;
-            byte b6 = (byte)((int)(this.streamState >> k * 8 & 255L));
-            byte[] bytes11 = bytes10;
-            obj = cipher2.interleaveHalves(bytes11, b6);
+            obj = cipher2.interleaveHalves((byte[])obj, (byte)((int)(this.streamState >> k * 8 & 255L)));
             cipher2 = this;
-            byte[] bytes12 = (byte[])obj;
-            byte b7 = (byte)(this.keyMix & 15);
-            byte[] bytes13 = bytes12;
-            obj = cipher2.applyPeriodicRotate(bytes13, k, b7);
+            obj = cipher2.applyPeriodicRotate((byte[])obj, k, (byte)(this.keyMix & 15));
          }
 
          cipher2 = this;
-         byte[] bytes14 = (byte[])obj;
-         return cipher2.finalizeAndMirrorQuarter(bytes14);
+         return cipher2.finalizeAndMirrorQuarter((byte[])obj);
       } else {
          return new byte[0];
       }

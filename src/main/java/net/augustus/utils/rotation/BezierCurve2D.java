@@ -41,8 +41,7 @@ public class BezierCurve2D {
    }
 
    public void advanceProgress(double d) {
-      double d2 = MathHelper.clamp_double(this.progress + d, 0.0, 1.0);
-      this.setProgress(d2);
+      this.setProgress(MathHelper.clamp_double(this.progress + d, 0.0, 1.0));
    }
 
    public double getPreviousProgress() {

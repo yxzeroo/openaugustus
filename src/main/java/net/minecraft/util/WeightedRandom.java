@@ -23,8 +23,7 @@ public class WeightedRandom {
       if (n <= 0) {
          throw new IllegalArgumentException();
       } else {
-         int n2 = rand.nextInt(n);
-         return getRandomItem(items, n2);
+         return getRandomItem(items, rand.nextInt(n));
       }
    }
 

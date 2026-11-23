@@ -14,8 +14,7 @@ public class CachedPlayerPredictionProvider implements MovementPredictionProvide
    }
 
    private static ArrayList computePlayerTrajectory(SimulatedPlayerEntity simulatedPlayerEntity, int n, int n2, int n3, int n4, String str) {
-      boolean flag = true;
-      return TrajectoryPredictionUtil.predictPlayerPositions(simulatedPlayerEntity, n, n2, n3, n4, flag);
+      return TrajectoryPredictionUtil.predictPlayerPositions(simulatedPlayerEntity, n, n2, n3, n4, true);
    }
 
    @Override

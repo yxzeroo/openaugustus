@@ -18,22 +18,22 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.animation.AnimationUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Vec3;
 
 public class TargetHud extends Module implements RenderListener, TickListener {
    public final ModeSetting modes;
-   public final BooleansSetting healthMode;
+   public final StringValue healthMode;
    public final BooleanValue trackEntity;
-   public final StringValue trackY;
-   public final StringValue trackX;
-   public final StringValue xCoord;
-   public final StringValue yCoord;
-   public final BooleansSetting toggleAnimation2;
-   public final StringValue animationTime;
+   public final DoubleValue trackY;
+   public final DoubleValue trackX;
+   public final DoubleValue xCoord;
+   public final DoubleValue yCoord;
+   public final StringValue toggleAnimation2;
+   public final DoubleValue animationTime;
    public final BlurShadowSettings blurShadowSettings;
    private AbstractClientPlayer displayedTarget;
    private AbstractClientPlayer lastActiveTarget;
@@ -45,33 +45,23 @@ public class TargetHud extends Module implements RenderListener, TickListener {
          MinecraftTargetHudMode.factory(), ModernTargetHudMode.factory(), LiquidGlassTargetHudMode.factory()
       };
       this.modes = new ModeSetting(this, "Modes", "LiquidGlass", biFunctions);
-      this.healthMode = new BooleansSetting(this, "HealthMode", "Entity", new String[]{"Entity", "Scoreboard", "NameTags"});
+      this.healthMode = new StringValue(this, "HealthMode", "Entity", new String[]{"Entity", "Scoreboard", "NameTags"});
       this.trackEntity = new BooleanValue(this, "TrackEntity", true);
-      StringValue stringValue = new StringValue(this, "TrackY", 0.0, -2.0, 2.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "TrackY", 0.0, -2.0, 2.0, 2);
       BooleanValue trackEntity2 = this.trackEntity;
       this.trackEntity.getClass();
       BooleanValue booleanValue = trackEntity2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.trackY = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "TrackX", 0.0, -200.0, 200.0, 2);
+      this.trackY = stringValue.visibleWhen(() -> booleanValue.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "TrackX", 0.0, -200.0, 200.0, 2);
       trackEntity2 = this.trackEntity;
       this.trackEntity.getClass();
       BooleanValue booleanValue2 = trackEntity2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.trackX = stringValue2.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this, "XCoord", 60.0, 0.0, 100.0, 2);
-      SettingVisibilityCondition condition3 = () -> this.isXCoordVisible();
-      this.xCoord = stringValue3.visibleWhen(condition3);
-      StringValue stringValue4 = new StringValue(this, "YCoord", 50.0, 0.0, 100.0, 2);
-      SettingVisibilityCondition condition4 = () -> this.isYCoordVisible();
-      this.yCoord = stringValue4.visibleWhen(condition4);
-      this.toggleAnimation2 = new BooleansSetting(this, "ToggleAnimation", "easeOutBack", AnimationUtil.getEasingNames(true));
-      StringValue stringValue5 = new StringValue(this, "AnimationTime", 500.0, 0.0, 2000.0, 0);
-      SettingVisibilityCondition condition5 = () -> this.isAnimationTimeVisible();
-      this.animationTime = stringValue5.visibleWhen(condition5);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.trackX = stringValue2.visibleWhen(() -> booleanValue2.getValue());
+      this.xCoord = new DoubleValue(this, "XCoord", 60.0, 0.0, 100.0, 2).visibleWhen(() -> this.isXCoordVisible());
+      this.yCoord = new DoubleValue(this, "YCoord", 50.0, 0.0, 100.0, 2).visibleWhen(() -> this.isYCoordVisible());
+      this.toggleAnimation2 = new StringValue(this, "ToggleAnimation", "easeOutBack", AnimationUtil.getEasingNames(true));
+      this.animationTime = new DoubleValue(this, "AnimationTime", 500.0, 0.0, 2000.0, 0).visibleWhen(() -> this.isAnimationTimeVisible());
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
       this.displayedTarget = null;
       this.lastActiveTarget = null;
       this.projectedTargetPos = new Vec3(0.0, 0.0, 0.0);
@@ -89,16 +79,13 @@ public class TargetHud extends Module implements RenderListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick() {
-      String selectedValue = this.modes.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.modes.getSelectedValue());
    }
 
    @Override
@@ -115,11 +102,9 @@ public class TargetHud extends Module implements RenderListener, TickListener {
       if ((!this.trackEntity.getValue() || this.projectedTargetPos.zCoord >= 0.0 && this.projectedTargetPos.zCoord <= 1.0) && this.displayedTarget != null) {
          AbstractTargetHudMode abstractSubMode = (AbstractTargetHudMode)this.modes.getAbstractSubMode();
          if (abstractSubMode != null) {
-            AbstractClientPlayer displayedTarget2 = this.displayedTarget;
-            abstractSubMode.renderTargetHud(displayedTarget2, activeTarget, sr);
+            abstractSubMode.renderTargetHud(this.displayedTarget, activeTarget, sr);
             if (this.displayedTarget != null) {
-               AbstractClientPlayer displayedTarget3 = this.displayedTarget;
-               abstractSubMode.recordLastTarget(displayedTarget3);
+               abstractSubMode.recordLastTarget(this.displayedTarget);
             }
          }
       }

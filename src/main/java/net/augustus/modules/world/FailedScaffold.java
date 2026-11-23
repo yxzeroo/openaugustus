@@ -34,8 +34,8 @@ import net.augustus.modules.world.scaffold.ScaffoldRaycastResult;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemStack;
@@ -46,13 +46,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class FailedScaffold extends Module implements TickListener, MoveInputListener, ClickListener, SafeWalkListener {
-   public final DoubleValue rotations;
+   public final SettingGroup rotations;
    public final RangeSetting yawSpeed;
    public final RangeSetting pitchSpeed;
    public final BooleanValue strafe;
-   public final StringValue predictTicks;
-   public final DoubleValue movement;
-   public final DoubleValue sneaking;
+   public final DoubleValue predictTicks;
+   public final SettingGroup movement;
+   public final SettingGroup sneaking;
    public final BooleanValue sneak;
    public final BooleanValue removeSneakStop;
    public final BooleanValue oneStackForward;
@@ -65,7 +65,7 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
    public final RangeSetting startSneakDistToBlock;
    public final RangeSetting sneakBlocksForward;
    public final RangeSetting sneakBlocksDiagonal;
-   public final StringValue sneakSlowDown;
+   public final DoubleValue sneakSlowDown;
    public final BooleanValue sameY;
    public final BooleanValue autoJump;
    public final BooleanValue tellyBridge;
@@ -86,38 +86,31 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
 
    public FailedScaffold() {
        super("FailedScaffold", "NeuGerüst", new Color(182, 194, 207), Categorys.WORLD);
-      this.rotations = new DoubleValue(this, "Rotations");
+      this.rotations = new SettingGroup(this, "Rotations");
       this.yawSpeed = new RangeSetting(this, "YawSpeed", 30.0, 50.0, 0.0, 180.0, 0, this.rotations);
       this.pitchSpeed = new RangeSetting(this, "PitchSpeed", 30.0, 50.0, 0.0, 180.0, 0, this.rotations);
       this.strafe = new BooleanValue(this, "Strafe", false, this.rotations);
-      this.predictTicks = new StringValue(this, "PredictTicks", 0.0, 0.0, 2.0, 0, this.rotations);
-      this.movement = new DoubleValue(this, "Movement");
-      this.sneaking = new DoubleValue(this, "Sneaking", this.movement);
+      this.predictTicks = new DoubleValue(this, "PredictTicks", 0.0, 0.0, 2.0, 0, this.rotations);
+      this.movement = new SettingGroup(this, "Movement");
+      this.sneaking = new SettingGroup(this, "Sneaking", this.movement);
       this.sneak = new BooleanValue(this, "Sneak", false, this.sneaking);
       BooleanValue booleanValue = new BooleanValue(this, "RemoveSneakStop", false, this.sneaking);
       BooleanValue sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue2 = sneak2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.removeSneakStop = (BooleanValue)booleanValue.withVisibility(condition);
+      this.removeSneakStop = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
       BooleanValue booleanValue3 = new BooleanValue(this, "OneStackForward", false, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue4 = sneak2;
-      SettingVisibilityCondition condition2 = () -> booleanValue4.getValue();
-      this.oneStackForward = (BooleanValue)booleanValue3.withVisibility(condition2);
-      RangeSetting rangeSetting = new RangeSetting(this, "MinOffGroundSneakTickForward", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition3 = () -> this.isMinOffGroundSneakForwardVisible();
-      this.minOffGroundSneakTickForward = rangeSetting.visibleWhen(condition3);
-      RangeSetting rangeSetting2 = new RangeSetting(this, "MaxOffGroundSneakTickForward", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition4 = () -> this.isMaxOffGroundSneakForwardVisible();
-      this.maxOffGroundSneakTickForward = rangeSetting2.visibleWhen(condition4);
+      this.oneStackForward = (BooleanValue)booleanValue3.withVisibility(() -> booleanValue4.getValue());
+      this.minOffGroundSneakTickForward = new RangeSetting(this, "MinOffGroundSneakTickForward", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMinOffGroundSneakForwardVisible());
+      this.maxOffGroundSneakTickForward = new RangeSetting(this, "MaxOffGroundSneakTickForward", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMaxOffGroundSneakForwardVisible());
       BooleanValue booleanValue5 = new BooleanValue(this, "OneStackDiagonal", false, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue6 = sneak2;
-      SettingVisibilityCondition condition5 = () -> booleanValue6.getValue();
-      this.oneStackDiagonal = (BooleanValue)booleanValue5.withVisibility(condition5);
+      this.oneStackDiagonal = (BooleanValue)booleanValue5.withVisibility(() -> booleanValue6.getValue());
       RangeSetting rangeSetting3 = new RangeSetting(this, "MinOffGroundSneakTickDiagonal", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking);
       SettingVisibilityCondition condition6 = () -> {
          return this.sneak.getValue() && this.oneStackDiagonal.getValue();
@@ -132,45 +125,38 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue7 = sneak2;
-      SettingVisibilityCondition condition8 = () -> booleanValue7.getValue();
-      this.sneakTicks = rangeSetting5.visibleWhen(condition8);
+      this.sneakTicks = rangeSetting5.visibleWhen(() -> booleanValue7.getValue());
       RangeSetting rangeSetting6 = new RangeSetting(this, "StartSneakDistToBlock", 0.05, 0.2, -0.2, 0.5, 2, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue8 = sneak2;
-      SettingVisibilityCondition condition9 = () -> booleanValue8.getValue();
-      this.startSneakDistToBlock = rangeSetting6.visibleWhen(condition9);
+      this.startSneakDistToBlock = rangeSetting6.visibleWhen(() -> booleanValue8.getValue());
       RangeSetting rangeSetting7 = new RangeSetting(this, "SneakBlocksForward", 1.0, 2.0, 0.0, 15.0, 0, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue9 = sneak2;
-      SettingVisibilityCondition condition10 = () -> booleanValue9.getValue();
-      this.sneakBlocksForward = rangeSetting7.visibleWhen(condition10);
+      this.sneakBlocksForward = rangeSetting7.visibleWhen(() -> booleanValue9.getValue());
       RangeSetting rangeSetting8 = new RangeSetting(this, "SneakBlocksDiagonal", 1.0, 2.0, 0.0, 15.0, 0, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue10 = sneak2;
-      SettingVisibilityCondition condition11 = () -> booleanValue10.getValue();
-      this.sneakBlocksDiagonal = rangeSetting8.visibleWhen(condition11);
-      StringValue stringValue = new StringValue(this, "SneakSlowDown", 0.3, 0.3, 1.0, 2, this.sneaking);
+      this.sneakBlocksDiagonal = rangeSetting8.visibleWhen(() -> booleanValue10.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "SneakSlowDown", 0.3, 0.3, 1.0, 2, this.sneaking);
       sneak2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue11 = sneak2;
-      SettingVisibilityCondition condition12 = () -> booleanValue11.getValue();
-      this.sneakSlowDown = stringValue.visibleWhen(condition12);
+      this.sneakSlowDown = stringValue.visibleWhen(() -> booleanValue11.getValue());
       this.sameY = new BooleanValue(this, "SameY", false);
       BooleanValue booleanValue12 = new BooleanValue(this, "AutoJump", false);
       sneak2 = this.sameY;
       this.sameY.getClass();
       BooleanValue booleanValue13 = sneak2;
-      SettingVisibilityCondition condition13 = () -> booleanValue13.getValue();
-      this.autoJump = (BooleanValue)booleanValue12.withVisibility(condition13);
+      this.autoJump = (BooleanValue)booleanValue12.withVisibility(() -> booleanValue13.getValue());
       BooleanValue booleanValue14 = new BooleanValue(this, "TellyBridge", false);
       sneak2 = this.sameY;
       this.sameY.getClass();
       BooleanValue booleanValue15 = sneak2;
-      SettingVisibilityCondition condition14 = () -> booleanValue15.getValue();
-      this.tellyBridge = (BooleanValue)booleanValue14.withVisibility(condition14);
+      this.tellyBridge = (BooleanValue)booleanValue14.withVisibility(() -> booleanValue15.getValue());
       this.rotationUtil = new RotationUtil();
       this.timeHelper = new TimeHelper();
       this.predictTicksCount = 1;
@@ -201,14 +187,10 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 7;
-      this.toggleEventSubscription(b3);
-      byte b4 = 33;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)33);
    }
 
    @Override
@@ -228,8 +210,7 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
             this.predictTicksCount = (int)this.predictTicks.getValue();
             double[] doubles = PlayerUtil.capturePlayerState();
             ArrayList list = new ArrayList();
-            ScaffoldSimStep scaffoldSimStep = this.createInitialSimStep();
-            ScaffoldSimStep scaffoldSimStep2 = this.advanceSimStep(scaffoldSimStep);
+            ScaffoldSimStep scaffoldSimStep2 = this.advanceSimStep(this.createInitialSimStep());
             list.add(scaffoldSimStep2);
             double[] doubles2 = new double[]{mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ};
 
@@ -239,16 +220,11 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
                double posY = mc.thePlayer.posY;
                double posZ = mc.thePlayer.posZ;
                EventMoveInput moveInput = scaffoldSimStep2.getMoveInput();
-               float yaw = scaffoldSimStep2.getYaw();
-               double d = posZ;
-               double d2 = posY;
-               double d3 = posX;
-               doubles2 = PlayerUtil.predictPlayerPosition(0, thePlayer, d3, d2, d, yaw, moveInput);
+               doubles2 = PlayerUtil.predictPlayerPosition(0, thePlayer, posX, posY, posZ, scaffoldSimStep2.getYaw(), moveInput);
                System.out.println("Last: " + doubles2[0] + " " + doubles2[2] + "  " + scaffoldSimStep2.getYaw() + " " + scaffoldSimStep2.getMoveInput().isSneak());
                PlayerUtil.restorePlayerState(doubles2);
                if (i < this.predictTicksCount - 1) {
-                  ScaffoldSimStep scaffoldSimStep3 = (ScaffoldSimStep)list.get(list.size() - 1);
-                  scaffoldSimStep2 = this.advanceSimStep(scaffoldSimStep3);
+                  scaffoldSimStep2 = this.advanceSimStep((ScaffoldSimStep)list.get(list.size() - 1));
                   list.add(scaffoldSimStep2);
                }
             }
@@ -278,13 +254,8 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
 
             if (!list2.isEmpty()) {
                ScaffoldSimStep scaffoldSimStep4 = (ScaffoldSimStep)list.get(0);
-               float yaw3 = scaffoldSimStep4.getYaw();
-               ScaffoldRaycastResult scaffoldRaycastResult = this.selectBestRaycastResult(list2, yaw3, vec);
-               RotationController rotationController = ClientManagers.rotationController;
-               float[] floats = new float[]{scaffoldSimStep4.getYaw(), scaffoldRaycastResult.pitch};
-               byte b = -1;
-               float[] floats2 = floats;
-               rotationController.requestRotation2(floats2, b, this);
+               ScaffoldRaycastResult scaffoldRaycastResult = this.selectBestRaycastResult(list2, scaffoldSimStep4.getYaw(), vec);
+               ClientManagers.rotationController.requestRotation2(new float[]{scaffoldSimStep4.getYaw(), scaffoldRaycastResult.pitch}, (byte)-1, this);
                this.plannedSimSteps = list;
                this.remainingPlannedTicks = this.predictTicksCount;
                this.executingPlan = true;
@@ -296,21 +267,12 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
          this.executingPlan = this.remainingPlannedTicks > 0;
          this.remainingPlannedTicks--;
          if (this.plannedSimSteps.isEmpty()) {
-            ScaffoldSimStep scaffoldSimStep5 = this.createInitialSimStep();
-            ScaffoldSimStep scaffoldSimStep6 = this.advanceSimStep(scaffoldSimStep5);
+            ScaffoldSimStep scaffoldSimStep6 = this.advanceSimStep(this.createInitialSimStep());
             this.plannedSimSteps.add(scaffoldSimStep6);
             this.applySimStepState(scaffoldSimStep6);
-            RotationController rotationController2 = ClientManagers.rotationController;
-            Rotation rotation = new Rotation(scaffoldSimStep6.getYaw(), f);
-            byte b2 = -1;
-            Rotation rotation2 = rotation;
-            rotationController2.requestRotation(rotation2, b2, this);
+            ClientManagers.rotationController.requestRotation(new Rotation(scaffoldSimStep6.getYaw(), f), (byte)-1, this);
          } else {
-            RotationController rotationController3 = ClientManagers.rotationController;
-            Rotation rotation3 = new Rotation(((ScaffoldSimStep)this.plannedSimSteps.get(0)).getYaw(), f);
-            byte b3 = -1;
-            Rotation rotation4 = rotation3;
-            rotationController3.requestRotation(rotation4, b3, this);
+            ClientManagers.rotationController.requestRotation(new Rotation(((ScaffoldSimStep)this.plannedSimSteps.get(0)).getYaw(), f), (byte)-1, this);
          }
       }
    }
@@ -318,8 +280,7 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (!this.plannedSimSteps.isEmpty()) {
-         EventMoveInput moveInput = ((ScaffoldSimStep)this.plannedSimSteps.get(0)).getMoveInput();
-         event.copyFrom(moveInput);
+         event.copyFrom(((ScaffoldSimStep)this.plannedSimSteps.get(0)).getMoveInput());
       }
 
       this.lastMoveInput = new EventMoveInput(event);
@@ -327,16 +288,10 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
 
    @Override
    public void onClick(EventClick event) {
-      ActionRateAccumulator cpsAccumulator2 = this.cpsAccumulator;
-      byte b = 15;
-      byte b2 = 11;
-      int n = DefaultRandomGenerator.instance.nextInt2(b2, b);
-      int n2 = cpsAccumulator2.accumulate(n);
+      int n2 = this.cpsAccumulator.accumulate(DefaultRandomGenerator.instance.nextInt2((byte)11, (byte)15));
       if (n2 > 0) {
          ActionRateAccumulator dcpsAccumulator2 = this.dcpsAccumulator;
-         byte b3 = 8;
-         byte b4 = 4;
-         int n3 = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+         int n3 = DefaultRandomGenerator.instance.nextInt2((byte)4, (byte)8);
          n2 += dcpsAccumulator2.accumulate(n3);
       }
 
@@ -345,26 +300,21 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
             ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
             BlockPos blockPos = mc.objectMouseOver.getBlockPos();
             Vec3 hitVec = mc.objectMouseOver.hitVec;
-            EnumFacing sideHit = mc.objectMouseOver.sideHit;
-            BlockPos pos = blockPos;
-            if (PlayerUtil.canPlaceBlockAt(currentEquippedItem, pos, sideHit, hitVec)) {
+            if (PlayerUtil.canPlaceBlockAt(currentEquippedItem, blockPos, mc.objectMouseOver.sideHit, hitVec)) {
                n2 = 1;
             }
          }
       }
 
       event.addRightClicks(n2);
-      boolean flag = true;
-      event.setIgnoreVanillaClicks(flag);
-      boolean flag2 = false;
-      event.setLeftMouseDown(flag2);
+      event.setIgnoreVanillaClicks(true);
+      event.setLeftMouseDown(false);
    }
 
    @Override
    public void onSafeWalk(EventSafeWalk event) {
       if (this.sneak.getValue() && this.removeSneakStop.getValue()) {
-         boolean flag = true;
-         event.setDisableSneakSafeWalk(flag);
+         event.setDisableSneakSafeWalk(true);
       }
    }
 
@@ -459,15 +409,7 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
          backwardYaw += strafeYawOffset2;
       }
 
-      RotationUtil rotationUtil2 = this.rotationUtil;
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      double minValue = this.yawSpeed.getMinValue();
-      double maxValue = this.yawSpeed.getMaxValue();
-      double d = minValue;
-      float f = instance.nextFloat2(d, maxValue);
-      float yaw = scaffoldSimStep.getYaw();
-      float f2 = f;
-      float f3 = rotationUtil2.stepYawWithGcd(f2, yaw, backwardYaw);
+      float f3 = this.rotationUtil.stepYawWithGcd(DefaultRandomGenerator.instance.nextFloat2(this.yawSpeed.getMinValue(), this.yawSpeed.getMaxValue()), scaffoldSimStep.getYaw(), backwardYaw);
       scaffoldSimStep = this.updateSimStepMovement(scaffoldSimStep);
       return new ScaffoldSimStep(scaffoldSimStep.getMoveInput(), f3, strafeYawOffset2, pos, scaffoldSimStep.getOffGroundTicks());
    }
@@ -475,30 +417,24 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
    private ScaffoldSimStep updateSimStepMovement(ScaffoldSimStep scaffoldSimStep) {
       EventMoveInput moveInput = scaffoldSimStep.getMoveInput();
       if (this.sneak.getValue()) {
-         double value = this.sneakSlowDown.getValue();
-         moveInput.setSneakForwardMultiplier(value);
-         double value2 = this.sneakSlowDown.getValue();
-         moveInput.setSneakStrafeMultiplier(value2);
+         moveInput.setSneakForwardMultiplier(this.sneakSlowDown.getValue());
+         moveInput.setSneakStrafeMultiplier(this.sneakSlowDown.getValue());
       }
 
-      int n = mc.thePlayer.onGround ? 0 : scaffoldSimStep.getOffGroundTicks() + 1;
-      scaffoldSimStep.setOffGroundTicks(n);
+      scaffoldSimStep.setOffGroundTicks(mc.thePlayer.onGround ? 0 : scaffoldSimStep.getOffGroundTicks() + 1);
       scaffoldSimStep.setMoveInput(moveInput);
       return scaffoldSimStep;
    }
 
    private float computeDefaultPitch() {
       float pitch = ClientManagers.rotationController.getPreviousRotation().pitch;
-      long l = 200L;
-      if (!this.timeHelper.reached2(l)) {
+      if (!this.timeHelper.reached2(200L)) {
          RotationUtil rotationUtil2 = this.rotationUtil;
          float f = 24.0F;
          float f2 = 18.0F;
          float f3 = DefaultRandomGenerator.instance.nextFloat(f2, f);
          float f4 = 80.34F;
-         float pitch2 = ClientManagers.rotationController.getPreviousRotation().pitch;
-         float f5 = f3;
-         pitch = rotationUtil2.updatePitchWithIntaveSin(f5, pitch2, f4);
+         pitch = rotationUtil2.updatePitchWithIntaveSin(f3, ClientManagers.rotationController.getPreviousRotation().pitch, f4);
       }
 
       return RotationUtil.applyPitchGcd(pitch, ClientManagers.rotationController.getPreviousRotation().pitch);
@@ -524,8 +460,7 @@ public class FailedScaffold extends Module implements TickListener, MoveInputLis
    }
 
    private float getBackwardYaw() {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      return realYaw - 180.0F;
+      return Augustus.getInstance().getYawPitchHelper().realYaw - 180.0F;
    }
 
    private float getTellyYawOffset() {

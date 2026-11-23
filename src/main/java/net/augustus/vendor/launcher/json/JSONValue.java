@@ -72,10 +72,8 @@ public class JSONValue {
    }
 
    public static Object parseWithException2(int n, byte b, Reader reader, int n2) throws IOException, JsonParseException {
-      long l = ((long)n << 32 | (long)b << 56 >>> 32 | (long)n2 << 40 >>> 40) ^ a;
-      long l2 = l ^ 16948404116413L;
-      JSONParser jsonParser = new JSONParser();
-      return jsonParser.parse(reader, l2);
+      long l2 = (((long)n << 32 | (long)b << 56 >>> 32 | (long)n2 << 40 >>> 40) ^ a) ^ 16948404116413L;
+      return new JSONParser().parse(reader, l2);
    }
 
    /** @deprecated */
@@ -84,8 +82,7 @@ public class JSONValue {
       long l2 = l ^ 48243072627398L;
 
       try {
-         JSONParser jsonParser = new JSONParser();
-         return jsonParser.parse(reader, l2);
+         return new JSONParser().parse(reader, l2);
       } catch (Exception e) {
          return null;
       }
@@ -162,8 +159,7 @@ public class JSONValue {
    public static Object parse2(String str, long l) {
       l = a ^ l;
       long l2 = l ^ 32429272102447L;
-      StringReader stringReader = new StringReader(str);
-      return parse(stringReader, l2);
+      return parse(new StringReader(str), l2);
    }
 
    public static Object parseWithException(String str, byte b, int n, int n2) throws JsonParseException {
@@ -172,8 +168,7 @@ public class JSONValue {
       int n3 = (int)((l ^ 52796174813594L) >>> 32);
       int n4 = (int)((l ^ 52796174813594L) << 32 >>> 48);
       int n5 = (int)(l2 << 48 >>> 48);
-      JSONParser jsonParser = new JSONParser();
-      return jsonParser.parse2(str, n3, (short)n4, (char)n5);
+      return new JSONParser().parse2(str, n3, (short)n4, (char)n5);
    }
 
 }

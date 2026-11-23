@@ -27,36 +27,28 @@ public class MotionModifierCommand extends Command {
 
    private void listConfigs() {
       ClientFileUtil.ensureDirectory(this.configDirectory);
-      File file = new File(this.configDirectory);
-      File[] files = file.listFiles(file2 -> {
+      File[] files = new File(this.configDirectory).listFiles(file2 -> {
          return file2 != null && file2.isFile() && file2.getName().endsWith(".json");
       });
       if (files != null && files.length != 0) {
-         String str = "Motion modifier scripts:";
-         this.sendChat(str);
+         this.sendChat("Motion modifier scripts:");
 
          for (File file3 : files) {
             String name = file3.getName();
-            String str2 = name.substring(0, name.length() - 5);
-            this.sendChat(str2);
+            this.sendChat(name.substring(0, name.length() - 5));
          }
       } else {
-         String str3 = "No motion modifier scripts found!";
-         this.sendChat(str3);
+         this.sendChat("No motion modifier scripts found!");
       }
    }
 
    @Override
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Saves, loads, or lists motion modifier configs)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Saves, loads, or lists motion modifier configs)");
    }
 
    private void loadConfigAsync(String[] strings) {
-      List settings = ClientManagers.settingManager.getSettings();
-      String str = strings[2];
-      List list = settings;
-      this.loadConfig(list, str);
+      this.loadConfig(ClientManagers.settingManager.getSettings(), strings[2]);
    }
 
    @Override
@@ -72,14 +64,11 @@ public class MotionModifierCommand extends Command {
 
          if (strings[1].equalsIgnoreCase("save")) {
             if (!Augustus.getInstance().isConfigEditingEnabled()) {
-               String str2 = "You are not allowed to use this command in a protected config. Sorry :/";
-               this.sendChat(str2);
+               this.sendChat("You are not allowed to use this command in a protected config. Sorry :/");
                return;
             }
 
-            String str3 = strings[2];
-            String str4 = str3;
-            this.saveConfig(str4);
+            this.saveConfig(strings[2]);
             return;
          }
       } else if (strings.length == 2 && strings[1].equalsIgnoreCase("list")) {
@@ -103,29 +92,24 @@ public class MotionModifierCommand extends Command {
    }
 
    public void sendUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§csave/load/list§7] [§2fileName§7]";
-      this.sendChat(str);
+      this.sendChat("§7" + this.getCommand() + " [§csave/load/list§7] [§2fileName§7]");
    }
 
    public void saveConfig(String str) {
       FeatureListJsonCodec featureListJsonCodec = CONFIG_CODEC;
-      Module[] modules = new Module[]{ClientManagers.moduleManager.motionModifier};
-      featureListJsonCodec.setFeatures2(modules);
+      featureListJsonCodec.setFeatures2(new Module[]{ClientManagers.moduleManager.motionModifier});
       featureListJsonCodec = CONFIG_CODEC;
       UnaryFunction unaryFunction = obj -> {
          return !(((ConfigProperty)obj).getFeatureBase() instanceof Module) || obj instanceof AbstractFeature;
       };
       JsonObject json = featureListJsonCodec.serializeToObject(unaryFunction);
       if (json == null) {
-         String str2 = "Failed to save the file §c" + str + "§7!";
-         this.sendChat(str2);
+         this.sendChat("Failed to save the file §c" + str + "§7!");
       } else {
          String str3 = str + ".json";
          Gson gson = GsonConstants.GSON;
-         String str4 = str3;
-         ClientFileUtil.writeJsonObject(this.configDirectory, str4, json, gson);
-         String str5 = "The file §c" + str + "§7 saved successfully!";
-         this.sendChat(str5);
+         ClientFileUtil.writeJsonObject(this.configDirectory, str3, json, gson);
+         this.sendChat("The file §c" + str + "§7 saved successfully!");
       }
    }
 
@@ -140,30 +124,19 @@ public class MotionModifierCommand extends Command {
 
       File file = new File(this.configDirectory + "/" + str + ".json");
       if (!file.exists()) {
-         String str2 = "The file §c" + str + "§7 doesn't exist!";
-         this.sendChat(str2);
+         this.sendChat("The file §c" + str + "§7 doesn't exist!");
       } else {
-         String configDirectory2 = this.configDirectory;
-         String name = file.getName();
-         Object obj = null;
-         String str3 = name;
-         JsonObject json = ClientFileUtil.readJsonObject(configDirectory2, str3, (Runnable)obj);
+         JsonObject json = ClientFileUtil.readJsonObject(this.configDirectory, file.getName(), (Runnable)null);
          if (json != null) {
-            FeatureListJsonCodec featureListJsonCodec = CONFIG_CODEC;
-            Module[] modules = new Module[]{ClientManagers.moduleManager.motionModifier};
-            featureListJsonCodec.setFeatures2(modules);
+            CONFIG_CODEC.setFeatures2(new Module[]{ClientManagers.moduleManager.motionModifier});
             FeatureListJsonCodec featureListJsonCodec2 = CONFIG_CODEC;
             UnaryFunction unaryFunction = obj2 -> {
                return !(((ConfigProperty)obj2).getFeatureBase() instanceof Module) || obj2 instanceof AbstractFeature;
             };
-            boolean flag = true;
-            boolean flag2 = featureListJsonCodec2.deserializeFromObject(json, flag, unaryFunction);
-            if (!flag2) {
-               String str4 = "Failed to load motion modifier configuration";
-               this.sendChat(str4);
+            if (!featureListJsonCodec2.deserializeFromObject(json, true, unaryFunction)) {
+               this.sendChat("Failed to load motion modifier configuration");
             } else {
-               String str5 = "The file §c" + str + "§7 loaded successfully!";
-               this.sendChat(str5);
+               this.sendChat("The file §c" + str + "§7 loaded successfully!");
             }
          }
       }

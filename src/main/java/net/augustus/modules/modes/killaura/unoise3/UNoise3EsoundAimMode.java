@@ -2,31 +2,27 @@ package net.augustus.modules.modes.killaura.unoise3;
 
 import net.augustus.utils.math.DefaultRandomGenerator;
 import net.augustus.utils.rotation.HitboxAngleUtil;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class UNoise3EsoundAimMode extends UNoise3AimMode {
    private final EsoundAimAxisState verticalState;
    private final EsoundAimAxisState horizontalState;
-   private final StringValue lockTolerance;
+   private final DoubleValue lockTolerance;
 
    private double computeHorizontalAngle(UNoise3AimContext uNoise3AimContext) {
-      boolean flag = false;
-      EsoundAimAxisState horizontalState2 = this.horizontalState;
-      return this.updateAxisAim(uNoise3AimContext, horizontalState2, flag);
+      return this.updateAxisAim(uNoise3AimContext, this.horizontalState, false);
    }
 
    private double interpolateAxisAngle(EsoundAimAxisState esoundAimAxisState, boolean flag) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       double d = (double)(esoundAimAxisState.interpolationStep + 1) / (double)EsoundAimAxisState.accessInterpolationDuration(esoundAimAxisState);
       double d2;
       if (flag) {
          d2 = esoundAimAxisState.startAngle + (esoundAimAxisState.targetAngle - esoundAimAxisState.startAngle) * d;
       } else {
          double d3 = (double)MathHelper.wrapAngleTo180_float((float)esoundAimAxisState.startAngle);
-         double d4 = (double)MathHelper.wrapAngleTo180_float((float)esoundAimAxisState.targetAngle);
-         double d5 = d4 - d3;
+         double d5 = ((double)MathHelper.wrapAngleTo180_float((float)esoundAimAxisState.targetAngle)) - d3;
          if (d5 > 180.0) {
             d5 -= 360.0;
          } else if (d5 < -180.0) {
@@ -54,9 +50,7 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
    }
 
    private double updateAxisAim(UNoise3AimContext uNoise3AimContext, EsoundAimAxisState esoundAimAxisState, boolean flag) {
-      boolean flag2 = true;
-      double[] effectiveAngleBounds = this.getEffectiveAngleBounds(uNoise3AimContext, flag2);
-      UNoise3CircleAimMode.getControlFlowState();
+      double[] effectiveAngleBounds = this.getEffectiveAngleBounds(uNoise3AimContext, true);
       boolean isOutsideAngleBounds = this.isOutsideAngleBounds(uNoise3AimContext, effectiveAngleBounds);
       esoundAimAxisState.ticksSinceRetarget++;
       if (isOutsideAngleBounds && esoundAimAxisState.locked || esoundAimAxisState.ticksSinceRetarget > EsoundAimAxisState.accessRetargetIntervalTicks(esoundAimAxisState)) {
@@ -67,14 +61,8 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
          esoundAimAxisState.angleBounds[1] = effectiveAngleBounds[1];
          esoundAimAxisState.interpolationStep = 0;
          esoundAimAxisState.ticksSinceRetarget = 0;
-         short s = 1005;
-         short s2 = 1003;
-         int n = DefaultRandomGenerator.instance.nextInt2(s2, s);
-         EsoundAimAxisState.setRetargetIntervalTicks(esoundAimAxisState, n);
-         byte b = 7;
-         byte b2 = 4;
-         int n2 = DefaultRandomGenerator.instance.nextInt2(b2, b);
-         EsoundAimAxisState.setInterpolationDuration(esoundAimAxisState, n2);
+         EsoundAimAxisState.setRetargetIntervalTicks(esoundAimAxisState, DefaultRandomGenerator.instance.nextInt2((short)1003, (short)1005));
+         EsoundAimAxisState.setInterpolationDuration(esoundAimAxisState, DefaultRandomGenerator.instance.nextInt2((byte)4, (byte)7));
       }
 
       if (!esoundAimAxisState.locked) {
@@ -83,17 +71,14 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
          if (flag) {
             Vec3 vec = uNoise3AimContext.closestTargetPoint.subtract(uNoise3AimContext.playerEyePos);
             esoundAimAxisState.targetAngle = -Math.atan2(vec.yCoord, vec.horizontalLength()) / 3.141592653589793 * 180.0;
-            double targetAngle = esoundAimAxisState.targetAngle;
-            double d = HitboxAngleUtil.inverseLerpRange(effectiveAngleBounds, targetAngle);
+            double d = HitboxAngleUtil.inverseLerpRange(effectiveAngleBounds, esoundAimAxisState.targetAngle);
             d += esoundAimAxisState.normalizedAimOffset;
             esoundAimAxisState.targetAngle = HitboxAngleUtil.lerpRange(effectiveAngleBounds, d);
          } else {
-            double normalizedAimOffset = esoundAimAxisState.normalizedAimOffset;
-            esoundAimAxisState.targetAngle = HitboxAngleUtil.lerpRange(effectiveAngleBounds, normalizedAimOffset);
+            esoundAimAxisState.targetAngle = HitboxAngleUtil.lerpRange(effectiveAngleBounds, esoundAimAxisState.normalizedAimOffset);
          }
 
-         double normalizedAimOffset2 = esoundAimAxisState.normalizedAimOffset;
-         if (!this.isWithinLockTolerance(uNoise3AimContext, normalizedAimOffset2, flag) && esoundAimAxisState.ticksSinceRetarget <= EsoundAimAxisState.accessInterpolationDuration(esoundAimAxisState) + 2) {
+         if (!this.isWithinLockTolerance(uNoise3AimContext, esoundAimAxisState.normalizedAimOffset, flag) && esoundAimAxisState.ticksSinceRetarget <= EsoundAimAxisState.accessInterpolationDuration(esoundAimAxisState) + 2) {
             if (esoundAimAxisState.interpolationStep < EsoundAimAxisState.accessInterpolationDuration(esoundAimAxisState)) {
                return this.interpolateAxisAngle(esoundAimAxisState, flag);
             }
@@ -109,14 +94,12 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
    }
 
    private boolean isOutsideAngleBounds(UNoise3AimContext uNoise3AimContext, double[] doubles) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       double d = this.computeNormalizedPosition(uNoise3AimContext, doubles);
       return d < 0.0 || d > 1.0;
    }
 
    private boolean isWithinLockTolerance(UNoise3AimContext uNoise3AimContext, double d, boolean flag) {
       double value = this.lockTolerance.getValue();
-      UNoise3CircleAimMode.getControlFlowState();
       double d2 = HitboxAngleUtil.lerpRange(uNoise3AimContext.expandedAngleBounds, d);
       double d3;
       if (flag) {
@@ -130,21 +113,17 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
 
    private double computeNormalizedPosition(UNoise3AimContext uNoise3AimContext, double[] doubles) {
       if (uNoise3AimContext.vertical) {
-         double currentAngle = uNoise3AimContext.currentAngle;
-         return HitboxAngleUtil.inverseLerpRange(doubles, currentAngle);
+         return HitboxAngleUtil.inverseLerpRange(doubles, uNoise3AimContext.currentAngle);
       } else {
          return HitboxAngleUtil.getNormalizedYawPosition(doubles[0], doubles[1], uNoise3AimContext.currentAngle);
       }
    }
 
    private double computeVerticalAngle(UNoise3AimContext uNoise3AimContext) {
-      boolean flag = true;
-      EsoundAimAxisState verticalState2 = this.verticalState;
-      return this.updateAxisAim(uNoise3AimContext, verticalState2, flag);
+      return this.updateAxisAim(uNoise3AimContext, this.verticalState, true);
    }
 
    private double sampleTargetOffset(UNoise3AimContext uNoise3AimContext, double[] doubles) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       if (uNoise3AimContext.vertical) {
          double d = 0.1;
          double d2 = -0.1;
@@ -172,9 +151,7 @@ public class UNoise3EsoundAimMode extends UNoise3AimMode {
 
    public UNoise3EsoundAimMode(UNoise3SettingContext uNoise3SettingContext2, boolean flag) {
        super(uNoise3SettingContext2, "Esound", UNoise3AimConstraintType.SURFACE_LIMITER, true, flag);
-      StringValue stringValue = new StringValue(uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getParentGroup().getName() + "_lock_tolerance", 1.5, 0.5, 3.0, 2, this.getSettingsGroup());
-      String str = "Lock Tolerance";
-      this.lockTolerance = stringValue.named(str);
+      this.lockTolerance = new DoubleValue(uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getParentGroup().getName() + "_lock_tolerance", 1.5, 0.5, 3.0, 2, this.getSettingsGroup()).named("Lock Tolerance");
       this.horizontalState = new EsoundAimAxisState(null);
       this.verticalState = new EsoundAimAxisState(null);
    }

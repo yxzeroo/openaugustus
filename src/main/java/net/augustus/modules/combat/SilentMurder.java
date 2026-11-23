@@ -11,11 +11,11 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 
 public class SilentMurder extends Module implements AttackEntityListener, GameLoopListener, TickListener {
-   private final StringValue tickDelay;
+   private final DoubleValue tickDelay;
    private final BooleanValue timer;
    private final BooleanValue bypassBalanceChecks;
    private int lastAttackTick;
@@ -25,14 +25,12 @@ public class SilentMurder extends Module implements AttackEntityListener, GameLo
 
    public SilentMurder() {
        super("SilentMurder", "LautloserMord", new Color(209, 140, 171), Categorys.COMBAT);
-      this.tickDelay = new StringValue(this, "TickDelay", 10.0, 0.0, 20.0, 0);
+      this.tickDelay = new DoubleValue(this, "TickDelay", 10.0, 0.0, 20.0, 0);
       this.timer = new BooleanValue(this, "Timer", false);
       BooleanValue booleanValue = new BooleanValue(this, "Bypass balance checks", true);
       BooleanValue timer2 = this.timer;
       this.timer.getClass();
-      BooleanValue booleanValue2 = timer2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.bypassBalanceChecks = (BooleanValue)booleanValue.withVisibility(condition);
+      this.bypassBalanceChecks = (BooleanValue)booleanValue.withVisibility(() -> timer2.getValue());
       this.lastAttackTick = 0;
       this.previousHotbarSlot = -1;
       this.pendingBalanceSkip = false;
@@ -89,8 +87,7 @@ public class SilentMurder extends Module implements AttackEntityListener, GameLo
    @Override
    public void onAttackEntity() {
       if (!this.timer.getValue()) {
-         int n = MurderWeaponSlotUtil.findMurderWeaponSlot();
-         if (n != -1 && this.previousHotbarSlot != -1) {
+         if (MurderWeaponSlotUtil.findMurderWeaponSlot() != -1 && this.previousHotbarSlot != -1) {
             mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(this.previousHotbarSlot));
          }
 
@@ -101,10 +98,8 @@ public class SilentMurder extends Module implements AttackEntityListener, GameLo
    @Override
    public void onGameLoop(EventGameLoop event) {
       if (this.pendingBalanceSkip && event.getElapsedTicks() > 0) {
-         int n = event.getElapsedTicks() - 1;
-         event.setElapsedTicks(n);
-         float f = 0.0F;
-         event.setRenderPartialTicks(f);
+         event.setElapsedTicks(event.getElapsedTicks() - 1);
+         event.setRenderPartialTicks(0.0F);
          this.pendingBalanceSkip = false;
       }
    }

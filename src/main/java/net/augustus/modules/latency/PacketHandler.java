@@ -29,8 +29,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.EventManager;
 import net.augustus.utils.AntiSamplerGuard;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -142,16 +142,16 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
    public Queue incomingPacketQueue;
    public Queue outgoingPacketQueue;
    private final BooleanValue pingFix;
-   public final DoubleValue incoming;
-   public final BooleansSetting macroDelayModes;
+   public final SettingGroup incoming;
+   public final StringValue macroDelayModes;
    private final BooleanValue realTimeDamage;
-   public final BooleansSetting eventToHandlePacket;
+   public final StringValue eventToHandlePacket;
    public final MultiOptionSetting incomingPacketsToDelay;
-   private final DoubleValue abortIncoming;
+   private final SettingGroup abortIncoming;
    public final MultiOptionSetting incomingPacketsToDelayAbort;
-   public final DoubleValue outgoing;
+   public final SettingGroup outgoing;
    public final MultiOptionSetting outGoingPacketsToDelay;
-   private final DoubleValue abortOutgoing;
+   private final SettingGroup abortOutgoing;
    public final MultiOptionSetting outGoingPacketsToDelayAbort;
    private boolean flushingPackets;
    private volatile boolean delayingIncoming;
@@ -163,27 +163,19 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
       this.incomingPacketQueue = Queues.newConcurrentLinkedQueue();
       this.outgoingPacketQueue = Queues.newConcurrentLinkedQueue();
       this.pingFix = new BooleanValue(this, "PingFix", false);
-      this.incoming = new DoubleValue(this, "Incoming", true);
-      this.macroDelayModes = new BooleansSetting(
+      this.incoming = new SettingGroup(this, "Incoming", true);
+      this.macroDelayModes = new StringValue(
          this, "MacroDelayModes", "None", new String[]{"None", "MacroDelay", "OtherMacroDelay", "ExperimentalMacroDelay", "Sandwich"}, this.incoming
       );
       this.realTimeDamage = new BooleanValue(this, "RealTimeDamage", true, this.incoming);
-      this.eventToHandlePacket = new BooleansSetting(this, "EventToHandlePacket", "Vanilla", new String[]{"Vanilla", "Tick"}, this.incoming);
-      MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "IncomingPacketsToDelay", sortedPacketOptions(INCOMING_DELAY_OPTIONS), this.incoming);
-      String str = "PacketsToDelay";
-      this.incomingPacketsToDelay = multiOptionSetting.named(str);
-      this.abortIncoming = new DoubleValue(this, "AbortIncoming", this.incoming);
-      MultiOptionSetting multiOptionSetting2 = new MultiOptionSetting(this, "IncomingPacketsToDelayAbort", sortedPacketOptions(INCOMING_ABORT_OPTIONS), this.abortIncoming);
-      String str2 = "PacketsToAbortDelay";
-      this.incomingPacketsToDelayAbort = multiOptionSetting2.named(str2);
-      this.outgoing = new DoubleValue(this, "Outgoing", true);
-      MultiOptionSetting multiOptionSetting3 = new MultiOptionSetting(this, "OutGoingPacketsToDelay", sortedPacketOptions(OUTGOING_DELAY_OPTIONS), this.outgoing);
-      String str3 = "PacketsToDelay";
-      this.outGoingPacketsToDelay = multiOptionSetting3.named(str3);
-      this.abortOutgoing = new DoubleValue(this, "AbortOutgoing", this.outgoing);
-      MultiOptionSetting multiOptionSetting4 = new MultiOptionSetting(this, "OutGoingPacketsToDelayAbort", sortedPacketOptions(OUTGOING_ABORT_OPTIONS), this.abortOutgoing);
-      String str4 = "PacketsToAbortDelay";
-      this.outGoingPacketsToDelayAbort = multiOptionSetting4.named(str4);
+      this.eventToHandlePacket = new StringValue(this, "EventToHandlePacket", "Vanilla", new String[]{"Vanilla", "Tick"}, this.incoming);
+      this.incomingPacketsToDelay = new MultiOptionSetting(this, "IncomingPacketsToDelay", sortedPacketOptions(INCOMING_DELAY_OPTIONS), this.incoming).named("PacketsToDelay");
+      this.abortIncoming = new SettingGroup(this, "AbortIncoming", this.incoming);
+      this.incomingPacketsToDelayAbort = new MultiOptionSetting(this, "IncomingPacketsToDelayAbort", sortedPacketOptions(INCOMING_ABORT_OPTIONS), this.abortIncoming).named("PacketsToAbortDelay");
+      this.outgoing = new SettingGroup(this, "Outgoing", true);
+      this.outGoingPacketsToDelay = new MultiOptionSetting(this, "OutGoingPacketsToDelay", sortedPacketOptions(OUTGOING_DELAY_OPTIONS), this.outgoing).named("PacketsToDelay");
+      this.abortOutgoing = new SettingGroup(this, "AbortOutgoing", this.outgoing);
+      this.outGoingPacketsToDelayAbort = new MultiOptionSetting(this, "OutGoingPacketsToDelayAbort", sortedPacketOptions(OUTGOING_ABORT_OPTIONS), this.abortOutgoing).named("PacketsToAbortDelay");
       this.flushingPackets = false;
       this.guardStatusFlags = new CopyOnWriteArrayList();
       this.consecutiveTransactionCount = 2;
@@ -239,9 +231,7 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
    public void flushAllIncomingPackets() {
 
       while (!this.incomingPacketQueue.isEmpty()) {
-         Object obj = this.incomingPacketQueue.poll();
-         DelayedPacketEntry delayedPacketEntry = (DelayedPacketEntry)obj;
-         this.processDelayedIncomingEntry(delayedPacketEntry);
+         this.processDelayedIncomingEntry((DelayedPacketEntry)this.incomingPacketQueue.poll());
       }
    }
 
@@ -252,10 +242,8 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
 
          while (it.hasNext()) {
             DelayedPacketEntry delayedPacketEntry = (DelayedPacketEntry)it.next();
-            long l = (long)n;
-            if (delayedPacketEntry.isExpired(l)) {
-               Packet packet = delayedPacketEntry.getPacket();
-               if (this.shouldHoldTransactionInMacroDelay(packet)) {
+            if (delayedPacketEntry.isExpired((long)n)) {
+               if (this.shouldHoldTransactionInMacroDelay(delayedPacketEntry.getPacket())) {
                   linkedBlockingQueue.add(delayedPacketEntry);
                } else {
                   while (!linkedBlockingQueue.isEmpty()) {
@@ -281,14 +269,11 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
 
          while (it.hasNext()) {
             DelayedPacketEntry delayedPacketEntry = (DelayedPacketEntry)it.next();
-            Packet packet = delayedPacketEntry.getPacket();
-            Vec3 vec = this.getRecordedEntityPosForPacket(packet, entity);
+            Vec3 vec = this.getRecordedEntityPosForPacket(delayedPacketEntry.getPacket(), entity);
             if (vec == null) {
                linkedBlockingQueue.add(delayedPacketEntry);
             } else {
-               AxisAlignedBB box = RotationUtil.createEntityBoxAt(entity, vec);
-               Vec3 vec2 = RotationUtil.clampPointToBox(positionEyes, box);
-               if (!(positionEyes.distanceTo(vec2) < d)) {
+               if (!(positionEyes.distanceTo(RotationUtil.clampPointToBox(positionEyes, RotationUtil.createEntityBoxAt(entity, vec))) < d)) {
                   return;
                }
 
@@ -306,8 +291,7 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
    }
 
    private Vec3 getRecordedEntityPosForPacket(Packet packet, EntityLivingBase entity) {
-      int n = this.extractEntityIdFromPacket(packet);
-      return n != entity.getEntityId() ? null : (Vec3)entity.packetPositionMap.get(packet);
+      return this.extractEntityIdFromPacket(packet) != entity.getEntityId() ? null : (Vec3)entity.packetPositionMap.get(packet);
    }
 
    private int extractEntityIdFromPacket(Packet packet) {
@@ -393,8 +377,7 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
 
          while (it.hasNext()) {
             DelayedOutboundPacket packet = (DelayedOutboundPacket)it.next();
-            long l = (long)n;
-            if (packet.isExpired(l)) {
+            if (packet.isExpired((long)n)) {
                event.getOutboundQueue().add(packet.toInboundHandlerTuple());
                it.remove();
             }
@@ -455,213 +438,111 @@ public class PacketHandler extends Module implements PacketDelayListener, TickLi
    }
 
    private static void registerIncomingPacketOptions(Map map) {
-      PacketHandlerPacketOption option = new PacketHandlerPacketOption("S00PacketKeepAlive", S00PacketKeepAlive.class);
-      putPacketOption(map, option);
-      PacketHandlerPacketOption option2 = new PacketHandlerPacketOption("S01PacketJoinGame", S01PacketJoinGame.class);
-      putPacketOption(map, option2);
-      PacketHandlerPacketOption option3 = new PacketHandlerPacketOption("S02PacketChat", S02PacketChat.class);
-      putPacketOption(map, option3);
-      PacketHandlerPacketOption option4 = new PacketHandlerPacketOption("S03PacketTimeUpdate", S03PacketTimeUpdate.class);
-      putPacketOption(map, option4);
-      PacketHandlerPacketOption option5 = new PacketHandlerPacketOption("S04PacketEntityEquipment", S04PacketEntityEquipment.class);
-      putPacketOption(map, option5);
-      PacketHandlerPacketOption option6 = new PacketHandlerPacketOption("S05PacketSpawnPosition", S05PacketSpawnPosition.class);
-      putPacketOption(map, option6);
-      PacketHandlerPacketOption option7 = new PacketHandlerPacketOption("S06PacketUpdateHealth", S06PacketUpdateHealth.class);
-      putPacketOption(map, option7);
-      PacketHandlerPacketOption option8 = new PacketHandlerPacketOption("S07PacketRespawn", S07PacketRespawn.class);
-      putPacketOption(map, option8);
-      PacketHandlerPacketOption option9 = new PacketHandlerPacketOption("S08PacketPlayerPosLook", S08PacketPlayerPosLook.class);
-      putPacketOption(map, option9);
-      PacketHandlerPacketOption option10 = new PacketHandlerPacketOption("S09PacketHeldItemChange", S09PacketHeldItemChange.class);
-      putPacketOption(map, option10);
-      PacketHandlerPacketOption option11 = new PacketHandlerPacketOption("S0APacketUseBed", S0APacketUseBed.class);
-      putPacketOption(map, option11);
-      PacketHandlerPacketOption option12 = new PacketHandlerPacketOption("S0BPacketAnimation", S0BPacketAnimation.class);
-      putPacketOption(map, option12);
-      PacketHandlerPacketOption option13 = new PacketHandlerPacketOption("S0CPacketSpawnPlayer", S0CPacketSpawnPlayer.class);
-      putPacketOption(map, option13);
-      PacketHandlerPacketOption option14 = new PacketHandlerPacketOption("S0DPacketCollectItem", S0DPacketCollectItem.class);
-      putPacketOption(map, option14);
-      PacketHandlerPacketOption option15 = new PacketHandlerPacketOption("S0EPacketSpawnObject", S0EPacketSpawnObject.class);
-      putPacketOption(map, option15);
-      PacketHandlerPacketOption option16 = new PacketHandlerPacketOption("S0FPacketSpawnMob", S0FPacketSpawnMob.class);
-      putPacketOption(map, option16);
-      PacketHandlerPacketOption option17 = new PacketHandlerPacketOption("S10PacketSpawnPainting", S10PacketSpawnPainting.class);
-      putPacketOption(map, option17);
-      PacketHandlerPacketOption option18 = new PacketHandlerPacketOption("S11PacketSpawnExperienceOrb", S11PacketSpawnExperienceOrb.class);
-      putPacketOption(map, option18);
-      PacketHandlerPacketOption option19 = new PacketHandlerPacketOption("S12PacketEntityVelocity", S12PacketEntityVelocity.class);
-      putPacketOption(map, option19);
-      PacketHandlerPacketOption option20 = new PacketHandlerPacketOption("S13PacketDestroyEntities", S13PacketDestroyEntities.class);
-      putPacketOption(map, option20);
-      PacketHandlerPacketOption option21 = new PacketHandlerPacketOption("S14PacketEntity", S14PacketEntity.class);
-      putPacketOption(map, option21);
-      PacketHandlerPacketOption option22 = new PacketHandlerPacketOption("S15PacketEntityRelMove", S14PacketEntity.S15PacketEntityRelMove.class);
-      putPacketOption(map, option22);
-      PacketHandlerPacketOption option23 = new PacketHandlerPacketOption("S16PacketEntityLook", S14PacketEntity.S16PacketEntityLook.class);
-      putPacketOption(map, option23);
-      PacketHandlerPacketOption option24 = new PacketHandlerPacketOption("S17PacketEntityLookMove", S14PacketEntity.S17PacketEntityLookMove.class);
-      putPacketOption(map, option24);
-      PacketHandlerPacketOption option25 = new PacketHandlerPacketOption("S18PacketEntityTeleport", S18PacketEntityTeleport.class);
-      putPacketOption(map, option25);
-      PacketHandlerPacketOption option26 = new PacketHandlerPacketOption("S19PacketEntityHeadLook", S19PacketEntityHeadLook.class);
-      putPacketOption(map, option26);
-      PacketHandlerPacketOption option27 = new PacketHandlerPacketOption("S19PacketEntityStatus", S19PacketEntityStatus.class);
-      putPacketOption(map, option27);
-      PacketHandlerPacketOption option28 = new PacketHandlerPacketOption("S1BPacketEntityAttach", S1BPacketEntityAttach.class);
-      putPacketOption(map, option28);
-      PacketHandlerPacketOption option29 = new PacketHandlerPacketOption("S1CPacketEntityMetadata", S1CPacketEntityMetadata.class);
-      putPacketOption(map, option29);
-      PacketHandlerPacketOption option30 = new PacketHandlerPacketOption("S1DPacketEntityEffect", S1DPacketEntityEffect.class);
-      putPacketOption(map, option30);
-      PacketHandlerPacketOption option31 = new PacketHandlerPacketOption("S1EPacketRemoveEntityEffect", S1EPacketRemoveEntityEffect.class);
-      putPacketOption(map, option31);
-      PacketHandlerPacketOption option32 = new PacketHandlerPacketOption("S1FPacketSetExperience", S1FPacketSetExperience.class);
-      putPacketOption(map, option32);
-      PacketHandlerPacketOption option33 = new PacketHandlerPacketOption("S20PacketEntityProperties", S20PacketEntityProperties.class);
-      putPacketOption(map, option33);
-      PacketHandlerPacketOption option34 = new PacketHandlerPacketOption("S21PacketChunkData", S21PacketChunkData.class);
-      putPacketOption(map, option34);
-      PacketHandlerPacketOption option35 = new PacketHandlerPacketOption("S22PacketMultiBlockChange", S22PacketMultiBlockChange.class);
-      putPacketOption(map, option35);
-      PacketHandlerPacketOption option36 = new PacketHandlerPacketOption("S23PacketBlockChange", S23PacketBlockChange.class);
-      putPacketOption(map, option36);
-      PacketHandlerPacketOption option37 = new PacketHandlerPacketOption("S24PacketBlockAction", S24PacketBlockAction.class);
-      putPacketOption(map, option37);
-      PacketHandlerPacketOption option38 = new PacketHandlerPacketOption("S25PacketBlockBreakAnim", S25PacketBlockBreakAnim.class);
-      putPacketOption(map, option38);
-      PacketHandlerPacketOption option39 = new PacketHandlerPacketOption("S26PacketMapChunkBulk", S26PacketMapChunkBulk.class);
-      putPacketOption(map, option39);
-      PacketHandlerPacketOption option40 = new PacketHandlerPacketOption("S27PacketExplosion", S27PacketExplosion.class);
-      putPacketOption(map, option40);
-      PacketHandlerPacketOption option41 = new PacketHandlerPacketOption("S28PacketEffect", S28PacketEffect.class);
-      putPacketOption(map, option41);
-      PacketHandlerPacketOption option42 = new PacketHandlerPacketOption("S29PacketSoundEffect", S29PacketSoundEffect.class);
-      putPacketOption(map, option42);
-      PacketHandlerPacketOption option43 = new PacketHandlerPacketOption("S2APacketParticles", S2APacketParticles.class);
-      putPacketOption(map, option43);
-      PacketHandlerPacketOption option44 = new PacketHandlerPacketOption("S2BPacketChangeGameState", S2BPacketChangeGameState.class);
-      putPacketOption(map, option44);
-      PacketHandlerPacketOption option45 = new PacketHandlerPacketOption("S2CPacketSpawnGlobalEntity", S2CPacketSpawnGlobalEntity.class);
-      putPacketOption(map, option45);
-      PacketHandlerPacketOption option46 = new PacketHandlerPacketOption("S2DPacketOpenWindow", S2DPacketOpenWindow.class);
-      putPacketOption(map, option46);
-      PacketHandlerPacketOption option47 = new PacketHandlerPacketOption("S2EPacketCloseWindow", S2EPacketCloseWindow.class);
-      putPacketOption(map, option47);
-      PacketHandlerPacketOption option48 = new PacketHandlerPacketOption("S2FPacketSetSlot", S2FPacketSetSlot.class);
-      putPacketOption(map, option48);
-      PacketHandlerPacketOption option49 = new PacketHandlerPacketOption("S30PacketWindowItems", S30PacketWindowItems.class);
-      putPacketOption(map, option49);
-      PacketHandlerPacketOption option50 = new PacketHandlerPacketOption("S31PacketWindowProperty", S31PacketWindowProperty.class);
-      putPacketOption(map, option50);
-      PacketHandlerPacketOption option51 = new PacketHandlerPacketOption("S32PacketConfirmTransaction", S32PacketConfirmTransaction.class);
-      putPacketOption(map, option51);
-      PacketHandlerPacketOption option52 = new PacketHandlerPacketOption("S33PacketUpdateSign", S33PacketUpdateSign.class);
-      putPacketOption(map, option52);
-      PacketHandlerPacketOption option53 = new PacketHandlerPacketOption("S34PacketMaps", S34PacketMaps.class);
-      putPacketOption(map, option53);
-      PacketHandlerPacketOption option54 = new PacketHandlerPacketOption("S35PacketUpdateTileEntity", S35PacketUpdateTileEntity.class);
-      putPacketOption(map, option54);
-      PacketHandlerPacketOption option55 = new PacketHandlerPacketOption("S36PacketSignEditorOpen", S36PacketSignEditorOpen.class);
-      putPacketOption(map, option55);
-      PacketHandlerPacketOption option56 = new PacketHandlerPacketOption("S37PacketStatistics", S37PacketStatistics.class);
-      putPacketOption(map, option56);
-      PacketHandlerPacketOption option57 = new PacketHandlerPacketOption("S38PacketPlayerListItem", S38PacketPlayerListItem.class);
-      putPacketOption(map, option57);
-      PacketHandlerPacketOption option58 = new PacketHandlerPacketOption("S39PacketPlayerAbilities", S39PacketPlayerAbilities.class);
-      putPacketOption(map, option58);
-      PacketHandlerPacketOption option59 = new PacketHandlerPacketOption("S3APacketTabComplete", S3APacketTabComplete.class);
-      putPacketOption(map, option59);
-      PacketHandlerPacketOption option60 = new PacketHandlerPacketOption("S3BPacketScoreboardObjective", S3BPacketScoreboardObjective.class);
-      putPacketOption(map, option60);
-      PacketHandlerPacketOption option61 = new PacketHandlerPacketOption("S3CPacketUpdateScore", S3CPacketUpdateScore.class);
-      putPacketOption(map, option61);
-      PacketHandlerPacketOption option62 = new PacketHandlerPacketOption("S3DPacketDisplayScoreboard", S3DPacketDisplayScoreboard.class);
-      putPacketOption(map, option62);
-      PacketHandlerPacketOption option63 = new PacketHandlerPacketOption("S3EPacketTeams", S3EPacketTeams.class);
-      putPacketOption(map, option63);
-      PacketHandlerPacketOption option64 = new PacketHandlerPacketOption("S3FPacketCustomPayload", S3FPacketCustomPayload.class);
-      putPacketOption(map, option64);
-      PacketHandlerPacketOption option65 = new PacketHandlerPacketOption("S40PacketDisconnect", S40PacketDisconnect.class);
-      putPacketOption(map, option65);
-      PacketHandlerPacketOption option66 = new PacketHandlerPacketOption("S41PacketServerDifficulty", S41PacketServerDifficulty.class);
-      putPacketOption(map, option66);
-      PacketHandlerPacketOption option67 = new PacketHandlerPacketOption("S42PacketCombatEvent", S42PacketCombatEvent.class);
-      putPacketOption(map, option67);
-      PacketHandlerPacketOption option68 = new PacketHandlerPacketOption("S43PacketCamera", S43PacketCamera.class);
-      putPacketOption(map, option68);
-      PacketHandlerPacketOption option69 = new PacketHandlerPacketOption("S44PacketWorldBorder", S44PacketWorldBorder.class);
-      putPacketOption(map, option69);
-      PacketHandlerPacketOption option70 = new PacketHandlerPacketOption("S45PacketTitle", S45PacketTitle.class);
-      putPacketOption(map, option70);
-      PacketHandlerPacketOption option71 = new PacketHandlerPacketOption("S46PacketSetCompressionLevel", S46PacketSetCompressionLevel.class);
-      putPacketOption(map, option71);
-      PacketHandlerPacketOption option72 = new PacketHandlerPacketOption("S47PacketPlayerListHeaderFooter", S47PacketPlayerListHeaderFooter.class);
-      putPacketOption(map, option72);
-      PacketHandlerPacketOption option73 = new PacketHandlerPacketOption("S48PacketResourcePackSend", S48PacketResourcePackSend.class);
-      putPacketOption(map, option73);
-      PacketHandlerPacketOption option74 = new PacketHandlerPacketOption("S49PacketUpdateEntityNBT", S49PacketUpdateEntityNBT.class);
-      putPacketOption(map, option74);
+      putPacketOption(map, new PacketHandlerPacketOption("S00PacketKeepAlive", S00PacketKeepAlive.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S01PacketJoinGame", S01PacketJoinGame.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S02PacketChat", S02PacketChat.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S03PacketTimeUpdate", S03PacketTimeUpdate.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S04PacketEntityEquipment", S04PacketEntityEquipment.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S05PacketSpawnPosition", S05PacketSpawnPosition.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S06PacketUpdateHealth", S06PacketUpdateHealth.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S07PacketRespawn", S07PacketRespawn.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S08PacketPlayerPosLook", S08PacketPlayerPosLook.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S09PacketHeldItemChange", S09PacketHeldItemChange.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0APacketUseBed", S0APacketUseBed.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0BPacketAnimation", S0BPacketAnimation.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0CPacketSpawnPlayer", S0CPacketSpawnPlayer.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0DPacketCollectItem", S0DPacketCollectItem.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0EPacketSpawnObject", S0EPacketSpawnObject.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S0FPacketSpawnMob", S0FPacketSpawnMob.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S10PacketSpawnPainting", S10PacketSpawnPainting.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S11PacketSpawnExperienceOrb", S11PacketSpawnExperienceOrb.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S12PacketEntityVelocity", S12PacketEntityVelocity.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S13PacketDestroyEntities", S13PacketDestroyEntities.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S14PacketEntity", S14PacketEntity.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S15PacketEntityRelMove", S14PacketEntity.S15PacketEntityRelMove.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S16PacketEntityLook", S14PacketEntity.S16PacketEntityLook.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S17PacketEntityLookMove", S14PacketEntity.S17PacketEntityLookMove.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S18PacketEntityTeleport", S18PacketEntityTeleport.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S19PacketEntityHeadLook", S19PacketEntityHeadLook.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S19PacketEntityStatus", S19PacketEntityStatus.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S1BPacketEntityAttach", S1BPacketEntityAttach.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S1CPacketEntityMetadata", S1CPacketEntityMetadata.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S1DPacketEntityEffect", S1DPacketEntityEffect.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S1EPacketRemoveEntityEffect", S1EPacketRemoveEntityEffect.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S1FPacketSetExperience", S1FPacketSetExperience.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S20PacketEntityProperties", S20PacketEntityProperties.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S21PacketChunkData", S21PacketChunkData.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S22PacketMultiBlockChange", S22PacketMultiBlockChange.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S23PacketBlockChange", S23PacketBlockChange.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S24PacketBlockAction", S24PacketBlockAction.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S25PacketBlockBreakAnim", S25PacketBlockBreakAnim.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S26PacketMapChunkBulk", S26PacketMapChunkBulk.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S27PacketExplosion", S27PacketExplosion.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S28PacketEffect", S28PacketEffect.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S29PacketSoundEffect", S29PacketSoundEffect.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2APacketParticles", S2APacketParticles.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2BPacketChangeGameState", S2BPacketChangeGameState.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2CPacketSpawnGlobalEntity", S2CPacketSpawnGlobalEntity.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2DPacketOpenWindow", S2DPacketOpenWindow.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2EPacketCloseWindow", S2EPacketCloseWindow.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S2FPacketSetSlot", S2FPacketSetSlot.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S30PacketWindowItems", S30PacketWindowItems.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S31PacketWindowProperty", S31PacketWindowProperty.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S32PacketConfirmTransaction", S32PacketConfirmTransaction.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S33PacketUpdateSign", S33PacketUpdateSign.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S34PacketMaps", S34PacketMaps.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S35PacketUpdateTileEntity", S35PacketUpdateTileEntity.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S36PacketSignEditorOpen", S36PacketSignEditorOpen.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S37PacketStatistics", S37PacketStatistics.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S38PacketPlayerListItem", S38PacketPlayerListItem.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S39PacketPlayerAbilities", S39PacketPlayerAbilities.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3APacketTabComplete", S3APacketTabComplete.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3BPacketScoreboardObjective", S3BPacketScoreboardObjective.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3CPacketUpdateScore", S3CPacketUpdateScore.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3DPacketDisplayScoreboard", S3DPacketDisplayScoreboard.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3EPacketTeams", S3EPacketTeams.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S3FPacketCustomPayload", S3FPacketCustomPayload.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S40PacketDisconnect", S40PacketDisconnect.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S41PacketServerDifficulty", S41PacketServerDifficulty.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S42PacketCombatEvent", S42PacketCombatEvent.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S43PacketCamera", S43PacketCamera.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S44PacketWorldBorder", S44PacketWorldBorder.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S45PacketTitle", S45PacketTitle.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S46PacketSetCompressionLevel", S46PacketSetCompressionLevel.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S47PacketPlayerListHeaderFooter", S47PacketPlayerListHeaderFooter.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S48PacketResourcePackSend", S48PacketResourcePackSend.class));
+      putPacketOption(map, new PacketHandlerPacketOption("S49PacketUpdateEntityNBT", S49PacketUpdateEntityNBT.class));
    }
 
    private static void registerOutgoingPacketOptions(Map map) {
-      PacketHandlerPacketOption option = new PacketHandlerPacketOption("C00PacketKeepAlive", C00PacketKeepAlive.class);
-      putPacketOption(map, option);
-      PacketHandlerPacketOption option2 = new PacketHandlerPacketOption("C01PacketChatMessage", C01PacketChatMessage.class);
-      putPacketOption(map, option2);
-      PacketHandlerPacketOption option3 = new PacketHandlerPacketOption("C02PacketUseEntity", C02PacketUseEntity.class);
-      putPacketOption(map, option3);
-      PacketHandlerPacketOption option4 = new PacketHandlerPacketOption("C03PacketPlayer", C03PacketPlayer.class);
-      putPacketOption(map, option4);
-      PacketHandlerPacketOption option5 = new PacketHandlerPacketOption("C04PacketPlayerPosition", C03PacketPlayer.C04PacketPlayerPosition.class);
-      putPacketOption(map, option5);
-      PacketHandlerPacketOption option6 = new PacketHandlerPacketOption("C05PacketPlayerLook", C03PacketPlayer.C05PacketPlayerLook.class);
-      putPacketOption(map, option6);
-      PacketHandlerPacketOption option7 = new PacketHandlerPacketOption("C06PacketPlayerPosLook", C03PacketPlayer.C06PacketPlayerPosLook.class);
-      putPacketOption(map, option7);
-      PacketHandlerPacketOption option8 = new PacketHandlerPacketOption("C07PacketPlayerDigging", C07PacketPlayerDigging.class);
-      putPacketOption(map, option8);
-      PacketHandlerPacketOption option9 = new PacketHandlerPacketOption("C08PacketPlayerBlockPlacement", C08PacketPlayerBlockPlacement.class);
-      putPacketOption(map, option9);
-      PacketHandlerPacketOption option10 = new PacketHandlerPacketOption("C09PacketHeldItemChange", C09PacketHeldItemChange.class);
-      putPacketOption(map, option10);
-      PacketHandlerPacketOption option11 = new PacketHandlerPacketOption("C0APacketAnimation", C0APacketAnimation.class);
-      putPacketOption(map, option11);
-      PacketHandlerPacketOption option12 = new PacketHandlerPacketOption("C0BPacketEntityAction", C0BPacketEntityAction.class);
-      putPacketOption(map, option12);
-      PacketHandlerPacketOption option13 = new PacketHandlerPacketOption("C0CPacketInput", C0CPacketInput.class);
-      putPacketOption(map, option13);
-      PacketHandlerPacketOption option14 = new PacketHandlerPacketOption("C0DPacketCloseWindow", C0DPacketCloseWindow.class);
-      putPacketOption(map, option14);
-      PacketHandlerPacketOption option15 = new PacketHandlerPacketOption("C0EPacketClickWindow", C0EPacketClickWindow.class);
-      putPacketOption(map, option15);
-      PacketHandlerPacketOption option16 = new PacketHandlerPacketOption("C0FPacketConfirmTransaction", C0FPacketConfirmTransaction.class);
-      putPacketOption(map, option16);
-      PacketHandlerPacketOption option17 = new PacketHandlerPacketOption("C10PacketCreativeInventoryAction", C10PacketCreativeInventoryAction.class);
-      putPacketOption(map, option17);
-      PacketHandlerPacketOption option18 = new PacketHandlerPacketOption("C11PacketEnchantItem", C11PacketEnchantItem.class);
-      putPacketOption(map, option18);
-      PacketHandlerPacketOption option19 = new PacketHandlerPacketOption("C12PacketUpdateSign", C12PacketUpdateSign.class);
-      putPacketOption(map, option19);
-      PacketHandlerPacketOption option20 = new PacketHandlerPacketOption("C13PacketPlayerAbilities", C13PacketPlayerAbilities.class);
-      putPacketOption(map, option20);
-      PacketHandlerPacketOption option21 = new PacketHandlerPacketOption("C14PacketTabComplete", C14PacketTabComplete.class);
-      putPacketOption(map, option21);
-      PacketHandlerPacketOption option22 = new PacketHandlerPacketOption("C15PacketClientSettings", C15PacketClientSettings.class);
-      putPacketOption(map, option22);
-      PacketHandlerPacketOption option23 = new PacketHandlerPacketOption("C16PacketClientStatus", C16PacketClientStatus.class);
-      putPacketOption(map, option23);
-      PacketHandlerPacketOption option24 = new PacketHandlerPacketOption("C17PacketCustomPayload", C17PacketCustomPayload.class);
-      putPacketOption(map, option24);
-      PacketHandlerPacketOption option25 = new PacketHandlerPacketOption("C18PacketSpectate", C18PacketSpectate.class);
-      putPacketOption(map, option25);
-      PacketHandlerPacketOption option26 = new PacketHandlerPacketOption("C19PacketResourcePackStatus", C19PacketResourcePackStatus.class);
-      putPacketOption(map, option26);
-      PacketHandlerPacketOption option27 = new PacketHandlerPacketOption("CAnimateHandPacket", C0APacketSwingHand.class);
-      putPacketOption(map, option27);
-      PacketHandlerPacketOption option28 = new PacketHandlerPacketOption("CPacketPlayerTryUseItemOnBlock", CPacketPlayerTryUseItemOnBlock.class);
-      putPacketOption(map, option28);
+      putPacketOption(map, new PacketHandlerPacketOption("C00PacketKeepAlive", C00PacketKeepAlive.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C01PacketChatMessage", C01PacketChatMessage.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C02PacketUseEntity", C02PacketUseEntity.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C03PacketPlayer", C03PacketPlayer.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C04PacketPlayerPosition", C03PacketPlayer.C04PacketPlayerPosition.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C05PacketPlayerLook", C03PacketPlayer.C05PacketPlayerLook.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C06PacketPlayerPosLook", C03PacketPlayer.C06PacketPlayerPosLook.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C07PacketPlayerDigging", C07PacketPlayerDigging.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C08PacketPlayerBlockPlacement", C08PacketPlayerBlockPlacement.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C09PacketHeldItemChange", C09PacketHeldItemChange.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0APacketAnimation", C0APacketAnimation.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0BPacketEntityAction", C0BPacketEntityAction.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0CPacketInput", C0CPacketInput.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0DPacketCloseWindow", C0DPacketCloseWindow.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0EPacketClickWindow", C0EPacketClickWindow.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C0FPacketConfirmTransaction", C0FPacketConfirmTransaction.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C10PacketCreativeInventoryAction", C10PacketCreativeInventoryAction.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C11PacketEnchantItem", C11PacketEnchantItem.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C12PacketUpdateSign", C12PacketUpdateSign.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C13PacketPlayerAbilities", C13PacketPlayerAbilities.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C14PacketTabComplete", C14PacketTabComplete.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C15PacketClientSettings", C15PacketClientSettings.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C16PacketClientStatus", C16PacketClientStatus.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C17PacketCustomPayload", C17PacketCustomPayload.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C18PacketSpectate", C18PacketSpectate.class));
+      putPacketOption(map, new PacketHandlerPacketOption("C19PacketResourcePackStatus", C19PacketResourcePackStatus.class));
+      putPacketOption(map, new PacketHandlerPacketOption("CAnimateHandPacket", C0APacketSwingHand.class));
+      putPacketOption(map, new PacketHandlerPacketOption("CPacketPlayerTryUseItemOnBlock", CPacketPlayerTryUseItemOnBlock.class));
    }
 
    private static void putPacketOption(Map map, PacketHandlerPacketOption option) {

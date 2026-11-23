@@ -79,8 +79,7 @@ public class TileEntityEnderChestRenderer extends TileEntitySpecialRenderer {
          GlStateManager.tryBlendFuncSeparate(770, 771, 0, 0);
          GlStateManager.disableLighting();
          GlStateManager.disableDepth();
-         byte b = 0;
-         RenderUtil.setGlColor(ClientManagers.moduleManager.chams.enderChestColor.getColorInt(b));
+         RenderUtil.setGlColor(ClientManagers.moduleManager.chams.enderChestColor.getColorInt((byte)0));
          GlStateManager.disableTexture2D();
          this.modelChest.renderAll();
          GlStateManager.enableDepth();

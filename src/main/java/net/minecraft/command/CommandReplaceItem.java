@@ -166,8 +166,7 @@ public class CommandReplaceItem extends CommandBase {
          if (flag) {
             commandSender.setCommandStat(CommandResultStats.Type.AFFECTED_ITEMS, 0);
             BlockPos pos = parseBlockPos(commandSender, strings, 1, false);
-            World entityWorld = commandSender.getEntityWorld();
-            TileEntity tileEntity = entityWorld.getTileEntity(pos);
+            TileEntity tileEntity = commandSender.getEntityWorld().getTileEntity(pos);
             if (tileEntity == null || !(tileEntity instanceof IInventory)) {
                throw new CommandException("commands.replaceitem.noContainer", new Object[]{pos.getX(), pos.getY(), pos.getZ()});
             }

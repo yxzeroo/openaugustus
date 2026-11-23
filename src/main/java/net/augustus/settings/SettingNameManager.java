@@ -2,7 +2,6 @@ package net.augustus.settings;
 
 import net.augustus.Augustus;
 import net.augustus.ClientManagers;
-import net.augustus.config.DescriptionYamlManager;
 import net.augustus.utils.file.ClientFileUtil;
 import net.augustus.utils.file.ClientPaths;
 import net.augustus.utils.file.DirectoryWatchService;
@@ -24,69 +23,45 @@ public class SettingNameManager {
 
    public void initialize() {
       String str = Augustus.getInstance().getName().toLowerCase() + "/settings/settingsnames";
-      boolean flag = true;
       String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/English_New.txt", str2, flag);
-      DescriptionYamlManager.getParseFlags();
-      String str3 = "English_New";
-      this.loadLanguageFile(str3);
+      ClientFileUtil.extractResource("assets/augustus/English_New.txt", str2, true);
+      this.loadLanguageFile("English_New");
       this.exportDefaultNames();
-      BooleansSetting settingNames = Augustus.getInstance().getModuleManager().clickGui.settingNames;
-      String[] strings = Augustus.getInstance().getSettingNameManager().listLanguageFiles();
-      settingNames.setOptions(strings);
+      StringValue settingNames = Augustus.getInstance().getModuleManager().clickGui.settingNames;
+      settingNames.setOptions(Augustus.getInstance().getSettingNameManager().listLanguageFiles());
       SettingNameManager settingNameManager = Augustus.getInstance().getSettingNameManager();
       str = settingNames.getSelectedValue();
-      String[] options = settingNames.getOptions();
-      String str4 = str;
-      String str5 = settingNameManager.resolveValidLanguage(str4, options);
-      settingNames.setSelectedValue(str5);
+      settingNames.setSelectedValue(settingNameManager.resolveValidLanguage(str, settingNames.getOptions()));
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(SETTINGS_NAMES_DIR);
-      Consumer consumer = obj -> onNameFileCreated(settingNames, (Path)obj);
-      directoryWatcher = directoryWatcher.onCreate(consumer);
-      Consumer consumer2 = obj2 -> onNameFileModified(settingNames, (Path)obj2);
-      directoryWatcher = directoryWatcher.onModify(consumer2);
-      Consumer consumer3 = obj3 -> onNameFileDeleted(settingNames, (Path)obj3);
-      directoryWatcher.onDelete(consumer3).register();
+      directoryWatcher = directoryWatcher.onCreate(obj -> onNameFileCreated(settingNames, (Path)obj));
+      directoryWatcher = directoryWatcher.onModify(obj2 -> onNameFileModified(settingNames, (Path)obj2));
+      directoryWatcher.onDelete(obj3 -> onNameFileDeleted(settingNames, (Path)obj3)).register();
    }
 
-   private static void onNameFileDeleted(BooleansSetting booleansSetting, Path path) {
-      String[] strings = Augustus.getInstance().getSettingNameManager().listLanguageFiles();
-      booleansSetting.setOptions(strings);
-      SettingNameManager settingNameManager = Augustus.getInstance().getSettingNameManager();
-      String selectedValue = booleansSetting.getSelectedValue();
-      String[] options = booleansSetting.getOptions();
-      String str = selectedValue;
-      String str2 = settingNameManager.resolveValidLanguage(str, options);
-      booleansSetting.setSelectedValue(str2);
+   private static void onNameFileDeleted(StringValue booleansSetting, Path path) {
+      booleansSetting.setOptions(Augustus.getInstance().getSettingNameManager().listLanguageFiles());
+      booleansSetting.setSelectedValue(Augustus.getInstance().getSettingNameManager().resolveValidLanguage(booleansSetting.getSelectedValue(), booleansSetting.getOptions()));
    }
 
-   private static void onNameFileModified(BooleansSetting booleansSetting, Path path) {
-      File file = path.toFile();
-      String name = file.getName();
-      String str = name.substring(0, name.lastIndexOf(46));
-      if (str.equals(booleansSetting.getSelectedValue())) {
+   private static void onNameFileModified(StringValue booleansSetting, Path path) {
+      String name = path.toFile().getName();
+      if (name.substring(0, name.lastIndexOf(46)).equals(booleansSetting.getSelectedValue())) {
          CompletableFuture.runAsync(() -> {
-            SettingNameManager settingNameManager = Augustus.getInstance().getSettingNameManager();
-            String selectedValue = booleansSetting.getSelectedValue();
-            settingNameManager.loadLanguageFile(selectedValue);
+            Augustus.getInstance().getSettingNameManager().loadLanguageFile(booleansSetting.getSelectedValue());
          });
       }
    }
 
    public void exportDefaultNames() {
       ClientFileUtil.ensureDirectory(SETTINGS_NAMES_DIR);
-      DescriptionYamlManager.getParseFlags();
       String str = Augustus.getInstance().getName().toLowerCase() + "/settings/settingsnames";
-      boolean flag = false;
-      String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/English_New.txt", str2, flag);
+      ClientFileUtil.extractResource("assets/augustus/English_New.txt", str, false);
 
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(SETTINGS_NAMES_DIR + "English_New.txt"))) {
          for (Setting setting : (Iterable<Setting>)(ClientManagers.settingManager.getSettings())) {
             if (!setting.getParentModule().equals(ClientManagers.moduleManager.motionModifier) && !setting.getParentModule().equals(ClientManagers.moduleManager.clientAntiCheat)) {
-               String[] translationKeys = setting.getTranslationKeys();
 
-               for (String str3 : translationKeys) {
+               for (String str3 : setting.getTranslationKeys()) {
                   String str4 = setting.getParentModule().getCategorys().name().toLowerCase(Locale.ROOT)
                      + "."
                      + setting.getParentModuleName().toLowerCase(Locale.ROOT)
@@ -104,17 +79,14 @@ public class SettingNameManager {
    }
 
    public synchronized void loadLanguageFile(String str) {
-      int[] parseFlags = DescriptionYamlManager.getParseFlags();
       if (str.equals("English_Default")) {
          for (Setting setting : (Iterable<Setting>)(ClientManagers.settingManager.getSettings())) {
-            String str2 = "";
-            setting.applyTranslation(str2, str);
+            setting.applyTranslation("", str);
          }
       } else {
          String str3 = SETTINGS_NAMES_DIR + str + ".txt";
          ClientFileUtil.ensureDirectory(SETTINGS_NAMES_DIR);
-         File file = new File(str3);
-         if (!file.exists()) {
+         if (!new File(str3).exists()) {
             this.exportDefaultNames();
          }
 
@@ -133,10 +105,7 @@ public class SettingNameManager {
 
                            for (String str5 : setting2.getTranslationKeys()) {
                               if (strings2[2].equalsIgnoreCase(str5)) {
-                                 String str6 = strings2[2];
-                                 String str7 = this.joinTranslationValue(strings);
-                                 String str8 = str6;
-                                 setting2.applyTranslation(str8, str7);
+                                 setting2.applyTranslation(strings2[2], this.joinTranslationValue(strings));
                                  flag = true;
                                  break;
                               }
@@ -158,20 +127,13 @@ public class SettingNameManager {
       }
    }
 
-   private static void onNameFileCreated(BooleansSetting booleansSetting, Path path) {
-      String[] strings = Augustus.getInstance().getSettingNameManager().listLanguageFiles();
-      booleansSetting.setOptions(strings);
-      SettingNameManager settingNameManager = Augustus.getInstance().getSettingNameManager();
-      String selectedValue = booleansSetting.getSelectedValue();
-      String[] options = booleansSetting.getOptions();
-      String str = selectedValue;
-      String str2 = settingNameManager.resolveValidLanguage(str, options);
-      booleansSetting.setSelectedValue(str2);
+   private static void onNameFileCreated(StringValue booleansSetting, Path path) {
+      booleansSetting.setOptions(Augustus.getInstance().getSettingNameManager().listLanguageFiles());
+      booleansSetting.setSelectedValue(Augustus.getInstance().getSettingNameManager().resolveValidLanguage(booleansSetting.getSelectedValue(), booleansSetting.getOptions()));
    }
 
    private String joinTranslationValue(String[] strings) {
       StringBuilder sb = new StringBuilder();
-      DescriptionYamlManager.getParseFlags();
 
       for (int i = 1; i < strings.length; i++) {
          sb.append(strings[i]);
@@ -185,7 +147,6 @@ public class SettingNameManager {
 
    public String[] listLanguageFiles() {
       ArrayList list = new ArrayList();
-      DescriptionYamlManager.getParseFlags();
       File file = new File(SETTINGS_NAMES_DIR);
       ClientFileUtil.ensureDirectory(SETTINGS_NAMES_DIR);
       File[] files = file.listFiles();
@@ -194,8 +155,7 @@ public class SettingNameManager {
          for (File file2 : files) {
             String name = file2.getName();
             if (name.endsWith(".txt")) {
-               String str = name.substring(0, Math.max(0, name.length() - 4));
-               list.add(str);
+               list.add(name.substring(0, Math.max(0, name.length() - 4)));
             }
          }
       }
@@ -204,7 +164,6 @@ public class SettingNameManager {
    }
 
    public String resolveValidLanguage(String str, String[] strings) {
-      int[] parseFlags = DescriptionYamlManager.getParseFlags();
       if (strings.length < 1) {
          return "";
       } else {

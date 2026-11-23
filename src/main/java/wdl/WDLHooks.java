@@ -194,9 +194,7 @@ public class WDLHooks {
             } else {
                if (!WDLPluginChannels.canDownloadAtAll()) {
                   if (WDLPluginChannels.canRequestPermissions()) {
-                     Minecraft mc = WDL.mc;
-                     GuiWDLPermissions guiWDLPermissions = new GuiWDLPermissions(guiIngameMenu);
-                     mc.displayGuiScreen(guiWDLPermissions);
+                     WDL.mc.displayGuiScreen(new GuiWDLPermissions(guiIngameMenu));
                   } else {
                      button.enabled = false;
                   }
@@ -205,22 +203,16 @@ public class WDLHooks {
                }
 
                if (WDLPluginChannels.hasChunkOverrides() && !WDLPluginChannels.canDownloadInGeneral()) {
-                  Minecraft mc2 = WDL.mc;
-                  GuiWDLChunkOverrides guiWDLChunkOverrides = new GuiWDLChunkOverrides(guiIngameMenu);
-                  mc2.displayGuiScreen(guiWDLChunkOverrides);
+                  WDL.mc.displayGuiScreen(new GuiWDLChunkOverrides(guiIngameMenu));
                } else {
                   WDL.startDownload();
                }
             }
          } else if (button.id == 1464093807) {
             if (WDL.mc.isIntegratedServerRunning()) {
-               Minecraft mc3 = WDL.mc;
-               GuiWDLAbout guiWDLAbout = new GuiWDLAbout(guiIngameMenu);
-               mc3.displayGuiScreen(guiWDLAbout);
+               WDL.mc.displayGuiScreen(new GuiWDLAbout(guiIngameMenu));
             } else {
-               Minecraft mc4 = WDL.mc;
-               GuiWDL guiWDL = new GuiWDL(guiIngameMenu);
-               mc4.displayGuiScreen(guiWDL);
+               WDL.mc.displayGuiScreen(new GuiWDL(guiIngameMenu));
             }
          } else if (button.id == 1) {
             WDL.stopDownload();

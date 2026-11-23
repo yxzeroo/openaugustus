@@ -7,7 +7,6 @@ public class MoreCosmeticsBootstrap {
    }
 
    public static void tick() {
-      MoreCosmeticsCore instance = MoreCosmeticsCore.getInstance();
-      instance.onClientTick();
+      MoreCosmeticsCore.getInstance().onClientTick();
    }
 }

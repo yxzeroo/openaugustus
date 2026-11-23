@@ -45,8 +45,7 @@ public class PredictiveAimSolver implements MC {
          Vec3 vec3 = new Vec3(0.0, 0.0, 0.0);
 
          for (int i = this.minPlayerResponseTicks; i <= this.maxPlayerResponseTicks; i++) {
-            EntityPlayerSP thePlayer = mc.thePlayer;
-            vec3 = vec3.add(this.predictEntityPosition((EntityLivingBase)thePlayer, i).scale(1.0 / (double)(this.maxPlayerResponseTicks - this.minPlayerResponseTicks + 1)));
+            vec3 = vec3.add(this.predictEntityPosition((EntityLivingBase)mc.thePlayer, i).scale(1.0 / (double)(this.maxPlayerResponseTicks - this.minPlayerResponseTicks + 1)));
          }
 
          vec3 = vec3.addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
@@ -56,15 +55,10 @@ public class PredictiveAimSolver implements MC {
             vec4 = vec4.add(this.predictEntityPosition(entity, j).scale(1.0 / (double)(this.maxTargetResponseTicks - this.minTargetResponseTicks + 1)));
          }
 
-         double minLeadDistanceScale2 = this.minLeadDistanceScale;
-         vec4 = this.enforceMinimumHorizontalLead(interpolatedPos, positionEyes, vec4, vec3, minLeadDistanceScale2);
-         Rotation rotation = new Rotation(f, f2);
-         Rotation rotation2 = this.computePredictedTargetAngles(entity, vec3, vec4, positionEyes, interpolatedPos, rotation);
-         Rotation rotation3 = new Rotation(f, f2);
-         Rotation rotation4 = this.applyAccelerationAndHoldCheck(entity, vec3, vec4, positionEyes, interpolatedPos, rotation2, rotation3);
+         vec4 = this.enforceMinimumHorizontalLead(interpolatedPos, positionEyes, vec4, vec3, this.minLeadDistanceScale);
+         Rotation rotation4 = this.applyAccelerationAndHoldCheck(entity, vec3, vec4, positionEyes, interpolatedPos, this.computePredictedTargetAngles(entity, vec3, vec4, positionEyes, interpolatedPos, new Rotation(f, f2)), new Rotation(f, f2));
          this.lastTarget = entity;
-         Rotation rotation5 = new Rotation(MathHelper.wrapAngleTo180_float(f), f2);
-         return this.applyAntiAxisLockJitter(entity, rotation4, rotation5);
+         return this.applyAntiAxisLockJitter(entity, rotation4, new Rotation(MathHelper.wrapAngleTo180_float(f), f2));
       }
    }
 
@@ -97,12 +91,8 @@ public class PredictiveAimSolver implements MC {
             player.movementInput.sneak,
             MoveInputStage.PRE
          );
-         double d2 = posZ;
-         double d3 = posY;
-         double d4 = posX;
-         ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player, d4, d3, d2, event);
-         int size = list.size();
-         ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, size);
+         ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player, posX, posY, posZ, event);
+         ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, list.size());
          list.add(player.getInterpolatedPos(1.0F));
          list2.add(entity.getInterpolatedPos(1.0F));
          int n = Math.min(list.size(), list2.size());
@@ -111,11 +101,8 @@ public class PredictiveAimSolver implements MC {
 
          for (int i = 0; i < n; i++) {
             double d5 = MathHelper.clamp_double((double)(player.getDistanceToEntityBox(entity) - 3.0F) / 3.0, 0.0, 1.0);
-            Vec3 vec = (Vec3)list2.get(i);
-            boolean flag = false;
-            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec, flag).expand(d5, d5, d5);
-            Vec3 vec2 = ((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0);
-            double[] pitchRange = HitboxAngleUtil.getPitchRange(vec2, box);
+            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox((Vec3)list2.get(i), false).expand(d5, d5, d5);
+            double[] pitchRange = HitboxAngleUtil.getPitchRange(((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0), box);
             doublesArr[i] = pitchRange;
             list3.add(pitchRange[0]);
             list3.add(pitchRange[1]);
@@ -171,8 +158,7 @@ public class PredictiveAimSolver implements MC {
          }
 
          double[] doubles3 = new double[]{Math.min(d6, d7), Math.max(d6, d7)};
-         double d11 = MathHelper.clamp_double(d, doubles3[0], doubles3[1]);
-         return (float)d11;
+         return (float)MathHelper.clamp_double(d, doubles3[0], doubles3[1]);
       }
    }
 
@@ -184,12 +170,8 @@ public class PredictiveAimSolver implements MC {
       Vec3 vec7 = null;
       if (vec6.length() < d) {
          for (double i = vec5.length(); i < 10.0; i += 0.1) {
-            double d2 = i / vec5.length();
-            Vec3 vec8 = vec5.scale(d2).add(vec2);
-            Vec3 vec9 = vec3.subtract(vec);
-            vec7 = vec8.add(vec9);
-            double length = vec7.subtract(vec4).length();
-            if (length > d) {
+            vec7 = vec5.scale(i / vec5.length()).add(vec2).add(vec3.subtract(vec));
+            if (vec7.subtract(vec4).length() > d) {
                break;
             }
          }
@@ -238,8 +220,7 @@ public class PredictiveAimSolver implements MC {
             if (!motionSnapshotHistory.isFull()) {
                entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.getEntries().get(motionSnapshotHistory.getEntries().size() - 1);
             } else {
-               int n3 = Math.max(0, 23 - n - 1 + n2);
-               entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.get(n3);
+               entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.get(Math.max(0, 23 - n - 1 + n2));
             }
 
             return EntityMovementPredictor.predictPositionFromSnapshot(entity, entityMotionSnapshot, n);
@@ -253,9 +234,7 @@ public class PredictiveAimSolver implements MC {
                list.add(entity.tickSnapshotHistory.get(i));
             }
 
-            EntityPlayerSP player = (EntityPlayerSP)entity;
-            boolean flag = false;
-            double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal(player, list, n, flag);
+            double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal((EntityPlayerSP)entity, list, n, false);
             return new Vec3(doubles[0], doubles[1], doubles[2]);
          } else {
             return entity.getInterpolatedPos(1.0F);
@@ -265,9 +244,7 @@ public class PredictiveAimSolver implements MC {
 
    private Rotation applyAccelerationAndHoldCheck(EntityLivingBase entity, Vec3 vec, Vec3 vec2, Vec3 vec3, Vec3 vec4, Rotation rotation, Rotation rotation2) {
       float yaw = rotation2.yaw;
-      byte b = 100;
-      byte b2 = 0;
-      Vec3 bestHitVec = RotationUtil.getBestHitVec(entity, b2, b);
+      Vec3 bestHitVec = RotationUtil.getBestHitVec(entity, (byte)0, (byte)100);
       float f = 180.0F;
       float f2 = 180.0F;
       Rotation rotation3 = new Rotation(yaw, RotationUtil.getRotationsBetweenPoints(bestHitVec, vec3, rotation2, f2, f).pitch);
@@ -275,32 +252,26 @@ public class PredictiveAimSolver implements MC {
       double d2 = 7.0;
       MovingObjectPosition hit = RayTraceUtil.rayTraceEntity(1.0F, rotation3, d2, d);
       if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-         byte b3 = 1;
-         Vec3 vec5 = EntityMovementPredictor.predictConstantHorizontalPosition(entity, b3);
+         Vec3 vec5 = EntityMovementPredictor.predictConstantHorizontalPosition(entity, (byte)1);
          double zCoord = vec5.zCoord;
          double yCoord = vec5.yCoord;
-         double xCoord = vec5.xCoord;
-         AxisAlignedBB box = RotationUtil.createEntityBoxAt(entity, xCoord, yCoord, zCoord).contract(0.3, 0.3, 0.3);
+         AxisAlignedBB box = RotationUtil.createEntityBoxAt(entity, vec5.xCoord, yCoord, zCoord).contract(0.3, 0.3, 0.3);
          double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
          Vec3 vec6 = new Vec3(doubles[0], doubles[1], doubles[2]).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
          EntityPlayerSP thePlayer = mc.thePlayer;
          float yaw2 = rotation2.yaw;
-         byte b4 = 100;
-         byte b5 = 0;
-         Vec3 vec7 = RotationUtil.getScaledNearestPointInBox(vec6, box, b5, b4);
+         Vec3 vec7 = RotationUtil.getScaledNearestPointInBox(vec6, box, (byte)0, (byte)100);
          float f3 = 180.0F;
          float f4 = 180.0F;
          Vec3 lookCustom2 = thePlayer.getLookCustom2(1.0F, yaw2, RotationUtil.getRotationsBetweenPoints(vec7, vec6, rotation2, f4, f3).pitch);
-         Vec3 vec8 = vec6.addVector(lookCustom2.xCoord * 7.0, lookCustom2.yCoord * 7.0, lookCustom2.zCoord * 7.0);
-         hit = box.calculateIntercept(vec6, vec8);
+         hit = box.calculateIntercept(vec6, vec6.addVector(lookCustom2.xCoord * 7.0, lookCustom2.yCoord * 7.0, lookCustom2.zCoord * 7.0));
          if (hit != null || entity.hurtTime < 5 || mc.thePlayer.hurtTime > 5) {
             rotation.yaw = MathHelper.wrapAngleTo180_float(rotation2.yaw);
          }
       }
 
       float pitch = rotation.pitch;
-      float yaw3 = rotation.yaw;
-      this.updateTargetRotationHistory(entity, yaw3, pitch);
+      this.updateTargetRotationHistory(entity, rotation.yaw, pitch);
       float yaw4 = rotation2.yaw;
       float yaw5 = rotation.yaw;
       float maxAimSpeed2 = this.maxAimSpeed;
@@ -343,22 +314,12 @@ public class PredictiveAimSolver implements MC {
    private Rotation computePredictedTargetAngles(EntityLivingBase entity, Vec3 vec, Vec3 vec2, Vec3 vec3, Vec3 vec4, Rotation rotation) {
       double zCoord = vec2.zCoord;
       double yCoord = vec2.yCoord;
-      double xCoord = vec2.xCoord;
-      AxisAlignedBB box = RotationUtil.createEntityBoxAt(entity, xCoord, yCoord, zCoord);
-      byte b = 20;
-      byte b2 = 100;
-      AxisAlignedBB box2 = box;
-      Vec3 vec5 = RotationUtil.getScaledNearestPointInBox(vec, box2, b2, b);
-      Vec3 vec6 = vec5.subtract(vec);
+      AxisAlignedBB box = RotationUtil.createEntityBoxAt(entity, vec2.xCoord, yCoord, zCoord);
+      Vec3 vec6 = RotationUtil.getScaledNearestPointInBox(vec, box, (byte)100, (byte)20).subtract(vec);
       double zCoord2 = vec4.zCoord;
       double yCoord2 = vec4.yCoord;
-      double xCoord2 = vec4.xCoord;
-      box = RotationUtil.createEntityBoxAt(entity, xCoord2, yCoord2, zCoord2);
-      byte b3 = 20;
-      byte b4 = 100;
-      AxisAlignedBB box3 = box;
-      Vec3 vec7 = RotationUtil.getScaledNearestPointInBox(vec, box3, b4, b3);
-      Vec3 vec8 = vec7.subtract(vec);
+      box = RotationUtil.createEntityBoxAt(entity, vec4.xCoord, yCoord2, zCoord2);
+      Vec3 vec8 = RotationUtil.getScaledNearestPointInBox(vec, box, (byte)100, (byte)20).subtract(vec);
       float f = (float)(MathHelper.atan2(vec6.zCoord, vec6.xCoord) * 180.0 / 3.141592653589793 - 90.0);
       float f2 = (float)(
          -(
@@ -377,7 +338,6 @@ public class PredictiveAimSolver implements MC {
    }
 
    private Vec3 predictEntityPosition(EntityLivingBase entity, int n) {
-      byte b = 0;
-      return this.predictEntityPositionWithOffset(entity, n, b);
+      return this.predictEntityPositionWithOffset(entity, n, (byte)0);
    }
 }

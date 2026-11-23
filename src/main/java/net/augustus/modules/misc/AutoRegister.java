@@ -21,14 +21,14 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S45PacketTitle;
 import org.apache.commons.lang3.StringUtils;
 
 public class AutoRegister extends Module implements PacketListener, TickListener {
-   private final BooleansSetting passwordMode;
+   private final StringValue passwordMode;
    private final RandomizedRangeSettings delay;
    public final TextInputSetting customPassword;
    private final BooleanValue getPasswordFromTxtIfPresent;
@@ -39,21 +39,17 @@ public class AutoRegister extends Module implements PacketListener, TickListener
 
    public AutoRegister() {
        super("AutoRegister", "AutoRegistrieren", new Color(189, 32, 110), Categorys.MISC);
-      this.passwordMode = (BooleansSetting)(new BooleansSetting(this, "PasswordMode", "Generated", new String[]{"Generated", "Private", "Private2", "Custom"}))
+      this.passwordMode = (StringValue)(new StringValue(this, "PasswordMode", "Generated", new String[]{"Generated", "Private", "Private2", "Custom"}))
          .markVisualOnly();
       this.delay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Delay", 700.0, 1400.0, 0.0, 4000.0, 0)).withoutNotInARow().markAllVisualOnly();
-      TextInputSetting textInputSetting = new TextInputSetting(this, "Custom password", "Hallo1337", true);
-      SettingVisibilityCondition condition = () -> this.isCustomPasswordMode();
-      this.customPassword = (TextInputSetting)((TextInputSetting)textInputSetting.withVisibility(condition)).markVisualOnly();
+      this.customPassword = (TextInputSetting)((TextInputSetting)new TextInputSetting(this, "Custom password", "Hallo1337", true).withVisibility(() -> this.isCustomPasswordMode())).markVisualOnly();
       this.getPasswordFromTxtIfPresent = (BooleanValue)(new BooleanValue(this, "Get password from txt if present", false)).markVisualOnly();
       this.printOnRegister = (BooleanValue)(new BooleanValue(this, "Print on register", false)).markVisualOnly();
       this.printOnLogin = (BooleanValue)(new BooleanValue(this, "Print on login", false)).markVisualOnly();
       this.scheduledCommands = new HashMap();
       this.filePasswords = new HashMap();
       String str = Augustus.getInstance().getName().toLowerCase() + File.separator;
-      boolean flag = false;
-      String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/autoregister.txt", str2, flag);
+      ClientFileUtil.extractResource("assets/augustus/autoregister.txt", str, false);
    }
 
    @Override
@@ -68,23 +64,18 @@ public class AutoRegister extends Module implements PacketListener, TickListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      String str = this.extractMessageText(packet);
+      String str = this.extractMessageText(event.getPacket());
       if (str != null) {
          if (StringUtils.containsIgnoreCase(str, "/reg") || StringUtils.containsIgnoreCase(str, "/register")) {
-            boolean flag = false;
-            this.scheduleAuthCommand(flag);
+            this.scheduleAuthCommand(false);
          } else if (StringUtils.containsIgnoreCase(str, "/login")) {
-            boolean flag2 = true;
-            this.scheduleAuthCommand(flag2);
+            this.scheduleAuthCommand(true);
          }
       }
    }
@@ -104,8 +95,7 @@ public class AutoRegister extends Module implements PacketListener, TickListener
 
    private String extractMessageText(Packet packet) {
       if (packet instanceof S02PacketChat) {
-         S02PacketChat packet2 = (S02PacketChat)packet;
-         return packet2.getChatComponent().getUnformattedText();
+         return ((S02PacketChat)packet).getChatComponent().getUnformattedText();
       } else {
          if (packet instanceof S45PacketTitle) {
             S45PacketTitle packet3 = (S45PacketTitle)packet;
@@ -124,23 +114,14 @@ public class AutoRegister extends Module implements PacketListener, TickListener
       String str = MathStatisticsUtil.formatRounded(d / 1000.0, 1);
       if (this.scheduledCommands.isEmpty()) {
          if (flag) {
-            String selectedValue = this.passwordMode.getSelectedValue();
-            boolean value = this.getPasswordFromTxtIfPresent.getValue();
-            String str2 = selectedValue;
-            String str3 = this.resolvePassword(str2, value);
-            StringBuilder sb = new StringBuilder().append("Logging in... (").append(str);
-            String str4 = sb.append("s)").append(this.printOnLogin.getValue() ? " with " + str3 : "").toString();
-            this.sendChatMessage2(str4);
+            String str3 = this.resolvePassword(this.passwordMode.getSelectedValue(), this.getPasswordFromTxtIfPresent.getValue());
+            this.sendChatMessage2(new StringBuilder().append("Logging in... (").append(str).append("s)").append(this.printOnLogin.getValue() ? " with " + str3 : "").toString());
             this.scheduledCommands.put(d2, "/login " + str3);
          } else {
-            String selectedValue2 = this.passwordMode.getSelectedValue();
-            boolean value2 = this.getPasswordFromTxtIfPresent.getValue();
-            String str5 = selectedValue2;
-            String str6 = this.resolvePassword(str5, value2);
+            String str6 = this.resolvePassword(this.passwordMode.getSelectedValue(), this.getPasswordFromTxtIfPresent.getValue());
             StringBuilder sb2 = new StringBuilder().append("Register in... (").append(str);
             short s = 28607;
-            String str7 = sb2.append("s)").append(this.printOnRegister.getValue() ? " with " + str6 : "").toString();
-            this.sendChatMessage2(str7);
+            this.sendChatMessage2(sb2.append("s)").append(this.printOnRegister.getValue() ? " with " + str6 : "").toString());
             this.scheduledCommands.put(d2, "/register " + str6 + " " + str6);
          }
       }
@@ -193,9 +174,7 @@ public class AutoRegister extends Module implements PacketListener, TickListener
          file = ClientFileUtil.getExistingFile("augustus/autoregister.txt");
       } catch (FileNotFoundException e) {
          String str = Augustus.getInstance().getName().toLowerCase() + File.separator;
-         boolean flag = false;
-         String str2 = str;
-         ClientFileUtil.extractResource("assets/augustus/autoregister.txt", str2, flag);
+         ClientFileUtil.extractResource("assets/augustus/autoregister.txt", str, false);
 
          try {
             file = ClientFileUtil.getExistingFile("augustus/autoregister.txt");

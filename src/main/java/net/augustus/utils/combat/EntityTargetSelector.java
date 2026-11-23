@@ -23,8 +23,7 @@ public class EntityTargetSelector implements MC {
 
    public List toList() {
       ArrayList list = new ArrayList();
-      Consumer consumer = list::add;
-      this.forEach(consumer);
+      this.forEach(list::add);
       return list;
    }
 
@@ -115,18 +114,12 @@ public class EntityTargetSelector implements MC {
    }
 
    private static boolean isWithinHitboxFov(double d, double d2, Entity entity) {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      float realPitch = Augustus.getInstance().getYawPitchHelper().realPitch;
-      float f = realYaw;
-      float[] angleDiffToEntityEyes = RotationUtil.getAngleDiffToEntityEyes(entity, f, realPitch);
+      float[] angleDiffToEntityEyes = RotationUtil.getAngleDiffToEntityEyes(entity, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch);
       return (double)Math.abs(angleDiffToEntityEyes[0]) <= d && (double)Math.abs(angleDiffToEntityEyes[1]) <= d2;
    }
 
    private static boolean isWithinEntityFov(double d, double d2, Entity entity) {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      float realPitch = Augustus.getInstance().getYawPitchHelper().realPitch;
-      float f = realYaw;
-      float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, f, realPitch);
+      float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch);
       return (double)Math.abs(floats[0]) <= d && (double)Math.abs(floats[1]) <= d2;
    }
 

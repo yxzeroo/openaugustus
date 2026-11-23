@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 import net.augustus.modules.Module;
 import net.augustus.modules.movement.LongJump;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -51,8 +51,8 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
    private final BooleanValue displayDirection;
    private final BooleanValue rotate;
    private final BooleanValue click;
-   private final StringValue clickRange;
-   private final StringValue intaveStrength;
+   private final DoubleValue clickRange;
+   private final DoubleValue intaveStrength;
    private final BooleanValue helpMessage;
    private boolean attachedToBoat;
    private int boostTicks;
@@ -61,29 +61,20 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
    private Entity targetVehicle;
    private boolean hasInteracted;
 
-   public IntaveBoatLongJumpMode(LongJump longJump, DoubleValue doubleValue) {
+   public IntaveBoatLongJumpMode(LongJump longJump, SettingGroup doubleValue) {
        super(longJump, doubleValue, "IntaveBoat");
       BooleanValue booleanValue = new BooleanValue(this.parentModule, "IntaveLonger", true, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.intaveLonger = (BooleanValue)booleanValue.withVisibility(condition);
+      this.intaveLonger = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       booleanValue = new BooleanValue(this.parentModule, "DisplayDirection", true, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.displayDirection = (BooleanValue)booleanValue.withVisibility(condition2);
+      this.displayDirection = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       booleanValue = new BooleanValue(this.parentModule, "Rotate", false, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.rotate = (BooleanValue)booleanValue.withVisibility(condition3);
+      this.rotate = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       booleanValue = new BooleanValue(this.parentModule, "Click", true, this.modeSetting);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.click = (BooleanValue)booleanValue.withVisibility(condition4);
-      StringValue stringValue = new StringValue(this.parentModule, "ClickRange", 6.0, 3.0, 6.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition5 = () -> this.isClickRangeVisible();
-      this.clickRange = stringValue.visibleWhen(condition5);
-      StringValue stringValue2 = new StringValue(this.parentModule, "IntaveStrength", 3.0, 1.0, 3.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.intaveStrength = stringValue2.visibleWhen(condition6);
+      this.click = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
+      this.clickRange = new DoubleValue(this.parentModule, "ClickRange", 6.0, 3.0, 6.0, 2, this.modeSetting).visibleWhen(() -> this.isClickRangeVisible());
+      this.intaveStrength = new DoubleValue(this.parentModule, "IntaveStrength", 3.0, 1.0, 3.0, 0, this.modeSetting).visibleWhen(() -> this.isSelected());
       booleanValue = new BooleanValue(this.parentModule, "HelpMessage", true, this.modeSetting);
-      SettingVisibilityCondition condition7 = () -> this.isSelected();
-      this.helpMessage = (BooleanValue)booleanValue.withVisibility(condition7);
+      this.helpMessage = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       this.attachedToBoat = false;
       this.boostTicks = 0;
       this.glideFloorY = -1337.0;
@@ -95,22 +86,16 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 3;
-      this.toggleEventSubscription(b3);
-      byte b4 = 25;
-      this.toggleEventSubscription(b4);
-      byte b5 = 7;
-      this.toggleEventSubscription(b5);
-      byte b6 = 40;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)3);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new IntaveBoatLongJumpMode((LongJump)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new IntaveBoatLongJumpMode((LongJump)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -123,21 +108,17 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
       this.boostTicks = 0;
       if (mc.thePlayer != null && this.helpMessage.getValue()) {
          LongJump parentModule2 = (LongJump)this.parentModule;
-         String str = "1. Toggle Longjump";
-         parentModule2.sendChatMessage2(str);
+         parentModule2.sendChatMessage2("1. Toggle Longjump");
          if (this.click.getValue()) {
             parentModule2 = (LongJump)this.parentModule;
-            String str2 = "2. Left click (stay from boat as far away as possible)";
-            parentModule2.sendChatMessage2(str2);
+            parentModule2.sendChatMessage2("2. Left click (stay from boat as far away as possible)");
          } else {
             parentModule2 = (LongJump)this.parentModule;
-            String str3 = "2. Right click boat from far away as possible";
-            parentModule2.sendChatMessage2(str3);
+            parentModule2.sendChatMessage2("2. Right click boat from far away as possible");
          }
 
          parentModule2 = (LongJump)this.parentModule;
-         String str4 = "3. Enjoy longjumping";
-         parentModule2.sendChatMessage2(str4);
+         parentModule2.sendChatMessage2("3. Enjoy longjumping");
       }
    }
 
@@ -189,10 +170,8 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
          double yCoord = vec2.yCoord;
          double zCoord = vec2.zCoord;
          Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         boolean flag = false;
          float f2 = 180.0F;
-         float f3 = 180.0F;
-         Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, f3, f2, flag);
+         Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, 180.0F, f2, false);
          rotationsToPos.yaw -= 180.0F;
          RenderUtil.setGlColor2(Color.green);
          GL11.glLineWidth(4.0F);
@@ -236,10 +215,9 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
 
          if ((double)event.getBlockPos().getY() < this.glideFloorY) {
             BlockPos blockPos = event.getBlockPos();
-            AxisAlignedBB box = new AxisAlignedBB(
+            event.setBoundingBox(new AxisAlignedBB(
                (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-            );
-            event.setBoundingBox(box);
+            ));
          }
       }
    }
@@ -247,8 +225,7 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
    @Override
    public void onPacketDelay(EventPacketDelay event) {
       if (this.attachedToBoat && this.boostTicks > 1 && this.boostTicks != 1001) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
@@ -260,21 +237,18 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
 
       if (this.attachedToBoat) {
          this.attachedTicks++;
-         double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
-         if (doubles[9] == 1.0 && !mc.thePlayer.onGround && this.boostTicks > 3) {
+         if (PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] == 1.0 && !mc.thePlayer.onGround && this.boostTicks > 3) {
             this.boostTicks = 1000;
          }
 
          if (this.boostTicks < 9 && this.boostTicks > 1 + MathHelper.clamp_int((int)this.intaveStrength.getValue(), 1, 3)) {
-            boolean flag = true;
-            event.setJump(flag);
+            event.setJump(true);
          }
 
          if (this.boostTicks > 1010 && mc.thePlayer.onGround) {
             this.attachedToBoat = false;
             this.boostTicks = 0;
-            boolean flag2 = false;
-            this.setEnabled(flag2);
+            this.setEnabled(false);
             return;
          }
 
@@ -289,10 +263,8 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
          && !this.hasInteracted
          && MouseInputUtil.isButtonDown(0)
          && this.click.getValue()) {
-         boolean flag = true;
-         event.setBlockAllClicks(flag);
-         boolean flag2 = true;
-         event.setIgnoreVanillaClicks(flag2);
+         event.setBlockAllClicks(true);
+         event.setIgnoreVanillaClicks(true);
          this.hasInteracted = true;
          Vec3 nearestPointOnEntity = RotationUtil.getNearestPointOnEntity(this.targetVehicle);
          Vec3 vec = new Vec3(nearestPointOnEntity.xCoord - this.targetVehicle.posX, nearestPointOnEntity.yCoord - this.targetVehicle.posY, nearestPointOnEntity.zCoord - this.targetVehicle.posZ);
@@ -304,8 +276,7 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
    @Override
    public void onTick() {
       if (this.targetVehicle == null) {
-         Stream stream = mc.theWorld.loadedEntityList.stream();
-         Object[] array = stream.filter(obj -> {
+         Object[] array = mc.theWorld.loadedEntityList.stream().filter(obj -> {
             return (obj instanceof EntityBoat || obj instanceof EntityMinecart) && ((Entity)obj).getDistanceToEntityBox(mc.thePlayer) < 8.0F;
          }).sorted(Comparator.comparingDouble(obj2 -> (double)mc.thePlayer.getDistanceToEntityBox((Entity)obj2))).toArray();
          if (array.length > 0) {
@@ -318,16 +289,8 @@ public class IntaveBoatLongJumpMode extends AbstractLongJumpMode implements Rend
          double yCoord = nearestPointOnEntity.yCoord;
          double zCoord = nearestPointOnEntity.zCoord;
          Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         boolean flag = false;
          float f = 180.0F;
-         float f2 = 180.0F;
-         Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, f2, f, flag);
-         Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-         Rotation rotation = RotationUtil.applyGcdFix(rotationsToPos, previousRotation2);
-         Module parentModule2 = this.parentModule;
-         byte b = -10;
-         Rotation rotation2 = rotation;
-         rotationController.requestRotation(rotation2, b, parentModule2);
+         rotationController.requestRotation(RotationUtil.applyGcdFix(RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, 180.0F, f, false), ClientManagers.rotationController.getPreviousRotation()), (byte)-10, this.parentModule);
       }
    }
 

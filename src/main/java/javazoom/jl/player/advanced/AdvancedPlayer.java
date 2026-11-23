@@ -139,8 +139,7 @@ public class AdvancedPlayer {
    }
 
    public boolean skipFrame() throws JavaLayerException {
-      Header header = this.bitstream.readFrame();
-      if (header == null) {
+      if (this.bitstream.readFrame() == null) {
          return false;
       } else {
          this.bitstream.closeFrame();

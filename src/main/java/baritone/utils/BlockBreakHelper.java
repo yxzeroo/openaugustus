@@ -34,18 +34,14 @@ public final class BlockBreakHelper implements ClickListener {
       boolean didBreakLastTick2 = this.didBreakLastTick;
       if (this.mc.playerController.isHittingBlock || this.lastBreakTick > this.mc.thePlayer.ticksExisted - 2 || this.lastBreakTick < this.mc.thePlayer.ticksExisted - 4) {
          if (didBreakLastTick2) {
-            boolean flag = true;
-            event.setOverrideBlockBreak(flag);
-            boolean flag2 = true;
-            event.setBreakingBlock(flag2);
+            event.setOverrideBlockBreak(true);
+            event.setBreakingBlock(true);
             this.lastBreakTick = this.mc.thePlayer.ticksExisted;
          }
 
          if (didBreakLastTick2 && !(this.mc.currentScreen instanceof GuiContainer)) {
-            byte b = 0;
-            this.mc.leftClickCounter = b;
-            boolean flag3 = true;
-            event.setForceBreakBlock(flag3);
+            this.mc.leftClickCounter = (byte)0;
+            event.setForceBreakBlock(true);
          }
       }
    }

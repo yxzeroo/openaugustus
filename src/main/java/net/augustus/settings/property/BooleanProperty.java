@@ -13,23 +13,13 @@ public class BooleanProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonPropertyCodec booleanCodec = configSerializerProvider.getBooleanCodec();
-      String name2 = this.getName();
-      Boolean bool = flag ? (Boolean)this.getDefaultValue() : (Boolean)this.getValue();
-      String str = name2;
-      Object obj = booleanCodec.read(str, bool, json);
-      Object obj2 = obj;
-      this.applyValue(obj2);
+      this.applyValue(configSerializerProvider.getBooleanCodec().read(this.getName(), flag ? (Boolean)this.getDefaultValue() : (Boolean)this.getValue(), json));
    }
 
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonPropertyCodec booleanCodec = configSerializerProvider.getBooleanCodec();
-      String name2 = this.getName();
-      Object value2 = this.getValue();
-      String str = name2;
-      booleanCodec.write(str, value2, json);
+      configSerializerProvider.getBooleanCodec().write(this.getName(), this.getValue(), json);
       return json;
    }
 

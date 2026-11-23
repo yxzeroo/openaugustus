@@ -32,9 +32,8 @@ public class DietrichEvents2 {
    }
 
    public boolean isSubscriber(int id, Object object) {
-      Object[] subscriberArr = this.subscribers[id];
 
-      for (Object o : subscriberArr) {
+      for (Object o : this.subscribers[id]) {
          if (o == object) {
             return true;
          }

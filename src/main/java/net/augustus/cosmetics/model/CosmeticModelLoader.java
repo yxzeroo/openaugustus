@@ -5,7 +5,6 @@ import net.augustus.cosmetics.CosmeticsHttpUtil;
 import net.augustus.cosmetics.MoreCosmeticsCore;
 import net.augustus.cosmetics.TrustedHostWhitelist;
 import net.augustus.cosmetics.molang.MolangParser;
-import net.augustus.settings.Setting;
 import net.augustus.utils.file.ClientFileUtil;
 import net.augustus.utils.file.ClientPaths;
 import com.google.gson.JsonArray;
@@ -41,71 +40,49 @@ public abstract class CosmeticModelLoader {
       String str = Augustus.getInstance().getName().toLowerCase() + File.separator + "cosmetics";
       String str2 = "assets/augustus/cosmetics/";
       String str3 = str2 + "1.json";
-      boolean flag = true;
-      ClientFileUtil.extractResource(str3, str, flag);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "2.json";
-      boolean flag2 = true;
-      ClientFileUtil.extractResource(str3, str, flag2);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "3.json";
-      boolean flag3 = true;
-      ClientFileUtil.extractResource(str3, str, flag3);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "4.json";
-      boolean flag4 = true;
-      ClientFileUtil.extractResource(str3, str, flag4);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "5.json";
-      boolean flag5 = true;
-      ClientFileUtil.extractResource(str3, str, flag5);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "6.json";
-      boolean flag6 = true;
-      ClientFileUtil.extractResource(str3, str, flag6);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "7.json";
-      boolean flag7 = true;
-      ClientFileUtil.extractResource(str3, str, flag7);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "8.json";
-      boolean flag8 = true;
-      ClientFileUtil.extractResource(str3, str, flag8);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "10.json";
-      boolean flag9 = true;
-      ClientFileUtil.extractResource(str3, str, flag9);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "11.json";
-      boolean flag10 = true;
-      ClientFileUtil.extractResource(str3, str, flag10);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "12.json";
-      boolean flag11 = true;
-      ClientFileUtil.extractResource(str3, str, flag11);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "13.json";
-      boolean flag12 = true;
-      ClientFileUtil.extractResource(str3, str, flag12);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "14.json";
-      boolean flag13 = true;
-      ClientFileUtil.extractResource(str3, str, flag13);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "16.json";
-      boolean flag14 = true;
-      ClientFileUtil.extractResource(str3, str, flag14);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "17.json";
-      boolean flag15 = true;
-      ClientFileUtil.extractResource(str3, str, flag15);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "18.json";
-      boolean flag16 = true;
-      ClientFileUtil.extractResource(str3, str, flag16);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "19.json";
-      boolean flag17 = true;
-      ClientFileUtil.extractResource(str3, str, flag17);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "20.json";
-      boolean flag18 = true;
-      ClientFileUtil.extractResource(str3, str, flag18);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "21.json";
-      boolean flag19 = true;
-      ClientFileUtil.extractResource(str3, str, flag19);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "22.json";
-      boolean flag20 = true;
-      ClientFileUtil.extractResource(str3, str, flag20);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "23.json";
-      boolean flag21 = true;
-      ClientFileUtil.extractResource(str3, str, flag21);
+      ClientFileUtil.extractResource(str3, str, true);
       str3 = str2 + "24.json";
-      boolean flag22 = true;
-      ClientFileUtil.extractResource(str3, str, flag22);
+      ClientFileUtil.extractResource(str3, str, true);
    }
 
    public boolean isLoaded() {
@@ -134,13 +111,11 @@ public abstract class CosmeticModelLoader {
 
       for (File file : this.cosmeticsDir.listFiles()) {
          if (file.getName().toLowerCase().endsWith(".json")) {
-            boolean flag = false;
-            this.loadModelFile(file, flag);
+            this.loadModelFile(file, false);
          }
       }
 
       this.loaded = true;
-      Setting.getControlFlowMarker();
    }
 
    private void readPartTransform(JsonObject json, AbstractCosmeticPart cosmeticPart) {
@@ -152,38 +127,31 @@ public abstract class CosmeticModelLoader {
       }
 
       if (json.has("scale")) {
-         float asFloat = json.get("scale").getAsFloat();
-         cosmeticPart.setScale(asFloat);
+         cosmeticPart.setScale(json.get("scale").getAsFloat());
       }
 
       if (json.has("x")) {
-         float asFloat2 = json.get("x").getAsFloat();
-         cosmeticPart.setOffsetX(asFloat2);
+         cosmeticPart.setOffsetX(json.get("x").getAsFloat());
       }
 
       if (json.has("y")) {
-         float asFloat3 = json.get("y").getAsFloat();
-         cosmeticPart.setOffsetY(asFloat3);
+         cosmeticPart.setOffsetY(json.get("y").getAsFloat());
       }
 
       if (json.has("z")) {
-         float asFloat4 = json.get("z").getAsFloat();
-         cosmeticPart.setOffsetZ(asFloat4);
+         cosmeticPart.setOffsetZ(json.get("z").getAsFloat());
       }
 
       if (json.has("yaw")) {
-         float asFloat5 = json.get("yaw").getAsFloat();
-         cosmeticPart.setYaw(asFloat5);
+         cosmeticPart.setYaw(json.get("yaw").getAsFloat());
       }
 
       if (json.has("pitch")) {
-         float asFloat6 = json.get("pitch").getAsFloat();
-         cosmeticPart.setPitch(asFloat6);
+         cosmeticPart.setPitch(json.get("pitch").getAsFloat());
       }
 
       if (json.has("roll")) {
-         float asFloat7 = json.get("roll").getAsFloat();
-         cosmeticPart.setRoll(asFloat7);
+         cosmeticPart.setRoll(json.get("roll").getAsFloat());
       }
    }
 
@@ -214,8 +182,7 @@ public abstract class CosmeticModelLoader {
          if (asJsonObject.has("texture")) {
             try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.getDecoder().decode(asJsonObject.get("texture").getAsString()))) {
                str = asString.replace(" ", "").toLowerCase() + n;
-               BufferedImage image = ImageIO.read(byteArrayInputStream);
-               this.registerModelTexture(str, image);
+               this.registerModelTexture(str, ImageIO.read(byteArrayInputStream));
             } catch (IOException e) {
                MoreCosmeticsCore.logInfo("Failed to load texture from " + asString);
             }
@@ -231,8 +198,7 @@ public abstract class CosmeticModelLoader {
                JsonObject asJsonObject2 = asJsonArray.get(i).getAsJsonObject();
                if (asJsonObject2.has("value")) {
                   if (modelConfigs[i].value.getClass().equals(Double.class)) {
-                     String asString2 = asJsonObject2.get("value").getAsString();
-                     if (!asString2.contains(".")) {
+                     if (!asJsonObject2.get("value").getAsString().contains(".")) {
                         modelConfigs[i].value = asJsonObject2.get("value").getAsInt();
                      }
                   }
@@ -241,8 +207,7 @@ public abstract class CosmeticModelLoader {
                      String asString3 = asJsonObject2.get("value").getAsString();
                      if (asString3.startsWith("http")) {
                         if (!TrustedHostWhitelist.isTrustedHost(asString3)) {
-                           String str2 = "Removed url: " + asString3;
-                           MoreCosmeticsCore.logInfo(str2);
+                           MoreCosmeticsCore.logInfo("Removed url: " + asString3);
                            modelConfigs[i].value = "";
                         }
                      }
@@ -256,9 +221,7 @@ public abstract class CosmeticModelLoader {
             }
          }
 
-         GeoModelParser modelparser = GeckoLibRegistry.MODEL_PARSER;
-         String str3 = asJsonObject.get("model").getAsJsonObject().toString();
-         GeoModel geoModel = modelparser.loadModel(asString, str3);
+         GeoModel geoModel = GeckoLibRegistry.MODEL_PARSER.loadModel(asString, asJsonObject.get("model").getAsJsonObject().toString());
          CosmeticSubModel[] cosmeticSubModels = new CosmeticSubModel[0];
          if (asJsonObject.has("models")) {
             JsonArray asJsonArray2 = asJsonObject.get("models").getAsJsonArray();
@@ -269,25 +232,18 @@ public abstract class CosmeticModelLoader {
                String str4 = asJsonObject3.has("name") ? asJsonObject3.get("name").getAsString() : "ModelComponent " + (j + 1);
                int n4 = asJsonObject3.has("color") ? 0xFF000000 | asJsonObject3.get("color").getAsInt() : -1;
                cosmeticSubModels[j] = new CosmeticSubModel(str4, n4, true);
-               CosmeticSubModel cosmeticSubModel = cosmeticSubModels[j];
-               this.readPartData(asJsonObject3, cosmeticSubModel);
+               this.readPartData(asJsonObject3, cosmeticSubModels[j]);
             }
          }
 
          for (int k = 0; k < cosmeticSubModels.length; k++) {
             CosmeticSubModel cosmeticSubModel2 = cosmeticSubModels[k];
-            List topLevelBones = geoModel.topLevelBones;
-            this.bindSubModelToBones(topLevelBones, cosmeticSubModel2, k);
+            this.bindSubModelToBones(geoModel.topLevelBones, cosmeticSubModel2, k);
          }
 
          CosmeticModel cosmeticModel = new CosmeticModel(asString, n, n2, n3, flag, str, geoModel, cosmeticSubModels, modelConfigs, file);
          if (asJsonObject.has("animation")) {
-            GeoAnimationLoader animationloader = GeckoLibRegistry.ANIMATION_LOADER;
-            MolangParser molangparser = GeckoLibRegistry.MOLANG_PARSER;
-            JsonObject asJsonObject4 = asJsonObject.get("animation").getAsJsonObject();
-            MolangParser molangParser = molangparser;
-            GeoAnimationFile geoAnimationFile = animationloader.loadAllAnimations(molangParser, asJsonObject4);
-            cosmeticModel.setAnimationFile(geoAnimationFile);
+            cosmeticModel.setAnimationFile(GeckoLibRegistry.ANIMATION_LOADER.loadAllAnimations(GeckoLibRegistry.MOLANG_PARSER, asJsonObject.get("animation").getAsJsonObject()));
          }
 
          if (asJsonObject.has("items")) {
@@ -314,27 +270,22 @@ public abstract class CosmeticModelLoader {
 
                CosmeticTextureModel cosmeticTextureModel = new CosmeticTextureModel(asString4, idx);
                if (asJsonObject6.has("opacity")) {
-                  float asFloat = asJsonObject6.get("opacity").getAsFloat();
-                  cosmeticTextureModel.setOpacity(asFloat);
+                  cosmeticTextureModel.setOpacity(asJsonObject6.get("opacity").getAsFloat());
                }
 
                if (asJsonObject6.has("color")) {
-                  int asInt2 = asJsonObject6.get("color").getAsInt();
-                  cosmeticTextureModel.setColor(asInt2);
+                  cosmeticTextureModel.setColor(asJsonObject6.get("color").getAsInt());
                }
 
                if (asJsonObject6.has("bound")) {
-                  int asInt3 = asJsonObject6.get("bound").getAsInt();
-                  cosmeticTextureModel.setBoundSubModelIndex(asInt3);
+                  cosmeticTextureModel.setBoundSubModelIndex(asJsonObject6.get("bound").getAsInt());
                   if (cosmeticTextureModel.getBoundSubModelIndex() >= 0) {
                      cosmeticModel.getSubModels()[cosmeticTextureModel.getBoundSubModelIndex()].getBoundTextures().add(cosmeticTextureModel);
                   }
                }
 
                if (asJsonObject6.has("mask")) {
-                  String asString5 = asJsonObject6.get("mask").getAsString();
-                  Consumer consumer = (Consumer)null;
-                  this.loadTextureMask(cosmeticTextureModel, asString, asString5, consumer);
+                  this.loadTextureMask(cosmeticTextureModel, asString, asJsonObject6.get("mask").getAsString(), (Consumer)null);
                }
 
                this.readPartData(asJsonObject6, cosmeticTextureModel);
@@ -343,38 +294,31 @@ public abstract class CosmeticModelLoader {
          }
 
          if (asJsonObject.has("height")) {
-            float asFloat2 = asJsonObject.get("height").getAsFloat();
-            cosmeticModel.setHeight(asFloat2);
+            cosmeticModel.setHeight(asJsonObject.get("height").getAsFloat());
          }
 
          if (asJsonObject.has("resize")) {
-            float asFloat3 = asJsonObject.get("resize").getAsFloat();
-            cosmeticModel.setResizeFactor(asFloat3);
+            cosmeticModel.setResizeFactor(asJsonObject.get("resize").getAsFloat());
          }
 
          if (asJsonObject.has("previewScale")) {
-            float asFloat4 = asJsonObject.get("previewScale").getAsFloat();
-            cosmeticModel.setPreviewScale(asFloat4);
+            cosmeticModel.setPreviewScale(asJsonObject.get("previewScale").getAsFloat());
          }
 
          if (asJsonObject.has("previewY")) {
-            float asFloat5 = asJsonObject.get("previewY").getAsFloat();
-            cosmeticModel.setPreviewY(asFloat5);
+            cosmeticModel.setPreviewY(asJsonObject.get("previewY").getAsFloat());
          }
 
          if (asJsonObject.has("previewRot")) {
-            float[] floats = (float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("previewRot"), float[].class);
-            cosmeticModel.setPreviewRotation(floats);
+            cosmeticModel.setPreviewRotation((float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("previewRot"), float[].class));
          }
 
          if (asJsonObject.has("adjustment")) {
-            float[] floats2 = (float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("adjustment"), float[].class);
-            cosmeticModel.setAdjustment(floats2);
+            cosmeticModel.setAdjustment((float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("adjustment"), float[].class));
          }
 
          if (asJsonObject.has("sideTransform")) {
-            float[] floats3 = (float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("sideTransform"), float[].class);
-            cosmeticModel.setSideTransform(floats3);
+            cosmeticModel.setSideTransform((float[])MoreCosmeticsCore.GSON.fromJson(asJsonObject.get("sideTransform"), float[].class));
          }
 
          this.readPartData(asJsonObject, cosmeticModel);
@@ -423,11 +367,9 @@ public abstract class CosmeticModelLoader {
 
                try {
                   Object[] array = new Object[0];
-                  short s = 5000;
 
-                  try (InputStream in = CosmeticsHttpUtil.openUrlStream(str2, s, array)) {
-                     BufferedImage image = ImageIO.read(in);
-                     cosmeticTextureModel.setMaskImage(image);
+                  try (InputStream in = CosmeticsHttpUtil.openUrlStream(str2, (short)5000, array)) {
+                     cosmeticTextureModel.setMaskImage(ImageIO.read(in));
                      cosmeticTextureModel.setMaskUrl(str2);
                      optional.ifPresent(obj -> ((Consumer)obj).accept(true));
                   }
@@ -439,8 +381,7 @@ public abstract class CosmeticModelLoader {
          }
       } else {
          try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.getDecoder().decode(str2))) {
-            BufferedImage image2 = ImageIO.read(byteArrayInputStream);
-            cosmeticTextureModel.setMaskImage(image2);
+            cosmeticTextureModel.setMaskImage(ImageIO.read(byteArrayInputStream));
             optional.ifPresent(obj3 -> ((Consumer)obj3).accept(true));
          } catch (IOException e2) {
             MoreCosmeticsCore.logInfo("Failed to load mask from " + str + ": " + e2.getMessage());
@@ -538,8 +479,7 @@ public abstract class CosmeticModelLoader {
          if (geoBone.getName().toLowerCase().startsWith(cosmeticSubModel.getName().toLowerCase())) {
             geoBone.subModelIndex = n;
          } else {
-            List childBones = geoBone.childBones;
-            this.bindSubModelToBones(childBones, cosmeticSubModel, n);
+            this.bindSubModelToBones(geoBone.childBones, cosmeticSubModel, n);
          }
       }
    }
@@ -556,8 +496,7 @@ public abstract class CosmeticModelLoader {
                }
             }
 
-            float asFloat = asJsonObject.get("mult").getAsFloat();
-            cosmeticEffect.setMultiplier(asFloat);
+            cosmeticEffect.setMultiplier(asJsonObject.get("mult").getAsFloat());
             animatedCosmeticPart.addEffect(cosmeticEffect);
          }
       }

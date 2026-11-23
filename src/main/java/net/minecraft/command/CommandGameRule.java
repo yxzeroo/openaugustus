@@ -59,8 +59,7 @@ public class CommandGameRule extends CommandBase {
          return getListOfStringsMatchingLastWord(strings, this.getGameRules().getRules());
       } else {
          if (strings.length == 2) {
-            GameRules gameRules = this.getGameRules();
-            if (gameRules.areSameType(strings[0], GameRules.ValueType.BOOLEAN_VALUE)) {
+            if (this.getGameRules().areSameType(strings[0], GameRules.ValueType.BOOLEAN_VALUE)) {
                return getListOfStringsMatchingLastWord(strings, new String[]{"true", "false"});
             }
          }

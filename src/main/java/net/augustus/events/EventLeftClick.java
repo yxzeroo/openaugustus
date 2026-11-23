@@ -12,7 +12,6 @@ public class EventLeftClick extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      LeftClickListener listener = (LeftClickListener)obj;
-      this.call2(listener);
+      this.call2((LeftClickListener)obj);
    }
 }

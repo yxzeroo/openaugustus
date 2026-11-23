@@ -5,20 +5,19 @@ import net.augustus.utils.MoveUtil;
 import net.augustus.utils.player.PlayerUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.movement.LongJump;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class OldCubeCraftLongJumpMode extends AbstractLongJumpMode implements UpdateListener {
    private int airTicks = 0;
 
-   public OldCubeCraftLongJumpMode(LongJump longJump, DoubleValue doubleValue) {
+   public OldCubeCraftLongJumpMode(LongJump longJump, SettingGroup doubleValue) {
       super(longJump, doubleValue, "OldCubeCraft");
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -33,7 +32,7 @@ public class OldCubeCraftLongJumpMode extends AbstractLongJumpMode implements Up
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new OldCubeCraftLongJumpMode((LongJump)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new OldCubeCraftLongJumpMode((LongJump)obj, (SettingGroup)obj2);
    }
 
    @Override

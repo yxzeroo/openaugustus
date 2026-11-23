@@ -69,8 +69,7 @@ public class LinkedListTest {
                   }
 
                   VboRange vboRange3 = (VboRange)list3.get(rand.nextInt(list3.size()));
-                  LinkedList.Node node2 = vboRange3.getNode();
-                  list.addAfter(node2, node);
+                  list.addAfter(vboRange3.getNode(), node);
                   dbg("Add after: " + vboRange3.getPosition() + ", " + vboRange2.getPosition());
                }
 
@@ -79,8 +78,7 @@ public class LinkedListTest {
             }
          } else if (!list3.isEmpty()) {
             VboRange vboRange4 = (VboRange)list3.get(rand.nextInt(list3.size()));
-            LinkedList.Node node3 = vboRange4.getNode();
-            list.remove(node3);
+            list.remove(vboRange4.getNode());
             dbg("Remove: " + vboRange4.getPosition());
             list3.remove(vboRange4);
             list2.add(vboRange4);

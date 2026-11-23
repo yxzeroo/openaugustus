@@ -19,13 +19,11 @@ public class EventWindowResize extends AbstractEvent {
 
    public void call2(WindowResizeListener listener) {
       int height2 = this.height;
-      int width2 = this.width;
-      listener.onWindowResize2(width2, height2);
+      listener.onWindowResize2(this.width, height2);
    }
 
    @Override
    public void call(Object obj) {
-      WindowResizeListener listener = (WindowResizeListener)obj;
-      this.call2(listener);
+      this.call2((WindowResizeListener)obj);
    }
 }

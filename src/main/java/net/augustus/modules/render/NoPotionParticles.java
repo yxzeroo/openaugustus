@@ -5,15 +5,15 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.events.listeners.PotionParticleListener;
 import net.augustus.events.EventPotionParticle;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 public class NoPotionParticles extends Module implements PotionParticleListener {
-   private final BooleansSetting particlesToRemoveFrom;
+   private final StringValue particlesToRemoveFrom;
 
    public NoPotionParticles() {
        super("NoPotionParticles", "KeineTränkePartikel", new Color(66, 245, 161), Categorys.RENDER);
-      this.particlesToRemoveFrom = new BooleansSetting(this, "Particles to remove from", "Myself", new String[]{"Myself", "OtherEntities", "AllEntities"});
+      this.particlesToRemoveFrom = new StringValue(this, "Particles to remove from", "Myself", new String[]{"Myself", "OtherEntities", "AllEntities"});
    }
 
    public void onEnable() {
@@ -23,8 +23,7 @@ public class NoPotionParticles extends Module implements PotionParticleListener 
    }
 
    public void updateEventSubscriptions() {
-      byte b = 65;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)65);
    }
 
    public void onPotionParticle(EventPotionParticle event) {

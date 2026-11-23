@@ -8,8 +8,7 @@ public class MsgCommand extends AbstractIrcCommand {
 
    public void commandAction(String[] strings, String str) {
       if (!Augustus.getInstance().getModuleManager().ircChat.isToggled()) {
-         String str2 = "Please enable the IRCChat module";
-         this.sendChat(str2);
+         this.sendChat("Please enable the IRCChat module");
       } else {
          if (strings.length > 2) {
             StringBuilder sb = new StringBuilder();
@@ -22,15 +21,13 @@ public class MsgCommand extends AbstractIrcCommand {
             String str3 = strings[1];
             String str4 = sb.toString();
          } else {
-            String str5 = "§7" + this.getCommand() + " [§cusername§7] [§2message§7]";
-            this.sendChat(str5);
+            this.sendChat("§7" + this.getCommand() + " [§cusername§7] [§2message§7]");
          }
       }
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (send private messages to other augustus user)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (send private messages to other augustus user)");
    }
 
    public MsgCommand() {

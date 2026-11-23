@@ -243,8 +243,7 @@ public class MovementParkour extends Movement {
                if (this.dist == 3 && !this.ascend) {
                   double d = (double)this.src.x2 + 0.5 - this.ctx.player().posX;
                   double d2 = (double)this.src.z2 + 0.5 - this.ctx.player().posZ;
-                  double d3 = Math.max(Math.abs(d), Math.abs(d2));
-                  if (d3 < 0.7) {
+                  if (Math.max(Math.abs(d), Math.abs(d2)) < 0.7) {
                      return movementState;
                   }
                }

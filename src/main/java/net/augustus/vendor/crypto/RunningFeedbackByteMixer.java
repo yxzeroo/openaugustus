@@ -68,17 +68,13 @@ public class RunningFeedbackByteMixer {
          }
 
          RunningFeedbackByteMixer runningFeedbackByteMixer = this;
-         byte[] bytes2 = (byte[])obj;
-         obj = runningFeedbackByteMixer.applyCombinedMaskRound(bytes2);
+         obj = runningFeedbackByteMixer.applyCombinedMaskRound((byte[])obj);
          runningFeedbackByteMixer = this;
-         byte[] bytes3 = (byte[])obj;
-         obj = runningFeedbackByteMixer.applyNeighborRotateRound(bytes3);
+         obj = runningFeedbackByteMixer.applyNeighborRotateRound((byte[])obj);
          runningFeedbackByteMixer = this;
-         byte[] bytes4 = (byte[])obj;
-         obj = runningFeedbackByteMixer.applyChunkReverseRound(bytes4);
+         obj = runningFeedbackByteMixer.applyChunkReverseRound((byte[])obj);
          runningFeedbackByteMixer = this;
-         byte[] bytes5 = (byte[])obj;
-         obj = runningFeedbackByteMixer.applyRunningFeedbackRound(bytes5);
+         obj = runningFeedbackByteMixer.applyRunningFeedbackRound((byte[])obj);
          return (byte[])obj;
       }
    }

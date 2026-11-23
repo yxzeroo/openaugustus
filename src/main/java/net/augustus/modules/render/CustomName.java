@@ -9,30 +9,22 @@ import net.augustus.events.EventLoadWorld;
 import net.augustus.Augustus;
 import net.augustus.settings.SettingChangeListener;
 import net.augustus.settings.SettingVisibilityCondition;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public class CustomName extends Module implements LoadWorldListener {
-   public final BooleansSetting modes;
-   public final BooleansSetting nameFormatting;
+   public final StringValue modes;
+   public final StringValue nameFormatting;
    public final TextInputSetting customName;
    public final String pcUserName;
    public String displayName2;
 
    public CustomName() {
        super("CustomName", "KundenspezifischerName", new Color(63, 21, 21), Categorys.RENDER);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Modes", "AugustusName", new String[]{"AugustusName", "IngameName", "PCName", "Custom"});
-      SettingChangeListener listener = () -> this.refreshCustomName();
-      SettingChangeListener listener2 = listener;
-      this.modes = (BooleansSetting)booleansSetting.withChangeListener(listener2);
-      BooleansSetting booleansSetting2 = new BooleansSetting(
+      this.modes = (StringValue)new StringValue(this, "Modes", "AugustusName", new String[]{"AugustusName", "IngameName", "PCName", "Custom"}).withChangeListener(() -> this.refreshCustomName());
+      this.nameFormatting = (StringValue)new StringValue(
          this, "Name-Formatting", "Xanax", new String[]{"Xanax", "Xanax2", "Centaurus", "Centaurus2", "Skid", "Simple"}
-      );
-      SettingChangeListener listener3 = () -> this.refreshCustomName();
-      SettingChangeListener listener4 = listener3;
-      this.nameFormatting = (BooleansSetting)booleansSetting2.withChangeListener(listener4);
-      TextInputSetting textInputSetting = new TextInputSetting(this, "Custom name", "Example Name");
-      SettingVisibilityCondition condition = () -> this.isCustomNameVisible();
-      this.customName = (TextInputSetting)textInputSetting.withVisibility(condition);
+      ).withChangeListener(() -> this.refreshCustomName());
+      this.customName = (TextInputSetting)new TextInputSetting(this, "Custom name", "Example Name").withVisibility(() -> this.isCustomNameVisible());
       this.pcUserName = System.getProperty("user.name");
    }
 
@@ -46,13 +38,11 @@ public class CustomName extends Module implements LoadWorldListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 17;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)17);
    }
 
    public void refreshCustomName() {
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "AugustusName":
             this.displayName2 = Augustus.getInstance().getUsername();
             break;

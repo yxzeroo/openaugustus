@@ -25,10 +25,7 @@ public class EntityLavaFX extends EntityFX {
    public int getBrightnessForRender(float f) {
       float f2 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
       f2 = MathHelper.clamp_float(f2, 0.0F, 1.0F);
-      int brightnessForRender = super.getBrightnessForRender(f);
-      short s = 240;
-      int n = brightnessForRender >> 16 & 0xFF;
-      return s | n << 16;
+      return ((short)240) | (super.getBrightnessForRender(f) >> 16 & 0xFF) << 16;
    }
 
    @Override

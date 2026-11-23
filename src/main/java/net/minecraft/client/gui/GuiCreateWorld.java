@@ -330,11 +330,7 @@ public class GuiCreateWorld extends GuiScreen {
                worldSettings.enableCommands();
             }
 
-            Minecraft mc2 = this.mc;
-            String saveDirName2 = this.saveDirName;
-            String str = this.worldNameField.getText().trim();
-            String str2 = saveDirName2;
-            mc2.launchIntegratedServer(str2, str, worldSettings);
+            this.mc.launchIntegratedServer(this.saveDirName, this.worldNameField.getText().trim(), worldSettings);
          } else if (button.id == 3) {
             this.toggleMoreWorldOptions();
          } else if (button.id == 2) {
@@ -401,13 +397,9 @@ public class GuiCreateWorld extends GuiScreen {
             this.updateDisplayState();
          } else if (button.id == 8) {
             if (WorldType.worldTypes[this.selectedIndex] == WorldType.FLAT) {
-               Minecraft mc3 = this.mc;
-               GuiCreateFlatWorld guiCreateFlatWorld = new GuiCreateFlatWorld(this, this.chunkProviderSettingsJson);
-               mc3.displayGuiScreen(guiCreateFlatWorld);
+               this.mc.displayGuiScreen(new GuiCreateFlatWorld(this, this.chunkProviderSettingsJson));
             } else {
-               Minecraft mc4 = this.mc;
-               GuiCustomizeWorldScreen guiCustomizeWorldScreen = new GuiCustomizeWorldScreen(this, this.chunkProviderSettingsJson);
-               mc4.displayGuiScreen(guiCustomizeWorldScreen);
+               this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(this, this.chunkProviderSettingsJson));
             }
          }
       }

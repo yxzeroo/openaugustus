@@ -7,8 +7,7 @@ import java.util.List;
 public final class BooleanArrayPropertySerializer implements ArrayPropertySerializer {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Boolean bool = (Boolean)obj;
-      this.writeBooleanElement(array, bool);
+      this.writeBooleanElement(array, (Boolean)obj);
    }
 
    public void writeBooleanElement(JsonArray array, Boolean bool) {

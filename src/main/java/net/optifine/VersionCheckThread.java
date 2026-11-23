@@ -14,8 +14,7 @@ public class VersionCheckThread extends Thread {
 
       try {
          Config.dbg("Checking for new version");
-         URL url = new URL("http://optifine.net/version/1.8.9/HD_U.txt");
-         conn = (HttpURLConnection)url.openConnection();
+         conn = (HttpURLConnection)new URL("http://optifine.net/version/1.8.9/HD_U.txt").openConnection();
          if (Config.getGameSettings().snooperEnabled) {
             conn.setRequestProperty("OF-MC-Version", "1.8.9");
             conn.setRequestProperty("OF-MC-Brand", "" + ClientBrandRetriever.getClientModName());

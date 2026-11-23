@@ -13,7 +13,6 @@ public class VarInt21FrameDecoder extends ByteToMessageDecoder {
 
    public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
       this.stageGuard.enterStage1();
-      PacketCipherEncoder.getControlFlowMarker();
       in.markReaderIndex();
       byte[] bytes = new byte[5];
 

@@ -42,8 +42,7 @@ public class ClickEvent {
 
    @Override
    public int hashCode() {
-      int n = this.action.hashCode();
-      return 31 * n + (this.value != null ? this.value.hashCode() : 0);
+      return 31 * this.action.hashCode() + (this.value != null ? this.value.hashCode() : 0);
    }
 
    public ClickEvent(ClickEvent.Action action2, String str) {

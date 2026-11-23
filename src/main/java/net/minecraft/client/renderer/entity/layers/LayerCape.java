@@ -28,8 +28,7 @@ public class LayerCape implements LayerRenderer {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             if (flag) {
                try {
-                  boolean flag2 = ClientManagers.moduleManager.customCape.type.getSelectedValue().equals("LabyMod");
-                  if (flag2) {
+                  if (ClientManagers.moduleManager.customCape.type.getSelectedValue().equals("LabyMod")) {
                      String selectedValue = ClientManagers.moduleManager.customCape.labyModCapes.getSelectedValue();
                      int n = (Integer)ClientManagers.moduleManager.customCape.customCapeTextures.get(selectedValue);
                      if (n == 0) {

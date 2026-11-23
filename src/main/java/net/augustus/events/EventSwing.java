@@ -14,8 +14,7 @@ public class EventSwing extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      SwingListener listener = (SwingListener)obj;
-      this.call2(listener);
+      this.call2((SwingListener)obj);
    }
 
    public static void reset(EventSwing event) {

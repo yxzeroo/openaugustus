@@ -20,8 +20,8 @@ import net.augustus.utils.rotation.RotationUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -32,88 +32,49 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 
 public class IntaveVelocityMode extends VelocityMode implements PacketListener, AttackSlowdownListener, PacketDelayListener, MoveInputListener, ClickListener {
-   public final StringValue xzOnHit;
-   public final StringValue xzonhitknockbackitem2;
-   public final StringValue xzOnHitSprint;
-   public final StringValue xzOnHitAtDoubleHit;
+   public final DoubleValue xzOnHit;
+   public final DoubleValue xzonhitknockbackitem2;
+   public final DoubleValue xzOnHitSprint;
+   public final DoubleValue xzOnHitAtDoubleHit;
    public final BooleanValue forceDoubleHit;
    public final BooleanValue intaveSmart;
    public final BooleanValue intaveBoost;
-   private final DoubleValue boostGroup;
-   public final StringValue intaveBoostDelay;
-   public final StringValue intaveBoostOnGroundTicks;
-   public final StringValue xzVelocityIntave;
-   public final StringValue yVelocityIntave;
+   private final SettingGroup boostGroup;
+   public final DoubleValue intaveBoostDelay;
+   public final DoubleValue intaveBoostOnGroundTicks;
+   public final DoubleValue xzVelocityIntave;
+   public final DoubleValue yVelocityIntave;
    public final BooleanValue sneakInAir;
    private final TimeHelper timeHelper;
    private boolean boostPending;
    private boolean doubleHitTriggered;
 
-   public IntaveVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public IntaveVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Intave");
-      StringValue stringValue = new StringValue(this.parentModule, "XZOnHit", 0.6, -1.0, 1.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.xzOnHit = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this.parentModule, "XZOnHitKnockbackItem_2", 0.6, -1.0, 1.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      StringValue stringValue3 = stringValue2.visibleWhen(condition2);
-      String str = "XZOnHitKnockbackItem";
-      this.xzonhitknockbackitem2 = stringValue3.named(str);
-      StringValue stringValue4 = new StringValue(this.parentModule, "XZOnHitSprint", 0.6, -1.0, 1.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.xzOnHitSprint = stringValue4.visibleWhen(condition3);
-      StringValue stringValue5 = new StringValue(this.parentModule, "XZOnHitAtDoubleHit", 1.0, -1.0, 1.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.xzOnHitAtDoubleHit = stringValue5.visibleWhen(condition4);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "ForceDoubleHit", false, this.modeSetting);
-      SettingVisibilityCondition condition5 = () -> this.isForceDoubleHitVisible();
-      this.forceDoubleHit = (BooleanValue)booleanValue.withVisibility(condition5);
-      BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "IntaveSmart", false, this.modeSetting);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.intaveSmart = (BooleanValue)booleanValue2.withVisibility(condition6);
-      BooleanValue booleanValue3 = new BooleanValue(this.parentModule, "IntaveBoost", false, this.modeSetting);
-      SettingVisibilityCondition condition7 = () -> this.isSelected();
-      this.intaveBoost = (BooleanValue)booleanValue3.withVisibility(condition7);
-      DoubleValue doubleValue2 = new DoubleValue(this.parentModule, "BoostGroup", true, this.modeSetting);
-      SettingVisibilityCondition condition8 = () -> this.isBoostGroupVisible();
-      this.boostGroup = doubleValue2.visibleWhen(condition8);
-      StringValue stringValue6 = new StringValue(this.parentModule, "IntaveBoostDelay", 2000.0, 0.0, 10000.0, 0, this.boostGroup);
-      SettingVisibilityCondition condition9 = () -> this.isBoostDelayVisible();
-      this.intaveBoostDelay = stringValue6.visibleWhen(condition9);
-      StringValue stringValue7 = new StringValue(this.parentModule, "IntaveBoostOnGroundTicks", 2.0, 0.0, 10.0, 0, this.boostGroup);
-      SettingVisibilityCondition condition10 = () -> this.isBoostOnGroundTicksVisible();
-      this.intaveBoostOnGroundTicks = stringValue7.visibleWhen(condition10);
-      StringValue stringValue8 = new StringValue(this.parentModule, "XZVelocityIntave", 100.0, -300.0, 300.0, 0, this.boostGroup);
-      String str2 = "XZVelocity";
-      StringValue stringValue9 = stringValue8.named(str2);
-      SettingVisibilityCondition condition11 = () -> this.isBoostXZVelocityVisible();
-      this.xzVelocityIntave = stringValue9.visibleWhen(condition11);
-      StringValue stringValue10 = new StringValue(this.parentModule, "YVelocityIntave", 100.0, -100.0, 200.0, 0, this.boostGroup);
-      String str3 = "YVelocity";
-      StringValue stringValue11 = stringValue10.named(str3);
-      SettingVisibilityCondition condition12 = () -> this.isBoostYVelocityVisible();
-      this.yVelocityIntave = stringValue11.visibleWhen(condition12);
-      BooleanValue booleanValue4 = new BooleanValue(this.parentModule, "SneakInAir", false, this.boostGroup);
-      SettingVisibilityCondition condition13 = () -> this.isSneakInAirVisible();
-      this.sneakInAir = (BooleanValue)booleanValue4.withVisibility(condition13);
+      this.xzOnHit = new DoubleValue(this.parentModule, "XZOnHit", 0.6, -1.0, 1.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.xzonhitknockbackitem2 = new DoubleValue(this.parentModule, "XZOnHitKnockbackItem_2", 0.6, -1.0, 1.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected()).named("XZOnHitKnockbackItem");
+      this.xzOnHitSprint = new DoubleValue(this.parentModule, "XZOnHitSprint", 0.6, -1.0, 1.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.xzOnHitAtDoubleHit = new DoubleValue(this.parentModule, "XZOnHitAtDoubleHit", 1.0, -1.0, 1.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.forceDoubleHit = (BooleanValue)new BooleanValue(this.parentModule, "ForceDoubleHit", false, this.modeSetting).withVisibility(() -> this.isForceDoubleHitVisible());
+      this.intaveSmart = (BooleanValue)new BooleanValue(this.parentModule, "IntaveSmart", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.intaveBoost = (BooleanValue)new BooleanValue(this.parentModule, "IntaveBoost", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.boostGroup = new SettingGroup(this.parentModule, "BoostGroup", true, this.modeSetting).visibleWhen(() -> this.isBoostGroupVisible());
+      this.intaveBoostDelay = new DoubleValue(this.parentModule, "IntaveBoostDelay", 2000.0, 0.0, 10000.0, 0, this.boostGroup).visibleWhen(() -> this.isBoostDelayVisible());
+      this.intaveBoostOnGroundTicks = new DoubleValue(this.parentModule, "IntaveBoostOnGroundTicks", 2.0, 0.0, 10.0, 0, this.boostGroup).visibleWhen(() -> this.isBoostOnGroundTicksVisible());
+      this.xzVelocityIntave = new DoubleValue(this.parentModule, "XZVelocityIntave", 100.0, -300.0, 300.0, 0, this.boostGroup).named("XZVelocity").visibleWhen(() -> this.isBoostXZVelocityVisible());
+      this.yVelocityIntave = new DoubleValue(this.parentModule, "YVelocityIntave", 100.0, -100.0, 200.0, 0, this.boostGroup).named("YVelocity").visibleWhen(() -> this.isBoostYVelocityVisible());
+      this.sneakInAir = (BooleanValue)new BooleanValue(this.parentModule, "SneakInAir", false, this.boostGroup).withVisibility(() -> this.isSneakInAirVisible());
       this.timeHelper = new TimeHelper();
       this.doubleHitTriggered = false;
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 25;
-      this.toggleEventSubscription(b2);
-      byte b3 = 100;
-      byte b4 = 2;
-      this.toggleEventSubscription(b4, b3);
-      byte b5 = 21;
-      this.toggleEventSubscription(b5);
-      short s = 1000;
-      byte b6 = 7;
-      this.toggleEventSubscription(b6, s);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)2, (byte)100);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)7, (short)1000);
    }
 
    @Override
@@ -127,16 +88,14 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new IntaveVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new IntaveVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void onClick(EventClick event) {
       if (this.forceDoubleHit.getValue() && !this.doubleHitTriggered && mc.thePlayer.hurtTime != 0 && mc.objectMouseOver != null && mc.objectMouseOver.entityHit instanceof EntityLivingBase) {
-         int n = event.getLeftClicks() + (event.isIgnoreVanillaClicks() ? 0 : mc.gameSettings.keyBindAttack.getPressTime());
-         if (n == 1) {
-            byte b = 1;
-            event.addLeftClicks(b);
+         if ((event.getLeftClicks() + (event.isIgnoreVanillaClicks() ? 0 : mc.gameSettings.keyBindAttack.getPressTime())) == 1) {
+            event.addLeftClicks((byte)1);
             this.doubleHitTriggered = true;
          }
       }
@@ -158,9 +117,7 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
             Vec3 vec2 = PlayerUtil.predictNextTickWithAttack(false, mc.objectMouseOver.entityHit, hitMotionMultiplier, rotationYaw2)
                .addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
             float collisionBorderSize = mc.objectMouseOver.entityHit.getCollisionBorderSize();
-            Vec3 vec3 = CombatOptimizationUtil.getPredictedEntityPosition(mc.objectMouseOver.entityHit);
-            boolean flag2 = false;
-            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec3, flag2).expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
+            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(CombatOptimizationUtil.getPredictedEntityPosition(mc.objectMouseOver.entityHit), false).expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
             Vec3 vec4 = RotationUtil.clampPointToBox(vec, box);
             Vec3 vec5 = RotationUtil.clampPointToBox(vec2, box);
             if (vec.distanceTo(vec4) >= vec2.distanceTo(vec5)) {
@@ -170,12 +127,9 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
 
          if (mc.thePlayer.hurtTime != 0 && flag && (((Velocity)this.parentModule).attackSlowdownCount == 0 || this.xzOnHitAtDoubleHit.getValue() != 1.0)) {
             double hitMotionMultiplier2 = this.getHitMotionMultiplier();
-            boolean flag3 = true;
-            event.setApplySecondStage(flag3);
-            double d = ((Velocity)this.parentModule).attackSlowdownCount == 0 ? hitMotionMultiplier2 : this.xzOnHitAtDoubleHit.getValue();
-            event.setSlowDownFactor(d);
-            boolean flag4 = false;
-            event.setSprint(flag4);
+            event.setApplySecondStage(true);
+            event.setSlowDownFactor(((Velocity)this.parentModule).attackSlowdownCount == 0 ? hitMotionMultiplier2 : this.xzOnHitAtDoubleHit.getValue());
+            event.setSprint(false);
             Augustus.getInstance().getClass();
          }
       }
@@ -185,15 +139,10 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
    public void onAttackSlowdown(EventAttackSlowdown event) {
       if (this.canApplyVelocity()) {
          if (mc.thePlayer.hurtTime != 0 && ((Velocity)this.parentModule).attackSlowdownCount == 0) {
-            double value = this.xzOnHitSprint.getValue();
-            double d = value;
-            event.setSlowDownFactor(d);
-            boolean flag = false;
-            event.setSprint(flag);
+            event.setSlowDownFactor(this.xzOnHitSprint.getValue());
+            event.setSprint(false);
             if (EnchantmentHelper.getKnockbackModifier(mc.thePlayer) > 0) {
-               double value2 = this.xzonhitknockbackitem2.getValue();
-               double d2 = value2;
-               event.setSlowDownFactor(d2);
+               event.setSlowDownFactor(this.xzonhitknockbackitem2.getValue());
             }
          }
       }
@@ -211,19 +160,15 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
             && !thePlayer.isCollidedHorizontally
             && this.intaveBoost.getValue()
             && (double)thePlayer.onGroundTicks > this.intaveBoostOnGroundTicks.getValue()) {
-            S12PacketEntityVelocity packet2 = (S12PacketEntityVelocity)packet;
-            if (packet2.getEntityID() == thePlayer.getEntityId()) {
-               TimeHelper timeHelper2 = this.timeHelper;
-               double value = this.intaveBoostDelay.getValue();
-               if (timeHelper2.reached(value)) {
+            if (((S12PacketEntityVelocity)packet).getEntityID() == thePlayer.getEntityId()) {
+               if (this.timeHelper.reached(this.intaveBoostDelay.getValue())) {
                   this.timeHelper.reset();
                   this.boostPending = true;
                }
             }
          }
 
-         boolean flag = thePlayer != null && thePlayer.ticksExisted > 20 && this.boostPending && this.intaveBoost.getValue();
-         event.setDelayed(flag);
+         event.setDelayed(thePlayer != null && thePlayer.ticksExisted > 20 && this.boostPending && this.intaveBoost.getValue());
       }
    }
 
@@ -235,18 +180,15 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
          } else {
             if (this.boostPending) {
                if (mc.thePlayer.onGround) {
-                  boolean flag = true;
-                  event.setSneak(flag);
-                  float f = 0.0F;
-                  event.setMoveForward(f);
+                  event.setSneak(true);
+                  event.setMoveForward(0.0F);
                }
 
                this.boostPending = false;
             }
 
             if (this.sneakInAir.getValue() && mc.thePlayer.hurtTime > 2) {
-               boolean flag2 = true;
-               event.setSneak(flag2);
+               event.setSneak(true);
             }
          }
       }
@@ -266,9 +208,7 @@ public class IntaveVelocityMode extends VelocityMode implements PacketListener, 
                   && this.intaveBoost.getValue()
                   && (double)mc.thePlayer.onGroundTicks > this.intaveBoostOnGroundTicks.getValue()
                   && packet2.getEntityID() == mc.thePlayer.getEntityId()) {
-                  TimeHelper timeHelper2 = this.timeHelper;
-                  double value = this.intaveBoostDelay.getValue();
-                  if (timeHelper2.reached(value)) {
+                  if (this.timeHelper.reached(this.intaveBoostDelay.getValue())) {
                      if (this.xzVelocityIntave.getValue() == 0.0 && this.yVelocityIntave.getValue() == 0.0) {
                         event.cancel();
                         return;

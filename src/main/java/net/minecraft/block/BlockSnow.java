@@ -108,8 +108,7 @@ public class BlockSnow extends Block {
    }
 
    static {
-      String str = "layers";
-      LAYERS = PropertyInteger.create(str, 1, 8);
+      LAYERS = PropertyInteger.create("layers", 1, 8);
    }
 
    private boolean checkAndDropBlock(World world, BlockPos pos, IBlockState state) {

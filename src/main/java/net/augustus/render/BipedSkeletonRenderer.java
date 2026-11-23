@@ -31,37 +31,31 @@ public class BipedSkeletonRenderer extends AbstractSkeletonRenderer {
 
    @Override
    public ModelRenderer getLeftArm(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getLeftArm2(modelBiped);
+      return this.getLeftArm2((ModelBiped)modelBase);
    }
 
    @Override
    public ModelRenderer getRightArm(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getRightArm2(modelBiped);
+      return this.getRightArm2((ModelBiped)modelBase);
    }
 
    @Override
    public ModelRenderer getLeftLeg(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getLeftLeg2(modelBiped);
+      return this.getLeftLeg2((ModelBiped)modelBase);
    }
 
    @Override
    public ModelRenderer getRightLeg(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getRightLeg2(modelBiped);
+      return this.getRightLeg2((ModelBiped)modelBase);
    }
 
    @Override
    public ModelRenderer getBody(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getBody2(modelBiped);
+      return this.getBody2((ModelBiped)modelBase);
    }
 
    @Override
    public ModelRenderer getHead(ModelBase modelBase) {
-      ModelBiped modelBiped = (ModelBiped)modelBase;
-      return this.getHead2(modelBiped);
+      return this.getHead2((ModelBiped)modelBase);
    }
 }

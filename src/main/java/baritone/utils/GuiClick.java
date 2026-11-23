@@ -40,8 +40,7 @@ public class GuiClick extends GuiScreen {
       GlStateManager.getFloat(2983, (FloatBuffer)((Buffer)this.PROJECTION).clear());
       GL11.glGetInteger(2978, (IntBuffer)((Buffer)this.VIEWPORT).clear());
       if (this.currentMouseOver != null) {
-         Entity renderViewEntity = this.mc.getRenderViewEntity();
-         PathRenderer.drawManySelectionBoxes(renderViewEntity, Collections.singletonList(this.currentMouseOver), Color.CYAN);
+         PathRenderer.drawManySelectionBoxes(this.mc.getRenderViewEntity(), Collections.singletonList(this.currentMouseOver), Color.CYAN);
          if (this.clickStart != null && !this.clickStart.equals(this.currentMouseOver)) {
             IRenderer.startLines(Color.RED, (Float)Baritone.settings().pathRenderLineWidthPixels.value, true);
             BetterBlockPos betterBlockPos = new BetterBlockPos(this.currentMouseOver);
@@ -115,7 +114,6 @@ public class GuiClick extends GuiScreen {
    }
 
    private Vec3 toWorld(double d, double d2, double d3) {
-      boolean flag = GLU.gluUnProject((float)d, (float)d2, (float)d3, this.MODELVIEW, this.PROJECTION, this.VIEWPORT, (FloatBuffer)((Buffer)this.TO_WORLD_BUFFER).clear());
-      return flag ? new Vec3((double)this.TO_WORLD_BUFFER.get(0), (double)this.TO_WORLD_BUFFER.get(1), (double)this.TO_WORLD_BUFFER.get(2)) : null;
+      return GLU.gluUnProject((float)d, (float)d2, (float)d3, this.MODELVIEW, this.PROJECTION, this.VIEWPORT, (FloatBuffer)((Buffer)this.TO_WORLD_BUFFER).clear()) ? new Vec3((double)this.TO_WORLD_BUFFER.get(0), (double)this.TO_WORLD_BUFFER.get(1), (double)this.TO_WORLD_BUFFER.get(2)) : null;
    }
 }

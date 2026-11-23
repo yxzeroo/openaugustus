@@ -35,12 +35,10 @@ public class NaturalProperties {
       TextureAtlasSprite sprite = bakedQuad.getSprite();
       float minU = sprite.getMinU();
       float maxU = sprite.getMaxU();
-      float f = maxU - minU;
-      float f2 = f / 256.0F;
+      float f2 = (maxU - minU) / 256.0F;
       float minV = sprite.getMinV();
       float maxV = sprite.getMaxV();
-      float f3 = maxV - minV;
-      float f4 = f3 / 256.0F;
+      float f4 = (maxV - minV) / 256.0F;
       int[] vertexData = bakedQuad.getVertexData();
       int n = vertexData.length / 4;
 
@@ -113,8 +111,7 @@ public class NaturalProperties {
    }
 
    private boolean equalsDelta(float f, float f2, float f3) {
-      float f4 = MathHelper.abs(f - f2);
-      return f4 < f3;
+      return MathHelper.abs(f - f2) < f3;
    }
 
    private BakedQuad makeQuad(BakedQuad bakedQuad, int n, boolean flag) {

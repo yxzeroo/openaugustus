@@ -19,9 +19,8 @@ public final int x;
    }
 
    public static CosmeticAxis byId(int n) {
-      CosmeticAxis[] values = values();
 
-      for (CosmeticAxis cosmeticAxis : values) {
+      for (CosmeticAxis cosmeticAxis : values()) {
          if (cosmeticAxis.getId() == n) {
             return cosmeticAxis;
          }

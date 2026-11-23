@@ -23,7 +23,6 @@ public class PlayerEffectEntry {
    }
 
    public PlayerEffectEntry(String str, String str2, byte b, int n, String str3, int n2, int n3) {
-      PlayerEffectRegistry.getOpaqueStateTag();
       this.playerName = str;
       this.effectName = str2;
       this.effectSlot = n2;

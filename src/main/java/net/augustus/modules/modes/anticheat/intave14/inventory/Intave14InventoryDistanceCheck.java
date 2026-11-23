@@ -29,8 +29,7 @@ public class Intave14InventoryDistanceCheck extends ModuleMode {
    public void onClientPacket(Packet packet) {
       if (packet instanceof C0EPacketClickWindow) {
          C0EPacketClickWindow packet2 = (C0EPacketClickWindow)packet;
-         int slotId = packet2.getSlotId();
-         Vec2d vec2d = this.slotToGridPosition(slotId);
+         Vec2d vec2d = this.slotToGridPosition(packet2.getSlotId());
          if (packet2.getClickedItem() == null) {
             return;
          }
@@ -38,18 +37,13 @@ public class Intave14InventoryDistanceCheck extends ModuleMode {
          if (!this.firstClickInWindow) {
             double d = (double)(System.nanoTime() - this.lastClickNanoTime) / 1.0E9;
             System.out.println("TimeDiff: " + d);
-            Vec2d lastSlotPosition2 = this.lastSlotPosition;
-            double length = vec2d.subtract(lastSlotPosition2).length();
-            BoundedHistoryList clickHistory2 = this.clickHistory;
-            DataPoint2D dataPoint2D = new DataPoint2D(d, length);
-            clickHistory2.add(dataPoint2D);
+            double length = vec2d.subtract(this.lastSlotPosition).length();
+            this.clickHistory.add(new DataPoint2D(d, length));
             this.distanceSamples.add(length);
             this.timeDiffSamples.add(d);
             if (this.distanceSamples.isFull() && this.timeDiffSamples.isFull()) {
-               DoubleSampleWindow distanceSamples2 = this.distanceSamples;
-               double d2 = this.calculateVariance(distanceSamples2);
-               DoubleSampleWindow timeDiffSamples2 = this.timeDiffSamples;
-               double d3 = this.calculateVariance(timeDiffSamples2);
+               double d2 = this.calculateVariance(this.distanceSamples);
+               double d3 = this.calculateVariance(this.timeDiffSamples);
                if (d3 > 0.001) {
                   ChatUtil.sendChat3("TimeVariance: " + d3);
                   System.out.println(d3 + " " + d2);

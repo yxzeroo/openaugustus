@@ -53,20 +53,17 @@ public class PathNode implements Comparable {
    }
 
    public void recalculateCost() {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (!this.recalculated) {
          this.parent.recalculateCost();
          PathBlockPos pos2 = this.pos;
-         double d = this.parent.gCost + this.parent.pos.distanceTo(pos2) / this.speedMultiplier;
-         this.setGCost(d);
+         this.setGCost(this.parent.gCost + this.parent.pos.distanceTo(pos2) / this.speedMultiplier);
          this.recalculated = true;
       }
    }
 
    @Override
    public int compareTo(Object other) {
-      PathNode pathNode = (PathNode)other;
-      return this.compareTo2(pathNode);
+      return this.compareTo2((PathNode)other);
    }
 
    public double getFCost() {
@@ -74,7 +71,6 @@ public class PathNode implements Comparable {
    }
 
    public int compareTo2(PathNode pathNode) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (pathNode.fCost > this.fCost) {
          return -1;
       } else {

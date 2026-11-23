@@ -132,8 +132,7 @@ public class EntityIronGolem extends EntityGolem {
          if (this.villageObj == null) {
             this.detachHome();
          } else {
-            BlockPos center = this.villageObj.getCenter();
-            this.setHomePosAndDistance(center, (int)((float)this.villageObj.getVillageRadius() * 0.6F));
+            this.setHomePosAndDistance(this.villageObj.getCenter(), (int)((float)this.villageObj.getVillageRadius() * 0.6F));
          }
       }
 
@@ -183,8 +182,7 @@ public class EntityIronGolem extends EntityGolem {
          int n2 = MathHelper.floor_double(this.posY - 0.2F);
          int n3 = MathHelper.floor_double(this.posZ);
          IBlockState blockState = this.entityWorld.getBlockState(new BlockPos(n, n2, n3));
-         Block block = blockState.getBlock();
-         if (block.getMaterial() != Material.air) {
+         if (blockState.getBlock().getMaterial() != Material.air) {
             this.entityWorld
                .spawnParticle(
                   EnumParticleTypes.BLOCK_CRACK,

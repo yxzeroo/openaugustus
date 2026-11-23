@@ -148,10 +148,8 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
          f *= 1.1F;
       }
 
-      IAttributeInstance entityAttribute = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-      double attributeValue = entityAttribute.getAttributeValue();
-      EventSprint event = SprintListener.onSprint4(SprintEventType.MOTION_SPRINT);
-      if (event.isMotionSprint()) {
+      double attributeValue = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue();
+      if (SprintListener.onSprint4(SprintEventType.MOTION_SPRINT).isMotionSprint()) {
          attributeValue = 0.1300000101327896;
       }
 
@@ -161,8 +159,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
       }
 
       if (this.isUsingItem() && this.getItemInUse().getItem() == Items.bow) {
-         int itemInUseDuration = this.getItemInUseDuration();
-         float f2 = (float)itemInUseDuration / 20.0F;
+         float f2 = (float)this.getItemInUseDuration() / 20.0F;
          if (f2 > 1.0F) {
             f2 = 1.0F;
          } else {

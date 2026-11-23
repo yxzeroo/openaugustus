@@ -21,17 +21,17 @@ import net.augustus.events.EventMoveEntity;
 import net.augustus.events.EventSprint;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
 
 public class Sprint extends Module implements SprintListener, MoveInputListener, TickListener, MoveEntityListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue ignoreCollisions;
    public final BooleanValue hungerSprint;
    public final BooleanValue hungerSprintOnlyOnGround;
    public final BooleanValue jumpSprint;
    public final BooleanValue editMotion;
-   public final DoubleValue motionMultiplierAtSprinting;
+   public final SettingGroup motionMultiplierAtSprinting;
    public final RandomizedRangeSettings multiplierAirForward;
    public final RandomizedRangeSettings multiplierGroundForward;
    public final RandomizedRangeSettings multiplierAirBackward;
@@ -47,7 +47,7 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
 
    public Sprint() {
        super("Sprint", "Sprinten", new Color(170, 181, 182, 255), Categorys.MOVEMENT);
-      this.mode = (BooleansSetting)(new BooleansSetting(
+      this.mode = (StringValue)(new StringValue(
             this, "Mode", "Legit", new String[]{"Legit", "LegitRotationAllDirection", "AllDirection", "AllDirectionMotion"}
          ))
          .markVisualOnly();
@@ -57,16 +57,14 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
       BooleanValue hungerSprint2 = this.hungerSprint;
       this.hungerSprint.getClass();
       BooleanValue booleanValue2 = hungerSprint2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.hungerSprintOnlyOnGround = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition)).markVisualOnly();
+      this.hungerSprintOnlyOnGround = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue())).markVisualOnly();
       this.jumpSprint = (BooleanValue)(new BooleanValue(this, "JumpSprint", false)).markVisualOnly();
       this.editMotion = (BooleanValue)(new BooleanValue(this, "EditMotion", false)).markVisualOnly();
-      DoubleValue doubleValue = new DoubleValue(this, "Motion multiplier at sprinting", true);
+      SettingGroup doubleValue = new SettingGroup(this, "Motion multiplier at sprinting", true);
       hungerSprint2 = this.editMotion;
       this.editMotion.getClass();
       BooleanValue booleanValue3 = hungerSprint2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.motionMultiplierAtSprinting = (DoubleValue)doubleValue.visibleWhen(condition2).markVisualOnly();
+      this.motionMultiplierAtSprinting = (SettingGroup)doubleValue.visibleWhen(() -> booleanValue3.getValue()).markVisualOnly();
       this.multiplierAirForward = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, " multiplier air forward", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplierAtSprinting)).withoutNotInARow().markAllVisualOnly();
       this.multiplierGroundForward = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, " multiplier ground forward", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplierAtSprinting))
          .withoutNotInARow()
@@ -103,67 +101,50 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = -4;
-      byte b2 = 36;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 10;
-      byte b4 = 21;
-      this.toggleEventSubscription(b4, b3);
-      byte b5 = 40;
-      this.toggleEventSubscription(b5);
-      byte b6 = 20;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)36, (byte)-4);
+      this.toggleEventSubscription((byte)21, (byte)10);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)20);
    }
 
    @Override
    public void onSprint3(EventSprint event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      boolean flag = true;
-      event.setSprintKeyDown(flag);
+      event.setSprintKeyDown(true);
       if (this.mode.getSelectedValue().equals("AllDirection")) {
-         boolean flag2 = true;
-         event.setForceSprint(flag2);
+         event.setForceSprint(true);
       }
 
       if (this.mode.getSelectedValue().equals("Legit") && this.ignoreCollisions.getValue()) {
-         boolean flag3 = true;
-         event.setKeepSprintOnCollision(flag3);
+         event.setKeepSprintOnCollision(true);
       }
 
       if (this.hungerSprint.getValue()) {
-         boolean flag4 = true;
-         event.setIgnoreHunger(flag4);
+         event.setIgnoreHunger(true);
       }
    }
 
    @Override
    public void onSprint(EventSprint event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.jumpSprint.getValue() && MoveUtil.isMoving()) {
-         boolean flag = true;
-         event.setOmniJumpSprint(flag);
+         event.setOmniJumpSprint(true);
       }
 
       if (this.hungerSprint.getValue() && (float)mc.thePlayer.getFoodStats().getFoodLevel() <= 6.0F && this.hungerSprintOnlyOnGround.getValue()) {
-         boolean flag2 = false;
-         event.setApplyJumpBoost(flag2);
+         event.setApplyJumpBoost(false);
       }
    }
 
    @Override
    public void onSprint2(EventSprint event) {
       if (this.mode.getSelectedValue().equals("AllDirectionMotion")) {
-         boolean flag = true;
-         event.setMotionSprint(flag);
+         event.setMotionSprint(true);
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer.isSprinting() && ClientManagers.moduleManager.scaffold.isToggled() && ClientManagers.moduleManager.scaffold.mode.getSelectedValue().equals("None")) {
-         float f = 0.0F;
-         event.setMoveForward(f);
+         event.setMoveForward(0.0F);
       }
 
       if (this.canUseLegitAllDirection() && ClientManagers.rotationController.isOwnedBy(this)) {
@@ -171,14 +152,12 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
             return;
          }
 
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 
    @Override
    public void onTick() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.canUseLegitAllDirection()) {
          int forwardAxis = KeyboardInputUtil.getForwardAxis();
          int strafeAxis = KeyboardInputUtil.getStrafeAxis();
@@ -191,9 +170,7 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
          float f = RotationUtil.applyYawGcd(
             RotationUtil.updateAngle(ClientManagers.rotationController.getPreviousRotation().yaw, (float)Math.toDegrees(direction), 180.0F), ClientManagers.rotationController.getPreviousRotation().yaw
          );
-         byte b = 11;
-         float f2 = f;
-         rotationController.requestYaw(f2, b, this);
+         rotationController.requestYaw(f, (byte)11, this);
       }
    }
 
@@ -205,42 +182,33 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
 
    @Override
    public void onMoveEntity(EventMoveEntity event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.editMotion.getValue() && (mc.thePlayer.isSprinting() || this.mode.getSelectedValue().equals("AllDirectionMotion"))) {
          if (KeyboardInputUtil.isPureForward(this.lastForwardInput, this.lastStrafeInput)) {
             RandomizedRangeSettings randomizedRangeSettings = this.multiplierGroundForward;
-            RandomizedRangeSettings multiplierAirForward2 = this.multiplierAirForward;
-            this.applySprintMotionMultiplier(event, multiplierAirForward2, randomizedRangeSettings);
+            this.applySprintMotionMultiplier(event, this.multiplierAirForward, randomizedRangeSettings);
          } else if (KeyboardInputUtil.isPureBackward(this.lastForwardInput, this.lastStrafeInput)) {
             RandomizedRangeSettings randomizedRangeSettings2 = this.multiplierGroundBackward;
-            RandomizedRangeSettings multiplierAirBackward2 = this.multiplierAirBackward;
-            this.applySprintMotionMultiplier(event, multiplierAirBackward2, randomizedRangeSettings2);
+            this.applySprintMotionMultiplier(event, this.multiplierAirBackward, randomizedRangeSettings2);
          } else if (KeyboardInputUtil.isForwardDiagonal(this.lastForwardInput, this.lastStrafeInput)) {
             RandomizedRangeSettings randomizedRangeSettings3 = this.multiplierGroundForwardSideways;
-            RandomizedRangeSettings randomizedRangeSettings4 = this.multiplierAirForwardSideways;
-            this.applySprintMotionMultiplier(event, randomizedRangeSettings4, randomizedRangeSettings3);
+            this.applySprintMotionMultiplier(event, this.multiplierAirForwardSideways, randomizedRangeSettings3);
          } else if (KeyboardInputUtil.isBackwardDiagonal(this.lastForwardInput, this.lastStrafeInput)) {
             RandomizedRangeSettings randomizedRangeSettings5 = this.multiplierGroundBackwardSideways;
-            RandomizedRangeSettings randomizedRangeSettings6 = this.multiplierAirBackwardSideways;
-            this.applySprintMotionMultiplier(event, randomizedRangeSettings6, randomizedRangeSettings5);
+            this.applySprintMotionMultiplier(event, this.multiplierAirBackwardSideways, randomizedRangeSettings5);
          } else if (KeyboardInputUtil.isPureStrafe(this.lastForwardInput, this.lastStrafeInput)) {
             RandomizedRangeSettings randomizedRangeSettings7 = this.multiplierGroundSideways;
-            RandomizedRangeSettings multiplierAirSideways2 = this.multiplierAirSideways;
-            this.applySprintMotionMultiplier(event, multiplierAirSideways2, randomizedRangeSettings7);
+            this.applySprintMotionMultiplier(event, this.multiplierAirSideways, randomizedRangeSettings7);
          }
       }
    }
 
    private void applySprintMotionMultiplier(EventMoveEntity event, RandomizedRangeSettings randomizedRangeSettings, RandomizedRangeSettings randomizedRangeSettings2) {
       double d = mc.thePlayer.onGround ? randomizedRangeSettings2.nextValue() : randomizedRangeSettings.nextValue();
-      double d2 = event.getX() * d;
-      event.setX(d2);
-      double d3 = event.getZ() * d;
-      event.setZ(d3);
+      event.setX(event.getX() * d);
+      event.setZ(event.getZ() * d);
    }
 
    private boolean canUseLegitAllDirection() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return mc.isNotInGui()
          && this.mode.getSelectedValue().equals("LegitRotationAllDirection")
          && !ClientManagers.moduleManager.scaffold.isToggled()
@@ -252,7 +220,6 @@ public class Sprint extends Module implements SprintListener, MoveInputListener,
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

@@ -14,8 +14,7 @@ public class PickupIngredientStep implements CraftingStep {
 
    public boolean execute(CraftingInventoryActions craftingInventoryActions, GuiCrafting guiCrafting) {
       int requiredCount2 = this.requiredCount;
-      Item item2 = this.item;
-      int n = craftingInventoryActions.findInventorySlot(guiCrafting, item2, requiredCount2);
+      int n = craftingInventoryActions.findInventorySlot(guiCrafting, this.item, requiredCount2);
       return n < 0 ? false : craftingInventoryActions.pickupFromSlot(guiCrafting, n);
    }
 }

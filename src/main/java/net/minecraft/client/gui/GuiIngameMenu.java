@@ -61,8 +61,7 @@ public class GuiIngameMenu extends GuiScreen implements ServerListHost {
          flag = false;
       }
 
-      boolean flag2 = flag;
-      if (flag2) {
+      if (flag) {
          this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + b, I18n.format("menu.returnToMenu", new Object[0])));
          if (!this.mc.isIntegratedServerRunning()) {
             ((GuiButton)this.buttonList.get(0)).displayString = I18n.format("menu.disconnect", new Object[0]);
@@ -109,9 +108,7 @@ public class GuiIngameMenu extends GuiScreen implements ServerListHost {
       WDLHooks.handleWDLButtonClick(this, button);
       switch (button.id) {
          case 0:
-            Minecraft mc2 = this.mc;
-            GuiOptions guiOptions = new GuiOptions(this, this.mc.gameSettings);
-            mc2.displayGuiScreen(guiOptions);
+            this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
             break;
          case 1:
             button.enabled = false;
@@ -126,31 +123,21 @@ public class GuiIngameMenu extends GuiScreen implements ServerListHost {
             this.mc.setIngameFocus();
             break;
          case 5:
-            Minecraft mc3 = this.mc;
-            GuiAchievements guiAchievements = new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter());
-            mc3.displayGuiScreen(guiAchievements);
+            this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
             break;
          case 6:
-            Minecraft mc4 = this.mc;
-            GuiStats guiStats = new GuiStats(this, this.mc.thePlayer.getStatFileWriter());
-            mc4.displayGuiScreen(guiStats);
+            this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
             break;
          case 7:
-            Minecraft mc5 = this.mc;
-            GuiShareToLan guiShareToLan = new GuiShareToLan(this);
-            mc5.displayGuiScreen(guiShareToLan);
+            this.mc.displayGuiScreen(new GuiShareToLan(this));
             break;
          case 1000:
-            Minecraft mc6 = this.mc;
-            ClientTabContainerScreen clientTabContainerScreen = new ClientTabContainerScreen(this, 0);
-            mc6.displayGuiScreen(clientTabContainerScreen);
+            this.mc.displayGuiScreen(new ClientTabContainerScreen(this, 0));
             break;
          case 1001:
-            Minecraft mc7 = this.mc;
-            GuiScreenServerList guiScreenServerList = new GuiScreenServerList(
+            this.mc.displayGuiScreen(new GuiScreenServerList(
                this, this.reconnectServerData = new ServerData("", this.mc.isSingleplayer() ? "" : this.mc.getCurrentServerData().serverIP, false)
-            );
-            mc7.displayGuiScreen(guiScreenServerList);
+            ));
       }
    }
 
@@ -160,13 +147,9 @@ public class GuiIngameMenu extends GuiScreen implements ServerListHost {
       WorldClient world = (WorldClient)null;
       this.mc.loadWorld(world);
       if (flag) {
-         Minecraft mc2 = this.mc;
-         GuiMainMenu guiMainMenu = new GuiMainMenu();
-         mc2.displayGuiScreen(guiMainMenu);
+         this.mc.displayGuiScreen(new GuiMainMenu());
       } else {
-         Minecraft mc3 = this.mc;
-         GuiMultiplayer guiMultiplayer = new GuiMultiplayer(new GuiMainMenu());
-         mc3.displayGuiScreen(guiMultiplayer);
+         this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
       }
    }
 
@@ -193,9 +176,7 @@ public class GuiIngameMenu extends GuiScreen implements ServerListHost {
    public void confirmClicked(boolean flag, int n) {
       if (flag) {
          this.disconnectFromWorld();
-         Minecraft mc2 = this.mc;
-         GuiConnecting guiConnecting = new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), this.mc, this.reconnectServerData);
-         mc2.displayGuiScreen(guiConnecting);
+         this.mc.displayGuiScreen(new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), this.mc, this.reconnectServerData));
       } else {
          this.mc.displayGuiScreen(this);
       }

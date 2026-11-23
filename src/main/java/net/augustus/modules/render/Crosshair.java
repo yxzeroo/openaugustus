@@ -12,17 +12,17 @@ import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.ui.GuiIngameHook;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class Crosshair extends Module implements RenderListener {
    public final BooleanValue defaultCrossHair;
    public final BooleanValue thirdPerson;
-   public final StringValue scale;
+   public final DoubleValue scale;
    public final ColorSetting color2;
-   public final StringValue length;
-   public final StringValue width;
-   public final StringValue margin;
+   public final DoubleValue length;
+   public final DoubleValue width;
+   public final DoubleValue margin;
    public final BooleanValue dot;
    public final BooleanValue tStyle;
    public final BooleanValue shadow;
@@ -31,37 +31,25 @@ public class Crosshair extends Module implements RenderListener {
        super("Crosshair", "Fadenkreuz", new Color(157, 230, 106), Categorys.RENDER);
       this.defaultCrossHair = new BooleanValue(this, "DefaultCrossHair", false);
       this.thirdPerson = new BooleanValue(this, "ThirdPerson", false);
-      StringValue stringValue = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2);
       BooleanValue defaultCrossHair2 = this.defaultCrossHair;
       this.defaultCrossHair.getClass();
-      BooleanValue booleanValue = defaultCrossHair2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.scale = stringValue.visibleWhen(condition);
-      ColorSetting colorSetting = new ColorSetting(this, "Color", new Color(94, 0, 255, 255));
-      SettingVisibilityCondition condition2 = () -> this.isColorVisible();
-      this.color2 = (ColorSetting)colorSetting.withVisibility(condition2);
-      StringValue stringValue2 = new StringValue(this, "Length", 4.0, 0.0, 40.0, 0);
+      this.scale = stringValue.visibleWhen(() -> defaultCrossHair2.getValue());
+      this.color2 = (ColorSetting)new ColorSetting(this, "Color", new Color(94, 0, 255, 255)).withVisibility(() -> this.isColorVisible());
+      DoubleValue stringValue2 = new DoubleValue(this, "Length", 4.0, 0.0, 40.0, 0);
       SettingVisibilityCondition condition3 = () -> {
          return !this.defaultCrossHair.getValue();
       };
       this.length = stringValue2.visibleWhen(condition3);
-      StringValue stringValue3 = new StringValue(this, "Width", 1.0, 1.0, 20.0, 0);
-      SettingVisibilityCondition condition4 = () -> this.isWidthVisible();
-      this.width = stringValue3.visibleWhen(condition4);
-      StringValue stringValue4 = new StringValue(this, "Margin", 1.0, 0.0, 40.0, 0);
-      SettingVisibilityCondition condition5 = () -> this.isMarginVisible();
-      this.margin = stringValue4.visibleWhen(condition5);
-      BooleanValue booleanValue2 = new BooleanValue(this, "Dot", true);
-      SettingVisibilityCondition condition6 = () -> this.isDotVisible();
-      this.dot = (BooleanValue)booleanValue2.withVisibility(condition6);
+      this.width = new DoubleValue(this, "Width", 1.0, 1.0, 20.0, 0).visibleWhen(() -> this.isWidthVisible());
+      this.margin = new DoubleValue(this, "Margin", 1.0, 0.0, 40.0, 0).visibleWhen(() -> this.isMarginVisible());
+      this.dot = (BooleanValue)new BooleanValue(this, "Dot", true).withVisibility(() -> this.isDotVisible());
       BooleanValue booleanValue3 = new BooleanValue(this, "T-Style", false);
       SettingVisibilityCondition condition7 = () -> {
          return !this.defaultCrossHair.getValue();
       };
       this.tStyle = (BooleanValue)booleanValue3.withVisibility(condition7);
-      BooleanValue booleanValue4 = new BooleanValue(this, "Shadow", true);
-      SettingVisibilityCondition condition8 = () -> this.isShadowVisible();
-      this.shadow = (BooleanValue)booleanValue4.withVisibility(condition8);
+      this.shadow = (BooleanValue)new BooleanValue(this, "Shadow", true).withVisibility(() -> this.isShadowVisible());
    }
 
    @Override
@@ -74,9 +62,7 @@ public class Crosshair extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      int n = 1000000;
-      byte b = 32;
-      this.toggleEventSubscription(b, n);
+      this.toggleEventSubscription((byte)32, 1000000);
    }
 
    @Override

@@ -14,9 +14,7 @@ public interface WaveyCapeHolder {
       StickSimulation simulation = this.getSimulation();
       WaveyCapeConfig capeConfig = this.getCapeConfig();
       if (!simulation.points.isEmpty()) {
-         CapeVector2f prevPosition = ((StickPoint)simulation.points.get(0)).prevPosition;
-         CapeVector2f position = ((StickPoint)simulation.points.get(0)).position;
-         prevPosition.copy(position);
+         ((StickPoint)simulation.points.get(0)).prevPosition.copy(((StickPoint)simulation.points.get(0)).position);
          double d = player.prevPosX - player.posX;
          double d2 = player.prevPosZ - player.posZ;
          float f = player.prevRenderYawOffset + player.renderYawOffset - player.prevRenderYawOffset;

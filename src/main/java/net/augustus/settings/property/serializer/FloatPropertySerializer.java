@@ -6,8 +6,7 @@ import com.google.gson.JsonPrimitive;
 public final class FloatPropertySerializer implements PrimitivePropertySerializer {
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      Float f = (Float)obj;
-      this.writeFloat(str, f, json);
+      this.writeFloat(str, (Float)obj, json);
    }
 
    public Float readFloat(JsonPrimitive primitive) {

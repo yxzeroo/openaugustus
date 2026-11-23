@@ -28,8 +28,7 @@ public class ChunkProviderDebug implements IChunkProvider {
 
    @Override
    public List getPossibleCreatures(EnumCreatureType enumCreatureType, BlockPos pos) {
-      BiomeGenBase biomeGenForCoords = this.world.getBiomeGenForCoords(pos);
-      return biomeGenForCoords.getSpawnableList(enumCreatureType);
+      return this.world.getBiomeGenForCoords(pos).getSpawnableList(enumCreatureType);
    }
 
    @Override

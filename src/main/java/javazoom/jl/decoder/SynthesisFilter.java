@@ -123,8 +123,7 @@ public final class SynthesisFilter {
    private static float[] load_d() {
       try {
          Class clazz = float.class;
-         Object obj = JavaLayerUtils.deserializeArrayResource("sfd.ser", clazz, 512);
-         return (float[])obj;
+         return (float[])JavaLayerUtils.deserializeArrayResource("sfd.ser", clazz, 512);
       } catch (IOException e) {
          throw new ExceptionInInitializerError(e);
       }

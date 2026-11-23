@@ -194,8 +194,7 @@ public class EntityItem extends Entity {
          this.thrower = tag.getString("Thrower");
       }
 
-      NBTTagCompound compoundTag = tag.getCompoundTag("Item");
-      this.setEntityItemStack(ItemStack.loadItemStackFromNBT(compoundTag));
+      this.setEntityItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("Item")));
       if (this.getEntityItem() == null) {
          this.setDead();
       }
@@ -302,8 +301,7 @@ public class EntityItem extends Entity {
          this.motionY -= 0.04F;
          this.noClip = this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0, this.posZ);
          this.moveEntity(this.motionX, this.motionY, this.motionZ);
-         boolean flag = (int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ;
-         if (flag || this.ticksExisted % 25 == 0) {
+         if (((int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ) || this.ticksExisted % 25 == 0) {
             if (this.entityWorld.getBlockState(new BlockPos(this)).getBlock().getMaterial() == Material.lava) {
                this.motionY = 0.2F;
                this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);

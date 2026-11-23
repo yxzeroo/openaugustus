@@ -1,7 +1,6 @@
 package net.augustus.config;
 
 import net.augustus.Augustus;
-import net.augustus.settings.Setting;
 import net.augustus.utils.UnaryFunction;
 import net.augustus.utils.file.ClientFileUtil;
 import com.google.common.collect.Lists;
@@ -22,8 +21,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    private JsonElement cachedJson = null;
 
    public String getBackupDirectory() {
-      StringBuilder sb = new StringBuilder().append(BASE_CONFIG_DIR).append(File.separator);
-      return sb.append(this.getSubDirectory())
+      return new StringBuilder().append(BASE_CONFIG_DIR).append(File.separator).append(this.getSubDirectory())
          .append(File.separator)
          .append("backups")
          .append(File.separator)
@@ -32,10 +30,8 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    private void pruneOldBackups(List list, File file) {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       if (list.size() > 10) {
-         List list2 = (List)(list.stream().sorted().limit((long)(list.size() - 10)).collect(Collectors.toList()));
-         list2.forEach(obj -> deleteBackupFile(file, (Long)obj));
+         ((List)(list.stream().sorted().limit((long)(list.size() - 10)).collect(Collectors.toList()))).forEach(obj -> deleteBackupFile(file, (Long)obj));
       }
    }
 
@@ -51,16 +47,12 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
          File[] files = file.listFiles(file2 -> file2.getName().endsWith(".json"));
          String str = String.valueOf(System.currentTimeMillis());
          if (files != null) {
-            ArrayList list = Lists.newArrayList(files);
-            ArrayList list2 = list;
-            List list3 = this.parseBackupTimestamps(list2);
-            this.pruneOldBackups(list3, file);
+            ArrayList list2 = Lists.newArrayList(files);
+            this.pruneOldBackups(this.parseBackupTimestamps(list2), file);
          }
 
          File file3 = new File(this.getBackupDirectory(), str + ".json");
-         JsonFileStorageHandler storageHandler2 = this.storageHandler;
-         Gson prettyGson = this.getPrettyGson();
-         storageHandler2.write(file3, elem, prettyGson);
+         this.storageHandler.write(file3, elem, this.getPrettyGson());
       }
    }
 
@@ -68,7 +60,6 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
       return ((List<File>)list).stream()
          .map(File::getName)
          .filter(str -> {
-            Setting[] cachedSettings = ConfigManager.getCachedSettings();
             return str.length() >= 7 && str.endsWith(".json");
          })
          .map(str2 -> str2.substring(0, str2.length() - 5))
@@ -100,8 +91,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    public String getDirectoryPath() {
-      StringBuilder sb = new StringBuilder().append(BASE_CONFIG_DIR).append(File.separator);
-      return sb.append(this.getSubDirectory()).toString();
+      return new StringBuilder().append(BASE_CONFIG_DIR).append(File.separator).append(this.getSubDirectory()).toString();
    }
 
    public void captureSnapshot() {
@@ -119,23 +109,14 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    public void writeJsonFile(File file, JsonElement elem) {
-      JsonFileStorageHandler storageHandler2 = this.storageHandler;
-      Gson prettyGson = this.getPrettyGson();
-      storageHandler2.write(file, elem, prettyGson);
+      this.storageHandler.write(file, elem, this.getPrettyGson());
    }
 
    public JsonElement readJsonFile(File file) {
-      JsonFileStorageHandler storageHandler2 = this.storageHandler;
-      Gson prettyGson = this.getPrettyGson();
-      Class jsonType = this.getJsonType();
-      Supplier supplier = () -> this.loadLatestBackup();
-      Class clazz = jsonType;
-      Gson gson = prettyGson;
-      return storageHandler2.read(file, gson, clazz, supplier);
+      return this.storageHandler.read(file, this.getPrettyGson(), this.getJsonType(), () -> this.loadLatestBackup());
    }
 
    public void load() {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       File file = new File(this.getFilePath());
       if (!file.exists()) {
          JsonElement elem = this.loadLatestBackup();
@@ -145,8 +126,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
             return;
          }
 
-         boolean flag = true;
-         this.save(flag);
+         this.save(true);
       }
 
       JsonElement elem2 = this.readJsonFile(file);
@@ -161,8 +141,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    public void save() {
-      boolean flag = false;
-      this.save(flag);
+      this.save(false);
    }
 
    public abstract void deserialize(JsonElement elem);
@@ -180,15 +159,13 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    private JsonElement loadLatestBackup() {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       if (!this.isBackupEnabled()) {
          return null;
       } else {
          File file = new File(this.getBackupDirectory());
          File[] files = file.listFiles(file2 -> file2.getName().endsWith(".json"));
          if (files != null) {
-            ArrayList list = Lists.newArrayList(files);
-            ArrayList list2 = list;
+            ArrayList list2 = Lists.newArrayList(files);
             List list3 = this.parseBackupTimestamps(list2);
             Collections.sort(list3);
             Collections.reverse(list3);
@@ -198,8 +175,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
                if (file3.exists()) {
                   JsonFileStorageHandler storageHandler2 = this.storageHandler;
                   Class jsonType = this.getJsonType();
-                  Gson prettyGson = this.getPrettyGson();
-                  JsonElement elem = storageHandler2.read(file3, prettyGson, jsonType);
+                  JsonElement elem = storageHandler2.read(file3, this.getPrettyGson(), jsonType);
                   if (!this.storageHandler.isEmpty(elem) && elem != null) {
                      return elem;
                   }
@@ -212,7 +188,6 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
    }
 
    public void save(boolean flag) {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       if (flag || this.loaded) {
          if (this.cachedJson == null || this.alwaysReserializeOnSave()) {
             this.captureSnapshot();
@@ -220,8 +195,7 @@ public abstract class JsonConfigFile implements NamedConfigComponent {
 
          JsonElement cachedJson2 = this.cachedJson;
          if (cachedJson2 != null) {
-            File file = new File(this.getFilePath());
-            this.writeJsonFile(file, cachedJson2);
+            this.writeJsonFile(new File(this.getFilePath()), cachedJson2);
             this.writeBackup(cachedJson2);
          }
       }

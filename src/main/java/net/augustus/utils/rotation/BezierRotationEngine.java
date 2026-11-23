@@ -130,8 +130,7 @@ public class BezierRotationEngine implements MC {
             this.activeCurve = null;
             double d3 = (double)f;
             double d4 = (double)f2;
-            double d5 = d3;
-            this.kinematicState.setAngles(d5, d4);
+            this.kinematicState.setAngles(d3, d4);
             this.smoothedAimOffset = null;
             this.aimRadiusNoisePhase = (float)ThreadLocalRandom.current().nextDouble(-100.0, 100.0);
          }
@@ -145,10 +144,8 @@ public class BezierRotationEngine implements MC {
             this.trySuperCorrection(player, entity);
          }
 
-         double d6 = (double)f2;
-         this.computeOverlapPitchRange(player, entity, d6);
-         RotationKinematicState kinematicState2 = this.kinematicState;
-         RotationKinematicState rotationKinematicState = this.stepKinematicState(kinematicState2, player, entity, d2);
+         this.computeOverlapPitchRange(player, entity, (double)f2);
+         RotationKinematicState rotationKinematicState = this.stepKinematicState(this.kinematicState, player, entity, d2);
          this.kinematicState = rotationKinematicState;
          float[] floats = new float[2];
          if (this.applyRecordedMouseJitter && ClientManagers.moduleManager.killAura.clickMode.getAbstractSubMode() instanceof RecordedClickPatternMode && ((RecordedClickPatternMode)ClientManagers.moduleManager.killAura.clickMode.getAbstractSubMode()).getActivePattern() != null) {
@@ -182,10 +179,9 @@ public class BezierRotationEngine implements MC {
       AnglePredictionSample[] anglePredictionSamples = this.trajectoryPredictor.predictYawBounds(player, entity, reactionTick2, n3, attentionWindow2, d, d2, d3);
       if (n > 0 && anglePredictionSamples != null && Math.abs(anglePredictionSamples[0].angularSlope + anglePredictionSamples[1].angularSlope) / 2.0 > this.maxLookaheadSlopeThreshold / (double)n) {
          n2 = player.ticksExisted + this.minLookaheadTicks;
-         byte b = 3;
          int n4 = n2;
          int reactionTick3 = this.reactionTick;
-         anglePredictionSamples = this.trajectoryPredictor.predictYawBounds(player, entity, reactionTick3, n4, b, d, d2, d3);
+         anglePredictionSamples = this.trajectoryPredictor.predictYawBounds(player, entity, reactionTick3, n4, (byte)3, d, d2, d3);
       }
 
       return anglePredictionSamples;
@@ -195,8 +191,7 @@ public class BezierRotationEngine implements MC {
       if (this.kinematicState != null) {
          double d = (double)f;
          double d2 = (double)f2;
-         double d3 = d;
-         this.kinematicState.setAngles(d3, d2);
+         this.kinematicState.setAngles(d, d2);
          if (flag) {
             RotationKinematicState kinematicState2 = this.kinematicState;
             Vec2d vec2d = new Vec2d(
@@ -223,12 +218,9 @@ public class BezierRotationEngine implements MC {
       double d6 = 1.0;
       if (this.activeCurve != null) {
          BezierCurve2D activeCurve2 = this.activeCurve;
-         double progress = this.activeCurve.getProgress();
-         Vec2d vec2d = activeCurve2.evaluate(progress);
+         Vec2d vec2d = activeCurve2.evaluate(this.activeCurve.getProgress());
          activeCurve2 = this.activeCurve;
-         double previousProgress = this.activeCurve.getPreviousProgress();
-         Vec2d vec2d2 = activeCurve2.evaluate(previousProgress);
-         Vec2d vec2d3 = vec2d.subtract(vec2d2);
+         Vec2d vec2d3 = vec2d.subtract(activeCurve2.evaluate(this.activeCurve.getPreviousProgress()));
          d4 = vec2d3.x;
          d5 = vec2d3.y;
          yaw = MathHelper.wrapAngleTo180_double(vec2d.x);
@@ -243,11 +235,7 @@ public class BezierRotationEngine implements MC {
             double d8 = HitboxAngleUtil.getShortestAngularDistance(this.activeCurve.targetCenterYaw, MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, d7)));
             Vec3 positionEyes = player.getPositionEyes(1.0F);
             if (flag && d8 < this.outOfReachYawTolerance) {
-               Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
-               boolean flag2 = true;
-               Vec3 vec = interpolatedPos;
-               AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec, flag2);
-               if (RotationUtil.clampPointToBox(positionEyes, entityBoundingBoxAt).distanceTo(positionEyes) > 3.0) {
+               if (RotationUtil.clampPointToBox(positionEyes, EntityBoundsUtil.getEntityBoundingBoxAt(entity, entity.getInterpolatedPos(1.0F), true)).distanceTo(positionEyes) > 3.0) {
                   if (this.skipYawOutOfReach) {
                      doubles = this.activeCurve.targetYawRange;
                   }
@@ -262,9 +250,7 @@ public class BezierRotationEngine implements MC {
 
       Vec2d vec2d4 = new Vec2d(yaw, pitch);
       double d9 = this.random.nextDouble() * this.maxAimpointAngleDiff * (double)(this.random.nextBoolean() ? -1 : 1);
-      double d10 = HitboxAngleUtil.getShortestAngularDistance(MathHelper.wrapAngleTo180_double(doubles[0]), MathHelper.wrapAngleTo180_double(doubles[1]));
-      double d11 = Math.abs(doubles2[0] - doubles2[1]);
-      double d12 = Math.min(d10, d11);
+      double d12 = Math.min(HitboxAngleUtil.getShortestAngularDistance(MathHelper.wrapAngleTo180_double(doubles[0]), MathHelper.wrapAngleTo180_double(doubles[1])), Math.abs(doubles2[0] - doubles2[1]));
       float f = 0.0F;
       float aimRadiusNoisePhase2 = this.aimRadiusNoisePhase;
       double d13 = d12 * MathStatisticsUtil.lerp(0.3, 0.8, (double)Math.abs(this.simplexNoise.sample(aimRadiusNoisePhase2, f))) / 2.0;
@@ -278,17 +264,12 @@ public class BezierRotationEngine implements MC {
       }
 
       this.smoothedAimOffset = vec2d5;
-      double d15 = 0.5;
-      double d16 = HitboxAngleUtil.lerpRange(doubles, d15);
+      double d16 = HitboxAngleUtil.lerpRange(doubles, 0.5);
       double d17 = 0.5;
-      Vec2d vec2d6 = new Vec2d(d16, HitboxAngleUtil.lerpRange(doubles2, d17));
-      Vec2d vec2d7 = vec2d5.add(vec2d6);
-      DoubleSampleWindow angularVelocityWindow2 = this.angularVelocityWindow;
-      double d18 = Math.abs(d);
-      angularVelocityWindow2.add(d18);
+      Vec2d vec2d7 = vec2d5.add(new Vec2d(d16, HitboxAngleUtil.lerpRange(doubles2, d17)));
+      this.angularVelocityWindow.add(Math.abs(d));
       double normalizedYawPosition = HitboxAngleUtil.getNormalizedYawPosition(doubles[0], doubles[1], MathHelper.wrapAngleTo180_double(vec2d7.x));
-      double d19 = vec2d7.y;
-      double d20 = MathStatisticsUtil.lerp(HitboxAngleUtil.inverseLerpRange(doubles2, d19), MathHelper.clamp_double(HitboxAngleUtil.inverseLerpRange(doubles2, pitch), 0.0, 1.0), 0.2);
+      double d20 = MathStatisticsUtil.lerp(HitboxAngleUtil.inverseLerpRange(doubles2, vec2d7.y), MathHelper.clamp_double(HitboxAngleUtil.inverseLerpRange(doubles2, pitch), 0.0, 1.0), 0.2);
       if (Double.isNaN(d20)) {
       }
 
@@ -326,9 +307,7 @@ public class BezierRotationEngine implements MC {
          -this.maxOrthogonalMovement,
          this.maxOrthogonalMovement
       );
-      Vec2d vec2d9 = vec2d7.scale(d23);
-      Vec2d vec2d10 = vec2d8.scale(d24);
-      Vec2d vec2d11 = vec2d9.add(vec2d10);
+      Vec2d vec2d11 = vec2d7.scale(d23).add(vec2d8.scale(d24));
       if (vec2d8.length() == 0.0) {
          vec2d11 = new Vec2d(0.0, 0.0);
       }
@@ -349,10 +328,8 @@ public class BezierRotationEngine implements MC {
          bezierCurve2D.controlPoints.add(vec2d7.add(vec2d4));
       }
 
-      double d25 = 1.0 / (double)(this.minLookaheadTicks + 1);
-      bezierCurve2D.setProgress(d25);
-      double d26 = 0.5;
-      bezierCurve2D.targetCenterYaw = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, d26));
+      bezierCurve2D.setProgress(1.0 / (double)(this.minLookaheadTicks + 1));
+      bezierCurve2D.targetCenterYaw = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, 0.5));
       bezierCurve2D.speedScale = d6;
       bezierCurve2D.targetYawRange = doubles;
       bezierCurve2D.targetPitchRange = doubles2;
@@ -383,12 +360,8 @@ public class BezierRotationEngine implements MC {
             player.movementInput.sneak,
             MoveInputStage.PRE
          );
-         double d2 = posZ;
-         double d3 = posY;
-         double d4 = posX;
-         list = PlayerUtil.predictPlayerTrajectory(5, player, d4, d3, d2, event);
-         int size = list.size();
-         list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, size);
+         list = PlayerUtil.predictPlayerTrajectory(5, player, posX, posY, posZ, event);
+         list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, list.size());
       }
 
       list.add(player.getInterpolatedPos(1.0F));
@@ -398,12 +371,8 @@ public class BezierRotationEngine implements MC {
       ArrayList list3 = new ArrayList();
 
       for (int i = 0; i < n; i++) {
-         Vec3 vec = (Vec3)list2.get(i);
-         boolean flag = false;
-         Vec3 vec2 = vec;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
-         Vec3 vec3 = ((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0);
-         double[] pitchRange = HitboxAngleUtil.getPitchRange(vec3, entityBoundingBoxAt);
+         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, (Vec3)list2.get(i), false);
+         double[] pitchRange = HitboxAngleUtil.getPitchRange(((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0), entityBoundingBoxAt);
          doublesArr[i] = pitchRange;
          list3.add(pitchRange[0]);
          list3.add(pitchRange[1]);
@@ -463,12 +432,7 @@ public class BezierRotationEngine implements MC {
    }
 
    public static boolean enforceMinimumYawSpan(Entity entity, double[] doubles) {
-      Vec3 vec = new Vec3(0.0, 0.0, 0.0);
-      Vec3 vec2 = new Vec3(3.4, 0.0, 0.0);
-      boolean flag = true;
-      Vec3 vec3 = vec2;
-      AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec3, flag);
-      double[] yawRange = HitboxAngleUtil.getYawRange(vec, entityBoundingBoxAt);
+      double[] yawRange = HitboxAngleUtil.getYawRange(new Vec3(0.0, 0.0, 0.0), EntityBoundsUtil.getEntityBoundingBoxAt(entity, new Vec3(3.4, 0.0, 0.0), true));
       double d = HitboxAngleUtil.getShortestAngularDistance(MathHelper.wrapAngleTo180_double(yawRange[0]), MathHelper.wrapAngleTo180_double(yawRange[1]));
       if (HitboxAngleUtil.getShortestAngularDistance(MathHelper.wrapAngleTo180_double(doubles[0]), MathHelper.wrapAngleTo180_double(doubles[1])) < d) {
          double d2 = (doubles[0] + doubles[1]) / 2.0;
@@ -544,8 +508,7 @@ public class BezierRotationEngine implements MC {
    private RotationKinematicState stepKinematicState(RotationKinematicState rotationKinematicState, EntityPlayerSP player, EntityLivingBase entity, double d) {
       double additionalInaccuracy2 = this.additionalInaccuracy;
       double d2 = this.maxPredictionInaccuracy;
-      double d3 = this.minPredictionInaccuracy;
-      AnglePredictionSample[] anglePredictionSamples = this.predictTargetAngles(rotationKinematicState, player, entity, d3, d2, additionalInaccuracy2);
+      AnglePredictionSample[] anglePredictionSamples = this.predictTargetAngles(rotationKinematicState, player, entity, this.minPredictionInaccuracy, d2, additionalInaccuracy2);
       if (anglePredictionSamples == null) {
          anglePredictionSamples = new AnglePredictionSample[]{new AnglePredictionSample(0.0, 0.0, rotationKinematicState.getYaw(), rotationKinematicState.getYaw(), 0), new AnglePredictionSample(0.0, 0.0, rotationKinematicState.getYaw(), rotationKinematicState.getYaw(), 0)};
          if (this.activeCurve == null || this.activeCurve.getProgress() >= 1.0) {
@@ -579,8 +542,7 @@ public class BezierRotationEngine implements MC {
          }
 
          this.lastVelocitySign = n;
-         double[] overlapPitchRange2 = this.overlapPitchRange;
-         this.buildBezierCurve(rotationKinematicState, player, entity, d5, doubles, overlapPitchRange2, d, flag);
+         this.buildBezierCurve(rotationKinematicState, player, entity, d5, doubles, this.overlapPitchRange, d, flag);
       }
 
       this.ticksSinceDirectionChange++;
@@ -593,8 +555,7 @@ public class BezierRotationEngine implements MC {
 
    private void truncateAtDistanceInflection(long l, ArrayList list, ArrayList list2) {
       Vec3 vec = (Vec3)list.get(0);
-      Vec3 vec2 = (Vec3)list2.get(0);
-      double d = vec2.distanceTo(vec);
+      double d = ((Vec3)list2.get(0)).distanceTo(vec);
       double d2 = 0.0;
       double d3 = 0.0;
       int n = Math.min(list.size(), list2.size());

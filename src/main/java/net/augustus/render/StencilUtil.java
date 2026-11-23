@@ -43,8 +43,7 @@ public final class StencilUtil implements MC {
    }
 
    public static void initStencilToWrite() {
-      Framebuffer framebuffer = mc.getFramebuffer();
-      initStencilToWrite(framebuffer);
+      initStencilToWrite(mc.getFramebuffer());
    }
 
    public static void uninitStencilBuffer() {

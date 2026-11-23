@@ -104,17 +104,13 @@ public class CyclicShiftByteMixer {
          }
 
          CyclicShiftByteMixer cyclicShiftByteMixer = this;
-         byte[] bytes2 = (byte[])obj;
-         obj = cyclicShiftByteMixer.applyTableXorRound(bytes2);
+         obj = cyclicShiftByteMixer.applyTableXorRound((byte[])obj);
          cyclicShiftByteMixer = this;
-         byte[] bytes3 = (byte[])obj;
-         obj = cyclicShiftByteMixer.applyCyclicShiftRound(bytes3);
+         obj = cyclicShiftByteMixer.applyCyclicShiftRound((byte[])obj);
          cyclicShiftByteMixer = this;
-         byte[] bytes4 = (byte[])obj;
-         obj = cyclicShiftByteMixer.applyFeedbackRotateRound(bytes4);
+         obj = cyclicShiftByteMixer.applyFeedbackRotateRound((byte[])obj);
          cyclicShiftByteMixer = this;
-         byte[] bytes5 = (byte[])obj;
-         obj = cyclicShiftByteMixer.applyNibbleAffineRound(bytes5);
+         obj = cyclicShiftByteMixer.applyNibbleAffineRound((byte[])obj);
          return (byte[])obj;
       }
    }

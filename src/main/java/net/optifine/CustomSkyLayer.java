@@ -95,15 +95,13 @@ public class CustomSkyLayer {
          return false;
       } else {
          if (this.days != null) {
-            long worldTime = world.getWorldTime();
-            long l = worldTime - (long)this.startFadeIn;
+            long l = world.getWorldTime() - (long)this.startFadeIn;
 
             while (l < 0L) {
                l += (long)(24000 * this.daysLoop);
             }
 
-            int n2 = (int)(l / 24000L);
-            int n3 = n2 % this.daysLoop;
+            int n3 = ((int)(l / 24000L)) % this.daysLoop;
             if (!this.days.isInRange(n3)) {
                return false;
             }
@@ -240,10 +238,7 @@ public class CustomSkyLayer {
          if (this.rotate) {
             float f5 = 0.0F;
             if (this.speed != (float)Math.round(this.speed)) {
-               long l = (world.getWorldTime() + 18000L) / 24000L;
-               double d = (double)(this.speed % 1.0F);
-               double d2 = (double)l * d;
-               f5 = (float)(d2 % 1.0);
+               f5 = (float)(((double)((world.getWorldTime() + 18000L) / 24000L) * ((double)(this.speed % 1.0F))) % 1.0);
             }
 
             GlStateManager.rotate(360.0F * (f5 + f * this.speed), this.axis[0], this.axis[1], this.axis[2]);
@@ -333,8 +328,7 @@ public class CustomSkyLayer {
    private float getFadeBrightness(int n) {
       if (this.timeBetween(n, this.startFadeIn, this.endFadeIn)) {
          int n2 = this.normalizeTime(this.endFadeIn - this.startFadeIn);
-         int n3 = this.normalizeTime(n - this.startFadeIn);
-         return (float)n3 / (float)n2;
+         return (float)this.normalizeTime(n - this.startFadeIn) / (float)n2;
       } else if (this.timeBetween(n, this.endFadeIn, this.startFadeOut)) {
          return 1.0F;
       } else if (this.timeBetween(n, this.startFadeOut, this.endFadeOut)) {
@@ -380,10 +374,7 @@ public class CustomSkyLayer {
                }
             }
 
-            int n2 = this.normalizeTime(this.startFadeOut - this.endFadeIn);
-            int n3 = this.normalizeTime(this.endFadeOut - this.startFadeOut);
-            int n4 = this.normalizeTime(this.startFadeIn - this.endFadeOut);
-            int n5 = n + n2 + n3 + n4;
+            int n5 = n + this.normalizeTime(this.startFadeOut - this.endFadeIn) + this.normalizeTime(this.endFadeOut - this.startFadeOut) + this.normalizeTime(this.startFadeIn - this.endFadeOut);
             if (n5 != 24000) {
                Config.warn("Invalid fadeIn/fadeOut times, sum is not 24h: " + n5);
                return false;

@@ -43,8 +43,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer {
       } else {
          if (!Config.zoomMode && tileEntitySign.lineBeingEdited < 0) {
             Entity renderViewEntity = Config.getMc().getRenderViewEntity();
-            double distanceSq = tileEntitySign.getDistanceSq(renderViewEntity.posX, renderViewEntity.posY, renderViewEntity.posZ);
-            if (distanceSq > textRenderDistanceSq) {
+            if (tileEntitySign.getDistanceSq(renderViewEntity.posX, renderViewEntity.posY, renderViewEntity.posZ) > textRenderDistanceSq) {
                return false;
             }
          }
@@ -59,8 +58,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer {
       float f2 = 0.6666667F;
       if (blockType == Blocks.standing_sign) {
          GlStateManager.translate((float)d + 0.5F, (float)d2 + 0.75F * f2, (float)d3 + 0.5F);
-         float f3 = (float)(tileEntitySign.getBlockMetadata() * 360) / 16.0F;
-         GlStateManager.rotate(-f3, 0.0F, 1.0F, 0.0F);
+         GlStateManager.rotate(-((float)(tileEntitySign.getBlockMetadata() * 360) / 16.0F), 0.0F, 1.0F, 0.0F);
          this.model.signStick.showModel = true;
       } else {
          int blockMetadata = tileEntitySign.getBlockMetadata();

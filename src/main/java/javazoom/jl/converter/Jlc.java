@@ -7,8 +7,7 @@ public class Jlc {
 
    public static void main(String[] args) {
       System.currentTimeMillis();
-      int n = args.length + 1;
-      String[] strings = new String[n];
+      String[] strings = new String[args.length + 1];
       strings[0] = "jlc";
 
       for (int i = 0; i < args.length; i++) {

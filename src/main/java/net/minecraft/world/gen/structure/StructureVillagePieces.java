@@ -1474,8 +1474,7 @@ public class StructureVillagePieces {
 
       @Override
       public void replaceAirAndLiquidDownwards(World world, IBlockState state, int n, int n2, int n3, StructureBoundingBox structureBoundingBox) {
-         IBlockState state2 = this.getBiomeSpecificBlockState(state);
-         super.replaceAirAndLiquidDownwards(world, state2, n, n2, n3, structureBoundingBox);
+         super.replaceAirAndLiquidDownwards(world, this.getBiomeSpecificBlockState(state), n, n2, n3, structureBoundingBox);
       }
 
       public IBlockState getBiomeSpecificBlockState(IBlockState state) {
@@ -1583,9 +1582,7 @@ public class StructureVillagePieces {
       public void fillWithBlocks(
          World world, StructureBoundingBox structureBoundingBox, int n, int n2, int n3, int n4, int n5, int n6, IBlockState state, IBlockState state2, boolean flag
       ) {
-         IBlockState state3 = this.getBiomeSpecificBlockState(state);
-         IBlockState state4 = this.getBiomeSpecificBlockState(state2);
-         super.fillWithBlocks(world, structureBoundingBox, n, n2, n3, n4, n5, n6, state3, state4, flag);
+         super.fillWithBlocks(world, structureBoundingBox, n, n2, n3, n4, n5, n6, this.getBiomeSpecificBlockState(state), this.getBiomeSpecificBlockState(state2), flag);
       }
 
       public Village(StructureVillagePieces.Start start, int n) {
@@ -1597,8 +1594,7 @@ public class StructureVillagePieces {
 
       @Override
       public void setBlockState(World world, IBlockState state, int n, int n2, int n3, StructureBoundingBox structureBoundingBox) {
-         IBlockState state2 = this.getBiomeSpecificBlockState(state);
-         super.setBlockState(world, state2, n, n2, n3, structureBoundingBox);
+         super.setBlockState(world, this.getBiomeSpecificBlockState(state), n, n2, n3, structureBoundingBox);
       }
 
       @Override

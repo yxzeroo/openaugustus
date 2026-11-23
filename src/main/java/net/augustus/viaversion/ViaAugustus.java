@@ -46,8 +46,7 @@ public final class ViaAugustus {
 
    public static void sendOpenInventoryPacketIfLegacy() {
       if (targetProtocolVersion.olderThanOrEqualTo(ProtocolVersion.v1_11_1)) {
-         Minecraft minecraft = Minecraft.getMinecraft();
-         minecraft.getNetHandler().addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+         Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
       }
    }
 

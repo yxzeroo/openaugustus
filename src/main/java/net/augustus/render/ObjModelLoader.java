@@ -24,10 +24,8 @@ public class ObjModelLoader {
    public static List normals = new ArrayList();
    private static int textureId;
    public static Map materials = new HashMap();
-   private static int[] loaderStateFlags;
 
    public static void renderModel() {
-      int[] loaderStateFlags2 = getLoaderStateFlags();
 
       for (Entry entry : (Iterable<Entry>)(facesByMaterial.entrySet())) {
          ObjMaterial objMaterial = (ObjMaterial)materials.get(entry.getKey());
@@ -45,7 +43,6 @@ public class ObjModelLoader {
    }
 
    public static void compileDisplayLists() {
-      int[] loaderStateFlags2 = getLoaderStateFlags();
 
       for (Entry entry : (Iterable<Entry>)(facesByMaterial.entrySet())) {
          ObjMaterial objMaterial = (ObjMaterial)materials.get(entry.getKey());
@@ -87,7 +84,6 @@ public class ObjModelLoader {
    }
 
    public static void loadObjModel(String str, String str2) {
-      int[] loaderStateFlags2 = getLoaderStateFlags();
 
       try {
          loadMaterialLibrary(str2);
@@ -152,12 +148,8 @@ public class ObjModelLoader {
       }
    }
 
-   static {
-      setLoaderStateFlags((int[])null);
-   }
 
    public static void loadMaterialLibrary(String str) throws IOException {
-      int[] loaderStateFlags2 = getLoaderStateFlags();
       InputStream resourceAsStream = ObjModelLoader.class.getResourceAsStream(String.format("/assets/augustus/custommodels/%s", str));
       if (resourceAsStream == null) {
          throw new IOException("Datei nicht gefunden: " + str);
@@ -229,12 +221,6 @@ public class ObjModelLoader {
       }
    }
 
-   public static void setLoaderStateFlags(int[] ints) {
-      loaderStateFlags = ints;
-   }
 
-   public static int[] getLoaderStateFlags() {
-      return loaderStateFlags;
-   }
 
 }

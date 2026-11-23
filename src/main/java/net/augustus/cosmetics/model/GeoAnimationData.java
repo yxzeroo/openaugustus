@@ -11,7 +11,6 @@ public class GeoAnimationData {
    public Double startTick;
    private double resetTickLength;
    private HashMap animationControllers;
-   private static int[] flowState;
 
    public HashMap getBoneSnapshotCollection() {
       return this.boneSnapshotCollection;
@@ -30,12 +29,10 @@ public class GeoAnimationData {
    }
 
    public void setResetSpeedInTicks(long l, double d) {
-      int[] flowState2 = getFlowState();
       this.resetTickLength = d < 0.0 ? 0.0 : d;
    }
 
    public GeoAnimationData() {
-      getFlowState();
       this.boneSnapshotCollection = new HashMap();
       this.animationControllers = new HashMap();
       this.isFirstTick = true;
@@ -51,17 +48,6 @@ public class GeoAnimationData {
       this.boneSnapshotCollection = map;
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 
-   static {
-      if (getFlowState() == null) {
-         setFlowState(new int[5]);
-      }
-   }
 }

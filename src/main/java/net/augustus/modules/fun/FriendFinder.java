@@ -10,21 +10,21 @@ import net.augustus.ClientManagers;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 
 public class FriendFinder extends Module implements PacketListener, TickListener {
-   private final StringValue inviteDelay;
+   private final DoubleValue inviteDelay;
    private final BooleanValue hideFriendMessage;
    private final TimeHelper timeHelper;
    private final ArrayList invitedPlayers;
 
    public FriendFinder() {
        super("FriendFinder", "FreundeFinder", new Color(235, 201, 52), Categorys.FUN);
-      this.inviteDelay = new StringValue(this, "InviteDelay", 1000.0, 0.0, 10000.0, 0);
+      this.inviteDelay = new DoubleValue(this, "InviteDelay", 1000.0, 0.0, 10000.0, 0);
       this.hideFriendMessage = new BooleanValue(this, "HideFriendMessage", true);
       this.timeHelper = new TimeHelper();
       this.invitedPlayers = new ArrayList();
@@ -38,17 +38,13 @@ public class FriendFinder extends Module implements PacketListener, TickListener
    }
 
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
       if (mc.getNetHandler().getPlayerInfoMap2().values().size() > 1) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double value = this.inviteDelay.getValue();
-         if (timeHelper2.reached(value)) {
+         if (this.timeHelper.reached(this.inviteDelay.getValue())) {
             for (NetworkPlayerInfo networkPlayerInfo : (Iterable<NetworkPlayerInfo>)(mc.getNetHandler().getPlayerInfoMap2().values())) {
                String name2 = networkPlayerInfo.getGameProfile().getName();
                if (TextFormatUtil.isCleanPlayerName(name2)
@@ -69,8 +65,7 @@ public class FriendFinder extends Module implements PacketListener, TickListener
       if (this.hideFriendMessage.getValue()) {
          Packet packet = event.getPacket();
          if (packet instanceof S02PacketChat) {
-            S02PacketChat packet2 = (S02PacketChat)packet;
-            String unformattedText = packet2.getChatComponent().getUnformattedText();
+            String unformattedText = ((S02PacketChat)packet).getChatComponent().getUnformattedText();
             if (unformattedText.contains("Friends") || unformattedText.contains("friends") || unformattedText.contains("Freunde")) {
                event.cancel();
             }

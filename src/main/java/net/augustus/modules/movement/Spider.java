@@ -6,7 +6,6 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.utils.LicenseTimestampStore;
 import net.augustus.events.listeners.MotionListener;
-import net.augustus.settings.Setting;
 import net.augustus.settings.ModeSetting;
 import net.augustus.modules.modes.spider.BoundingBoxSpiderMode;
 import net.augustus.modules.modes.spider.JumpSpiderMode;
@@ -15,11 +14,11 @@ import net.augustus.modules.modes.spider.MotionSpiderMode;
 import net.augustus.modules.modes.spider.PositionSpiderMode;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.EventMotion;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class Spider extends Module implements TickListener, MotionListener {
    public final ModeSetting mode;
-   public final StringValue timer;
+   public final DoubleValue timer;
 
    public Spider() {
        super("Spider", "Spinne", new Color(168, 127, 50), Categorys.MOVEMENT);
@@ -31,7 +30,7 @@ public class Spider extends Module implements TickListener, MotionListener {
          BoundingBoxSpiderMode.factory()
       };
       this.mode = new ModeSetting(this, "Mode", "Jump", biFunctions);
-      this.timer = new StringValue(this, "Timer", 1.0, 0.1, 2.0, 2);
+      this.timer = new DoubleValue(this, "Timer", 1.0, 0.1, 2.0, 2);
    }
 
    public void onEnable() {
@@ -42,14 +41,11 @@ public class Spider extends Module implements TickListener, MotionListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 18;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)18);
    }
 
    public void onMotion(EventMotion event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.canClimbWall()) {
          mc.getTimer().timerSpeed = (float)Math.max(0.1, this.timer.getValue());
       } else {
@@ -58,12 +54,10 @@ public class Spider extends Module implements TickListener, MotionListener {
    }
 
    public void onTick2() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
    }
 
    private boolean canClimbWall() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer != null && mc.thePlayer.isCollidedHorizontally) {
          if (this.isLicenseTimestampValid() && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isInLava()) {
             return true;
@@ -75,7 +69,6 @@ public class Spider extends Module implements TickListener, MotionListener {
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

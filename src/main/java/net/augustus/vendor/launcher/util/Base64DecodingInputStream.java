@@ -1,6 +1,5 @@
 package net.augustus.vendor.launcher.util;
 
-import net.augustus.vendor.launcher.crypto.Sha256Digest;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,17 +16,14 @@ public class Base64DecodingInputStream extends InputStream {
 
    @Override
    public void close() throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (!this.closed) {
-         boolean flag = true;
-         this.closed = flag;
+         this.closed = true;
          this.is.close();
       }
    }
 
    @Override
    public int read(byte[] bytes, int n, int n2) throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.closed) {
          throw new IOException("Stream is closed");
       } else if (this.eof && this.nextout < 0) {
@@ -42,19 +38,16 @@ public class Base64DecodingInputStream extends InputStream {
 
                bytes[n++] = (byte)(this.bits >> this.nextout);
                n2--;
-               int n4 = this.nextout - 8;
-               this.nextout = n4;
+               this.nextout = this.nextout - 8;
             } while (this.nextout >= 0);
 
-            byte b = 0;
-            this.bits = b;
+            this.bits = (byte)0;
          }
 
          while (n2 > 0) {
             int n5 = this.is.read();
             if (n5 == -1) {
-               boolean flag = true;
-               this.eof = flag;
+               this.eof = true;
                if (this.nextin != 18) {
                   if (this.nextin == 12) {
                      throw new IOException("Base64 stream has one un-decoded dangling byte.");
@@ -64,10 +57,8 @@ public class Base64DecodingInputStream extends InputStream {
                   n2--;
                   if (this.nextin == 0) {
                      if (n2 == 0) {
-                        int n6 = this.bits >> 8;
-                        this.bits = n6;
-                        byte b2 = 0;
-                        this.nextout = b2;
+                        this.bits = this.bits >> 8;
+                        this.nextout = (byte)0;
                      } else {
                         bytes[n++] = (byte)(this.bits >> 8);
                      }
@@ -90,17 +81,14 @@ public class Base64DecodingInputStream extends InputStream {
                n2--;
                if (this.nextin == 0) {
                   if (n2 == 0) {
-                     int n7 = this.bits >> 8;
-                     this.bits = n7;
-                     byte b3 = 0;
-                     this.nextout = b3;
+                     this.bits = this.bits >> 8;
+                     this.nextout = (byte)0;
                   } else {
                      bytes[n++] = (byte)(this.bits >> 8);
                   }
                }
 
-               boolean flag2 = true;
-               this.eof = flag2;
+               this.eof = true;
                break;
             }
 
@@ -109,29 +97,23 @@ public class Base64DecodingInputStream extends InputStream {
                   throw new IOException("Illegal base64 character " + Integer.toString(n5, 16));
                }
             } else {
-               int n8 = this.bits | n5 << this.nextin;
-               this.bits = n8;
+               this.bits = this.bits | n5 << this.nextin;
                if (this.nextin != 0) {
-                  int n9 = this.nextin - 6;
-                  this.nextin = n9;
+                  this.nextin = this.nextin - 6;
                } else {
-                  byte b4 = 18;
-                  this.nextin = b4;
-                  byte b5 = 16;
-                  this.nextout = b5;
+                  this.nextin = (byte)18;
+                  this.nextout = (byte)16;
 
                   while (this.nextout >= 0) {
                      bytes[n++] = (byte)(this.bits >> this.nextout);
                      n2--;
-                     int n10 = this.nextout - 8;
-                     this.nextout = n10;
+                     this.nextout = this.nextout - 8;
                      if (n2 == 0 && this.nextout >= 0) {
                         return n - n3;
                      }
                   }
 
-                  byte b6 = 0;
-                  this.bits = b6;
+                  this.bits = (byte)0;
                }
             }
          }
@@ -144,7 +126,6 @@ public class Base64DecodingInputStream extends InputStream {
 
    @Override
    public int available() throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.closed) {
          throw new IOException("Stream is closed");
       } else {
@@ -153,18 +134,12 @@ public class Base64DecodingInputStream extends InputStream {
    }
 
    public Base64DecodingInputStream(InputStream in, int[] ints, boolean flag) {
-      byte b = 0;
-      this.bits = b;
-      byte b2 = 18;
-      this.nextin = b2;
-      byte b3 = -8;
-      this.nextout = b3;
-      boolean flag2 = false;
-      this.eof = flag2;
-      boolean flag3 = false;
-      this.closed = flag3;
-      byte[] bytes = new byte[1];
-      this.sbBuf = bytes;
+      this.bits = (byte)0;
+      this.nextin = (byte)18;
+      this.nextout = (byte)-8;
+      this.eof = false;
+      this.closed = false;
+      this.sbBuf = new byte[1];
       this.is = in;
       this.base64 = ints;
       this.isMIME = flag;
@@ -172,11 +147,7 @@ public class Base64DecodingInputStream extends InputStream {
 
    @Override
    public int read() throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
-      byte b = 1;
-      byte b2 = 0;
-      byte[] sbBuf2 = this.sbBuf;
-      return this.read(sbBuf2, b2, b) == -1 ? -1 : this.sbBuf[0] & 0xFF;
+      return this.read(this.sbBuf, (byte)0, (byte)1) == -1 ? -1 : this.sbBuf[0] & 0xFF;
    }
 
 }

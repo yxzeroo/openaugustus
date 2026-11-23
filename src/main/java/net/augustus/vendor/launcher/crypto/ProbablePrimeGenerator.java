@@ -8,19 +8,14 @@ public class ProbablePrimeGenerator {
    private static final ShadedBigInteger TWO;
 
    private boolean isProbablePrime(ShadedBigInteger shadedBigInteger, int n) {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
-      ShadedBigInteger one = ShadedBigInteger.ONE;
-      if (shadedBigInteger.compareTo2(one) <= 0) {
+      if (shadedBigInteger.compareTo2(ShadedBigInteger.ONE) <= 0) {
          return false;
       } else {
-         ShadedBigInteger shadedBigInteger2 = TWO;
-         if (shadedBigInteger.equals(shadedBigInteger2)) {
+         if (shadedBigInteger.equals(TWO)) {
             return true;
          } else {
-            ShadedBigInteger shadedBigInteger3 = TWO;
-            ShadedBigInteger shadedBigInteger4 = shadedBigInteger.mod(shadedBigInteger3);
-            ShadedBigInteger zero = ShadedBigInteger.ZERO;
-            if (shadedBigInteger4.equals(zero)) {
+            ShadedBigInteger shadedBigInteger4 = shadedBigInteger.mod(TWO);
+            if (shadedBigInteger4.equals(ShadedBigInteger.ZERO)) {
                return false;
             } else {
                ShadedBigInteger[] shadedBigIntegers = new ShadedBigInteger[]{
@@ -41,39 +36,31 @@ public class ProbablePrimeGenerator {
                   }
 
                   shadedBigInteger4 = shadedBigInteger.mod(shadedBigInteger5);
-                  ShadedBigInteger zero2 = ShadedBigInteger.ZERO;
-                  if (shadedBigInteger4.equals(zero2)) {
+                  if (shadedBigInteger4.equals(ShadedBigInteger.ZERO)) {
                      return false;
                   }
                }
 
-               ShadedBigInteger one2 = ShadedBigInteger.ONE;
-               ShadedBigInteger shadedBigInteger6 = shadedBigInteger.subtract(one2);
+               ShadedBigInteger shadedBigInteger6 = shadedBigInteger.subtract(ShadedBigInteger.ONE);
                int n2 = 0;
                ShadedBigInteger shadedBigInteger7 = shadedBigInteger6;
 
                while (true) {
-                  ShadedBigInteger shadedBigInteger8 = TWO;
-                  shadedBigInteger4 = shadedBigInteger7.mod(shadedBigInteger8);
-                  ShadedBigInteger zero3 = ShadedBigInteger.ZERO;
-                  if (!shadedBigInteger4.equals(zero3)) {
+                  shadedBigInteger4 = shadedBigInteger7.mod(TWO);
+                  if (!shadedBigInteger4.equals(ShadedBigInteger.ZERO)) {
                      for (int i = 0; i < n; i++) {
                         while (true) {
                            shadedBigInteger4 = new ShadedBigInteger(shadedBigInteger.bitLength(), this.random);
                            ShadedBigInteger shadedBigInteger9 = shadedBigInteger4.mod(shadedBigInteger);
-                           ShadedBigInteger one3 = ShadedBigInteger.ONE;
-                           if (shadedBigInteger9.compareTo2(one3) > 0) {
+                           if (shadedBigInteger9.compareTo2(ShadedBigInteger.ONE) > 0) {
                               if (shadedBigInteger9.compareTo2(shadedBigInteger6) < 0) {
                                  ShadedBigInteger shadedBigInteger10 = shadedBigInteger9.modPow(shadedBigInteger7, shadedBigInteger);
-                                 ShadedBigInteger one4 = ShadedBigInteger.ONE;
-                                 if (!shadedBigInteger10.equals(one4) && !shadedBigInteger10.equals(shadedBigInteger6)) {
+                                 if (!shadedBigInteger10.equals(ShadedBigInteger.ONE) && !shadedBigInteger10.equals(shadedBigInteger6)) {
                                     boolean flag = false;
 
                                     for (int j = 0; j < n2 - 1; j++) {
-                                       ShadedBigInteger shadedBigInteger11 = TWO;
-                                       shadedBigInteger10 = shadedBigInteger10.modPow(shadedBigInteger11, shadedBigInteger);
-                                       ShadedBigInteger one5 = ShadedBigInteger.ONE;
-                                       if (shadedBigInteger10.equals(one5)) {
+                                       shadedBigInteger10 = shadedBigInteger10.modPow(TWO, shadedBigInteger);
+                                       if (shadedBigInteger10.equals(ShadedBigInteger.ONE)) {
                                           return false;
                                        }
 
@@ -96,8 +83,7 @@ public class ProbablePrimeGenerator {
                      return true;
                   }
 
-                  ShadedBigInteger shadedBigInteger12 = TWO;
-                  shadedBigInteger7 = shadedBigInteger7.divide(shadedBigInteger12);
+                  shadedBigInteger7 = shadedBigInteger7.divide(TWO);
                   n2++;
                }
             }
@@ -107,7 +93,6 @@ public class ProbablePrimeGenerator {
 
    public void nextEntropyBytes(byte[] bytes) {
       this.random.nextBytes(bytes);
-      Pkcs1Padding.getInvertedFlowMarker();
 
       for (int i = 0; i < bytes.length; i++) {
          bytes[i] ^= (byte)((int)(System.nanoTime() & 255L));
@@ -140,7 +125,6 @@ public class ProbablePrimeGenerator {
 
    public ShadedBigInteger generateRandomBigInteger(int n) {
       int n2 = (n + 7) / 8;
-      Pkcs1Padding.getFlowState();
       byte[] bytes = new byte[n2];
       this.nextEntropyBytes(bytes);
       if (n > 0) {
@@ -153,17 +137,13 @@ public class ProbablePrimeGenerator {
    }
 
    public ShadedBigInteger generateProbablePrime(int n, int n2) {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
       ShadedBigInteger shadedBigInteger = this.generateRandomBigInteger(n);
-      byte b = 0;
-      if (!shadedBigInteger.testBit(b)) {
-         ShadedBigInteger one = ShadedBigInteger.ONE;
-         shadedBigInteger = shadedBigInteger.add(one);
+      if (!shadedBigInteger.testBit((byte)0)) {
+         shadedBigInteger = shadedBigInteger.add(ShadedBigInteger.ONE);
       }
 
       while (!this.isProbablePrime(shadedBigInteger, n2)) {
-         ShadedBigInteger shadedBigInteger2 = TWO;
-         shadedBigInteger = shadedBigInteger.add(shadedBigInteger2);
+         shadedBigInteger = shadedBigInteger.add(TWO);
       }
 
       return shadedBigInteger;

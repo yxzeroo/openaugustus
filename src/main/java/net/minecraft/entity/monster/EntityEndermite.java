@@ -121,8 +121,7 @@ public class EntityEndermite extends EntityMob {
    @Override
    public boolean getCanSpawnHere() {
       if (super.getCanSpawnHere()) {
-         EntityPlayer closestPlayerToEntity = this.entityWorld.getClosestPlayerToEntity(this, 5.0);
-         return closestPlayerToEntity == null;
+         return this.entityWorld.getClosestPlayerToEntity(this, 5.0) == null;
       } else {
          return false;
       }

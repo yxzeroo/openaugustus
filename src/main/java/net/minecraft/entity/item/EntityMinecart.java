@@ -174,8 +174,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable {
                      (double)MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F)
                   )
                   .normalize();
-               double d7 = Math.abs(vec.dotProduct(vec2));
-               if (d7 < 0.8F) {
+               if (Math.abs(vec.dotProduct(vec2)) < 0.8F) {
                   return;
                }
 
@@ -394,8 +393,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable {
       double d2 = (double)(intsArr[1][0] - intsArr[0][0]);
       double d3 = (double)(intsArr[1][2] - intsArr[0][2]);
       double d4 = Math.sqrt(d2 * d2 + d3 * d3);
-      double d5 = this.motionX * d2 + this.motionZ * d3;
-      if (d5 < 0.0) {
+      if ((this.motionX * d2 + this.motionZ * d3) < 0.0) {
          d2 = -d2;
          d3 = -d3;
       }
@@ -408,12 +406,10 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable {
       this.motionX = d6 * d2 / d4;
       this.motionZ = d6 * d3 / d4;
       if (this.riddenByEntity instanceof EntityLivingBase) {
-         double moveForward = (double)((EntityLivingBase)this.riddenByEntity).moveForward;
-         if (moveForward > 0.0) {
+         if (((double)((EntityLivingBase)this.riddenByEntity).moveForward) > 0.0) {
             double d7 = -Math.sin((double)(this.riddenByEntity.rotationYaw * (float) Math.PI / 180.0F));
             double d8 = Math.cos((double)(this.riddenByEntity.rotationYaw * (float) Math.PI / 180.0F));
-            double d9 = this.motionX * this.motionX + this.motionZ * this.motionZ;
-            if (d9 < 0.01) {
+            if ((this.motionX * this.motionX + this.motionZ * this.motionZ) < 0.01) {
                this.motionX += d7 * 0.1;
                this.motionZ += d8 * 0.1;
                flag2 = false;
@@ -422,8 +418,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable {
       }
 
       if (flag2) {
-         double d10 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-         if (d10 < 0.03) {
+         if (Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ) < 0.03) {
             this.motionX *= 0.0;
             this.motionY *= 0.0;
             this.motionZ *= 0.0;

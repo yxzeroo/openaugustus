@@ -41,16 +41,14 @@ public class AntiStrike extends Module implements PacketListener {
    }
 
    public void onEnable() {
-      String str = "Please rejoin the server for full Protection";
-      this.sendChatMessage2(str);
+      this.sendChatMessage2("Please rejoin the server for full Protection");
    }
 
    public void onDisable() {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    public void onPacket(EventPacket event) {
@@ -90,8 +88,7 @@ public class AntiStrike extends Module implements PacketListener {
             str = strings2[0];
          }
 
-         char ch = 167;
-         str = TextFormatUtil.stripFormattingCodes(str, ch);
+         str = TextFormatUtil.stripFormattingCodes(str, (char)167);
          this.scoreboardTitleServerIp = str;
       }
    }
@@ -130,8 +127,7 @@ public class AntiStrike extends Module implements PacketListener {
             str = strings2[0];
          }
 
-         char ch = 167;
-         str = TextFormatUtil.stripFormattingCodes(str, ch);
+         str = TextFormatUtil.stripFormattingCodes(str, (char)167);
          this.scoreboardLineServerIp = str;
       }
    }

@@ -22,8 +22,7 @@ public class GeneralizedNormalSampler {
        super();
       this.randomGenerator = new SecureRandomGeneratorAdapter();
       this.stdDev = 1.0;
-      double d = 1.0;
-      this.setBeta(d);
+      this.setBeta(1.0);
    }
 
    public void setBeta(double d) {
@@ -37,10 +36,8 @@ public class GeneralizedNormalSampler {
    }
 
    public double sample(double d) {
-      double d2 = this.gammaDistribution.sample();
-      double d3 = Math.pow(d2, 1.0 / this.beta);
-      boolean flag = this.randomGenerator.nextBoolean();
-      double d4 = flag ? 1.0 : -1.0;
+      double d3 = Math.pow(this.gammaDistribution.sample(), 1.0 / this.beta);
+      double d4 = this.randomGenerator.nextBoolean() ? 1.0 : -1.0;
       return d + this.alpha * d4 * d3;
    }
 

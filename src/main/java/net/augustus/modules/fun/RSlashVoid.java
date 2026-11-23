@@ -18,7 +18,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -30,7 +30,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class RSlashVoid extends Module implements TickListener, ClickListener, MoveInputListener {
-   private final StringValue numberOfBlocksToReplace;
+   private final DoubleValue numberOfBlocksToReplace;
    private final RandomizedRangeSettings clickDelay;
    private final BooleanValue teleport;
    private final RandomizedRangeSettings tpDelay;
@@ -48,18 +48,14 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
 
    public RSlashVoid() {
        super("RSlashVoid", "RSlashVoid", Color.black, Categorys.FUN);
-      this.numberOfBlocksToReplace = new StringValue(this, "Number of blocks to replace", 1000.0, 0.0, 5000.0, 0);
+      this.numberOfBlocksToReplace = new DoubleValue(this, "Number of blocks to replace", 1000.0, 0.0, 5000.0, 0);
       this.clickDelay = (new RandomizedRangeSettings(this, "ClickDelay", 1000.0, 2000.0, 0.0, 4000.0, 0)).withoutNotInARow();
       this.teleport = new BooleanValue(this, "Teleport", true);
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "TPDelay", 3000.0, 4000.0, 0.0, 10000.0, 0)).withoutNotInARow();
       BooleanValue teleport2 = this.teleport;
       this.teleport.getClass();
-      BooleanValue booleanValue = teleport2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.tpDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "WalkingPointUpdateDelay", 3000.0, 4000.0, 0.0, 10000.0, 0)).withoutNotInARow();
-      SettingVisibilityCondition condition2 = () -> this.isWalkingModeEnabled();
-      this.walkingPointUpdateDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2);
+      this.tpDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> teleport2.getValue());
+      this.walkingPointUpdateDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "WalkingPointUpdateDelay", 3000.0, 4000.0, 0.0, 10000.0, 0)).withoutNotInARow().withVisibility(() -> this.isWalkingModeEnabled());
       this.leftClick = new BooleanValue(this, "LeftClick", true);
       this.rightClick = new BooleanValue(this, "RightClick", true);
       this.lookDown = new BooleanValue(this, "LookDown", true);
@@ -75,14 +71,10 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
    @Override
    public void onEnable() {
       if (mc.theWorld != null && mc.thePlayer != null) {
-         String str = "How to grief r/place on gomme:";
-         this.sendChatMessage2(str);
-         String str2 = "1. Get a coal block into your hotbar";
-         this.sendChatMessage2(str2);
-         String str3 = "2. Select the coal block";
-         this.sendChatMessage2(str3);
-         String str4 = "3. Enable autoplay to tab out and chill";
-         this.sendChatMessage2(str4);
+         this.sendChatMessage2("How to grief r/place on gomme:");
+         this.sendChatMessage2("1. Get a coal block into your hotbar");
+         this.sendChatMessage2("2. Select the coal block");
+         this.sendChatMessage2("3. Enable autoplay to tab out and chill");
          this.originPos = mc.thePlayer.getInterpolatedPos(1.0F);
          this.spiralCoords = generateSpiralCoords((int)this.originPos.xCoord, (int)this.originPos.zCoord, (int)this.numberOfBlocksToReplace.getValue());
          this.replaceStep = 0;
@@ -97,33 +89,27 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
    public void onTick() {
       if (!this.isInactiveOrMissingCoalBlock()) {
          if (this.lookDown.getValue()) {
-            byte b = -19;
             float f = 90.0F;
-            ClientManagers.rotationController.requestPitch(f, b, this);
+            ClientManagers.rotationController.requestPitch(f, (byte)-19, this);
          }
 
          if (this.replaceStep == 0 || !this.teleport.getValue()) {
             TimeHelper teleportTimer2 = this.teleportTimer;
-            long lastIntValue = (long)this.tpDelay.getLastIntValue();
-            if (teleportTimer2.reached2(lastIntValue) || !this.teleport.getValue()) {
+            if (teleportTimer2.reached2((long)this.tpDelay.getLastIntValue()) || !this.teleport.getValue()) {
                this.tpDelay.nextValue();
                this.teleportTimer.reset();
 
                for (GridCoord2I gridCoord2I : (Iterable<GridCoord2I>)(this.spiralCoords)) {
-                  Block block = mc.theWorld.getBlockState((double)gridCoord2I.x, mc.thePlayer.lastGroundY - 1.0, (double)gridCoord2I.z).getBlock();
-                  if (!block.equals(Blocks.coal_block)) {
+                  if (!mc.theWorld.getBlockState((double)gridCoord2I.x, mc.thePlayer.lastGroundY - 1.0, (double)gridCoord2I.z).getBlock().equals(Blocks.coal_block)) {
                      double d = (double)gridCoord2I.x + 0.5;
                      double d2 = (double)gridCoord2I.z + 0.5;
                      if (this.teleport.getValue()) {
@@ -132,8 +118,7 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
                         mc.thePlayer.setPosition(mc.thePlayer.posX - d3, this.originPos.yCoord + 0.2, mc.thePlayer.posZ - d4);
                      } else {
                         teleportTimer2 = this.walkTargetTimer;
-                        long lastIntValue2 = (long)this.walkingPointUpdateDelay.getLastIntValue();
-                        if (teleportTimer2.reached2(lastIntValue2)) {
+                        if (teleportTimer2.reached2((long)this.walkingPointUpdateDelay.getLastIntValue())) {
                            this.walkTargetPos = new Vec3(d, mc.thePlayer.posY, d2);
                            this.walkTargetTimer.reset();
                            this.walkingPointUpdateDelay.nextValue();
@@ -148,11 +133,7 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
                         float f4 = DefaultRandomGenerator.instance.nextFloat(f3, f2);
                         float f5 = 15.0F;
                         float f6 = 10.0F;
-                        float f7 = DefaultRandomGenerator.instance.nextFloat(f6, f5);
-                        boolean flag = false;
-                        float f8 = f7;
-                        float f9 = f4;
-                        Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, d5, zCoord, previousRotation, f9, f8, flag);
+                        Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, d5, zCoord, previousRotation, f4, DefaultRandomGenerator.instance.nextFloat(f6, f5), false);
                         rotationsToPos = new Rotation(rotationsToPos.yaw, this.lookDown.getValue() && mc.thePlayer.getDistanceToVec(this.walkTargetPos) < 3.0 ? 90.0F : rotationsToPos.pitch);
                         if (Math.abs(rotationsToPos.yaw - ClientManagers.rotationController.getPreviousRotation().yaw) > 2.0F || Math.abs(rotationsToPos.pitch - ClientManagers.rotationController.getPreviousRotation().pitch) > 2.0F) {
                            float f10 = 1.0F;
@@ -168,10 +149,8 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
                         Rotation rotation = new Rotation(
                            rotationsToPos.yaw, RotationUtil.updatePitchWithGcd(ClientManagers.rotationController.getPreviousRotation().pitch, rotationsToPos.pitch, DefaultRandomGenerator.instance.nextFloat(f15, f14))
                         );
-                        Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-                        rotationsToPos = RotationUtil.applyGcdFix(rotation, previousRotation2);
-                        byte b2 = -20;
-                        ClientManagers.rotationController.requestRotation(rotationsToPos, b2, this);
+                        rotationsToPos = RotationUtil.applyGcdFix(rotation, ClientManagers.rotationController.getPreviousRotation());
+                        ClientManagers.rotationController.requestRotation(rotationsToPos, (byte)-20, this);
                      }
 
                      this.replaceStep = 1;
@@ -190,9 +169,7 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
          if (this.replaceStep == 1 && this.teleport.getValue()) {
             this.replaceStep = 2;
          } else {
-            TimeHelper clickTimer2 = this.clickTimer;
-            long lastIntValue = (long)this.clickDelay.getLastIntValue();
-            if (clickTimer2.reached2(lastIntValue)) {
+            if (this.clickTimer.reached2((long)this.clickDelay.getLastIntValue())) {
                BlockPos pos = new BlockPos(mc.thePlayer.posX, this.originPos.yCoord - 0.7, mc.thePlayer.posZ);
                if (this.replaceStep < 2 && this.teleport.getValue()
                   || mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.coal_block)
@@ -241,20 +218,16 @@ public class RSlashVoid extends Module implements TickListener, ClickListener, M
       if (!this.isInactiveOrMissingCoalBlock() && !this.teleport.getValue() && this.walkTargetPos != null) {
          double distance = mc.thePlayer.getDistance(this.walkTargetPos.xCoord, this.walkTargetPos.yCoord, this.walkTargetPos.zCoord);
          if (distance > 0.2) {
-            float f = 1.0F;
-            event.setMoveForward(f);
+            event.setMoveForward(1.0F);
             if (distance > 6.0) {
-               boolean flag = true;
-               event.setJump(flag);
+               event.setJump(true);
             }
 
             if (distance < 1.5) {
-               boolean flag2 = true;
-               event.setSneak(flag2);
+               event.setSneak(true);
             }
          } else {
-            boolean flag3 = true;
-            event.setSneak(flag3);
+            event.setSneak(true);
          }
       }
    }

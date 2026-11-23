@@ -53,20 +53,15 @@ public class Lag extends Module implements TickListener, PacketListener, KeyList
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 14;
-      this.toggleEventSubscription(b3);
-      byte b4 = 32;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)14);
+      this.toggleEventSubscription((byte)32);
    }
 
    public void onRender(float f) {
       if (this.lagging) {
-         Object obj = null;
-         mc.currentScreen = (GuiScreen)obj;
+         mc.currentScreen = (GuiScreen)null;
       }
    }
 
@@ -90,8 +85,7 @@ public class Lag extends Module implements TickListener, PacketListener, KeyList
                   for (int i = 0; i < lastDisplayedScreen.inventorySlots.inventorySlots.size(); i++) {
                      ItemStack stack = lastDisplayedScreen.inventorySlots.getSlot(i).getStack();
                      if (stack != null) {
-                        Item item = stack.getItem();
-                        if (item instanceof ItemSword) {
+                        if (stack.getItem() instanceof ItemSword) {
                            mc.playerController.windowClick(lastDisplayedScreen.inventorySlots.windowId, -999, 0, 4, mc.thePlayer);
                            mc.playerController.windowClick(lastDisplayedScreen.inventorySlots.windowId, i, 0, 0, mc.thePlayer);
                            this.lagReportStage = LagReportStage.CLOSE;
@@ -129,8 +123,7 @@ public class Lag extends Module implements TickListener, PacketListener, KeyList
       }
 
       if (packet instanceof S02PacketChat) {
-         S02PacketChat packet2 = (S02PacketChat)packet;
-         if (packet2.getChatComponent().getUnformattedText().contains("Spieler konnte nicht gefunden werden")) {
+         if (((S02PacketChat)packet).getChatComponent().getUnformattedText().contains("Spieler konnte nicht gefunden werden")) {
             this.lagReportStage = LagReportStage.SEND_MESSAGE;
             event.cancel();
          }
@@ -142,11 +135,9 @@ public class Lag extends Module implements TickListener, PacketListener, KeyList
          this.lagging = !this.lagging;
          if (this.lagging) {
             this.lagReportStage = LagReportStage.SEND_MESSAGE;
-            String str = "Start lagging";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Start lagging");
          } else {
-            String str2 = "Stop lagging";
-            this.sendChatMessage2(str2);
+            this.sendChatMessage2("Stop lagging");
          }
       }
    }

@@ -27,9 +27,7 @@ public class ETACommand extends Command {
    @Override
    public void execute(String str, IArgConsumer argConsumer) throws CommandException {
       argConsumer.requireMax(0);
-      IPathingControlManager pathingControlManager = this.baritone.getPathingControlManager();
-      IBaritoneProcess baritoneProcess = (IBaritoneProcess)pathingControlManager.mostRecentInControl().orElse(null);
-      if (baritoneProcess == null) {
+      if (((IBaritoneProcess)this.baritone.getPathingControlManager().mostRecentInControl().orElse(null)) == null) {
          throw new CommandInvalidStateException("No process in control");
       } else {
          IPathingBehavior pathingBehavior = this.baritone.getPathingBehavior();

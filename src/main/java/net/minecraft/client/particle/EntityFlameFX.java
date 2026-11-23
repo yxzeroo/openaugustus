@@ -68,8 +68,7 @@ public class EntityFlameFX extends EntityFX {
    public float getBrightness(float f) {
       float f2 = ((float)this.particleAge + f) / (float)this.particleMaxAge;
       f2 = MathHelper.clamp_float(f2, 0.0F, 1.0F);
-      float brightness = super.getBrightness(f);
-      return brightness * f2 + (1.0F - f2);
+      return super.getBrightness(f) * f2 + (1.0F - f2);
    }
 
 

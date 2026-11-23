@@ -33,9 +33,7 @@ public class VendorPacketDispatcher {
                return;
             }
 
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            FriendAcceptPacket packet2 = packet;
-            activeHandler.sendPacket(packet2);
+            AugustusServerHandler.getActiveHandler().sendPacket(packet);
          } else if (VendorSessionTicker.sessionToken.length >= 32) {
             while (true) {
                while (b < 1) {
@@ -64,9 +62,7 @@ public class VendorPacketDispatcher {
 
       while (true) {
          while (2 >= b) {
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            IrcChatSendPacket packet = new IrcChatSendPacket(VendorSessionTicker.sessionToken, str, "");
-            activeHandler.sendPacket(packet);
+            AugustusServerHandler.getActiveHandler().sendPacket(new IrcChatSendPacket(VendorSessionTicker.sessionToken, str, ""));
          }
 
          if (3 < b) {
@@ -119,9 +115,7 @@ public class VendorPacketDispatcher {
                return;
             }
 
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            PlayerPresenceClearPacket packet2 = packet;
-            activeHandler.sendPacket(packet2);
+            AugustusServerHandler.getActiveHandler().sendPacket(packet);
          }
 
          n = nextAckId();
@@ -141,9 +135,7 @@ public class VendorPacketDispatcher {
       } while (((byte[])VendorSessionTicker.sessionToken).length >= 32);
 
       while (2 >= b) {
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         IrcChatSendPacket packet = new IrcChatSendPacket(VendorSessionTicker.sessionToken, str2, str);
-         activeHandler.sendPacket(packet);
+         AugustusServerHandler.getActiveHandler().sendPacket(new IrcChatSendPacket(VendorSessionTicker.sessionToken, str2, str));
       }
 
       if (b > 3) {
@@ -198,9 +190,7 @@ public class VendorPacketDispatcher {
             return;
          }
 
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         IrcVisibilityUpdatePacket packet2 = packet;
-         activeHandler.sendPacket(packet2);
+         AugustusServerHandler.getActiveHandler().sendPacket(packet);
          l = l + -6049759494623358567L ^ -8533797956038573432L;
       }
    }
@@ -215,9 +205,7 @@ public class VendorPacketDispatcher {
                ;
             }
          } else {
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            ServerCommandPacket packet = new ServerCommandPacket(VendorSessionTicker.sessionToken, str, str2, str3);
-            activeHandler.sendPacket(packet);
+            AugustusServerHandler.getActiveHandler().sendPacket(new ServerCommandPacket(VendorSessionTicker.sessionToken, str, str2, str3));
          }
 
          while (2 < b) {
@@ -271,9 +259,7 @@ public class VendorPacketDispatcher {
          if (b <= 2) {
             pendingAckPackets.put(n, new TuplePair(System.currentTimeMillis(), packet));
          } else {
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            FriendRequestPacket packet2 = packet;
-            activeHandler.sendPacket(packet2);
+            AugustusServerHandler.getActiveHandler().sendPacket(packet);
          }
       }
    }
@@ -288,9 +274,7 @@ public class VendorPacketDispatcher {
                ;
             }
          } else {
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            IrcChatTogglePacket packet = new IrcChatTogglePacket(VendorSessionTicker.sessionToken, true);
-            activeHandler.sendPacket(packet);
+            AugustusServerHandler.getActiveHandler().sendPacket(new IrcChatTogglePacket(VendorSessionTicker.sessionToken, true));
          }
 
          while (2 < b) {
@@ -334,9 +318,7 @@ public class VendorPacketDispatcher {
             l = (l ^ 5233668941387324278L) + 1412335866377477451L;
             if (AugustusServerHandler.isConnectedAndReady()) {
                l = l + -33699786205082705L ^ 2273859395011844257L;
-               AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-               FriendRemoveC2SPacket packet = (FriendRemoveC2SPacket)obj;
-               activeHandler.sendPacket(packet);
+               AugustusServerHandler.getActiveHandler().sendPacket((FriendRemoveC2SPacket)obj);
                l = l + 40913739074716577L ^ -7280564067895542136L;
             } else {
                l = (l ^ -1498820367456127309L) + -2476515143691231501L;
@@ -366,9 +348,7 @@ public class VendorPacketDispatcher {
                break;
             }
 
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            IrcChatTogglePacket packet = new IrcChatTogglePacket(VendorSessionTicker.sessionToken, false);
-            activeHandler.sendPacket(packet);
+            AugustusServerHandler.getActiveHandler().sendPacket(new IrcChatTogglePacket(VendorSessionTicker.sessionToken, false));
          } else if (VendorSessionTicker.sessionToken.length < 32) {
             break;
          }
@@ -430,9 +410,7 @@ public class VendorPacketDispatcher {
                return false;
             }
 
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            TelemetryLogPacket packet = (TelemetryLogPacket)obj2;
-            activeHandler.sendPacket(packet);
+            AugustusServerHandler.getActiveHandler().sendPacket((TelemetryLogPacket)obj2);
             l = (l ^ 1088016319020558402L) - -4330668201231086018L;
          } else {
             n2 = 0;
@@ -494,9 +472,7 @@ public class VendorPacketDispatcher {
                }
             }
 
-            AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-            PlayerPresenceUpdatePacket packet2 = packet;
-            activeHandler.sendPacket(packet2);
+            AugustusServerHandler.getActiveHandler().sendPacket(packet);
          }
       }
    }

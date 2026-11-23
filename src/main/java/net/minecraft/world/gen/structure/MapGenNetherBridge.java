@@ -56,9 +56,7 @@ public class MapGenNetherBridge extends MapGenStructure {
          List pendingChildren = start.pendingChildren;
 
          while (!pendingChildren.isEmpty()) {
-            int n3 = rand.nextInt(pendingChildren.size());
-            StructureComponent structureComponent = (StructureComponent)pendingChildren.remove(n3);
-            structureComponent.buildComponent(start, this.components, rand);
+            ((StructureComponent)pendingChildren.remove(rand.nextInt(pendingChildren.size()))).buildComponent(start, this.components, rand);
          }
 
          this.updateBoundingBox();

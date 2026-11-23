@@ -22,8 +22,7 @@ public class StringArraySetting extends AbstractArraySetting {
 
    @Override
    public void setValues(Object[] array) {
-      String[] strings = (String[])array;
-      this.setStringValues(strings);
+      this.setStringValues((String[])array);
    }
 
    public StringArraySetting(Module module, String str) {

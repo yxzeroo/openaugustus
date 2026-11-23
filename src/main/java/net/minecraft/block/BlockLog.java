@@ -21,8 +21,7 @@ public abstract class BlockLog extends BlockRotatedPillar {
    }
 
    static {
-      String str = "axis";
-      LOG_AXIS = PropertyEnum.create(str, BlockLog.EnumAxis.class);
+      LOG_AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
    }
 
    @Override

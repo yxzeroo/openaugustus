@@ -4,20 +4,19 @@ import net.augustus.events.EventPacket;
 import net.augustus.events.listeners.PacketListener;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
 public class HypixelTestVelocityMode extends VelocityMode implements PacketListener {
 
-   public HypixelTestVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public HypixelTestVelocityMode(Velocity velocity, SettingGroup doubleValue) {
       super(velocity, doubleValue, "HypixelTest");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -29,7 +28,7 @@ public class HypixelTestVelocityMode extends VelocityMode implements PacketListe
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new HypixelTestVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new HypixelTestVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override

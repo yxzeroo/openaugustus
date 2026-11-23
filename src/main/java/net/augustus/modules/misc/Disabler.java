@@ -34,9 +34,9 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.EventMotion;
 import net.augustus.events.listeners.SwingListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -66,18 +66,18 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 public class Disabler extends Module implements UpdateListener, RenderListener, PacketListener, TickListener, MotionListener, ClickListener, SwingListener, PacketDelayListener {
-   private final DoubleValue customPacketCanceling;
-   private final DoubleValue incomingPackets;
+   private final SettingGroup customPacketCanceling;
+   private final SettingGroup incomingPackets;
    private final MultiOptionSetting incomingPacketsToCancel;
-   private final DoubleValue outgoingPackets;
+   private final SettingGroup outgoingPackets;
    private final MultiOptionSetting outGoingPacketsToCancel;
-   private final DoubleValue detailedPackets;
+   private final SettingGroup detailedPackets;
    private final MultiOptionSetting entityActionsToCancel;
    private final MultiOptionSetting diggingPacket;
    private final BooleanValue pingSpoof;
    private final MultiOptionSetting pingSpoofPackets;
    private final RangeSetting delay;
-   private final DoubleValue place;
+   private final SettingGroup place;
    private final BooleanValue place1;
    private final BooleanValue notWhileAttack1;
    private final BooleanValue notWhileScaffold1;
@@ -110,8 +110,8 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
    private final BooleanValue grimSpecAlways;
    private final BooleanValue minibloxMoveFix;
    private final BooleanValue sneak;
-   private final BooleansSetting sneakType;
-   private final StringValue sneakDelay;
+   private final StringValue sneakType;
+   private final DoubleValue sneakDelay;
    private final CopyOnWriteArrayList spoofedPackets;
    private final HashMap spoofedPacketTimestamps;
    private int transactionCounter;
@@ -128,12 +128,12 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
    public Disabler() {
        super("Disabler", "Deaktivierer", new Color(73, 127, 163), Categorys.MISC);
-      this.customPacketCanceling = new DoubleValue(this, "CustomPacketCanceling");
-      this.incomingPackets = new DoubleValue(this, "IncomingPackets", this.customPacketCanceling);
+      this.customPacketCanceling = new SettingGroup(this, "CustomPacketCanceling");
+      this.incomingPackets = new SettingGroup(this, "IncomingPackets", this.customPacketCanceling);
       this.incomingPacketsToCancel = new DisablerIncomingPacketCancelSetting(this, this, "IncomingPacketsToCancel", DisablerIncomingPacketOption.values(), this.incomingPackets);
-      this.outgoingPackets = new DoubleValue(this, "OutgoingPackets", this.customPacketCanceling);
+      this.outgoingPackets = new SettingGroup(this, "OutgoingPackets", this.customPacketCanceling);
       this.outGoingPacketsToCancel = new DisablerOutgoingPacketCancelSetting(this, this, "OutGoingPacketsToCancel", DisablerOutgoingPacketOption.values(), this.outgoingPackets);
-      this.detailedPackets = new DoubleValue(this, "DetailedPackets", this.customPacketCanceling);
+      this.detailedPackets = new SettingGroup(this, "DetailedPackets", this.customPacketCanceling);
       this.entityActionsToCancel = new MultiOptionSetting(this, "EntityActionsToCancel", DisablerEntityActionOption.values(), this.detailedPackets);
       this.diggingPacket = new MultiOptionSetting(this, "DiggingPacket", DisablerDiggingActionOption.values(), this.detailedPackets);
       this.pingSpoof = new BooleanValue(this, "PingSpoof", false);
@@ -141,114 +141,64 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       BooleanValue pingSpoof2 = this.pingSpoof;
       this.pingSpoof.getClass();
       BooleanValue booleanValue = pingSpoof2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.pingSpoofPackets = multiOptionSetting.visibleWhen(condition);
+      this.pingSpoofPackets = multiOptionSetting.visibleWhen(() -> booleanValue.getValue());
       RangeSetting rangeSetting = new RangeSetting(this, "Delay", 1000.0, 1500.0, 1.0, 10000.0, 0);
       pingSpoof2 = this.pingSpoof;
       this.pingSpoof.getClass();
       BooleanValue booleanValue2 = pingSpoof2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.delay = rangeSetting.visibleWhen(condition2);
-      this.place = new DoubleValue(this, "Place");
+      this.delay = rangeSetting.visibleWhen(() -> booleanValue2.getValue());
+      this.place = new SettingGroup(this, "Place");
       this.place1 = new BooleanValue(this, "Place1", false, this.place);
-      BooleanValue booleanValue3 = new BooleanValue(this, "NotWhileAttack1", true, this.place);
-      String str = "NotWhileAttack";
-      BooleanValue booleanValue4 = (BooleanValue)booleanValue3.withDisplayName(str);
+      BooleanValue booleanValue4 = (BooleanValue)new BooleanValue(this, "NotWhileAttack1", true, this.place).withDisplayName("NotWhileAttack");
       BooleanValue place12 = this.place1;
       this.place1.getClass();
-      BooleanValue booleanValue5 = place12;
-      SettingVisibilityCondition condition3 = () -> booleanValue5.getValue();
-      this.notWhileAttack1 = (BooleanValue)booleanValue4.withVisibility(condition3);
-      BooleanValue booleanValue6 = new BooleanValue(this, "NotWhileScaffold1", true, this.place);
-      String str2 = "NotWhileScaffold";
-      BooleanValue booleanValue7 = (BooleanValue)booleanValue6.withDisplayName(str2);
+      this.notWhileAttack1 = (BooleanValue)booleanValue4.withVisibility(() -> place12.getValue());
+      BooleanValue booleanValue7 = (BooleanValue)new BooleanValue(this, "NotWhileScaffold1", true, this.place).withDisplayName("NotWhileScaffold");
       BooleanValue place13 = this.place1;
       this.place1.getClass();
-      BooleanValue booleanValue8 = place13;
-      SettingVisibilityCondition condition4 = () -> booleanValue8.getValue();
-      this.notWhileScaffold1 = (BooleanValue)booleanValue7.withVisibility(condition4);
-      BooleanValue booleanValue9 = new BooleanValue(this, "OnlyWhileMove1", true, this.place);
-      String str3 = "OnlyWhileMove";
-      BooleanValue booleanValue10 = (BooleanValue)booleanValue9.withDisplayName(str3);
+      this.notWhileScaffold1 = (BooleanValue)booleanValue7.withVisibility(() -> place13.getValue());
+      BooleanValue booleanValue10 = (BooleanValue)new BooleanValue(this, "OnlyWhileMove1", true, this.place).withDisplayName("OnlyWhileMove");
       BooleanValue place14 = this.place1;
       this.place1.getClass();
-      BooleanValue booleanValue11 = place14;
-      SettingVisibilityCondition condition5 = () -> booleanValue11.getValue();
-      this.onlyWhileMove1 = (BooleanValue)booleanValue10.withVisibility(condition5);
-      BooleanValue booleanValue12 = new BooleanValue(this, "OnlyWhileSpeedModule1", true, this.place);
-      String str4 = "OnlyWhileSpeedModule";
-      BooleanValue booleanValue13 = (BooleanValue)booleanValue12.withDisplayName(str4);
+      this.onlyWhileMove1 = (BooleanValue)booleanValue10.withVisibility(() -> place14.getValue());
+      BooleanValue booleanValue13 = (BooleanValue)new BooleanValue(this, "OnlyWhileSpeedModule1", true, this.place).withDisplayName("OnlyWhileSpeedModule");
       BooleanValue place15 = this.place1;
       this.place1.getClass();
-      BooleanValue booleanValue14 = place15;
-      SettingVisibilityCondition condition6 = () -> booleanValue14.getValue();
-      this.onlyWhileSpeedModule1 = (BooleanValue)booleanValue13.withVisibility(condition6);
+      this.onlyWhileSpeedModule1 = (BooleanValue)booleanValue13.withVisibility(() -> place15.getValue());
       this.place2 = new BooleanValue(this, "Place2", false, this.place);
-      BooleanValue booleanValue15 = new BooleanValue(this, "NotWhileAttack2", true, this.place);
-      String str5 = "NotWhileAttack";
-      BooleanValue booleanValue16 = (BooleanValue)booleanValue15.withDisplayName(str5);
+      BooleanValue booleanValue16 = (BooleanValue)new BooleanValue(this, "NotWhileAttack2", true, this.place).withDisplayName("NotWhileAttack");
       BooleanValue place22 = this.place2;
       this.place2.getClass();
-      BooleanValue booleanValue17 = place22;
-      SettingVisibilityCondition condition7 = () -> booleanValue17.getValue();
-      this.notWhileAttack2 = (BooleanValue)booleanValue16.withVisibility(condition7);
-      BooleanValue booleanValue18 = new BooleanValue(this, "NotWhileScaffold2", true, this.place);
-      String str6 = "NotWhileScaffold";
-      BooleanValue booleanValue19 = (BooleanValue)booleanValue18.withDisplayName(str6);
+      this.notWhileAttack2 = (BooleanValue)booleanValue16.withVisibility(() -> place22.getValue());
+      BooleanValue booleanValue19 = (BooleanValue)new BooleanValue(this, "NotWhileScaffold2", true, this.place).withDisplayName("NotWhileScaffold");
       BooleanValue place23 = this.place2;
       this.place2.getClass();
-      BooleanValue booleanValue20 = place23;
-      SettingVisibilityCondition condition8 = () -> booleanValue20.getValue();
-      this.notWhileScaffold2 = (BooleanValue)booleanValue19.withVisibility(condition8);
-      BooleanValue booleanValue21 = new BooleanValue(this, "OnlyWhileMove2", true, this.place);
-      String str7 = "OnlyWhileMove";
-      BooleanValue booleanValue22 = (BooleanValue)booleanValue21.withDisplayName(str7);
+      this.notWhileScaffold2 = (BooleanValue)booleanValue19.withVisibility(() -> place23.getValue());
+      BooleanValue booleanValue22 = (BooleanValue)new BooleanValue(this, "OnlyWhileMove2", true, this.place).withDisplayName("OnlyWhileMove");
       BooleanValue place24 = this.place2;
       this.place2.getClass();
-      BooleanValue booleanValue23 = place24;
-      SettingVisibilityCondition condition9 = () -> booleanValue23.getValue();
-      this.onlyWhileMove2 = (BooleanValue)booleanValue22.withVisibility(condition9);
-      BooleanValue booleanValue24 = new BooleanValue(this, "OnlyWhileSpeedModule2", true, this.place);
-      String str8 = "OnlyWhileSpeedModule";
-      BooleanValue booleanValue25 = (BooleanValue)booleanValue24.withDisplayName(str8);
+      this.onlyWhileMove2 = (BooleanValue)booleanValue22.withVisibility(() -> place24.getValue());
+      BooleanValue booleanValue25 = (BooleanValue)new BooleanValue(this, "OnlyWhileSpeedModule2", true, this.place).withDisplayName("OnlyWhileSpeedModule");
       BooleanValue place25 = this.place2;
       this.place2.getClass();
-      BooleanValue booleanValue26 = place25;
-      SettingVisibilityCondition condition10 = () -> booleanValue26.getValue();
-      this.onlyWhileSpeedModule2 = (BooleanValue)booleanValue25.withVisibility(condition10);
+      this.onlyWhileSpeedModule2 = (BooleanValue)booleanValue25.withVisibility(() -> place25.getValue());
       this.place3 = new BooleanValue(this, "Place3", false, this.place);
-      BooleanValue booleanValue27 = new BooleanValue(this, "NotWhileAttack3", true, this.place);
-      String str9 = "NotWhileAttack";
-      BooleanValue booleanValue28 = (BooleanValue)booleanValue27.withDisplayName(str9);
+      BooleanValue booleanValue28 = (BooleanValue)new BooleanValue(this, "NotWhileAttack3", true, this.place).withDisplayName("NotWhileAttack");
       BooleanValue place32 = this.place3;
       this.place3.getClass();
-      BooleanValue booleanValue29 = place32;
-      SettingVisibilityCondition condition11 = () -> booleanValue29.getValue();
-      this.notWhileAttack3 = (BooleanValue)booleanValue28.withVisibility(condition11);
-      BooleanValue booleanValue30 = new BooleanValue(this, "NotWhileScaffold3", true, this.place);
-      String str10 = "NotWhileScaffold";
-      BooleanValue booleanValue31 = (BooleanValue)booleanValue30.withDisplayName(str10);
+      this.notWhileAttack3 = (BooleanValue)booleanValue28.withVisibility(() -> place32.getValue());
+      BooleanValue booleanValue31 = (BooleanValue)new BooleanValue(this, "NotWhileScaffold3", true, this.place).withDisplayName("NotWhileScaffold");
       BooleanValue place33 = this.place3;
       this.place3.getClass();
-      BooleanValue booleanValue32 = place33;
-      SettingVisibilityCondition condition12 = () -> booleanValue32.getValue();
-      this.notWhileScaffold3 = (BooleanValue)booleanValue31.withVisibility(condition12);
-      BooleanValue booleanValue33 = new BooleanValue(this, "OnlyWhileMove3", true, this.place);
-      String str11 = "OnlyWhileMove";
-      BooleanValue booleanValue34 = (BooleanValue)booleanValue33.withDisplayName(str11);
+      this.notWhileScaffold3 = (BooleanValue)booleanValue31.withVisibility(() -> place33.getValue());
+      BooleanValue booleanValue34 = (BooleanValue)new BooleanValue(this, "OnlyWhileMove3", true, this.place).withDisplayName("OnlyWhileMove");
       BooleanValue place34 = this.place3;
       this.place3.getClass();
-      BooleanValue booleanValue35 = place34;
-      SettingVisibilityCondition condition13 = () -> booleanValue35.getValue();
-      this.onlyWhileMove3 = (BooleanValue)booleanValue34.withVisibility(condition13);
-      BooleanValue booleanValue36 = new BooleanValue(this, "OnlyWhileSpeedModule3", true, this.place);
-      String str12 = "OnlyWhileSpeedModule";
-      BooleanValue booleanValue37 = (BooleanValue)booleanValue36.withDisplayName(str12);
+      this.onlyWhileMove3 = (BooleanValue)booleanValue34.withVisibility(() -> place34.getValue());
+      BooleanValue booleanValue37 = (BooleanValue)new BooleanValue(this, "OnlyWhileSpeedModule3", true, this.place).withDisplayName("OnlyWhileSpeedModule");
       BooleanValue place35 = this.place3;
       this.place3.getClass();
-      BooleanValue booleanValue38 = place35;
-      SettingVisibilityCondition condition14 = () -> booleanValue38.getValue();
-      this.onlyWhileSpeedModule3 = (BooleanValue)booleanValue37.withVisibility(condition14);
+      this.onlyWhileSpeedModule3 = (BooleanValue)booleanValue37.withVisibility(() -> place35.getValue());
       this.royalPixels = new BooleanValue(this, "RoyalPixels", false);
       this.spectate = new BooleanValue(this, "Spectate", false);
       this.ride = new BooleanValue(this, "Ride", false);
@@ -259,21 +209,15 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "TPDelay", 1000.0, 1500.0, 1.0, 10000.0, 0)).withoutNotInARow();
       BooleanValue tp2 = this.tp;
       this.tp.getClass();
-      BooleanValue booleanValue39 = tp2;
-      SettingVisibilityCondition condition15 = () -> booleanValue39.getValue();
-      this.tpDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition15);
+      this.tpDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> tp2.getValue());
       RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "TPY", 1024.0, 2048.0, 1024.0, 2048.0, 0)).withoutNotInARow();
       BooleanValue tp3 = this.tp;
       this.tp.getClass();
-      BooleanValue booleanValue40 = tp3;
-      SettingVisibilityCondition condition16 = () -> booleanValue40.getValue();
-      this.tpy = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition16);
+      this.tpy = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> tp3.getValue());
       RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "TPXZ", 1024.0, 2048.0, 1024.0, 2048.0, 0)).withoutNotInARow();
       BooleanValue tp4 = this.tp;
       this.tp.getClass();
-      BooleanValue booleanValue41 = tp4;
-      SettingVisibilityCondition condition17 = () -> booleanValue41.getValue();
-      this.tpxz = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition17);
+      this.tpxz = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(() -> tp4.getValue());
       this.test = new BooleanValue(this, "Test", false);
       this.resourcePack = new BooleanValue(this, "ResourcePack", false);
       this.hover = new BooleanValue(this, "Hover", false);
@@ -281,23 +225,17 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       BooleanValue booleanValue42 = new BooleanValue(this, "grimSpecAlways", false);
       BooleanValue grimSpec2 = this.grimSpec;
       this.grimSpec.getClass();
-      BooleanValue booleanValue43 = grimSpec2;
-      SettingVisibilityCondition condition18 = () -> booleanValue43.getValue();
-      this.grimSpecAlways = (BooleanValue)booleanValue42.withVisibility(condition18);
+      this.grimSpecAlways = (BooleanValue)booleanValue42.withVisibility(() -> grimSpec2.getValue());
       this.minibloxMoveFix = new BooleanValue(this, "MinibloxMoveFix", false);
       this.sneak = new BooleanValue(this, "Sneak", false);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "SneakType", "StartStop", new String[]{"StartStop", "Start", "Stop"});
+      StringValue booleansSetting = new StringValue(this, "SneakType", "StartStop", new String[]{"StartStop", "Start", "Stop"});
       BooleanValue sneak2 = this.sneak;
       this.sneak.getClass();
-      BooleanValue booleanValue44 = sneak2;
-      SettingVisibilityCondition condition19 = () -> booleanValue44.getValue();
-      this.sneakType = (BooleansSetting)booleansSetting.withVisibility(condition19);
-      StringValue stringValue = new StringValue(this, "SneakDelay", 10.0, 1.0, 40.0, 0);
+      this.sneakType = (StringValue)booleansSetting.withVisibility(() -> sneak2.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "SneakDelay", 10.0, 1.0, 40.0, 0);
       BooleanValue sneak3 = this.sneak;
       this.sneak.getClass();
-      BooleanValue booleanValue45 = sneak3;
-      SettingVisibilityCondition condition20 = () -> booleanValue45.getValue();
-      this.sneakDelay = stringValue.visibleWhen(condition20);
+      this.sneakDelay = stringValue.visibleWhen(() -> sneak3.getValue());
       this.spoofedPackets = new CopyOnWriteArrayList();
       this.spoofedPacketTimestamps = new HashMap();
       this.transactionCounter = 0;
@@ -313,138 +251,66 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       this.unusedStateFlag = false;
 
       for (DisablerIncomingPacketOption option : DisablerIncomingPacketOption.values()) {
-         DoubleValue doubleValue = new DoubleValue(this, DisablerIncomingPacketOption.getOptionName(option), this.incomingPackets);
-         DisablerIncomingPacketOption option2 = option;
-         SettingVisibilityCondition condition21 = () -> DisablerIncomingPacketOption.isOptionSelected(option2);
-         DoubleValue doubleValue2 = doubleValue.visibleWhen(condition21);
-         StringValue stringValue2 = new StringValue(this, DisablerIncomingPacketOption.getOptionName(option) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue2);
-         String str13 = "Interval";
-         StringValue stringValue3 = stringValue2.named(str13);
-         DisablerIncomingPacketOption.setIntervalSetting(option, stringValue3);
-         BooleanValue booleanValue46 = new BooleanValue(this, DisablerIncomingPacketOption.getOptionName(option) + "InvertInterval", false, doubleValue2);
-         String str14 = "InvertInterval";
-         BooleanValue booleanValue47 = (BooleanValue)booleanValue46.withDisplayName(str14);
-         DisablerIncomingPacketOption.setInvertIntervalSetting(option, booleanValue47);
-         BooleanValue booleanValue48 = new BooleanValue(this, DisablerIncomingPacketOption.getOptionName(option) + "Always", true, doubleValue2);
-         String str15 = "Always";
-         BooleanValue booleanValue49 = (BooleanValue)booleanValue48.withDisplayName(str15);
-         DisablerIncomingPacketOption.setAlwaysSetting(option, booleanValue49);
+         SettingGroup doubleValue2 = new SettingGroup(this, DisablerIncomingPacketOption.getOptionName(option), this.incomingPackets).visibleWhen(() -> DisablerIncomingPacketOption.isOptionSelected(option));
+         DisablerIncomingPacketOption.setIntervalSetting(option, new DoubleValue(this, DisablerIncomingPacketOption.getOptionName(option) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue2).named("Interval"));
+         DisablerIncomingPacketOption.setInvertIntervalSetting(option, (BooleanValue)new BooleanValue(this, DisablerIncomingPacketOption.getOptionName(option) + "InvertInterval", false, doubleValue2).withDisplayName("InvertInterval"));
+         DisablerIncomingPacketOption.setAlwaysSetting(option, (BooleanValue)new BooleanValue(this, DisablerIncomingPacketOption.getOptionName(option) + "Always", true, doubleValue2).withDisplayName("Always"));
          RangeSetting rangeSetting2 = new RangeSetting(
             this, DisablerIncomingPacketOption.getOptionName(option) + "StartTick", DisablerIncomingPacketOption.getOptionName(option) + "EndTick", 0.0, 100.0, 0.0, 100.0, 0, doubleValue2
          );
          String str16 = "EndTick";
-         String str17 = "StartTick";
-         RangeSetting rangeSetting3 = rangeSetting2.withBoundNames(str17, str16);
-         DisablerIncomingPacketOption option3 = option;
-         SettingVisibilityCondition condition22 = () -> isIncomingTickRangeVisible(option3);
-         RangeSetting rangeSetting4 = rangeSetting3.visibleWhen(condition22);
-         DisablerIncomingPacketOption.setTickRangeSetting(option, rangeSetting4);
-         BooleansSetting booleansSetting2 = new BooleansSetting(
+         DisablerIncomingPacketOption.setTickRangeSetting(option, rangeSetting2.withBoundNames("StartTick", str16).visibleWhen(() -> isIncomingTickRangeVisible(option)));
+         StringValue booleansSetting3 = (StringValue)new StringValue(
             this, DisablerIncomingPacketOption.getOptionName(option) + "CancelCondition", "Always", new String[]{"Always", "OnlyOnGround", "OnlyInAir"}, doubleValue2
-         );
-         String str18 = "CancelCondition";
-         BooleansSetting booleansSetting3 = (BooleansSetting)booleansSetting2.withDisplayName(str18);
+         ).withDisplayName("CancelCondition");
          DisablerIncomingPacketOption.setCancelConditionSetting(option, booleansSetting3);
       }
 
       for (DisablerOutgoingPacketOption option4 : DisablerOutgoingPacketOption.values()) {
-         DoubleValue doubleValue3 = new DoubleValue(this, DisablerOutgoingPacketOption.getOptionName(option4), this.outgoingPackets);
-         DisablerOutgoingPacketOption option5 = option4;
-         SettingVisibilityCondition condition23 = () -> DisablerOutgoingPacketOption.isOptionSelected(option5);
-         DoubleValue doubleValue4 = doubleValue3.visibleWhen(condition23);
-         StringValue stringValue4 = new StringValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue4);
-         String str19 = "Interval";
-         StringValue stringValue5 = stringValue4.named(str19);
-         DisablerOutgoingPacketOption.setIntervalSetting(option4, stringValue5);
-         BooleanValue booleanValue50 = new BooleanValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "InvertInterval", false, doubleValue4);
-         String str20 = "InvertInterval";
-         BooleanValue booleanValue51 = (BooleanValue)booleanValue50.withDisplayName(str20);
-         DisablerOutgoingPacketOption.setInvertIntervalSetting(option4, booleanValue51);
-         BooleanValue booleanValue52 = new BooleanValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "Always", true, doubleValue4);
-         String str21 = "Always";
-         BooleanValue booleanValue53 = (BooleanValue)booleanValue52.withDisplayName(str21);
-         DisablerOutgoingPacketOption.setAlwaysSetting(option4, booleanValue53);
+         SettingGroup doubleValue4 = new SettingGroup(this, DisablerOutgoingPacketOption.getOptionName(option4), this.outgoingPackets).visibleWhen(() -> DisablerOutgoingPacketOption.isOptionSelected(option4));
+         DisablerOutgoingPacketOption.setIntervalSetting(option4, new DoubleValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue4).named("Interval"));
+         DisablerOutgoingPacketOption.setInvertIntervalSetting(option4, (BooleanValue)new BooleanValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "InvertInterval", false, doubleValue4).withDisplayName("InvertInterval"));
+         DisablerOutgoingPacketOption.setAlwaysSetting(option4, (BooleanValue)new BooleanValue(this, DisablerOutgoingPacketOption.getOptionName(option4) + "Always", true, doubleValue4).withDisplayName("Always"));
          RangeSetting rangeSetting5 = new RangeSetting(
             this, DisablerOutgoingPacketOption.getOptionName(option4) + "StartTick", DisablerOutgoingPacketOption.getOptionName(option4) + "EndTick", 0.0, 100.0, 0.0, 100.0, 0, doubleValue4
          );
          String str22 = "EndTick";
-         String str23 = "StartTick";
-         RangeSetting rangeSetting6 = rangeSetting5.withBoundNames(str23, str22);
-         DisablerOutgoingPacketOption option6 = option4;
-         SettingVisibilityCondition condition24 = () -> isOutgoingTickRangeVisible(option6);
-         RangeSetting rangeSetting7 = rangeSetting6.visibleWhen(condition24);
-         DisablerOutgoingPacketOption.setTickRangeSetting(option4, rangeSetting7);
-         BooleansSetting booleansSetting4 = new BooleansSetting(
+         DisablerOutgoingPacketOption.setTickRangeSetting(option4, rangeSetting5.withBoundNames("StartTick", str22).visibleWhen(() -> isOutgoingTickRangeVisible(option4)));
+         StringValue booleansSetting5 = (StringValue)new StringValue(
             this, DisablerOutgoingPacketOption.getOptionName(option4) + "CancelCondition", "Always", new String[]{"Always", "OnlyOnGround", "OnlyInAir"}, doubleValue4
-         );
-         String str24 = "CancelCondition";
-         BooleansSetting booleansSetting5 = (BooleansSetting)booleansSetting4.withDisplayName(str24);
+         ).withDisplayName("CancelCondition");
          DisablerOutgoingPacketOption.setCancelConditionSetting(option4, booleansSetting5);
       }
 
       for (DisablerEntityActionOption option7 : DisablerEntityActionOption.values()) {
-         DoubleValue doubleValue5 = new DoubleValue(this, DisablerEntityActionOption.getOptionName(option7), this.detailedPackets);
-         SettingVisibilityCondition condition25 = () -> DisablerEntityActionOption.isOptionSelected(option7);
-         DoubleValue doubleValue6 = doubleValue5.visibleWhen(condition25);
-         StringValue stringValue6 = new StringValue(this, DisablerEntityActionOption.getOptionName(option7) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue6);
-         String str25 = "Interval";
-         StringValue stringValue7 = stringValue6.named(str25);
-         DisablerEntityActionOption.setIntervalSetting(option7, stringValue7);
-         BooleanValue booleanValue54 = new BooleanValue(this, DisablerEntityActionOption.getOptionName(option7) + "InvertInterval", false, doubleValue6);
-         String str26 = "InvertInterval";
-         BooleanValue booleanValue55 = (BooleanValue)booleanValue54.withDisplayName(str26);
-         DisablerEntityActionOption.setInvertIntervalSetting(option7, booleanValue55);
-         BooleanValue booleanValue56 = new BooleanValue(this, DisablerEntityActionOption.getOptionName(option7) + "Always", true, doubleValue6);
-         String str27 = "Always";
-         BooleanValue booleanValue57 = (BooleanValue)booleanValue56.withDisplayName(str27);
-         DisablerEntityActionOption.setAlwaysSetting(option7, booleanValue57);
+         SettingGroup doubleValue6 = new SettingGroup(this, DisablerEntityActionOption.getOptionName(option7), this.detailedPackets).visibleWhen(() -> DisablerEntityActionOption.isOptionSelected(option7));
+         DisablerEntityActionOption.setIntervalSetting(option7, new DoubleValue(this, DisablerEntityActionOption.getOptionName(option7) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue6).named("Interval"));
+         DisablerEntityActionOption.setInvertIntervalSetting(option7, (BooleanValue)new BooleanValue(this, DisablerEntityActionOption.getOptionName(option7) + "InvertInterval", false, doubleValue6).withDisplayName("InvertInterval"));
+         DisablerEntityActionOption.setAlwaysSetting(option7, (BooleanValue)new BooleanValue(this, DisablerEntityActionOption.getOptionName(option7) + "Always", true, doubleValue6).withDisplayName("Always"));
          RangeSetting rangeSetting8 = new RangeSetting(
             this, DisablerEntityActionOption.getOptionName(option7) + "StartTick", DisablerEntityActionOption.getOptionName(option7) + "EndTick", 0.0, 100.0, 0.0, 100.0, 0, doubleValue6
          );
          String str28 = "EndTick";
-         String str29 = "StartTick";
-         RangeSetting rangeSetting9 = rangeSetting8.withBoundNames(str29, str28);
-         SettingVisibilityCondition condition26 = () -> isEntityActionTickRangeVisible(option7);
-         RangeSetting rangeSetting10 = rangeSetting9.visibleWhen(condition26);
-         DisablerEntityActionOption.setTickRangeSetting(option7, rangeSetting10);
-         BooleansSetting booleansSetting6 = new BooleansSetting(
+         DisablerEntityActionOption.setTickRangeSetting(option7, rangeSetting8.withBoundNames("StartTick", str28).visibleWhen(() -> isEntityActionTickRangeVisible(option7)));
+         StringValue booleansSetting7 = (StringValue)new StringValue(
             this, DisablerEntityActionOption.getOptionName(option7) + "CancelCondition", "Always", new String[]{"Always", "OnlyOnGround", "OnlyInAir"}, doubleValue6
-         );
-         String str30 = "CancelCondition";
-         BooleansSetting booleansSetting7 = (BooleansSetting)booleansSetting6.withDisplayName(str30);
+         ).withDisplayName("CancelCondition");
          DisablerEntityActionOption.setCancelConditionSetting(option7, booleansSetting7);
       }
 
       for (DisablerDiggingActionOption option8 : DisablerDiggingActionOption.values()) {
-         DoubleValue doubleValue7 = new DoubleValue(this, DisablerDiggingActionOption.getOptionName(option8), this.detailedPackets);
-         SettingVisibilityCondition condition27 = () -> DisablerDiggingActionOption.isOptionSelected(option8);
-         DoubleValue doubleValue8 = doubleValue7.visibleWhen(condition27);
-         StringValue stringValue8 = new StringValue(this, DisablerDiggingActionOption.getOptionName(option8) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue8);
-         String str31 = "Interval";
-         StringValue stringValue9 = stringValue8.named(str31);
-         DisablerDiggingActionOption.setIntervalSetting(option8, stringValue9);
-         BooleanValue booleanValue58 = new BooleanValue(this, DisablerDiggingActionOption.getOptionName(option8) + "InvertInterval", false, doubleValue8);
-         String str32 = "InvertInterval";
-         BooleanValue booleanValue59 = (BooleanValue)booleanValue58.withDisplayName(str32);
-         DisablerDiggingActionOption.setInvertIntervalSetting(option8, booleanValue59);
-         BooleanValue booleanValue60 = new BooleanValue(this, DisablerDiggingActionOption.getOptionName(option8) + "Always", true, doubleValue8);
-         String str33 = "Always";
-         BooleanValue booleanValue61 = (BooleanValue)booleanValue60.withDisplayName(str33);
-         DisablerDiggingActionOption.setAlwaysSetting(option8, booleanValue61);
+         SettingGroup doubleValue8 = new SettingGroup(this, DisablerDiggingActionOption.getOptionName(option8), this.detailedPackets).visibleWhen(() -> DisablerDiggingActionOption.isOptionSelected(option8));
+         DisablerDiggingActionOption.setIntervalSetting(option8, new DoubleValue(this, DisablerDiggingActionOption.getOptionName(option8) + "Interval", 0.0, 0.0, 20.0, 0, doubleValue8).named("Interval"));
+         DisablerDiggingActionOption.setInvertIntervalSetting(option8, (BooleanValue)new BooleanValue(this, DisablerDiggingActionOption.getOptionName(option8) + "InvertInterval", false, doubleValue8).withDisplayName("InvertInterval"));
+         DisablerDiggingActionOption.setAlwaysSetting(option8, (BooleanValue)new BooleanValue(this, DisablerDiggingActionOption.getOptionName(option8) + "Always", true, doubleValue8).withDisplayName("Always"));
          RangeSetting rangeSetting11 = new RangeSetting(
             this, DisablerDiggingActionOption.getOptionName(option8) + "StartTick", DisablerDiggingActionOption.getOptionName(option8) + "EndTick", 0.0, 100.0, 0.0, 100.0, 0, doubleValue8
          );
          String str34 = "EndTick";
-         String str35 = "StartTick";
-         RangeSetting rangeSetting12 = rangeSetting11.withBoundNames(str35, str34);
-         SettingVisibilityCondition condition28 = () -> isDiggingTickRangeVisible(option8);
-         RangeSetting rangeSetting13 = rangeSetting12.visibleWhen(condition28);
-         DisablerDiggingActionOption.setTickRangeSetting(option8, rangeSetting13);
-         BooleansSetting booleansSetting8 = new BooleansSetting(
+         DisablerDiggingActionOption.setTickRangeSetting(option8, rangeSetting11.withBoundNames("StartTick", str34).visibleWhen(() -> isDiggingTickRangeVisible(option8)));
+         StringValue booleansSetting9 = (StringValue)new StringValue(
             this, DisablerDiggingActionOption.getOptionName(option8) + "CancelCondition", "Always", new String[]{"Always", "OnlyOnGround", "OnlyInAir"}, doubleValue8
-         );
-         String str36 = "CancelCondition";
-         BooleansSetting booleansSetting9 = (BooleansSetting)booleansSetting8.withDisplayName(str36);
+         ).withDisplayName("CancelCondition");
          DisablerDiggingActionOption.setCancelConditionSetting(option8, booleansSetting9);
       }
    }
@@ -500,29 +366,20 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 18;
-      this.toggleEventSubscription(b5);
-      byte b6 = 7;
-      this.toggleEventSubscription(b6);
-      byte b7 = 39;
-      this.toggleEventSubscription(b7);
-      byte b8 = 25;
-      this.toggleEventSubscription(b8);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)39);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override
    public void onPacketDelay(EventPacketDelay event) {
       if (this.mmcReachSemi.getValue()) {
-         short s = 500;
-         event.setOutgoingDelayMs(s);
+         event.setOutgoingDelayMs((short)500);
       }
    }
 
@@ -536,8 +393,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
          Entity entityHit = mc.objectMouseOver.entityHit;
          if (entityHit instanceof EntityBoat || entityHit instanceof EntityMinecart) {
             if (mc.thePlayer.ticksExisted % 6 == 0) {
-               byte b = 1;
-               event.addLeftClicks(b);
+               event.addLeftClicks((byte)1);
             }
 
             float f = entityHit instanceof EntityBoat ? ((EntityBoat)entityHit).getDamageTaken() : ((EntityMinecart)entityHit).getDamage();
@@ -550,10 +406,8 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
                attributeValue += modifierForCreature;
                if (f > 40.0F - attributeValue * 10.0F) {
-                  byte b2 = 1;
-                  event.addLeftClicks(b2);
-                  byte b3 = 1;
-                  event.addRightClicks(b3);
+                  event.addLeftClicks((byte)1);
+                  event.addRightClicks((byte)1);
                }
             }
          }
@@ -566,8 +420,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
          Entity entityHit = mc.objectMouseOver.entityHit;
          if (entityHit instanceof EntityBoat || entityHit instanceof EntityMinecart) {
             if (mc.thePlayer.ticksExisted % 6 == 0) {
-               boolean flag = true;
-               event.setCancelClientSwing(flag);
+               event.setCancelClientSwing(true);
             }
 
             float f = entityHit instanceof EntityBoat ? ((EntityBoat)entityHit).getDamageTaken() : ((EntityMinecart)entityHit).getDamage();
@@ -580,8 +433,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
                attributeValue += modifierForCreature;
                if (f > 40.0F - attributeValue * 10.0F) {
-                  boolean flag2 = true;
-                  event.setCancelClientSwing(flag2);
+                  event.setCancelClientSwing(true);
                }
             }
          }
@@ -605,35 +457,19 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
       if (this.hover.getValue() && mc.thePlayer.ticksExisted % 2 == 0 && mc.thePlayer.onGround && event.getY() % 1.0 == 0.0) {
          double d = Math.random() * 1.0E-4;
-         double d2 = event.getY() + d;
-         event.setY(d2);
-         boolean flag = false;
-         event.setOnGround(flag);
+         event.setY(event.getY() + d);
+         event.setOnGround(false);
       }
 
       if (this.tp.getValue()) {
-         TimeHelper positionJitterTimer2 = this.positionJitterTimer;
-         long lastIntValue = (long)this.tpDelay.getLastIntValue();
-         if (positionJitterTimer2.reached2(lastIntValue)) {
+         if (this.positionJitterTimer.reached2((long)this.tpDelay.getLastIntValue())) {
             this.positionJitterTimer.reset();
             double y = event.getY();
-            int lastIntValue2 = this.tpy.getLastIntValue();
-            byte b = 100;
-            byte b2 = 0;
-            double d3 = y + (double)(lastIntValue2 * DefaultRandomGenerator.instance.nextInt2(b2, b) % 2) == 0.0 ? -1.0 : 1.0;
-            event.setY(d3);
+            event.setY(y + (double)(this.tpy.getLastIntValue() * DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100) % 2) == 0.0 ? -1.0 : 1.0);
             y = event.getX();
-            double d4 = this.tpxz.nextValue();
-            byte b3 = 100;
-            byte b4 = 0;
-            double d5 = y + d4 * (double)DefaultRandomGenerator.instance.nextInt2(b4, b3) % 2.0 == 0.0 ? -1.0 : 1.0;
-            event.setX(d5);
+            event.setX(y + this.tpxz.nextValue() * (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100) % 2.0 == 0.0 ? -1.0 : 1.0);
             y = event.getZ();
-            double d6 = this.tpxz.nextValue();
-            byte b5 = 100;
-            byte b6 = 0;
-            double d7 = y + d6 * (double)DefaultRandomGenerator.instance.nextInt2(b6, b5) % 2.0 == 0.0 ? -1.0 : 1.0;
-            event.setZ(d7);
+            event.setZ(y + this.tpxz.nextValue() * (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100) % 2.0 == 0.0 ? -1.0 : 1.0);
             this.tpDelay.nextValue();
             this.tpy.nextValue();
             return;
@@ -643,8 +479,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
 
    @Override
    public void onPacket4(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (this.shouldCancelIncomingPacket(packet)) {
+      if (this.shouldCancelIncomingPacket(event.getPacket())) {
          event.cancel();
       }
    }
@@ -710,8 +545,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       }
 
       if (this.onGroundTrue.getValue() && packet instanceof C03PacketPlayer) {
-         C03PacketPlayer packet2 = (C03PacketPlayer)packet;
-         packet2.setOnGround(true);
+         ((C03PacketPlayer)packet).setOnGround(true);
       }
    }
 
@@ -744,20 +578,13 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
                if (DisablerEntityActionOption.getCancelConditionSetting(option).getSelectedValue().equals("Always")
                   || DisablerEntityActionOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyOnGround") && mc.thePlayer.onGround
                   || DisablerEntityActionOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyInAir") && !mc.thePlayer.onGround) {
-                  StringValue intervalSetting = DisablerEntityActionOption.getIntervalSetting(option);
-                  BooleanValue invertIntervalSetting = DisablerEntityActionOption.getInvertIntervalSetting(option);
-                  int packetCount = DisablerEntityActionOption.getPacketCount(option);
-                  BooleanValue booleanValue = invertIntervalSetting;
-                  StringValue stringValue = intervalSetting;
-                  if (this.matchesCancelModulo(stringValue, booleanValue, packetCount)) {
+                  if (this.matchesCancelModulo(DisablerEntityActionOption.getIntervalSetting(option), DisablerEntityActionOption.getInvertIntervalSetting(option), DisablerEntityActionOption.getPacketCount(option))) {
                      if (!DisablerEntityActionOption.getAlwaysSetting(option).getValue()) {
                         if (!((double)mc.thePlayer.ticksExisted > DisablerEntityActionOption.getTickRangeSetting(option).getMinValue())) {
                            break;
                         }
 
-                        double ticksExisted = (double)mc.thePlayer.ticksExisted;
-                        RangeSetting tickRangeSetting = DisablerEntityActionOption.getTickRangeSetting(option);
-                        if (!(ticksExisted < tickRangeSetting.getMaxValue())) {
+                        if (!(((double)mc.thePlayer.ticksExisted) < DisablerEntityActionOption.getTickRangeSetting(option).getMaxValue())) {
                            break;
                         }
                      }
@@ -779,20 +606,13 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
                if (DisablerDiggingActionOption.getCancelConditionSetting(option2).getSelectedValue().equals("Always")
                   || DisablerDiggingActionOption.getCancelConditionSetting(option2).getSelectedValue().equals("OnlyOnGround") && mc.thePlayer.onGround
                   || DisablerDiggingActionOption.getCancelConditionSetting(option2).getSelectedValue().equals("OnlyInAir") && !mc.thePlayer.onGround) {
-                  StringValue intervalSetting2 = DisablerDiggingActionOption.getIntervalSetting(option2);
-                  BooleanValue invertIntervalSetting2 = DisablerDiggingActionOption.getInvertIntervalSetting(option2);
-                  int packetCount2 = DisablerDiggingActionOption.getPacketCount(option2);
-                  BooleanValue booleanValue2 = invertIntervalSetting2;
-                  StringValue stringValue2 = intervalSetting2;
-                  if (this.matchesCancelModulo(stringValue2, booleanValue2, packetCount2)) {
+                  if (this.matchesCancelModulo(DisablerDiggingActionOption.getIntervalSetting(option2), DisablerDiggingActionOption.getInvertIntervalSetting(option2), DisablerDiggingActionOption.getPacketCount(option2))) {
                      if (!DisablerDiggingActionOption.getAlwaysSetting(option2).getValue()) {
                         if (!((double)mc.thePlayer.ticksExisted > DisablerDiggingActionOption.getTickRangeSetting(option2).getMinValue())) {
                            break;
                         }
 
-                        double ticksExisted2 = (double)mc.thePlayer.ticksExisted;
-                        RangeSetting tickRangeSetting2 = DisablerDiggingActionOption.getTickRangeSetting(option2);
-                        if (!(ticksExisted2 < tickRangeSetting2.getMaxValue())) {
+                        if (!(((double)mc.thePlayer.ticksExisted) < DisablerDiggingActionOption.getTickRangeSetting(option2).getMaxValue())) {
                            break;
                         }
                      }
@@ -833,8 +653,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       BooleanValue onlyWhileMove12 = this.onlyWhileMove1;
       BooleanValue notWhileScaffold12 = this.notWhileScaffold1;
       BooleanValue notWhileAttack12 = this.notWhileAttack1;
-      BooleanValue place12 = this.place1;
-      if (this.shouldSendPlacePacket(place12, notWhileAttack12, notWhileScaffold12, onlyWhileMove12, onlyWhileSpeedModule12)) {
+      if (this.shouldSendPlacePacket(this.place1, notWhileAttack12, notWhileScaffold12, onlyWhileMove12, onlyWhileSpeedModule12)) {
          mc.thePlayer.sendQueue.addToSendQueueUnchecked(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, new ItemStack(Items.water_bucket), 0.0F, 0.5F, 0.0F));
          mc.thePlayer
             .sendQueue
@@ -854,8 +673,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       BooleanValue onlyWhileMove22 = this.onlyWhileMove2;
       BooleanValue notWhileScaffold22 = this.notWhileScaffold2;
       BooleanValue notWhileAttack22 = this.notWhileAttack2;
-      BooleanValue place22 = this.place2;
-      if (this.shouldSendPlacePacket(place22, notWhileAttack22, notWhileScaffold22, onlyWhileMove22, onlyWhileSpeedModule22)) {
+      if (this.shouldSendPlacePacket(this.place2, notWhileAttack22, notWhileScaffold22, onlyWhileMove22, onlyWhileSpeedModule22)) {
          mc.thePlayer.sendQueue.addToSendQueueUnchecked(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
       }
 
@@ -863,8 +681,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       BooleanValue onlyWhileMove32 = this.onlyWhileMove3;
       BooleanValue notWhileScaffold32 = this.notWhileScaffold3;
       BooleanValue notWhileAttack32 = this.notWhileAttack3;
-      BooleanValue place32 = this.place3;
-      if (this.shouldSendPlacePacket(place32, notWhileAttack32, notWhileScaffold32, onlyWhileMove32, onlyWhileSpeedModule32)) {
+      if (this.shouldSendPlacePacket(this.place3, notWhileAttack32, notWhileScaffold32, onlyWhileMove32, onlyWhileSpeedModule32)) {
          mc.thePlayer.sendQueue.addToSendQueueUnchecked(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, new ItemStack(Items.water_bucket), 0.0F, 0.5F, 0.0F));
       }
 
@@ -900,20 +717,13 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
                         || DisablerIncomingPacketOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyOnGround") && mc.thePlayer.onGround
                         || DisablerIncomingPacketOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyInAir") && !mc.thePlayer.onGround
                   )) {
-                  StringValue intervalSetting = DisablerIncomingPacketOption.getIntervalSetting(option);
-                  BooleanValue invertIntervalSetting = DisablerIncomingPacketOption.getInvertIntervalSetting(option);
-                  int packetCount = DisablerIncomingPacketOption.getPacketCount(option);
-                  BooleanValue booleanValue = invertIntervalSetting;
-                  StringValue stringValue = intervalSetting;
-                  if (this.matchesCancelModulo(stringValue, booleanValue, packetCount)) {
+                  if (this.matchesCancelModulo(DisablerIncomingPacketOption.getIntervalSetting(option), DisablerIncomingPacketOption.getInvertIntervalSetting(option), DisablerIncomingPacketOption.getPacketCount(option))) {
                      if (DisablerIncomingPacketOption.getAlwaysSetting(option).getValue()) {
                         return true;
                      }
 
                      if ((double)mc.thePlayer.ticksExisted > DisablerIncomingPacketOption.getTickRangeSetting(option).getMinValue()) {
-                        double ticksExisted = (double)mc.thePlayer.ticksExisted;
-                        RangeSetting tickRangeSetting = DisablerIncomingPacketOption.getTickRangeSetting(option);
-                        if (ticksExisted < tickRangeSetting.getMaxValue()) {
+                        if (((double)mc.thePlayer.ticksExisted) < DisablerIncomingPacketOption.getTickRangeSetting(option).getMaxValue()) {
                            return true;
                         }
                      }
@@ -940,20 +750,13 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
                      || DisablerOutgoingPacketOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyOnGround") && mc.thePlayer.onGround
                      || DisablerOutgoingPacketOption.getCancelConditionSetting(option).getSelectedValue().equals("OnlyInAir") && !mc.thePlayer.onGround
                )) {
-               StringValue intervalSetting = DisablerOutgoingPacketOption.getIntervalSetting(option);
-               BooleanValue invertIntervalSetting = DisablerOutgoingPacketOption.getInvertIntervalSetting(option);
-               int packetCount = DisablerOutgoingPacketOption.getPacketCount(option);
-               BooleanValue booleanValue = invertIntervalSetting;
-               StringValue stringValue = intervalSetting;
-               if (this.matchesCancelModulo(stringValue, booleanValue, packetCount)) {
+               if (this.matchesCancelModulo(DisablerOutgoingPacketOption.getIntervalSetting(option), DisablerOutgoingPacketOption.getInvertIntervalSetting(option), DisablerOutgoingPacketOption.getPacketCount(option))) {
                   if (DisablerOutgoingPacketOption.getAlwaysSetting(option).getValue()) {
                      return true;
                   }
 
                   if ((double)mc.thePlayer.ticksExisted > DisablerOutgoingPacketOption.getTickRangeSetting(option).getMinValue()) {
-                     double ticksExisted = (double)mc.thePlayer.ticksExisted;
-                     RangeSetting tickRangeSetting = DisablerOutgoingPacketOption.getTickRangeSetting(option);
-                     if (ticksExisted < tickRangeSetting.getMaxValue()) {
+                     if (((double)mc.thePlayer.ticksExisted) < DisablerOutgoingPacketOption.getTickRangeSetting(option).getMaxValue()) {
                         return true;
                      }
                   }
@@ -972,11 +775,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       if (this.pingSpoof.getValue()) {
          if (!this.spoofedPackets.isEmpty()) {
             Iterator it = this.spoofedPackets.iterator();
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.delay.getMinValue();
-            double maxValue = this.delay.getMaxValue();
-            double d = minValue;
-            long l = instance.nextLong(d, maxValue);
+            long l = DefaultRandomGenerator.instance.nextLong(this.delay.getMinValue(), this.delay.getMaxValue());
             long l2 = System.currentTimeMillis();
 
             while (it.hasNext()) {
@@ -999,7 +798,7 @@ public class Disabler extends Module implements UpdateListener, RenderListener, 
       }
    }
 
-   private boolean matchesCancelModulo(StringValue stringValue, BooleanValue booleanValue, int n) {
+   private boolean matchesCancelModulo(DoubleValue stringValue, BooleanValue booleanValue, int n) {
       return booleanValue.getValue()
          ? stringValue.getValue() <= 0.0 || (double)n % stringValue.getValue() != 0.0
          : stringValue.getValue() <= 0.0 || (double)n % stringValue.getValue() == 0.0;

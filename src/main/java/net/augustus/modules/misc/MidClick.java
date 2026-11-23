@@ -20,7 +20,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.vendor.ElectricFriendManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
@@ -31,7 +31,7 @@ import net.minecraft.util.MovingObjectPosition;
 public class MidClick extends Module implements ClickListener, TickListener {
    public HashSet friends;
    private final HashSet partyFriends;
-   private final StringValue midClickDistance;
+   private final DoubleValue midClickDistance;
    private final BooleanValue ignoreWalls;
    public final BooleanValue autoUnfriend;
    private final BooleanValue partyFriend;
@@ -48,23 +48,18 @@ public class MidClick extends Module implements ClickListener, TickListener {
        super("MidClick", "Mittelklick", new Color(76, 78, 76), Categorys.MISC);
       this.friends = new HashSet();
       this.partyFriends = new HashSet();
-      this.midClickDistance = (StringValue)(new StringValue(this, "MidClickDistance", 4.5, 3.0, 10.0, 2)).markVisualOnly();
+      this.midClickDistance = (DoubleValue)(new DoubleValue(this, "MidClickDistance", 4.5, 3.0, 10.0, 2)).markVisualOnly();
       this.ignoreWalls = new BooleanValue(this, "IgnoreWalls", true);
       this.autoUnfriend = (BooleanValue)(new BooleanValue(this, "AutoUnfriend", true)).markVisualOnly();
       this.partyFriend = (BooleanValue)(new BooleanValue(this, "PartyFriend", true)).markVisualOnly();
       BooleanValue booleanValue = new BooleanValue(this, "PartyFriendGomme", true);
       BooleanValue partyFriend2 = this.partyFriend;
       this.partyFriend.getClass();
-      BooleanValue booleanValue2 = partyFriend2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.partyFriendGomme = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition)).markVisualOnly();
+      this.partyFriendGomme = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> partyFriend2.getValue())).markVisualOnly();
       this.reverse = (BooleanValue)(new BooleanValue(this, "Reverse", false)).markVisualOnly();
       this.simple = (BooleanValue)(new BooleanValue(this, "Simple", false)).markVisualOnly();
       this.deleteAllFriends = (ActionSetting)(new ActionSetting(this, "DeleteAllFriends", () -> this.clearAllFriends())).markVisualOnly();
-      StringSetSetting stringSetSetting = new StringSetSetting(this, "Friends");
-      SettingChangeListener listener = () -> this.reloadFriendsFromSetting();
-      SettingChangeListener listener2 = listener;
-      this.friends2 = (StringSetSetting)((StringSetSetting)stringSetSetting.withChangeListener(listener2)).markVisualOnly();
+      this.friends2 = (StringSetSetting)((StringSetSetting)new StringSetSetting(this, "Friends").withChangeListener(() -> this.reloadFriendsFromSetting())).markVisualOnly();
       this.savedFriendsCache = new HashSet();
       this.autoUnfriendTriggered = false;
       this.friendsLoaded = false;
@@ -83,10 +78,8 @@ public class MidClick extends Module implements ClickListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void clearAllFriends() {
@@ -96,8 +89,7 @@ public class MidClick extends Module implements ClickListener, TickListener {
    }
 
    public boolean isFriend(Entity entity) {
-      String name2 = entity.getName();
-      return this.isFriend2(name2);
+      return this.isFriend2(entity.getName());
    }
 
    public boolean isFriend(String str, boolean flag) {
@@ -121,8 +113,7 @@ public class MidClick extends Module implements ClickListener, TickListener {
    }
 
    public boolean isFriend2(String str) {
-      boolean flag = false;
-      return this.isFriend(str, flag);
+      return this.isFriend(str, false);
    }
 
    @Override
@@ -135,9 +126,8 @@ public class MidClick extends Module implements ClickListener, TickListener {
       }
 
       if (this.partyFriend.getValue()) {
-         NetHandlerPlayClient sendQueue = mc.thePlayer.sendQueue;
 
-         for (NetworkPlayerInfo networkPlayerInfo : (Iterable<NetworkPlayerInfo>)(sendQueue.getPlayerInfoMap())) {
+         for (NetworkPlayerInfo networkPlayerInfo : (Iterable<NetworkPlayerInfo>)(mc.thePlayer.sendQueue.getPlayerInfoMap())) {
             String name2 = networkPlayerInfo.getGameProfile().getName();
             if (!name2.equals(mc.thePlayer.getGameProfile().getName())) {
                String str = networkPlayerInfo.getDisplayName() != null

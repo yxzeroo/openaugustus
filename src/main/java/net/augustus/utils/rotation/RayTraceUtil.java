@@ -123,8 +123,7 @@ public class RayTraceUtil implements MC {
             } else if (hit2 != null) {
                double d3 = positionEyes.distanceTo(hit2.hitVec);
                if (d3 < d2 || d2 == 0.0) {
-                  boolean flag2 = false;
-                  if (entity2 != renderViewEntity.ridingEntity || flag2) {
+                  if (entity2 != renderViewEntity.ridingEntity || false) {
                      entity = entity2;
                      vec2 = hit2.hitVec;
                      d2 = d3;
@@ -153,9 +152,8 @@ public class RayTraceUtil implements MC {
    }
 
    public static MovingObjectPosition rayTrace(float f, float f2, float f3, double d, double d2, double d3, boolean flag) {
-      Object obj = null;
       return rayTraceCustom(
-         f, f2, f3, d, d2, d3, flag, mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, (AxisAlignedBB)null, (EntityLivingBase)obj
+         f, f2, f3, d, d2, d3, flag, mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, (AxisAlignedBB)null, (EntityLivingBase)null
       );
    }
 
@@ -260,8 +258,7 @@ public class RayTraceUtil implements MC {
             } else if (hit2 != null) {
                double d19 = hit2.hitVec.distanceTo(d9, d10, d11);
                if (d19 < d18 || d18 == 0.0) {
-                  boolean flag3 = false;
-                  if (entity3 != renderViewEntity.ridingEntity || flag3) {
+                  if (entity3 != renderViewEntity.ridingEntity || false) {
                      entity2 = entity3;
                      vec = hit2.hitVec;
                      d18 = d19;
@@ -354,8 +351,7 @@ public class RayTraceUtil implements MC {
             } else if (hit2 != null) {
                double d3 = positionEyes.distanceTo(hit2.hitVec);
                if (d3 < d2 || d2 == 0.0) {
-                  boolean flag2 = false;
-                  if (entity2 != renderViewEntity.ridingEntity || flag2) {
+                  if (entity2 != renderViewEntity.ridingEntity || false) {
                      entity = entity2;
                      vec2 = hit2.hitVec;
                      d2 = d3;
@@ -430,10 +426,8 @@ public class RayTraceUtil implements MC {
                double d14 = 0.0;
             }
          } else if (hit2 != null) {
-            double d15 = hit2.hitVec.distanceTo(d2, d7, d4);
-            if (d15 < d6 || d6 == 0.0) {
-               boolean flag2 = false;
-               if (entity != renderViewEntity.ridingEntity || flag2) {
+            if (hit2.hitVec.distanceTo(d2, d7, d4) < d6 || d6 == 0.0) {
+               if (entity != renderViewEntity.ridingEntity || false) {
                   entity2 = entity;
                   vec = hit2.hitVec;
                } else if (d6 == 0.0) {

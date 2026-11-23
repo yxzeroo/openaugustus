@@ -18,10 +18,8 @@ public class QuestsMenuTab extends ClientMenuTab {
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       double d = (double)mouseX;
-      double d2 = (double)mouseY;
-      double d3 = d2;
-      double d4 = d;
-      this.scrollBar.handleMouseClick(d4, d3);
+      double d3 = (double)mouseY;
+      this.scrollBar.handleMouseClick(d, d3);
    }
 
    public void drawQuestIcon(int n, int n2, float f, float f2, ResourceLocation location) {
@@ -33,7 +31,6 @@ public class QuestsMenuTab extends ClientMenuTab {
 
    public void drawContent(int n, int n2, float f) {
       this.scrollBar.updateAndDraw();
-      CreditsSection.getControlFlowGuard();
       int n3 = (int)(52.0 + this.scrollBar.getClampedScrollOffset());
       float f2 = (float)(this.width + 102) / 2.0F;
       if (Augustus.getInstance().getQuestManager() != null) {
@@ -55,47 +52,37 @@ public class QuestsMenuTab extends ClientMenuTab {
             String str = "§a§l" + serverQuest.getDescription();
             float f3 = f2 - 146.0F;
             float f4 = (float)(n3 + 4);
-            byte b = -1;
             float f5 = f4;
             float f6 = f3;
-            String str2 = str;
-            ((AugustusGuiScreen)this).drawString(str2, f6, f5, b);
+            ((AugustusGuiScreen)this).drawString(str, f6, f5, (byte)-1);
             String str3 = "§7" + serverQuest.getRemainingTimeText();
             f3 = f2 - 146.0F;
             f4 = (float)(n3 + 16);
-            byte b2 = -1;
             float f7 = f4;
             float f8 = f3;
-            String str4 = str3;
-            ((AugustusGuiScreen)this).drawString(str4, f8, f7, b2);
+            ((AugustusGuiScreen)this).drawString(str3, f8, f7, (byte)-1);
             String str5 = "§7" + (int)serverQuest.getProgressPercent() + "% finished";
             f3 = f2 - 146.0F;
             f4 = (float)(n3 + 28);
-            byte b3 = -1;
             float f9 = f4;
             float f10 = f3;
-            String str6 = str5;
-            ((AugustusGuiScreen)this).drawString(str6, f10, f9, b3);
+            ((AugustusGuiScreen)this).drawString(str5, f10, f9, (byte)-1);
             if (!serverQuest.isCompleted()) {
                String str7 = "§b" + serverQuest.getRewardExperience() + " XP";
                int n4 = this.fontRendererObj.getStringWidth(str7) * 2;
                f3 = (f2 + 146.0F - (float)n4) / 2.0F;
                f4 = (float)((n3 + 12) / 2);
-               byte b4 = -1;
                float f11 = 2.0F;
                float f12 = f4;
                float f13 = f3;
-               ((AugustusGuiScreen)this).drawScaledString(str7, f13, f12, f11, b4);
+               ((AugustusGuiScreen)this).drawScaledString(str7, f13, f12, f11, (byte)-1);
             } else {
                GlStateManager.color(255.0F, 255.0F, 255.0F, 1.0F);
                int n5 = (int)(f2 + 115.0F);
                int n6 = n3 + 5;
                ResourceLocation augustustexture = GuiMultiplayer.AUGUSTUS_TEXTURE;
                float f14 = 30.0F;
-               float f15 = 30.0F;
-               int n7 = n6;
-               int n8 = n5;
-               this.drawQuestIcon(n8, n7, f15, f14, augustustexture);
+               this.drawQuestIcon(n5, n6, 30.0F, f14, augustustexture);
             }
 
             n3 += 44;
@@ -115,22 +102,16 @@ public class QuestsMenuTab extends ClientMenuTab {
    }
 
    public void initContent() {
-      int[] controlFlowGuard = CreditsSection.getControlFlowGuard();
       super.initContent();
       if (Augustus.getInstance().getQuestManager() != null) {
-         ScrollBar scrollBar2 = this.scrollBar;
-         int size = Augustus.getInstance().getQuestManager().getQuests().size();
-         scrollBar2.setItemCount(size);
+         this.scrollBar.setItemCount(Augustus.getInstance().getQuestManager().getQuests().size());
       }
 
       float f = (float)(this.width + 102) / 2.0F;
       int n = (int)(f + 152.0F);
       int n2 = (int)(f + 155.0F);
       int height2 = this.height;
-      int n3 = n2;
-      byte b = 52;
-      int n4 = n;
-      this.scrollBar.setBounds(n4, b, n3, height2);
+      this.scrollBar.setBounds(n, (byte)52, n2, height2);
    }
 
    public void handleMouseInput() throws IOException {

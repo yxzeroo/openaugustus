@@ -77,8 +77,7 @@ public class ViewFrustum {
    }
 
    public void createRenderChunks(IRenderChunkFactory renderChunkFactory) {
-      int n = this.countChunksX * this.countChunksY * this.countChunksZ;
-      this.renderChunks = new RenderChunk[n];
+      this.renderChunks = new RenderChunk[this.countChunksX * this.countChunksY * this.countChunksZ];
       int n2 = 0;
 
       for (int i = 0; i < this.countChunksX; i++) {
@@ -99,9 +98,7 @@ public class ViewFrustum {
 
          for (int idx = 0; idx < EnumFacing.VALUES.length; idx++) {
             EnumFacing facing = EnumFacing.VALUES[idx];
-            BlockPos blockPosOffset16 = renderChunk.getBlockPosOffset16(facing);
-            RenderChunk renderChunk2 = this.getRenderChunk(blockPosOffset16);
-            renderChunk.setRenderChunkNeighbour(facing, renderChunk2);
+            renderChunk.setRenderChunkNeighbour(facing, this.getRenderChunk(renderChunk.getBlockPosOffset16(facing)));
          }
       }
    }
@@ -133,8 +130,7 @@ public class ViewFrustum {
                }
 
                int n16 = (n15 * this.countChunksY + n14) * this.countChunksX + n13;
-               RenderChunk renderChunk = this.renderChunks[n16];
-               renderChunk.setNeedsUpdate(true);
+               this.renderChunks[n16].setNeedsUpdate(true);
             }
          }
       }

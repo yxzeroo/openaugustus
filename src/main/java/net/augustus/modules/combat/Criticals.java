@@ -38,15 +38,9 @@ public class Criticals extends Module implements TickListener {
          return !this.mode.getSelectedValue().equals("Lag");
       };
       this.onlyWhileJumpKeyPressed = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue2 = new BooleanValue(this, "onlyWhileKillAuraTarget", false);
-      SettingVisibilityCondition condition2 = () -> this.isKillAuraTargetSettingVisible();
-      this.onlyWhileKillAuraTarget = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this, "CriticalsInAir", true);
-      SettingVisibilityCondition condition3 = () -> this.isInAirSettingVisible();
-      this.criticalsInAir = (BooleanValue)booleanValue3.withVisibility(condition3);
-      BooleanValue booleanValue4 = new BooleanValue(this, "CriticalsOnGround", true);
-      SettingVisibilityCondition condition4 = () -> this.isOnGroundSettingVisible();
-      this.criticalsOnGround = (BooleanValue)booleanValue4.withVisibility(condition4);
+      this.onlyWhileKillAuraTarget = (BooleanValue)new BooleanValue(this, "onlyWhileKillAuraTarget", false).withVisibility(() -> this.isKillAuraTargetSettingVisible());
+      this.criticalsInAir = (BooleanValue)new BooleanValue(this, "CriticalsInAir", true).withVisibility(() -> this.isInAirSettingVisible());
+      this.criticalsOnGround = (BooleanValue)new BooleanValue(this, "CriticalsOnGround", true).withVisibility(() -> this.isOnGroundSettingVisible());
    }
 
    @Override
@@ -59,14 +53,12 @@ public class Criticals extends Module implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
    }
 
    private boolean isOnGroundSettingVisible() {

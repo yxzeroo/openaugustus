@@ -66,8 +66,7 @@ public class GameRules {
 
    public void readFromNBT(NBTTagCompound tag) {
       for (String str : (Iterable<String>)(tag.getKeySet())) {
-         String string = tag.getString(str);
-         this.setOrCreateGameRule(str, string);
+         this.setOrCreateGameRule(str, tag.getString(str));
       }
    }
 

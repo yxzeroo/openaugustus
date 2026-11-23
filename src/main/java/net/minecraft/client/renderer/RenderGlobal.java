@@ -213,8 +213,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
    private void cleanupDamagedBlocks(Iterator it) {
       while (it.hasNext()) {
-         DestroyBlockProgress destroyBlockProgress = (DestroyBlockProgress)it.next();
-         int n = destroyBlockProgress.getCreationCloudUpdateTick();
+         int n = ((DestroyBlockProgress)it.next()).getCreationCloudUpdateTick();
          if (this.cloudTickCounter - n > 400) {
             it.remove();
          }
@@ -309,7 +308,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             GlStateManager.disableFog();
          }
 
-         boolean flag = false;
 
          for (int i = 0; i < this.theWorld.weatherEffects.size(); i++) {
             Entity entity2 = (Entity)this.theWorld.weatherEffects.get(i);
@@ -346,8 +344,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         }
 
                         if (ClientManagers.moduleManager.itemESP.isToggled() && ClientManagers.moduleManager.itemESP.mode.getSelectedValue().equals("Vanilla") && entity3 instanceof EntityItem) {
-                           Item item = ((EntityItem)entity3).getEntityItem().getItem();
-                           if (ItemESP.isItemWhitelisted(item)) {
+                           if (ItemESP.isItemWhitelisted(((EntityItem)entity3).getEntityItem().getItem())) {
                               break exitBlock2;
                            }
                         }
@@ -400,8 +397,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
          for (int k = 0; k < this.renderInfosEntities.size(); k++) {
             RenderGlobal.ContainerLocalRenderInformation information = (RenderGlobal.ContainerLocalRenderInformation)this.renderInfosEntities.get(k);
-            Chunk chunk = information.renderChunk.getChunk();
-            ClassInheritanceMultiMap classInheritanceMultiMap = chunk.getEntityLists()[information.renderChunk.getPosition().getY() / 16];
+            ClassInheritanceMultiMap classInheritanceMultiMap = information.renderChunk.getChunk().getEntityLists()[information.renderChunk.getPosition().getY() / 16];
             if (!classInheritanceMultiMap.isEmpty()) {
                for (Entity entity5 : (Iterable<Entity>)(classInheritanceMultiMap)) {
                   boolean flag7 = this.renderManager.shouldRender(entity5, camera, d, d2, d3) || entity5.riddenByEntity == this.mc.thePlayer;
@@ -450,11 +446,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          RenderHelper.enableStandardItemLighting();
 
          for (int m = 0; m < this.renderInfosTileEntities.size(); m++) {
-            RenderGlobal.ContainerLocalRenderInformation information2 = (RenderGlobal.ContainerLocalRenderInformation)this.renderInfosTileEntities.get(m);
-            List tileEntities = information2.renderChunk.getCompiledChunk().getTileEntities();
+            List tileEntities = ((RenderGlobal.ContainerLocalRenderInformation)this.renderInfosTileEntities.get(m)).renderChunk.getCompiledChunk().getTileEntities();
             if (!tileEntities.isEmpty()) {
                for (TileEntity tileEntity : (Iterable<TileEntity>)(tileEntities)) {
-                  if (!flag) {
+                  if (!false) {
                      TileEntityRendererDispatcher.instance.renderTileEntity(tileEntity, f, -1);
                      this.countTileEntitiesRendered++;
                   }
@@ -494,9 +489,8 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             }
 
             Block block = this.theWorld.getBlockState(position).getBlock();
-            boolean flag9 = tileEntity2 != null
-               && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull);
-            if (flag9) {
+            if (tileEntity2 != null
+               && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull)) {
                if (isShaderPackLoaded) {
                   Shaders.nextBlockEntity(tileEntity2);
                }
@@ -1055,11 +1049,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             double d5 = (double)position.getY() - d2;
             double d6 = (double)position.getZ() - d3;
             Block block = this.theWorld.getBlockState(position).getBlock();
-            boolean flag = !(block instanceof BlockChest)
+            if (!(block instanceof BlockChest)
                && !(block instanceof BlockEnderChest)
                && !(block instanceof BlockSign)
-               && !(block instanceof BlockSkull);
-            if (flag) {
+               && !(block instanceof BlockSkull)) {
                if (d4 * d4 + d5 * d5 + d6 * d6 > 1024.0) {
                   it.remove();
                } else {
@@ -1067,8 +1060,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                   if (blockState.getBlock().getMaterial() != Material.air) {
                      int partialBlockDamage = destroyBlockProgress.getPartialBlockDamage();
                      TextureAtlasSprite textureAtlasSprite = this.destroyBlockIcons[partialBlockDamage];
-                     BlockRendererDispatcher blockRendererDispatcher = this.mc.getBlockRendererDispatcher();
-                     blockRendererDispatcher.renderBlockDamage(blockState, position, textureAtlasSprite, this.theWorld);
+                     this.mc.getBlockRendererDispatcher().renderBlockDamage(blockState, position, textureAtlasSprite, this.theWorld);
                   }
                }
             }
@@ -1164,10 +1156,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
          GlStateManager.depthMask(false);
          GlStateManager.pushMatrix();
          int id = worldBorder.getStatus().getID();
-         float f2 = (float)(id >> 16 & 0xFF) / 255.0F;
-         float f3 = (float)(id >> 8 & 0xFF) / 255.0F;
-         float f4 = (float)(id & 0xFF) / 255.0F;
-         GlStateManager.color(f2, f3, f4, (float)d2);
+         GlStateManager.color((float)(id >> 16 & 0xFF) / 255.0F, (float)(id >> 8 & 0xFF) / 255.0F, (float)(id & 0xFF) / 255.0F, (float)d2);
          GlStateManager.doPolygonOffset(-3.0F, -3.0F);
          GlStateManager.enablePolygonOffset();
          GlStateManager.alphaFunc(516, 0.1F);
@@ -1728,8 +1717,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             BlockPos position = renderChunkNeighbour.getPosition();
             int n4 = n - position.getX();
             int n5 = n2 - position.getZ();
-            int n6 = n4 * n4 + n5 * n5;
-            if (n6 > this.renderDistanceSq) {
+            if ((n4 * n4 + n5 * n5) > this.renderDistanceSq) {
                return null;
             }
          }
@@ -2652,8 +2640,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             Set set = SET_ALL_FACINGS;
             if (set.size() == 1) {
                Vector3f viewVector = this.getViewVector(entity, d);
-               EnumFacing opposite = EnumFacing.getFacingFromVector(viewVector.x, viewVector.y, viewVector.z).getOpposite();
-               set.remove(opposite);
+               set.remove(EnumFacing.getFacingFromVector(viewVector.x, viewVector.y, viewVector.z).getOpposite());
             }
 
             if (set.isEmpty()) {
@@ -2746,11 +2733,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             if (renderChunk6.isNeedsUpdate() || chunksToUpdate2.contains(renderChunk6)) {
                this.displayListEntitiesDirty = true;
                BlockPos position = renderChunk6.getPosition();
-               boolean flag4 = distanceSq(
+               if (!(distanceSq(
                      (double)n2, (double)n3, (double)n4, (double)(position.getX() + 8), (double)(position.getY() + 8), (double)(position.getZ() + 8)
                   )
-                  < 768.0;
-               if (!flag4) {
+                  < 768.0)) {
                   this.chunksToUpdate.add(renderChunk6);
                } else if (!renderChunk6.isPlayerUpdate()) {
                   this.chunksToUpdateForced.add(renderChunk6);

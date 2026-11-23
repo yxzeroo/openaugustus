@@ -59,8 +59,7 @@ public class ProxyChecker {
                      } catch (InterruptedException e3) {
                      }
 
-                     boolean flag = flags[0];
-                     if (flag) {
+                     if (flags[0]) {
                         return true;
                      }
                   }
@@ -143,8 +142,7 @@ public class ProxyChecker {
 
          for (ProxyEntry proxyEntry4 : (Iterable<ProxyEntry>)(ProxyManagerScreen.proxies)) {
             if (proxyEntry4.matches(proxyEntry3)) {
-               int ping = proxyEntry3.getPing();
-               proxyEntry4.setPing(ping);
+               proxyEntry4.setPing(proxyEntry3.getPing());
                break;
             }
          }

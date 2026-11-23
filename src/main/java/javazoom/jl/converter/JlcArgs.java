@@ -41,8 +41,7 @@ public class JlcArgs {
                   this.verbose_mode = true;
                   if (strings[i].length() > 2) {
                      try {
-                        String str = strings[i].substring(2);
-                        this.verbose_level = Integer.parseInt(str);
+                        this.verbose_level = Integer.parseInt(strings[i].substring(2));
                      } catch (NumberFormatException e) {
                         System.err.println("Invalid verbose level. Using default.");
                      }

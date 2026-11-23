@@ -14,8 +14,7 @@ public class BlockNewLog extends BlockLog {
    public static final PropertyEnum VARIANT;
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockPlanks.EnumType.class, obj -> ((BlockPlanks.EnumType)obj).getMetadata() >= 4);
+      VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, obj -> ((BlockPlanks.EnumType)obj).getMetadata() >= 4);
    }
 
    @Override

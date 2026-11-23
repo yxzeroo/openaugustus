@@ -31,9 +31,9 @@ import java.util.List;
 import net.augustus.modules.Module;
 import net.augustus.modules.movement.MovementRecorder;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketThreadUtil;
@@ -43,18 +43,18 @@ import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 
 public class MovementReplayMode extends AbstractMovementRecorderMode implements TickListener, PacketDelayListener, MoveInputListener, SprintListener, TimerListener, MotionListener {
-   private final BooleansSetting recordings;
-   private final StringValue startDelay;
+   private final StringValue recordings;
+   private final DoubleValue startDelay;
    private final BooleanValue autoDetect;
-   private final StringValue minTeleportDistanceToStartReplay;
+   private final DoubleValue minTeleportDistanceToStartReplay;
    private final BooleanValue mouseSensi;
    private final BooleanValue loop;
    private final BooleanValue replayDebug;
-   private final DoubleValue timer;
-   private final BooleansSetting timerMode;
-   private final StringValue startTimerAfterXTicksOfTheRecording;
-   private final StringValue timerSpeedDefault;
-   private final StringValue timerSpeedBalanced;
+   private final SettingGroup timer;
+   private final StringValue timerMode;
+   private final DoubleValue startTimerAfterXTicksOfTheRecording;
+   private final DoubleValue timerSpeedDefault;
+   private final DoubleValue timerSpeedBalanced;
    private final HashMap recordingsByName;
    private boolean awaitingStartOnGround;
    private boolean replaying;
@@ -63,57 +63,28 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    private int replayTickIndex;
    private boolean defaultTimerApplied;
 
-   public MovementReplayMode(MovementRecorder movementRecorder, DoubleValue doubleValue) {
+   public MovementReplayMode(MovementRecorder movementRecorder, SettingGroup doubleValue) {
        super(movementRecorder, doubleValue, "Replay");
-      BooleansSetting booleansSetting = new BooleansSetting(this.parentModule, "Recordings", "", new String[0], this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.recordings = (BooleansSetting)((BooleansSetting)booleansSetting.withVisibility(condition)).markVisualOnly();
-      StringValue stringValue = new StringValue(this.parentModule, "StartDelay", 3000.0, 0.0, 10000.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.startDelay = (StringValue)stringValue.visibleWhen(condition2).markVisualOnly();
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "AutoDetect", true, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.autoDetect = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition3)).markVisualOnly();
-      StringValue stringValue2 = new StringValue(this.parentModule, "Min teleport distance to start replay", 0.0, 0.0, 1.0, 2);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.minTeleportDistanceToStartReplay = (StringValue)stringValue2.visibleWhen(condition4).markVisualOnly();
-      BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "MouseSensi", true, this.modeSetting);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.mouseSensi = (BooleanValue)((BooleanValue)booleanValue2.withVisibility(condition5)).markVisualOnly();
-      BooleanValue booleanValue3 = new BooleanValue(this.parentModule, "Loop", false, this.modeSetting);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.loop = (BooleanValue)((BooleanValue)booleanValue3.withVisibility(condition6)).markVisualOnly();
-      BooleanValue booleanValue4 = new BooleanValue(this.parentModule, "ReplayDebug", true, this.modeSetting);
-      String str = "Debug";
-      BooleanValue booleanValue5 = (BooleanValue)booleanValue4.withDisplayName(str);
-      SettingVisibilityCondition condition7 = () -> this.isSelected();
-      this.replayDebug = (BooleanValue)((BooleanValue)booleanValue5.withVisibility(condition7)).markVisualOnly();
-      DoubleValue doubleValue2 = new DoubleValue(this.parentModule, "Timer", true, this.modeSetting);
-      SettingVisibilityCondition condition8 = () -> this.isSelected();
-      this.timer = (DoubleValue)doubleValue2.visibleWhen(condition8).markVisualOnly();
-      BooleansSetting booleansSetting2 = new BooleansSetting(this.parentModule, "TimerMode", "Default", new String[]{"None", "Default", "Balanced"}, this.timer);
-      SettingVisibilityCondition condition9 = () -> this.isSelected();
-      BooleansSetting booleansSetting3 = (BooleansSetting)booleansSetting2.withVisibility(condition9);
-      SettingChangeListener listener = () -> mc.getTimer().timerSpeed = 1.0F;
-      SettingChangeListener listener2 = listener;
-      this.timerMode = (BooleansSetting)((BooleansSetting)booleansSetting3.withChangeListener(listener2)).markVisualOnly();
-      StringValue stringValue3 = new StringValue(this.parentModule, "StartTimerAfterXTicksOfTheRecording", 40.0, 0.0, 100.0, 0, this.timer);
+      this.recordings = (StringValue)((StringValue)new StringValue(this.parentModule, "Recordings", "", new String[0], this.modeSetting).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.startDelay = (DoubleValue)new DoubleValue(this.parentModule, "StartDelay", 3000.0, 0.0, 10000.0, 0, this.modeSetting).visibleWhen(() -> this.isSelected()).markVisualOnly();
+      this.autoDetect = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "AutoDetect", true, this.modeSetting).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.minTeleportDistanceToStartReplay = (DoubleValue)new DoubleValue(this.parentModule, "Min teleport distance to start replay", 0.0, 0.0, 1.0, 2).visibleWhen(() -> this.isSelected()).markVisualOnly();
+      this.mouseSensi = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "MouseSensi", true, this.modeSetting).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.loop = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "Loop", false, this.modeSetting).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.replayDebug = (BooleanValue)((BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "ReplayDebug", true, this.modeSetting).withDisplayName("Debug")).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.timer = (SettingGroup)new SettingGroup(this.parentModule, "Timer", true, this.modeSetting).visibleWhen(() -> this.isSelected()).markVisualOnly();
+      this.timerMode = (StringValue)((StringValue)((StringValue)new StringValue(this.parentModule, "TimerMode", "Default", new String[]{"None", "Default", "Balanced"}, this.timer).withVisibility(() -> this.isSelected())).withChangeListener(() -> mc.getTimer().timerSpeed = 1.0F)).markVisualOnly();
+      DoubleValue stringValue3 = new DoubleValue(this.parentModule, "StartTimerAfterXTicksOfTheRecording", 40.0, 0.0, 100.0, 0, this.timer);
       SettingVisibilityCondition condition10 = () -> {
          return this.isSelected() && !this.timerMode.getSelectedValue().equals("None");
       };
-      this.startTimerAfterXTicksOfTheRecording = (StringValue)stringValue3.visibleWhen(condition10).markVisualOnly();
-      StringValue stringValue4 = new StringValue(this.parentModule, "TimerSpeedDefault", 1.0, 0.1, 10.0, 8, this.timer);
-      String str2 = "TimeSpeed";
-      StringValue stringValue5 = stringValue4.named(str2);
-      SettingVisibilityCondition condition11 = () -> this.isDefaultTimerSpeedVisible();
-      this.timerSpeedDefault = (StringValue)stringValue5.visibleWhen(condition11).markVisualOnly();
-      StringValue stringValue6 = new StringValue(this.parentModule, "TimerSpeedBalanced", 1.0, 0.1, 10.0, 8, this.timer);
-      String str3 = "TimeSpeed";
-      StringValue stringValue7 = stringValue6.named(str3);
+      this.startTimerAfterXTicksOfTheRecording = (DoubleValue)stringValue3.visibleWhen(condition10).markVisualOnly();
+      this.timerSpeedDefault = (DoubleValue)new DoubleValue(this.parentModule, "TimerSpeedDefault", 1.0, 0.1, 10.0, 8, this.timer).named("TimeSpeed").visibleWhen(() -> this.isDefaultTimerSpeedVisible()).markVisualOnly();
+      DoubleValue stringValue7 = new DoubleValue(this.parentModule, "TimerSpeedBalanced", 1.0, 0.1, 10.0, 8, this.timer).named("TimeSpeed");
       SettingVisibilityCondition condition12 = () -> {
          return this.isSelected() && this.timerMode.getSelectedValue().equals("Balanced");
       };
-      this.timerSpeedBalanced = (StringValue)stringValue7.visibleWhen(condition12).markVisualOnly();
+      this.timerSpeedBalanced = (DoubleValue)stringValue7.visibleWhen(condition12).markVisualOnly();
       this.recordingsByName = new HashMap();
       this.awaitingStartOnGround = false;
       this.replaying = false;
@@ -125,20 +96,12 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 100;
-      byte b3 = 25;
-      this.toggleEventSubscription(b3, b2);
-      byte b4 = 36;
-      this.toggleEventSubscription(b4);
-      byte b5 = 100;
-      byte b6 = 21;
-      this.toggleEventSubscription(b6, b5);
-      byte b7 = 18;
-      this.toggleEventSubscription(b7);
-      byte b8 = 41;
-      this.toggleEventSubscription(b8);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)25, (byte)100);
+      this.toggleEventSubscription((byte)36);
+      this.toggleEventSubscription((byte)21, (byte)100);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)41);
    }
 
    @Override
@@ -146,9 +109,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
       this.reloadRecordings();
       this.resetReplayState();
       if (this.timerMode.getSelectedValue().equals("Balanced") && !ClientManagers.moduleManager.timeManipulation.isToggled()) {
-         MovementRecorder parentModule2 = (MovementRecorder)this.parentModule;
-         String str = "Please enable \"TimeManipulation\" module to use the balance timer option.";
-         parentModule2.sendChatMessage2(str);
+         ((MovementRecorder)this.parentModule).sendChatMessage2("Please enable \"TimeManipulation\" module to use the balance timer option.");
       }
    }
 
@@ -161,9 +122,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    public void onTick() {
       MovementRecording selectedRecording = this.getSelectedRecording();
       if (mc.isNotInGui() && selectedRecording != null) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double value = this.startDelay.getValue();
-         if (timeHelper2.reached(value)) {
+         if (this.timeHelper.reached(this.startDelay.getValue())) {
             if (this.awaitingStartOnGround && mc.thePlayer.onGround) {
                this.replaying = !this.autoDetect.getValue();
                if (this.autoDetect.getValue()) {
@@ -173,18 +132,14 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
                      List list = this.captureSurroundingBlocks();
                      if (Arrays.equals(MovementRecording.accessBlockSignature(movementRecording).toArray(new Boolean[0]), list.toArray(new Boolean[0]))) {
                         this.replaying = true;
-                        BooleansSetting recordings2 = this.recordings;
-                        String str = MovementRecording.accessName(movementRecording);
-                        recordings2.setSelectedValue(str);
+                        this.recordings.setSelectedValue(MovementRecording.accessName(movementRecording));
                         flag = true;
                         break;
                      }
                   }
 
                   if (!flag) {
-                     MovementRecorder parentModule2 = (MovementRecorder)this.parentModule;
-                     String str2 = "No equal map found. Sorry :/";
-                     parentModule2.sendChatMessage2(str2);
+                     ((MovementRecorder)this.parentModule).sendChatMessage2("No equal map found. Sorry :/");
                   }
                }
 
@@ -199,9 +154,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
             if (this.replayTickIndex >= MovementRecording.accessInputs(selectedRecording).size()) {
                if (!this.loop.getValue()) {
                   this.replaying = false;
-                  MovementRecorder parentModule3 = (MovementRecorder)this.parentModule;
-                  String str3 = "Finished!";
-                  parentModule3.sendChatMessage2(str3);
+                  ((MovementRecorder)this.parentModule).sendChatMessage2("Finished!");
                } else {
                   this.replayTickIndex = 0;
                }
@@ -215,9 +168,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
             }
 
             if (this.replayDebug.getValue()) {
-               MovementRecorder parentModule4 = (MovementRecorder)this.parentModule;
-               String str4 = this.recordedMovementInput.toString();
-               parentModule4.sendChatMessage2(str4);
+               ((MovementRecorder)this.parentModule).sendChatMessage2(this.recordedMovementInput.toString());
             }
 
             this.replayTickIndex++;
@@ -226,13 +177,11 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
                RotationUtil.updateAngle(ClientManagers.rotationController.getPreviousRotation().pitch, this.recordedMovementInput.getPitch(), 180.0F)
             );
             if (this.mouseSensi.getValue()) {
-               Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               rotation = RotationUtil.applyGcdFix(rotation, previousRotation);
+               rotation = RotationUtil.applyGcdFix(rotation, ClientManagers.rotationController.getPreviousRotation());
             }
 
             Module parentModule5 = this.parentModule;
-            byte b = -20;
-            ClientManagers.rotationController.requestRotation(rotation, b, parentModule5);
+            ClientManagers.rotationController.requestRotation(rotation, (byte)-20, parentModule5);
             return;
          }
       }
@@ -241,16 +190,11 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (!this.isReplayInactive()) {
-         MoveFixMode none = MoveFixMode.NONE;
-         event.setMoveFixMode(none);
-         float forward = this.recordedMovementInput.getForward();
-         event.setMoveForward(forward);
-         float strafe = this.recordedMovementInput.getStrafe();
-         event.setMoveStrafe(strafe);
-         boolean isJumping = this.recordedMovementInput.isJumping();
-         event.setJump(isJumping);
-         boolean isSneaking = this.recordedMovementInput.isSneaking();
-         event.setSneak(isSneaking);
+         event.setMoveFixMode(MoveFixMode.NONE);
+         event.setMoveForward(this.recordedMovementInput.getForward());
+         event.setMoveStrafe(this.recordedMovementInput.getStrafe());
+         event.setJump(this.recordedMovementInput.isJumping());
+         event.setSneak(this.recordedMovementInput.isSneaking());
       }
    }
 
@@ -262,9 +206,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
             PacketThreadUtil.runOnMainThreadImmediate(() -> this.resetReplayState());
          } else if (packet instanceof S08PacketPlayerPosLook) {
             S08PacketPlayerPosLook packet2 = (S08PacketPlayerPosLook)packet;
-            Vec3 vec = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-            Vec3 vec2 = new Vec3(packet2.getX(), packet2.getY(), packet2.getZ());
-            if (vec.distanceTo(vec2) >= this.minTeleportDistanceToStartReplay.getValue()) {
+            if (new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ).distanceTo(new Vec3(packet2.getX(), packet2.getY(), packet2.getZ())) >= this.minTeleportDistanceToStartReplay.getValue()) {
                PacketThreadUtil.runOnMainThreadImmediate(() -> this.resetReplayState());
             }
          }
@@ -274,8 +216,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    @Override
    public void onSprint3(EventSprint event) {
       if (!this.isReplayInactive()) {
-         boolean isSprinting = this.recordedMovementInput.isSprinting();
-         event.setSprintKeyDown(isSprinting);
+         event.setSprintKeyDown(this.recordedMovementInput.isSprinting());
       }
    }
 
@@ -283,9 +224,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    public void onMotion(EventMotion event) {
       if (this.timerMode.getSelectedValue().equals("Default")) {
          if ((double)this.replayTickIndex > this.startTimerAfterXTicksOfTheRecording.getValue() && this.replaying) {
-            Timer timer2 = mc.getTimer();
-            boolean flag = true;
-            timer2.timerSpeed = (float)this.timerSpeedDefault.getValue(flag);
+            mc.getTimer().timerSpeed = (float)this.timerSpeedDefault.getValue(true);
             this.defaultTimerApplied = true;
          } else if (this.defaultTimerApplied) {
             this.defaultTimerApplied = false;
@@ -297,9 +236,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    @Override
    public void onTimer2(EventTimer event) {
       if (this.timerMode.getSelectedValue().equals("Balanced") && (double)this.replayTickIndex > this.startTimerAfterXTicksOfTheRecording.getValue() && this.replaying) {
-         boolean flag = true;
-         float value = (float)this.timerSpeedBalanced.getValue(flag);
-         event.setTimerSpeed(value);
+         event.setTimerSpeed((float)this.timerSpeedBalanced.getValue(true));
       }
    }
 
@@ -318,8 +255,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    private void reloadRecordings() {
       this.recordingsByName.clear();
       ClientFileUtil.ensureDirectory(MovementRecorder.RECORDINGS_DIR);
-      File file = new File(MovementRecorder.RECORDINGS_DIR);
-      File[] files = file.listFiles(File::isFile);
+      File[] files = new File(MovementRecorder.RECORDINGS_DIR).listFiles(File::isFile);
       if (files != null) {
          for (File file2 : files) {
             if (file2.getName().endsWith(".json")) {
@@ -342,18 +278,13 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    }
 
    private MovementRecording loadRecordingFile(File file) {
-      String absolutePath = file.getParentFile().getAbsolutePath();
-      String name2 = file.getName();
-      Object obj = null;
-      String str = name2;
-      JsonObject json = ClientFileUtil.readJsonObject(absolutePath, str, (Runnable)obj);
+      JsonObject json = ClientFileUtil.readJsonObject(file.getParentFile().getAbsolutePath(), file.getName(), (Runnable)null);
       if (json == null) {
          return null;
       } else {
          JsonListPropertyCodec booleanListCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanListCodec();
          ArrayList list = new ArrayList();
-         String str2 = "Blocks";
-         List list2 = booleanListCodec.readList(str2, list, json);
+         List list2 = booleanListCodec.readList("Blocks", list, json);
          if (list2.isEmpty()) {
             return null;
          } else {
@@ -366,8 +297,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
                for (JsonElement elem : asJsonArray) {
                   if (elem.isJsonObject()) {
                      RecordedMovementInput recordedMovementInput2 = new RecordedMovementInput();
-                     JsonObject json2 = (JsonObject)elem;
-                     recordedMovementInput2.fromJson(json2);
+                     recordedMovementInput2.fromJson((JsonObject)elem);
                      list3.add(recordedMovementInput2);
                   }
                }
@@ -385,9 +315,7 @@ public class MovementReplayMode extends AbstractMovementRecorderMode implements 
    private boolean isReplayInactive() {
       MovementRecording selectedRecording = this.getSelectedRecording();
       if (mc.isNotInGui() && selectedRecording != null && this.recordedMovementInput != null && this.replaying) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double value = this.startDelay.getValue();
-         if (timeHelper2.reached(value)) {
+         if (this.timeHelper.reached(this.startDelay.getValue())) {
             return false;
          }
       }

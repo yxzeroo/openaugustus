@@ -161,7 +161,6 @@ public class GeoBone implements IGeoBone {
 
    @Override
    public void saveInitialSnapshot() {
-      int[] flowState = GeoVector3f.getFlowState();
       if (this.initialSnapshot == null) {
          this.initialSnapshot = new GeoBoneSnapshot(this, true);
       }

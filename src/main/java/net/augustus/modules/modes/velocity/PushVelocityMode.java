@@ -7,55 +7,42 @@ import java.util.HashMap;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 
 public class PushVelocityMode extends VelocityMode implements UpdateListener {
-   private final BooleansSetting pushMode;
-   public final StringValue push;
-   public final StringValue pushStart;
-   public final StringValue pushEnd;
+   private final StringValue pushMode;
+   public final DoubleValue push;
+   public final DoubleValue pushStart;
+   public final DoubleValue pushEnd;
    public final BooleanValue onGround;
    private final HashMap hurtTimeEntries;
 
-   public PushVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public PushVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Push");
-      BooleansSetting booleansSetting = new BooleansSetting(this.parentModule, "PushMode", "Simple", new String[]{"Simple", "Expert"}, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.pushMode = (BooleansSetting)booleansSetting.withVisibility(condition);
-      StringValue stringValue = new StringValue(this.parentModule, "Push", 1.1, 0.01, 20.0, 2, this.modeSetting);
-      String str = "PushMotion";
-      stringValue = stringValue.named(str);
-      SettingVisibilityCondition condition2 = () -> this.isPushMotionVisible();
-      this.push = stringValue.visibleWhen(condition2);
-      stringValue = new StringValue(this.parentModule, "PushStart", 9.0, 1.0, 10.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isPushStartVisible();
-      this.pushStart = stringValue.visibleWhen(condition3);
-      stringValue = new StringValue(this.parentModule, "PushEnd", 2.0, 1.0, 10.0, 0, this.modeSetting);
+      this.pushMode = (StringValue)new StringValue(this.parentModule, "PushMode", "Simple", new String[]{"Simple", "Expert"}, this.modeSetting).withVisibility(() -> this.isSelected());
+      DoubleValue stringValue = new DoubleValue(this.parentModule, "Push", 1.1, 0.01, 20.0, 2, this.modeSetting);
+      stringValue = stringValue.named("PushMotion");
+      this.push = stringValue.visibleWhen(() -> this.isPushMotionVisible());
+      stringValue = new DoubleValue(this.parentModule, "PushStart", 9.0, 1.0, 10.0, 0, this.modeSetting);
+      this.pushStart = stringValue.visibleWhen(() -> this.isPushStartVisible());
+      stringValue = new DoubleValue(this.parentModule, "PushEnd", 2.0, 1.0, 10.0, 0, this.modeSetting);
       SettingVisibilityCondition condition4 = () -> {
          return this.isSelected() && this.isSimpleMode();
       };
       this.pushEnd = stringValue.visibleWhen(condition4);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "OnGround", false, this.modeSetting);
-      SettingVisibilityCondition condition5 = () -> this.isOnGroundVisible();
-      this.onGround = (BooleanValue)booleanValue.withVisibility(condition5);
+      this.onGround = (BooleanValue)new BooleanValue(this.parentModule, "OnGround", false, this.modeSetting).withVisibility(() -> this.isOnGroundVisible());
       this.hurtTimeEntries = new HashMap();
 
       for (int i = 10; i > 0; i--) {
-         DoubleValue doubleValue2 = new DoubleValue(velocity, "Hurttime " + i, doubleValue);
-         SettingVisibilityCondition condition6 = () -> this.isExpertGroupVisible();
-         DoubleValue doubleValue3 = doubleValue2.visibleWhen(condition6);
-         StringValue stringValue2 = new StringValue(velocity, "PushMotion" + i, 0.0, 0.0, 20.0, 2, doubleValue3);
-         String str2 = "PushMotion";
-         StringValue stringValue3 = stringValue2.named(str2);
+         SettingGroup doubleValue3 = new SettingGroup(velocity, "Hurttime " + i, doubleValue).visibleWhen(() -> this.isExpertGroupVisible());
+         DoubleValue stringValue3 = new DoubleValue(velocity, "PushMotion" + i, 0.0, 0.0, 20.0, 2, doubleValue3).named("PushMotion");
          SettingVisibilityCondition condition7 = () -> {
             return this.isSelected() && !this.isSimpleMode();
          };
-         StringValue stringValue4 = stringValue3.visibleWhen(condition7);
-         BooleanValue booleanValue2 = new BooleanValue(velocity, "PushOnGround" + i, false, doubleValue3);
-         String str3 = "PushOnGround";
-         BooleanValue booleanValue3 = (BooleanValue)booleanValue2.withDisplayName(str3);
+         DoubleValue stringValue4 = stringValue3.visibleWhen(condition7);
+         BooleanValue booleanValue3 = (BooleanValue)new BooleanValue(velocity, "PushOnGround" + i, false, doubleValue3).withDisplayName("PushOnGround");
          SettingVisibilityCondition condition8 = () -> {
             return this.isSelected() && !this.isSimpleMode();
          };
@@ -66,8 +53,7 @@ public class PushVelocityMode extends VelocityMode implements UpdateListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -79,7 +65,7 @@ public class PushVelocityMode extends VelocityMode implements UpdateListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new PushVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new PushVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override

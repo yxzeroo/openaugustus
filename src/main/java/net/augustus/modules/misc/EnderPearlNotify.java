@@ -12,20 +12,20 @@ import net.augustus.Augustus;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.options.NotificationCategoryOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemEnderPearl;
 
 public class EnderPearlNotify extends Module implements TickListener, LoadWorldListener {
    private final BooleanValue deadPlayers;
-   private final StringValue notifyDelay;
+   private final DoubleValue notifyDelay;
    private final HashMap notifiedCooldowns;
 
    public EnderPearlNotify() {
        super("EnderPearlNotify", "PerlenWarnung", new Color(66, 224, 245), Categorys.MISC);
       this.deadPlayers = (BooleanValue)(new BooleanValue(this, "DeadPlayers", true)).markVisualOnly();
-      this.notifyDelay = (StringValue)(new StringValue(this, "NotifyDelay", 4000.0, 0.0, 10000.0, 0)).markVisualOnly();
+      this.notifyDelay = (DoubleValue)(new DoubleValue(this, "NotifyDelay", 4000.0, 0.0, 10000.0, 0)).markVisualOnly();
       this.notifiedCooldowns = new HashMap();
    }
 
@@ -40,10 +40,8 @@ public class EnderPearlNotify extends Module implements TickListener, LoadWorldL
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 17;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

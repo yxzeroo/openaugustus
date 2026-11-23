@@ -73,8 +73,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
             GL11.glEnd();
 
             for (PathNode pathNode2 : (Iterable<PathNode>)(this.pathNodes)) {
-               PathBlockPos pos = pathNode2.getPos();
-               RenderUtil.drawFilledBox(AxisAlignedBB.fromCenter(pos.toVec3().addVector(0.5, 0.01, 0.5), 0.1));
+               RenderUtil.drawFilledBox(AxisAlignedBB.fromCenter(pathNode2.getPos().toVec3().addVector(0.5, 0.01, 0.5), 0.1));
             }
          }
 
@@ -102,12 +101,10 @@ public class PathFinderCommand extends Command implements RenderListener, Update
          if (strings[1].equalsIgnoreCase("toggle")) {
             this.renderingEnabled = !this.renderingEnabled;
             if (this.renderingEnabled) {
-               String str2 = "Enabled pathrendering";
-               this.sendChat(str2);
+               this.sendChat("Enabled pathrendering");
                this.registerListeners();
             } else {
-               String str3 = "Disabled pathrendering";
-               this.sendChat(str3);
+               this.sendChat("Disabled pathrendering");
                this.unregisterListeners();
             }
          } else {
@@ -116,14 +113,12 @@ public class PathFinderCommand extends Command implements RenderListener, Update
                   this.teleportingAlongPath = true;
                   this.currentNodeIndex = 0;
                   if (!this.renderingEnabled) {
-                     String str4 = "Enabled pathrendering";
-                     this.sendChat(str4);
+                     this.sendChat("Enabled pathrendering");
                      this.registerListeners();
                      this.renderingEnabled = true;
                   }
 
-                  String str5 = "Teleporting along path";
-                  this.sendChat(str5);
+                  this.sendChat("Teleporting along path");
                } else {
                   this.teleportingAlongPath = false;
                }
@@ -140,8 +135,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
                   this.colorRed = (float)n / 255.0F;
                   this.colorGreen = (float)n2 / 255.0F;
                   this.colorBlue = (float)n3 / 255.0F;
-                  String str6 = "Set color! (r=" + n + " g=" + n2 + " b=" + n3 + ")";
-                  this.sendChat(str6);
+                  this.sendChat("Set color! (r=" + n + " g=" + n2 + " b=" + n3 + ")");
                }
             } else {
                if (strings.length > 3) {
@@ -168,13 +162,11 @@ public class PathFinderCommand extends Command implements RenderListener, Update
                         n6 = Integer.parseInt(strings[3]);
                      }
                   } catch (Throwable e) {
-                     String str7 = "Parsing failed";
-                     this.sendChat(str7);
+                     this.sendChat("Parsing failed");
                      return;
                   }
 
-                  String str8 = "Calculating a path to (x=" + n4 + " y=" + n5 + " z=" + n6 + ")";
-                  this.sendChat(str8);
+                  this.sendChat("Calculating a path to (x=" + n4 + " y=" + n5 + " z=" + n6 + ")");
                   Vec3 interpolatedPos = mc.getRenderViewEntity().getInterpolatedPos(1.0F);
                   PathBlockPos pathBlockPos = new PathBlockPos((int)Math.floor(interpolatedPos.xCoord), (int)Math.floor(interpolatedPos.yCoord), (int)Math.floor(interpolatedPos.zCoord));
                   PathBlockPos pathBlockPos2 = new PathBlockPos(n4, n5, n6);
@@ -183,19 +175,15 @@ public class PathFinderCommand extends Command implements RenderListener, Update
                   boolean flag = isToggled && Augustus.getInstance().getModuleManager().jesus.mode.getSelectedValue().equalsIgnoreCase("dolphin");
                   AStarPathFinder aStarPathFinder = new AStarPathFinder(pathBlockPos, pathBlockPos2, isToggled && !flag, flag, false);
                   aStarPathFinder.smoothPath = true;
-                  long l2 = 10000L;
-                  boolean flag2 = true;
-                  ArrayList list = aStarPathFinder.computePath(flag2, l2);
+                  ArrayList list = aStarPathFinder.computePath(true, 10000L);
                   long l3 = System.currentTimeMillis() - l;
                   if (list == null) {
-                     String str9 = "Exceeded timelimit";
-                     this.sendChat(str9);
+                     this.sendChat("Exceeded timelimit");
                      return;
                   }
 
                   if (list.isEmpty()) {
-                     String str10 = "No path was found";
-                     this.sendChat(str10);
+                     this.sendChat("No path was found");
                      return;
                   }
 
@@ -206,8 +194,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
 
                   for (PathNode pathNode : (Iterable<PathNode>)(list)) {
                      if (pathBlockPos3 != null) {
-                        PathBlockPos pos = pathNode.getPos();
-                        double d2 = pathBlockPos3.distanceTo(pos);
+                        double d2 = pathBlockPos3.distanceTo(pathNode.getPos());
                         d += d2;
                      }
 
@@ -225,8 +212,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
                      + "ms))";
                   this.sendChat(str11);
                   if (!this.renderingEnabled) {
-                     String str12 = "Enabled pathrendering";
-                     this.sendChat(str12);
+                     this.sendChat("Enabled pathrendering");
                      this.registerListeners();
                      this.renderingEnabled = true;
                   }
@@ -234,12 +220,9 @@ public class PathFinderCommand extends Command implements RenderListener, Update
             }
          }
       } else {
-         String str13 = this.getCommand() + " [§2x§7] [§2y§7] [§2z§7]";
-         this.sendChat(str13);
-         String str14 = this.getCommand() + " [§ccolor§7] [§2r§7] [§2g§7] [§2b§7]";
-         this.sendChat(str14);
-         String str15 = this.getCommand() + " [§ctoggle§7]";
-         this.sendChat(str15);
+         this.sendChat(this.getCommand() + " [§2x§7] [§2y§7] [§2z§7]");
+         this.sendChat(this.getCommand() + " [§ccolor§7] [§2r§7] [§2g§7] [§2b§7]");
+         this.sendChat(this.getCommand() + " [§ctoggle§7]");
       }
    }
 
@@ -252,9 +235,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
             int n = 0;
 
             for (int i = 0; i < this.pathNodes.size(); i++) {
-               PathNode pathNode = (PathNode)this.pathNodes.get(i);
-               PathBlockPos pos = pathNode.getPos();
-               double d2 = pos.toVec3().distanceTo(vec);
+               double d2 = ((PathNode)this.pathNodes.get(i)).getPos().toVec3().distanceTo(vec);
                if (d > d2) {
                   d = d2;
                   n = i;
@@ -283,10 +264,8 @@ public class PathFinderCommand extends Command implements RenderListener, Update
 
          for (int i = this.currentNodeIndex; i < this.pathNodes.size(); i++) {
             PathNode pathNode = (PathNode)this.pathNodes.get(i);
-            PathBlockPos pos = pathNode.getPos();
-            Vec3 vec3 = pos.toVec3().addVector(0.5, 0.0, 0.5);
-            Block block = mc.theWorld.getBlockState(pathNode.getPos().toBlockPos()).getBlock();
-            if (block instanceof BlockStairs) {
+            Vec3 vec3 = pathNode.getPos().toVec3().addVector(0.5, 0.0, 0.5);
+            if (mc.theWorld.getBlockState(pathNode.getPos().toBlockPos()).getBlock() instanceof BlockStairs) {
                vec3 = vec3.addVector(0.0, 1.0, 0.0);
             }
 
@@ -334,8 +313,7 @@ public class PathFinderCommand extends Command implements RenderListener, Update
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + " §7(calculates a path to a specified location)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + " §7(calculates a path to a specified location)");
    }
 
 }

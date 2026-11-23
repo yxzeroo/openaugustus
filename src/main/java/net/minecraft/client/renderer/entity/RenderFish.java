@@ -46,8 +46,7 @@ public class RenderFish extends Render {
       GlStateManager.disableRescaleNormal();
       GlStateManager.popMatrix();
       if (entityFishHook.angler != null) {
-         float swingProgress = entityFishHook.angler.getSwingProgress(f2);
-         float f10 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * 3.1415927F);
+         float f10 = MathHelper.sin(MathHelper.sqrt_float(entityFishHook.angler.getSwingProgress(f2)) * 3.1415927F);
          Vec3 rodTipOffset = this.getRodTipOffset();
          rodTipOffset = rodTipOffset.rotatePitch(-(entityFishHook.angler.prevRotationPitch + (entityFishHook.angler.rotationPitch - entityFishHook.angler.prevRotationPitch) * f2) * 3.1415927F / 180.0F);
          rodTipOffset = rodTipOffset.rotateYaw(-(entityFishHook.angler.prevRotationYaw + (entityFishHook.angler.rotationYaw - entityFishHook.angler.prevRotationYaw) * f2) * 3.1415927F / 180.0F);
@@ -106,8 +105,7 @@ public class RenderFish extends Render {
       if (!ClientManagers.moduleManager.legacyAnimations.isLegacyRodEnabled()) {
          return new Vec3(-0.36, 0.03, 0.35);
       } else {
-         double fovSetting = (double)Minecraft.getMinecraft().gameSettings.fovSetting;
-         double d = fovSetting / 110.0;
+         double d = ((double)Minecraft.getMinecraft().gameSettings.fovSetting) / 110.0;
          return new Vec3(-d + d / 2.5 - d / 8.0 + 0.16, 0.0, 0.4);
       }
    }

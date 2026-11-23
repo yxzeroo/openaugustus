@@ -32,8 +32,7 @@ public class TileEntityEnchantmentTableRenderer extends TileEntitySpecialRendere
          f3 += (float) (Math.PI * 2);
       }
 
-      float f4 = table.bookRotationPrev + f3 * f;
-      GlStateManager.rotate(-f4 * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
+      GlStateManager.rotate(-(table.bookRotationPrev + f3 * f) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
       GlStateManager.rotate(80.0F, 0.0F, 0.0F, 1.0F);
       this.bindTexture(TEXTURE_BOOK);
       float f5 = table.pageFlipPrev + (table.pageFlip - table.pageFlipPrev) * f + 0.25F;

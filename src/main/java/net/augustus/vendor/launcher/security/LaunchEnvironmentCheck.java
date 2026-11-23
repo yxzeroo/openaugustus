@@ -4,7 +4,6 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public class LaunchEnvironmentCheck {
-   private static int[] controlFlowMarker;
 
    private static boolean isClassPresent(String str) {
       try {
@@ -19,9 +18,8 @@ public class LaunchEnvironmentCheck {
       if (StartupAntiDebugCheck.isDebugDetected()) {
          return false;
       } else {
-         List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 
-         for (String str : inputArguments) {
+         for (String str : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
             String str2 = str.toLowerCase();
             if (str2.contains("-agentlib:jdwp")
                || str2.contains("-xdebug")
@@ -48,15 +46,6 @@ public class LaunchEnvironmentCheck {
       }
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(new int[2]);
-   }
 }

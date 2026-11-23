@@ -48,8 +48,7 @@ public class ItemBoat extends Item {
             Entity entity = (Entity)list.get(i);
             if (entity.canBeCollidedWith()) {
                float collisionBorderSize = entity.getCollisionBorderSize();
-               AxisAlignedBB box = entity.getEntityBoundingBox().expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
-               if (box.isVecInside(d, d2, d3)) {
+               if (entity.getEntityBoundingBox().expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize).isVecInside(d, d2, d3)) {
                   flag = true;
                }
             }

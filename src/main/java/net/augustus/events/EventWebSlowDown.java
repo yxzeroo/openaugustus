@@ -40,8 +40,7 @@ public class EventWebSlowDown extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      WebSlowDownListener listener = (WebSlowDownListener)obj;
-      this.call2(listener);
+      this.call2((WebSlowDownListener)obj);
    }
 
    private void reset(double d, double d2, boolean flag, boolean flag2) {

@@ -34,8 +34,7 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements IHo
    public void onUpdate() {
       super.onUpdate();
       if (!this.entityWorld.isRemote && this.isEntityAlive() && this.getBlocked()) {
-         BlockPos pos = new BlockPos(this);
-         if (pos.equals(this.lastPosition)) {
+         if (new BlockPos(this).equals(this.lastPosition)) {
             this.transferTicker--;
          } else {
             this.setTransferTicker(0);

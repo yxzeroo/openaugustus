@@ -7,8 +7,7 @@ public class AesCipherUtil {
    private static final long a = 31075419399341L;
 
    static {
-      String str = "0123456789ABCDEF";
-      HEX_CHARS = str.toCharArray();
+      HEX_CHARS = "0123456789ABCDEF".toCharArray();
    }
 
    public static byte[] encrypt(byte[] bytes, byte[] bytes2) {
@@ -16,33 +15,23 @@ public class AesCipherUtil {
          return null;
       } else {
          AesCrypto aesCrypto = new AesCrypto();
-         boolean flag = true;
-         aesCrypto.init(flag, bytes2);
-         int length = bytes.length;
-         byte b = 0;
-         return aesCrypto.decrypt(bytes, b, length);
+         aesCrypto.init(true, bytes2);
+         return aesCrypto.decrypt(bytes, (byte)0, bytes.length);
       }
    }
 
    public static byte[] decrypt(byte[] bytes, byte[] bytes2) {
       AesCrypto aesCrypto = new AesCrypto();
-      boolean flag = false;
-      aesCrypto.init(flag, bytes2);
-      int length = bytes.length;
-      byte b = 0;
-      return aesCrypto.encrypt(bytes, b, length);
+      aesCrypto.init(false, bytes2);
+      return aesCrypto.encrypt(bytes, (byte)0, bytes.length);
    }
 
    public static synchronized byte[] encrypt(byte[] bytes, byte[] bytes2, AesCrypto aesCrypto) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes == null) {
          return null;
       } else {
-         boolean flag = true;
-         aesCrypto.init(flag, bytes2);
-         int length = bytes.length;
-         byte b = 0;
-         byte[] bytes3 = aesCrypto.decrypt(bytes, b, length);
+         aesCrypto.init(true, bytes2);
+         byte[] bytes3 = aesCrypto.decrypt(bytes, (byte)0, bytes.length);
          aesCrypto.resetIv();
          return bytes3;
       }
@@ -51,7 +40,6 @@ public class AesCipherUtil {
    public static byte[] concatByteArrays(long l, byte[][] bytesArr) {
       l = a ^ l;
       int n = 0;
-      Sha256Digest.getFlowState();
 
       for (byte[] bytes : bytesArr) {
          if (l > 0L && bytes != null) {
@@ -74,7 +62,6 @@ public class AesCipherUtil {
 
    public static String bytesToHex(byte[] bytes) {
       char[] chars = new char[bytes.length * 2];
-      Sha256Digest.getFlowState();
 
       for (int i = 0; i < bytes.length; i++) {
          int n = bytes[i] & 255;
@@ -86,11 +73,8 @@ public class AesCipherUtil {
    }
 
    public static synchronized byte[] decrypt(byte[] bytes, byte[] bytes2, AesCrypto aesCrypto) {
-      boolean flag = false;
-      aesCrypto.init(flag, bytes2);
-      int length = bytes.length;
-      byte b = 0;
-      byte[] bytes3 = aesCrypto.encrypt(bytes, b, length);
+      aesCrypto.init(false, bytes2);
+      byte[] bytes3 = aesCrypto.encrypt(bytes, (byte)0, bytes.length);
       aesCrypto.resetIv();
       return bytes3;
    }

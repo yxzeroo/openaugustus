@@ -47,9 +47,7 @@ public class GuiWDLEntitiesListEntries extends ArrayList {
          GuiEntityList.setTotalWidth(this.parentList, GuiEntityList.getLargestWidth(this.parentList) + 255);
       } catch (Exception e) {
          WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToSetUpEntityUI", new Object[]{e});
-         Minecraft minecraft = Minecraft.getMinecraft();
-         Object obj = null;
-         minecraft.displayGuiScreen((GuiScreen)obj);
+         Minecraft.getMinecraft().displayGuiScreen((GuiScreen)null);
       }
    }
 }

@@ -46,8 +46,7 @@ public class ItemFishFood extends ItemFood {
 
    @Override
    public void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
-      ItemFishFood.FishType fishType = ItemFishFood.FishType.byItemStack(stack);
-      if (fishType == ItemFishFood.FishType.PUFFERFISH) {
+      if (ItemFishFood.FishType.byItemStack(stack) == ItemFishFood.FishType.PUFFERFISH) {
          player.addPotionEffect(new PotionEffect(Potion.poison.id, 1200, 3));
          player.addPotionEffect(new PotionEffect(Potion.hunger.id, 300, 2));
          player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300, 1));

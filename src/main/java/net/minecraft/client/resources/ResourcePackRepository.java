@@ -169,17 +169,14 @@ public class ResourcePackRepository {
       }
 
       String str = Augustus.getInstance().getName().toLowerCase() + "/packs";
-      boolean flag = true;
       String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/packs/AugustusSmoothFont.zip", str2, flag);
+      ClientFileUtil.extractResource("assets/augustus/packs/AugustusSmoothFont.zip", str2, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/packs";
-      boolean flag2 = true;
       String str3 = str;
-      ClientFileUtil.extractResource("assets/augustus/packs/AugustusAmiFont.zip", str3, flag2);
+      ClientFileUtil.extractResource("assets/augustus/packs/AugustusAmiFont.zip", str3, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/packs";
-      boolean flag3 = true;
       String str4 = str;
-      ClientFileUtil.extractResource("assets/augustus/packs/AugustusLowFire.zip", str4, flag3);
+      ClientFileUtil.extractResource("assets/augustus/packs/AugustusLowFire.zip", str4, true);
       ArrayList list = new ArrayList(Collections.emptyList());
       if (this.dirResourcepacks.isDirectory()) {
          list.addAll(Arrays.asList(this.dirResourcepacks.listFiles(resourcePackFilter)));
@@ -279,8 +276,7 @@ public class ResourcePackRepository {
          GuiScreenWorking guiScreenWorking = new GuiScreenWorking();
          Map sessionInfo = Minecraft.getSessionInfo();
          Minecraft minecraft = Minecraft.getMinecraft();
-         ResourcePackRepository.WorkerTask obj = new ResourcePackRepository.WorkerTask(this, minecraft, guiScreenWorking);
-         Futures.getUnchecked(minecraft.addScheduledTask(obj));
+         Futures.getUnchecked(minecraft.addScheduledTask(new ResourcePackRepository.WorkerTask(this, minecraft, guiScreenWorking)));
          this.downloadingPacks = HttpUtil.downloadResourcePack(file, str, sessionInfo, 52428800, guiScreenWorking, minecraft.getProxy());
          Futures.addCallback(this.downloadingPacks, new ResourcePackRepository.DefaultFutureCallback(this, file), MoreExecutors.directExecutor());
          return this.downloadingPacks;

@@ -14,30 +14,30 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 
 public class RotationEngine {
    private RandomizedRangeSettings uNoise3ResyncUpdateDelay;
    private double curveDeltaYaw;
-   private StringValue uNoise3RemoveNoiseChance;
+   private DoubleValue uNoise3RemoveNoiseChance;
    private final BooleanValue rotationEngineRandomizeOnlyWhileRotating;
    private IntervalNoiseSetting uNoise3SpeedAtInitialRotation;
    private float previousTargetYaw;
    private int lastAdvancedTick;
    private final RandomizedRangeSettings rotationEnginePitchAcceleration;
-   private final StringValue rotationEngineInterval;
+   private final DoubleValue rotationEngineInterval;
    private double curveStartYaw;
    private double largeRotationSpeed;
    private final Supplier targetChangedSupplier;
-   private StringValue uNoise3LargeRotation;
+   private DoubleValue uNoise3LargeRotation;
    private double actualYaw;
    private final RandomizedRangeSettings rotationEngineYawSpeed;
    private double simulatedYaw;
-   private final StringValue rotationEngineAmplitude;
+   private final DoubleValue rotationEngineAmplitude;
    private RandomizedRangeSettings uNoise3RecalcRemoveNoise;
    private final BooleanValue rotationEngineBetterAcceleration;
    private int resyncDelayTicks;
@@ -50,19 +50,19 @@ public class RotationEngine {
    private int curveIntervalTicks;
    private boolean resyncPending;
    private final RandomizedRangeSettings rotationEnginePitchSpeed;
-   private StringValue uNoise3ResyncChanceAtAimgoal;
+   private DoubleValue uNoise3ResyncChanceAtAimgoal;
    private final RandomizedRangeSettings rotationEngineYawAcceleration;
-   private final BooleansSetting rotationEngineMode;
+   private final StringValue rotationEngineMode;
    private boolean shouldResyncAtGoal;
    private double actualPitch;
    private IntervalNoiseSetting uNoise3DecelerationFactorPostHighspeed;
    private UNoise3MouseSimulator uNoise3MouseSimulator;
    private double curveDeltaPitch;
-   private StringValue uNoise3highspeed;
+   private DoubleValue uNoise3highspeed;
    private IntervalNoiseSetting uNoise3DecelerationFactorPost;
    private double curveStartPitch;
    private IntervalNoiseSetting uNoise3SpeedAtLargeRotation;
-   private final StringValue rotationEngineFrequency;
+   private final DoubleValue rotationEngineFrequency;
    private double simulatedPitch;
    private int resyncRecalcTicks;
    private final RandomizedRangeSettings rotationEngineRandomStrength;
@@ -85,16 +85,14 @@ public class RotationEngine {
 
    public Rotation rotateTowards(float f, float f2, Rotation rotation) {
       float pitch = rotation.pitch;
-      float yaw = rotation.yaw;
-      return this.rotateTowards(f, f2, yaw, pitch);
+      return this.rotateTowards(f, f2, rotation.yaw, pitch);
    }
 
    public Rotation rotateTowards(Rotation rotation, Rotation rotation2) {
       float pitch = rotation2.pitch;
       float yaw = rotation2.yaw;
       float pitch2 = rotation.pitch;
-      float yaw2 = rotation.yaw;
-      return this.rotateTowards(yaw2, pitch2, yaw, pitch);
+      return this.rotateTowards(rotation.yaw, pitch2, yaw, pitch);
    }
 
    private boolean isRandomizeOnlyWhileRotatingVisible(SettingVisibilityCondition condition) {
@@ -110,8 +108,7 @@ public class RotationEngine {
          double d2 = (double)f - this.curveStartYaw;
          double d3 = (double)f2 - this.curveStartPitch;
          if (this.curveIntervalTicks > 0 && haveSameSign(d2, this.curveDeltaYaw)) {
-            double curveDeltaPitch2 = this.curveDeltaPitch;
-            if (haveSameSign(d3, curveDeltaPitch2)) {
+            if (haveSameSign(d3, this.curveDeltaPitch)) {
                break exitBlock;
             }
          }
@@ -129,146 +126,82 @@ public class RotationEngine {
       return new Rotation((float)doubles[0], (float)doubles[1]);
    }
 
-   public RotationEngine(Module module, DoubleValue doubleValue, Supplier supplier) {
+   public RotationEngine(Module module, SettingGroup doubleValue, Supplier supplier) {
        super();
       this.previousTargetYaw = Float.NaN;
       this.previousTargetPitch = 0.0F;
       this.curveIntervalTicks = 0;
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.rotationEngineMode = (StringValue)new StringValue(
          module, "RotationEngineMode", "Independent", new String[]{"Independent", "Linear", "Curve", "Advanced"}, doubleValue
-      );
-      String str = "Mode";
-      this.rotationEngineMode = (BooleansSetting)booleansSetting.withDisplayName(str);
+      ).withDisplayName("Mode");
       SettingVisibilityCondition condition = () -> this.isAdvancedMode();
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(module, "RotationEngineYawSpeed", 15.0, 20.0, 0.0, 180.0, 1, doubleValue);
-      String str2 = "YawSpeed";
-      RandomizedRangeSettings randomizedRangeSettings2 = ((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2)).withoutNotInARow();
+      RandomizedRangeSettings randomizedRangeSettings2 = ((RandomizedRangeSettings)new RandomizedRangeSettings(module, "RotationEngineYawSpeed", 15.0, 20.0, 0.0, 180.0, 1, doubleValue).withDisplayNamePrefix("YawSpeed")).withoutNotInARow();
       SettingVisibilityCondition condition2 = () -> {
          return !condition.isVisible();
       };
       this.rotationEngineYawSpeed = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2);
-      RandomizedRangeSettings randomizedRangeSettings3 = new RandomizedRangeSettings(module, "RotationEnginePitchSpeed", 15.0, 20.0, 0.0, 180.0, 1, doubleValue);
-      String str3 = "PitchSpeed";
-      RandomizedRangeSettings randomizedRangeSettings4 = ((RandomizedRangeSettings)randomizedRangeSettings3.withDisplayNamePrefix(str3)).withoutNotInARow();
+      RandomizedRangeSettings randomizedRangeSettings4 = ((RandomizedRangeSettings)new RandomizedRangeSettings(module, "RotationEnginePitchSpeed", 15.0, 20.0, 0.0, 180.0, 1, doubleValue).withDisplayNamePrefix("PitchSpeed")).withoutNotInARow();
       SettingVisibilityCondition condition3 = () -> {
          return !condition.isVisible();
       };
       this.rotationEnginePitchSpeed = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition3);
-      RandomizedRangeSettings randomizedRangeSettings5 = new RandomizedRangeSettings(module, "RotationEngineYawAcceleration", 5.0, 10.0, 0.0, 180.0, 1, doubleValue);
-      String str4 = "YawAcceleration";
-      RandomizedRangeSettings randomizedRangeSettings6 = ((RandomizedRangeSettings)randomizedRangeSettings5.withDisplayNamePrefix(str4)).withoutNotInARow();
+      RandomizedRangeSettings randomizedRangeSettings6 = ((RandomizedRangeSettings)new RandomizedRangeSettings(module, "RotationEngineYawAcceleration", 5.0, 10.0, 0.0, 180.0, 1, doubleValue).withDisplayNamePrefix("YawAcceleration")).withoutNotInARow();
       SettingVisibilityCondition condition4 = () -> {
          return !condition.isVisible();
       };
       this.rotationEngineYawAcceleration = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings7 = new RandomizedRangeSettings(module, "RotationEnginePitchAcceleration", 5.0, 10.0, 0.0, 180.0, 1, doubleValue);
-      String str5 = "PitchAcceleration";
-      RandomizedRangeSettings randomizedRangeSettings8 = ((RandomizedRangeSettings)randomizedRangeSettings7.withDisplayNamePrefix(str5)).withoutNotInARow();
+      RandomizedRangeSettings randomizedRangeSettings8 = ((RandomizedRangeSettings)new RandomizedRangeSettings(module, "RotationEnginePitchAcceleration", 5.0, 10.0, 0.0, 180.0, 1, doubleValue).withDisplayNamePrefix("PitchAcceleration")).withoutNotInARow();
       SettingVisibilityCondition condition5 = () -> {
          return !condition.isVisible();
       };
       this.rotationEnginePitchAcceleration = (RandomizedRangeSettings)randomizedRangeSettings8.withVisibility(condition5);
-      RandomizedRangeSettings randomizedRangeSettings9 = (new RandomizedRangeSettings(module, "RotationEngineRandomStrength", 0.0, 0.5, 0.0, 4.0, 2, doubleValue)).withoutNotInARow();
-      String str6 = "RandomStrength";
-      RandomizedRangeSettings randomizedRangeSettings10 = (RandomizedRangeSettings)randomizedRangeSettings9.withDisplayNamePrefix(str6);
+      RandomizedRangeSettings randomizedRangeSettings10 = (RandomizedRangeSettings)(new RandomizedRangeSettings(module, "RotationEngineRandomStrength", 0.0, 0.5, 0.0, 4.0, 2, doubleValue)).withoutNotInARow().withDisplayNamePrefix("RandomStrength");
       SettingVisibilityCondition condition6 = () -> {
          return !this.rotationEngineMode.getSelectedValue().equals("Curve") && !condition.isVisible();
       };
       this.rotationEngineRandomStrength = (RandomizedRangeSettings)randomizedRangeSettings10.withVisibility(condition6);
-      BooleanValue booleanValue = new BooleanValue(module, "RotationEngineRandomizeOnlyWhileRotating", true, doubleValue);
-      String str7 = "RandomizeOnlyAtRotating";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str7);
-      SettingVisibilityCondition condition7 = () -> this.isRandomizeOnlyWhileRotatingVisible(condition);
-      this.rotationEngineRandomizeOnlyWhileRotating = (BooleanValue)booleanValue2.withVisibility(condition7);
-      StringValue stringValue = new StringValue(module, "RotationEngineInterval", 7.0, 1.0, 20.0, 0, doubleValue);
-      String str8 = "Interval";
-      StringValue stringValue2 = stringValue.named(str8);
-      SettingVisibilityCondition condition8 = () -> this.isIntervalVisible();
-      this.rotationEngineInterval = stringValue2.visibleWhen(condition8);
-      StringValue stringValue3 = new StringValue(module, "RotationEngineAmplitude", 1.0, 0.1, 5.0, 2, doubleValue);
-      String str9 = "Amplitude";
-      StringValue stringValue4 = stringValue3.named(str9);
-      SettingVisibilityCondition condition9 = () -> this.isAmplitudeVisible();
-      this.rotationEngineAmplitude = stringValue4.visibleWhen(condition9);
-      StringValue stringValue5 = new StringValue(module, "RotationEngineFrequency", 1.0, 1.0, 8.0, 0, doubleValue);
-      String str10 = "Frequency";
-      StringValue stringValue6 = stringValue5.named(str10);
-      SettingVisibilityCondition condition10 = () -> this.isFrequencyVisible();
-      this.rotationEngineFrequency = stringValue6.visibleWhen(condition10);
-      BooleanValue booleanValue3 = new BooleanValue(module, "RotationEngineBetterAcceleration", false, doubleValue);
-      String str11 = "BetterAcceleration";
-      BooleanValue booleanValue4 = (BooleanValue)booleanValue3.withDisplayName(str11);
+      this.rotationEngineRandomizeOnlyWhileRotating = (BooleanValue)((BooleanValue)new BooleanValue(module, "RotationEngineRandomizeOnlyWhileRotating", true, doubleValue).withDisplayName("RandomizeOnlyAtRotating")).withVisibility(() -> this.isRandomizeOnlyWhileRotatingVisible(condition));
+      this.rotationEngineInterval = new DoubleValue(module, "RotationEngineInterval", 7.0, 1.0, 20.0, 0, doubleValue).named("Interval").visibleWhen(() -> this.isIntervalVisible());
+      this.rotationEngineAmplitude = new DoubleValue(module, "RotationEngineAmplitude", 1.0, 0.1, 5.0, 2, doubleValue).named("Amplitude").visibleWhen(() -> this.isAmplitudeVisible());
+      this.rotationEngineFrequency = new DoubleValue(module, "RotationEngineFrequency", 1.0, 1.0, 8.0, 0, doubleValue).named("Frequency").visibleWhen(() -> this.isFrequencyVisible());
+      BooleanValue booleanValue4 = (BooleanValue)new BooleanValue(module, "RotationEngineBetterAcceleration", false, doubleValue).withDisplayName("BetterAcceleration");
       SettingVisibilityCondition condition11 = () -> {
          return !condition.isVisible();
       };
       this.rotationEngineBetterAcceleration = (BooleanValue)booleanValue4.withVisibility(condition11);
       UNoise3SettingContext uNoise3SettingContext = new UNoise3SettingContext(module, doubleValue, condition);
-      IntervalNoiseSetting intervalNoiseSetting = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3Aimspeed", doubleValue, true);
-      String str12 = "Aim speed";
-      IntervalNoiseSetting intervalNoiseSetting2 = intervalNoiseSetting.named(str12);
-      byte b = 1;
+      IntervalNoiseSetting intervalNoiseSetting2 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3Aimspeed", doubleValue, true).named("Aim speed");
       double d = 20.0;
       double d2 = 15.0;
       double d3 = 100.0;
-      double d4 = 1.0;
-      IntervalNoiseSetting intervalNoiseSetting3 = intervalNoiseSetting2.withInterval(d4, d3, d2, d, b);
-      this.uNoise3Aimspeed = intervalNoiseSetting3.visibleWhen(condition);
-      IntervalNoiseSetting intervalNoiseSetting4 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPre", doubleValue, false);
-      String str13 = "Decelerationfactor Pre";
-      IntervalNoiseSetting intervalNoiseSetting5 = intervalNoiseSetting4.named(str13);
-      byte b2 = 2;
+      this.uNoise3Aimspeed = intervalNoiseSetting2.withInterval(1.0, d3, d2, d, (byte)1).visibleWhen(condition);
+      IntervalNoiseSetting intervalNoiseSetting5 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPre", doubleValue, false).named("Decelerationfactor Pre");
       double d5 = 1.0;
       double d6 = 1.0;
       double d7 = 2.0;
-      double d8 = 0.5;
-      IntervalNoiseSetting intervalNoiseSetting6 = intervalNoiseSetting5.withInterval(d8, d7, d6, d5, b2);
-      this.uNoise3DecelerationFactorPre = intervalNoiseSetting6.visibleWhen(condition);
-      IntervalNoiseSetting intervalNoiseSetting7 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPost", doubleValue, false);
-      String str14 = "Decelerationfactor Post";
-      IntervalNoiseSetting intervalNoiseSetting8 = intervalNoiseSetting7.named(str14);
-      byte b3 = 2;
+      this.uNoise3DecelerationFactorPre = intervalNoiseSetting5.withInterval(0.5, d7, d6, d5, (byte)2).visibleWhen(condition);
+      IntervalNoiseSetting intervalNoiseSetting8 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPost", doubleValue, false).named("Decelerationfactor Post");
       double d9 = 1.0;
       double d10 = 1.0;
       double d11 = 8.0;
-      double d12 = 0.5;
-      IntervalNoiseSetting intervalNoiseSetting9 = intervalNoiseSetting8.withInterval(d12, d11, d10, d9, b3);
-      this.uNoise3DecelerationFactorPost = intervalNoiseSetting9.visibleWhen(condition);
-      IntervalNoiseSetting intervalNoiseSetting10 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPostHighspeed", doubleValue, false);
-      String str15 = "Decelerationfactor Post at highspeed";
-      IntervalNoiseSetting intervalNoiseSetting11 = intervalNoiseSetting10.named(str15);
-      byte b4 = 2;
+      this.uNoise3DecelerationFactorPost = intervalNoiseSetting8.withInterval(0.5, d11, d10, d9, (byte)2).visibleWhen(condition);
+      IntervalNoiseSetting intervalNoiseSetting11 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3DecelerationFactorPostHighspeed", doubleValue, false).named("Decelerationfactor Post at highspeed");
       double d13 = 2.0;
       double d14 = 2.0;
       double d15 = 8.0;
-      double d16 = 0.5;
-      IntervalNoiseSetting intervalNoiseSetting12 = intervalNoiseSetting11.withInterval(d16, d15, d14, d13, b4);
-      this.uNoise3DecelerationFactorPostHighspeed = intervalNoiseSetting12.visibleWhen(condition);
-      StringValue stringValue7 = new StringValue(uNoise3SettingContext.getModule(), "UNoise3highspeed", 10.0, 5.0, 20.0, 1, doubleValue);
-      String str16 = "How many degrees per tick is high speed?";
-      this.uNoise3highspeed = stringValue7.named(str16).visibleWhen(condition);
-      IntervalNoiseSetting intervalNoiseSetting13 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3SpeedAtLargeRotation", doubleValue, true);
-      String str17 = "Speed at large rotation";
-      IntervalNoiseSetting intervalNoiseSetting14 = intervalNoiseSetting13.named(str17);
-      byte b5 = 1;
+      this.uNoise3DecelerationFactorPostHighspeed = intervalNoiseSetting11.withInterval(0.5, d15, d14, d13, (byte)2).visibleWhen(condition);
+      this.uNoise3highspeed = new DoubleValue(uNoise3SettingContext.getModule(), "UNoise3highspeed", 10.0, 5.0, 20.0, 1, doubleValue).named("How many degrees per tick is high speed?").visibleWhen(condition);
+      IntervalNoiseSetting intervalNoiseSetting14 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3SpeedAtLargeRotation", doubleValue, true).named("Speed at large rotation");
       double d17 = 40.0;
       double d18 = 30.0;
       double d19 = 100.0;
-      double d20 = 1.0;
-      IntervalNoiseSetting intervalNoiseSetting15 = intervalNoiseSetting14.withInterval(d20, d19, d18, d17, b5);
-      this.uNoise3SpeedAtLargeRotation = intervalNoiseSetting15.visibleWhen(condition);
-      IntervalNoiseSetting intervalNoiseSetting16 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3SpeedAtInitialRotation", doubleValue, true);
-      String str18 = "Speed at initial rotation";
-      IntervalNoiseSetting intervalNoiseSetting17 = intervalNoiseSetting16.named(str18);
-      byte b6 = 1;
+      this.uNoise3SpeedAtLargeRotation = intervalNoiseSetting14.withInterval(1.0, d19, d18, d17, (byte)1).visibleWhen(condition);
+      IntervalNoiseSetting intervalNoiseSetting17 = new IntervalNoiseSetting(uNoise3SettingContext.getModule(), "UNoise3SpeedAtInitialRotation", doubleValue, true).named("Speed at initial rotation");
       double d21 = 40.0;
       double d22 = 30.0;
       double d23 = 100.0;
-      double d24 = 1.0;
-      IntervalNoiseSetting intervalNoiseSetting18 = intervalNoiseSetting17.withInterval(d24, d23, d22, d21, b6);
-      this.uNoise3SpeedAtInitialRotation = intervalNoiseSetting18.visibleWhen(condition);
-      StringValue stringValue8 = new StringValue(uNoise3SettingContext.getModule(), "UNoise3LargeRotation", 30.0, 20.0, 180.0, 1, doubleValue);
-      String str19 = "How many degrees difference do count as large rotation?";
-      this.uNoise3LargeRotation = stringValue8.named(str19).visibleWhen(condition);
+      this.uNoise3SpeedAtInitialRotation = intervalNoiseSetting17.withInterval(1.0, d23, d22, d21, (byte)1).visibleWhen(condition);
+      this.uNoise3LargeRotation = new DoubleValue(uNoise3SettingContext.getModule(), "UNoise3LargeRotation", 30.0, 20.0, 180.0, 1, doubleValue).named("How many degrees difference do count as large rotation?").visibleWhen(condition);
       this.uNoise3MouseSimulator = new UNoise3MouseSimulator(uNoise3SettingContext.withParentGroup(doubleValue));
       this.uNoise3Aimspeed.addDefaultLayer();
       this.uNoise3DecelerationFactorPre.addDefaultLayer();
@@ -276,21 +209,11 @@ public class RotationEngine {
       this.uNoise3SpeedAtLargeRotation.addDefaultLayer();
       this.uNoise3SpeedAtInitialRotation.addDefaultLayer();
       this.uNoise3DecelerationFactorPostHighspeed.addDefaultLayer();
-      StringValue stringValue9 = new StringValue(uNoise3SettingContext.getModule(), "UNoise3ResyncChanceAtAimgoal", 0.0, 0.0, 100.0, 0, doubleValue);
-      String str20 = "Resync at aimgoal";
-      this.uNoise3ResyncChanceAtAimgoal = stringValue9.named(str20).visibleWhen(condition);
-      RandomizedRangeSettings randomizedRangeSettings11 = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3ResyncUpdateDelay", 1.0, 1.0, 1.0, 5.0, 0, doubleValue);
-      String str21 = "Resync recalculate delay";
-      this.uNoise3ResyncUpdateDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings11.withDisplayNamePrefix(str21)).withVisibility(condition);
-      StringValue stringValue10 = new StringValue(uNoise3SettingContext.getModule(), "UNoise3RemoveNoiseChance", 0.0, 0.0, 100.0, 0, doubleValue);
-      String str22 = "Apply no noise when near target chance";
-      this.uNoise3RemoveNoiseChance = stringValue10.named(str22).visibleWhen(condition);
-      RandomizedRangeSettings randomizedRangeSettings12 = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3RecalcRemoveNoise", 1.0, 5.0, 1.0, 8.0, 0, doubleValue);
-      String str23 = "No noise recalc delay";
-      this.uNoise3RecalcRemoveNoise = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings12.withDisplayNamePrefix(str23)).withVisibility(condition);
-      RandomizedRangeSettings randomizedRangeSettings13 = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3resyncdelay", 0.0, 0.0, 0.0, 1000.0, 0, doubleValue);
-      String str24 = "Resync delay";
-      this.uNoise3resyncdelay = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings13.withDisplayNamePrefix(str24)).withoutNotInARow().withVisibility(condition);
+      this.uNoise3ResyncChanceAtAimgoal = new DoubleValue(uNoise3SettingContext.getModule(), "UNoise3ResyncChanceAtAimgoal", 0.0, 0.0, 100.0, 0, doubleValue).named("Resync at aimgoal").visibleWhen(condition);
+      this.uNoise3ResyncUpdateDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3ResyncUpdateDelay", 1.0, 1.0, 1.0, 5.0, 0, doubleValue).withDisplayNamePrefix("Resync recalculate delay")).withVisibility(condition);
+      this.uNoise3RemoveNoiseChance = new DoubleValue(uNoise3SettingContext.getModule(), "UNoise3RemoveNoiseChance", 0.0, 0.0, 100.0, 0, doubleValue).named("Apply no noise when near target chance").visibleWhen(condition);
+      this.uNoise3RecalcRemoveNoise = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3RecalcRemoveNoise", 1.0, 5.0, 1.0, 8.0, 0, doubleValue).withDisplayNamePrefix("No noise recalc delay")).withVisibility(condition);
+      this.uNoise3resyncdelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3resyncdelay", 0.0, 0.0, 0.0, 1000.0, 0, doubleValue).withDisplayNamePrefix("Resync delay")).withoutNotInARow().withVisibility(condition);
       this.uNoise3MouseSimulator.onGoalReached = () -> this.onAimGoalReached();
       this.uNoise3MouseSimulator.onResyncTriggered = () -> this.scheduleResync();
       this.targetChangedSupplier = supplier;
@@ -301,11 +224,7 @@ public class RotationEngine {
       this.simulatedPitch = d2;
       this.actualYaw = d;
       this.actualPitch = d2;
-      UNoise3MouseSimulator uNoise3MouseSimulator2 = this.uNoise3MouseSimulator;
-      double d3 = this.uNoise3SpeedAtInitialRotation.sample() * 20.0;
-      boolean flag = false;
-      double d4 = d3;
-      uNoise3MouseSimulator2.setAcceleration(d4, flag);
+      this.uNoise3MouseSimulator.setAcceleration(this.uNoise3SpeedAtInitialRotation.sample() * 20.0, false);
       this.uNoise3MouseSimulator.preDecelerationFactor = this.uNoise3DecelerationFactorPre.sample();
       this.uNoise3MouseSimulator.postDecelerationFactor = this.uNoise3DecelerationFactorPost.sample();
       this.uNoise3MouseSimulator.postHighSpeedDecelFactor = this.uNoise3DecelerationFactorPostHighspeed.sample();
@@ -344,16 +263,11 @@ public class RotationEngine {
    }
 
    private void onAimGoalReached() {
-      boolean shouldResyncAtGoal2 = this.shouldResyncAtGoal;
-      if (shouldResyncAtGoal2) {
+      if (this.shouldResyncAtGoal) {
          this.scheduleResync();
       }
 
-      UNoise3MouseSimulator uNoise3MouseSimulator2 = this.uNoise3MouseSimulator;
-      double d = this.uNoise3Aimspeed.sample() * 20.0;
-      boolean flag = false;
-      double d2 = d;
-      uNoise3MouseSimulator2.setAcceleration(d2, flag);
+      this.uNoise3MouseSimulator.setAcceleration(this.uNoise3Aimspeed.sample() * 20.0, false);
       this.uNoise3MouseSimulator.clearAccelerationCap();
       this.uNoise3MouseSimulator.preDecelerationFactor = this.uNoise3DecelerationFactorPre.sample();
       this.uNoise3MouseSimulator.postDecelerationFactor = this.uNoise3DecelerationFactorPost.sample();
@@ -366,14 +280,11 @@ public class RotationEngine {
       float f7 = f - f3;
       float f8 = f2 - f4;
       float f9 = Math.min(Math.abs(f7), f5);
-      float f10 = Math.min(Math.abs(f8), f6);
-      float f11 = f4 + f10 * (float)(f8 > 0.0F ? 1 : -1);
+      float f11 = f4 + Math.min(Math.abs(f8), f6) * (float)(f8 > 0.0F ? 1 : -1);
       float f12 = f3 + f9 * (float)(f7 > 0.0F ? 1 : -1);
       double d = interpolateXAtY((double)f3, (double)f4, (double)f, (double)f2, (double)f11);
       double d2 = interpolateYAtX((double)f3, (double)f4, (double)f, (double)f2, (double)f12);
-      double d3 = distance2D((double)f3, (double)f4, d, (double)f11);
-      double d4 = distance2D((double)f3, (double)f4, (double)f12, d2);
-      return Math.min(d3, d4);
+      return Math.min(distance2D((double)f3, (double)f4, d, (double)f11), distance2D((double)f3, (double)f4, (double)f12, d2));
    }
 
    private void updatePreviousTarget(float f, float f2, boolean flag) {
@@ -386,10 +297,8 @@ public class RotationEngine {
    private Rotation applyRandomJitter(Rotation rotation, float f, float f2) {
       Rotation rotation2 = new Rotation(rotation);
       if ((double)Math.abs(rotation2.yaw - f) > 0.16 || (double)Math.abs(rotation2.pitch - f2) > 0.16 || !this.rotationEngineRandomizeOnlyWhileRotating.getValue()) {
-         boolean flag = true;
-         rotation2.yaw = rotation2.yaw + (float)this.rotationEngineRandomStrength.nextValue(flag) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1);
-         boolean flag2 = true;
-         rotation2.pitch = rotation2.pitch + (float)this.rotationEngineRandomStrength.nextValue(flag2) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1);
+         rotation2.yaw = rotation2.yaw + (float)this.rotationEngineRandomStrength.nextValue(true) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1);
+         rotation2.pitch = rotation2.pitch + (float)this.rotationEngineRandomStrength.nextValue(true) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1);
       }
 
       return rotation2;
@@ -398,8 +307,7 @@ public class RotationEngine {
    public Rotation rotateTowards(float f, float f2, float f3, float f4) {
       f = RotationUtil.updateAngle(f3, f, 180.0F);
       f2 = RotationUtil.updateAngle(f4, f2, 180.0F);
-      boolean flag = false;
-      this.updatePreviousTarget(f, f2, flag);
+      this.updatePreviousTarget(f, f2, false);
       boolean isGuardActive = AntiSamplerGuard.isGuardActive(1);
       Rotation rotation = this.computeTurnSpeeds(f, f2, f3, f4, isGuardActive);
       Rotation rotation2 = null;
@@ -411,46 +319,28 @@ public class RotationEngine {
       switch (selectedValue) {
          case "Independent":
             float pitch = rotation.pitch;
-            float yaw = rotation.yaw;
-            rotation2 = this.computeIndependentRotation(f, f2, f3, f4, yaw, pitch);
+            rotation2 = this.computeIndependentRotation(f, f2, f3, f4, rotation.yaw, pitch);
             rotation2 = this.applyRandomJitter(rotation2, f, f2);
             break;
          case "Linear":
             float pitch2 = rotation.pitch;
-            float yaw2 = rotation.yaw;
-            rotation2 = this.computeLinearRotation(f, f2, f3, f4, yaw2, pitch2);
+            rotation2 = this.computeLinearRotation(f, f2, f3, f4, rotation.yaw, pitch2);
             rotation2 = this.applyRandomJitter(rotation2, f, f2);
             break;
          case "Curve":
             Rotation rotation3;
             if (isGuardActive) {
                float pitch3 = rotation.pitch;
-               float yaw3 = rotation.yaw;
-               rotation3 = this.computeLinearRotation(f, f2, f3, f4, yaw3, pitch3);
+               rotation3 = this.computeLinearRotation(f, f2, f3, f4, rotation.yaw, pitch3);
             } else {
-               float yaw4 = rotation.yaw;
-               float pitch4 = rotation.pitch;
-               boolean flag2 = true;
-               int value = (int)this.rotationEngineInterval.getValue(flag2);
-               boolean flag3 = true;
-               float value2 = (float)this.rotationEngineAmplitude.getValue(flag3);
-               boolean flag4 = true;
-               float value3 = (float)this.rotationEngineFrequency.getValue(flag4);
-               float f5 = value2;
-               int n = value;
-               float f6 = pitch4;
-               float f7 = yaw4;
-               rotation3 = this.computeCurvedRotation(f, f2, f3, f4, f7, f6, n, f5, value3);
+               rotation3 = this.computeCurvedRotation(f, f2, f3, f4, rotation.yaw, rotation.pitch, (int)this.rotationEngineInterval.getValue(true), (float)this.rotationEngineAmplitude.getValue(true), (float)this.rotationEngineFrequency.getValue(true));
             }
 
             rotation2 = rotation3;
             break;
          case "Advanced":
             if (this.lastAdvancedTick + 1 != Minecraft.getMinecraft().thePlayer.ticksExisted) {
-               double d = MathHelper.wrapAngleTo180_double((double)f3);
-               double d2 = (double)f4;
-               double d3 = d;
-               this.resetAdvancedState(d3, d2);
+               this.resetAdvancedState(MathHelper.wrapAngleTo180_double((double)f3), (double)f4);
             }
 
             if (EntityBoundsUtil.getShortestAngleDistance(MathHelper.wrapAngleTo180_double((double)f3), this.actualYaw) > 0.15) {
@@ -463,22 +353,15 @@ public class RotationEngine {
             }
 
             if (this.resyncRecalcTicks == 0) {
-               double d4 = Math.random();
-               boolean flag5 = true;
-               this.shouldResyncAtGoal = d4 <= this.uNoise3ResyncChanceAtAimgoal.getValue(flag5) / 100.0;
-               boolean flag6 = true;
-               this.resyncRecalcTicks = this.uNoise3ResyncUpdateDelay.nextInt(flag6);
+               this.shouldResyncAtGoal = Math.random() <= this.uNoise3ResyncChanceAtAimgoal.getValue(true) / 100.0;
+               this.resyncRecalcTicks = this.uNoise3ResyncUpdateDelay.nextInt(true);
             } else if (this.resyncRecalcTicks > 0) {
                this.resyncRecalcTicks--;
             }
 
             if (this.removeNoiseRecalcTicks == 0) {
-               UNoise3MouseSimulator uNoise3MouseSimulator2 = this.uNoise3MouseSimulator;
-               double d5 = Math.random();
-               boolean flag7 = true;
-               uNoise3MouseSimulator2.disableNoiseNearTarget = d5 <= this.uNoise3RemoveNoiseChance.getValue(flag7) / 100.0;
-               boolean flag8 = true;
-               this.removeNoiseRecalcTicks = this.uNoise3RecalcRemoveNoise.nextInt(flag8);
+               this.uNoise3MouseSimulator.disableNoiseNearTarget = Math.random() <= this.uNoise3RemoveNoiseChance.getValue(true) / 100.0;
+               this.removeNoiseRecalcTicks = this.uNoise3RecalcRemoveNoise.nextInt(true);
             } else if (this.removeNoiseRecalcTicks > 0) {
                this.removeNoiseRecalcTicks--;
             }
@@ -487,21 +370,15 @@ public class RotationEngine {
             MutableDoubleRef mutableDoubleRef = new MutableDoubleRef(EntityBoundsUtil.getShortestSignedAngleDelta(this.simulatedYaw, d6));
             MutableDoubleRef mutableDoubleRef2 = new MutableDoubleRef((double)f2 - this.simulatedPitch);
             double d7 = 0.0;
-            double d8 = Math.sqrt(mutableDoubleRef.getValue() * mutableDoubleRef.getValue() + mutableDoubleRef2.getValue() * mutableDoubleRef2.getValue());
-            boolean flag9 = true;
-            if (d8 > this.uNoise3LargeRotation.getValue(flag9)) {
-               boolean flag10 = false;
+            if (Math.sqrt(mutableDoubleRef.getValue() * mutableDoubleRef.getValue() + mutableDoubleRef2.getValue() * mutableDoubleRef2.getValue()) > this.uNoise3LargeRotation.getValue(true)) {
                double largeRotationSpeed2 = this.largeRotationSpeed;
-               this.uNoise3MouseSimulator.setAcceleration(largeRotationSpeed2, flag10);
+               this.uNoise3MouseSimulator.setAcceleration(largeRotationSpeed2, false);
             }
 
             UNoise3MouseSimulator uNoise3MouseSimulator3 = this.uNoise3MouseSimulator;
             double d9 = d7 / 0.15;
             float var3f = f2;
-            MouseSimulationStepCallback callback = (n2, d10, d11) -> this.onMouseSimulationSubstep(mutableDoubleRef, d6, mutableDoubleRef2, var3f, n2, d10, d11);
-            byte b = 3;
-            double d12 = d9;
-            MouseSimulationDelta mouseSimulationDelta = uNoise3MouseSimulator3.simulateTickSubsteps(mutableDoubleRef, mutableDoubleRef2, d12, b, callback);
+            MouseSimulationDelta mouseSimulationDelta = uNoise3MouseSimulator3.simulateTickSubsteps(mutableDoubleRef, mutableDoubleRef2, d9, (byte)3, (n2, d10, d11) -> this.onMouseSimulationSubstep(mutableDoubleRef, d6, mutableDoubleRef2, var3f, n2, d10, d11));
             this.uNoise3Aimspeed.stepLayers();
             this.uNoise3SpeedAtLargeRotation.stepLayers();
             this.uNoise3SpeedAtInitialRotation.stepLayers();
@@ -517,8 +394,7 @@ public class RotationEngine {
             rotation2 = new Rotation((float)this.actualYaw, (float)this.actualPitch);
       }
 
-      boolean flag11 = true;
-      this.updatePreviousTarget(f, f2, flag11);
+      this.updatePreviousTarget(f, f2, true);
       return rotation2 == null ? new Rotation(f3, f4) : RotationUtil.applyGcdFix(rotation2.yaw, rotation2.pitch, f3, f4);
    }
 
@@ -529,8 +405,7 @@ public class RotationEngine {
    public Rotation computeLinearRotation(float f, float f2, float f3, float f4, float f5, float f6) {
       f = RotationUtil.updateAngle(f3, f, 180.0F);
       f2 = RotationUtil.updateAngle(f4, f2, 180.0F);
-      double d = computeMaxLinearStep(f, f2, f3, f4, f5, f6);
-      double[] doubles = stepAlongLine((double)f3, (double)f4, (double)f, (double)f2, d);
+      double[] doubles = stepAlongLine((double)f3, (double)f4, (double)f, (double)f2, computeMaxLinearStep(f, f2, f3, f4, f5, f6));
       return new Rotation((float)doubles[0], (float)doubles[1]);
    }
 
@@ -540,23 +415,19 @@ public class RotationEngine {
       if (this.resyncPending) {
          this.simulatedYaw = this.actualYaw;
          this.simulatedPitch = this.actualPitch;
-         double d4 = EntityBoundsUtil.getShortestSignedAngleDelta(this.simulatedYaw, d);
-         mutableDoubleRef.setValue(d4);
-         double d5 = (double)f - this.simulatedPitch;
-         mutableDoubleRef2.setValue(d5);
+         mutableDoubleRef.setValue(EntityBoundsUtil.getShortestSignedAngleDelta(this.simulatedYaw, d));
+         mutableDoubleRef2.setValue((double)f - this.simulatedPitch);
          this.resyncPending = false;
       }
    }
 
    private static double interpolateYAtX(double d, double d2, double d3, double d4, double d5) {
-      double d6 = (d4 - d2) / (d3 - d);
-      return d6 * (d5 - d) + d2;
+      return ((d4 - d2) / (d3 - d)) * (d5 - d) + d2;
    }
 
    public float computeAcceleratedSpeed(RandomizedRangeSettings randomizedRangeSettings, float f, float f2, float f3, float f4, float f5, boolean flag, boolean flag2) {
       float f6 = (float)randomizedRangeSettings.nextDouble() + (float)(flag2 ? 15 : 0);
-      double d = randomizedRangeSettings.getMinValue() + (double)(flag2 ? 15 : 0);
-      double d2 = d + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
+      double d2 = (randomizedRangeSettings.getMinValue() + (double)(flag2 ? 15 : 0)) + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
       float f7 = f - f2;
       double d3 = flag ? (double)Math.abs(f4 - f) : 0.0;
       double d4 = (double)Math.abs(f7 / Math.max(f3, 1.0F));
@@ -581,13 +452,12 @@ public class RotationEngine {
       return new double[]{d10, d11};
    }
 
-   public RotationEngine(Module module, DoubleValue doubleValue) {
+   public RotationEngine(Module module, SettingGroup doubleValue) {
        this(module, doubleValue, () -> false);
    }
 
    private void triggerResync() {
-      boolean flag = true;
-      this.resyncDelayTicks = (int)((double)this.uNoise3resyncdelay.nextInt(flag) / 16.6);
+      this.resyncDelayTicks = (int)((double)this.uNoise3resyncdelay.nextInt(true) / 16.6);
       this.resyncQueued = false;
       this.resyncPending = true;
    }
@@ -609,23 +479,13 @@ public class RotationEngine {
       float previousTargetYaw2 = this.previousTargetYaw;
       float f5 = (float)this.rotationEngineYawSpeed.nextValue();
       boolean value = this.rotationEngineBetterAcceleration.getValue();
-      boolean flag2 = value;
-      float f6 = f5;
-      float f7 = previousTargetYaw2;
-      float f8 = yaw;
-      RandomizedRangeSettings randomizedRangeSettings2 = randomizedRangeSettings;
-      float f9 = this.computeAcceleratedSpeed(randomizedRangeSettings2, f, f3, f8, f7, f6, flag2, flag);
+      float f9 = this.computeAcceleratedSpeed(randomizedRangeSettings, f, f3, yaw, previousTargetYaw2, f5, value, flag);
       RandomizedRangeSettings randomizedRangeSettings3 = this.rotationEnginePitchAcceleration;
       yaw = rotation.pitch;
       float previousTargetPitch2 = this.previousTargetPitch;
       f5 = (float)this.rotationEnginePitchSpeed.nextValue();
       value = this.rotationEngineBetterAcceleration.getValue();
-      boolean flag3 = value;
-      float f10 = f5;
-      float f11 = previousTargetPitch2;
-      float f12 = yaw;
-      RandomizedRangeSettings randomizedRangeSettings4 = randomizedRangeSettings3;
-      float f13 = this.computeAcceleratedSpeed(randomizedRangeSettings4, f2, f4, f12, f11, f10, flag3, flag);
+      float f13 = this.computeAcceleratedSpeed(randomizedRangeSettings3, f2, f4, yaw, previousTargetPitch2, f5, value, flag);
       return new Rotation(f9, f13);
    }
 

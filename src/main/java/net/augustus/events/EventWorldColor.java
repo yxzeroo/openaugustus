@@ -11,8 +11,7 @@ public class EventWorldColor extends AbstractEvent {
    private WorldColorType type;
 
    public void call(Object obj) {
-      WorldColorListener listener = (WorldColorListener)obj;
-      this.call2(listener);
+      this.call2((WorldColorListener)obj);
    }
 
    private void reset(float f, float f2, float f3, WorldColorType worldColorType) {

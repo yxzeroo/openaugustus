@@ -17,9 +17,7 @@ public class ItemDoor extends Item {
       if (facing != EnumFacing.UP) {
          return false;
       } else {
-         IBlockState blockState = world.getBlockState(pos);
-         Block block2 = blockState.getBlock();
-         if (!block2.isReplaceable(world, pos)) {
+         if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
             pos = pos.offset(facing);
          }
 

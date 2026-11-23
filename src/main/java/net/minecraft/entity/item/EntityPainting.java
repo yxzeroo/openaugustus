@@ -83,8 +83,7 @@ public class EntityPainting extends EntityHanging {
    public void onBroken(Entity entity) {
       if (this.entityWorld.getGameRules().getBoolean("doEntityDrops")) {
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.capabilities.isCreativeMode) {
+            if (((EntityPlayer)entity).capabilities.isCreativeMode) {
                return;
             }
          }

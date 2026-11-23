@@ -9,7 +9,7 @@ import net.augustus.settings.KeybindSetting;
 import net.augustus.settings.TextInputSetting;
 import net.augustus.settings.DynamicSettingList;
 import net.augustus.events.listeners.KeyListener;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class Hotkeys extends Module implements KeyListener {
    private final DynamicSettingList hotkeys;
@@ -29,14 +29,13 @@ public class Hotkeys extends Module implements KeyListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 14;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)14);
    }
 
    @Override
    public void onKey2(EventKey event) {
 
-      for (DoubleValue doubleValue : (Iterable<DoubleValue>)(this.hotkeys.getEntries())) {
+      for (SettingGroup doubleValue : (Iterable<SettingGroup>)(this.hotkeys.getEntries())) {
          KeybindSetting keybindSetting = null;
          TextInputSetting textInputSetting = null;
 
@@ -54,8 +53,8 @@ public class Hotkeys extends Module implements KeyListener {
       }
    }
 
-   private DoubleValue createHotkeyEntry(int n) {
-      DoubleValue doubleValue = new DoubleValue(this, "Hotkey_" + n, true);
+   private SettingGroup createHotkeyEntry(int n) {
+      SettingGroup doubleValue = new SettingGroup(this, "Hotkey_" + n, true);
       new KeybindSetting(this, "Key_" + n, doubleValue);
       new TextInputSetting(this, "Text_" + n, "", doubleValue);
       return doubleValue;

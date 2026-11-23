@@ -2,7 +2,6 @@ package net.augustus.ui.menu;
 
 import net.augustus.Augustus;
 import net.augustus.ClientManagers;
-import net.augustus.events.EventMotion;
 import net.augustus.ui.AugustusGuiScreen;
 import net.augustus.utils.audio.ClientSounds;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,7 +16,6 @@ public class AbstractMainMenuScreen extends AugustusGuiScreen {
 
    @Override
    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-      int[] controlFlowState = EventMotion.getControlFlowState();
       if (Augustus.getInstance().firstStart) {
          if (ClientManagers.moduleManager.augustusServer.welcomeSound.getValue()) {
             ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE3);
@@ -31,9 +29,7 @@ public class AbstractMainMenuScreen extends AugustusGuiScreen {
       Augustus instance = Augustus.getInstance();
       String str = ClientManagers.moduleManager.getModules().size() + " modules and " + instance.getSettingManager().getSettings().size() + " settings loaded";
       float f = (float)(this.width - this.getStringWidth(str) - 2);
-      float f2 = 2.0F;
-      float f3 = f;
-      this.drawString(str, f3, f2);
+      this.drawString(str, f, 2.0F);
       String str2 = "§e"
          + Augustus.getInstance().getUsername()
          + " §7[§e"
@@ -43,18 +39,13 @@ public class AbstractMainMenuScreen extends AugustusGuiScreen {
          + Augustus.getInstance().getUserRank()
          + "§r]";
       float f4 = 2.0F;
-      float f5 = 2.0F;
-      this.drawString(str2, f5, f4);
+      this.drawString(str2, 2.0F, f4);
       String str3 = "Created by " + instance.getAuthors();
       f = (float)(this.width - this.getStringWidth(str3) - 2);
-      float f6 = (float)(this.height - this.fontRendererObj.FONT_HEIGHT - 2);
-      float f7 = f;
-      this.drawString(str3, f7, f6);
+      this.drawString(str3, f, (float)(this.height - this.fontRendererObj.FONT_HEIGHT - 2));
       String version = instance.getVersion();
       float f8 = (float)(this.height - this.fontRendererObj.FONT_HEIGHT - 2);
-      float f9 = 2.0F;
-      String str4 = version;
-      this.drawString(str4, f9, f8);
+      this.drawString(version, 2.0F, f8);
    }
 
    public AbstractMainMenuScreen() {

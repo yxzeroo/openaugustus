@@ -23,17 +23,12 @@ public class Saver extends Module implements TickListener {
    }
 
    public void onDisable() {
-      String str = ClientPaths.CLIENT_DIR + File.separator + "datatest";
-      String str2 = System.currentTimeMillis() + ".json";
-      JsonArray recordedRotations2 = this.recordedRotations;
-      String str3 = str2;
-      ClientFileUtil.writeJsonArray(str, str3, recordedRotations2);
+      ClientFileUtil.writeJsonArray(ClientPaths.CLIENT_DIR + File.separator + "datatest", System.currentTimeMillis() + ".json", this.recordedRotations);
       this.recordedRotations = null;
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick5() {

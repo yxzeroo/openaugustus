@@ -12,15 +12,13 @@ public class StartDownloadSetupMultiworldSelectCallback implements WorldSelectio
       WDL.worldName = str;
       WDL.isMultiworld = true;
       WDL.propsFound = true;
-      Object obj = null;
-      MC.mc.displayGuiScreen((GuiScreen)obj);
+      MC.mc.displayGuiScreen((GuiScreen)null);
       WDL.startDownload();
    }
 
    @Override
    public void onCancel() {
-      Object obj = null;
-      MC.mc.displayGuiScreen((GuiScreen)obj);
+      MC.mc.displayGuiScreen((GuiScreen)null);
       WDL.cancelDownload();
    }
 

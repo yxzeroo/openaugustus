@@ -21,8 +21,7 @@ public class JarResourceListingUtil {
          if (str2.contains(".jar") && strings.length == 2 && strings[0].startsWith("file:")) {
             FileSystem fileSystem = FileSystems.newFileSystem(new URI("jar", strings[0], null), new HashMap<>());
             Files.list(fileSystem.getPath(strings[1])).forEach(path -> {
-               String str3 = path.toString();
-               String[] strings2 = str3.split("/");
+               String[] strings2 = path.toString().split("/");
                list.add(strings2[strings2.length - 1]);
             });
             fileSystem.close();

@@ -221,9 +221,8 @@ public class Protocolr1_1Tor1_2_1_3 extends StatelessProtocol<ClientboundPackets
                PendingBlocksTracker pendingBlocksTracker = (PendingBlocksTracker)wrapper.user().get(PendingBlocksTracker.class);
                int chunkX = (Integer)wrapper.get(Types.INT, 0);
                int chunkZ = (Integer)wrapper.get(Types.INT, 1);
-               BlockChangeRecord[] blockChangeRecords = (BlockChangeRecord[])wrapper.get(Types1_7_6.BLOCK_CHANGE_RECORD_ARRAY, 0);
 
-               for (BlockChangeRecord record : blockChangeRecords) {
+               for (BlockChangeRecord record : (BlockChangeRecord[])wrapper.get(Types1_7_6.BLOCK_CHANGE_RECORD_ARRAY, 0)) {
                   int targetX = record.getSectionX() + (chunkX << 4);
                   int targetY = record.getY(-1);
                   int targetZ = record.getSectionZ() + (chunkZ << 4);

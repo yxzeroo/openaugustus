@@ -69,8 +69,8 @@ import net.augustus.modules.modes.speed.InteractSpeedMode;
 import net.augustus.modules.modes.speed.LegitHopSpeedMode;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class Speed
    extends Module
@@ -84,21 +84,21 @@ public class Speed
    PacketListener,
    TimerListener,
    PacketDelayListener {
-   public final BooleansSetting mode;
-   public final StringValue vanillaSpeed;
-   public final StringValue dojoSpeed;
-   public final StringValue height;
+   public final StringValue mode;
+   public final DoubleValue vanillaSpeed;
+   public final DoubleValue dojoSpeed;
+   public final DoubleValue height;
    public final BooleanValue damageBoost;
-   public final StringValue dmgSpeed;
+   public final DoubleValue dmgSpeed;
    public final BooleanValue strafe;
-   public final StringValue timeManipulationTimer;
-   public final StringValue timeManipulationTPTicks;
-   public final StringValue interactSpeed;
+   public final DoubleValue timeManipulationTimer;
+   public final DoubleValue timeManipulationTPTicks;
+   public final DoubleValue interactSpeed;
    public final BooleanValue mouseSensi;
    public final BooleanValue autoJump;
    public final BooleanValue onlyWhileMove;
    public final BooleanValue allDirectionSprint;
-   public final StringValue additionalSpeed;
+   public final DoubleValue additionalSpeed;
    public final BooleanValue correctMovement;
    public final BooleanValue notWhileInCobweb;
    public final BooleanValue notWhileInWater;
@@ -111,61 +111,33 @@ public class Speed
 
    public Speed() {
        super("Speed", "Schnell", new Color(74, 133, 93), Categorys.MOVEMENT);
-      this.mode = new BooleansSetting(this, "Mode", "VBhop", new String[0]);
-      StringValue stringValue = new StringValue(this, "VanillaSpeed", 1.0, 0.0, 10.0, 2);
-      String str = "Speed";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isVanillaSpeedVisible();
-      this.vanillaSpeed = stringValue2.visibleWhen(condition);
-      StringValue stringValue3 = new StringValue(this, "DojoSpeed", 5.0, 1.0, 10.0, 2);
-      SettingVisibilityCondition condition2 = () -> this.isDojoSpeedVisible();
-      this.dojoSpeed = stringValue3.visibleWhen(condition2);
-      StringValue stringValue4 = new StringValue(this, "Height", 1.0, 0.0, 5.0, 2);
+      this.mode = new StringValue(this, "Mode", "VBhop", new String[0]);
+      this.vanillaSpeed = new DoubleValue(this, "VanillaSpeed", 1.0, 0.0, 10.0, 2).named("Speed").visibleWhen(() -> this.isVanillaSpeedVisible());
+      this.dojoSpeed = new DoubleValue(this, "DojoSpeed", 5.0, 1.0, 10.0, 2).visibleWhen(() -> this.isDojoSpeedVisible());
+      DoubleValue stringValue4 = new DoubleValue(this, "Height", 1.0, 0.0, 5.0, 2);
       SettingVisibilityCondition condition3 = () -> {
          return this.mode.getSelectedValue().equals("VBhop");
       };
       this.height = stringValue4.visibleWhen(condition3);
-      BooleanValue booleanValue = new BooleanValue(this, "DamageBoost", false);
-      SettingVisibilityCondition condition4 = () -> this.isDamageBoostVisible();
-      this.damageBoost = (BooleanValue)booleanValue.withVisibility(condition4);
-      StringValue stringValue5 = new StringValue(this, "DMGSpeed", 1.0, 0.0, 2.0, 2);
-      SettingVisibilityCondition condition5 = () -> this.isDamageSpeedVisible();
-      this.dmgSpeed = stringValue5.visibleWhen(condition5);
-      BooleanValue booleanValue2 = new BooleanValue(this, "Strafe", false);
-      SettingVisibilityCondition condition6 = () -> this.isStrafeVisible();
-      this.strafe = (BooleanValue)booleanValue2.withVisibility(condition6);
-      StringValue stringValue6 = new StringValue(this, "TimeManipulationTimer", 1.0, 0.0, 10.0, 2);
-      String str2 = "TimerSpeed";
-      StringValue stringValue7 = stringValue6.named(str2);
+      this.damageBoost = (BooleanValue)new BooleanValue(this, "DamageBoost", false).withVisibility(() -> this.isDamageBoostVisible());
+      this.dmgSpeed = new DoubleValue(this, "DMGSpeed", 1.0, 0.0, 2.0, 2).visibleWhen(() -> this.isDamageSpeedVisible());
+      this.strafe = (BooleanValue)new BooleanValue(this, "Strafe", false).withVisibility(() -> this.isStrafeVisible());
+      DoubleValue stringValue7 = new DoubleValue(this, "TimeManipulationTimer", 1.0, 0.0, 10.0, 2).named("TimerSpeed");
       SettingVisibilityCondition condition7 = () -> {
          return this.mode.getSelectedValue().equals("TimeManipulation");
       };
       this.timeManipulationTimer = stringValue7.visibleWhen(condition7);
-      StringValue stringValue8 = new StringValue(this, "TimeManipulationTPTicks", 0.0, 0.0, 10.0, 0);
-      String str3 = "TPTicks";
-      StringValue stringValue9 = stringValue8.named(str3);
-      SettingVisibilityCondition condition8 = () -> this.isTimeManipulationTpTicksVisible();
-      this.timeManipulationTPTicks = stringValue9.visibleWhen(condition8);
-      StringValue stringValue10 = new StringValue(this, "InteractSpeed", 1.0, 1.0, 10.0, 0);
-      SettingVisibilityCondition condition9 = () -> this.isInteractSpeedVisible();
-      this.interactSpeed = stringValue10.visibleWhen(condition9);
-      BooleanValue booleanValue3 = new BooleanValue(this, "MouseSensi", true);
-      SettingVisibilityCondition condition10 = () -> this.isMouseSensiVisible();
-      this.mouseSensi = (BooleanValue)booleanValue3.withVisibility(condition10);
-      BooleanValue booleanValue4 = new BooleanValue(this, "AutoJump", true);
-      SettingVisibilityCondition condition11 = () -> this.isAutoJumpVisible();
-      this.autoJump = (BooleanValue)booleanValue4.withVisibility(condition11);
+      this.timeManipulationTPTicks = new DoubleValue(this, "TimeManipulationTPTicks", 0.0, 0.0, 10.0, 0).named("TPTicks").visibleWhen(() -> this.isTimeManipulationTpTicksVisible());
+      this.interactSpeed = new DoubleValue(this, "InteractSpeed", 1.0, 1.0, 10.0, 0).visibleWhen(() -> this.isInteractSpeedVisible());
+      this.mouseSensi = (BooleanValue)new BooleanValue(this, "MouseSensi", true).withVisibility(() -> this.isMouseSensiVisible());
+      this.autoJump = (BooleanValue)new BooleanValue(this, "AutoJump", true).withVisibility(() -> this.isAutoJumpVisible());
       BooleanValue booleanValue5 = new BooleanValue(this, "OnlyWhileMove", true);
       SettingVisibilityCondition condition12 = () -> {
          return this.mode.getSelectedValue().equals("45Degree");
       };
       this.onlyWhileMove = (BooleanValue)booleanValue5.withVisibility(condition12);
-      BooleanValue booleanValue6 = new BooleanValue(this, "AllDirectionSprint", false);
-      SettingVisibilityCondition condition13 = () -> this.isAllDirectionSprintVisible();
-      this.allDirectionSprint = (BooleanValue)booleanValue6.withVisibility(condition13);
-      StringValue stringValue11 = new StringValue(this, "AdditionalSpeed", 0.2, 0.0, 2.0, 4);
-      SettingVisibilityCondition condition14 = () -> this.isAdditionalSpeedVisible();
-      this.additionalSpeed = stringValue11.visibleWhen(condition14);
+      this.allDirectionSprint = (BooleanValue)new BooleanValue(this, "AllDirectionSprint", false).withVisibility(() -> this.isAllDirectionSprintVisible());
+      this.additionalSpeed = new DoubleValue(this, "AdditionalSpeed", 0.2, 0.0, 2.0, 4).visibleWhen(() -> this.isAdditionalSpeedVisible());
       this.correctMovement = new BooleanValue(this, "CorrectMovement", true);
       this.notWhileInCobweb = new BooleanValue(this, "NotWhileInCobweb", true);
       this.notWhileInWater = new BooleanValue(this, "NotWhileInWater", true);
@@ -173,74 +145,44 @@ public class Speed
       this.customModesDir = ClientPaths.CLIENT_DIR + File.separator + "motionmodifier" + File.separator + "speed";
       this.suppressedByEnvironment = new AtomicBoolean(false);
       ClientFileUtil.ensureDirectory(this.customModesDir);
-      VOnGroundSpeedMode vOnGroundSpeedMode2 = this.vOnGroundSpeedMode = new VOnGroundSpeedMode("VOnGround", this);
-      this.registerMode(vOnGroundSpeedMode2);
-      VBhopSpeedMode vBhopSpeedMode = new VBhopSpeedMode("VBhop", this);
-      this.registerMode(vBhopSpeedMode);
-      OldMineplexSpeedMode oldMineplexSpeedMode = new OldMineplexSpeedMode("OldMineplex", this);
-      this.registerMode(oldMineplexSpeedMode);
-      OldMatrixSpeedMode oldMatrixSpeedMode = new OldMatrixSpeedMode("OldMatrix", this);
-      this.registerMode(oldMatrixSpeedMode);
-      MatrixSpeedMode matrixSpeedMode = new MatrixSpeedMode("Matrix", this);
-      this.registerMode(matrixSpeedMode);
-      OldMinemoraSpeedMode oldMinemoraSpeedMode = new OldMinemoraSpeedMode("OldMinemora", this);
-      this.registerMode(oldMinemoraSpeedMode);
-      OldNCPSpeedMode oldNCPSpeedMode = new OldNCPSpeedMode("OldNCP", this);
-      this.registerMode(oldNCPSpeedMode);
-      CubeCraftSpeedMode cubeCraftSpeedMode = new CubeCraftSpeedMode("CubeCraft", this);
-      this.registerMode(cubeCraftSpeedMode);
-      LegitHopSpeedMode legitHopSpeedMode = new LegitHopSpeedMode("LegitHop", this);
-      this.registerMode(legitHopSpeedMode);
-      DojoSpeedMode dojoSpeedMode = new DojoSpeedMode("Dojo", this);
-      this.registerMode(dojoSpeedMode);
-      StrafeSpeedMode strafeSpeedMode = new StrafeSpeedMode("Strafe", this);
-      this.registerMode(strafeSpeedMode);
-      SentrySpeedMode sentrySpeedMode = new SentrySpeedMode("Sentry", this);
-      this.registerMode(sentrySpeedMode);
-      TimeManipulationSpeedMode mode2 = new TimeManipulationSpeedMode("TimeManipulation", this);
-      this.registerMode(mode2);
-      OldHypixelSpeedMode oldHypixelSpeedMode = new OldHypixelSpeedMode("OldHypixel", this);
-      this.registerMode(oldHypixelSpeedMode);
-      IntaveSpeedMode intaveSpeedMode = new IntaveSpeedMode("Intave", this);
-      this.registerMode(intaveSpeedMode);
-      VulcanLowHopSpeedMode vulcanLowHopSpeedMode = new VulcanLowHopSpeedMode("VulcanLowHop", this);
-      this.registerMode(vulcanLowHopSpeedMode);
-      VulcanOnGroundSpeedMode vulcanOnGroundSpeedMode = new VulcanOnGroundSpeedMode("VulcanOnground", this);
-      this.registerMode(vulcanOnGroundSpeedMode);
-      VulcanYPortSpeedMode vulcanYPortSpeedMode = new VulcanYPortSpeedMode("VulcanYPort", this);
-      this.registerMode(vulcanYPortSpeedMode);
-      VulcanHopSpeedMode vulcanHopSpeedMode = new VulcanHopSpeedMode("VulcanHop", this);
-      this.registerMode(vulcanHopSpeedMode);
-      VerusSpeedMode verusSpeedMode = new VerusSpeedMode("Verus", this);
-      this.registerMode(verusSpeedMode);
-      VerusLowHopSpeedMode verusLowHopSpeedMode = new VerusLowHopSpeedMode("VerusLowHop", this);
-      this.registerMode(verusLowHopSpeedMode);
-      InteractSpeedMode interactSpeedMode = new InteractSpeedMode("Interact", this);
-      this.registerMode(interactSpeedMode);
-      KarhuSpeedMode karhuSpeedMode = new KarhuSpeedMode("Karhu", this);
-      this.registerMode(karhuSpeedMode);
-      FortyFiveDegreeSpeedMode fortyFiveDegreeSpeedMode = new FortyFiveDegreeSpeedMode("45Degree", this);
-      this.registerMode(fortyFiveDegreeSpeedMode);
-      EntitySpeedMode entitySpeedMode = new EntitySpeedMode("EntitySpeed", this);
-      this.registerMode(entitySpeedMode);
-      MotionSpeedMode motionSpeedMode = new MotionSpeedMode("Motion", this);
-      this.registerMode(motionSpeedMode);
+      this.registerMode(this.vOnGroundSpeedMode = new VOnGroundSpeedMode("VOnGround", this));
+      this.registerMode(new VBhopSpeedMode("VBhop", this));
+      this.registerMode(new OldMineplexSpeedMode("OldMineplex", this));
+      this.registerMode(new OldMatrixSpeedMode("OldMatrix", this));
+      this.registerMode(new MatrixSpeedMode("Matrix", this));
+      this.registerMode(new OldMinemoraSpeedMode("OldMinemora", this));
+      this.registerMode(new OldNCPSpeedMode("OldNCP", this));
+      this.registerMode(new CubeCraftSpeedMode("CubeCraft", this));
+      this.registerMode(new LegitHopSpeedMode("LegitHop", this));
+      this.registerMode(new DojoSpeedMode("Dojo", this));
+      this.registerMode(new StrafeSpeedMode("Strafe", this));
+      this.registerMode(new SentrySpeedMode("Sentry", this));
+      this.registerMode(new TimeManipulationSpeedMode("TimeManipulation", this));
+      this.registerMode(new OldHypixelSpeedMode("OldHypixel", this));
+      this.registerMode(new IntaveSpeedMode("Intave", this));
+      this.registerMode(new VulcanLowHopSpeedMode("VulcanLowHop", this));
+      this.registerMode(new VulcanOnGroundSpeedMode("VulcanOnground", this));
+      this.registerMode(new VulcanYPortSpeedMode("VulcanYPort", this));
+      this.registerMode(new VulcanHopSpeedMode("VulcanHop", this));
+      this.registerMode(new VerusSpeedMode("Verus", this));
+      this.registerMode(new VerusLowHopSpeedMode("VerusLowHop", this));
+      this.registerMode(new InteractSpeedMode("Interact", this));
+      this.registerMode(new KarhuSpeedMode("Karhu", this));
+      this.registerMode(new FortyFiveDegreeSpeedMode("45Degree", this));
+      this.registerMode(new EntitySpeedMode("EntitySpeed", this));
+      this.registerMode(new MotionSpeedMode("Motion", this));
       Augustus.getInstance().getClass();
       this.builtinModes = new HashMap(this.modesByName);
       this.reloadCustomModes();
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(this.customModesDir);
-      Consumer consumer = obj -> this.onCustomModeCreated((Path)obj);
-      directoryWatcher = directoryWatcher.onCreate(consumer);
+      directoryWatcher = directoryWatcher.onCreate(obj -> this.onCustomModeCreated((Path)obj));
       Consumer consumer2 = obj2 -> {
-         File file = ((Path)obj2).toFile();
-         this.loadCustomModeFile(file);
+         this.loadCustomModeFile(((Path)obj2).toFile());
          this.syncModeSettingOptions();
       };
       directoryWatcher = directoryWatcher.onModify(consumer2);
       Consumer consumer3 = obj3 -> {
-         File file2 = ((Path)obj3).toFile();
-         Fly.getCachedSettings();
-         String name2 = file2.getName();
+         String name2 = ((Path)obj3).toFile().getName();
          if (name2.endsWith(".json")) {
             String str4 = name2.substring(0, name2.length() - 5);
             this.modesByName.remove(str4);
@@ -252,7 +194,6 @@ public class Speed
 
    @Override
    public void onEnable() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       mc.getTimer().timerSpeed = 1.0F;
       if (mc.thePlayer != null) {
          mc.thePlayer.setSpeedInAir(0.02F);
@@ -260,13 +201,11 @@ public class Speed
          mc.thePlayer.stepHeight = 0.6F;
       }
 
-      SpeedMode activeMode = this.getActiveMode();
-      activeMode.onEnable();
+      this.getActiveMode().onEnable();
    }
 
    @Override
    public void onDisable() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       mc.getTimer().timerSpeed = 1.0F;
       if (mc.thePlayer != null) {
          mc.thePlayer.setSpeedInAir(0.02F);
@@ -278,37 +217,22 @@ public class Speed
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 1;
-      byte b2 = 0;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 28;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 20;
-      this.toggleEventSubscription(b5);
-      byte b6 = 21;
-      this.toggleEventSubscription(b6);
-      byte b7 = 43;
-      this.toggleEventSubscription(b7);
-      byte b8 = 1;
-      byte b9 = 18;
-      this.toggleEventSubscription(b9, b8);
-      byte b10 = 1;
-      byte b11 = 26;
-      this.toggleEventSubscription(b11, b10);
-      byte b12 = 41;
-      this.toggleEventSubscription(b12);
-      byte b13 = 25;
-      this.toggleEventSubscription(b13);
+      this.toggleEventSubscription((byte)0, (byte)1);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)18, (byte)1);
+      this.toggleEventSubscription((byte)26, (byte)1);
+      this.toggleEventSubscription((byte)41);
+      this.toggleEventSubscription((byte)25);
    }
 
    public void reloadCustomModes() {
       this.modesByName.clear();
       this.modesByName.putAll(this.builtinModes);
-      Fly.getCachedSettings();
-      File file = new File(this.customModesDir);
-      File[] files = file.listFiles();
+      File[] files = new File(this.customModesDir).listFiles();
       if (files != null) {
          for (File file2 : files) {
             this.loadCustomModeFile(file2);
@@ -319,9 +243,7 @@ public class Speed
    }
 
    private void loadCustomModeFile(File file) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String name2 = file.getName();
-      if (name2.endsWith(".json")) {
+      if (file.getName().endsWith(".json")) {
          MotionModifierSpeedMode motionModifierSpeedMode = this.parseCustomModeFile(file);
          if (motionModifierSpeedMode == null) {
             return;
@@ -333,22 +255,16 @@ public class Speed
 
    private MotionModifierSpeedMode parseCustomModeFile(File file) {
       String name2 = file.getName();
-      Fly.getCachedSettings();
       String str = name2.substring(0, Math.max(name2.length() - 5, 0));
       MotionModifierSpeedMode motionModifierSpeedMode = new MotionModifierSpeedMode(str, this);
-      Object obj = null;
-      JsonObject json = ClientFileUtil.readJsonObject(this.customModesDir, name2, (Runnable)obj);
+      JsonObject json = ClientFileUtil.readJsonObject(this.customModesDir, name2, (Runnable)null);
       if (json == null) {
          return null;
       } else {
          FeatureListJsonCodec featureListJsonCodec = JSON_CODEC;
-         Module[] modules = new Module[]{motionModifierSpeedMode.dummy};
-         featureListJsonCodec.setFeatures2(modules);
+         featureListJsonCodec.setFeatures2(new Module[]{motionModifierSpeedMode.dummy});
          featureListJsonCodec = JSON_CODEC;
-         UnaryFunction unaryFunction = obj2 -> true;
-         boolean flag = true;
-         boolean flag2 = featureListJsonCodec.deserializeFromObject(json, flag, unaryFunction);
-         if (!flag2) {
+         if (!featureListJsonCodec.deserializeFromObject(json, true, obj2 -> true)) {
             System.out.println("Failed to read speed");
             return null;
          } else {
@@ -359,7 +275,6 @@ public class Speed
 
    @Override
    public void onPacketDelay(EventPacketDelay event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onOutgoingPacketDelay(event);
       }
@@ -367,9 +282,7 @@ public class Speed
 
    @Override
    public void onMotion(EventMotion event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (!this.isSuppressed()) {
          this.getActiveMode().onMotion(event);
       }
@@ -377,25 +290,20 @@ public class Speed
 
    @Override
    public void onMoveEntity(EventMoveEntity event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
-         SpeedMode activeMode = this.getActiveMode();
-         activeMode.onMoveEntity(event);
+         this.getActiveMode().onMoveEntity(event);
       }
    }
 
    @Override
    public void onUpdate2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
-         SpeedMode activeMode = this.getActiveMode();
-         activeMode.onPreUpdate();
+         this.getActiveMode().onPreUpdate();
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onPreMoveInput(event);
       }
@@ -403,16 +311,13 @@ public class Speed
 
    @Override
    public void onMoveInput(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
-         SpeedMode activeMode = this.getActiveMode();
-         activeMode.onPostMoveInput(event);
+         this.getActiveMode().onPostMoveInput(event);
       }
    }
 
    @Override
    public void onMove(EventMove event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onMoveFlying(event);
          if (mc.thePlayer.fallDistance > 4.0F && !this.mode.getSelectedValue().equals("LegitHop")) {
@@ -420,19 +325,16 @@ public class Speed
          }
 
          if (!BlockUtil.isScaffoldActiveAndValid() && !this.correctMovement.getValue()) {
-            float movementYaw = MoveUtil.getMovementYaw();
-            event.setYaw(movementYaw);
+            event.setYaw(MoveUtil.getMovementYaw());
          }
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          if (!BlockUtil.isScaffoldActiveAndValid() && !this.correctMovement.getValue()) {
-            float movementYaw = MoveUtil.getMovementYaw();
-            event.setYaw(movementYaw);
+            event.setYaw(MoveUtil.getMovementYaw());
          }
 
          this.getActiveMode().onJumpMove(event);
@@ -441,7 +343,6 @@ public class Speed
 
    @Override
    public void onTick() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       this.updateSuppressionState();
       if (!this.isSuppressed()) {
          this.getActiveMode().onEarlyTick();
@@ -450,7 +351,6 @@ public class Speed
 
    @Override
    public void onPacket2(EventPacket event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onSendPacket(event);
       }
@@ -458,7 +358,6 @@ public class Speed
 
    @Override
    public void onPacket(EventPacket event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onReadPacket(event);
       }
@@ -466,7 +365,6 @@ public class Speed
 
    @Override
    public void onTimer2(EventTimer event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onTimer(event);
       }
@@ -474,7 +372,6 @@ public class Speed
 
    @Override
    public void onTimer(EventTimer event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onTimer(event);
       }
@@ -482,7 +379,6 @@ public class Speed
 
    @Override
    public void onUpdate() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onPostUpdate();
       }
@@ -490,7 +386,6 @@ public class Speed
 
    @Override
    public void onAIMoveSpeed(EventAIMoveSpeed event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.isSuppressed()) {
          this.getActiveMode().onAIMoveSpeed(event);
       }
@@ -505,7 +400,6 @@ public class Speed
    }
 
    private void updateSuppressionState() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       this.suppressedByEnvironment.set(mc.thePlayer != null && (mc.thePlayer.isInWater() && this.notWhileInWater.getValue() || mc.thePlayer.isInWeb() && this.notWhileInCobweb.getValue()));
    }
 
@@ -514,22 +408,17 @@ public class Speed
    }
 
    private void syncModeSettingOptions() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      boolean flag = this.modesByName.containsKey(this.mode.getSelectedValue());
-      if (!flag) {
-         BooleansSetting mode2 = this.mode;
-         String str = (String)this.modesByName.keySet().iterator().next();
-         mode2.setSelectedValue(str);
+      if (!this.modesByName.containsKey(this.mode.getSelectedValue())) {
+         this.mode.setSelectedValue((String)this.modesByName.keySet().iterator().next());
       }
 
-      BooleansSetting mode3 = this.mode;
+      StringValue mode3 = this.mode;
       String[] strings = ((Map<String, ?>)this.modesByName).keySet().stream().sorted(Comparator.comparing(String::toLowerCase)).toArray(String[]::new);
       mode3.setOptions(strings);
    }
 
    private void onCustomModeCreated(Path path) {
-      File file = path.toFile();
-      this.loadCustomModeFile(file);
+      this.loadCustomModeFile(path.toFile());
       this.syncModeSettingOptions();
    }
 
@@ -558,12 +447,10 @@ public class Speed
    }
 
    private boolean isStrafeVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.mode.getSelectedValue().equals("VOnGround") || this.mode.getSelectedValue().equals("VBhop");
    }
 
    private boolean isDamageSpeedVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.mode.getSelectedValue().equals("Verus") && this.damageBoost.getValue();
    }
 
@@ -576,7 +463,6 @@ public class Speed
    }
 
    private boolean isVanillaSpeedVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.mode.getSelectedValue().equals("VOnGround") || this.mode.getSelectedValue().equals("VBhop");
    }
 

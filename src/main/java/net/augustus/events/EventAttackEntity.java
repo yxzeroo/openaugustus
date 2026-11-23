@@ -11,8 +11,7 @@ public class EventAttackEntity extends AbstractEvent {
    private Entity target;
 
    public void call(Object obj) {
-      AttackEntityListener listener = (AttackEntityListener)obj;
-      this.call2(listener);
+      this.call2((AttackEntityListener)obj);
    }
 
    public Entity getTarget() {

@@ -15,11 +15,9 @@ import net.minecraft.block.state.IBlockState;
 public enum AutoJumpBlockOption implements SelectableOption {
    SLIME_BLOCKS("SlimeBlocks", false, obj -> ((IBlockState)obj).getBlock() instanceof BlockSlime),
    STAIRS("Stairs", true, obj -> {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return ((IBlockState)obj).getBlock() instanceof BlockStairs && (MC.mc.thePlayer.posY % 1.0 != 0.0 || MC.mc.thePlayer.isCollidedHorizontally);
    }),
    HALF_SLABS("HalfSlabs", false, obj -> {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return ((IBlockState)obj).getBlock() instanceof BlockSlab && ((IBlockState)obj).getBlock().getBlockBoundsMaxY() == 0.5 && ((IBlockState)obj).getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.BOTTOM;
    });
    private final String name;

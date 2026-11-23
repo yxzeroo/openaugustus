@@ -30,10 +30,7 @@ public class BlockBreakable extends Block {
       Block block = blockState2.getBlock();
       if (this == Blocks.glass || this == Blocks.stained_glass) {
          EnumFacing opposite = facing.getOpposite();
-         int n4 = n + opposite.getFrontOffsetX();
-         int n5 = n2 + opposite.getFrontOffsetY();
-         int n6 = n3 + opposite.getFrontOffsetZ();
-         if (world.getBlockState2(n4, n5, n6) != blockState2) {
+         if (world.getBlockState2(n + opposite.getFrontOffsetX(), n2 + opposite.getFrontOffsetY(), n3 + opposite.getFrontOffsetZ()) != blockState2) {
             return true;
          }
 

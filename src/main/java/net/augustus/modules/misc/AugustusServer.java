@@ -27,9 +27,9 @@ import net.augustus.utils.ClientHoliday;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -49,26 +49,26 @@ import net.minecraft.util.StringUtils;
 import org.lwjgl.opengl.GL11;
 
 public class AugustusServer extends Module implements TickListener, RenderListener, PacketListener, ChatListener {
-   private final DoubleValue guiButtons;
+   private final SettingGroup guiButtons;
    public final BooleanValue roundedButtons;
-   public final StringValue roundFactor;
-   private final DoubleValue sounds;
-   public final BooleansSetting mode;
+   public final DoubleValue roundFactor;
+   private final SettingGroup sounds;
+   public final StringValue mode;
    public final BooleanValue moduleToggleSound;
    public final BooleanValue welcomeSound;
-   private final DoubleValue connectionInfo;
-   private final StringValue scale;
-   private final DoubleValue commandStuff;
-   public final BooleansSetting commandPrefixes;
-   private final DoubleValue configSettings;
+   private final SettingGroup connectionInfo;
+   private final DoubleValue scale;
+   private final SettingGroup commandStuff;
+   public final StringValue commandPrefixes;
+   private final SettingGroup configSettings;
    public final BooleanValue loadKeysFromConfigs;
-   private final DoubleValue chatSettings;
+   private final SettingGroup chatSettings;
    private final BooleanValue chatCopySymbol;
    public final BooleanValue fastServerPining1;
-   public final BooleansSetting banStatistics;
+   public final StringValue banStatistics;
    public final BooleanValue removeFramerateLimitInScreens;
    public final BooleanValue limitFrameRateIfScreenNotFocused;
-   private final DoubleValue backgroundSettings;
+   private final SettingGroup backgroundSettings;
    public final BooleanValue customBackground;
    public final BooleanValue mouseInputsOnBackgrounds;
    public final BooleanValue useAntialiasedRoundRects;
@@ -86,35 +86,29 @@ public class AugustusServer extends Module implements TickListener, RenderListen
 
    public AugustusServer() {
        super("ClientSettings", "KundenEinstellungen", true, new Color(158, 168, 50), Categorys.MISC);
-      this.guiButtons = (DoubleValue)(new DoubleValue(this, "GuiButtons", true)).markVisualOnly();
+      this.guiButtons = (SettingGroup)(new SettingGroup(this, "GuiButtons", true)).markVisualOnly();
       this.roundedButtons = (BooleanValue)(new BooleanValue(this, "RoundedButtons", true, this.guiButtons)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "RoundFactor", 2.0, 1.0, 20.0, 0, this.guiButtons);
-      SettingVisibilityCondition condition = () -> this.roundedButtons.getValue();
-      this.roundFactor = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
-      this.sounds = (DoubleValue)(new DoubleValue(this, "Sounds", true)).markVisualOnly();
-      this.mode = (BooleansSetting)(new BooleansSetting(this, "Mode", "Sigma", new String[]{"Vanilla", "Sigma", "Piano"}, this.sounds)).markVisualOnly();
+      this.roundFactor = (DoubleValue)new DoubleValue(this, "RoundFactor", 2.0, 1.0, 20.0, 0, this.guiButtons).visibleWhen(() -> this.roundedButtons.getValue()).markVisualOnly();
+      this.sounds = (SettingGroup)(new SettingGroup(this, "Sounds", true)).markVisualOnly();
+      this.mode = (StringValue)(new StringValue(this, "Mode", "Sigma", new String[]{"Vanilla", "Sigma", "Piano"}, this.sounds)).markVisualOnly();
       this.moduleToggleSound = (BooleanValue)(new BooleanValue(this, "ModuleToggleSound", true, this.sounds)).markVisualOnly();
       this.welcomeSound = (BooleanValue)(new BooleanValue(this, "WelcomeSound", true, this.sounds)).markVisualOnly();
-      this.connectionInfo = (DoubleValue)(new DoubleValue(this, "ConnectionInfo", true)).markVisualOnly();
-      this.scale = (StringValue)(new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2, this.connectionInfo)).markVisualOnly();
-      this.commandStuff = (DoubleValue)(new DoubleValue(this, "CommandStuff", true)).markVisualOnly();
-      this.commandPrefixes = (BooleansSetting)(new BooleansSetting(
+      this.connectionInfo = (SettingGroup)(new SettingGroup(this, "ConnectionInfo", true)).markVisualOnly();
+      this.scale = (DoubleValue)(new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2, this.connectionInfo)).markVisualOnly();
+      this.commandStuff = (SettingGroup)(new SettingGroup(this, "CommandStuff", true)).markVisualOnly();
+      this.commandPrefixes = (StringValue)(new StringValue(
             this, "CommandPrefixes", ".", new String[]{".", "-", "_", ":", ",", "+", "!", "#", "?", "\\", ">", "<"}, this.commandStuff
          ))
          .markVisualOnly();
-      this.configSettings = (DoubleValue)(new DoubleValue(this, "ConfigSettings", true)).markVisualOnly();
+      this.configSettings = (SettingGroup)(new SettingGroup(this, "ConfigSettings", true)).markVisualOnly();
       this.loadKeysFromConfigs = (BooleanValue)(new BooleanValue(this, "LoadKeysFromConfigs", false, this.configSettings)).markVisualOnly();
-      this.chatSettings = (DoubleValue)(new DoubleValue(this, "ChatSettings", true)).markVisualOnly();
+      this.chatSettings = (SettingGroup)(new SettingGroup(this, "ChatSettings", true)).markVisualOnly();
       this.chatCopySymbol = (BooleanValue)(new BooleanValue(this, "ChatCopySymbol", false, this.chatSettings)).markVisualOnly();
-      BooleanValue booleanValue = new BooleanValue(this, "FastServerPining1", false);
-      SettingVisibilityCondition condition2 = AugustusServer::isFastServerPingingVisible;
-      this.fastServerPining1 = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition2)).markVisualOnly();
-      BooleansSetting booleansSetting = new BooleansSetting(this, "BanStatistics", "Icon", new String[0]);
-      SettingVisibilityCondition condition3 = AugustusServer::isBanStatisticsVisible;
-      this.banStatistics = (BooleansSetting)((BooleansSetting)booleansSetting.withVisibility(condition3)).markVisualOnly();
+      this.fastServerPining1 = (BooleanValue)((BooleanValue)new BooleanValue(this, "FastServerPining1", false).withVisibility(AugustusServer::isFastServerPingingVisible)).markVisualOnly();
+      this.banStatistics = (StringValue)((StringValue)new StringValue(this, "BanStatistics", "Icon", new String[0]).withVisibility(AugustusServer::isBanStatisticsVisible)).markVisualOnly();
       this.removeFramerateLimitInScreens = (BooleanValue)(new BooleanValue(this, "RemoveFramerateLimitInScreens", true)).markVisualOnly();
       this.limitFrameRateIfScreenNotFocused = (BooleanValue)(new BooleanValue(this, "LimitFrameRateIfScreenNotFocused", true)).markVisualOnly();
-      this.backgroundSettings = (DoubleValue)(new DoubleValue(this, "BackgroundSettings", true)).markVisualOnly();
+      this.backgroundSettings = (SettingGroup)(new SettingGroup(this, "BackgroundSettings", true)).markVisualOnly();
       this.customBackground = (BooleanValue)(new BooleanValue(this, "CustomBackground", true, this.backgroundSettings)).markVisualOnly();
       this.mouseInputsOnBackgrounds = (BooleanValue)(new BooleanValue(this, "MouseInputsOnBackgrounds", false, this.backgroundSettings)).markVisualOnly();
       this.useAntialiasedRoundRects = (BooleanValue)(new BooleanValue(this, "UseAntialiasedRoundRects", true)).markVisualOnly();
@@ -123,15 +117,10 @@ public class AugustusServer extends Module implements TickListener, RenderListen
       this.hideMainMenuAccountInfos = (BooleanValue)(new BooleanValue(this, "HideMainMenuAccountInfos", false)).markVisualOnly();
       this.sideMainMenu = (BooleanValue)(new BooleanValue(this, "SideMainMenu", true)).markVisualOnly();
       this.holidaySoundTimer = new TimeHelper();
-      long l = 400000L;
-      long l2 = 220000L;
-      this.halloweenSoundDelay = DefaultRandomGenerator.instance.nextLong2(l2, l);
-      long l3 = 1000000L;
-      long l4 = 800000L;
-      this.aprilFoolsSoundDelay = DefaultRandomGenerator.instance.nextLong2(l4, l3);
+      this.halloweenSoundDelay = DefaultRandomGenerator.instance.nextLong2(220000L, 400000L);
+      this.aprilFoolsSoundDelay = DefaultRandomGenerator.instance.nextLong2(800000L, 1000000L);
       this.lastBlurState = false;
-      boolean flag = true;
-      this.setToggled(flag);
+      this.setToggled(true);
       EventManager.getEventBus().subscribe(40, this);
       EventManager.getEventBus().subscribe(32, this);
       EventManager.getEventBus().subscribe(26, this);
@@ -151,8 +140,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
    public void onPacket2(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof C01PacketChatMessage) {
-         C01PacketChatMessage packet2 = (C01PacketChatMessage)packet;
-         String message = packet2.getMessage();
+         String message = ((C01PacketChatMessage)packet).getMessage();
          String str = message.toLowerCase();
          if (str.contains("/sampler start")) {
             AntiSamplerGuard.activateGuard(1);
@@ -164,8 +152,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
             || str.contains("/alerts")
             || str.contains("/register")
             || str.contains("/login")) {
-            StringBuilder sb = new StringBuilder().append(Augustus.getInstance().getUsername());
-            String str2 = sb.append(" tE=")
+            String str2 = new StringBuilder().append(Augustus.getInstance().getUsername()).append(" tE=")
                .append(mc.thePlayer != null ? mc.thePlayer.ticksExisted : -1)
                .append(" aura=")
                .append(ClientManagers.moduleManager.killAura.isToggled())
@@ -187,8 +174,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
       Packet packet = event.getPacket();
       if (packet instanceof S02PacketChat) {
          Augustus.getInstance().getClass();
-         S02PacketChat packet2 = (S02PacketChat)packet;
-         IChatComponent chatComponent = packet2.getChatComponent();
+         IChatComponent chatComponent = ((S02PacketChat)packet).getChatComponent();
          if (chatComponent == null) {
             return;
          }
@@ -264,8 +250,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
                   .append(" morekb=")
                   .append(moduleManager.moreKB.isToggled());
                if (moduleManager.killAura.isToggled()) {
-                  String selectedValue = moduleManager.killAura.randomizeMode.getSelectedValue();
-                  if (selectedValue.equals("Noise2")) {
+                  if (moduleManager.killAura.randomizeMode.getSelectedValue().equals("Noise2")) {
                      StringBuilder sb2 = new StringBuilder()
                         .append(" speed=")
                         .append(moduleManager.killAura.aimSpeed.getValue())
@@ -367,8 +352,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
 
       exitBlock: {
          if (connectionState == 2) {
-            long l = 10000L;
-            if (CONNECTION_STATUS_TIMER.reached2(l)) {
+            if (CONNECTION_STATUS_TIMER.reached2(10000L)) {
                break exitBlock;
             }
          }
@@ -388,8 +372,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
                || Augustus.getInstance().getUsername().equals("goatqjudoo")
          )
          && ClientManagers.moduleManager.combatRotationTracker.isHiddenInGui()) {
-         boolean flag = false;
-         ClientManagers.moduleManager.combatRotationTracker.setHiddenInGui(flag);
+         ClientManagers.moduleManager.combatRotationTracker.setHiddenInGui(false);
       }
 
       EntityRenderer.shaderProgramSwitchEnabled = this.tryFixingRendermodulesWithOptifineShaders.getValue();
@@ -398,9 +381,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
          long halloweenSoundDelay2 = this.halloweenSoundDelay;
          if (this.holidaySoundTimer.reached2(halloweenSoundDelay2)) {
             ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE14);
-            long l = 500000L;
-            long l2 = 220000L;
-            this.halloweenSoundDelay = DefaultRandomGenerator.instance.nextLong2(l2, l);
+            this.halloweenSoundDelay = DefaultRandomGenerator.instance.nextLong2(220000L, 500000L);
             this.holidaySoundTimer.reset();
          }
       }
@@ -409,9 +390,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
          long aprilFoolsSoundDelay2 = this.aprilFoolsSoundDelay;
          if (this.holidaySoundTimer.reached2(aprilFoolsSoundDelay2)) {
             ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE12);
-            long l3 = 1000000L;
-            long l4 = 800000L;
-            this.aprilFoolsSoundDelay = DefaultRandomGenerator.instance.nextLong2(l4, l3);
+            this.aprilFoolsSoundDelay = DefaultRandomGenerator.instance.nextLong2(800000L, 1000000L);
             this.holidaySoundTimer.reset();
          }
       }
@@ -435,8 +414,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
          Augustus.getInstance().getClass();
          String[] strings = message.split(" ");
          if (strings.length > 1 && OnlineUserRegistry.usersByIngameName.containsKey(strings[1])) {
-            boolean flag = true;
-            ClientManagers.moduleManager.shuffleMode.setToggled(flag);
+            ClientManagers.moduleManager.shuffleMode.setToggled(true);
             event.cancel();
          }
       }
@@ -479,8 +457,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
    }
 
    public static void playButtonClickSound() {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue()) {
          case "Vanilla":
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
             break;
@@ -491,8 +468,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
    }
 
    public static void playModuleEnableSound() {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue()) {
          case "Vanilla":
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(ClientSounds.GUI_TEXTURE, 1.0F));
             break;
@@ -505,8 +481,7 @@ public class AugustusServer extends Module implements TickListener, RenderListen
    }
 
    public static void playModuleDisableSound() {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue()) {
          case "Vanilla":
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(ClientSounds.GUI_TEXTURE, 1.0F));
             break;

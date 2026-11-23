@@ -20,7 +20,6 @@ public class PacketDecoder extends ByteToMessageDecoder {
       int n = 0;
       Object obj = null;
       Object obj2 = null;
-      PacketCipherEncoder.getControlFlowMarker();
       Object obj3 = null;
       this.stageGuard.enterStage3();
       if (in.readableBytes() != 0) {
@@ -32,9 +31,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
          }
 
          obj3 = (LauncherPacket)((Supplier)obj2).get();
-         LauncherPacket packet = (LauncherPacket)obj3;
-         NettyPacketBuf nettyPacketBuf = (NettyPacketBuf)obj;
-         packet.read(nettyPacketBuf);
+         ((LauncherPacket)obj3).read((NettyPacketBuf)obj);
          out.add((LauncherPacket)obj3);
       }
    }

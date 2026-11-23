@@ -226,8 +226,7 @@ public class ShadersTex {
    public static int loadSimpleTexture(int n, BufferedImage image, boolean flag, boolean flag2, IResourceManager resourceManager, ResourceLocation location, MultiTexID multiTexID) {
       int width = image.getWidth();
       int height = image.getHeight();
-      int n2 = width * height;
-      int[] intArray2 = getIntArray(n2 * 3);
+      int[] intArray2 = getIntArray((width * height) * 3);
       image.getRGB(0, 0, width, height, intArray2, 0, width);
       loadNSMap(resourceManager, location, width, height, intArray2);
       setupTexture(multiTexID, intArray2, width, height, flag, flag2);
@@ -387,9 +386,7 @@ public class ShadersTex {
       if (location == null) {
          return null;
       } else {
-         String resourcePath = location.getResourcePath();
-         String[] strings = resourcePath.split(".png");
-         String str2 = strings[0];
+         String str2 = location.getResourcePath().split(".png")[0];
          return new ResourceLocation(location.getResourceDomain(), str2 + "_" + str + ".png");
       }
    }
@@ -451,8 +448,7 @@ public class ShadersTex {
          if (obj != null) {
             try {
                ResourceLocation location = new ResourceLocation((String)obj);
-               InputStream inputStream = resourceManager.getResource(location).getInputStream();
-               BufferedImage image = ImageIO.read(inputStream);
+               BufferedImage image = ImageIO.read(resourceManager.getResource(location).getInputStream());
                if (n3 == 0) {
                   n = image.getWidth();
                   n2 = image.getHeight();
@@ -480,8 +476,7 @@ public class ShadersTex {
    }
 
    public static void uploadTexSub1(int[][] intsArr, int n, int n2, int n3, int n4, int n5) {
-      int n6 = n * n2;
-      IntBuffer intBuffer2 = getIntBuffer(n6);
+      IntBuffer intBuffer2 = getIntBuffer(n * n2);
       int length = intsArr.length;
       int n7 = 0;
       int n8 = n;
@@ -518,8 +513,7 @@ public class ShadersTex {
 
    public static IntBuffer getIntBuffer(int n) {
       if (intBuffer.capacity() < n) {
-         int n2 = roundUpPOT(n);
-         byteBuffer = BufferUtils.createByteBuffer(n2 * 4);
+         byteBuffer = BufferUtils.createByteBuffer(roundUpPOT(n) * 4);
          intBuffer = byteBuffer.asIntBuffer();
       }
 
@@ -633,8 +627,7 @@ public class ShadersTex {
          return false;
       } else {
          try {
-            IResource resource = resourceManager.getResource(location);
-            BufferedImage image = ImageIO.read(resource.getInputStream());
+            BufferedImage image = ImageIO.read(resourceManager.getResource(location).getInputStream());
             if (image == null) {
                return false;
             } else if (image.getWidth() == n && image.getHeight() == n2) {
@@ -676,8 +669,7 @@ public class ShadersTex {
    }
 
    public static void updateTextureMinMagFilter() {
-      TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-      ITextureObject texture = textureManager.getTexture(TextureMap.locationBlocksTexture);
+      ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture);
       if (texture != null) {
          MultiTexID multiTexID = texture.getMultiTexID();
          GlStateManager.bindTexture(multiTexID.base);
@@ -708,8 +700,7 @@ public class ShadersTex {
    }
 
    public static void bindTextures2(int n) {
-      MultiTexID multiTexID = (MultiTexID)multiTexMap.get(n);
-      bindTextures(multiTexID);
+      bindTextures((MultiTexID)multiTexMap.get(n));
    }
 
    public static void genMipmapSimple(int[] ints, int n, int n2, int n3) {

@@ -74,9 +74,7 @@ public class RecipeRepairItem implements IRecipe {
          ItemStack stack3 = (ItemStack)list.get(1);
          if (stack2.getItem() == stack3.getItem() && stack2.stackSize == 1 && stack3.stackSize == 1 && stack2.getItem().isDamageable()) {
             Item item = stack2.getItem();
-            int n = item.getMaxDamage() - stack2.getItemDamage();
-            int n2 = item.getMaxDamage() - stack3.getItemDamage();
-            int n3 = n + n2 + item.getMaxDamage() * 5 / 100;
+            int n3 = (item.getMaxDamage() - stack2.getItemDamage()) + (item.getMaxDamage() - stack3.getItemDamage()) + item.getMaxDamage() * 5 / 100;
             int n4 = item.getMaxDamage() - n3;
             if (n4 < 0) {
                n4 = 0;

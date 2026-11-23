@@ -13,7 +13,7 @@ import net.augustus.settings.options.AutoUsePotionTriggerOption;
 import net.augustus.utils.TickCounter;
 import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
    private final RandomizedRangeSettings minimumDelayBetweenUsages;
    private final RandomizedRangeSettings tickDelayAfterSlotSwitch;
    private final RandomizedRangeSettings tickDelayBeforeBackswitch;
-   private final StringValue itemId;
+   private final DoubleValue itemId;
    private final BooleanValue silentSlotSwitching;
    private final MultiOptionSetting potionEffectToTriggerUsage;
    private final TickCounter ticksAfterSwitch;
@@ -37,7 +37,7 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
       this.minimumDelayBetweenUsages = new RandomizedRangeSettings(this, "Minimum delay between usages", 10.0, 20.0, 0.0, 200.0, 2);
       this.tickDelayAfterSlotSwitch = new RandomizedRangeSettings(this, "Tick delay after slot switch", 2.0, 4.0, 0.0, 10.0, 0);
       this.tickDelayBeforeBackswitch = new RandomizedRangeSettings(this, "Tick delay before backswitch", 2.0, 4.0, 0.0, 10.0, 0);
-      this.itemId = new StringValue(this, "Item ID", 26.0, 0.0, 300.0, 0);
+      this.itemId = new DoubleValue(this, "Item ID", 26.0, 0.0, 300.0, 0);
       this.silentSlotSwitching = new BooleanValue(this, "SilentSlotSwitching", true);
       this.potionEffectToTriggerUsage = new MultiOptionSetting(this, "Potion effect to trigger usage", Arrays.stream(AutoUsePotionTriggerOption.values()).sorted().toArray(AutoUsePotionTriggerOption[]::new));
       this.ticksAfterSwitch = new TickCounter();
@@ -58,10 +58,8 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 34;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
@@ -75,13 +73,10 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
 
       if (this.shouldUseItem()) {
          if (this.ticksAfterSwitch.getTicks() == (long)this.tickDelayAfterSlotSwitch.getLastIntValue()) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
          }
 
-         TickCounter totalUsageTicks2 = this.totalUsageTicks;
-         int n = this.tickDelayBeforeBackswitch.getLastIntValue() + this.tickDelayAfterSlotSwitch.getLastIntValue();
-         if (totalUsageTicks2.hasReached2(n)) {
+         if (this.totalUsageTicks.hasReached2(this.tickDelayBeforeBackswitch.getLastIntValue() + this.tickDelayAfterSlotSwitch.getLastIntValue())) {
             this.timeHelper.reset();
             this.totalUsageTicks.reset();
             this.ticksAfterSwitch.reset();
@@ -101,10 +96,7 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
    public void onSilentSlot() {
       this.itemHotbarSlot = this.findTargetItemHotbarSlot();
       if (this.shouldUseItem()) {
-         boolean value = this.silentSlotSwitching.getValue();
-         byte b = 1;
-         byte b2 = 19;
-         SilentSlotManager.requestSlot(this, b2, b, value);
+         SilentSlotManager.requestSlot(this, (byte)19, (byte)1, this.silentSlotSwitching.getValue());
       }
    }
 
@@ -121,18 +113,14 @@ public class AutoUse extends Module implements SilentSlotListener, ClickListener
                break;
             }
 
-            PotionEffect activePotionEffect = mc.thePlayer.getActivePotionEffect(AutoUsePotionTriggerOption.getPotion(option));
-            int n = activePotionEffect.getDuration() / 20;
-            if ((double)n < AutoUsePotionTriggerOption.getMinDurationSetting(option).getValue()) {
+            if ((double)(mc.thePlayer.getActivePotionEffect(AutoUsePotionTriggerOption.getPotion(option)).getDuration() / 20) < AutoUsePotionTriggerOption.getMinDurationSetting(option).getValue()) {
                flag = true;
                break;
             }
          }
       }
 
-      TimeHelper timeHelper2 = this.timeHelper;
-      double d = this.minimumDelayBetweenUsages.getLastValue() * 1000.0;
-      return timeHelper2.reached(d) && (flag || !flag2);
+      return this.timeHelper.reached(this.minimumDelayBetweenUsages.getLastValue() * 1000.0) && (flag || !flag2);
    }
 
    private boolean shouldUseItem() {

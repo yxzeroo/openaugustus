@@ -39,9 +39,7 @@ public abstract class AbstractConfigProperty implements ConfigProperty {
 
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       if (this.valueSupplier != null) {
-         Object obj = this.valueSupplier.get();
-         Object obj2 = obj;
-         this.setValue(obj2);
+         this.setValue(this.valueSupplier.get());
       }
 
       return json;
@@ -66,8 +64,7 @@ public abstract class AbstractConfigProperty implements ConfigProperty {
    }
 
    public void resetToDefault() {
-      Object defaultValue2 = this.defaultValue;
-      this.applyValue(defaultValue2);
+      this.applyValue(this.defaultValue);
    }
 
    public AbstractConfigProperty(FeatureBase featureBase2, String str, Object obj, Object obj2) {
@@ -89,13 +86,11 @@ public abstract class AbstractConfigProperty implements ConfigProperty {
 
    public void applyValue(Object obj) {
       if (this.onValueChanged != null && obj != this.getValue()) {
-         Consumer onValueChanged2 = this.onValueChanged;
-         this.invokeConsumerSafely(onValueChanged2, obj);
+         this.invokeConsumerSafely(this.onValueChanged, obj);
       }
 
       if (this.onValueApplied != null) {
-         Consumer onValueApplied2 = this.onValueApplied;
-         this.invokeConsumerSafely(onValueApplied2, obj);
+         this.invokeConsumerSafely(this.onValueApplied, obj);
       }
 
       this.setValue(obj);

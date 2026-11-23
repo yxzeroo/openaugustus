@@ -29,8 +29,7 @@ public class KeybindSetting extends Setting {
    public void setKeyCode(int n) {
       IntegerProperty integerProperty = this.k;
       Integer num = n;
-      Integer num2 = num;
-      integerProperty.setValue(num2);
+      integerProperty.setValue(num);
    }
 
    public KeybindSetting(Module module, String str) {
@@ -55,22 +54,17 @@ public class KeybindSetting extends Setting {
          if (this.listeningForKey) {
             int n = this.boxWidth + 20;
             int boxHeight2 = this.boxHeight;
-            int n2 = n;
             int boxY2 = this.boxY;
-            int boxX2 = this.boxX;
-            if (this.isPointInBounds(boxX2, boxY2, n2, boxHeight2, mouseX, mouseY) && (mouseButton == 0 || mouseButton == 1) || mouseButton > 1) {
-               int n3 = mouseButton + 10000;
-               this.setKeyCode(n3);
+            if (this.isPointInBounds(this.boxX, boxY2, n, boxHeight2, mouseX, mouseY) && (mouseButton == 0 || mouseButton == 1) || mouseButton > 1) {
+               this.setKeyCode(mouseButton + 10000);
             }
 
             this.listeningForKey = false;
-            boolean flag2 = false;
-            this.setFocused(flag2);
+            this.setFocused(false);
          }
       } else {
          this.listeningForKey = true;
-         boolean flag3 = true;
-         this.setFocused(flag3);
+         this.setFocused(true);
          flag = true;
       }
 
@@ -88,28 +82,22 @@ public class KeybindSetting extends Setting {
       if (this.listeningForKey) {
          IntegerProperty integerProperty = this.k;
          Integer num = keyCode == 1 ? -1 : keyCode;
-         Integer num2 = num;
-         integerProperty.setValue(num2);
+         integerProperty.setValue(num);
          this.listeningForKey = false;
-         boolean flag = false;
-         this.setFocused(flag);
+         this.setFocused(false);
       }
    }
 
    @Override
    public void renderTooltip() {
-      CustomFontUtil renderFont2 = this.renderFont;
-      String str = this.getName() + ": ";
-      String str2 = str;
-      int stringWidth = (int)renderFont2.getStringWidth(str2);
-      this.drawDescriptionTooltip(stringWidth);
+      this.drawDescriptionTooltip((int)this.renderFont.getStringWidth(this.getName() + ": "));
    }
 
    private boolean isPointInBounds(int n, int n2, int n3, int n4, int n5, int n6) {
       return n5 >= n && n6 >= n2 && n5 < n + n3 && n6 < n2 + n4;
    }
 
-   public KeybindSetting(Module module, String str, DoubleValue doubleValue) {
+   public KeybindSetting(Module module, String str, SettingGroup doubleValue) {
        super(module, doubleValue, str);
       this.k = new IntegerProperty(this, "K", 0);
    }
@@ -134,13 +122,7 @@ public class KeybindSetting extends Setting {
          this.boxY = n4;
          this.boxHeight = (int)customFontUtil.getFontHeight() + 1;
          this.boxWidth = (int)customFontUtil.getStringWidth(str) + 4;
-         double d = (double)n3;
-         double d2 = (double)n4;
-         byte b = 0;
-         int hoveredColor = RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.textColor.getColorInt(b), 0.2, n, n2, this.boxX, this.boxY, this.boxWidth, this.boxHeight);
-         double d3 = d2;
-         double d4 = d;
-         customFontUtil.drawString(str, d4, d3, hoveredColor);
+         customFontUtil.drawString(str, (double)n3, (double)n4, RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0), 0.2, n, n2, this.boxX, this.boxY, this.boxWidth, this.boxHeight));
       }
    }
 

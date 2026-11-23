@@ -15,7 +15,6 @@ public class RoundFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return (double)Math.round(this.getArg(b));
+      return (double)Math.round(this.getArg((byte)0));
    }
 }

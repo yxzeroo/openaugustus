@@ -19,8 +19,7 @@ public class C14PacketTabComplete implements Packet {
    @Override
    public void readPacketData(PacketBuffer buf) throws IOException {
       this.message = buf.readUtf8String(32767);
-      boolean flag = buf.readBoolean();
-      if (flag) {
+      if (buf.readBoolean()) {
          this.targetBlock = buf.readBlockPos();
       }
    }

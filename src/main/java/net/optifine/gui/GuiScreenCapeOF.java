@@ -49,14 +49,10 @@ public class GuiScreenCapeOF extends GuiScreenOF {
                String token = this.mc.getSession().getToken();
                Random rand = new Random();
                Random rand2 = new Random((long)System.identityHashCode(new Object()));
-               BigInteger bigInt = new BigInteger(128, rand);
-               BigInteger bigInt2 = new BigInteger(128, rand2);
-               BigInteger bigInt3 = bigInt.xor(bigInt2);
-               String str2 = bigInt3.toString(16);
+               String str2 = new BigInteger(128, rand).xor(new BigInteger(128, rand2)).toString(16);
                this.mc.getSessionService().joinServer(this.mc.getSession().getProfile(), token, str2);
                String str3 = "https://optifine.net/capeChange?u=" + str + "&n=" + name + "&s=" + str2;
-               boolean flag = Config.openWebLink(new URI(str3));
-               if (flag) {
+               if (Config.openWebLink(new URI(str3))) {
                   this.showMessage(Lang.get("of.message.capeOF.openEditor"), 10000L);
                } else {
                   this.showMessage(Lang.get("of.message.capeOF.openEditorError"), 10000L);
@@ -76,8 +72,7 @@ public class GuiScreenCapeOF extends GuiScreenOF {
          if (button.id == 220) {
             this.showMessage(Lang.get("of.message.capeOF.reloadCape"), 15000L);
             if (this.mc.thePlayer != null) {
-               long l = 15000L;
-               long l2 = System.currentTimeMillis() + l;
+               long l2 = System.currentTimeMillis() + 15000L;
                this.mc.thePlayer.setReloadCapeTimeMs(l2);
             }
          }

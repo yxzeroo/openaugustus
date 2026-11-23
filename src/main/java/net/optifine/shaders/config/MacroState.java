@@ -56,10 +56,8 @@ public class MacroState {
    }
 
    private boolean eval(String str) {
-      Matcher matcher = PATTERN_DEFINED.matcher(str);
-      str = matcher.replaceAll("defined_$1");
-      Matcher matcher2 = PATTERN_DEFINED_FUNC.matcher(str);
-      str = matcher2.replaceAll("defined_$1");
+      str = PATTERN_DEFINED.matcher(str).replaceAll("defined_$1");
+      str = PATTERN_DEFINED_FUNC.matcher(str).replaceAll("defined_$1");
       boolean flag = false;
       int n = 0;
 
@@ -94,15 +92,11 @@ public class MacroState {
       } else {
          try {
             MacroExpressionResolver macroExpressionResolver = new MacroExpressionResolver(this.mapMacroValues);
-            ExpressionParser expressionParser = new ExpressionParser(macroExpressionResolver);
-            IExpression expression = expressionParser.parse(str);
+            IExpression expression = new ExpressionParser(macroExpressionResolver).parse(str);
             if (expression.getFloatValue() == ExpressionType.BOOL) {
-               IExpressionBool expressionBool = (IExpressionBool)expression;
-               return expressionBool.eval();
+               return ((IExpressionBool)expression).eval();
             } else if (expression.getFloatValue() == ExpressionType.FLOAT) {
-               IExpressionFloat expressionFloat = (IExpressionFloat)expression;
-               float f = expressionFloat.eval();
-               return f != 0.0F;
+               return ((IExpressionFloat)expression).eval() != 0.0F;
             } else {
                throw new ParseException("Not a boolean or float expression: " + expression.getFloatValue());
             }
@@ -159,8 +153,7 @@ public class MacroState {
          } else if (str.equals("else")) {
             boolean flag7 = (Boolean)this.dequeState.removeLast();
             boolean flag8 = (Boolean)this.dequeResolved.removeLast();
-            boolean flag9 = !flag8;
-            this.dequeState.add(flag9);
+            this.dequeState.add(!flag8);
             this.dequeResolved.add(true);
          } else if (str.equals("endif")) {
             this.dequeState.removeLast();

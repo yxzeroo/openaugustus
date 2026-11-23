@@ -100,8 +100,7 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob {
    public void readEntityFromNBT(NBTTagCompound tag) {
       super.readEntityFromNBT(tag);
       if (tag.hasKey("SkeletonType", 99)) {
-         byte b = tag.getByte("SkeletonType");
-         this.setSkeletonType(b);
+         this.setSkeletonType(tag.getByte("SkeletonType"));
       }
 
       this.setCombatTask();
@@ -282,8 +281,7 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob {
    public void updateRidden() {
       super.updateRidden();
       if (this.ridingEntity instanceof EntityCreature) {
-         EntityCreature ridingEntity2 = (EntityCreature)this.ridingEntity;
-         this.renderYawOffset = ridingEntity2.renderYawOffset;
+         this.renderYawOffset = ((EntityCreature)this.ridingEntity).renderYawOffset;
       }
    }
 

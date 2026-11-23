@@ -13,7 +13,6 @@ public class EventMotion extends AbstractEvent {
    private double x;
    private StateTypes state;
    public static final int ID = 18;
-   private static int[] controlFlowState;
 
    public void setZ(double d) {
       this.z = d;
@@ -40,8 +39,7 @@ public class EventMotion extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      MotionListener listener = (MotionListener)obj;
-      this.call2(listener);
+      this.call2((MotionListener)obj);
    }
 
    public void setPitch(float f) {
@@ -103,17 +101,6 @@ public class EventMotion extends AbstractEvent {
       this.y = d;
    }
 
-   public static void setControlFlowState(int[] ints) {
-      controlFlowState = ints;
-   }
 
-   public static int[] getControlFlowState() {
-      return controlFlowState;
-   }
 
-   static {
-      if (getControlFlowState() != null) {
-         setControlFlowState(new int[1]);
-      }
-   }
 }

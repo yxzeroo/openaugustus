@@ -2,16 +2,16 @@ package net.augustus.modules.modes.spammer;
 
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.Spammer;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class NoneSpammerRandomMode extends SpammerRandomMode {
 
-   public NoneSpammerRandomMode(Spammer spammer, DoubleValue doubleValue) {
+   public NoneSpammerRandomMode(Spammer spammer, SettingGroup doubleValue) {
       super(spammer, doubleValue, "None");
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new NoneSpammerRandomMode((Spammer)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new NoneSpammerRandomMode((Spammer)obj, (SettingGroup)obj2);
    }
 
    @Override

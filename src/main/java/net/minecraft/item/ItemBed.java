@@ -19,15 +19,12 @@ public class ItemBed extends Item {
       } else if (facing != EnumFacing.UP) {
          return false;
       } else {
-         IBlockState blockState = world.getBlockState(pos);
-         Block block = blockState.getBlock();
-         boolean isReplaceable = block.isReplaceable(world, pos);
+         boolean isReplaceable = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
          if (!isReplaceable) {
             pos = pos.up();
          }
 
-         int n = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5) & 3;
-         EnumFacing horizontal = EnumFacing.getHorizontal(n);
+         EnumFacing horizontal = EnumFacing.getHorizontal(MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5) & 3);
          BlockPos pos2 = pos.offset(horizontal);
          if (player.canPlayerEdit(pos, facing, stack) && player.canPlayerEdit(pos2, facing, stack)) {
             boolean isReplaceable2 = world.getBlockState(pos2).getBlock().isReplaceable(world, pos2);
@@ -40,8 +37,7 @@ public class ItemBed extends Item {
                   .withProperty(BlockBed.FACING, horizontal)
                   .withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
                if (world.setBlockState(pos, state, 3)) {
-                  IBlockState state2 = state.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
-                  world.setBlockState(pos2, state2, 3);
+                  world.setBlockState(pos2, state.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 3);
                }
 
                stack.stackSize--;

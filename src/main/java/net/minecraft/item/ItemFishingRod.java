@@ -20,8 +20,7 @@ public class ItemFishingRod extends Item {
    @Override
    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
       if (player.fishEntity != null) {
-         int n = player.fishEntity.handleHookRetraction();
-         stack.damageItem(n, player);
+         stack.damageItem(player.fishEntity.handleHookRetraction(), player);
          player.swingItem();
       } else {
          world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));

@@ -52,9 +52,7 @@ public class InventoryClicker extends Module implements TickListener, InventoryC
       BooleanValue booleanValue = new BooleanValue(this, "OnlyOnLeftClick", true);
       BooleanValue onlyOnShiftClick2 = this.onlyOnShiftClick;
       this.onlyOnShiftClick.getClass();
-      BooleanValue booleanValue2 = onlyOnShiftClick2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.onlyOnLeftClick = (BooleanValue)booleanValue.withVisibility(condition);
+      this.onlyOnLeftClick = (BooleanValue)booleanValue.withVisibility(() -> onlyOnShiftClick2.getValue());
       this.wasHotbarFullForHoveredItem = false;
    }
 
@@ -68,10 +66,8 @@ public class InventoryClicker extends Module implements TickListener, InventoryC
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 51;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)51);
    }
 
    @Override
@@ -92,36 +88,29 @@ public class InventoryClicker extends Module implements TickListener, InventoryC
          && (!this.onlyOnShiftClick.getValue() || KeyboardInputUtil.isKeyDown(42) || KeyboardInputUtil.isKeyDown(54))
          && (!this.onlyOnShiftClick.getValue() || !this.onlyOnLeftClick.getValue() || MouseInputUtil.isButtonDown(0))) {
          if (this.onlyOnShiftClick.getValue() && this.onlyOnLeftClick.getValue()) {
-            boolean flag = true;
-            event.setOverrideMouseInput(flag);
+            event.setOverrideMouseInput(true);
          }
 
          GuiContainer currentScreen = (GuiContainer)mc.currentScreen;
          TickCounter cpsRecalculateCounter2 = this.cpsRecalculateCounter;
-         int lastIntValue = this.cpsRecalculateDelay.getLastIntValue();
-         if (cpsRecalculateCounter2.hasReached2(lastIntValue)) {
+         if (cpsRecalculateCounter2.hasReached2(this.cpsRecalculateDelay.getLastIntValue())) {
             this.cpsRecalculateCounter.reset();
             this.cpsRecalculateDelay.nextValue();
             this.cps.nextValue();
          }
 
          cpsRecalculateCounter2 = this.dcpsRecalculateCounter;
-         int lastIntValue2 = this.dcpsRecalculateDelay.getLastIntValue();
-         if (cpsRecalculateCounter2.hasReached2(lastIntValue2)) {
+         if (cpsRecalculateCounter2.hasReached2(this.dcpsRecalculateDelay.getLastIntValue())) {
             this.dcpsRecalculateCounter.reset();
             this.dcpsRecalculateDelay.nextValue();
             this.dcps.nextValue();
          }
 
-         int x = Mouse.getX();
-         int y = Mouse.getY();
-         Slot slotUnderMouse = this.getSlotUnderMouse(currentScreen, x, y);
+         Slot slotUnderMouse = this.getSlotUnderMouse(currentScreen, Mouse.getX(), Mouse.getY());
          boolean isHotbarFullForSlot = this.isHotbarFullForSlot(currentScreen, slotUnderMouse);
          if (!isHotbarFullForSlot && !this.wasHotbarFullForHoveredItem) {
             this.wasHotbarFullForHoveredItem = false;
-            ActionRateAccumulator cpsAccumulator2 = this.cpsAccumulator;
-            int lastIntValue3 = this.cps.getLastIntValue();
-            int n = cpsAccumulator2.accumulate(lastIntValue3);
+            int n = this.cpsAccumulator.accumulate(this.cps.getLastIntValue());
             if (n > 0) {
                ActionRateAccumulator dcpsAccumulator2 = this.dcpsAccumulator;
                int lastIntValue4 = this.dcps.getLastIntValue();
@@ -152,9 +141,7 @@ public class InventoryClicker extends Module implements TickListener, InventoryC
          Slot slot = guiContainer.inventorySlots.getSlot(i);
          int scaledWidth = sr.getScaledWidth();
          int scaledHeight = sr.getScaledHeight();
-         int n3 = n * scaledWidth / mc.displayWidth;
-         int n4 = scaledHeight - n2 * scaledHeight / mc.displayHeight - 1;
-         if (guiContainer.isMouseOverSlot(slot, n3, n4)) {
+         if (guiContainer.isMouseOverSlot(slot, n * scaledWidth / mc.displayWidth, scaledHeight - n2 * scaledHeight / mc.displayHeight - 1)) {
             return slot;
          }
       }
@@ -169,21 +156,18 @@ public class InventoryClicker extends Module implements TickListener, InventoryC
             return false;
          } else {
             for (int i = 36; i < mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
-               Slot slot2 = mc.thePlayer.inventoryContainer.getSlot(i);
-               if (slot.equals(slot2)) {
+               if (slot.equals(mc.thePlayer.inventoryContainer.getSlot(i))) {
                   return false;
                }
             }
 
             for (int j = 36; j < mc.thePlayer.inventoryContainer.inventorySlots.size(); j++) {
-               Slot slot3 = mc.thePlayer.inventoryContainer.getSlot(j);
-               ItemStack stack2 = slot3.getStack();
+               ItemStack stack2 = mc.thePlayer.inventoryContainer.getSlot(j).getStack();
                if (stack2 == null) {
                   return false;
                }
 
-               Item item = stack2.getItem();
-               if (item.getClass().equals(stack.getItem().getClass()) && stack.isStackable() && stack2.stackSize < stack2.getMaxStackSize()) {
+               if (stack2.getItem().getClass().equals(stack.getItem().getClass()) && stack.isStackable() && stack2.stackSize < stack2.getMaxStackSize()) {
                   return false;
                }
             }

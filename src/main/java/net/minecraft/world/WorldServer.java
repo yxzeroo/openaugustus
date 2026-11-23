@@ -671,8 +671,7 @@ public class WorldServer extends World implements IThreadListener {
 
       for (int i = 0; i < this.playerEntities.size(); i++) {
          EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.playerEntities.get(i);
-         BlockPos position = entityPlayerMP.getPosition();
-         double d8 = position.distanceSq(d, d2, d3);
+         double d8 = entityPlayerMP.getPosition().distanceSq(d, d2, d3);
          if (d8 <= 256.0 || flag && d8 <= 65536.0) {
             entityPlayerMP.playerNetServerHandler.sendPacket(packet);
          }
@@ -751,8 +750,7 @@ public class WorldServer extends World implements IThreadListener {
                         blockState.getBlock().updateTick(this, nextTickListEntry2.position, blockState, this.rand);
                      } catch (Throwable e) {
                         CrashReport crashReport = CrashReport.makeCrashReport(e, "Exception while ticking a block");
-                        CrashReportCategory crashReportCategory = crashReport.makeCategory("Block being ticked");
-                        CrashReportCategory.addBlockInfo(crashReportCategory, nextTickListEntry2.position, blockState);
+                        CrashReportCategory.addBlockInfo(crashReport.makeCategory("Block being ticked"), nextTickListEntry2.position, blockState);
                         throw new ReportedException(crashReport);
                      }
                   }

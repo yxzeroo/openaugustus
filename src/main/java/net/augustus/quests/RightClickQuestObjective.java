@@ -28,8 +28,7 @@ public class RightClickQuestObjective extends QuestObjective implements ClickLis
 
    public void onClick(EventClick event) {
       if (event.getRightClicks() + (event.isIgnoreVanillaClicks() ? 0 : mc.gameSettings.keyBindUseItem.getPressTime()) > 0 && !event.isBlockAllClicks() && !event.isCancelled()) {
-         double d = 1.0;
-         this.addProgress(d);
+         this.addProgress(1.0);
       }
    }
 

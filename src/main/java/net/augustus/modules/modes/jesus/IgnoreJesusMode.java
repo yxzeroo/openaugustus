@@ -8,8 +8,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.movement.Jesus;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 
 public class IgnoreJesusMode extends AbstractJesusMode implements LiquidPhysicsListener, LiquidJumpListener, TickListener {
@@ -19,46 +19,31 @@ public class IgnoreJesusMode extends AbstractJesusMode implements LiquidPhysicsL
    private final BooleanValue jumpInLava;
    private final BooleanValue disableIgnoranceTemporaryIfDoubleJumpKeyPressed;
    private final BooleanValue disableIfYouFallingDown;
-   private final StringValue motionYToDisable;
+   private final DoubleValue motionYToDisable;
    private final TimeHelper timeHelper;
    private boolean temporarilyDisabled;
 
-   public IgnoreJesusMode(Jesus jesus, DoubleValue doubleValue) {
+   public IgnoreJesusMode(Jesus jesus, SettingGroup doubleValue) {
        super(jesus, doubleValue, "Ignore");
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "Ignore water", true, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.ignoreWater = (BooleanValue)booleanValue.withVisibility(condition);
-      AbstractJesusMode.getControlFlowState2();
+      this.ignoreWater = (BooleanValue)new BooleanValue(this.parentModule, "Ignore water", true, this.modeSetting).withVisibility(() -> this.isSelected());
       BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "Jump in water", true, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.jumpInWater = (BooleanValue)booleanValue2.withVisibility(condition2);
+      this.jumpInWater = (BooleanValue)booleanValue2.withVisibility(() -> this.isSelected());
       booleanValue2 = new BooleanValue(this.parentModule, "Ignore lava", true, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.ignoreLava = (BooleanValue)booleanValue2.withVisibility(condition3);
+      this.ignoreLava = (BooleanValue)booleanValue2.withVisibility(() -> this.isSelected());
       booleanValue2 = new BooleanValue(this.parentModule, "Jump in lava", true, this.modeSetting);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.jumpInLava = (BooleanValue)booleanValue2.withVisibility(condition4);
-      BooleanValue booleanValue3 = new BooleanValue(this.parentModule, "Disable ignorance temporary if double jump key pressed", false, this.modeSetting);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.disableIgnoranceTemporaryIfDoubleJumpKeyPressed = (BooleanValue)booleanValue3.withVisibility(condition5);
-      BooleanValue booleanValue4 = new BooleanValue(this.parentModule, "Disable if you falling down", false, this.modeSetting);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.disableIfYouFallingDown = (BooleanValue)booleanValue4.withVisibility(condition6);
-      StringValue stringValue = new StringValue(this.parentModule, "Motion y to disable", -0.7, -2.0, 0.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition7 = () -> this.isDisableMotionYVisible();
-      this.motionYToDisable = stringValue.visibleWhen(condition7);
+      this.jumpInLava = (BooleanValue)booleanValue2.withVisibility(() -> this.isSelected());
+      this.disableIgnoranceTemporaryIfDoubleJumpKeyPressed = (BooleanValue)new BooleanValue(this.parentModule, "Disable ignorance temporary if double jump key pressed", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.disableIfYouFallingDown = (BooleanValue)new BooleanValue(this.parentModule, "Disable if you falling down", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.motionYToDisable = new DoubleValue(this.parentModule, "Motion y to disable", -0.7, -2.0, 0.0, 2, this.modeSetting).visibleWhen(() -> this.isDisableMotionYVisible());
       this.timeHelper = new TimeHelper();
       this.temporarilyDisabled = false;
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 66;
-      this.toggleEventSubscription(b);
-      byte b2 = 67;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)66);
+      this.toggleEventSubscription((byte)67);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -71,39 +56,32 @@ public class IgnoreJesusMode extends AbstractJesusMode implements LiquidPhysicsL
 
    @Override
    public void onLiquidPhysics(EventLiquidPhysics event) {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (!this.temporarilyDisabled && this.shouldApplyJesus()) {
          if (this.ignoreWater.getValue()) {
-            boolean flag = true;
-            event.setIgnoreWater(flag);
+            event.setIgnoreWater(true);
          }
 
          if (this.ignoreLava.getValue()) {
-            boolean flag2 = true;
-            event.setIgnoreLava(flag2);
+            event.setIgnoreLava(true);
          }
       }
    }
 
    @Override
    public void onLiquidJump(EventLiquidJump event) {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (!this.temporarilyDisabled && this.shouldApplyJesus()) {
          if (this.jumpInWater.getValue()) {
-            boolean flag = true;
-            event.setIgnoreWater(flag);
+            event.setIgnoreWater(true);
          }
 
          if (this.jumpInLava.getValue()) {
-            boolean flag2 = true;
-            event.setIgnoreLava(flag2);
+            event.setIgnoreLava(true);
          }
       }
    }
 
    @Override
    public void onTick2() {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (!mc.thePlayer.isInWater() && mc.thePlayer.onGround) {
          this.temporarilyDisabled = false;
       }
@@ -114,8 +92,7 @@ public class IgnoreJesusMode extends AbstractJesusMode implements LiquidPhysicsL
 
       if (this.disableIgnoranceTemporaryIfDoubleJumpKeyPressed.getValue()) {
          if (mc.gameSettings.keyBindJump.getPressTime() > 0) {
-            long l = 250L;
-            if (!this.timeHelper.reached2(l)) {
+            if (!this.timeHelper.reached2(250L)) {
                this.temporarilyDisabled = !this.temporarilyDisabled;
             }
 
@@ -127,7 +104,6 @@ public class IgnoreJesusMode extends AbstractJesusMode implements LiquidPhysicsL
    }
 
    private boolean isDisableMotionYVisible() {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       return this.isSelected() && this.disableIfYouFallingDown.getValue();
    }
 

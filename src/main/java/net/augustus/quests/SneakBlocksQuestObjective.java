@@ -27,8 +27,7 @@ public class SneakBlocksQuestObjective extends QuestObjective implements TickLis
 
    public void onTick() {
       if (mc.thePlayer.isServerSneakState()) {
-         long l = 900L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(900L)) {
             this.ticksMovedInWindow = 0;
             this.timeHelper.reset();
          }
@@ -36,8 +35,7 @@ public class SneakBlocksQuestObjective extends QuestObjective implements TickLis
          double d = Math.abs(mc.thePlayer.posX - mc.thePlayer.lastTickPosX);
          double d2 = Math.abs(mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ);
          if (d < 1.0 && d2 < 1.0 && this.ticksMovedInWindow < 21) {
-            double d3 = (double)MathHelper.sqrt_double(d * d + d2 * d2);
-            this.addProgress(d3);
+            this.addProgress((double)MathHelper.sqrt_double(d * d + d2 * d2));
             this.ticksMovedInWindow++;
          }
       }

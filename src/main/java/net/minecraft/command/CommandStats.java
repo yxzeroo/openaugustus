@@ -125,8 +125,7 @@ public class CommandStats extends CommandBase {
                   commandResultStats = ((TileEntitySign)tileEntity).getStats();
                }
             } else {
-               Entity entity = getEntity(commandSender, strings[1]);
-               commandResultStats = entity.getCommandStats();
+               commandResultStats = getEntity(commandSender, strings[1]).getCommandStats();
             }
 
             if ("set".equals(str)) {
@@ -144,9 +143,7 @@ public class CommandStats extends CommandBase {
             }
 
             if (flag) {
-               BlockPos pos2 = parseBlockPos(commandSender, strings, 1, false);
-               TileEntity tileEntity2 = entityWorld.getTileEntity(pos2);
-               tileEntity2.markDirty();
+               entityWorld.getTileEntity(parseBlockPos(commandSender, strings, 1, false)).markDirty();
             }
          }
       }

@@ -102,8 +102,7 @@ public class ItemPotion extends Item {
          NBTTagList tagList = stack.getTagCompound().getTagList("CustomPotionEffects", 10);
 
          for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound compoundTagAt = tagList.getCompoundTagAt(i);
-            PotionEffect potionEffect2 = PotionEffect.readCustomPotionEffectFromNBT(compoundTagAt);
+            PotionEffect potionEffect2 = PotionEffect.readCustomPotionEffectFromNBT(tagList.getCompoundTagAt(i));
             if (potionEffect2 != null) {
                list.add(potionEffect2);
             }
@@ -289,8 +288,7 @@ public class ItemPotion extends Item {
             effectName = effectName + ".postfix";
             return str + StatCollector.translateToLocal(effectName).trim();
          } else {
-            String potionPrefix = PotionHelper.getPotionPrefix(stack.getMetadata());
-            return StatCollector.translateToLocal(potionPrefix).trim() + " " + super.getItemStackDisplayName(stack);
+            return StatCollector.translateToLocal(PotionHelper.getPotionPrefix(stack.getMetadata())).trim() + " " + super.getItemStackDisplayName(stack);
          }
       }
    }

@@ -45,8 +45,7 @@ public abstract class BlockWoodSlab extends BlockSlab {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockPlanks.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
    }
 
    @Override

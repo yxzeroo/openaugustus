@@ -94,8 +94,7 @@ public class ItemBanner extends ItemBlock {
       if (n == 0) {
          return 16777215;
       } else {
-         EnumDyeColor baseColor = this.getBaseColor(stack);
-         return baseColor.getMapColor().colorValue;
+         return this.getBaseColor(stack).getMapColor().colorValue;
       }
    }
 
@@ -119,8 +118,7 @@ public class ItemBanner extends ItemBlock {
    @Override
    public String getItemStackDisplayName(ItemStack stack) {
       String str = "item.banner.";
-      EnumDyeColor baseColor = this.getBaseColor(stack);
-      str = str + baseColor.getUnlocalizedName() + ".name";
+      str = str + this.getBaseColor(stack).getUnlocalizedName() + ".name";
       return StatCollector.translateToLocal(str);
    }
 }

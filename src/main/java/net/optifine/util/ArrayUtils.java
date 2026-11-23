@@ -85,8 +85,7 @@ public class ArrayUtils {
       } else if (clazz.isPrimitive()) {
          throw new IllegalArgumentException("Can not make arrays with primitive elements (int, double), element class: " + clazz);
       } else {
-         Object[] array = (Object[])Array.newInstance(clazz, items.size());
-         return items.toArray(array);
+         return items.toArray((Object[])Array.newInstance(clazz, items.size()));
       }
    }
 
@@ -114,8 +113,7 @@ public class ArrayUtils {
          return false;
       } else {
          for (int i = 0; i < array.length; i++) {
-            Object obj2 = array[i];
-            if (obj == obj2) {
+            if (obj == array[i]) {
                return true;
             }
          }
@@ -137,8 +135,7 @@ public class ArrayUtils {
    public static Object[] addObjectToArray(Object[] array, Object obj, int n) {
       ArrayList list = new ArrayList<>(Arrays.asList(array));
       list.add(n, obj);
-      Object[] array2 = (Object[])Array.newInstance(array.getClass().getComponentType(), list.size());
-      return list.toArray(array2);
+      return list.toArray((Object[])Array.newInstance(array.getClass().getComponentType(), list.size()));
    }
 
    public static Object[] removeObjectFromArray(Object[] array, Object obj) {
@@ -197,8 +194,7 @@ public class ArrayUtils {
    public static int[] addIntsToArray(int[] ints, int[] ints2) {
       if (ints != null && ints2 != null) {
          int length = ints.length;
-         int n = length + ints2.length;
-         int[] ints3 = new int[n];
+         int[] ints3 = new int[length + ints2.length];
          System.arraycopy(ints, 0, ints3, 0, length);
 
          for (int i = 0; i < ints2.length; i++) {
@@ -236,8 +232,7 @@ public class ArrayUtils {
          return false;
       } else {
          for (int i = 0; i < array.length; i++) {
-            Object obj2 = array[i];
-            if (obj2 == obj) {
+            if (array[i] == obj) {
                return true;
             }
          }
@@ -274,8 +269,7 @@ public class ArrayUtils {
          return false;
       } else {
          for (int i = 0; i < array.length; i++) {
-            Object obj2 = array[i];
-            if (equals(obj, obj2)) {
+            if (equals(obj, array[i])) {
                return true;
             }
          }

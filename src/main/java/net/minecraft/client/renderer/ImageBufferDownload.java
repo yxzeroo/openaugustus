@@ -21,8 +21,7 @@ public class ImageBufferDownload implements IImageBuffer {
    private boolean hasTransparency(int n, int n2, int n3, int n4) {
       for (int i = n; i < n3; i++) {
          for (int j = n2; j < n4; j++) {
-            int n5 = this.imageData[i + j * this.imageWidth];
-            if ((n5 >> 24 & 0xFF) < 128) {
+            if ((this.imageData[i + j * this.imageWidth] >> 24 & 0xFF) < 128) {
                return true;
             }
          }

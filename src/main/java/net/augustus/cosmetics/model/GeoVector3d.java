@@ -17,9 +17,7 @@ public class GeoVector3d {
    public double distanceSq(GeoVector3d geoVector3d) {
       double x2 = geoVector3d.getX();
       double z2 = geoVector3d.getZ();
-      double y2 = geoVector3d.getY();
-      double d = x2;
-      return this.distanceSq(d, y2, z2);
+      return this.distanceSq(x2, geoVector3d.getY(), z2);
    }
 
    public double distanceSqToCenter(long l, double d, double d2, double d3) {

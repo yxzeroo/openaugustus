@@ -214,8 +214,7 @@ public class EntityCreeper extends EntityMob {
       if (damageSource.getEntity() instanceof EntitySkeleton) {
          int idFromItem = Item.getIdFromItem(Items.record_13);
          int idFromItem2 = Item.getIdFromItem(Items.record_wait);
-         int n = idFromItem + this.rand.nextInt(idFromItem2 - idFromItem + 1);
-         this.dropItem(Item.getItemById(n), 1);
+         this.dropItem(Item.getItemById(idFromItem + this.rand.nextInt(idFromItem2 - idFromItem + 1)), 1);
       } else if (damageSource.getEntity() instanceof EntityCreeper
          && damageSource.getEntity() != this
          && ((EntityCreeper)damageSource.getEntity()).getPowered()

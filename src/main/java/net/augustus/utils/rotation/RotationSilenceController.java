@@ -4,7 +4,7 @@ import net.augustus.modules.modes.killaura.unoise3.UNoise3SettingContext;
 import net.augustus.settings.RandomizedRangeSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class RotationSilenceController {
    private BooleanValue keepticking;
@@ -22,8 +22,7 @@ public class RotationSilenceController {
    public void reset() {
       double d = 0.0;
       this.silencestrength.setLastValue(d);
-      boolean flag = true;
-      this.remainingIntervalTicks = this.nonsilentinterval.nextInt(flag);
+      this.remainingIntervalTicks = this.nonsilentinterval.nextInt(true);
       if (this.remainingIntervalTicks <= 1) {
          this.remainingIntervalTicks = 2;
       }
@@ -57,8 +56,7 @@ public class RotationSilenceController {
             if (this.silentActive) {
                flag = true;
             } else {
-               boolean flag2 = true;
-               this.remainingIntervalTicks = this.nonsilentinterval.nextInt(flag2);
+               this.remainingIntervalTicks = this.nonsilentinterval.nextInt(true);
                if (this.remainingIntervalTicks == 0) {
                   flag = true;
                   this.silentActive = true;
@@ -66,12 +64,9 @@ public class RotationSilenceController {
             }
 
             if (flag) {
-               boolean flag3 = true;
-               this.remainingIntervalTicks = this.silentinterval.nextInt(flag3);
-               boolean flag4 = true;
-               this.currentDecreaseFactor = this.silencedecreasefactor.nextValue(flag4);
-               boolean flag5 = true;
-               this.silencestrength.nextValue(flag5);
+               this.remainingIntervalTicks = this.silentinterval.nextInt(true);
+               this.currentDecreaseFactor = this.silencedecreasefactor.nextValue(true);
+               this.silencestrength.nextValue(true);
             }
          }
 
@@ -81,43 +76,29 @@ public class RotationSilenceController {
 
    public RotationSilenceController(UNoise3SettingContext uNoise3SettingContext, boolean flag) {
        super();
-      DoubleValue doubleValue = new DoubleValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_silence", uNoise3SettingContext.getParentGroup());
-      String str = "Silence";
-      DoubleValue doubleValue2 = (DoubleValue)doubleValue.withDisplayName(str);
+      SettingGroup doubleValue2 = (SettingGroup)new SettingGroup(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_silence", uNoise3SettingContext.getParentGroup()).withDisplayName("Silence");
       if (!flag) {
          BooleanValue booleanValue = new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_allowforsilence", false, doubleValue2);
-         String str2 = "Enable Silence";
-         this.allowforsilence = (BooleanValue)booleanValue.withDisplayName(str2);
+         this.allowforsilence = (BooleanValue)booleanValue.withDisplayName("Enable Silence");
          booleanValue = new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_synchronizesilence", true, doubleValue2);
-         String str3 = "Synchronize Silence";
-         booleanValue = (BooleanValue)booleanValue.withDisplayName(str3);
+         booleanValue = (BooleanValue)booleanValue.withDisplayName("Synchronize Silence");
          BooleanValue allowforsilence2 = this.allowforsilence;
          this.allowforsilence.getClass();
-         BooleanValue booleanValue2 = allowforsilence2;
-         SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-         this.synchronizesilence = (BooleanValue)booleanValue.withVisibility(condition);
+         this.synchronizesilence = (BooleanValue)booleanValue.withVisibility(() -> allowforsilence2.getValue());
       }
 
       SettingVisibilityCondition condition2 = () -> this.areSilenceSettingsVisible(flag);
       RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_silentinterval", 1.0, 1.0, 1.0, 20.0, 0, doubleValue2);
-      String str4 = "Silent Interval Length";
-      this.silentinterval = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str4)).withVisibility(condition2);
+      this.silentinterval = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Silent Interval Length")).withVisibility(condition2);
       randomizedRangeSettings = (RandomizedRangeSettings)(new RandomizedRangeSettings(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_nonsilentinterval", 3.0, 5.0, 0.0, 40.0, 0, doubleValue2))
          .withVisibility(condition2);
-      String str5 = "Loud interval";
-      this.nonsilentinterval = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str5);
+      this.nonsilentinterval = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Loud interval");
       randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_silencestrength", 1.0, 1.0, 0.0, 1.0, 2, doubleValue2);
-      String str6 = "Silence Strength";
-      this.silencestrength = ((RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str6)).withVisibility(condition2)).withoutNotInARow();
+      this.silencestrength = ((RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Silence Strength")).withVisibility(condition2)).withoutNotInARow();
       randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_silencedecreasefactor", 0.0, 0.0, 0.0, 1.0, 2, doubleValue2);
-      String str7 = "Silence Decrease Factor";
-      this.silencedecreasefactor = ((RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str7)).withVisibility(condition2)).withoutNotInARow();
-      BooleanValue booleanValue3 = new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_keepticking", true, doubleValue2);
-      String str8 = "Keep Ticking";
-      this.keepticking = (BooleanValue)((BooleanValue)booleanValue3.withDisplayName(str8)).withVisibility(condition2);
-      BooleanValue booleanValue4 = new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_shutup", false, doubleValue2);
-      String str9 = "Be silent even if not on target";
-      this.shutup = (BooleanValue)((BooleanValue)booleanValue4.withDisplayName(str9)).withVisibility(condition2);
+      this.silencedecreasefactor = ((RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Silence Decrease Factor")).withVisibility(condition2)).withoutNotInARow();
+      this.keepticking = (BooleanValue)((BooleanValue)new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_keepticking", true, doubleValue2).withDisplayName("Keep Ticking")).withVisibility(condition2);
+      this.shutup = (BooleanValue)((BooleanValue)new BooleanValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_shutup", false, doubleValue2).withDisplayName("Be silent even if not on target")).withVisibility(condition2);
    }
 
 }

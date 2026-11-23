@@ -206,8 +206,7 @@ public class GuiTextField extends Gui {
          }
 
          int width2 = this.getWidth();
-         String str = this.fontRendererInstance.trimStringToWidth(this.text.substring(this.lineScrollOffset), width2);
-         int n2 = str.length() + this.lineScrollOffset;
+         int n2 = this.fontRendererInstance.trimStringToWidth(this.text.substring(this.lineScrollOffset), width2).length() + this.lineScrollOffset;
          if (n == this.lineScrollOffset) {
             this.lineScrollOffset = this.lineScrollOffset - this.fontRendererInstance.trimStringToWidth(this.text, width2, true).length();
          }
@@ -435,8 +434,7 @@ public class GuiTextField extends Gui {
          }
 
          if (n3 != n2) {
-            int n8 = n4 + this.fontRendererInstance.getStringWidth(str.substring(0, n3));
-            this.drawCursorVertical(n7, n5 - 1, n8 - 1, n5 + 1 + this.fontRendererInstance.FONT_HEIGHT);
+            this.drawCursorVertical(n7, n5 - 1, (n4 + this.fontRendererInstance.getStringWidth(str.substring(0, n3))) - 1, n5 + 1 + this.fontRendererInstance.FONT_HEIGHT);
          }
       }
    }

@@ -238,8 +238,7 @@ public class BlockDoor extends Block {
          return true;
       } else {
          BlockPos pos2 = state.getValue(HALF) == BlockDoor.EnumDoorHalf.LOWER ? pos : pos.down();
-         IBlockState state2 = pos.equals(pos2) ? state : world.getBlockState(pos2);
-         return state2.getBlock() == this;
+         return (pos.equals(pos2) ? state : world.getBlockState(pos2)).getBlock() == this;
       }
    }
 

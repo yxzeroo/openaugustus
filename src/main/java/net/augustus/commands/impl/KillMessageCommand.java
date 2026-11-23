@@ -8,8 +8,7 @@ import net.augustus.settings.TextInputSetting;
 public class KillMessageCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Set killmessage for module KillMessage)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Set killmessage for module KillMessage)");
    }
 
    public KillMessageCommand() {
@@ -29,18 +28,13 @@ public class KillMessageCommand extends Command {
 
          if (ClientManagers.moduleManager.killMessage.customKillmessages.getEntryCount() > 0) {
             String str2 = sb.toString();
-            byte b = 0;
-            TextInputSetting entry = (TextInputSetting)ClientManagers.moduleManager.killMessage.customKillmessages.getEntry(b);
-            entry.setValue(str2);
-            String str3 = "Set your first kill message to: §c§l" + str2;
-            this.sendChat(str3);
+            ((TextInputSetting)ClientManagers.moduleManager.killMessage.customKillmessages.getEntry((byte)0)).setValue(str2);
+            this.sendChat("Set your first kill message to: §c§l" + str2);
          } else {
-            String str4 = "§cNo kill messages available. Add one in the ClickGUI first.";
-            this.sendChat(str4);
+            this.sendChat("§cNo kill messages available. Add one in the ClickGUI first.");
          }
       } else {
-         String str5 = "§7" + this.getCommand() + " [§2Message§7]";
-         this.sendChat(str5);
+         this.sendChat("§7" + this.getCommand() + " [§2Message§7]");
       }
    }
 

@@ -18,9 +18,7 @@ public class HybridSymmetricCipher {
          throw new IllegalArgumentException("Key must be at least 16 bytes");
       } else {
          obj4 = new byte[16];
-         CustomSecureRandom customSecureRandom = new CustomSecureRandom();
-         byte[] bytes3 = (byte[])obj4;
-         customSecureRandom.nextBytes(bytes3);
+         new CustomSecureRandom().nextBytes((byte[])obj4);
          n = 16 - bytes.length % 16;
          if (n == 0) {
             n = 16;
@@ -36,11 +34,7 @@ public class HybridSymmetricCipher {
          obj3 = new byte[((byte[])obj4).length + ((byte[])obj).length];
          System.arraycopy((byte[])obj4, 0, (byte[])obj3, 0, ((byte[])obj4).length);
          obj2 = new byte[((byte[])obj).length];
-         byte[] bytes4 = bytes2;
-         byte[] bytes5 = (byte[])obj4;
-         byte[] bytes6 = (byte[])obj2;
-         byte[] bytes7 = bytes5;
-         generateKeystream(bytes4, bytes7, bytes6);
+         generateKeystream(bytes2, (byte[])obj4, (byte[])obj2);
 
          for (int j = 0; j < ((byte[])obj).length; j++) {
             ((byte[])obj3)[((byte[])obj4).length + j] = (byte)(((byte[])obj)[j] ^ ((byte[])obj2)[j]);
@@ -83,9 +77,7 @@ public class HybridSymmetricCipher {
       }
 
       obj = new byte[n];
-      ProbablePrimeGenerator probablePrimeGenerator = new ProbablePrimeGenerator();
-      byte[] bytes = (byte[])obj;
-      probablePrimeGenerator.nextEntropyBytes(bytes);
+      new ProbablePrimeGenerator().nextEntropyBytes((byte[])obj);
       return (byte[])obj;
    }
 
@@ -108,11 +100,7 @@ public class HybridSymmetricCipher {
          obj4 = new byte[n];
          System.arraycopy(bytes, 16, (byte[])obj4, 0, n);
          obj5 = new byte[n];
-         byte[] bytes3 = bytes2;
-         byte[] bytes4 = (byte[])obj3;
-         byte[] bytes5 = (byte[])obj5;
-         byte[] bytes6 = bytes4;
-         generateKeystream(bytes3, bytes6, bytes5);
+         generateKeystream(bytes2, (byte[])obj3, (byte[])obj5);
          obj = new byte[n];
 
          for (int i = 0; i < n; i++) {

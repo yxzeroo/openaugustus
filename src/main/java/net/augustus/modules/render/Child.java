@@ -24,15 +24,12 @@ public class Child extends Module implements OrientCameraListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 3;
-      byte b2 = 24;
-      this.toggleEventSubscription(b2, b);
+      this.toggleEventSubscription((byte)24, (byte)3);
    }
 
    public void onOrientCamera(EventOrientCamera event) {
       if (this.editEyeHeight.getValue()) {
-         float f = 0.85F;
-         event.setEyeHeight(f);
+         event.setEyeHeight(0.85F);
       }
    }
 

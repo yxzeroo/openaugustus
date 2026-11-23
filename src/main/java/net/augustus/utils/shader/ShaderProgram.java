@@ -76,8 +76,7 @@ public class ShaderProgram {
    }
 
    public void bindTextureUniform(String str, Framebuffer framebuffer) {
-      int size = this.savedTextureBindings.size();
-      this.setUniform1i(str, size);
+      this.setUniform1i(str, this.savedTextureBindings.size());
       GlStateManager.setActiveTexture(33984 + this.savedTextureBindings.size());
       this.savedTextureBindings.add(GL11.glGetInteger(32873));
       GlStateManager.bindTexture(framebuffer.framebufferTexture);

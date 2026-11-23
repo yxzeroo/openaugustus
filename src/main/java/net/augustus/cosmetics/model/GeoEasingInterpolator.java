@@ -14,7 +14,6 @@ public class GeoEasingInterpolator {
    }
 
    public static float lerpValues(GeoAnimationPoint geoAnimationPoint, GeoEasingType geoEasingType, UnaryFunction unaryFunction) {
-      int[] flowState = GeoFunctionMemoizer.getFlowState();
       if (geoAnimationPoint.currentTick >= geoAnimationPoint.animationEndTick) {
          return geoAnimationPoint.animationEndValue.floatValue();
       } else if (geoAnimationPoint.currentTick == 0.0 && geoAnimationPoint.animationEndTick == 0.0) {
@@ -27,10 +26,7 @@ public class GeoEasingInterpolator {
             geoEasingType = geoAnimationPoint.keyframe.easingType;
          }
 
-         double d2 = geoAnimationPoint.currentTick / geoAnimationPoint.animationEndTick;
-         List list = geoAnimationPoint.keyframe == null ? null : geoAnimationPoint.keyframe.easingArgs;
-         double d3 = GeoEasingManager.ease(d2, geoEasingType, list);
-         return lerpFloatValues(d3, geoAnimationPoint.animationStartValue, geoAnimationPoint.animationEndValue);
+         return lerpFloatValues(GeoEasingManager.ease(geoAnimationPoint.currentTick / geoAnimationPoint.animationEndTick, geoEasingType, geoAnimationPoint.keyframe == null ? null : geoAnimationPoint.keyframe.easingArgs), geoAnimationPoint.animationStartValue, geoAnimationPoint.animationEndValue);
       }
    }
 }

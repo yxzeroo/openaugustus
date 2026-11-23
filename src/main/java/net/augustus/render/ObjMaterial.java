@@ -15,7 +15,6 @@ public class ObjMaterial {
    public String name;
 
    public ObjMaterial() {
-      ObjModelLoader.getLoaderStateFlags();
       this.diffuseColor = new Vector3f(1.0F, 1.0F, 1.0F);
       this.specularColor = new Vector3f(1.0F, 1.0F, 1.0F);
       this.emissiveColor = new Vector3f(0.0F, 0.0F, 0.0F);

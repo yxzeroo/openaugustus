@@ -174,8 +174,7 @@ public class Chunk {
       for (int i = 0; i < 16; i++) {
          for (int j = 0; j < 16; j++) {
             for (int k = 0; k < s; k++) {
-               int n3 = i * s * 16 | j * s | k;
-               IBlockState blockState = chunkPrimer.getBlockState(n3);
+               IBlockState blockState = chunkPrimer.getBlockState(i * s * 16 | j * s | k);
                if (blockState.getBlock().getMaterial() != Material.air) {
                   int n4 = k >> 4;
                   if (this.storageArrays[n4] == null) {
@@ -271,8 +270,7 @@ public class Chunk {
       try {
          return this.getBlock0(n & 15, n2, n3 & 15);
       } catch (ReportedException e) {
-         CrashReportCategory crashReportCategory = e.getCrashReport().makeCategory("Block being got");
-         crashReportCategory.addCrashSectionCallable("Location", new Chunk.ValueCallable(this, n, n2, n3));
+         e.getCrashReport().makeCategory("Block being got").addCrashSectionCallable("Location", new Chunk.ValueCallable(this, n, n2, n3));
          throw e;
       }
    }
@@ -286,8 +284,7 @@ public class Chunk {
             this.precipitationHeightMap[i + (j << 4)] = -999;
 
             for (int k = topFilledSegment + 16; k > 0; k--) {
-               Block block0 = this.getBlock0(i, k - 1, j);
-               if (block0.getLightOpacity() != 0) {
+               if (this.getBlock0(i, k - 1, j).getLightOpacity() != 0) {
                   this.heightMap[j << 4 | i] = k;
                   if (k < this.heightMapMinimum) {
                      this.heightMapMinimum = k;
@@ -469,9 +466,7 @@ public class Chunk {
    }
 
    public BlockPos getPrecipitationHeight(BlockPos pos) {
-      int n = pos.getX() & 15;
-      int n2 = pos.getZ() & 15;
-      int n3 = n | n2 << 4;
+      int n3 = (pos.getX() & 15) | (pos.getZ() & 15) << 4;
       int x = pos.getX();
       int n4 = this.precipitationHeightMap[n3];
       int z = pos.getZ();
@@ -480,8 +475,7 @@ public class Chunk {
          int n5 = -1;
 
          while (n4 > 0 && n5 == -1) {
-            Block block = this.getBlock(x, n4, z);
-            Material material = block.getMaterial();
+            Material material = this.getBlock(x, n4, z).getMaterial();
             if (!material.blocksMovement() && !material.isLiquid()) {
                n4--;
             } else {
@@ -788,7 +782,6 @@ public class Chunk {
 
    public void enqueueRelightChecks() {
       int n = this.xPosition << 4;
-      byte b = 0;
       int n2 = this.zPosition << 4;
 
       for (int i = 0; i < 8; i++) {
@@ -803,7 +796,7 @@ public class Chunk {
 
          for (int j = 0; j < 16; j++) {
             int n6 = n + n4;
-            int n7 = b + (n3 << 4) + j;
+            int n7 = ((byte)0) + (n3 << 4) + j;
             int n8 = n2 + n5;
             boolean flag = j == 0 || j == 15 || n4 == 0 || n4 == 15 || n5 == 0 || n5 == 15;
             if (this.storageArrays[n3] == null && flag
@@ -878,8 +871,7 @@ public class Chunk {
       int n4 = n2 & 15;
       int n5 = this.blockBiomeArray[n4 << 4 | n3] & 255;
       if (n5 == 255) {
-         BiomeGenBase biome = worldChunkManager.getBiome(n, n2, BiomeGenBase.plains);
-         n5 = biome.biomeID;
+         n5 = worldChunkManager.getBiome(n, n2, BiomeGenBase.plains).biomeID;
          this.blockBiomeArray[n4 << 4 | n3] = (byte)(n5 & 0xFF);
       }
 
@@ -958,17 +950,14 @@ public class Chunk {
    }
 
    public int getPrecipitationHeightY(int n, int n2) {
-      int n3 = n & 15;
-      int n4 = n2 & 15;
-      int n5 = n3 | n4 << 4;
+      int n5 = (n & 15) | (n2 & 15) << 4;
       int n6 = this.precipitationHeightMap[n5];
       if (n6 == -999) {
          n6 = this.getTopFilledSegment() + 15;
          int n7 = -1;
 
          while (n6 > 0 && n7 == -1) {
-            Block block = this.getBlock(n, n6, n2);
-            Material material = block.getMaterial();
+            Material material = this.getBlock(n, n6, n2).getMaterial();
             if (!material.blocksMovement() && !material.isLiquid()) {
                n6--;
             } else {
@@ -1161,18 +1150,14 @@ public class Chunk {
             if (pos.getY() >= 0 && pos.getY() >> 4 < this.storageArrays.length) {
                ExtendedBlockStorage extendedBlockStorage = this.storageArrays[pos.getY() >> 4];
                if (extendedBlockStorage != null) {
-                  int n = pos.getX() & 15;
-                  int n2 = pos.getY() & 15;
-                  int n3 = pos.getZ() & 15;
-                  return extendedBlockStorage.get(n, n2, n3);
+                  return extendedBlockStorage.get(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
                }
             }
 
             return Blocks.air.getDefaultState();
          } catch (Throwable e) {
             CrashReport crashReport = CrashReport.makeCrashReport(e, "Getting block state");
-            CrashReportCategory crashReportCategory = crashReport.makeCategory("Block being got");
-            crashReportCategory.addCrashSectionCallable("Location", new Chunk.ValueCallable3(this, pos));
+            crashReport.makeCategory("Block being got").addCrashSectionCallable("Location", new Chunk.ValueCallable3(this, pos));
             throw new ReportedException(crashReport);
          }
       }
@@ -1182,8 +1167,7 @@ public class Chunk {
       try {
          return this.getBlock0(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
       } catch (ReportedException e) {
-         CrashReportCategory crashReportCategory = e.getCrashReport().makeCategory("Block being got");
-         crashReportCategory.addCrashSectionCallable("Location", new Chunk.ValueCallable2(this, pos));
+         e.getCrashReport().makeCategory("Block being got").addCrashSectionCallable("Location", new Chunk.ValueCallable2(this, pos));
          throw e;
       }
    }
@@ -1202,10 +1186,7 @@ public class Chunk {
       if (n2 >= 0 && n2 >> 4 < this.storageArrays.length) {
          ExtendedBlockStorage extendedBlockStorage = this.storageArrays[n2 >> 4];
          if (extendedBlockStorage != null) {
-            int n4 = n & 15;
-            int n5 = n2 & 15;
-            int n6 = n3 & 15;
-            return extendedBlockStorage.get(n4, n5, n6);
+            return extendedBlockStorage.get(n & 15, n2 & 15, n3 & 15);
          }
       }
 

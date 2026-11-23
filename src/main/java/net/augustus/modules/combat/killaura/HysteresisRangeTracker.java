@@ -85,7 +85,6 @@ public class HysteresisRangeTracker implements MC {
    }
 
    public void updateRange(EntityLivingBase entity, EntityLivingBase entity2, RandomizedRangeSettings randomizedRangeSettings) {
-      double d = entity != null ? (double)mc.thePlayer.getDistanceToEntityBox(entity) : 0.0;
-      this.updateRangeWithDistance(entity, entity2, randomizedRangeSettings, d);
+      this.updateRangeWithDistance(entity, entity2, randomizedRangeSettings, entity != null ? (double)mc.thePlayer.getDistanceToEntityBox(entity) : 0.0);
    }
 }

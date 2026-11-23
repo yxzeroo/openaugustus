@@ -56,8 +56,7 @@ public final class HypotMath {
          }
 
          int exponent = Math.getExponent(d);
-         int exponent2 = Math.getExponent(d2);
-         if (exponent > exponent2 + 27) {
+         if (exponent > Math.getExponent(d2) + 27) {
             return d;
          } else {
             int n = 0;

@@ -16,8 +16,7 @@ public class EventBlockPlace extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      BlockPlaceListener listener = (BlockPlaceListener)obj;
-      this.call2(listener);
+      this.call2((BlockPlaceListener)obj);
    }
 
    public void reset(BlockPlaceStage blockPlaceStage) {

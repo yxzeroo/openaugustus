@@ -185,9 +185,7 @@ public abstract class EntityLivingBase extends Entity {
       if (f == 1.0F) {
          return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
       } else {
-         float f2 = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f;
-         float f3 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * f;
-         return this.getVectorForRotation(f2, f3);
+         return this.getVectorForRotation(this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f, this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * f);
       }
    }
 
@@ -384,10 +382,7 @@ public abstract class EntityLivingBase extends Entity {
          return f;
       } else {
          if (this.isPotionActive(Potion.resistance) && damageSource != DamageSource.outOfWorld) {
-            int n = (this.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5;
-            int n2 = 25 - n;
-            float f2 = f * (float)n2;
-            f = f2 / 25.0F;
+            f = (f * (float)(25 - ((this.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5))) / 25.0F;
          }
 
          if (f <= 0.0F) {
@@ -399,9 +394,7 @@ public abstract class EntityLivingBase extends Entity {
             }
 
             if (n3 > 0 && n3 <= 20) {
-               int n4 = 25 - n3;
-               float f3 = f * (float)n4;
-               f = f3 / 25.0F;
+               f = (f * (float)(25 - n3)) / 25.0F;
             }
 
             return f;
@@ -679,8 +672,7 @@ public abstract class EntityLivingBase extends Entity {
          NBTTagList tagList = tag.getTagList("ActiveEffects", 10);
 
          for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound compoundTagAt = tagList.getCompoundTagAt(i);
-            PotionEffect potionEffect = PotionEffect.readCustomPotionEffectFromNBT(compoundTagAt);
+            PotionEffect potionEffect = PotionEffect.readCustomPotionEffectFromNBT(tagList.getCompoundTagAt(i));
             if (potionEffect != null) {
                this.activePotionsMap.put(potionEffect.getPotionID(), potionEffect);
             }
@@ -911,8 +903,7 @@ public abstract class EntityLivingBase extends Entity {
 
    public float applyArmorCalculations(DamageSource damageSource, float f) {
       if (!damageSource.isUnblockable()) {
-         int n = 25 - this.getTotalArmorValue();
-         float f2 = f * (float)n;
+         float f2 = f * (float)(25 - this.getTotalArmorValue());
          this.damageArmor(f);
          f = f2 / 25.0F;
       }
@@ -1017,8 +1008,7 @@ public abstract class EntityLivingBase extends Entity {
          );
       if (!list.isEmpty()) {
          for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity)list.get(i);
-            this.collideWithEntity(entity);
+            this.collideWithEntity((Entity)list.get(i));
          }
       }
    }
@@ -1046,10 +1036,9 @@ public abstract class EntityLivingBase extends Entity {
             d - (double)f, d2, d3 - (double)f, d + (double)f, d2 + (double)height2, d3 + (double)f
          );
          if (this == Minecraft.getMinecraft().thePlayer) {
-            boolean flag = false;
             float rotationPitch2 = this.rotationPitch;
             float rotationYaw2 = this.rotationYaw;
-            ClientManagers.moduleManager.killAura.rotationUtil.bezierRotationEngine.syncCurrentRotation(rotationYaw2, rotationPitch2, flag);
+            ClientManagers.moduleManager.killAura.rotationUtil.bezierRotationEngine.syncCurrentRotation(rotationYaw2, rotationPitch2, false);
          }
       }
 
@@ -1065,9 +1054,7 @@ public abstract class EntityLivingBase extends Entity {
          this.setPosition(d4, d5, d6);
          this.setRotation(this.rotationYaw, this.rotationPitch);
          if (this instanceof EntityPlayerSP) {
-            RotationController rotationController = Augustus.getInstance().getRotationController();
-            Rotation rotation = new Rotation(this.rotationYaw, this.rotationPitch);
-            rotationController.forceRotation(rotation);
+            Augustus.getInstance().getRotationController().forceRotation(new Rotation(this.rotationYaw, this.rotationPitch));
          }
       } else if (!this.isServerWorld()) {
          this.motionX *= 0.98;
@@ -1076,9 +1063,7 @@ public abstract class EntityLivingBase extends Entity {
       }
 
       if (this.ticksExisted > 5 && Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
-         BoundedHistoryList motionSnapshotHistory2 = this.motionSnapshotHistory;
-         EntityMotionSnapshot entityMotionSnapshot = new EntityMotionSnapshot(this);
-         motionSnapshotHistory2.add(entityMotionSnapshot);
+         this.motionSnapshotHistory.add(new EntityMotionSnapshot(this));
       }
 
       double motionZeroThreshold = ViaAugustus.getMotionZeroThreshold();
@@ -1230,8 +1215,7 @@ public abstract class EntityLivingBase extends Entity {
          this.potionsNeedUpdate = false;
       }
 
-      EventPotionParticle event = PotionParticleListener.onPotionParticle2(this);
-      if (!event.isCancelled()) {
+      if (!PotionParticleListener.onPotionParticle2(this).isCancelled()) {
          int watchableObjectInt = this.dataWatcher.getWatchableObjectInt(7);
          boolean flag = this.dataWatcher.getWatchableObjectByte(8) > 0;
          if (watchableObjectInt > 0) {
@@ -1395,11 +1379,9 @@ public abstract class EntityLivingBase extends Entity {
       if (this instanceof EntityPlayerSP) {
          YawPitchHelper yawPitchHelper = Augustus.getInstance().getYawPitchHelper();
          float realLastYaw = yawPitchHelper.realLastYaw;
-         float realYaw = yawPitchHelper.realYaw;
-         yawPitchHelper.realLastYaw = yawPitchHelper.wrapRelativeYaw(realYaw, realLastYaw);
+         yawPitchHelper.realLastYaw = yawPitchHelper.wrapRelativeYaw(yawPitchHelper.realYaw, realLastYaw);
          float realLastPitch = yawPitchHelper.realLastPitch;
-         float realPitch = yawPitchHelper.realPitch;
-         yawPitchHelper.realLastPitch = yawPitchHelper.wrapRelativeYaw(realPitch, realLastPitch);
+         yawPitchHelper.realLastPitch = yawPitchHelper.wrapRelativeYaw(yawPitchHelper.realPitch, realLastPitch);
       }
 
       this.lastMotionX = this.motionX;
@@ -1479,8 +1461,7 @@ public abstract class EntityLivingBase extends Entity {
                   this.recentlyHit = 100;
                   this.attackingPlayer = (EntityPlayer)entity;
                } else if (entity instanceof EntityWolf) {
-                  EntityWolf entityWolf = (EntityWolf)entity;
-                  if (entityWolf.isTamed()) {
+                  if (((EntityWolf)entity).isTamed()) {
                      this.recentlyHit = 100;
                      this.attackingPlayer = null;
                   }
@@ -1537,15 +1518,13 @@ public abstract class EntityLivingBase extends Entity {
          this.unclampedHurtTime = this.maxHurtTime = 10;
          EntityHurtListener.onEntityHurt2(this);
          this.attackedAtYaw = 0.0F;
-         String hurtSound = this.getHurtSound();
-         if (hurtSound != null) {
+         if (this.getHurtSound() != null) {
             this.playSound(this.getHurtSound(), this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
          }
 
          this.attackEntityFrom(DamageSource.generic, 0.0F);
       } else if (b == 3) {
-         String deathSound = this.getDeathSound();
-         if (deathSound != null) {
+         if (this.getDeathSound() != null) {
             this.playSound(this.getDeathSound(), this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
          }
 
@@ -1670,8 +1649,7 @@ public abstract class EntityLivingBase extends Entity {
                      this.motionY = -0.15;
                   }
 
-                  boolean flag = this.isSneaking() && this instanceof EntityPlayer;
-                  if (flag && this.motionY < 0.0) {
+                  if ((this.isSneaking() && this instanceof EntityPlayer) && this.motionY < 0.0) {
                      this.motionY = 0.0;
                   }
                }
@@ -1679,8 +1657,7 @@ public abstract class EntityLivingBase extends Entity {
                this.moveEntity(this.motionX, this.motionY, this.motionZ);
                if (this.isCollidedHorizontally && this.isOnLadder()) {
                   if (this instanceof EntityPlayerSP) {
-                     EventLadder event2 = LadderListener.onLadder2(0.2);
-                     this.motionY = event2.getMotionY();
+                     this.motionY = LadderListener.onLadder2(0.2).getMotionY();
                   } else {
                      this.motionY = 0.2;
                   }
@@ -1716,8 +1693,7 @@ public abstract class EntityLivingBase extends Entity {
                }
             }
          } else if (this instanceof EntityPlayerSP) {
-            EventSwim event3 = SwimListener.onSwim(f2, f);
-            if (!event3.isCancelled()) {
+            if (!SwimListener.onSwim(f2, f).isCancelled()) {
                double posY3 = this.posY;
                float f7 = event.getWaterHorizontalFriction();
                float f8 = 0.02F;

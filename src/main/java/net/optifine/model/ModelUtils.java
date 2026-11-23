@@ -29,8 +29,7 @@ public class ModelUtils {
 
    private static void dbgQuads(String str, List list, String str2) {
       for (Object obj : list) {
-         BakedQuad bakedQuad = (BakedQuad)obj;
-         dbgQuad(str, bakedQuad, str2);
+         dbgQuad(str, (BakedQuad)obj, str2);
       }
    }
 
@@ -54,9 +53,7 @@ public class ModelUtils {
       ArrayList list2 = new ArrayList();
 
       for (Object obj : list) {
-         BakedQuad bakedQuad = (BakedQuad)obj;
-         BakedQuad bakedQuad2 = duplicateQuad(bakedQuad);
-         list2.add(bakedQuad2);
+         list2.add(duplicateQuad((BakedQuad)obj));
       }
 
       return list2;
@@ -99,10 +96,7 @@ public class ModelUtils {
       ArrayList list2 = new ArrayList();
 
       for (int i = 0; i < values.length; i++) {
-         EnumFacing facing = values[i];
-         List faceQuads = bakedModel.getFaceQuads(facing);
-         List list3 = duplicateQuadList(faceQuads);
-         list2.add(list3);
+         list2.add(duplicateQuadList(bakedModel.getFaceQuads(values[i])));
       }
 
       return new SimpleBakedModel(list, list2, bakedModel.isAmbientOcclusion(), bakedModel.isGui3d(), bakedModel.getParticleTexture(), bakedModel.getItemCameraTransforms());

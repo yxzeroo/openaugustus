@@ -22,8 +22,8 @@ import net.augustus.Augustus;
 import net.augustus.ui.GuiIngameHook;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,18 +32,18 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class HUD extends Module implements RenderListener {
-   public final BooleansSetting mode;
-   public final BooleansSetting side;
-   public final BooleansSetting casing;
-   private final StringValue xPos;
-   private final StringValue yPos;
-   private final StringValue scale;
-   public final StringValue size;
-   private final StringValue newFontSize;
+   public final StringValue mode;
+   public final StringValue side;
+   public final StringValue casing;
+   private final DoubleValue xPos;
+   private final DoubleValue yPos;
+   private final DoubleValue scale;
+   public final DoubleValue size;
+   private final DoubleValue newFontSize;
    private final ColorSetting color2;
    private final BooleanValue backGround;
    private final BooleanValue roundedBackGround;
-   private final StringValue roundFactor;
+   private final DoubleValue roundFactor;
    private final ColorSetting backgroundColor;
    private final BlurShadowSettings hud;
    private final String upperCaseClientName;
@@ -56,39 +56,25 @@ public class HUD extends Module implements RenderListener {
 
    public HUD() {
        super("HUD", "ÜberlagerungsElemente", new Color(75, 166, 91), Categorys.RENDER);
-      this.mode = new BooleansSetting(
+      this.mode = new StringValue(
          this, "Mode", "Basic", new String[]{"None", "Basic", "Other", "Simple", "Ausustus", "Xave", "Augustus", "Amogus", "Logo", "Fanart"}
       );
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Side", "Left", new String[]{"Left", "Right"});
-      SettingVisibilityCondition condition = () -> this.isSideVisible();
-      this.side = (BooleansSetting)booleansSetting.withVisibility(condition);
-      BooleansSetting booleansSetting2 = new BooleansSetting(this, "Casing", "Default", new String[]{"Default", "UpperCase", "LowerCase"});
+      this.side = (StringValue)new StringValue(this, "Side", "Left", new String[]{"Left", "Right"}).withVisibility(() -> this.isSideVisible());
+      StringValue booleansSetting2 = new StringValue(this, "Casing", "Default", new String[]{"Default", "UpperCase", "LowerCase"});
       SettingVisibilityCondition condition2 = () -> {
          return this.mode.getSelectedValue().equals("Simple");
       };
-      this.casing = (BooleansSetting)booleansSetting2.withVisibility(condition2);
-      StringValue stringValue = new StringValue(this, "X-Pos", 0.0, 0.0, 100.0, 2);
-      SettingVisibilityCondition condition3 = () -> this.isPosXVisible();
-      this.xPos = stringValue.visibleWhen(condition3);
-      StringValue stringValue2 = new StringValue(this, "Y-Pos", 0.0, 0.0, 100.0, 2);
-      SettingVisibilityCondition condition4 = () -> this.isPosYVisible();
-      this.yPos = stringValue2.visibleWhen(condition4);
-      StringValue stringValue3 = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
-      SettingVisibilityCondition condition5 = () -> this.isScaleVisible();
-      this.scale = stringValue3.visibleWhen(condition5);
-      StringValue stringValue4 = new StringValue(this, "Size", 0.6, 0.01, 2.0, 2);
-      SettingVisibilityCondition condition6 = () -> this.isImageLogoMode();
-      this.size = stringValue4.visibleWhen(condition6);
-      StringValue stringValue5 = new StringValue(this, "NewFontSize", 33.0, 16.0, 80.0, 0);
-      String str = "Size";
-      StringValue stringValue6 = stringValue5.named(str);
+      this.casing = (StringValue)booleansSetting2.withVisibility(condition2);
+      this.xPos = new DoubleValue(this, "X-Pos", 0.0, 0.0, 100.0, 2).visibleWhen(() -> this.isPosXVisible());
+      this.yPos = new DoubleValue(this, "Y-Pos", 0.0, 0.0, 100.0, 2).visibleWhen(() -> this.isPosYVisible());
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2).visibleWhen(() -> this.isScaleVisible());
+      this.size = new DoubleValue(this, "Size", 0.6, 0.01, 2.0, 2).visibleWhen(() -> this.isImageLogoMode());
+      DoubleValue stringValue6 = new DoubleValue(this, "NewFontSize", 33.0, 16.0, 80.0, 0).named("Size");
       SettingVisibilityCondition condition7 = () -> {
          return this.mode.getSelectedValue().equals("Simple");
       };
       this.newFontSize = stringValue6.visibleWhen(condition7);
-      ColorSetting colorSetting = new ColorSetting(this, "Color", Color.white);
-      SettingVisibilityCondition condition8 = () -> this.isTextColorVisible();
-      this.color2 = (ColorSetting)colorSetting.withVisibility(condition8);
+      this.color2 = (ColorSetting)new ColorSetting(this, "Color", Color.white).withVisibility(() -> this.isTextColorVisible());
       BooleanValue booleanValue = new BooleanValue(this, "BackGround", true);
       SettingVisibilityCondition condition9 = () -> {
          return this.mode.getSelectedValue().equals("Ausustus")
@@ -97,18 +83,10 @@ public class HUD extends Module implements RenderListener {
             || this.mode.getSelectedValue().equals("Simple");
       };
       this.backGround = (BooleanValue)booleanValue.withVisibility(condition9);
-      BooleanValue booleanValue2 = new BooleanValue(this, "RoundedBackGround", false);
-      SettingVisibilityCondition condition10 = () -> this.isRoundedBackgroundVisible();
-      this.roundedBackGround = (BooleanValue)booleanValue2.withVisibility(condition10);
-      StringValue stringValue7 = new StringValue(this, "RoundFactor", 2.0, 1.0, 10.0, 0);
-      SettingVisibilityCondition condition11 = () -> this.isRoundFactorVisible();
-      this.roundFactor = stringValue7.visibleWhen(condition11);
-      ColorSetting colorSetting2 = new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100));
-      SettingVisibilityCondition condition12 = () -> this.isBackgroundColorVisible();
-      this.backgroundColor = (ColorSetting)colorSetting2.withVisibility(condition12);
-      BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, "Hud");
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings2 = blurShadowSettings.withCustomShadowColor(black);
+      this.roundedBackGround = (BooleanValue)new BooleanValue(this, "RoundedBackGround", false).withVisibility(() -> this.isRoundedBackgroundVisible());
+      this.roundFactor = new DoubleValue(this, "RoundFactor", 2.0, 1.0, 10.0, 0).visibleWhen(() -> this.isRoundFactorVisible());
+      this.backgroundColor = (ColorSetting)new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100)).withVisibility(() -> this.isBackgroundColorVisible());
+      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this, "Hud").withCustomShadowColor(Color.black);
       SettingVisibilityCondition condition13 = () -> {
          return !this.mode.getSelectedValue().equals("None");
       };
@@ -132,14 +110,12 @@ public class HUD extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
    public void onRender2(float f, ScaledResolution sr) {
-      boolean isImageLogoMode = this.isImageLogoMode();
-      if (isImageLogoMode && this.hud.isBlurActive()) {
+      if (this.isImageLogoMode() && this.hud.isBlurActive()) {
          GL11.glPushMatrix();
          GL11.glScaled((double)(1.0F / (float)sr.getScaleFactor()), (double)(1.0F / (float)sr.getScaleFactor()), 1.0);
          GL11.glTranslated(this.xPos.getValue() / 100.0 * (double)mc.displayWidth, this.yPos.getValue() / 100.0 * (double)mc.displayHeight, 0.0);
@@ -177,8 +153,7 @@ public class HUD extends Module implements RenderListener {
          GlStateManager.disableBlend();
          ScaledResolution sr2 = new ScaledResolution((double)mc.displayWidth * (1.0 / d), (double)mc.displayHeight * (1.0 / d), (int)d);
          FontRenderer fontRendererObj = mc.fontRendererObj;
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "Augustus":
             case "Logo":
             case "Fanart":
@@ -201,28 +176,19 @@ public class HUD extends Module implements RenderListener {
                   BlurShadowManager.enableNormalPassOnce();
                }
 
-               RenderPassTask renderPassTask = shaderRenderPass -> mc.ingameGUI.drawTexturedModalRect(n2, -3, 0, 0, n, 256);
-               boolean flag2 = true;
-               BlurShadowManager.submitRenderTask(flag2, renderPassTask);
-               double d2 = (double)((float)(256.0 * d) + 1.0F);
-               double d3 = 1.0;
-               double d4 = d2;
-               this.updateArrayListOffset(d4, d3);
+               BlurShadowManager.submitRenderTask(true, shaderRenderPass -> mc.ingameGUI.drawTexturedModalRect(n2, -3, 0, 0, n, 256));
+               this.updateArrayListOffset((double)((float)(256.0 * d) + 1.0F), 1.0);
                break;
             case "Other":
                GL11.glPushMatrix();
                GL11.glScaled(1.5, 1.5, 1.0);
-               double d5 = (double)((int)((double)((float)fontRendererObj.FONT_HEIGHT * 1.75F + 5.0F) * 1.5));
-               this.updateArrayListOffset(d5, d);
+               this.updateArrayListOffset((double)((int)((double)((float)fontRendererObj.FONT_HEIGHT * 1.75F + 5.0F) * 1.5)), d);
                int stringWidth = fontRendererObj.getStringWidth("A");
                int stringWidth2 = fontRendererObj.getStringWidth("ugustus");
-               byte b = 0;
-               int colorInt = this.color2.getColorInt(b);
-               byte b2 = 0;
-               int colorInt2 = this.backgroundColor.getColorInt(b2);
+               int colorInt = this.color2.getColorInt((byte)0);
+               int colorInt2 = this.backgroundColor.getColorInt((byte)0);
                if (this.backGround.getValue()) {
-                  boolean isBlurActive = this.hud.isBlurActive();
-                  BlurShadowManager.enableOneShotPass(isBlurActive, this.hud.isShadowActive());
+                  BlurShadowManager.enableOneShotPass(this.hud.isBlurActive(), this.hud.isShadowActive());
                }
 
                if (flag) {
@@ -260,8 +226,7 @@ public class HUD extends Module implements RenderListener {
             case "Basic":
             case "Ausustus":
                GregorianCalendar instance = (GregorianCalendar)GregorianCalendar.getInstance();
-               Date date = new Date();
-               instance.setTime(date);
+               instance.setTime(new Date());
                int n3 = ClientManagers.moduleManager.protector.isToggled() && ClientManagers.moduleManager.protector.time.getValue() ? ClientManagers.moduleManager.protector.getFakeHour() : instance.get(10);
                String str = instance.get(12) <= 9 ? "0" + instance.get(12) : String.valueOf(instance.get(12));
                str = ClientManagers.moduleManager.protector.isToggled() && ClientManagers.moduleManager.protector.time.getValue() ? String.valueOf(ClientManagers.moduleManager.protector.getFakeMinute()) : str;
@@ -284,16 +249,12 @@ public class HUD extends Module implements RenderListener {
                String str4 = sb.append(str3).append(" ").append(Augustus.getInstance().getVersion()).toString();
                float stringWidth3 = (float)fontRendererObj.getStringWidth(str4);
                float stringWidth4 = (float)fontRendererObj.getStringWidth(str2);
-               double d6 = (double)(fontRendererObj.FONT_HEIGHT + 1);
-               this.updateArrayListOffset(d6, d);
+               this.updateArrayListOffset((double)(fontRendererObj.FONT_HEIGHT + 1), d);
                int rgb = new Color(182, 186, 189).getRGB();
-               byte b3 = 0;
-               int colorInt3 = this.color2.getColorInt(b3);
-               byte b4 = 0;
-               int colorInt4 = this.backgroundColor.getColorInt(b4);
+               int colorInt3 = this.color2.getColorInt((byte)0);
+               int colorInt4 = this.backgroundColor.getColorInt((byte)0);
                if (this.backGround.getValue()) {
-                  boolean isBlurActive2 = this.hud.isBlurActive();
-                  BlurShadowManager.enableOneShotPass(isBlurActive2, this.hud.isShadowActive());
+                  BlurShadowManager.enableOneShotPass(this.hud.isBlurActive(), this.hud.isShadowActive());
                }
 
                boolean value = this.backGround.getValue();
@@ -304,9 +265,7 @@ public class HUD extends Module implements RenderListener {
                      BlurShadowManager.submitRenderTask(
                         false,
                         shaderRenderPass4 -> {
-                           BlurShadowSettings hud2 = this.hud;
-                           int n4 = ColorUtil.resolvePassColor(shaderRenderPass4, colorInt4);
-                           int n5 = hud2.resolvePassColor(shaderRenderPass4, n4);
+                           int n5 = this.hud.resolvePassColor(shaderRenderPass4, ColorUtil.resolvePassColor(shaderRenderPass4, colorInt4));
                            if (value2) {
                               RenderUtil.drawRoundedRect(
                                  0.0F,
@@ -331,9 +290,7 @@ public class HUD extends Module implements RenderListener {
                      BlurShadowManager.submitRenderTask(
                         false,
                         shaderRenderPass5 -> {
-                           BlurShadowSettings hud3 = this.hud;
-                           int n6 = ColorUtil.resolvePassColor(shaderRenderPass5, colorInt4);
-                           int n7 = hud3.resolvePassColor(shaderRenderPass5, n6);
+                           int n7 = this.hud.resolvePassColor(shaderRenderPass5, ColorUtil.resolvePassColor(shaderRenderPass5, colorInt4));
                            if (value2) {
                               RenderUtil.drawRoundedRect(
                                  (float)sr2.getScaledWidth() - stringWidth4 - 3.0F - stringWidth3,
@@ -362,32 +319,22 @@ public class HUD extends Module implements RenderListener {
                }
                break;
             case "Xave":
-               byte b5 = 0;
-               int colorInt5 = this.color2.getColorInt(b5);
+               int colorInt5 = this.color2.getColorInt((byte)0);
                BlurShadowManager.enableOneShotPass(false, this.hud.isShadowActive());
                if (flag) {
-                  int n8 = colorInt5;
                   BlurShadowManager.submitRenderTask(false, shaderRenderPass6 -> {
                      CustomFontUtil esp60 = FontManager.esp60;
                      String upperCaseClientName2 = this.upperCaseClientName;
-                     int n9 = this.hud.resolvePassColor(shaderRenderPass6, n8);
+                     int n9 = this.hud.resolvePassColor(shaderRenderPass6, colorInt5);
                      double d7 = 2.0;
-                     double d8 = 2.0;
-                     String str5 = upperCaseClientName2;
-                     esp60.drawStringWithShadow(str5, d8, d7, n9);
+                     esp60.drawStringWithShadow(upperCaseClientName2, 2.0, d7, n9);
                   });
                } else {
-                  int n10 = colorInt5;
-                  RenderPassTask renderPassTask2 = shaderRenderPass7 -> this.renderXaveRightText(sr2, n10, shaderRenderPass7);
-                  boolean flag3 = false;
-                  BlurShadowManager.submitRenderTask(flag3, renderPassTask2);
+                  BlurShadowManager.submitRenderTask(false, shaderRenderPass7 -> this.renderXaveRightText(sr2, colorInt5, shaderRenderPass7));
                }
 
                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-               double d9 = (double)FontManager.esp60.getFontHeight() * d + (double)FontManager.esp16.getFontHeight() / 1.25;
-               double d10 = 1.0;
-               double d11 = d9;
-               this.updateArrayListOffset(d11, d10);
+               this.updateArrayListOffset((double)FontManager.esp60.getFontHeight() * d + (double)FontManager.esp16.getFontHeight() / 1.25, 1.0);
                break;
             case "Simple":
                int n11 = MathHelper.clamp_int((int)this.newFontSize.getValue(), 1, 300);
@@ -405,23 +352,17 @@ public class HUD extends Module implements RenderListener {
                }
 
                this.lastSimpleFontSize = n11;
-               byte b6 = 0;
-               int colorInt6 = this.color2.getColorInt(b6);
-               boolean isBlurActive3 = this.hud.isBlurActive();
-               BlurShadowManager.enableOneShotPass(isBlurActive3, this.hud.isShadowActive());
+               int colorInt6 = this.color2.getColorInt((byte)0);
+               BlurShadowManager.enableOneShotPass(this.hud.isBlurActive(), this.hud.isShadowActive());
                float stringWidth5 = FontManager.rubikBoldHud.getStringWidth(str6);
                float f3 = FontManager.rubikBoldHud.getStringHeight(str6) * 1.12F;
                if (flag) {
                   if (this.backGround.getValue()) {
-                     byte b7 = 0;
-                     int colorInt7 = this.backgroundColor.getColorInt(b7);
+                     int colorInt7 = this.backgroundColor.getColorInt((byte)0);
                      float f4 = f3;
                      float f5 = stringWidth5;
-                     int n12 = colorInt7;
                      BlurShadowManager.submitRenderTask(false, shaderRenderPass8 -> {
-                        BlurShadowSettings hud4 = this.hud;
-                        int n13 = ColorUtil.resolvePassColor(shaderRenderPass8, n12);
-                        int n14 = hud4.resolvePassColor(shaderRenderPass8, n13);
+                        int n14 = this.hud.resolvePassColor(shaderRenderPass8, ColorUtil.resolvePassColor(shaderRenderPass8, colorInt7));
                         if (this.roundedBackGround.getValue()) {
                            RenderUtil.drawRoundedRect(0.0F, 0.0F, f5 + 6.0F, f4, (float)this.roundFactor.getValue(), 1, n14);
                         } else {
@@ -431,48 +372,35 @@ public class HUD extends Module implements RenderListener {
                   }
 
                   BlurShadowManager.enableOneShotPass(false, this.hud.isShadowActive() && !this.backGround.getValue());
-                  int n15 = colorInt6;
                   String str7 = str6;
-                  BlurShadowManager.submitRenderTask(false, shaderRenderPass9 -> this.renderSimpleLeftText(str7, n15, shaderRenderPass9));
+                  BlurShadowManager.submitRenderTask(false, shaderRenderPass9 -> this.renderSimpleLeftText(str7, colorInt6, shaderRenderPass9));
                } else {
                   if (this.backGround.getValue()) {
-                     byte b8 = 0;
-                     int colorInt8 = this.backgroundColor.getColorInt(b8);
-                     float f6 = f3;
-                     float f7 = stringWidth5;
-                     BlurShadowManager.submitRenderTask(false, shaderRenderPass10 -> this.renderSimpleRightBackground(colorInt8, f7, f6, shaderRenderPass10));
+                     int colorInt8 = this.backgroundColor.getColorInt((byte)0);
+                     BlurShadowManager.submitRenderTask(false, shaderRenderPass10 -> this.renderSimpleRightBackground(colorInt8, stringWidth5, f3, shaderRenderPass10));
                   }
 
                   BlurShadowManager.enableOneShotPass(false, this.hud.isShadowActive() && !this.backGround.getValue());
-                  int n16 = colorInt6;
-                  float f8 = stringWidth5;
                   String str8 = str6;
                   BlurShadowManager.submitRenderTask(false, shaderRenderPass11 -> {
                      DynamicFontUtil rubikBoldHud = FontManager.rubikBoldHud;
-                     double d12 = (double)((float)mc.displayWidth - f8 - 3.0F);
-                     int n17 = this.hud.resolvePassColor(shaderRenderPass11, n16);
-                     double d13 = 0.0;
-                     double d14 = d12;
-                     rubikBoldHud.drawString(str8, d14, d13, n17);
+                     double d12 = (double)((float)mc.displayWidth - stringWidth5 - 3.0F);
+                     int n17 = this.hud.resolvePassColor(shaderRenderPass11, colorInt6);
+                     rubikBoldHud.drawString(str8, d12, 0.0, n17);
                   });
                }
 
-               double d15 = (double)f3 + (double)f3 / 1.25;
-               double d16 = 1.0;
-               double d17 = d15;
-               this.updateArrayListOffset(d17, d16);
+               this.updateArrayListOffset((double)f3 + (double)f3 / 1.25, 1.0);
                break;
             default:
                double d18 = 1.0;
-               double d19 = 0.0;
-               this.updateArrayListOffset(d19, d18);
+               this.updateArrayListOffset(0.0, d18);
          }
 
          GL11.glPopMatrix();
       } else {
          double d20 = 1.0;
-         double d21 = 0.0;
-         this.updateArrayListOffset(d21, d20);
+         this.updateArrayListOffset(0.0, d20);
       }
 
       RenderUtil.resetGlColorState();
@@ -494,9 +422,7 @@ public class HUD extends Module implements RenderListener {
    }
 
    private void renderSimpleRightBackground(int n, float f, float f2, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings hud2 = this.hud;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      int n3 = hud2.resolvePassColor(shaderRenderPass, n2);
+      int n3 = this.hud.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n));
       if (this.roundedBackGround.getValue()) {
          RenderUtil.drawRoundedRect(
             (float)mc.displayWidth - f - 6.0F, 0.0F, (float)mc.displayWidth, f2, (float)this.roundFactor.getValue(), 1, n3
@@ -510,9 +436,7 @@ public class HUD extends Module implements RenderListener {
       DynamicFontUtil rubikBoldHud = FontManager.rubikBoldHud;
       double d = (double)(-1.0F * ((float)this.lastSimpleFontSize / 80.0F));
       int n2 = this.hud.resolvePassColor(shaderRenderPass, n);
-      double d2 = d;
-      double d3 = 3.0;
-      rubikBoldHud.drawString(str, d3, d2, n2);
+      rubikBoldHud.drawString(str, 3.0, d, n2);
    }
 
    private void renderXaveRightText(ScaledResolution sr, int n, ShaderRenderPass shaderRenderPass) {
@@ -522,16 +446,11 @@ public class HUD extends Module implements RenderListener {
       String upperCaseClientName3 = this.upperCaseClientName;
       double d = (double)(scaledWidth - FontManager.esp60.getStringWidth(upperCaseClientName3));
       int n2 = this.hud.resolvePassColor(shaderRenderPass, n);
-      double d2 = 4.0;
-      double d3 = d;
-      String str = upperCaseClientName2;
-      esp60.drawStringWithShadow(str, d3, d2, n2);
+      esp60.drawStringWithShadow(upperCaseClientName2, d, 4.0, n2);
    }
 
    private void renderOtherRightBackground(int n, ScaledResolution sr, int n2, int n3, FontRenderer fontRenderer, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings hud2 = this.hud;
-      int n4 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      int n5 = hud2.resolvePassColor(shaderRenderPass, n4);
+      int n5 = this.hud.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n));
       if (this.roundedBackGround.getValue()) {
          RenderUtil.drawRoundedRect(
             (float)((int)((float)sr.getScaledWidth() / 1.5F - (float)((int)((float)n2 * 1.75F + (float)n3 + 4.0F)))),
@@ -554,9 +473,7 @@ public class HUD extends Module implements RenderListener {
    }
 
    private void renderOtherLeftBackground(int n, int n2, int n3, FontRenderer fontRenderer, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings hud2 = this.hud;
-      int n4 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      int n5 = hud2.resolvePassColor(shaderRenderPass, n4);
+      int n5 = this.hud.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n));
       if (this.roundedBackGround.getValue()) {
          float value = (float)this.roundFactor.getValue();
          RenderUtil.drawRoundedRect(

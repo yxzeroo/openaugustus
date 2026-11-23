@@ -25,8 +25,7 @@ public class ItemArmorStand extends Item {
       if (facing == EnumFacing.DOWN) {
          return false;
       } else {
-         boolean isReplaceable = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
-         BlockPos pos2 = isReplaceable ? pos : pos.offset(facing);
+         BlockPos pos2 = world.getBlockState(pos).getBlock().isReplaceable(world, pos) ? pos : pos.offset(facing);
          if (!player.canPlayerEdit(pos2, facing, stack)) {
             return false;
          } else {
@@ -39,10 +38,9 @@ public class ItemArmorStand extends Item {
                double x = (double)pos2.getX();
                double y = (double)pos2.getY();
                double z = (double)pos2.getZ();
-               List list = world.getEntitiesWithinAABBExcludingEntity(
+               if (world.getEntitiesWithinAABBExcludingEntity(
                   (Entity)null, AxisAlignedBB.fromBounds(x, y, z, x + 1.0, y + 2.0, z + 1.0)
-               );
-               if (list.size() > 0) {
+               ).size() > 0) {
                   return false;
                } else {
                   if (!world.isRemote) {

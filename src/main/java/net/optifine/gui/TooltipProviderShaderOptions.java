@@ -35,16 +35,13 @@ public class TooltipProviderShaderOptions extends TooltipProviderOptions {
       if (!(button instanceof GuiButtonShaderOption)) {
          return null;
       } else {
-         GuiButtonShaderOption guiButtonShaderOption = (GuiButtonShaderOption)button;
-         ShaderOption shaderOption = guiButtonShaderOption.getShaderOption();
-         return this.makeTooltipLines2(shaderOption, n);
+         return this.makeTooltipLines2(((GuiButtonShaderOption)button).getShaderOption(), n);
       }
    }
 
    private String[] makeTooltipLines2(ShaderOption shaderOption, int n) {
       String nameText = shaderOption.getNameText();
-      String str = Config.normalize(shaderOption.getDescriptionText()).trim();
-      String[] strings = this.splitDescription(str);
+      String[] strings = this.splitDescription(Config.normalize(shaderOption.getDescriptionText()).trim());
       GameSettings gameSettings = Config.getGameSettings();
       String str2 = null;
       if (!nameText.equals(shaderOption.getName()) && gameSettings.advancedItemTooltips) {

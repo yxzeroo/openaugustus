@@ -20,9 +20,7 @@ public class ProxyConfigStorage extends AbstractIndexedFeatureConfigFile {
       ProxyManagerScreen.proxies.clear();
       ProxyManagerScreen.proxyListEntries.clear();
       super.deserializeIndexed(json);
-      ScrollBar scrollBar = ProxyManagerScreen.scrollBar;
-      int size = ProxyManagerScreen.proxies.size();
-      scrollBar.setItemCount(size);
+      ProxyManagerScreen.scrollBar.setItemCount(ProxyManagerScreen.proxies.size());
    }
 
    @Override
@@ -53,9 +51,7 @@ public class ProxyConfigStorage extends AbstractIndexedFeatureConfigFile {
 
    @Override
    public void deserialize(JsonElement elem) {
-      JsonObject json = (JsonObject)elem;
-      JsonObject json2 = json;
-      this.deserializeIndexed(json2);
+      this.deserializeIndexed((JsonObject)elem);
    }
 
    @Override

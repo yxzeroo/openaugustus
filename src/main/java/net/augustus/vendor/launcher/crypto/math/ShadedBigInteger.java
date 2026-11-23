@@ -99,7 +99,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private ShadedBigInteger(byte[] bytes, int n) {
       super();
-      int[] flowState2 = ShadedNumber.getFlowState();
       this.signum = bytes.length == 0 ? 0 : n;
       this.mag = stripLeadingZeroBytes(bytes);
       if (this.mag.length >= 67108864) {
@@ -108,7 +107,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger divide(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger.mag.length >= 80 && this.mag.length - shadedBigInteger.mag.length >= 40) {
          return this.divideBurnikelZiegler(shadedBigInteger);
       } else {
@@ -117,9 +115,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static ShadedBigInteger multiplyKaratsuba(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
-      int length = shadedBigInteger.mag.length;
-      int length2 = shadedBigInteger2.mag.length;
-      int n = (Math.max(length, length2) + 1) / 2;
+      int n = (Math.max(shadedBigInteger.mag.length, shadedBigInteger2.mag.length) + 1) / 2;
       ShadedBigInteger lower = shadedBigInteger.getLower(n);
       ShadedBigInteger upper = shadedBigInteger.getUpper(n);
       ShadedBigInteger lower2 = shadedBigInteger2.getLower(n);
@@ -127,22 +123,16 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       ShadedBigInteger shadedBigInteger3 = upper.multiply(upper2);
       ShadedBigInteger shadedBigInteger4 = lower.multiply(lower2);
       ShadedBigInteger shadedBigInteger5 = upper.add(lower);
-      ShadedBigInteger shadedBigInteger6 = upper2.add(lower2);
-      ShadedBigInteger shadedBigInteger7 = shadedBigInteger5.multiply(shadedBigInteger6);
-      int n2 = 32 * n;
-      shadedBigInteger5 = shadedBigInteger3.shiftLeft(n2);
-      ShadedBigInteger shadedBigInteger8 = shadedBigInteger7.subtract(shadedBigInteger3).subtract(shadedBigInteger4);
-      ShadedBigInteger shadedBigInteger9 = shadedBigInteger8;
-      shadedBigInteger5 = shadedBigInteger5.add(shadedBigInteger9);
-      int n3 = 32 * n;
-      shadedBigInteger5 = shadedBigInteger5.shiftLeft(n3);
+      ShadedBigInteger shadedBigInteger7 = shadedBigInteger5.multiply(upper2.add(lower2));
+      shadedBigInteger5 = shadedBigInteger3.shiftLeft(32 * n);
+      shadedBigInteger5 = shadedBigInteger5.add(shadedBigInteger7.subtract(shadedBigInteger3).subtract(shadedBigInteger4));
+      shadedBigInteger5 = shadedBigInteger5.shiftLeft(32 * n);
       ShadedBigInteger shadedBigInteger10 = shadedBigInteger5.add(shadedBigInteger4);
       return shadedBigInteger.signum != shadedBigInteger2.signum ? shadedBigInteger10.negate() : shadedBigInteger10;
    }
 
    private static int[] add(int[] ints, long l) {
       long l2 = 0L;
-      ShadedNumber.getFlowState();
       int length = ints.length;
       int n = (int)(l >>> 32);
       int[] ints2;
@@ -187,27 +177,20 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static int[] implMontgomerySquare(int[] ints, int[] ints2, int n, long l, int[] ints3) {
       ints3 = squareToLen(ints, n, ints3);
-      int n2 = (int)l;
-      return montReduce(ints3, ints2, n, n2);
+      return montReduce(ints3, ints2, n, (int)l);
    }
 
    public ShadedBigInteger remainder(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       return shadedBigInteger.mag.length >= 80 && this.mag.length - shadedBigInteger.mag.length >= 40 ? this.remainderBurnikelZiegler(shadedBigInteger) : this.remainderKnuth(shadedBigInteger);
    }
 
    public ShadedBigInteger multiply(ShadedBigInteger shadedBigInteger) {
-      boolean flag = false;
-      return this.multiply(shadedBigInteger, flag);
+      return this.multiply(shadedBigInteger, false);
    }
 
    private ShadedBigInteger remainderKnuth(ShadedBigInteger shadedBigInteger) {
       MutableBigInt mutableBigInt = new MutableBigInt();
-      MutableBigInt mutableBigInt2 = new MutableBigInt(this.mag);
-      MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger.mag);
-      MutableBigInt mutableBigInt4 = mutableBigInt2.divideKnuth(mutableBigInt3, mutableBigInt);
-      int signum2 = this.signum;
-      return mutableBigInt4.toBigInteger(signum2);
+      return new MutableBigInt(this.mag).divideKnuth(new MutableBigInt(shadedBigInteger.mag), mutableBigInt).toBigInteger(this.signum);
    }
 
    private static int bitLength(int[] ints, int n) {
@@ -215,7 +198,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public int bitCount(long l) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       int n = this.bitCount - 1;
       if (n == -1) {
          n = 0;
@@ -236,15 +218,13 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             n += n2 - 1;
          }
 
-         int n4 = n + 1;
-         this.bitCount = n4;
+         this.bitCount = n + 1;
       }
 
       return n;
    }
 
    private static void montgomeryMultiplyChecks(int[] ints, int[] ints2, int[] ints3, int n, int[] ints4) throws RuntimeException {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n % 2 != 0) {
          throw new IllegalArgumentException("input array length must be even: " + n);
       } else if (n < 1) {
@@ -255,12 +235,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private ShadedBigInteger square() {
-      boolean flag = false;
-      return this.square(flag);
+      return this.square(false);
    }
 
    public ShadedBigInteger max(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       return this.compareTo2(shadedBigInteger) > 0 ? this : shadedBigInteger;
    }
 
@@ -283,7 +261,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int intArrayCmpToLen(int[] ints, int[] ints2, int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
 
       for (int i = 0; i < n; i++) {
          long l = (long)ints[i] & 4294967295L;
@@ -301,26 +278,20 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger[] divideAndRemainder(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       return shadedBigInteger.mag.length >= 80 && this.mag.length - shadedBigInteger.mag.length >= 40 ? this.divideAndRemainderBurnikelZiegler(shadedBigInteger) : this.divideAndRemainderKnuth(shadedBigInteger);
    }
 
    public boolean isProbablePrime(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n <= 0) {
          return true;
       } else {
          ShadedBigInteger shadedBigInteger = this.abs();
-         ShadedBigInteger shadedBigInteger2 = TWO;
-         if (shadedBigInteger.equals(shadedBigInteger2)) {
+         if (shadedBigInteger.equals(TWO)) {
             return true;
          } else {
-            byte b = 0;
-            if (shadedBigInteger.testBit(b)) {
-               ShadedBigInteger shadedBigInteger3 = ONE;
-               if (!shadedBigInteger.equals(shadedBigInteger3)) {
-                  Object obj = null;
-                  return shadedBigInteger.primeToCertainty(n, (Random)obj);
+            if (shadedBigInteger.testBit((byte)0)) {
+               if (!shadedBigInteger.equals(ONE)) {
+                  return shadedBigInteger.primeToCertainty(n, (Random)null);
                }
             }
 
@@ -342,26 +313,21 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger min(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       return this.compareTo2(shadedBigInteger) < 0 ? this : shadedBigInteger;
    }
 
    private static int[] montgomerySquare(int[] ints, int[] ints2, int n, long l, int[] ints3) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       montgomeryMultiplyChecks(ints, ints, ints2, n, ints3);
       if (n > 512) {
          ints3 = squareToLen(ints, n, ints3);
-         int n2 = (int)l;
-         return montReduce(ints3, ints2, n, n2);
+         return montReduce(ints3, ints2, n, (int)l);
       } else {
-         int[] ints4 = materialize(ints3, n);
-         return implMontgomerySquare(ints, ints2, n, l, ints4);
+         return implMontgomerySquare(ints, ints2, n, l, materialize(ints3, n));
       }
    }
 
    public ShadedBigInteger(int n, int n2, Random rand) {
       super();
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 2) {
          throw new ArithmeticException("bitLength < 2");
       } else {
@@ -379,7 +345,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public static ShadedBigInteger probablePrime(int n, Random rand) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 2) {
          throw new ArithmeticException("bitLength < 2");
       } else {
@@ -400,7 +365,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static ShadedBigInteger getRadixConversionCache(int n, int n2) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       ShadedBigInteger[] shadedBigIntegers = powerCache[n];
       if (n2 < shadedBigIntegers.length) {
          return shadedBigIntegers[n2];
@@ -409,9 +373,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          shadedBigIntegers = Arrays.copyOf(shadedBigIntegers, n2 + 1);
 
          for (int i = length; i <= n2; i++) {
-            ShadedBigInteger shadedBigInteger = shadedBigIntegers[i - 1];
-            byte b = 2;
-            shadedBigIntegers[i] = shadedBigInteger.pow(b);
+            shadedBigIntegers[i] = shadedBigIntegers[i - 1].pow((byte)2);
          }
 
          ShadedBigInteger[][] shadedBigIntegersArr = powerCache;
@@ -426,7 +388,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public long longValueExact() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.mag.length <= 2 && this.bitLength() <= 63) {
          return this.longValue();
       } else {
@@ -435,10 +396,8 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private byte[] magSerializedForm() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       int length = this.mag.length;
-      int n = length == 0 ? 0 : (length - 1 << 5) + bitLengthForInt(this.mag[0]);
-      int n2 = n + 7 >>> 3;
+      int n2 = (length == 0 ? 0 : (length - 1 << 5) + bitLengthForInt(this.mag[0])) + 7 >>> 3;
       byte[] bytes = new byte[n2];
       int n3 = n2 - 1;
       int n4 = 4;
@@ -461,7 +420,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private ShadedBigInteger(int n, int[] ints) {
       super();
-      ShadedNumber.getFlowState();
       this.mag = stripLeadingZeroInts(ints);
       if (n >= -1 && n <= 1) {
          if (this.mag.length == 0) {
@@ -484,7 +442,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public boolean primeToCertainty(int n, Random rand) {
       int n2 = 0;
-      ShadedNumber.getFlowState();
       int n3 = (Math.min(n, 2147483646) + 1) / 2;
       int n4 = this.bitLength();
       if (n4 < 100) {
@@ -518,14 +475,12 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    @Override
    public String toString() {
-      byte b = 10;
-      return this.toString(b);
+      return this.toString((byte)10);
    }
 
    @Override
    public int hashCode() {
       int n = 0;
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < this.mag.length; i++) {
          n = (int)((long)(31 * n) + ((long)this.mag[i] & 4294967295L));
@@ -547,7 +502,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    @Override
    public double doubleValue() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum == 0) {
          return 0.0;
       } else {
@@ -577,8 +531,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             long l = ((long)n5 & 4294967295L) << 32 | (long)n6 & 4294967295L;
             long l2 = l >> 1;
             l2 &= 4503599627370495L;
-            boolean flag = (l & 1L) != 0L && ((l2 & 1L) != 0L || this.abs().getLowestSetBit() < n2);
-            long l3 = flag ? l2 + 1L : l2;
+            long l3 = ((l & 1L) != 0L && ((l2 & 1L) != 0L || this.abs().getLowestSetBit() < n2)) ? l2 + 1L : l2;
             long l4 = (long)(n + 1023) << 52;
             l4 += l3;
             l4 |= (long)this.signum & Long.MIN_VALUE;
@@ -589,7 +542,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static int[] makePositive(byte[] bytes) {
       int length = bytes.length;
-      ShadedNumber.getFlowState();
       int n = 0;
 
       while (n < length && bytes[n] == -1) {
@@ -602,8 +554,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          n2++;
       }
 
-      int n3 = n2 == length ? 1 : 0;
-      int n4 = length - n + n3 + 3 >>> 2;
+      int n4 = length - n + (n2 == length ? 1 : 0) + 3 >>> 2;
       int[] ints = new int[n4];
       int n5 = length - 1;
 
@@ -637,25 +588,19 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private String smallToString(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum == 0) {
          return "0";
       } else {
-         int n2 = (4 * this.mag.length + 6) / 7;
-         String[] strings = new String[n2];
+         String[] strings = new String[(4 * this.mag.length + 6) / 7];
          ShadedBigInteger shadedBigInteger = this.abs();
          int n3 = 0;
 
          while (shadedBigInteger.signum != 0) {
             ShadedBigInteger shadedBigInteger2 = longRadix[n];
             MutableBigInt mutableBigInt = new MutableBigInt();
-            MutableBigInt mutableBigInt2 = new MutableBigInt(shadedBigInteger.mag);
-            MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger2.mag);
-            MutableBigInt mutableBigInt4 = mutableBigInt2.divide2(mutableBigInt3, mutableBigInt);
-            int n4 = shadedBigInteger.signum * shadedBigInteger2.signum;
-            ShadedBigInteger shadedBigInteger3 = mutableBigInt.toBigInteger(n4);
-            int n5 = shadedBigInteger.signum * shadedBigInteger2.signum;
-            ShadedBigInteger shadedBigInteger4 = mutableBigInt4.toBigInteger(n5);
+            MutableBigInt mutableBigInt4 = new MutableBigInt(shadedBigInteger.mag).divide2(new MutableBigInt(shadedBigInteger2.mag), mutableBigInt);
+            ShadedBigInteger shadedBigInteger3 = mutableBigInt.toBigInteger(shadedBigInteger.signum * shadedBigInteger2.signum);
+            ShadedBigInteger shadedBigInteger4 = mutableBigInt4.toBigInteger(shadedBigInteger.signum * shadedBigInteger2.signum);
             strings[n3++] = Long.toString(shadedBigInteger4.longValue(), n);
             shadedBigInteger = shadedBigInteger3;
          }
@@ -768,7 +713,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    public static void primitiveRightShift(int[] ints, int n, int n2) {
       int n3 = 32 - n2;
       int n4 = n - 1;
-      ShadedNumber.getFlowState();
 
       for (int i = ints[n4]; n4 > 0; n4--) {
          int n5 = i;
@@ -781,7 +725,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger(int n, byte[] bytes) {
       super();
-      ShadedNumber.getFlowState();
       this.mag = stripLeadingZeroBytes(bytes);
       if (n >= -1 && n <= 1) {
          if (this.mag.length == 0) {
@@ -807,7 +750,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int[] subtract3(long l, int[] ints) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       int n = (int)(l >>> 32);
       if (n == 0) {
          return new int[]{(int)(l - ((long)ints[0] & 4294967295L))};
@@ -816,8 +758,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          if (ints.length == 1) {
             long l2 = ((long)((int)l) & 4294967295L) - ((long)ints[0] & 4294967295L);
             ints2[1] = (int)l2;
-            boolean flag = l2 >> 32 != 0L;
-            if (flag) {
+            if (l2 >> 32 != 0L) {
                ints2[0] = n - 1;
             } else {
                ints2[0] = n;
@@ -835,22 +776,16 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger gcd(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger.signum == 0) {
          return this.abs();
       } else if (this.signum == 0) {
          return shadedBigInteger.abs();
       } else {
-         MutableBigInt mutableBigInt = new MutableBigInt(this);
-         MutableBigInt mutableBigInt2 = new MutableBigInt(shadedBigInteger);
-         MutableBigInt mutableBigInt3 = mutableBigInt.hybridGCD(mutableBigInt2);
-         byte b = 1;
-         return mutableBigInt3.toBigInteger(b);
+         return new MutableBigInt(this).hybridGCD(new MutableBigInt(shadedBigInteger)).toBigInteger((byte)1);
       }
    }
 
    public ShadedBigInteger add2(long l) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (l == 0L) {
          return this;
       } else if (this.signum == 0) {
@@ -866,9 +801,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          } else {
             int[] ints;
             if (n > 0) {
-               int[] mag3 = this.mag;
-               long l3 = Math.abs(l);
-               ints = subtract2(mag3, l3);
+               ints = subtract2(this.mag, Math.abs(l));
             } else {
                ints = subtract3(Math.abs(l), this.mag);
             }
@@ -885,7 +818,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int[] materialize(int[] ints, int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (ints == null || ints.length < n) {
          ints = new int[n];
       }
@@ -901,8 +833,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       } else if (n == 0) {
          return this;
       } else {
-         int n2 = -n;
-         return this.shiftRightImpl(n2);
+         return this.shiftRightImpl(-n);
       }
    }
 
@@ -912,8 +843,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       } else {
          int length = this.mag.length;
          if (length < 128) {
-            Object obj = null;
-            int[] ints = squareToLen(this.mag, length, (int[])obj);
+            int[] ints = squareToLen(this.mag, length, (int[])null);
             return new ShadedBigInteger(trustedStripLeadingZeroInts(ints), 1);
          } else if (length < 216) {
             return this.squareKaratsuba();
@@ -974,8 +904,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       } else if (n == 0) {
          return this;
       } else {
-         int n2 = -n;
-         return new ShadedBigInteger(shiftLeft(this.mag, n2), this.signum);
+         return new ShadedBigInteger(shiftLeft(this.mag, -n), this.signum);
       }
    }
 
@@ -996,8 +925,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             n += (n2 << 5) + Integer.numberOfTrailingZeros(n3);
          }
 
-         int n4 = n + 2;
-         this.lowestSetBit = n4;
+         this.lowestSetBit = n + 2;
       }
 
       return n;
@@ -1010,7 +938,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    @Override
    public long longValue() {
       long l = 0L;
-      ShadedNumber.getFlowState();
 
       for (int i = 1; i >= 0; i--) {
          l = (l << 32) + ((long)this.getInt(i) & 4294967295L);
@@ -1052,7 +979,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static int[] subtract2(int[] ints, long l) {
       int n = (int)(l >>> 32);
-      ShadedNumber.getFlowState();
       int length = ints.length;
       int[] ints2 = new int[length];
       long l2 = 0L;
@@ -1085,59 +1011,35 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static ShadedBigInteger multiplyToomCook3(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
-      int length = shadedBigInteger.mag.length;
-      int length2 = shadedBigInteger2.mag.length;
-      int n = Math.max(length, length2);
+      int n = Math.max(shadedBigInteger.mag.length, shadedBigInteger2.mag.length);
       int n2 = (n + 2) / 3;
       int n3 = n - 2 * n2;
-      byte b = 0;
-      ShadedBigInteger toomSlice = shadedBigInteger.getToomSlice(n2, n3, b, n);
-      byte b2 = 1;
-      ShadedBigInteger toomSlice2 = shadedBigInteger.getToomSlice(n2, n3, b2, n);
-      byte b3 = 2;
-      ShadedBigInteger toomSlice3 = shadedBigInteger.getToomSlice(n2, n3, b3, n);
-      byte b4 = 0;
-      ShadedBigInteger toomSlice4 = shadedBigInteger2.getToomSlice(n2, n3, b4, n);
-      byte b5 = 1;
-      ShadedBigInteger toomSlice5 = shadedBigInteger2.getToomSlice(n2, n3, b5, n);
-      byte b6 = 2;
-      ShadedBigInteger toomSlice6 = shadedBigInteger2.getToomSlice(n2, n3, b6, n);
-      boolean flag = true;
-      ShadedBigInteger shadedBigInteger3 = toomSlice3.multiply(toomSlice6, flag);
+      ShadedBigInteger toomSlice = shadedBigInteger.getToomSlice(n2, n3, (byte)0, n);
+      ShadedBigInteger toomSlice2 = shadedBigInteger.getToomSlice(n2, n3, (byte)1, n);
+      ShadedBigInteger toomSlice3 = shadedBigInteger.getToomSlice(n2, n3, (byte)2, n);
+      ShadedBigInteger toomSlice4 = shadedBigInteger2.getToomSlice(n2, n3, (byte)0, n);
+      ShadedBigInteger toomSlice5 = shadedBigInteger2.getToomSlice(n2, n3, (byte)1, n);
+      ShadedBigInteger toomSlice6 = shadedBigInteger2.getToomSlice(n2, n3, (byte)2, n);
+      ShadedBigInteger shadedBigInteger3 = toomSlice3.multiply(toomSlice6, true);
       ShadedBigInteger shadedBigInteger4 = toomSlice.add(toomSlice3);
       ShadedBigInteger shadedBigInteger5 = toomSlice4.add(toomSlice6);
       ShadedBigInteger shadedBigInteger6 = shadedBigInteger4.subtract(toomSlice2);
-      ShadedBigInteger shadedBigInteger7 = shadedBigInteger5.subtract(toomSlice5);
-      boolean flag2 = true;
-      ShadedBigInteger shadedBigInteger8 = shadedBigInteger7;
-      ShadedBigInteger shadedBigInteger9 = shadedBigInteger6.multiply(shadedBigInteger8, flag2);
+      ShadedBigInteger shadedBigInteger9 = shadedBigInteger6.multiply(shadedBigInteger5.subtract(toomSlice5), true);
       shadedBigInteger4 = shadedBigInteger4.add(toomSlice2);
       shadedBigInteger5 = shadedBigInteger5.add(toomSlice5);
-      boolean flag3 = true;
-      ShadedBigInteger shadedBigInteger10 = shadedBigInteger4.multiply(shadedBigInteger5, flag3);
+      ShadedBigInteger shadedBigInteger10 = shadedBigInteger4.multiply(shadedBigInteger5, true);
       shadedBigInteger6 = shadedBigInteger4.add(toomSlice);
-      byte b7 = 1;
-      shadedBigInteger6 = shadedBigInteger6.shiftLeft(b7).subtract(toomSlice3);
-      ShadedBigInteger shadedBigInteger11 = shadedBigInteger5.add(toomSlice4);
-      byte b8 = 1;
-      ShadedBigInteger shadedBigInteger12 = shadedBigInteger11.shiftLeft(b8).subtract(toomSlice6);
-      boolean flag4 = true;
-      ShadedBigInteger shadedBigInteger13 = shadedBigInteger12;
-      ShadedBigInteger shadedBigInteger14 = shadedBigInteger6.multiply(shadedBigInteger13, flag4);
-      boolean flag5 = true;
-      ShadedBigInteger shadedBigInteger15 = toomSlice.multiply(toomSlice4, flag5);
+      shadedBigInteger6 = shadedBigInteger6.shiftLeft((byte)1).subtract(toomSlice3);
+      ShadedBigInteger shadedBigInteger14 = shadedBigInteger6.multiply(shadedBigInteger5.add(toomSlice4).shiftLeft((byte)1).subtract(toomSlice6), true);
+      ShadedBigInteger shadedBigInteger15 = toomSlice.multiply(toomSlice4, true);
       ShadedBigInteger shadedBigInteger16 = shadedBigInteger14.subtract(shadedBigInteger9).exactDivideBy3();
       shadedBigInteger6 = shadedBigInteger10.subtract(shadedBigInteger9);
-      byte b9 = 1;
-      ShadedBigInteger shadedBigInteger17 = shadedBigInteger6.shiftRight((int)b9);
+      ShadedBigInteger shadedBigInteger17 = shadedBigInteger6.shiftRight((int)((byte)1));
       ShadedBigInteger shadedBigInteger18 = shadedBigInteger10.subtract(shadedBigInteger3);
       shadedBigInteger6 = shadedBigInteger16.subtract(shadedBigInteger18);
-      byte b10 = 1;
-      shadedBigInteger16 = shadedBigInteger6.shiftRight((int)b10);
+      shadedBigInteger16 = shadedBigInteger6.shiftRight((int)((byte)1));
       shadedBigInteger18 = shadedBigInteger18.subtract(shadedBigInteger17).subtract(shadedBigInteger15);
-      byte b11 = 1;
-      ShadedBigInteger shadedBigInteger19 = shadedBigInteger15.shiftLeft(b11);
-      shadedBigInteger16 = shadedBigInteger16.subtract(shadedBigInteger19);
+      shadedBigInteger16 = shadedBigInteger16.subtract(shadedBigInteger15.shiftLeft((byte)1));
       shadedBigInteger17 = shadedBigInteger17.subtract(shadedBigInteger16);
       int n4 = n2 * 32;
       shadedBigInteger6 = shadedBigInteger15.shiftLeft(n4);
@@ -1150,12 +1052,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      ShadedBigInteger shadedBigInteger = (ShadedBigInteger)other;
-      return this.compareTo2(shadedBigInteger);
+      return this.compareTo2((ShadedBigInteger)other);
    }
 
    public ShadedBigInteger mod(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger.signum <= 0) {
          throw new ArithmeticException("BigInteger: modulus not positive");
       } else {
@@ -1172,7 +1072,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public String toString(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum == 0) {
          return "0";
       } else {
@@ -1185,13 +1084,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          } else {
             StringBuilder sb = new StringBuilder();
             if (this.signum < 0) {
-               ShadedBigInteger shadedBigInteger = this.negate();
-               byte b = 0;
-               toString(shadedBigInteger, sb, n, b);
+               toString(this.negate(), sb, n, (byte)0);
                sb.insert(0, '-');
             } else {
-               byte b2 = 0;
-               toString(this, sb, n, b2);
+               toString(this, sb, n, (byte)0);
             }
 
             return sb.toString();
@@ -1200,28 +1096,20 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger modPow(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger2.signum <= 0) {
          throw new ArithmeticException("BigInteger: modulus not positive");
       } else if (shadedBigInteger.signum == 0) {
-         ShadedBigInteger shadedBigInteger3 = ONE;
-         return shadedBigInteger2.equals(shadedBigInteger3) ? ZERO : ONE;
+         return shadedBigInteger2.equals(ONE) ? ZERO : ONE;
       } else {
-         ShadedBigInteger shadedBigInteger4 = ONE;
-         if (this.equals(shadedBigInteger4)) {
-            ShadedBigInteger shadedBigInteger5 = ONE;
-            return shadedBigInteger2.equals(shadedBigInteger5) ? ZERO : ONE;
+         if (this.equals(ONE)) {
+            return shadedBigInteger2.equals(ONE) ? ZERO : ONE;
          } else {
-            ShadedBigInteger shadedBigInteger6 = ZERO;
-            if (this.equals(shadedBigInteger6) && shadedBigInteger.signum >= 0) {
+            if (this.equals(ZERO) && shadedBigInteger.signum >= 0) {
                return ZERO;
             } else {
-               ShadedBigInteger shadedBigInteger7 = negConst[1];
-               if (this.equals(shadedBigInteger7)) {
-                  byte b = 0;
-                  if (!shadedBigInteger.testBit(b)) {
-                     ShadedBigInteger shadedBigInteger8 = ONE;
-                     return shadedBigInteger2.equals(shadedBigInteger8) ? ZERO : ONE;
+               if (this.equals(negConst[1])) {
+                  if (!shadedBigInteger.testBit((byte)0)) {
+                     return shadedBigInteger2.equals(ONE) ? ZERO : ONE;
                   }
                }
 
@@ -1243,9 +1131,8 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                }
 
                ShadedBigInteger shadedBigInteger10 = shadedBigInteger9;
-               byte b2 = 0;
                ShadedBigInteger shadedBigInteger11;
-               if (shadedBigInteger2.testBit(b2)) {
+               if (shadedBigInteger2.testBit((byte)0)) {
                   shadedBigInteger11 = shadedBigInteger10.oddModPow(shadedBigInteger, shadedBigInteger2);
                } else {
                   int n;
@@ -1266,30 +1153,22 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                   }
 
                   ShadedBigInteger shadedBigInteger14 = shadedBigInteger9;
-                  ShadedBigInteger shadedBigInteger15 = ONE;
-                  ShadedBigInteger shadedBigInteger16 = shadedBigInteger12.equals(shadedBigInteger15) ? ZERO : shadedBigInteger14.oddModPow(shadedBigInteger, shadedBigInteger12);
+                  ShadedBigInteger shadedBigInteger16 = shadedBigInteger12.equals(ONE) ? ZERO : shadedBigInteger14.oddModPow(shadedBigInteger, shadedBigInteger12);
                   ShadedBigInteger shadedBigInteger17 = shadedBigInteger10.modPow2(shadedBigInteger, n);
                   ShadedBigInteger shadedBigInteger18 = shadedBigInteger13.modInverse(shadedBigInteger12);
                   ShadedBigInteger shadedBigInteger19 = shadedBigInteger12.modInverse(shadedBigInteger13);
                   if (shadedBigInteger2.mag.length < 33554432) {
                      shadedBigInteger9 = shadedBigInteger16.multiply(shadedBigInteger13).multiply(shadedBigInteger18);
-                     ShadedBigInteger shadedBigInteger20 = shadedBigInteger17.multiply(shadedBigInteger12).multiply(shadedBigInteger19);
-                     ShadedBigInteger shadedBigInteger21 = shadedBigInteger20;
-                     shadedBigInteger9 = shadedBigInteger9.add(shadedBigInteger21);
+                     shadedBigInteger9 = shadedBigInteger9.add(shadedBigInteger17.multiply(shadedBigInteger12).multiply(shadedBigInteger19));
                      shadedBigInteger11 = shadedBigInteger9.mod(shadedBigInteger2);
                   } else {
                      MutableBigInt mutableBigInt = new MutableBigInt();
-                     MutableBigInt mutableBigInt2 = new MutableBigInt(shadedBigInteger16.multiply(shadedBigInteger13));
-                     MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger18);
-                     mutableBigInt2.multiply(mutableBigInt3, mutableBigInt);
+                     new MutableBigInt(shadedBigInteger16.multiply(shadedBigInteger13)).multiply(new MutableBigInt(shadedBigInteger18), mutableBigInt);
                      MutableBigInt mutableBigInt4 = new MutableBigInt();
-                     MutableBigInt mutableBigInt5 = new MutableBigInt(shadedBigInteger17.multiply(shadedBigInteger12));
-                     MutableBigInt mutableBigInt6 = new MutableBigInt(shadedBigInteger19);
-                     mutableBigInt5.multiply(mutableBigInt6, mutableBigInt4);
+                     new MutableBigInt(shadedBigInteger17.multiply(shadedBigInteger12)).multiply(new MutableBigInt(shadedBigInteger19), mutableBigInt4);
                      mutableBigInt.add(mutableBigInt4);
                      MutableBigInt mutableBigInt7 = new MutableBigInt();
-                     MutableBigInt mutableBigInt8 = new MutableBigInt(shadedBigInteger2);
-                     shadedBigInteger11 = mutableBigInt.divide2(mutableBigInt8, mutableBigInt7).toBigInteger();
+                     shadedBigInteger11 = mutableBigInt.divide2(new MutableBigInt(shadedBigInteger2), mutableBigInt7).toBigInteger();
                   }
                }
 
@@ -1346,12 +1225,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger modInverse(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger.signum != 1) {
          throw new ArithmeticException("BigInteger: modulus not positive");
       } else {
-         ShadedBigInteger shadedBigInteger2 = ONE;
-         if (shadedBigInteger.equals(shadedBigInteger2)) {
+         if (shadedBigInteger.equals(ONE)) {
             return ZERO;
          } else {
             ShadedBigInteger shadedBigInteger3 = this;
@@ -1359,15 +1236,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                shadedBigInteger3 = this.mod(shadedBigInteger);
             }
 
-            ShadedBigInteger shadedBigInteger4 = ONE;
-            if (shadedBigInteger3.equals(shadedBigInteger4)) {
+            if (shadedBigInteger3.equals(ONE)) {
                return ONE;
             } else {
-               MutableBigInt mutableBigInt = new MutableBigInt(shadedBigInteger3);
-               MutableBigInt mutableBigInt2 = new MutableBigInt(shadedBigInteger);
-               MutableBigInt mutableBigInt3 = mutableBigInt.mutableModInverse(mutableBigInt2);
-               byte b = 1;
-               return mutableBigInt3.toBigInteger(b);
+               return new MutableBigInt(shadedBigInteger3).mutableModInverse(new MutableBigInt(shadedBigInteger)).toBigInteger((byte)1);
             }
          }
       }
@@ -1376,8 +1248,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    @Override
    public int intValue() {
       boolean flag = false;
-      byte b = 0;
-      return this.getInt(b);
+      return this.getInt((byte)0);
    }
 
    private ShadedBigInteger getUpper(int n) {
@@ -1393,7 +1264,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private ShadedBigInteger mod2(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.bitLength() <= n) {
          return this;
       } else {
@@ -1467,16 +1337,11 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
          int n7 = n5 - 1;
          int n8;
-         int n9 = n8 = n3 + n6;
-         ints[n7] = this.parseInt(chars, n3, n9);
+         ints[n7] = this.parseInt(chars, n3, n8 = n3 + n6);
 
          while (n8 < n2) {
-            int n10 = n8;
-            int n11 = n8 += digitsPerInt[10];
-            int n12 = n10;
-            int n13 = this.parseInt(chars, n12, n11);
-            int n14 = intRadix[10];
-            destructiveMulAdd(ints, n14, n13);
+            int n13 = this.parseInt(chars, n8, n8 += digitsPerInt[10]);
+            destructiveMulAdd(ints, intRadix[10], n13);
          }
 
          this.mag = trustedStripLeadingZeroInts(ints);
@@ -1487,26 +1352,20 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger nextProbablePrime() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum < 0) {
          throw new ArithmeticException("start < 0: " + this);
       } else {
          if (this.signum != 0) {
-            ShadedBigInteger shadedBigInteger = ONE;
-            if (!this.equals(shadedBigInteger)) {
-               ShadedBigInteger shadedBigInteger2 = ONE;
-               ShadedBigInteger shadedBigInteger3 = this.add(shadedBigInteger2);
+            if (!this.equals(ONE)) {
+               ShadedBigInteger shadedBigInteger3 = this.add(ONE);
                if (shadedBigInteger3.bitLength() < 95) {
-                  byte b = 0;
-                  if (!shadedBigInteger3.testBit(b)) {
-                     ShadedBigInteger shadedBigInteger4 = ONE;
-                     shadedBigInteger3 = shadedBigInteger3.add(shadedBigInteger4);
+                  if (!shadedBigInteger3.testBit((byte)0)) {
+                     shadedBigInteger3 = shadedBigInteger3.add(ONE);
                   }
 
                   while (true) {
                      if (shadedBigInteger3.bitLength() > 6) {
-                        ShadedBigInteger shadedBigInteger5 = SMALL_PRIME_PRODUCT;
-                        long l = shadedBigInteger3.remainder(shadedBigInteger5).longValue();
+                        long l = shadedBigInteger3.remainder(SMALL_PRIME_PRODUCT).longValue();
                         if (l % 3L == 0L
                            || l % 5L == 0L
                            || l % 7L == 0L
@@ -1519,8 +1378,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                            || l % 31L == 0L
                            || l % 37L == 0L
                            || l % 41L == 0L) {
-                           ShadedBigInteger shadedBigInteger6 = TWO;
-                           shadedBigInteger3 = shadedBigInteger3.add(shadedBigInteger6);
+                           shadedBigInteger3 = shadedBigInteger3.add(TWO);
                            continue;
                         }
                      }
@@ -1529,37 +1387,27 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                         return shadedBigInteger3;
                      }
 
-                     Object obj = null;
-                     byte b2 = 100;
-                     if (shadedBigInteger3.primeToCertainty(b2, (Random)obj)) {
+                     if (shadedBigInteger3.primeToCertainty((byte)100, (Random)null)) {
                         return shadedBigInteger3;
                      }
 
-                     ShadedBigInteger shadedBigInteger7 = TWO;
-                     shadedBigInteger3 = shadedBigInteger3.add(shadedBigInteger7);
+                     shadedBigInteger3 = shadedBigInteger3.add(TWO);
                   }
                }
 
-               byte b3 = 0;
-               if (shadedBigInteger3.testBit(b3)) {
-                  ShadedBigInteger shadedBigInteger8 = ONE;
-                  shadedBigInteger3 = shadedBigInteger3.subtract(shadedBigInteger8);
+               if (shadedBigInteger3.testBit((byte)0)) {
+                  shadedBigInteger3 = shadedBigInteger3.subtract(ONE);
                }
 
                int primeSearchLen = getPrimeSearchLen(shadedBigInteger3.bitLength());
 
                while (true) {
-                  PrimeBitSieve primeBitSieve = new PrimeBitSieve(shadedBigInteger3, primeSearchLen);
-                  Object obj2 = null;
-                  byte b4 = 100;
-                  ShadedBigInteger shadedBigInteger9 = primeBitSieve.retrieve(shadedBigInteger3, b4, (Random)obj2);
+                  ShadedBigInteger shadedBigInteger9 = new PrimeBitSieve(shadedBigInteger3, primeSearchLen).retrieve(shadedBigInteger3, (byte)100, (Random)null);
                   if (shadedBigInteger9 != null) {
                      return shadedBigInteger9;
                   }
 
-                  ShadedBigInteger shadedBigInteger10 = valueOf((long)(2 * primeSearchLen));
-                  ShadedBigInteger shadedBigInteger11 = shadedBigInteger10;
-                  shadedBigInteger3 = shadedBigInteger3.add(shadedBigInteger11);
+                  shadedBigInteger3 = shadedBigInteger3.add(valueOf((long)(2 * primeSearchLen)));
                }
             }
          }
@@ -1569,7 +1417,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger setBit(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
@@ -1601,29 +1448,23 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
       for (int j = 1; n4 > 0; j += 2) {
          int n5 = ints[n4 - 1];
-         int n6 = n4 - 1;
-         n5 = mulAdd(ints2, ints, j, n6, n5);
-         int n7 = j - 1;
-         addOne(ints2, n7, n4, n5);
+         n5 = mulAdd(ints2, ints, j, n4 - 1, n5);
+         addOne(ints2, j - 1, n4, n5);
          n4--;
       }
 
-      byte b = 1;
-      primitiveLeftShift(ints2, n2, b);
+      primitiveLeftShift(ints2, n2, (byte)1);
       ints2[n2 - 1] = ints2[n2 - 1] | ints[n - 1] & 1;
       return ints2;
    }
 
    private static int[] montReduce(int[] ints, int[] ints2, int n, int n2) {
       int n3 = 0;
-      ShadedNumber.getFlowState();
       int n4 = n;
       int n5 = 0;
 
       do {
-         int n6 = ints[ints.length - 1 - n5];
-         int n7 = n2 * n6;
-         int n8 = mulAdd(ints, ints2, n5, n, n7);
+         int n8 = mulAdd(ints, ints2, n5, n, n2 * ints[ints.length - 1 - n5]);
          n3 += addOne(ints, n5, n, n8);
          n5++;
       } while (--n4 > 0);
@@ -1641,8 +1482,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static int[] implMontgomeryMultiply(int[] ints, int[] ints2, int[] ints3, int n, long l, int[] ints4) {
       ints4 = multiplyToLen(ints, n, ints2, n, ints4);
-      int n2 = (int)l;
-      return montReduce(ints4, ints3, n, n2);
+      return montReduce(ints4, ints3, n, (int)l);
    }
 
    public int[] javaIncrement(int[] ints) {
@@ -1661,12 +1501,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private int signBit(long l) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       return this.signum < 0 ? 1 : 0;
    }
 
    public int compareTo2(ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum == shadedBigInteger.signum) {
          switch (this.signum) {
             case -1:
@@ -1693,8 +1531,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          }
 
          n = length - n2 - 1;
-         int n3 = n + 2;
-         this.firstNonzeroIntNum = n3;
+         this.firstNonzeroIntNum = n + 2;
       }
 
       return n;
@@ -1705,7 +1542,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int jacobiSymbol(int n, ShadedBigInteger shadedBigInteger) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n == 0) {
          return 0;
       } else {
@@ -1737,9 +1573,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                n2 = -n2;
             }
 
-            ShadedBigInteger shadedBigInteger2 = valueOf((long)n);
-            ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
-            n3 = shadedBigInteger.mod(shadedBigInteger3).intValue();
+            n3 = shadedBigInteger.mod(valueOf((long)n)).intValue();
 
             while (n3 != 0) {
                while ((n3 & 3) == 0) {
@@ -1777,7 +1611,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static int[] stripLeadingZeroInts(int[] ints) {
       int length = ints.length;
-      ShadedNumber.getFlowState();
       int n = 0;
 
       while (n < length && ints[n] == 0) {
@@ -1791,40 +1624,26 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       int length = this.mag.length;
       int n = (length + 2) / 3;
       int n2 = length - 2 * n;
-      byte b = 0;
-      ShadedBigInteger toomSlice = this.getToomSlice(n, n2, b, length);
-      byte b2 = 1;
-      ShadedBigInteger toomSlice2 = this.getToomSlice(n, n2, b2, length);
-      byte b3 = 2;
-      ShadedBigInteger toomSlice3 = this.getToomSlice(n, n2, b3, length);
-      boolean flag = true;
-      ShadedBigInteger shadedBigInteger = toomSlice3.square(flag);
+      ShadedBigInteger toomSlice = this.getToomSlice(n, n2, (byte)0, length);
+      ShadedBigInteger toomSlice2 = this.getToomSlice(n, n2, (byte)1, length);
+      ShadedBigInteger toomSlice3 = this.getToomSlice(n, n2, (byte)2, length);
+      ShadedBigInteger shadedBigInteger = toomSlice3.square(true);
       ShadedBigInteger shadedBigInteger2 = toomSlice.add(toomSlice3);
       ShadedBigInteger shadedBigInteger3 = shadedBigInteger2.subtract(toomSlice2);
-      boolean flag2 = true;
-      ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.square(flag2);
+      ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.square(true);
       shadedBigInteger2 = shadedBigInteger2.add(toomSlice2);
-      boolean flag3 = true;
-      ShadedBigInteger shadedBigInteger5 = shadedBigInteger2.square(flag3);
-      boolean flag4 = true;
-      ShadedBigInteger shadedBigInteger6 = toomSlice.square(flag4);
+      ShadedBigInteger shadedBigInteger5 = shadedBigInteger2.square(true);
+      ShadedBigInteger shadedBigInteger6 = toomSlice.square(true);
       shadedBigInteger3 = shadedBigInteger2.add(toomSlice);
-      byte b4 = 1;
-      shadedBigInteger3 = shadedBigInteger3.shiftLeft(b4).subtract(toomSlice3);
-      boolean flag5 = true;
-      ShadedBigInteger shadedBigInteger7 = shadedBigInteger3.square(flag5);
-      ShadedBigInteger shadedBigInteger8 = shadedBigInteger7.subtract(shadedBigInteger4).exactDivideBy3();
+      shadedBigInteger3 = shadedBigInteger3.shiftLeft((byte)1).subtract(toomSlice3);
+      ShadedBigInteger shadedBigInteger8 = shadedBigInteger3.square(true).subtract(shadedBigInteger4).exactDivideBy3();
       shadedBigInteger3 = shadedBigInteger5.subtract(shadedBigInteger4);
-      byte b5 = 1;
-      ShadedBigInteger shadedBigInteger9 = shadedBigInteger3.shiftRight((int)b5);
+      ShadedBigInteger shadedBigInteger9 = shadedBigInteger3.shiftRight((int)((byte)1));
       ShadedBigInteger shadedBigInteger10 = shadedBigInteger5.subtract(shadedBigInteger);
       shadedBigInteger3 = shadedBigInteger8.subtract(shadedBigInteger10);
-      byte b6 = 1;
-      shadedBigInteger8 = shadedBigInteger3.shiftRight((int)b6);
+      shadedBigInteger8 = shadedBigInteger3.shiftRight((int)((byte)1));
       shadedBigInteger10 = shadedBigInteger10.subtract(shadedBigInteger9).subtract(shadedBigInteger6);
-      byte b7 = 1;
-      ShadedBigInteger shadedBigInteger11 = shadedBigInteger6.shiftLeft(b7);
-      shadedBigInteger8 = shadedBigInteger8.subtract(shadedBigInteger11);
+      shadedBigInteger8 = shadedBigInteger8.subtract(shadedBigInteger6.shiftLeft((byte)1));
       shadedBigInteger9 = shadedBigInteger9.subtract(shadedBigInteger8);
       int n3 = n * 32;
       shadedBigInteger3 = shadedBigInteger6.shiftLeft(n3);
@@ -1850,9 +1669,8 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                   int n3 = this.mag[0];
                   return multiplyByInt(shadedBigInteger.mag, n3, n);
                } else {
-                  Object obj = null;
                   int[] mag2 = shadedBigInteger.mag;
-                  int[] ints = multiplyToLen(this.mag, length, mag2, length2, (int[])obj);
+                  int[] ints = multiplyToLen(this.mag, length, mag2, length2, (int[])null);
                   ints = trustedStripLeadingZeroInts(ints);
                   return new ShadedBigInteger(ints, n);
                }
@@ -1888,7 +1706,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger clearBit(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
@@ -1928,9 +1745,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private boolean passesMillerRabin(int n, Random rand) {
-      ShadedBigInteger shadedBigInteger = ONE;
-      ShadedBigInteger shadedBigInteger2 = this.subtract(shadedBigInteger);
-      ShadedNumber.getFlowState();
+      ShadedBigInteger shadedBigInteger2 = this.subtract(ONE);
       int lowestSetBit2 = shadedBigInteger2.getLowestSetBit();
       ShadedBigInteger shadedBigInteger3 = shadedBigInteger2.shiftRight(lowestSetBit2);
       if (rand == null) {
@@ -1941,16 +1756,14 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       for (int i = 0; i < n; i++) {
          while (true) {
             ShadedBigInteger shadedBigInteger4 = new ShadedBigInteger(this.bitLength(), (Random)rand);
-            ShadedBigInteger shadedBigInteger5 = ONE;
-            if (shadedBigInteger4.compareTo2(shadedBigInteger5) > 0) {
+            if (shadedBigInteger4.compareTo2(ONE) > 0) {
                if (shadedBigInteger4.compareTo2(this) < 0) {
                   int n2 = 0;
                   ShadedBigInteger shadedBigInteger6 = shadedBigInteger4.modPow(shadedBigInteger3, this);
 
                   while (true) {
                      if (n2 == 0) {
-                        ShadedBigInteger shadedBigInteger7 = ONE;
-                        if (shadedBigInteger6.equals(shadedBigInteger7)) {
+                        if (shadedBigInteger6.equals(ONE)) {
                            continue outerLoop;
                         }
                      }
@@ -1960,8 +1773,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                      }
 
                      if (n2 > 0) {
-                        ShadedBigInteger shadedBigInteger8 = ONE;
-                        if (shadedBigInteger6.equals(shadedBigInteger8)) {
+                        if (shadedBigInteger6.equals(ONE)) {
                            return false;
                         }
                      }
@@ -1970,8 +1782,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
                         return false;
                      }
 
-                     ShadedBigInteger shadedBigInteger9 = TWO;
-                     shadedBigInteger6 = shadedBigInteger6.modPow(shadedBigInteger9, this);
+                     shadedBigInteger6 = shadedBigInteger6.modPow(TWO, this);
                   }
                }
             }
@@ -1982,16 +1793,11 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static void toString(ShadedBigInteger shadedBigInteger, StringBuilder sb, int n, int n2) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (shadedBigInteger.mag.length > 20) {
-         int n3 = shadedBigInteger.bitLength();
-         int n4 = (int)Math.round(Math.log((double)n3 * LOG_TWO / logCache[n]) / LOG_TWO - 1.0);
-         ShadedBigInteger radixConversionCache = getRadixConversionCache(n, n4);
-         ShadedBigInteger[] shadedBigIntegers = shadedBigInteger.divideAndRemainder(radixConversionCache);
+         int n4 = (int)Math.round(Math.log((double)shadedBigInteger.bitLength() * LOG_TWO / logCache[n]) / LOG_TWO - 1.0);
+         ShadedBigInteger[] shadedBigIntegers = shadedBigInteger.divideAndRemainder(getRadixConversionCache(n, n4));
          int n5 = 1 << n4;
-         ShadedBigInteger shadedBigInteger2 = shadedBigIntegers[0];
-         int n6 = n2 - n5;
-         toString(shadedBigInteger2, sb, n, n6);
+         toString(shadedBigIntegers[0], sb, n, n2 - n5);
          toString(shadedBigIntegers[1], sb, n, n5);
       } else {
          String str = shadedBigInteger.smallToString(n);
@@ -2008,8 +1814,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    public int bitLength() {
       int n = this.bitLength - 1;
       if (n == -1) {
-         int[] mag2 = this.mag;
-         int length = mag2.length;
+         int length = this.mag.length;
          if (length == 0) {
             n = 0;
          } else {
@@ -2027,15 +1832,13 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             }
          }
 
-         int n3 = n + 1;
-         this.bitLength = n3;
+         this.bitLength = n + 1;
       }
 
       return n;
    }
 
    private static int[] makePositive2(int[] ints) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       int n = 0;
 
       while (n < ints.length && ints[n] == -1) {
@@ -2069,7 +1872,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public final int compareMagnitude2(long l) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (!assertionsDisabled && l == Long.MIN_VALUE) {
          throw new AssertionError();
       } else {
@@ -2150,7 +1952,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       int n3 = n + 31 >>> 5;
       int[] ints = new int[n3];
       int n4 = 1 << (n + 31 & 31);
-      ShadedNumber.getFlowState();
       int n5 = (n4 << 1) - 1;
 
       while (true) {
@@ -2165,8 +1966,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
          ShadedBigInteger shadedBigInteger = new ShadedBigInteger(ints, 1);
          if (n > 6) {
-            ShadedBigInteger shadedBigInteger2 = SMALL_PRIME_PRODUCT;
-            long l = shadedBigInteger.remainder(shadedBigInteger2).longValue();
+            long l = shadedBigInteger.remainder(SMALL_PRIME_PRODUCT).longValue();
             if (l % 3L == 0L
                || l % 5L == 0L
                || l % 7L == 0L
@@ -2199,13 +1999,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger and(ShadedBigInteger shadedBigInteger) {
       int[] ints = new int[Math.max(this.intLength(), shadedBigInteger.intLength())];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < ints.length; i++) {
-         int n = ints.length - i - 1;
-         int n2 = this.getInt(n);
-         int n3 = ints.length - i - 1;
-         ints[i] = n2 & shadedBigInteger.getInt(n3);
+         ints[i] = this.getInt(ints.length - i - 1) & shadedBigInteger.getInt(ints.length - i - 1);
       }
 
       return valueOf2(ints);
@@ -2214,7 +2010,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    private static int[] leftShift(int[] ints, int n, int n2) {
       int n3 = n2 >>> 5;
       int n4 = n2 & 31;
-      ShadedNumber.getFlowState();
       int n5 = bitLengthForInt(ints[0]);
       if (n2 <= 32 - n5) {
          primitiveLeftShift(ints, n, n4);
@@ -2222,16 +2017,12 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       } else if (n4 <= 32 - n5) {
          int[] ints2 = new int[n3 + n];
          System.arraycopy(ints, 0, ints2, 0, n);
-         int length = ints2.length;
-         primitiveLeftShift(ints2, length, n4);
+         primitiveLeftShift(ints2, ints2.length, n4);
          return ints2;
       } else {
          int[] ints3 = new int[n3 + n + 1];
          System.arraycopy(ints, 0, ints3, 0, n);
-         int length2 = ints3.length;
-         int n6 = 32 - n4;
-         int n7 = length2;
-         primitiveRightShift(ints3, n7, n6);
+         primitiveRightShift(ints3, ints3.length, 32 - n4);
          return ints3;
       }
    }
@@ -2261,7 +2052,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger flipBit(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
@@ -2284,11 +2074,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public ShadedBigInteger multiply2(long l) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (l != 0L && this.signum != 0) {
          if (l == Long.MIN_VALUE) {
-            ShadedBigInteger shadedBigInteger = valueOf(l);
-            return this.multiply(shadedBigInteger);
+            return this.multiply(valueOf(l));
          } else {
             int n = l > 0L ? this.signum : -this.signum;
             if (l < 0L) {
@@ -2336,24 +2124,19 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private ShadedBigInteger[] divideAndRemainderBurnikelZiegler(ShadedBigInteger shadedBigInteger) {
       MutableBigInt mutableBigInt = new MutableBigInt();
-      ShadedNumber.getFlowState();
-      MutableBigInt mutableBigInt2 = new MutableBigInt(this);
-      MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger);
-      MutableBigInt mutableBigInt4 = mutableBigInt2.divideAndRemainderBurnikelZiegler(mutableBigInt3, mutableBigInt);
+      MutableBigInt mutableBigInt4 = new MutableBigInt(this).divideAndRemainderBurnikelZiegler(new MutableBigInt(shadedBigInteger), mutableBigInt);
       ShadedBigInteger shadedBigInteger2;
       if (mutableBigInt.isZero()) {
          shadedBigInteger2 = ZERO;
       } else {
-         int n = this.signum * shadedBigInteger.signum;
-         shadedBigInteger2 = mutableBigInt.toBigInteger(n);
+         shadedBigInteger2 = mutableBigInt.toBigInteger(this.signum * shadedBigInteger.signum);
       }
 
       ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
       if (mutableBigInt4.isZero()) {
          shadedBigInteger2 = ZERO;
       } else {
-         int signum2 = this.signum;
-         shadedBigInteger2 = mutableBigInt4.toBigInteger(signum2);
+         shadedBigInteger2 = mutableBigInt4.toBigInteger(this.signum);
       }
 
       ShadedBigInteger shadedBigInteger4 = shadedBigInteger2;
@@ -2362,13 +2145,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger andNot(ShadedBigInteger shadedBigInteger) {
       int[] ints = new int[Math.max(this.intLength(), shadedBigInteger.intLength())];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < ints.length; i++) {
-         int n = ints.length - i - 1;
-         int n2 = this.getInt(n);
-         int n3 = ints.length - i - 1;
-         ints[i] = n2 & ~shadedBigInteger.getInt(n3);
+         ints[i] = this.getInt(ints.length - i - 1) & ~shadedBigInteger.getInt(ints.length - i - 1);
       }
 
       return valueOf2(ints);
@@ -2376,11 +2155,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger not() {
       int[] ints = new int[this.intLength()];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < ints.length; i++) {
-         int n = ints.length - i - 1;
-         ints[i] = ~this.getInt(n);
+         ints[i] = ~this.getInt(ints.length - i - 1);
       }
 
       return valueOf2(ints);
@@ -2401,7 +2178,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int getPrimeSearchLen(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n > 500000001) {
          throw new ArithmeticException("Prime search implementation restriction on bitLength");
       } else {
@@ -2440,7 +2216,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static ShadedBigInteger lucasLehmerSequence(int n, ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
       ShadedBigInteger shadedBigInteger3 = valueOf((long)n);
-      ShadedNumber.getFlowState();
       ShadedBigInteger shadedBigInteger4 = ONE;
       ShadedBigInteger shadedBigInteger5 = ONE;
 
@@ -2448,41 +2223,32 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          ShadedBigInteger shadedBigInteger6 = shadedBigInteger4.multiply(shadedBigInteger5);
          ShadedBigInteger shadedBigInteger7 = shadedBigInteger6.mod(shadedBigInteger2);
          shadedBigInteger6 = shadedBigInteger5.square();
-         ShadedBigInteger shadedBigInteger8 = shadedBigInteger4.square();
-         ShadedBigInteger shadedBigInteger9 = shadedBigInteger3.multiply(shadedBigInteger8);
-         ShadedBigInteger shadedBigInteger10 = shadedBigInteger9;
-         shadedBigInteger6 = shadedBigInteger6.add(shadedBigInteger10);
+         ShadedBigInteger shadedBigInteger9 = shadedBigInteger3.multiply(shadedBigInteger4.square());
+         shadedBigInteger6 = shadedBigInteger6.add(shadedBigInteger9);
          ShadedBigInteger shadedBigInteger11 = shadedBigInteger6.mod(shadedBigInteger2);
-         byte b = 0;
-         if (shadedBigInteger11.testBit(b)) {
+         if (shadedBigInteger11.testBit((byte)0)) {
             shadedBigInteger11 = shadedBigInteger11.subtract(shadedBigInteger2);
          }
 
-         byte b2 = 1;
-         shadedBigInteger11 = shadedBigInteger11.shiftRight((int)b2);
+         shadedBigInteger11 = shadedBigInteger11.shiftRight((int)((byte)1));
          shadedBigInteger4 = shadedBigInteger7;
          shadedBigInteger5 = shadedBigInteger11;
          if (shadedBigInteger.testBit(i)) {
             shadedBigInteger6 = shadedBigInteger7.add(shadedBigInteger11);
             shadedBigInteger7 = shadedBigInteger6.mod(shadedBigInteger2);
-            byte b3 = 0;
-            if (shadedBigInteger7.testBit(b3)) {
+            if (shadedBigInteger7.testBit((byte)0)) {
                shadedBigInteger7 = shadedBigInteger7.subtract(shadedBigInteger2);
             }
 
-            byte b4 = 1;
-            ShadedBigInteger shadedBigInteger12 = shadedBigInteger7.shiftRight((int)b4);
+            ShadedBigInteger shadedBigInteger12 = shadedBigInteger7.shiftRight((int)((byte)1));
             shadedBigInteger9 = shadedBigInteger3.multiply(shadedBigInteger7);
-            ShadedBigInteger shadedBigInteger13 = shadedBigInteger9;
-            shadedBigInteger6 = shadedBigInteger11.add(shadedBigInteger13);
+            shadedBigInteger6 = shadedBigInteger11.add(shadedBigInteger9);
             shadedBigInteger11 = shadedBigInteger6.mod(shadedBigInteger2);
-            byte b5 = 0;
-            if (shadedBigInteger11.testBit(b5)) {
+            if (shadedBigInteger11.testBit((byte)0)) {
                shadedBigInteger11 = shadedBigInteger11.subtract(shadedBigInteger2);
             }
 
-            byte b6 = 1;
-            shadedBigInteger11 = shadedBigInteger11.shiftRight((int)b6);
+            shadedBigInteger11 = shadedBigInteger11.shiftRight((int)((byte)1));
             shadedBigInteger4 = shadedBigInteger12;
             shadedBigInteger5 = shadedBigInteger11;
          }
@@ -2617,24 +2383,17 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private static ShadedBigInteger largePrime(int n, int n2, Random rand) {
       ShadedBigInteger shadedBigInteger = new ShadedBigInteger(n, rand);
-      int n3 = n - 1;
-      int n4 = n3;
-      ShadedBigInteger shadedBigInteger2 = shadedBigInteger.setBit(n4);
-      ShadedNumber.getFlowState();
+      ShadedBigInteger shadedBigInteger2 = shadedBigInteger.setBit(n - 1);
       shadedBigInteger2.mag[shadedBigInteger2.mag.length - 1] = shadedBigInteger2.mag[shadedBigInteger2.mag.length - 1] & -2;
       int primeSearchLen = getPrimeSearchLen(n);
       PrimeBitSieve primeBitSieve = new PrimeBitSieve(shadedBigInteger2, primeSearchLen);
       ShadedBigInteger shadedBigInteger3 = primeBitSieve.retrieve(shadedBigInteger2, n2, rand);
 
       while (shadedBigInteger3 == null || shadedBigInteger3.bitLength() != n) {
-         ShadedBigInteger shadedBigInteger4 = valueOf((long)(2 * primeSearchLen));
-         ShadedBigInteger shadedBigInteger5 = shadedBigInteger4;
-         shadedBigInteger2 = shadedBigInteger2.add(shadedBigInteger5);
+         shadedBigInteger2 = shadedBigInteger2.add(valueOf((long)(2 * primeSearchLen)));
          if (shadedBigInteger2.bitLength() != n) {
             shadedBigInteger = new ShadedBigInteger(n, rand);
-            int n5 = n - 1;
-            int n6 = n5;
-            shadedBigInteger2 = shadedBigInteger.setBit(n6);
+            shadedBigInteger2 = shadedBigInteger.setBit(n - 1);
          }
 
          shadedBigInteger2.mag[shadedBigInteger2.mag.length - 1] = shadedBigInteger2.mag[shadedBigInteger2.mag.length - 1] & -2;
@@ -2651,22 +2410,14 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       ShadedBigInteger upper = this.getUpper(n);
       ShadedBigInteger shadedBigInteger = upper.square();
       ShadedBigInteger shadedBigInteger2 = lower.square();
-      int n2 = n * 32;
-      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.shiftLeft(n2);
-      ShadedBigInteger shadedBigInteger4 = lower.add(upper);
-      ShadedBigInteger shadedBigInteger5 = shadedBigInteger4.square();
-      ShadedBigInteger shadedBigInteger6 = shadedBigInteger.add(shadedBigInteger2);
-      ShadedBigInteger shadedBigInteger7 = shadedBigInteger5.subtract(shadedBigInteger6);
-      ShadedBigInteger shadedBigInteger8 = shadedBigInteger7;
-      shadedBigInteger3 = shadedBigInteger3.add(shadedBigInteger8);
-      int n3 = n * 32;
-      shadedBigInteger3 = shadedBigInteger3.shiftLeft(n3);
+      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.shiftLeft(n * 32);
+      shadedBigInteger3 = shadedBigInteger3.add(lower.add(upper).square().subtract(shadedBigInteger.add(shadedBigInteger2)));
+      shadedBigInteger3 = shadedBigInteger3.shiftLeft(n * 32);
       return shadedBigInteger3.add(shadedBigInteger2);
    }
 
    private static int[] stripLeadingZeroBytes(byte[] bytes) {
       int length = bytes.length;
-      ShadedNumber.getFlowState();
       int n = 0;
 
       while (n < length && bytes[n] == 0) {
@@ -2679,8 +2430,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
       for (int i = n2 - 1; i >= 0; i--) {
          ints[i] = bytes[n3--] & 255;
-         int n4 = n3 - n + 1;
-         int n5 = Math.min(3, n4);
+         int n5 = Math.min(3, n3 - n + 1);
 
          for (int j = 8; j <= n5 << 3; j += 8) {
             ints[i] |= (bytes[n3--] & 255) << j;
@@ -2699,13 +2449,11 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       byte[] bytes = new byte[n];
       int n2 = n - 1;
       int n3 = 4;
-      ShadedNumber.getFlowState();
       int n4 = 0;
 
       for (int i = 0; n2 >= 0; n2--) {
          if (n3 == 4) {
-            int n5 = i++;
-            n4 = this.getInt(n5);
+            n4 = this.getInt(i++);
             n3 = 1;
          } else {
             n4 >>>= 8;
@@ -2720,17 +2468,12 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private ShadedBigInteger divideKnuth(ShadedBigInteger shadedBigInteger) {
       MutableBigInt mutableBigInt = new MutableBigInt();
-      MutableBigInt mutableBigInt2 = new MutableBigInt(this.mag);
-      MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger.mag);
-      boolean flag = false;
-      mutableBigInt2.divideKnuth(mutableBigInt3, mutableBigInt, flag);
-      int n = this.signum * shadedBigInteger.signum;
-      return mutableBigInt.toBigInteger(n);
+      new MutableBigInt(this.mag).divideKnuth(new MutableBigInt(shadedBigInteger.mag), mutableBigInt, false);
+      return mutableBigInt.toBigInteger(this.signum * shadedBigInteger.signum);
    }
 
    private ShadedBigInteger(int[] ints) {
       super();
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (ints.length == 0) {
          throw new NumberFormatException("Zero length BigInteger");
       } else {
@@ -2800,13 +2543,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger or(ShadedBigInteger shadedBigInteger) {
       int[] ints = new int[Math.max(this.intLength(), shadedBigInteger.intLength())];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < ints.length; i++) {
-         int n = ints.length - i - 1;
-         int n2 = this.getInt(n);
-         int n3 = ints.length - i - 1;
-         ints[i] = n2 | shadedBigInteger.getInt(n3);
+         ints[i] = this.getInt(ints.length - i - 1) | shadedBigInteger.getInt(ints.length - i - 1);
       }
 
       return valueOf2(ints);
@@ -2814,7 +2553,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    @Override
    public float floatValue() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.signum == 0) {
          return 0.0F;
       } else {
@@ -2839,8 +2577,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
             int n6 = n5 >> 1;
             n6 &= 8388607;
-            boolean flag = (n5 & 1) != 0 && ((n6 & 1) != 0 || this.abs().getLowestSetBit() < n2);
-            int n7 = flag ? n6 + 1 : n6;
+            int n7 = ((n5 & 1) != 0 && ((n6 & 1) != 0 || this.abs().getLowestSetBit() < n2)) ? n6 + 1 : n6;
             int n8 = n + 127 << 23;
             n8 += n7;
             n8 |= this.signum & -2147483648;
@@ -2853,10 +2590,8 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
       ShadedBigInteger shadedBigInteger2 = ONE;
       ShadedBigInteger shadedBigInteger3 = this.mod2(n);
       int n2 = 0;
-      ShadedNumber.getFlowState();
       int n3 = shadedBigInteger.bitLength();
-      byte b = 0;
-      if (this.testBit(b)) {
+      if (this.testBit((byte)0)) {
          n3 = n - 1 < n3 ? n - 1 : n3;
       }
 
@@ -2898,7 +2633,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
       GetField getField = objectInputStream.readFields();
-      ShadedNumber.getFlowState();
       int n = getField.get("signum", -2);
       byte[] bytes = (byte[])getField.get("magnitude", null);
       if (n >= -1 && n <= 1) {
@@ -2933,19 +2667,14 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private boolean passesLucasLehmer() {
-      ShadedBigInteger shadedBigInteger = ONE;
-      ShadedBigInteger shadedBigInteger2 = this.add(shadedBigInteger);
-      ShadedNumber.getFlowState();
+      ShadedBigInteger shadedBigInteger2 = this.add(ONE);
       int n = 5;
 
       while (jacobiSymbol(n, this) != -1) {
          n = n < 0 ? Math.abs(n) + 2 : -(n + 2);
       }
 
-      ShadedBigInteger shadedBigInteger3 = lucasLehmerSequence(n, shadedBigInteger2, this);
-      ShadedBigInteger shadedBigInteger4 = shadedBigInteger3.mod(this);
-      ShadedBigInteger shadedBigInteger5 = ZERO;
-      return shadedBigInteger4.equals(shadedBigInteger5);
+      return lucasLehmerSequence(n, shadedBigInteger2, this).mod(this).equals(ZERO);
    }
 
    public static int addOne(int[] ints, int n, int n2, int n3) {
@@ -3010,12 +2739,10 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public boolean testBit(int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
-         int n2 = n >>> 5;
-         return (this.getInt(n2) & 1 << (n & 31)) != 0;
+         return (this.getInt(n >>> 5) & 1 << (n & 31)) != 0;
       }
    }
 
@@ -3032,7 +2759,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int subN(int[] ints, int[] ints2, int n) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       long l = 0L;
 
       while (--n >= 0) {
@@ -3055,21 +2781,15 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    private ShadedBigInteger[] divideAndRemainderKnuth(ShadedBigInteger shadedBigInteger) {
       ShadedBigInteger[] shadedBigIntegers = new ShadedBigInteger[2];
-      ShadedNumber.getFlowState();
       MutableBigInt mutableBigInt = new MutableBigInt();
-      MutableBigInt mutableBigInt2 = new MutableBigInt(this.mag);
-      MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger.mag);
-      MutableBigInt mutableBigInt4 = mutableBigInt2.divideKnuth(mutableBigInt3, mutableBigInt);
-      int n = this.signum == shadedBigInteger.signum ? 1 : -1;
-      shadedBigIntegers[0] = mutableBigInt.toBigInteger(n);
-      int signum2 = this.signum;
-      shadedBigIntegers[1] = mutableBigInt4.toBigInteger(signum2);
+      MutableBigInt mutableBigInt4 = new MutableBigInt(this.mag).divideKnuth(new MutableBigInt(shadedBigInteger.mag), mutableBigInt);
+      shadedBigIntegers[0] = mutableBigInt.toBigInteger(this.signum == shadedBigInteger.signum ? 1 : -1);
+      shadedBigIntegers[1] = mutableBigInt4.toBigInteger(this.signum);
       return shadedBigIntegers;
    }
 
    public ShadedBigInteger(byte[] bytes) {
       super();
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (bytes[0] < 0) {
          this.mag = makePositive(bytes);
          this.signum = -1;
@@ -3095,7 +2815,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static byte[] randomBits(int n, Random rand) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (n < 0) {
          throw new IllegalArgumentException("numBits must be non-negative");
       } else {
@@ -3117,13 +2836,9 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
 
    public ShadedBigInteger xor(ShadedBigInteger shadedBigInteger) {
       int[] ints = new int[Math.max(this.intLength(), shadedBigInteger.intLength())];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < ints.length; i++) {
-         int n = ints.length - i - 1;
-         int n2 = this.getInt(n);
-         int n3 = ints.length - i - 1;
-         ints[i] = n2 ^ shadedBigInteger.getInt(n3);
+         ints[i] = this.getInt(ints.length - i - 1) ^ shadedBigInteger.getInt(ints.length - i - 1);
       }
 
       return valueOf2(ints);
@@ -3191,15 +2906,12 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private static int[] montgomeryMultiply(int[] ints, int[] ints2, int[] ints3, int n, long l, int[] ints4) {
-      int[] flowState2 = ShadedNumber.getFlowState();
       montgomeryMultiplyChecks(ints, ints2, ints3, n, ints4);
       if (n > 512) {
          ints4 = multiplyToLen(ints, n, ints2, n, ints4);
-         int n2 = (int)l;
-         return montReduce(ints4, ints3, n, n2);
+         return montReduce(ints4, ints3, n, (int)l);
       } else {
-         int[] ints5 = materialize(ints4, n);
-         return implMontgomeryMultiply(ints, ints2, ints3, n, l, ints5);
+         return implMontgomeryMultiply(ints, ints2, ints3, n, l, materialize(ints4, n));
       }
    }
 
@@ -3237,7 +2949,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public short shortValueExact() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.mag.length <= 1 && this.bitLength() <= 31) {
          int n = this.intValue();
          if (n >= -32768 && n <= 32767) {
@@ -3249,7 +2960,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public int intValueExact() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.mag.length <= 1 && this.bitLength() <= 31) {
          return this.intValue();
       } else {
@@ -3258,9 +2968,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    private ShadedBigInteger oddModPow(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
-      int[] flowState2 = ShadedNumber.getFlowState();
-      ShadedBigInteger shadedBigInteger3 = ONE;
-      if (shadedBigInteger.equals(shadedBigInteger3)) {
+      if (shadedBigInteger.equals(ONE)) {
          return this;
       } else if (this.signum == 0) {
          return ZERO;
@@ -3277,8 +2985,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
          }
 
          int n = 0;
-         int length2 = mag2.length;
-         int n2 = bitLength(mag2, length2);
+         int n2 = bitLength(mag2, mag2.length);
          if (n2 != 17 || mag2[0] != 65537) {
             while (n2 > bnExpModThreshTable[n]) {
                n++;
@@ -3292,18 +2999,13 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             intsArr[i] = new int[length];
          }
 
-         long l = ((long)mag3[length - 1] & 4294967295L) + (((long)mag3[length - 2] & 4294967295L) << 32);
-         long l2 = -MutableBigInt.inverseMod64(l);
-         int length3 = ints.length;
-         int n4 = length << 5;
-         int n5 = length3;
-         int[] ints3 = leftShift(ints, n5, n4);
+         long l2 = -MutableBigInt.inverseMod64(((long)mag3[length - 1] & 4294967295L) + (((long)mag3[length - 2] & 4294967295L) << 32));
+         int[] ints3 = leftShift(ints, ints.length, length << 5);
          MutableBigInt mutableBigInt = new MutableBigInt();
          MutableBigInt mutableBigInt2 = new MutableBigInt(ints3);
          MutableBigInt mutableBigInt3 = new MutableBigInt(mag3);
          mutableBigInt3.normalize();
-         MutableBigInt mutableBigInt4 = mutableBigInt2.divide2(mutableBigInt3, mutableBigInt);
-         intsArr[0] = mutableBigInt4.toIntArray();
+         intsArr[0] = mutableBigInt2.divide2(mutableBigInt3, mutableBigInt).toIntArray();
          if (intsArr[0].length < length) {
             int n6 = length - intsArr[0].length;
             int[] ints4 = new int[length];
@@ -3311,16 +3013,11 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             intsArr[0] = ints4;
          }
 
-         int[] ints5 = intsArr[0];
-         Object obj = null;
-         int[] ints6 = montgomerySquare(ints5, mag3, length, l2, (int[])obj);
+         int[] ints6 = montgomerySquare(intsArr[0], mag3, length, l2, (int[])null);
          int[] ints7 = Arrays.copyOf(ints6, length);
 
          for (int j = 1; j < n3; j++) {
-            int[] ints8 = intsArr[j - 1];
-            Object obj2 = null;
-            int[] ints9 = ints8;
-            intsArr[j] = montgomeryMultiply(ints7, ints9, mag3, length, l2, (int[])obj2);
+            intsArr[j] = montgomeryMultiply(ints7, intsArr[j - 1], mag3, length, l2, (int[])null);
          }
 
          int n7 = 1 << (n2 - 1 & 31);
@@ -3388,8 +3085,7 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
             if (n2 == 0) {
                int[] ints11 = new int[2 * length];
                System.arraycopy(ints6, 0, ints11, length, length);
-               int n11 = (int)l2;
-               ints6 = montReduce(ints11, mag3, length, n11);
+               ints6 = montReduce(ints11, mag3, length, (int)l2);
                ints11 = Arrays.copyOf(ints6, length);
                return new ShadedBigInteger(1, ints11);
             }
@@ -3525,7 +3221,6 @@ public class ShadedBigInteger extends ShadedNumber implements Comparable {
    }
 
    public byte byteValueExact() {
-      int[] flowState2 = ShadedNumber.getFlowState();
       if (this.mag.length <= 1 && this.bitLength() <= 31) {
          int n = this.intValue();
          if (n >= -128 && n <= 127) {

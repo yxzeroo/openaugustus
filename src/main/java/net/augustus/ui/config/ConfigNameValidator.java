@@ -19,15 +19,13 @@ public class ConfigNameValidator {
          ALLOWED_CHARACTERS.add(k);
       }
 
-      char[] chars = new char[]{'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü'};
 
-      for (char ch : chars) {
+      for (char ch : new char[]{'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü'}) {
          ALLOWED_CHARACTERS.add(ch);
       }
 
-      char[] chars2 = new char[]{'-', '_', ' '};
 
-      for (char ch2 : chars2) {
+      for (char ch2 : new char[]{'-', '_', ' '}) {
          ALLOWED_CHARACTERS.add(ch2);
       }
    }

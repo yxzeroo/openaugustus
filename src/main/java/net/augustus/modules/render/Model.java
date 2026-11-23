@@ -7,7 +7,7 @@ import net.augustus.events.listeners.RenderListener;
 import net.augustus.render.RenderUtil;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
@@ -18,18 +18,18 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.MathHelper;
 
 public class Model extends Module implements RenderListener, TickListener {
-   public final StringValue xCoord;
-   public final StringValue yCoord;
-   public final StringValue scale;
+   public final DoubleValue xCoord;
+   public final DoubleValue yCoord;
+   public final DoubleValue scale;
    public final BooleanValue yawRot;
    private float currentYaw;
    private float previousYaw;
 
    public Model() {
        super("Model", "Model", new Color(252, 186, 3), Categorys.RENDER);
-      this.xCoord = new StringValue(this, "X-Coord", 1.0, 0.0, 100.0, 2);
-      this.yCoord = new StringValue(this, "Y-Coord", 8.0, 0.0, 100.0, 2);
-      this.scale = new StringValue(this, "Scale", 30.0, 10.0, 100.0, 0);
+      this.xCoord = new DoubleValue(this, "X-Coord", 1.0, 0.0, 100.0, 2);
+      this.yCoord = new DoubleValue(this, "Y-Coord", 8.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 30.0, 10.0, 100.0, 0);
       this.yawRot = new BooleanValue(this, "YawRot", true);
       this.currentYaw = 0.0F;
       this.previousYaw = 0.0F;
@@ -42,10 +42,8 @@ public class Model extends Module implements RenderListener, TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
@@ -59,9 +57,7 @@ public class Model extends Module implements RenderListener, TickListener {
       int value = (int)this.scale.getValue();
       EntityPlayerSP thePlayer = mc.thePlayer;
       float f2 = 0.0F;
-      float f3 = 0.0F;
-      int n3 = value;
-      this.renderPlayerModel(n, n2, n3, f3, f2, thePlayer);
+      this.renderPlayerModel(n, n2, value, 0.0F, f2, thePlayer);
       RenderUtil.resetGlColorState();
    }
 

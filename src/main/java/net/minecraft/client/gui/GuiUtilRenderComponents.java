@@ -87,8 +87,7 @@ public class GuiUtilRenderComponents {
          sb.append(str);
          n2 += stringWidth;
       } else {
-         int n3 = n - n2;
-         String str2 = fontRenderer.trimStringToWidth(str, n3, false);
+         String str2 = fontRenderer.trimStringToWidth(str, n - n2, false);
          sb.append(str2);
          String str3 = str.substring(str2.length());
          if (!str3.isEmpty()) {
@@ -125,9 +124,7 @@ public class GuiUtilRenderComponents {
                n4 = unformattedTextForChat.length();
             }
 
-            String str = unformattedTextForChat.substring(n3, n4);
-            String str2 = removeTextColorsIfConfigured(formattingCode + str, flag2);
-            n2 = appendWrappedSegment(str2, n, fontRenderer, flag, sb, n2);
+            n2 = appendWrappedSegment(removeTextColorsIfConfigured(formattingCode + unformattedTextForChat.substring(n3, n4), flag2), n, fontRenderer, flag, sb, n2);
             n3 = n4 + 1;
          }
       }

@@ -40,8 +40,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.utils.player.ContainerSlotQuery;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.Container;
@@ -63,8 +63,8 @@ public class Stealer extends Module implements TickListener, RenderListener {
    private final RandomizedRangeSettings closeDelay;
    private final RandomizedRangeSettings chestOpenTime;
    private final ModeSetting mouseMode;
-   private final BooleansSetting clickCalculationMode;
-   private final DoubleValue clickSettings;
+   private final StringValue clickCalculationMode;
+   private final SettingGroup clickSettings;
    private final RandomizedRangeSettings cps;
    private final RandomizedRangeSettings delayBeforeClick;
    private final RandomizedRangeSettings delayAfterClick;
@@ -74,7 +74,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
    private final RandomizedRangeSettings doubleClickChance;
    private final BooleanValue stealOnlyOncePerTick;
    private final BooleanValue row;
-   private final DoubleValue rowSettings;
+   private final SettingGroup rowSettings;
    private final RandomizedRangeSettings rowCPS;
    private final RandomizedRangeSettings rowDelayBeforeClick;
    private final RandomizedRangeSettings rowDelayAfterClick;
@@ -82,12 +82,12 @@ public class Stealer extends Module implements TickListener, RenderListener {
    private final BooleanValue stealAbilityCheck;
    private final BooleanValue intelligent;
    private final BooleanValue ignoreBadPotions;
-   private final DoubleValue itemBlackList;
+   private final SettingGroup itemBlackList;
    private final BooleanValue autoSort;
-   public final BooleansSetting whereToSteal;
+   public final StringValue whereToSteal;
    private final BooleanValue ignoreEnderChests;
-   private final BooleansSetting sequence;
-   private final BooleansSetting clickMode;
+   private final StringValue sequence;
+   private final StringValue clickMode;
    private final BooleanValue toggleStorageESP;
    private final BooleanValue toggleChestAura;
    public final BooleanValue silent;
@@ -130,73 +130,39 @@ public class Stealer extends Module implements TickListener, RenderListener {
       BooleanValue autoClose2 = this.autoClose;
       this.autoClose.getClass();
       BooleanValue booleanValue = autoClose2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.closeDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
+      this.closeDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> booleanValue.getValue());
       RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "ChestOpenTime", 3.0, 4.0, 0.0, 20.0, 0)).withoutNotInARow();
       autoClose2 = this.autoClose;
       this.autoClose.getClass();
       BooleanValue booleanValue2 = autoClose2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.chestOpenTime = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2);
+      this.chestOpenTime = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> booleanValue2.getValue());
       BiFunction[] biFunctions = new BiFunction[]{
-         (obj, obj2) -> new StealerNoneMouseMode((Stealer)obj, (DoubleValue)obj2),
-         (obj3, obj4) -> new StealerLinearMouseMode((Stealer)obj3, (DoubleValue)obj4),
-         (obj5, obj6) -> new StealerCubicMouseMode((Stealer)obj5, (DoubleValue)obj6),
+         (obj, obj2) -> new StealerNoneMouseMode((Stealer)obj, (SettingGroup)obj2),
+         (obj3, obj4) -> new StealerLinearMouseMode((Stealer)obj3, (SettingGroup)obj4),
+         (obj5, obj6) -> new StealerCubicMouseMode((Stealer)obj5, (SettingGroup)obj6),
          null
       };
-      biFunctions[3] = (obj7, obj8) -> new StealerMouseSimulationMode((Stealer)obj7, (DoubleValue)obj8);
-      BiFunction[] biFunctions2 = biFunctions;
-      this.mouseMode = new ModeSetting(this, "MouseMode", "Linear", biFunctions2);
-      this.clickCalculationMode = new BooleansSetting(this, "ClickCalculationMode", "Default", new String[]{"Instant", "Default", "Intave"});
-      DoubleValue doubleValue = new DoubleValue(this, "ClickSettings", true);
-      SettingVisibilityCondition condition3 = () -> this.isClickSettingsVisible();
-      this.clickSettings = doubleValue.visibleWhen(condition3);
-      RandomizedRangeSettings randomizedRangeSettings3 = new RandomizedRangeSettings(this, "CPS", 8.0, 12.0, 1.0, 20.0, 0, this.clickSettings);
-      SettingVisibilityCondition condition4 = () -> this.isDefaultClickMode();
-      this.cps = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings4 = new RandomizedRangeSettings(this, "DelayBeforeClick", 0.0, 2.0, 0.0, 4.0, 0, this.clickSettings);
-      SettingVisibilityCondition condition5 = () -> this.isDefaultClickMode();
-      this.delayBeforeClick = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition5);
-      RandomizedRangeSettings randomizedRangeSettings5 = new RandomizedRangeSettings(this, "DelayAfterClick", 0.0, 2.0, 0.0, 4.0, 0, this.clickSettings);
-      SettingVisibilityCondition condition6 = () -> this.isDefaultClickMode();
-      this.delayAfterClick = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(condition6);
-      RandomizedRangeSettings randomizedRangeSettings6 = (new RandomizedRangeSettings(this, "MisClickChance", 0.0, 0.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow();
-      SettingVisibilityCondition condition7 = () -> this.isDefaultClickMode();
-      this.misClickChance = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition7);
-      RandomizedRangeSettings randomizedRangeSettings7 = (new RandomizedRangeSettings(this, "FailRateChance", 5.0, 10.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow();
-      SettingVisibilityCondition condition8 = () -> this.isDefaultClickMode();
-      this.failRateChance = (RandomizedRangeSettings)randomizedRangeSettings7.withVisibility(condition8);
-      RandomizedRangeSettings randomizedRangeSettings8 = new RandomizedRangeSettings(this, "FailDuration", 2.0, 3.0, 0.0, 5.0, 0, this.clickSettings);
-      SettingVisibilityCondition condition9 = () -> this.isFailDurationVisible();
-      RandomizedRangeSettings randomizedRangeSettings9 = (RandomizedRangeSettings)randomizedRangeSettings8.withVisibility(condition9);
-      SettingVisibilityCondition condition10 = () -> this.isDefaultClickMode();
-      this.failDuration = (RandomizedRangeSettings)randomizedRangeSettings9.withVisibility(condition10);
-      RandomizedRangeSettings randomizedRangeSettings10 = (new RandomizedRangeSettings(this, "DoubleClickChance", 50.0, 70.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow();
-      SettingVisibilityCondition condition11 = () -> this.isDefaultClickMode();
-      this.doubleClickChance = (RandomizedRangeSettings)randomizedRangeSettings10.withVisibility(condition11);
-      BooleanValue booleanValue3 = new BooleanValue(this, "StealOnlyOncePerTick", false, this.clickSettings);
-      SettingVisibilityCondition condition12 = () -> this.isDefaultClickMode();
-      this.stealOnlyOncePerTick = (BooleanValue)booleanValue3.withVisibility(condition12);
-      BooleanValue booleanValue4 = new BooleanValue(this, "Row", true, this.clickSettings);
-      SettingVisibilityCondition condition13 = () -> this.isDefaultClickMode();
-      this.row = (BooleanValue)booleanValue4.withVisibility(condition13);
-      DoubleValue doubleValue2 = new DoubleValue(this, "RowSettings", true, this.clickSettings);
+      biFunctions[3] = (obj7, obj8) -> new StealerMouseSimulationMode((Stealer)obj7, (SettingGroup)obj8);
+      this.mouseMode = new ModeSetting(this, "MouseMode", "Linear", biFunctions);
+      this.clickCalculationMode = new StringValue(this, "ClickCalculationMode", "Default", new String[]{"Instant", "Default", "Intave"});
+      this.clickSettings = new SettingGroup(this, "ClickSettings", true).visibleWhen(() -> this.isClickSettingsVisible());
+      this.cps = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "CPS", 8.0, 12.0, 1.0, 20.0, 0, this.clickSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.delayBeforeClick = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "DelayBeforeClick", 0.0, 2.0, 0.0, 4.0, 0, this.clickSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.delayAfterClick = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "DelayAfterClick", 0.0, 2.0, 0.0, 4.0, 0, this.clickSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.misClickChance = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "MisClickChance", 0.0, 0.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow().withVisibility(() -> this.isDefaultClickMode());
+      this.failRateChance = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "FailRateChance", 5.0, 10.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow().withVisibility(() -> this.isDefaultClickMode());
+      this.failDuration = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(this, "FailDuration", 2.0, 3.0, 0.0, 5.0, 0, this.clickSettings).withVisibility(() -> this.isFailDurationVisible())).withVisibility(() -> this.isDefaultClickMode());
+      this.doubleClickChance = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DoubleClickChance", 50.0, 70.0, 0.0, 100.0, 0, this.clickSettings)).withoutNotInARow().withVisibility(() -> this.isDefaultClickMode());
+      this.stealOnlyOncePerTick = (BooleanValue)new BooleanValue(this, "StealOnlyOncePerTick", false, this.clickSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.row = (BooleanValue)new BooleanValue(this, "Row", true, this.clickSettings).withVisibility(() -> this.isDefaultClickMode());
+      SettingGroup doubleValue2 = new SettingGroup(this, "RowSettings", true, this.clickSettings);
       autoClose2 = this.row;
       this.row.getClass();
       BooleanValue booleanValue5 = autoClose2;
-      SettingVisibilityCondition condition14 = () -> booleanValue5.getValue();
-      DoubleValue doubleValue3 = doubleValue2.visibleWhen(condition14);
-      SettingVisibilityCondition condition15 = () -> this.isRowSettingsVisible();
-      this.rowSettings = doubleValue3.visibleWhen(condition15);
-      RandomizedRangeSettings randomizedRangeSettings11 = new RandomizedRangeSettings(this, "RowCPS", 8.0, 12.0, 1.0, 20.0, 0, this.rowSettings);
-      SettingVisibilityCondition condition16 = () -> this.isDefaultClickMode();
-      this.rowCPS = (RandomizedRangeSettings)randomizedRangeSettings11.withVisibility(condition16);
-      RandomizedRangeSettings randomizedRangeSettings12 = new RandomizedRangeSettings(this, "RowDelayBeforeClick", 0.0, 2.0, 0.0, 4.0, 0, this.rowSettings);
-      SettingVisibilityCondition condition17 = () -> this.isDefaultClickMode();
-      this.rowDelayBeforeClick = (RandomizedRangeSettings)randomizedRangeSettings12.withVisibility(condition17);
-      RandomizedRangeSettings randomizedRangeSettings13 = new RandomizedRangeSettings(this, "RowDelayAfterClick", 0.0, 2.0, 0.0, 4.0, 0, this.rowSettings);
-      SettingVisibilityCondition condition18 = () -> this.isDefaultClickMode();
-      this.rowDelayAfterClick = (RandomizedRangeSettings)randomizedRangeSettings13.withVisibility(condition18);
+      this.rowSettings = doubleValue2.visibleWhen(() -> booleanValue5.getValue()).visibleWhen(() -> this.isRowSettingsVisible());
+      this.rowCPS = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "RowCPS", 8.0, 12.0, 1.0, 20.0, 0, this.rowSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.rowDelayBeforeClick = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "RowDelayBeforeClick", 0.0, 2.0, 0.0, 4.0, 0, this.rowSettings).withVisibility(() -> this.isDefaultClickMode());
+      this.rowDelayAfterClick = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "RowDelayAfterClick", 0.0, 2.0, 0.0, 4.0, 0, this.rowSettings).withVisibility(() -> this.isDefaultClickMode());
       this.stealZeroStackSizeItems = new BooleanValue(this, "StealZeroStackSizeItems", false);
       this.stealAbilityCheck = new BooleanValue(this, "StealAbilityCheck", true);
       this.intelligent = new BooleanValue(this, "Intelligent", true);
@@ -204,59 +170,43 @@ public class Stealer extends Module implements TickListener, RenderListener {
       BooleanValue intelligent2 = this.intelligent;
       this.intelligent.getClass();
       BooleanValue booleanValue6 = intelligent2;
-      SettingVisibilityCondition condition19 = () -> booleanValue6.getValue();
-      this.ignoreBadPotions = (BooleanValue)autoClose2.withVisibility(condition19);
-      DoubleValue doubleValue4 = new DoubleValue(this, "ItemBlackList");
+      this.ignoreBadPotions = (BooleanValue)autoClose2.withVisibility(() -> booleanValue6.getValue());
+      SettingGroup doubleValue4 = new SettingGroup(this, "ItemBlackList");
       intelligent2 = this.intelligent;
       this.intelligent.getClass();
       BooleanValue booleanValue7 = intelligent2;
-      SettingVisibilityCondition condition20 = () -> booleanValue7.getValue();
-      this.itemBlackList = doubleValue4.visibleWhen(condition20);
+      this.itemBlackList = doubleValue4.visibleWhen(() -> booleanValue7.getValue());
       autoClose2 = new BooleanValue(this, "AutoSort", true);
-      SettingVisibilityCondition condition21 = () -> this.isAutoSortVisible();
-      this.autoSort = (BooleanValue)autoClose2.withVisibility(condition21);
-      this.whereToSteal = new BooleansSetting(this, "WhereToSteal", "ChestsOnly", new String[]{"Always", "ChestsOnly", "CustomChest"});
+      this.autoSort = (BooleanValue)autoClose2.withVisibility(() -> this.isAutoSortVisible());
+      this.whereToSteal = new StringValue(this, "WhereToSteal", "ChestsOnly", new String[]{"Always", "ChestsOnly", "CustomChest"});
       autoClose2 = new BooleanValue(this, "IgnoreEnderChests", false);
-      SettingVisibilityCondition condition22 = () -> this.isIgnoreEnderChestsVisible();
-      this.ignoreEnderChests = (BooleanValue)autoClose2.withVisibility(condition22);
-      this.sequence = new BooleansSetting(this, "Sequence", "Nearest", new String[]{"Basic", "Nearest", "Random"});
-      this.clickMode = new BooleansSetting(this, "ClickMode", "Basic", new String[]{"Basic"});
+      this.ignoreEnderChests = (BooleanValue)autoClose2.withVisibility(() -> this.isIgnoreEnderChestsVisible());
+      this.sequence = new StringValue(this, "Sequence", "Nearest", new String[]{"Basic", "Nearest", "Random"});
+      this.clickMode = new StringValue(this, "ClickMode", "Basic", new String[]{"Basic"});
       this.toggleStorageESP = new BooleanValue(this, "ToggleStorageESP", false);
       this.toggleChestAura = new BooleanValue(this, "ToggleChestAura", false);
       this.silent = (BooleanValue)(new BooleanValue(this, "Silent", false)).markVisualOnly();
       autoClose2 = new BooleanValue(this, "Visualize", true);
-      SettingVisibilityCondition condition23 = () -> this.isVisualizeVisible();
-      this.visualize = (BooleanValue)((BooleanValue)autoClose2.withVisibility(condition23)).markVisualOnly();
+      this.visualize = (BooleanValue)((BooleanValue)autoClose2.withVisibility(() -> this.isVisualizeVisible())).markVisualOnly();
       autoClose2 = new BooleanValue(this, "StealIndicator", true);
       intelligent2 = this.silent;
       this.silent.getClass();
       BooleanValue booleanValue8 = intelligent2;
-      SettingVisibilityCondition condition24 = () -> booleanValue8.getValue();
-      this.stealIndicator = (BooleanValue)((BooleanValue)autoClose2.withVisibility(condition24)).markVisualOnly();
-      ColorSetting colorSetting = new ColorSetting(this, "Color", Color.WHITE);
-      SettingVisibilityCondition condition25 = () -> this.isIndicatorColorVisible();
-      this.color2 = (ColorSetting)((ColorSetting)colorSetting.withVisibility(condition25)).markVisualOnly();
+      this.stealIndicator = (BooleanValue)((BooleanValue)autoClose2.withVisibility(() -> booleanValue8.getValue())).markVisualOnly();
+      this.color2 = (ColorSetting)((ColorSetting)new ColorSetting(this, "Color", Color.WHITE).withVisibility(() -> this.isIndicatorColorVisible())).markVisualOnly();
       autoClose2 = new BooleanValue(this, "BackGround", true);
-      SettingVisibilityCondition condition26 = () -> this.isBackgroundVisible();
-      this.backGround = (BooleanValue)((BooleanValue)autoClose2.withVisibility(condition26)).markVisualOnly();
-      ColorSetting colorSetting2 = new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100));
-      SettingVisibilityCondition condition27 = () -> this.isBackgroundColorVisible();
-      this.backgroundColor = (ColorSetting)((ColorSetting)colorSetting2.withVisibility(condition27)).markVisualOnly();
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
+      this.backGround = (BooleanValue)((BooleanValue)autoClose2.withVisibility(() -> this.isBackgroundVisible())).markVisualOnly();
+      this.backgroundColor = (ColorSetting)((ColorSetting)new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100)).withVisibility(() -> this.isBackgroundColorVisible())).markVisualOnly();
+      BlurShadowSettings blurShadowSettings3 = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
       SettingVisibilityCondition condition28 = () -> {
          return this.silent.getValue() && this.stealIndicator.getValue();
       };
       this.blurShadowSettings = (BlurShadowSettings)((BlurShadowSettings)blurShadowSettings3.withVisibility(condition28)).markAllVisualOnly();
-      StringListSetting stringListSetting = new StringListSetting(this, "ChestStorage", new ArrayList());
-      SettingVisibilityCondition condition29 = () -> false;
-      this.chestStorage = (StringListSetting)stringListSetting.withVisibility(condition29);
-      DoubleValue itemBlackList2 = this.itemBlackList;
+      this.chestStorage = (StringListSetting)new StringListSetting(this, "ChestStorage", new ArrayList()).withVisibility(() -> false);
+      SettingGroup itemBlackList2 = this.itemBlackList;
       BooleanValue intelligent3 = this.intelligent;
       this.intelligent.getClass();
-      BooleanValue booleanValue9 = intelligent3;
-      SettingVisibilityCondition condition30 = () -> booleanValue9.getValue();
+      SettingVisibilityCondition condition30 = () -> intelligent3.getValue();
       this.items = new ItemFilterSetting(this, "Items", itemBlackList2, condition30, obj9 -> {
          return !this.isGearItem((Item)obj9) && !(obj9 instanceof ItemPotion) && InventoryUtil.isCleanableItem((Item)obj9);
       });
@@ -266,18 +216,10 @@ public class Stealer extends Module implements TickListener, RenderListener {
       this.afterClickCounter = new TickCounter();
       this.beforeClickCounter = new TickCounter();
       this.failDurationCounter = new TickCounter();
-      byte b = 60;
-      byte b2 = 0;
-      this.cpsAccumulator = new ActionRateAccumulator(60, (double)DefaultRandomGenerator.instance.nextInt2(b2, b));
-      byte b3 = 100;
-      byte b4 = 0;
-      this.misClickAccumulator = new ActionRateAccumulator(300, (double)DefaultRandomGenerator.instance.nextInt2(b4, b3));
-      byte b5 = 100;
-      byte b6 = 0;
-      this.failRateAccumulator = new ActionRateAccumulator(100, (double)DefaultRandomGenerator.instance.nextInt2(b6, b5));
-      byte b7 = 100;
-      byte b8 = 0;
-      this.doubleClickAccumulator = new ActionRateAccumulator(100, (double)DefaultRandomGenerator.instance.nextInt2(b8, b7));
+      this.cpsAccumulator = new ActionRateAccumulator(60, (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)60));
+      this.misClickAccumulator = new ActionRateAccumulator(300, (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100));
+      this.failRateAccumulator = new ActionRateAccumulator(100, (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100));
+      this.doubleClickAccumulator = new ActionRateAccumulator(100, (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100));
       this.clickIntervalWindow = new DoubleSampleWindow(30);
       this.lastClickNanoTime = System.currentTimeMillis();
       this.wasEmptyLastTick = false;
@@ -294,32 +236,27 @@ public class Stealer extends Module implements TickListener, RenderListener {
 
    @Override
    public void onEnable() {
-      boolean flag = true;
-      this.toggleLinkedModules(flag);
+      this.toggleLinkedModules(true);
       this.chestInitialized = false;
       this.completedClickCount = 0;
    }
 
    @Override
    public void onDisable() {
-      boolean flag = false;
-      this.toggleLinkedModules(flag);
+      this.toggleLinkedModules(false);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
    public void onRender(float f, ScaledResolution sr) {
       if (this.silent.getValue() && this.stealIndicator.getValue() && ContainerUtil.isChestOpen()) {
          String str = "Stealing (" + this.stolenSlotCount + "/" + this.initialSlotCount + ")";
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderStealIndicator(str, sr, shaderRenderPass));
          RenderUtil.resetGlColorState();
       }
@@ -327,10 +264,8 @@ public class Stealer extends Module implements TickListener, RenderListener {
 
    private boolean isValidChestOpen() {
       if (ContainerUtil.isChestOpen()) {
-         GuiChest currentScreen = (GuiChest)mc.currentScreen;
-         if (this.shouldStealFromChest(currentScreen)) {
-            Container inventorySlots = ((GuiChest)mc.currentScreen).inventorySlots;
-            return inventorySlots.isReceivedItems();
+         if (this.shouldStealFromChest((GuiChest)mc.currentScreen)) {
+            return ((GuiChest)mc.currentScreen).inventorySlots.isReceivedItems();
          }
       }
 
@@ -358,8 +293,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
          }
 
          try {
-            GuiChest currentScreen = (GuiChest)mc.currentScreen;
-            this.processChestSteal(currentScreen);
+            this.processChestSteal((GuiChest)mc.currentScreen);
          } catch (IOException e) {
             throw new RuntimeException(e);
          }
@@ -379,17 +313,13 @@ public class Stealer extends Module implements TickListener, RenderListener {
                   this.closeDelayCounter.reset();
                }
 
-               TickCounter closeDelayCounter2 = this.closeDelayCounter;
-               int lastIntValue = this.closeDelay.getLastIntValue();
-               if (closeDelayCounter2.hasReached2(lastIntValue)) {
+               if (this.closeDelayCounter.hasReached2(this.closeDelay.getLastIntValue())) {
                   mc.thePlayer.closeScreen();
                   this.closeDelay.nextValue();
                   return true;
                }
             } else {
-               TickCounter chestOpenCounter2 = this.chestOpenCounter;
-               int lastIntValue2 = this.chestOpenTime.getLastIntValue();
-               if (chestOpenCounter2.hasReached2(lastIntValue2)) {
+               if (this.chestOpenCounter.hasReached2(this.chestOpenTime.getLastIntValue())) {
                   mc.thePlayer.closeScreen();
                   this.chestOpenTime.nextValue();
                   return true;
@@ -404,9 +334,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    private void processChestSteal(GuiChest guiChest) throws IOException {
-      TickCounter startDelayCounter2 = this.startDelayCounter;
-      int lastIntValue = this.startDelay.getLastIntValue();
-      if (startDelayCounter2.hasReached2(lastIntValue)) {
+      if (this.startDelayCounter.hasReached2(this.startDelay.getLastIntValue())) {
          Container inventorySlots = guiChest.inventorySlots;
          this.wasEmptyLastTick = !this.hasTargetSlots();
          AtomicBoolean atomicBoolean = new AtomicBoolean(false);
@@ -418,16 +346,12 @@ public class Stealer extends Module implements TickListener, RenderListener {
                }
 
                Slot slot = (Slot)this.targetSlots.get(0);
-               AbstractStealerMouseMode abstractSubMode = (AbstractStealerMouseMode)this.mouseMode.getAbstractSubMode();
-               List targetSlots2 = this.targetSlots;
-               Vec2d vec2d = abstractSubMode.computeNextCursorPos(inventorySlots, targetSlots2);
+               Vec2d vec2d = ((AbstractStealerMouseMode)this.mouseMode.getAbstractSubMode()).computeNextCursorPos(inventorySlots, this.targetSlots);
                int n = (int)Math.round(vec2d.x);
                int n2 = (int)Math.round(vec2d.y);
                boolean isMouseOverSlot = guiChest.isMouseOverSlot(slot, n, n2);
                if (isMouseOverSlot) {
-                  List targetSlots3 = this.targetSlots;
-                  boolean flag = this.stealSlot(inventorySlots, slot, targetSlots3);
-                  if (flag) {
+                  if (this.stealSlot(inventorySlots, slot, this.targetSlots)) {
                      this.refreshTargetSlots(inventorySlots);
                      ((AbstractStealerMouseMode)this.mouseMode.getAbstractSubMode()).onTargetSlotChanged();
                      this.cps.nextValue();
@@ -437,9 +361,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
                   }
                } else {
                   if (this.misClickChance.getMaxValue() > 0.0 && !atomicBoolean.get()) {
-                     List list = ContainerSlotQuery.of(inventorySlots).emptyOnly().toSlotList();
-                     Stream stream = list.stream();
-                     stream.filter(obj -> {
+                     ContainerSlotQuery.of(inventorySlots).emptyOnly().toSlotList().stream().filter(obj -> {
                         return guiChest.isMouseOverSlot((Slot)obj, n, n2) && ((Slot)obj).getDistanceTo(slot) < 25.0 && ((Slot)obj).slotNumber != InventoryUtil.getLastClickedSlot();
                      }).findFirst().ifPresent(obj2 -> this.tryMisClickSlot(inventorySlots, atomicBoolean, (Slot)obj2));
                   }
@@ -458,8 +380,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
          this.refreshTargetSlots(container);
 
          for (Slot slot : (Iterable<Slot>)(this.targetSlots)) {
-            List targetSlots2 = this.targetSlots;
-            this.stealSlot(container, slot, targetSlots2);
+            this.stealSlot(container, slot, this.targetSlots);
             this.refreshTargetSlots(container);
          }
 
@@ -473,8 +394,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    private boolean executeClickAction(List list, Runnable runnable) {
-      String selectedValue = this.clickCalculationMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.clickCalculationMode.getSelectedValue()) {
          case "Default":
             return this.executeClickDefault(list, runnable);
          case "Instant":
@@ -518,15 +438,10 @@ public class Stealer extends Module implements TickListener, RenderListener {
       }
 
       TickCounter beforeClickCounter2 = this.beforeClickCounter;
-      int delayBeforeClick2 = this.getDelayBeforeClick(isConsecutiveRow);
-      if (beforeClickCounter2.hasReached2(delayBeforeClick2)) {
-         ActionRateAccumulator cpsAccumulator2 = this.cpsAccumulator;
-         int effectiveCps = this.getEffectiveCps(isConsecutiveRow);
-         if (cpsAccumulator2.shouldTrigger(effectiveCps) && (!this.stealOnlyOncePerTick.getValue() || !this.clickedThisTick)) {
+      if (beforeClickCounter2.hasReached2(this.getDelayBeforeClick(isConsecutiveRow))) {
+         if (this.cpsAccumulator.shouldTrigger(this.getEffectiveCps(isConsecutiveRow)) && (!this.stealOnlyOncePerTick.getValue() || !this.clickedThisTick)) {
             if (!this.clickedCurrentSlot) {
-               ActionRateAccumulator failRateAccumulator2 = this.failRateAccumulator;
-               int lastIntValue = this.failRateChance.getLastIntValue();
-               if (failRateAccumulator2.shouldTrigger(lastIntValue)) {
+               if (this.failRateAccumulator.shouldTrigger(this.failRateChance.getLastIntValue())) {
                   this.failDurationCounter.reset();
                   this.failRateChance.nextValue();
                   this.failDuration.nextValue();
@@ -534,14 +449,11 @@ public class Stealer extends Module implements TickListener, RenderListener {
             }
 
             beforeClickCounter2 = this.failDurationCounter;
-            int lastIntValue2 = this.failDuration.getLastIntValue();
-            if (beforeClickCounter2.hasReached2(lastIntValue2)) {
+            if (beforeClickCounter2.hasReached2(this.failDuration.getLastIntValue())) {
                if (!this.clickedCurrentSlot) {
                   runnable.run();
                } else {
-                  ActionRateAccumulator doubleClickAccumulator2 = this.doubleClickAccumulator;
-                  int lastIntValue3 = this.doubleClickChance.getLastIntValue();
-                  if (doubleClickAccumulator2.shouldTrigger(lastIntValue3)) {
+                  if (this.doubleClickAccumulator.shouldTrigger(this.doubleClickChance.getLastIntValue())) {
                      runnable.run();
                      this.doubleClickChance.nextValue();
                   }
@@ -558,11 +470,9 @@ public class Stealer extends Module implements TickListener, RenderListener {
       }
 
       beforeClickCounter2 = this.afterClickCounter;
-      int delayAfterClick2 = this.getDelayAfterClick(isConsecutiveRow);
-      if (beforeClickCounter2.hasReached2(delayAfterClick2)) {
+      if (beforeClickCounter2.hasReached2(this.getDelayAfterClick(isConsecutiveRow))) {
          beforeClickCounter2 = this.beforeClickCounter;
-         int delayBeforeClick3 = this.getDelayBeforeClick(isConsecutiveRow);
-         if (beforeClickCounter2.hasReached2(delayBeforeClick3) && this.clickedCurrentSlot) {
+         if (beforeClickCounter2.hasReached2(this.getDelayBeforeClick(isConsecutiveRow)) && this.clickedCurrentSlot) {
             return true;
          }
       }
@@ -591,8 +501,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
       double d = 0.0;
 
       for (int i = 2; i < 6; i++) {
-         long l = System.nanoTime() + Math.max((long)i - this.beforeClickCounter.getTicks(), 0L) * 50000000L;
-         double d2 = (double)(l - this.lastClickNanoTime) / 1.0E9;
+         double d2 = (double)((System.nanoTime() + Math.max((long)i - this.beforeClickCounter.getTicks(), 0L) * 50000000L) - this.lastClickNanoTime) / 1.0E9;
          ArrayList list = new ArrayList(this.clickIntervalWindow.getSamples());
          list.add(d2);
          double d3 = this.calculateVariance(list);
@@ -697,34 +606,26 @@ public class Stealer extends Module implements TickListener, RenderListener {
 
    private boolean stealSlot(Container container, Slot slot, List list) {
       if (this.intelligent.getValue() && this.autoSort.getValue()) {
-         ItemStack stack = slot.getStack();
-         String itemCategoryName = InventoryUtil.getItemCategoryName(stack);
+         String itemCategoryName = InventoryUtil.getItemCategoryName(slot.getStack());
          ArrayList hotbarSlotsForCategory = ClientManagers.moduleManager.invManager.getHotbarSlotsForCategory(itemCategoryName);
          if (!hotbarSlotsForCategory.isEmpty()) {
-            ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-            byte b = 9;
-            if (containerSlotQuery.fromSlot(b).hasAnyEmptySlot()) {
+            if (ContainerSlotQuery.of(mc.thePlayer.inventoryContainer).fromSlot((byte)9).hasAnyEmptySlot()) {
                int n = (Integer)hotbarSlotsForCategory.get(0);
                if (!itemCategoryName.equals("Sword") && !itemCategoryName.equals("Bow") && !itemCategoryName.equals("Rod")) {
-                  ItemStack stack2 = mc.thePlayer.inventoryContainer.getSlot(n + 36).getStack();
-                  String itemCategoryName2 = InventoryUtil.getItemCategoryName(stack2);
-                  if (itemCategoryName2.equals(itemCategoryName)) {
-                     Runnable runnable = () -> this.clickOverflowSortSlot(container, slot);
-                     return this.executeClickAction(list, runnable);
+                  if (InventoryUtil.getItemCategoryName(mc.thePlayer.inventoryContainer.getSlot(n + 36).getStack()).equals(itemCategoryName)) {
+                     return this.executeClickAction(list, () -> this.clickOverflowSortSlot(container, slot));
                   }
                }
 
                Runnable runnable2 = () -> {
-                  String selectedValue = this.clickMode.getSelectedValue();
-                  ContainerUtil.swapHotbarSlot(container, selectedValue, slot, n);
+                  ContainerUtil.swapHotbarSlot(container, this.clickMode.getSelectedValue(), slot, n);
                };
                return this.executeClickAction(list, runnable2);
             }
          }
       }
 
-      Runnable runnable3 = () -> this.clickTargetSlot(container, slot);
-      return this.executeClickAction(list, runnable3);
+      return this.executeClickAction(list, () -> this.clickTargetSlot(container, slot));
    }
 
    private List collectOrderedTargetSlots(Container container) {
@@ -732,33 +633,23 @@ public class Stealer extends Module implements TickListener, RenderListener {
       ArrayList list2 = new ArrayList();
 
       for (Integer num : (Iterable<Integer>)(list)) {
-         Slot slot = container.getSlot(num);
-         list2.add(slot);
+         list2.add(container.getSlot(num));
       }
 
       return list2;
    }
 
    private List collectOrderedTargetSlotIndices(Container container) {
-      List list = this.collectStealableSlotIndices(container);
-      String selectedValue = this.sequence.getSelectedValue();
-      int containerGuiHeight = InventoryUtil.getContainerGuiHeight(container);
-      String str = selectedValue;
-      List list2 = list;
-      return InventoryUtil.sortSlotsByMode(container, list2, str, containerGuiHeight);
+      return InventoryUtil.sortSlotsByMode(container, this.collectStealableSlotIndices(container), this.sequence.getSelectedValue(), InventoryUtil.getContainerGuiHeight(container));
    }
 
    private List collectStealableSlotIndices(Container container) {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(container);
-      int n = container.inventorySlots.size() - 36;
-      containerSlotQuery = containerSlotQuery.toSlot(n);
-      boolean value = this.stealZeroStackSizeItems.getValue();
-      List list = containerSlotQuery.nonEmptyOrNonNull(value).toSlotIndexList();
+      containerSlotQuery = containerSlotQuery.toSlot(container.inventorySlots.size() - 36);
+      List list = containerSlotQuery.nonEmptyOrNonNull(this.stealZeroStackSizeItems.getValue()).toSlotIndexList();
       if (this.stealAbilityCheck.getValue()) {
          for (int i = list.size() - 1; i >= 0; i--) {
-            Slot slot = container.getSlot((Integer)list.get(i));
-            Slot slot2 = slot;
-            if (!this.canFitInInventory(slot2)) {
+            if (!this.canFitInInventory(container.getSlot((Integer)list.get(i)))) {
                list.remove(i);
             }
          }
@@ -771,8 +662,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
          ArrayList list3 = new ArrayList();
          ArrayList list4;
          if (this.ignoreBadPotions.getValue()) {
-            byte b = 0;
-            list4 = InventoryUtil.getGoodPotionSlots(container, b);
+            list4 = InventoryUtil.getGoodPotionSlots(container, (byte)0);
          } else {
             list4 = new ArrayList();
          }
@@ -783,10 +673,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
             Slot slot3 = container.getSlot(n2);
             ItemStack stack = slot3.getStack();
             if (this.isBestItemInChest(stack, container, list2) && this.isUpgradeOverInventory(stack, list2)) {
-               ItemFilterSetting items2 = this.items;
-               Item item = stack.getItem();
-               Item item2 = item;
-               if (!items2.isItemAllowed(item2) || list5.contains(slot3.slotNumber)) {
+               if (!this.items.isItemAllowed(stack.getItem()) || list5.contains(slot3.slotNumber)) {
                   list3.add(n2);
                }
             }
@@ -812,14 +699,9 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    private List collectBestArmorStacks(Container container) {
-      ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(container);
-      Predicate predicate = obj -> obj instanceof ItemArmor;
-      List list = containerSlotQuery.filterItem(predicate).toStackList();
-      ContainerSlotQuery containerSlotQuery2 = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      Predicate predicate2 = obj2 -> obj2 instanceof ItemArmor;
-      list.addAll(containerSlotQuery2.filterItem(predicate2).toStackList());
-      boolean flag = ClientManagers.moduleManager.invManager.isToggled() && InvManagerActionOption.PUT_ON_ARMOR.isSelected() && ClientManagers.moduleManager.invManager.ignoreDurability.getValue();
-      return InventoryUtil.findBestArmorSetFromList(list, flag);
+      List list = ContainerSlotQuery.of(container).filterItem(obj -> obj instanceof ItemArmor).toStackList();
+      list.addAll(ContainerSlotQuery.of(mc.thePlayer.inventoryContainer).filterItem(obj2 -> obj2 instanceof ItemArmor).toStackList());
+      return InventoryUtil.findBestArmorSetFromList(list, ClientManagers.moduleManager.invManager.isToggled() && InvManagerActionOption.PUT_ON_ARMOR.isSelected() && ClientManagers.moduleManager.invManager.ignoreDurability.getValue());
    }
 
    public boolean isBestItemInChest(ItemStack stack, Container container, List list) {
@@ -848,28 +730,19 @@ public class Stealer extends Module implements TickListener, RenderListener {
                }
 
                if (item instanceof ItemAxe && item2 instanceof ItemAxe) {
-                  boolean flag = true;
-                  double itemScore = InventoryUtil.getItemScore(stack, flag);
-                  boolean flag2 = true;
-                  if (itemScore < InventoryUtil.getItemScore(stack2, flag2)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
 
                if (item instanceof ItemPickaxe && item2 instanceof ItemPickaxe) {
-                  boolean flag3 = true;
-                  double itemScore2 = InventoryUtil.getItemScore(stack, flag3);
-                  boolean flag4 = true;
-                  if (itemScore2 < InventoryUtil.getItemScore(stack2, flag4)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
 
                if (item instanceof ItemSpade && item2 instanceof ItemSpade) {
-                  boolean flag5 = true;
-                  double itemScore3 = InventoryUtil.getItemScore(stack, flag5);
-                  boolean flag6 = true;
-                  if (itemScore3 < InventoryUtil.getItemScore(stack2, flag6)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
@@ -911,28 +784,19 @@ public class Stealer extends Module implements TickListener, RenderListener {
                }
 
                if (item2 instanceof ItemAxe && item instanceof ItemAxe) {
-                  boolean flag = true;
-                  double itemScore = InventoryUtil.getItemScore(stack, flag);
-                  boolean flag2 = true;
-                  if (itemScore < InventoryUtil.getItemScore(stack2, flag2)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
 
                if (item2 instanceof ItemPickaxe && item instanceof ItemPickaxe) {
-                  boolean flag3 = true;
-                  double itemScore2 = InventoryUtil.getItemScore(stack, flag3);
-                  boolean flag4 = true;
-                  if (itemScore2 < InventoryUtil.getItemScore(stack2, flag4)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
 
                if (item2 instanceof ItemSpade && item instanceof ItemSpade) {
-                  boolean flag5 = true;
-                  double itemScore3 = InventoryUtil.getItemScore(stack, flag5);
-                  boolean flag6 = true;
-                  if (itemScore3 < InventoryUtil.getItemScore(stack2, flag6)) {
+                  if (InventoryUtil.getItemScore(stack, true) < InventoryUtil.getItemScore(stack2, true)) {
                      return false;
                   }
                }
@@ -944,9 +808,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    private boolean isGearItemStack(ItemStack stack) {
-      Item item = stack.getItem();
-      Item item2 = item;
-      return this.isGearItem(item2);
+      return this.isGearItem(stack.getItem());
    }
 
    private boolean isGearItem(Item item) {
@@ -970,12 +832,7 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    public boolean shouldStealFromChest(GuiChest guiChest) {
-      String selectedValue = this.whereToSteal.getSelectedValue();
-      boolean value = this.ignoreEnderChests.getValue();
-      StringListSetting chestStorage2 = this.chestStorage;
-      boolean flag = value;
-      String str = selectedValue;
-      return ContainerUtil.isValidChest(guiChest, str, flag, chestStorage2);
+      return ContainerUtil.isValidChest(guiChest, this.whereToSteal.getSelectedValue(), this.ignoreEnderChests.getValue(), this.chestStorage);
    }
 
    private void incrementTickCounters() {
@@ -1000,22 +857,17 @@ public class Stealer extends Module implements TickListener, RenderListener {
    }
 
    private void clickTargetSlot(Container container, Slot slot) {
-      String selectedValue = this.clickMode.getSelectedValue();
-      ContainerUtil.shiftClickSlot(container, selectedValue, slot);
+      ContainerUtil.shiftClickSlot(container, this.clickMode.getSelectedValue(), slot);
    }
 
    private void clickOverflowSortSlot(Container container, Slot slot) {
-      String selectedValue = this.clickMode.getSelectedValue();
-      ContainerUtil.shiftClickSlot(container, selectedValue, slot);
+      ContainerUtil.shiftClickSlot(container, this.clickMode.getSelectedValue(), slot);
    }
 
    private void tryMisClickSlot(Container container, AtomicBoolean atomicBoolean, Slot slot) {
-      ActionRateAccumulator misClickAccumulator2 = this.misClickAccumulator;
-      int lastIntValue = this.misClickChance.getLastIntValue();
-      if (misClickAccumulator2.shouldTrigger(lastIntValue)) {
+      if (this.misClickAccumulator.shouldTrigger(this.misClickChance.getLastIntValue())) {
          this.misClickChance.nextValue();
-         String selectedValue = this.clickMode.getSelectedValue();
-         ContainerUtil.shiftClickSlot(container, selectedValue, slot);
+         ContainerUtil.shiftClickSlot(container, this.clickMode.getSelectedValue(), slot);
          atomicBoolean.set(true);
       }
    }
@@ -1025,20 +877,12 @@ public class Stealer extends Module implements TickListener, RenderListener {
       int n = sr.getScaledWidth() / 2 - stringWidth / 2;
       int n2 = sr.getScaledHeight() / 2 - 4;
       if (this.backGround.getValue()) {
-         byte b = 0;
-         int colorInt = this.backgroundColor.getColorInt(b);
-         int n3 = n - 2;
-         int n4 = n2 - 2;
-         int n5 = n + stringWidth + 1;
-         int n6 = n2 + 9;
-         BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-         int n7 = ColorUtil.resolvePassColor(shaderRenderPass, colorInt);
-         RenderUtil.drawRect3(n3, n4, n5, n6, blurShadowSettings2.resolvePassColor(shaderRenderPass, n7));
+         int colorInt = this.backgroundColor.getColorInt((byte)0);
+         RenderUtil.drawRect3(n - 2, n2 - 2, n + stringWidth + 1, n2 + 9, this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, colorInt)));
       }
 
       if (shaderRenderPass == ShaderRenderPass.NONE || !this.backGround.getValue() && shaderRenderPass == ShaderRenderPass.SHADOW) {
-         byte b2 = 0;
-         mc.fontRendererObj.drawString(str, n, n2, this.color2.getColorInt(b2));
+         mc.fontRendererObj.drawString(str, n, n2, this.color2.getColorInt((byte)0));
       }
    }
 

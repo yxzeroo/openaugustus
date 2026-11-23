@@ -86,7 +86,7 @@ import net.augustus.modules.modes.anticheat.autoclicker.AutoClickerP2Check;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -164,7 +164,7 @@ public class ClientAntiCheat extends Module implements LoadWorldListener, Attack
       this.checks.add(new HitDelayFixCCheck("HitDelayFixC", this.antiCheatPlayerData));
       this.checks.add(new AimDistanceCheck("AimDistance", this.antiCheatPlayerData));
       this.checks.add(new NoJumpDelayACheck("NoJumpDelayA", this.antiCheatPlayerData));
-      DoubleValue doubleValue = new DoubleValue(this, "ChecksForMyself");
+      SettingGroup doubleValue = new SettingGroup(this, "ChecksForMyself");
 
       for (ModuleMode moduleMode : (Iterable<ModuleMode>)(this.checks)) {
          BooleanValue booleanValue = new BooleanValue(this, moduleMode.getName(), true, doubleValue);
@@ -175,7 +175,6 @@ public class ClientAntiCheat extends Module implements LoadWorldListener, Attack
          this.checkToggleSettings.put(moduleMode, booleanValue2);
       }
 
-      Setting.getControlFlowMarker();
    }
 
    @Override
@@ -191,16 +190,10 @@ public class ClientAntiCheat extends Module implements LoadWorldListener, Attack
    @Override
    public void updateEventSubscriptions() {
       this.onAttackEntity();
-      byte b = 20;
-      byte b2 = 28;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 20;
-      byte b4 = 21;
-      this.toggleEventSubscription(b4, b3);
+      this.toggleEventSubscription((byte)28, (byte)20);
+      this.toggleEventSubscription((byte)21, (byte)20);
       this.onAttackEntity();
-      byte b5 = 10;
-      byte b6 = 32;
-      this.toggleEventSubscription(b6, b5);
+      this.toggleEventSubscription((byte)32, (byte)10);
       this.onAttackEntity();
       this.onAttackEntity();
       this.onAttackEntity();
@@ -258,11 +251,9 @@ public class ClientAntiCheat extends Module implements LoadWorldListener, Attack
    public void onAttackEntity(EventAttackEntity event) {
       if (this.antiCheatPlayerData != null && event.getTarget() instanceof EntityLivingBase && mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
          AntiCheatPlayerData antiCheatPlayerData2 = this.antiCheatPlayerData;
-         int entityId = event.getTarget().getEntityId();
-         antiCheatPlayerData2.onAttackEntity(entityId);
+         antiCheatPlayerData2.onAttackEntity(event.getTarget().getEntityId());
          antiCheatPlayerData2 = this.antiCheatPlayerData;
-         double d = mc.thePlayer.getPositionEyes(1.0F).distanceTo(mc.objectMouseOver.hitVec);
-         antiCheatPlayerData2.setLastAttackRange(d);
+         antiCheatPlayerData2.setLastAttackRange(mc.thePlayer.getPositionEyes(1.0F).distanceTo(mc.objectMouseOver.hitVec));
       }
    }
 

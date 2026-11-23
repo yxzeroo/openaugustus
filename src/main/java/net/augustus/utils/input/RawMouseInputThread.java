@@ -30,8 +30,7 @@ public class RawMouseInputThread {
                   if (controllers[i].getType() == Type.MOUSE) {
                      controllers[i].poll();
                      if ((double)((Mouse)controllers[i]).getX().getPollData() != 0.0 || (double)((Mouse)controllers[i]).getY().getPollData() != 0.0) {
-                        Mouse mouse = (Mouse)controllers[i];
-                        this.setMouseDevice(mouse);
+                        this.setMouseDevice((Mouse)controllers[i]);
                         ChatUtil.sendChat3("Found mouse");
                      }
                   }

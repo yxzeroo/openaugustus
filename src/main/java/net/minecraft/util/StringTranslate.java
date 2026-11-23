@@ -23,9 +23,8 @@ public class StringTranslate {
    }
 
    public StringTranslate() {
-      InputStream resourceAsStream = StringTranslate.class.getResourceAsStream("/assets/minecraft/lang/en_US.lang");
 
-      for (String str : IOUtils.readLines(resourceAsStream, Charsets.UTF_8)) {
+      for (String str : IOUtils.readLines(StringTranslate.class.getResourceAsStream("/assets/minecraft/lang/en_US.lang"), Charsets.UTF_8)) {
          if (!str.isEmpty() && str.charAt(0) != '#') {
             String[] strings = (String[])Iterables.toArray(equalSignSplitter.split(str), String.class);
             if (strings != null && strings.length == 2) {

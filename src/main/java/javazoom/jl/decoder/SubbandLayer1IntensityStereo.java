@@ -35,11 +35,9 @@ public class SubbandLayer1IntensityStereo extends SubbandLayer1 {
             synthesisFilter.input_sample(f, this.subbandnumber);
             synthesisFilter2.input_sample(f2, this.subbandnumber);
          } else if (n == 1) {
-            float f3 = this.sample * this.scalefactor;
-            synthesisFilter.input_sample(f3, this.subbandnumber);
+            synthesisFilter.input_sample(this.sample * this.scalefactor, this.subbandnumber);
          } else {
-            float f4 = this.sample * this.channel2_scalefactor;
-            synthesisFilter.input_sample(f4, this.subbandnumber);
+            synthesisFilter.input_sample(this.sample * this.channel2_scalefactor, this.subbandnumber);
          }
       }
 

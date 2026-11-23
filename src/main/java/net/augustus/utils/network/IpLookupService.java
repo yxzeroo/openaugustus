@@ -8,7 +8,6 @@ public interface IpLookupService {
    Gson GSON = new Gson().newBuilder().create();
 
    default String getStringOrNull(JsonObject json, String str) {
-      int[] stateFlags = IpLookupProvider.getStateFlags();
       return json.has(str) ? json.get(str).getAsString() : null;
    }
 
@@ -28,12 +27,10 @@ public interface IpLookupService {
    }
 
    default Boolean getBooleanOrNull(JsonObject json, String str) {
-      int[] stateFlags = IpLookupProvider.getStateFlags();
       return json.has(str) ? json.get(str).getAsBoolean() : null;
    }
 
    default Double getDoubleOrNull(JsonObject json, String str) {
-      int[] stateFlags = IpLookupProvider.getStateFlags();
       return json.has(str) ? json.get(str).getAsDouble() : null;
    }
 }

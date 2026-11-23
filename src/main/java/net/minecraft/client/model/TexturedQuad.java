@@ -24,8 +24,7 @@ public class TexturedQuad {
 
    public void draw(WorldRenderer worldRenderer, float f) {
       Vec3 vec = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[0].vector3D);
-      Vec3 vec2 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[2].vector3D);
-      Vec3 vec3 = vec2.crossProduct(vec).normalize();
+      Vec3 vec3 = this.vertexPositions[1].vector3D.subtractReverse(this.vertexPositions[2].vector3D).crossProduct(vec).normalize();
       float xCoord = (float)vec3.xCoord;
       float yCoord = (float)vec3.yCoord;
       float zCoord = (float)vec3.zCoord;

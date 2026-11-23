@@ -33,8 +33,7 @@ public class GuiNumericTextField extends GuiTextField {
       String text2 = super.getText();
 
       try {
-         int n = Integer.parseInt("0" + text2);
-         return String.valueOf(n);
+         return String.valueOf(Integer.parseInt("0" + text2));
       } catch (NumberFormatException e) {
          this.setText(this.lastSafeText);
          return this.lastSafeText;

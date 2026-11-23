@@ -14,8 +14,7 @@ public class BlockWallSign extends BlockSign {
 
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-      EnumFacing value = (EnumFacing)state.getValue(FACING);
-      if (!world.getBlockState(pos.offset(value.getOpposite())).getBlock().getMaterial().isSolid()) {
+      if (!world.getBlockState(pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite())).getBlock().getMaterial().isSolid()) {
          this.dropBlockAsItem(world, pos, state, 0);
          world.setBlockToAir(pos);
       }
@@ -72,8 +71,7 @@ public class BlockWallSign extends BlockSign {
    }
 
    static {
-      String str = "facing";
-      FACING = PropertyDirection.create(str, EnumFacing.Plane.HORIZONTAL);
+      FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
    }
 
 

@@ -23,9 +23,7 @@ public class EventRenderEntities extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      RenderEntitiesListener listener = (RenderEntitiesListener)obj;
-      RenderEntitiesListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((RenderEntitiesListener)obj);
    }
 
    public ICamera getCamera() {

@@ -61,8 +61,7 @@ public class ShadedRsaUtil {
                   StringBuilder sb = new StringBuilder().append("No params accepted for ");
                   throw new ProviderException(sb.append(shadedRsaKeyType.getKeyAlgo()).toString());
                case 2:
-                  Class<PSSParameterSpec> clazz = PSSParameterSpec.class;
-                  return algorithmParameters.getParameterSpec(clazz);
+                  return algorithmParameters.getParameterSpec(PSSParameterSpec.class);
                default:
                   throw new ProviderException("Unsupported RSA algorithm: " + algorithm);
             }

@@ -40,7 +40,7 @@ public abstract class Setting extends AbstractFeature {
    private boolean visualOnly;
    public SettingChangeListener userChangeListener;
    private String translatedName;
-   private final DoubleValue parentGroup;
+   private final SettingGroup parentGroup;
    private boolean labelDirty;
    public int tooltipAnchorY;
    private static String controlFlowMarker;
@@ -58,8 +58,7 @@ public abstract class Setting extends AbstractFeature {
    }
 
    public synchronized void notifyValueChanged() {
-      SettingChangeListener changeListener2 = this.changeListener;
-      this.dispatchChangeListener(changeListener2);
+      this.dispatchChangeListener(this.changeListener);
    }
 
    public void applyTranslation(String str, String str2) {
@@ -71,7 +70,7 @@ public abstract class Setting extends AbstractFeature {
       }
    }
 
-   public DoubleValue getParentGroup() {
+   public SettingGroup getParentGroup() {
       return this.parentGroup;
    }
 
@@ -85,7 +84,7 @@ public abstract class Setting extends AbstractFeature {
       this.renderFont = customFontUtil;
    }
 
-   public Setting(Module module, DoubleValue doubleValue, String str, boolean flag) {
+   public Setting(Module module, SettingGroup doubleValue, String str, boolean flag) {
        super(module, str);
       this.description = "";
       this.visibilityCondition = null;
@@ -160,7 +159,7 @@ public abstract class Setting extends AbstractFeature {
       this.displayName = str;
    }
 
-   public Setting(Module module, DoubleValue doubleValue, String str) {
+   public Setting(Module module, SettingGroup doubleValue, String str) {
        this(module, doubleValue, str, true);
    }
 
@@ -195,8 +194,7 @@ public abstract class Setting extends AbstractFeature {
    }
 
    public synchronized void notifyUserChanged() {
-      SettingChangeListener userChangeListener2 = this.userChangeListener;
-      this.dispatchUserChangeListener(userChangeListener2);
+      this.dispatchUserChangeListener(this.userChangeListener);
    }
 
    private boolean matchesConfigName(Setting setting) {
@@ -243,9 +241,7 @@ public abstract class Setting extends AbstractFeature {
                CustomFontUtil renderFont2 = this.renderFont;
                String description2 = this.getDescription();
                int tooltipAnchorY2 = this.tooltipAnchorY;
-               int tooltipAnchorX2 = this.tooltipAnchorX;
-               String str = description2;
-               MainClickGuiWindow.drawTooltip(renderFont2, str, tooltipAnchorX2, tooltipAnchorY2);
+               MainClickGuiWindow.drawTooltip(renderFont2, description2, this.tooltipAnchorX, tooltipAnchorY2);
             }
          }
 

@@ -14,7 +14,7 @@ import net.augustus.events.listeners.UpdateListener;
 import net.augustus.events.EventMoveInput;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -25,7 +25,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class Teleport extends Module implements UpdateListener, PacketListener, PacketDelayListener, BlockBoundingBoxListener, MoveInputListener {
-   public BooleansSetting mode;
+   public StringValue mode;
    public BooleanValue autoDisable;
    private final TimeHelper oldVulcanTimer;
    private final TimeHelper vulcanAirWalkTimer;
@@ -41,7 +41,7 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
 
    public Teleport() {
        super("Teleport", "Raumreise", new Color(141, 232, 5), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "Vulcan", new String[]{"OldKarhu", "OldVulcan", "Vulcan", "VulcanNew", "Vanilla"});
+      this.mode = new StringValue(this, "Mode", "Vulcan", new String[]{"OldKarhu", "OldVulcan", "Vulcan", "VulcanNew", "Vanilla"});
       this.autoDisable = new BooleanValue(this, "AutoDisable", true);
       this.oldVulcanTimer = new TimeHelper();
       this.vulcanAirWalkTimer = new TimeHelper();
@@ -72,21 +72,15 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
    }
 
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 25;
-      this.toggleEventSubscription(b3);
-      byte b4 = 3;
-      this.toggleEventSubscription(b4);
-      byte b5 = 21;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)3);
+      this.toggleEventSubscription((byte)21);
    }
 
    public void onUpdate2() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (mc.gameSettings.keyBindAttack.isKeyDown() && mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.targetPos[0] == 1.0 / 0.0) {
          BlockPos blockPos = mc.objectMouseOver.getBlockPos();
          Block block = mc.theWorld.getBlockState(blockPos).getBlock();
@@ -107,8 +101,7 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
       }
 
       if (this.mode.getSelectedValue().equals("VulcanNew") && mc.thePlayer.onGround && this.vulcanNewTeleported && !this.vulcanPostJumpPhase) {
-         long l = 500L;
-         if (this.vulcanAirWalkTimer.reached2(l)) {
+         if (this.vulcanAirWalkTimer.reached2(500L)) {
             this.vulcanPostJumpPhase = true;
             mc.thePlayer.jump();
             this.airFloorY = (int)mc.thePlayer.posY + 1;
@@ -117,8 +110,7 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
       }
 
       if (this.teleportPending) {
-         String selectedValue2 = this.mode.getSelectedValue();
-         switch (selectedValue2) {
+         switch (this.mode.getSelectedValue()) {
             case "OldKarhu":
                if (!mc.thePlayer.onGround) {
                   mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(this.targetPos[0], this.targetPos[1] + 0.3, this.targetPos[2], true));
@@ -165,8 +157,7 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
 
    public void onPacket(EventPacket event) {
       Packet packet = event.getPacket();
-      String selectedValue = this.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.mode.getSelectedValue()) {
          case "OldVulcan":
             if (packet instanceof S08PacketPlayerPosLook && this.teleportPending) {
                S08PacketPlayerPosLook packet2 = (S08PacketPlayerPosLook)packet;
@@ -202,8 +193,7 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
          packet2.setPositionZ(this.targetPos[2]);
          mc.thePlayer.setPosition(this.targetPos[0], this.targetPos[1], this.targetPos[2]);
          mc.thePlayer.onGround = true;
-         long l = 1000L;
-         if (this.oldVulcanTimer.reached2(l)) {
+         if (this.oldVulcanTimer.reached2(1000L)) {
             this.teleportPending = false;
             this.teleportCompleted = true;
             this.targetPos = new double[]{1.0 / 0.0, 1.0 / 0.0, 1.0 / 0.0};
@@ -213,17 +203,14 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
 
    public void onPacketDelay(EventPacketDelay event) {
       if (this.mode.getSelectedValue().equals("Vulcan") && this.delayingPackets) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    public void onBlockBoundingBox(EventBlockBoundingBox event) {
-      String selectedValue = this.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.mode.getSelectedValue()) {
          case "Vulcan":
-            long l = 1500L;
-            if (!this.vulcanAirWalkTimer.reached2(l) && event.getBlock() instanceof BlockAir && event.getBlockPos().getY() < this.airFloorY) {
+            if (!this.vulcanAirWalkTimer.reached2(1500L) && event.getBlock() instanceof BlockAir && event.getBlockPos().getY() < this.airFloorY) {
                BlockPos blockPos = event.getBlockPos();
                AxisAlignedBB box = new AxisAlignedBB(
                   (double)blockPos.getX(),
@@ -255,10 +242,8 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
    public void onMoveInput3(EventMoveInput event) {
       exitBlock: {
          if (this.mode.getSelectedValue().equals("Vulcan")) {
-            long l = 1500L;
-            if (!this.vulcanAirWalkTimer.reached2(l)) {
-               float f = 1.0F;
-               event.setMoveForward(f);
+            if (!this.vulcanAirWalkTimer.reached2(1500L)) {
+               event.setMoveForward(1.0F);
                break exitBlock;
             }
          }
@@ -272,15 +257,12 @@ public class Teleport extends Module implements UpdateListener, PacketListener, 
 
       if (this.mode.getSelectedValue().equals("VulcanNew") && this.vulcanNewActive) {
          if (!this.vulcanNewTeleported || this.vulcanPostJumpPhase) {
-            float f2 = 1.0F;
-            event.setMoveForward(f2);
+            event.setMoveForward(1.0F);
          }
 
          if (this.vulcanNewActive && !this.vulcanNewTeleported && this.vulcanNewPacketCount >= 1) {
-            float f3 = 0.0F;
-            event.setMoveForward(f3);
-            float f4 = 0.0F;
-            event.setMoveStrafe(f4);
+            event.setMoveForward(0.0F);
+            event.setMoveStrafe(0.0F);
          }
 
          if (this.vulcanNewPacketCount > 40 && this.vulcanNewTeleported && this.vulcanPostJumpPhase) {

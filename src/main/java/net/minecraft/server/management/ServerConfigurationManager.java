@@ -372,8 +372,7 @@ public abstract class ServerConfigurationManager {
       serverForPlayer.getPlayerManager().removePlayer(entityPlayerMP);
       this.playerEntityList.remove(entityPlayerMP);
       UUID uniqueID = entityPlayerMP.getUniqueID();
-      EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.uuidToPlayerMap.get(uniqueID);
-      if (entityPlayerMP2 == entityPlayerMP) {
+      if (((EntityPlayerMP)this.uuidToPlayerMap.get(uniqueID)) == entityPlayerMP) {
          this.uuidToPlayerMap.remove(uniqueID);
          this.playerStatFiles.remove(uniqueID);
       }
@@ -729,8 +728,7 @@ public abstract class ServerConfigurationManager {
       this.playerEntityList.add(entityPlayerMP);
       this.uuidToPlayerMap.put(entityPlayerMP.getUniqueID(), entityPlayerMP);
       this.sendPacketToAllPlayers(new S38PacketPlayerListItem(S38PacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[]{entityPlayerMP}));
-      WorldServer world = this.mcServer.worldServerForDimension(entityPlayerMP.dimension);
-      world.spawnEntityInWorld(entityPlayerMP);
+      this.mcServer.worldServerForDimension(entityPlayerMP.dimension).spawnEntityInWorld(entityPlayerMP);
       this.preparePlayer(entityPlayerMP, (WorldServer)null);
 
       for (int i = 0; i < this.playerEntityList.size(); i++) {

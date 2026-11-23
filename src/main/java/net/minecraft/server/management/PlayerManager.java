@@ -221,8 +221,7 @@ public class PlayerManager {
       }
 
       double d = (double)f * (Math.PI / 180.0);
-      double rotationPitch = (double)entityPlayerMP.rotationPitch;
-      double d2 = rotationPitch * (Math.PI / 180.0);
+      double d2 = ((double)entityPlayerMP.rotationPitch) * (Math.PI / 180.0);
       ChunkPosComparator chunkPosComparator = new ChunkPosComparator(entityPlayerMP.chunkCoordX, entityPlayerMP.chunkCoordZ, d, d2);
       Comparator comparator = Collections.reverseOrder(chunkPosComparator);
       PriorityQueue priorityQueue = new PriorityQueue(n, comparator);
@@ -231,8 +230,7 @@ public class PlayerManager {
          if (priorityQueue.size() < n) {
             priorityQueue.add(chunkCoordIntPair);
          } else {
-            ChunkCoordIntPair chunkCoordIntPair2 = (ChunkCoordIntPair)priorityQueue.peek();
-            if (chunkPosComparator.compare2(chunkCoordIntPair, chunkCoordIntPair2) < 0) {
+            if (chunkPosComparator.compare2(chunkCoordIntPair, (ChunkCoordIntPair)priorityQueue.peek()) < 0) {
                priorityQueue.remove();
                priorityQueue.add(chunkCoordIntPair);
             }
@@ -270,8 +268,7 @@ public class PlayerManager {
    }
 
    public void updatePlayerInstances() {
-      Set entries = this.mapPlayerPendingEntries.entrySet();
-      Iterator it = entries.iterator();
+      Iterator it = this.mapPlayerPendingEntries.entrySet().iterator();
 
       while (it.hasNext()) {
          Entry entry = (Entry)it.next();
@@ -287,8 +284,7 @@ public class PlayerManager {
                }
 
                for (ChunkCoordIntPair chunkCoordIntPair : (Iterable<ChunkCoordIntPair>)(this.getNearest(value, key, n))) {
-                  PlayerManager.PlayerInstance playerInstance = this.getPlayerInstance(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos, true);
-                  playerInstance.addPlayer(key);
+                  this.getPlayerInstance(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos, true).addPlayer(key);
                   value.remove(chunkCoordIntPair);
                }
             }
@@ -306,15 +302,13 @@ public class PlayerManager {
          }
       } else {
          for (int j = 0; j < this.playerInstancesToUpdate.size(); j++) {
-            PlayerManager.PlayerInstance playerInstance3 = (PlayerManager.PlayerInstance)this.playerInstancesToUpdate.get(j);
-            playerInstance3.onUpdate();
+            ((PlayerManager.PlayerInstance)this.playerInstancesToUpdate.get(j)).onUpdate();
          }
       }
 
       this.playerInstancesToUpdate.clear();
       if (this.players.isEmpty()) {
-         WorldProvider provider = this.theWorldServer.provider;
-         if (!provider.canRespawnHere()) {
+         if (!this.theWorldServer.provider.canRespawnHere()) {
             this.theWorldServer.theChunkProviderServer.unloadAllChunks();
          }
       }
@@ -326,9 +320,7 @@ public class PlayerManager {
    }
 
    public void markBlockForUpdate(BlockPos pos) {
-      int n = pos.getX() >> 4;
-      int n2 = pos.getZ() >> 4;
-      PlayerManager.PlayerInstance playerInstance = this.getPlayerInstance(n, n2, false);
+      PlayerManager.PlayerInstance playerInstance = this.getPlayerInstance(pos.getX() >> 4, pos.getZ() >> 4, false);
       if (playerInstance != null) {
          playerInstance.flagChunkForUpdate(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
       }
@@ -339,8 +331,7 @@ public class PlayerManager {
       int n2 = (int)entityPlayerMP.posZ >> 4;
       double d = entityPlayerMP.managedPosX - entityPlayerMP.posX;
       double d2 = entityPlayerMP.managedPosZ - entityPlayerMP.posZ;
-      double d3 = d * d + d2 * d2;
-      if (d3 >= 64.0) {
+      if ((d * d + d2 * d2) >= 64.0) {
          int n3 = (int)entityPlayerMP.managedPosX >> 4;
          int n4 = (int)entityPlayerMP.managedPosZ >> 4;
          int playerViewRadius2 = this.playerViewRadius;

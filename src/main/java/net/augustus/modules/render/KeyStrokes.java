@@ -7,7 +7,7 @@ import net.augustus.events.listeners.RenderListener;
 import net.augustus.settings.BlurShadowSettings;
 import net.augustus.settings.ColorSetting;
 import net.augustus.render.RenderUtil;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
@@ -23,10 +23,10 @@ public class KeyStrokes extends Module implements RenderListener {
    public final ColorSetting backgroundColorPressed;
    public final ColorSetting keyColor;
    public final ColorSetting keyColorPressed;
-   public final StringValue scale;
-   public final StringValue fadeSpeed;
-   public final StringValue x;
-   public final StringValue y;
+   public final DoubleValue scale;
+   public final DoubleValue fadeSpeed;
+   public final DoubleValue x;
+   public final DoubleValue y;
    public final BlurShadowSettings blurShadowSettings;
    private final java.util.ArrayList tiles;
 
@@ -42,13 +42,11 @@ public class KeyStrokes extends Module implements RenderListener {
       this.backgroundColorPressed = new ColorSetting(this, "BackGroundColorPressed", new Color(100, 100, 100, 100));
       this.keyColor = new ColorSetting(this, "KeyColor", Color.LIGHT_GRAY);
       this.keyColorPressed = new ColorSetting(this, "KeyColorPressed", Color.white);
-      this.scale = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 1);
-      this.fadeSpeed = new StringValue(this, "FadeSpeed", 300.0, 0.0, 1000.0, 0);
-      this.x = new StringValue(this, "X", 80.0, 0.0, 100.0, 2);
-      this.y = new StringValue(this, "Y", 80.0, 0.0, 100.0, 2);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 1);
+      this.fadeSpeed = new DoubleValue(this, "FadeSpeed", 300.0, 0.0, 1000.0, 0);
+      this.x = new DoubleValue(this, "X", 80.0, 0.0, 100.0, 2);
+      this.y = new DoubleValue(this, "Y", 80.0, 0.0, 100.0, 2);
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
       this.tiles = new java.util.ArrayList();
       this.tiles.add(this.keyW);
       this.tiles.add(this.keyA);
@@ -65,8 +63,7 @@ public class KeyStrokes extends Module implements RenderListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    public void onRender(float f, ScaledResolution sr) {

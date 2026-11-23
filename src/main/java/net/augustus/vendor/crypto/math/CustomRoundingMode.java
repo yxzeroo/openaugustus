@@ -2,7 +2,6 @@ package net.augustus.vendor.crypto.math;
 
 
 
-import net.augustus.vendor.crypto.CustomBigInteger;
 public enum CustomRoundingMode {
    DOWN(1),
    FLOOR(3),
@@ -21,7 +20,6 @@ public enum CustomRoundingMode {
 
    public static CustomRoundingMode valueOf2(int n) {
       boolean flag = false;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (n == 4) {
          return HALF_UP;
       } else if (n == 6) {

@@ -33,19 +33,9 @@ public final class QuickActionsSidebar implements MC {
    public void initSidebar() {
       ScaledResolution sr = new ScaledResolution(mc);
       this.scrollBar = new ScrollBar(mc.fontRendererObj.FONT_HEIGHT + 1);
-      ScrollBar scrollBar2 = this.scrollBar;
-      int n = sr.getScaledWidth() - 4;
-      int n2 = sr.getScaledWidth() - 2;
-      int scaledHeight = sr.getScaledHeight();
-      int n3 = n2;
-      byte b = 0;
-      int n4 = n;
-      scrollBar2.setBounds(n4, b, n3, scaledHeight);
+      this.scrollBar.setBounds(sr.getScaledWidth() - 4, (byte)0, sr.getScaledWidth() - 2, sr.getScaledHeight());
       List list = this.collectDisplayLines();
-      ScrollBar.getControlFlowGuard();
-      ScrollBar scrollBar3 = this.scrollBar;
-      int size = list.size();
-      scrollBar3.setItemCount(size);
+      this.scrollBar.setItemCount(list.size());
       this.sidebarWidth = 0;
 
       for (String str : (Iterable<String>)(list)) {
@@ -57,7 +47,6 @@ public final class QuickActionsSidebar implements MC {
    }
 
    public boolean handleMouseWheel() {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       boolean flag = this.visible && Mouse.getX() > new ScaledResolution(mc).getScaledWidth() - this.sidebarWidth;
       if (flag) {
          this.scrollBar.handleMouseWheel();
@@ -67,9 +56,7 @@ public final class QuickActionsSidebar implements MC {
    }
 
    private void updateSlideState(int n) {
-      ScaledResolution sr = new ScaledResolution(mc);
-      ScrollBar.getControlFlowGuard();
-      int scaledWidth = sr.getScaledWidth();
+      int scaledWidth = new ScaledResolution(mc).getScaledWidth();
       this.slideAnimation.setBounds((float)scaledWidth, 0.0F, (float)(scaledWidth - this.sidebarWidth), 0.0F);
       if (!((float)n > Math.max(this.slideAnimation.updateX(), (float)(scaledWidth - this.sidebarWidth))) && n <= scaledWidth - 40) {
          if (this.expanded) {
@@ -93,7 +80,6 @@ public final class QuickActionsSidebar implements MC {
    }
 
    private ContextMenuItem findItemByText(String str) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
 
       for (ContextMenuItem contextMenuItem : (Iterable<ContextMenuItem>)(this.menuItems)) {
          String displayText = contextMenuItem.getDisplayText();
@@ -116,15 +102,12 @@ public final class QuickActionsSidebar implements MC {
    }
 
    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       if (!this.visible) {
          return false;
       } else {
          double d = (double)mouseX;
-         double d2 = (double)mouseY;
-         double d3 = d2;
-         double d4 = d;
-         this.scrollBar.handleMouseClick(d4, d3);
+         double d3 = (double)mouseY;
+         this.scrollBar.handleMouseClick(d, d3);
          ScaledResolution sr = new ScaledResolution(mc);
          int clampedScrollOffset = (int)this.scrollBar.getClampedScrollOffset();
 
@@ -151,7 +134,6 @@ public final class QuickActionsSidebar implements MC {
 
    public void drawSidebar(int n, int n2, float f) {
       this.updateSlideState(n);
-      ScrollBar.getControlFlowGuard();
       int n3 = (int)this.slideAnimation.updateX();
       ScaledResolution sr = new ScaledResolution(mc);
       if (!this.visible) {
@@ -189,7 +171,6 @@ public final class QuickActionsSidebar implements MC {
 
    private List collectDisplayLines() {
       LinkedList list = new LinkedList();
-      ScrollBar.getControlFlowGuard();
 
       for (ContextMenuItem contextMenuItem : (Iterable<ContextMenuItem>)(this.menuItems)) {
          Set displayOptions = contextMenuItem.getDisplayOptions();

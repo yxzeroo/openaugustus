@@ -23,9 +23,9 @@ import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -40,23 +40,23 @@ import net.minecraft.util.Vec3;
 
 public class TimerRangeV2 extends Module implements GameLoopListener, PacketDelayListener, LoadWorldListener {
    private final BooleanValue dynamicLagTicks;
-   private final StringValue lagTickDiff;
-   private final StringValue lagTicks;
-   private final StringValue timerTicks;
-   private final StringValue maxTargetHurttime;
-   public final StringValue delay;
+   private final DoubleValue lagTickDiff;
+   private final DoubleValue lagTicks;
+   private final DoubleValue timerTicks;
+   private final DoubleValue maxTargetHurttime;
+   public final DoubleValue delay;
    private final BooleanValue correct;
    private final BooleanValue dynamic;
    private final BooleanValue accurate;
    private final BooleanValue debug;
    private final BooleanValue onlyOnGround;
    private final BooleanValue notInLiquid;
-   private final BooleansSetting fixMode;
+   private final StringValue fixMode;
    private final BooleanValue extreme;
-   private final DoubleValue targets;
+   private final SettingGroup targets;
    private final BooleanValue onlyWhileKillAura;
    private final TargetSelectionSettings targetSelection;
-   private final StringValue preAimRange;
+   private final DoubleValue preAimRange;
    public final TimeHelper lastPhaseChangeTimer;
    private final TimeHelper cooldownTimer;
    private boolean delayingIncoming;
@@ -74,36 +74,34 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
    public TimerRangeV2() {
        super("TimerRangeV2", "ZeitDistanzV2", new Color(23, 233, 123), Categorys.LATENCY);
       this.dynamicLagTicks = new BooleanValue(this, "DynamicLagTicks", true);
-      StringValue stringValue = new StringValue(this, "LagTickDiff", 3.0, 0.0, 10.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "LagTickDiff", 3.0, 0.0, 10.0, 0);
       BooleanValue dynamicLagTicks2 = this.dynamicLagTicks;
       this.dynamicLagTicks.getClass();
-      BooleanValue booleanValue = dynamicLagTicks2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.lagTickDiff = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "LagTicks", 1.0, 0.0, 10.0, 0);
+      this.lagTickDiff = stringValue.visibleWhen(() -> dynamicLagTicks2.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "LagTicks", 1.0, 0.0, 10.0, 0);
       SettingVisibilityCondition condition2 = () -> {
          return !this.dynamicLagTicks.getValue();
       };
       this.lagTicks = stringValue2.visibleWhen(condition2);
-      this.timerTicks = new StringValue(this, "TimerTicks", 5.0, 0.0, 10.0, 0);
-      this.maxTargetHurttime = new StringValue(this, "MaxTargetHurttime", 3.0, 0.0, 10.0, 0);
-      this.delay = new StringValue(this, "Delay", 500.0, 0.0, 4000.0, 0);
+      this.timerTicks = new DoubleValue(this, "TimerTicks", 5.0, 0.0, 10.0, 0);
+      this.maxTargetHurttime = new DoubleValue(this, "MaxTargetHurttime", 3.0, 0.0, 10.0, 0);
+      this.delay = new DoubleValue(this, "Delay", 500.0, 0.0, 4000.0, 0);
       this.correct = new BooleanValue(this, "Correct", false);
       this.dynamic = new BooleanValue(this, "Dynamic", true);
       this.accurate = new BooleanValue(this, "Accurate", false);
       this.debug = new BooleanValue(this, "Debug", false);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false);
       this.notInLiquid = new BooleanValue(this, "NotInLiquid", false);
-      this.fixMode = new BooleansSetting(this, "FixMode", "None", new String[]{"None", "Fix1", "Fix2"});
+      this.fixMode = new StringValue(this, "FixMode", "None", new String[]{"None", "Fix1", "Fix2"});
       this.extreme = new BooleanValue(this, "Extreme", false);
-      this.targets = new DoubleValue(this, "Targets");
+      this.targets = new SettingGroup(this, "Targets");
       this.onlyWhileKillAura = new BooleanValue(this, "OnlyWhileKillAura", true, this.targets);
       TargetSelectionSettings targetSelectionSettings = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter(), this.targets)).withSorting();
       SettingVisibilityCondition condition3 = () -> {
          return !this.onlyWhileKillAura.getValue();
       };
       this.targetSelection = targetSelectionSettings.withVisibility(condition3);
-      StringValue stringValue3 = new StringValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1, this.targets);
+      DoubleValue stringValue3 = new DoubleValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1, this.targets);
       SettingVisibilityCondition condition4 = () -> {
          return !this.onlyWhileKillAura.getValue();
       };
@@ -137,26 +135,21 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
 
    @Override
    public void onDisable() {
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 16;
-      this.toggleEventSubscription(b);
-      byte b2 = 25;
-      this.toggleEventSubscription(b2);
-      byte b3 = 17;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)16);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
    public void onPacketDelay2(EventPacketDelay event) {
       EntityPlayerSP thePlayer = mc.thePlayer;
       if (!this.fixMode.getSelectedValue().equals("None") && thePlayer != null && thePlayer.ticksExisted > 10) {
-         boolean delayingIncoming2 = this.delayingIncoming;
-         event.setDelayed(delayingIncoming2);
+         event.setDelayed(this.delayingIncoming);
       }
    }
 
@@ -168,22 +161,19 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
       } else if (packet instanceof C02PacketUseEntity && !this.extremeDelayActive) {
          this.extremeDelayActive = true;
       } else if (this.extremeDelayActive) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    @Override
    public void onLoadWorld(EventLoadWorld event) {
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    @Override
    public void onGameLoop(EventGameLoop event) {
       EntityLivingBase entity = this.findTarget();
-      boolean value = this.correct.getValue();
-      event.setAllowSkipRender(value);
+      event.setAllowSkipRender(this.correct.getValue());
       int value2 = (int)this.timerTicks.getValue();
       this.preStopCompleted = this.lagTicks.getValue() <= 0.0 && !this.dynamicLagTicks.getValue() || this.preStopCompleted;
       if (!this.dynamicLagTicks.getValue()) {
@@ -193,9 +183,7 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
       if (event.getElapsedTicks() >= 1) {
          if (!this.preStopCompleted) {
             if (this.stage == 0) {
-               TimeHelper cooldownTimer2 = this.cooldownTimer;
-               double value3 = this.delay.getValue();
-               if (!cooldownTimer2.reached(value3)) {
+               if (!this.cooldownTimer.reached(this.delay.getValue())) {
                   return;
                }
 
@@ -204,9 +192,7 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                   this.canTimerTarget = false;
                } else {
                   for (int i = value2; i > Math.max(1, n); i--) {
-                     int n2 = Math.max(0, n);
-                     boolean flag = this.simulateTimerAdvantage(entity, i, n2);
-                     if (flag) {
+                     if (this.simulateTimerAdvantage(entity, i, Math.max(0, n))) {
                         this.canTimerTarget = true;
                         this.plannedTimerTicks = i;
                         this.initialPlannedTicks = i;
@@ -226,15 +212,12 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                   this.elapsedStageTicks = 0;
                   if (this.debug.getValue()) {
                      short s = 13673;
-                     String str = "PreStop";
-                     this.sendChatMessage2(str);
+                     this.sendChatMessage2("PreStop");
                   }
                }
             }
          } else {
-            TimeHelper cooldownTimer3 = this.cooldownTimer;
-            double value4 = this.delay.getValue();
-            if (!cooldownTimer3.reached(value4)) {
+            if (!this.cooldownTimer.reached(this.delay.getValue())) {
                return;
             }
 
@@ -246,9 +229,7 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                   int n4 = this.dynamicLagTicks.getValue() ? (int)Math.max((double)this.plannedTimerTicks, this.lagTickDiff.getValue()) : value2;
 
                   for (int j = n4; j > Math.max(1, n3); j--) {
-                     byte b = 0;
-                     boolean flag2 = this.simulateTimerAdvantage(entity, j, b);
-                     if (flag2) {
+                     if (this.simulateTimerAdvantage(entity, j, (byte)0)) {
                         this.canTimerTarget = true;
                         this.plannedTimerTicks = j;
                         break;
@@ -270,26 +251,21 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
       if (this.stage == 1) {
          if (this.canTimerTarget) {
             this.predictedTargetBox = null;
-            byte b2 = 0;
-            event.setElapsedTicks(b2);
-            float f = 0.0F;
-            event.setRenderPartialTicks(f);
-            boolean flag3 = true;
-            event.setSkipRender(flag3);
+            event.setElapsedTicks((byte)0);
+            event.setRenderPartialTicks(0.0F);
+            event.setSkipRender(true);
             this.preStopCompleted = true;
             this.delayingIncoming = true;
             this.lastPhaseChangeTimer.reset();
          }
       } else if (this.stage == 2) {
          if (this.canTimerTarget) {
-            int plannedTimerTicks2 = this.plannedTimerTicks;
-            event.setElapsedTicks(plannedTimerTicks2);
+            event.setElapsedTicks(this.plannedTimerTicks);
             this.stage = 3;
             this.elapsedStageTicks = 0;
             this.initialPlannedTicks = 0;
             if (this.debug.getValue()) {
-               String str2 = "TimerSuccessful " + this.plannedTimerTicks;
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2("TimerSuccessful " + this.plannedTimerTicks);
             }
 
             this.lastPhaseChangeTimer.reset();
@@ -297,30 +273,25 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                this.delayingIncoming = true;
             }
          } else if (this.dynamicLagTicks.getValue()) {
-            int n5 = (int)((double)this.plannedTimerTicks - this.lagTickDiff.getValue());
-            if (n5 > 0) {
-               int value5 = (int)this.lagTicks.getValue();
-               event.setElapsedTicks(value5);
+            if (((int)((double)this.plannedTimerTicks - this.lagTickDiff.getValue())) > 0) {
+               event.setElapsedTicks((int)this.lagTicks.getValue());
                this.resetStageAndCooldown();
                this.preStopCompleted = false;
                this.initialPlannedTicks = 0;
                if (this.debug.getValue()) {
-                  String str3 = "TimerAbort";
-                  this.sendChatMessage2(str3);
+                  this.sendChatMessage2("TimerAbort");
                }
 
                this.lastPhaseChangeTimer.reset();
                this.delayingIncoming = false;
             }
          } else if (this.lagTicks.getValue() > 0.0) {
-            int value6 = (int)this.lagTicks.getValue();
-            event.setElapsedTicks(value6);
+            event.setElapsedTicks((int)this.lagTicks.getValue());
             this.resetStageAndCooldown();
             this.preStopCompleted = false;
             this.initialPlannedTicks = 0;
             if (this.debug.getValue()) {
-               String str4 = "TimerAbort";
-               this.sendChatMessage2(str4);
+               this.sendChatMessage2("TimerAbort");
             }
 
             this.lastPhaseChangeTimer.reset();
@@ -332,20 +303,16 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
             : (int)((double)this.plannedTimerTicks - this.lagTicks.getValue());
          if (this.elapsedStageTicks <= n6) {
             this.predictedTargetBox = null;
-            byte b3 = 0;
-            event.setElapsedTicks(b3);
-            float f2 = 0.0F;
-            event.setRenderPartialTicks(f2);
-            boolean flag4 = true;
-            event.setSkipRender(flag4);
+            event.setElapsedTicks((byte)0);
+            event.setRenderPartialTicks(0.0F);
+            event.setSkipRender(true);
             this.preStopCompleted = false;
             this.lastPhaseChangeTimer.reset();
             this.delayingIncoming = true;
          } else {
             this.resetStageAndCooldown();
             if (this.debug.getValue()) {
-               String str5 = "LastTimerStop";
-               this.sendChatMessage2(str5);
+               this.sendChatMessage2("LastTimerStop");
             }
 
             this.delayingIncoming = false;
@@ -360,16 +327,9 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
       EntityLivingBase activeTarget = CombatTargetUtil.getActiveTarget();
       if (!this.onlyWhileKillAura.getValue() && activeTarget == null) {
          EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-         EntityTargetFilter targetFilter = this.targetSelection.getTargetFilter();
-         EntityTargetFilter entityTargetFilter = targetFilter;
-         entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter).filterFocus();
-         double value = this.preAimRange.getValue();
-         entityTargetSelector = entityTargetSelector.maxDistance(value);
-         TargetSelectionSettings targetSelection2 = this.targetSelection;
-         Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         double d = ClientManagers.moduleManager.range.isCombatRangeActive() ? ClientManagers.moduleManager.range.getCurrentRange() : 3.0;
-         Rotation rotation = previousRotation;
-         ToDoubleFunction toDoubleFunction = targetSelection2.createTargetComparatorKey(rotation, d);
+         entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelection.getTargetFilter()).filterFocus();
+         entityTargetSelector = entityTargetSelector.maxDistance(this.preAimRange.getValue());
+         ToDoubleFunction toDoubleFunction = this.targetSelection.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), ClientManagers.moduleManager.range.isCombatRangeActive() ? ClientManagers.moduleManager.range.getCurrentRange() : 3.0);
          Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
          return optional.isPresent() && optional.get() instanceof EntityLivingBase ? (EntityLivingBase)optional.get() : null;
       } else {
@@ -459,13 +419,9 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                vec7.zCoord + (double)f2
             )
             .expand((double)collisionBorderSize2, (double)collisionBorderSize2, (double)collisionBorderSize2);
-         int n5 = n2 + 1;
-         int n6 = n5;
-         Vec3 vec8 = EntityMovementPredictor.predictConstantHorizontalPosition(entity, n6);
+         Vec3 vec8 = EntityMovementPredictor.predictConstantHorizontalPosition(entity, n2 + 1);
          Vec3 vec9 = EntityMovementPredictor.predictConstantHorizontalPosition(entity, n2);
-         int n7 = n2 + 1;
-         double[] doubles2 = EntityMovementPredictor.predictFullState(entity, n7);
-         boolean flag = doubles2[9] == 1.0;
+         boolean flag = EntityMovementPredictor.predictFullState(entity, n2 + 1)[9] == 1.0;
          Vec3 vec10 = new Vec3(vec8);
          Vec3 vec11 = new Vec3(vec9);
          float f3 = 0.91F;
@@ -518,8 +474,7 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
          double d6 = MathHelper.clamp_double(vec13.xCoord, box.minX, box.maxX);
          double d7 = MathHelper.clamp_double(vec13.zCoord, box.minZ, box.maxZ);
          double d8 = d6 - doubles[3];
-         double d9 = d7 - doubles[5];
-         float f6 = (float)(MathHelper.atan2(d9, d8) * 180.0 / Math.PI - 90.0);
+         float f6 = (float)(MathHelper.atan2(d7 - doubles[5], d8) * 180.0 / Math.PI - 90.0);
          int n8 = 1 + EnchantmentHelper.getKnockbackModifier(mc.thePlayer);
          vec12 = vec12.addVector(
             (double)(-MathHelper.sin(f6 * (float) Math.PI / 180.0F) * (float)n8 * 0.5F),
@@ -564,8 +519,7 @@ public class TimerRangeV2 extends Module implements GameLoopListener, PacketDela
                MathHelper.clamp_double(vec14.zCoord, box2.minZ, box2.maxZ)
             );
             double d10 = vec12.xCoord * -1.0;
-            double d11 = vec12.zCoord * -1.0;
-            float f12 = (float)(MathHelper.atan2(d11, d10) * 180.0 / Math.PI - 90.0);
+            float f12 = (float)(MathHelper.atan2(vec12.zCoord * -1.0, d10) * 180.0 / Math.PI - 90.0);
             float f13 = MathHelper.sin(f12 * (float) Math.PI / 180.0F);
             float f14 = MathHelper.cos(f12 * (float) Math.PI / 180.0F);
             vec12 = vec12.addVector((double)(f9 * f14 - f10 * f13), 0.0, (double)(f10 * f14 + f9 * f13));

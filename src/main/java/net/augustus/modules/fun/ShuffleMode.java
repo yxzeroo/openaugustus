@@ -22,8 +22,7 @@ public class ShuffleMode extends Module implements TickListener {
        super("ShuffleMode", "MischMode", new Color(102, 242, 207), Categorys.FUN);
       this.audioPlayer = new JavaFxAudioPlayer();
       this.activatedOnce = false;
-      boolean flag = false;
-      this.setLoadFromConfig(flag);
+      this.setLoadFromConfig(false);
    }
 
    @Override
@@ -49,8 +48,7 @@ public class ShuffleMode extends Module implements TickListener {
          if ((Boolean)this.mT.getValue()) {
             BooleanProperty mt = this.mT;
             Boolean bool = false;
-            Boolean bool2 = bool;
-            mt.setValue(bool2);
+            mt.setValue(bool);
             if (mc.theWorld != null && ClientManagers.moduleManager.augustusServer.moduleToggleSound.getValue() && this.isToggleSoundEnabled()) {
                PacketThreadUtil.runOnMainThread(() -> AugustusServer.playModuleDisableSound());
             }
@@ -62,8 +60,7 @@ public class ShuffleMode extends Module implements TickListener {
          } else {
             BooleanProperty mt2 = this.mT;
             Boolean bool3 = true;
-            Boolean bool4 = bool3;
-            mt2.setValue(bool4);
+            mt2.setValue(bool3);
             if (mc.theWorld != null && ClientManagers.moduleManager.augustusServer.moduleToggleSound.getValue() && this.isToggleSoundEnabled()) {
                PacketThreadUtil.runOnMainThread(() -> AugustusServer.playModuleEnableSound());
             }
@@ -80,11 +77,9 @@ public class ShuffleMode extends Module implements TickListener {
    public void onTick2() {
       if (!this.audioPlayer.isPlaying()) {
          try {
-            boolean flag = true;
             String str = "sounds/shuffle.mp3";
-            this.audioPlayer.playResource(str, flag);
-            short s = 10000;
-            this.audioPlayer.setCycleCount(s);
+            this.audioPlayer.playResource(str, true);
+            this.audioPlayer.setCycleCount((short)10000);
          } catch (Exception e) {
          }
       }
@@ -99,8 +94,7 @@ public class ShuffleMode extends Module implements TickListener {
       int n = 0;
 
       for (Module module2 : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
-         String str2 = (String)list.get(n);
-         module2.setName(str2);
+         module2.setName((String)list.get(n));
          n++;
       }
 

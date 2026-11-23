@@ -27,16 +27,13 @@ public class Chams extends Module {
 
    public Chams() {
        super("Chams", "Röntgenblick", new Color(91, 152, 222), Categorys.RENDER);
-      TargetSelectionSettings targetSelectionSettings = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter());
-      String str = "Entities";
-      this.entities = targetSelectionSettings.withTargetsDisplayName(str);
+      this.entities = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter()).withTargetsDisplayName("Entities");
       this.coloredEntityChams = new BooleanValue(this, "ColoredEntityChams", true);
       BooleanValue booleanValue = new BooleanValue(this, "OnlyThroughWallsEntities", false);
       BooleanValue coloredEntityChams2 = this.coloredEntityChams;
       this.coloredEntityChams.getClass();
       BooleanValue booleanValue2 = coloredEntityChams2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.onlyThroughWallsEntities = (BooleanValue)booleanValue.withVisibility(condition);
+      this.onlyThroughWallsEntities = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
       BooleanValue booleanValue3 = new BooleanValue(this, "RenderTextureEntity", false);
       SettingVisibilityCondition condition2 = () -> {
          return this.coloredEntityChams.getValue() && !this.onlyThroughWallsEntities.getValue();
@@ -52,22 +49,15 @@ public class Chams extends Module {
       coloredEntityChams2 = this.chests;
       this.chests.getClass();
       BooleanValue booleanValue5 = coloredEntityChams2;
-      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
-      this.coloredChestChams = (BooleanValue)booleanValue4.withVisibility(condition4);
-      BooleanValue booleanValue6 = new BooleanValue(this, "OnlyThroughWalls", false);
-      SettingVisibilityCondition condition5 = () -> this.isChestOnlyThroughWallsVisible();
-      this.onlyThroughWalls = (BooleanValue)booleanValue6.withVisibility(condition5);
-      BooleanValue booleanValue7 = new BooleanValue(this, "RenderTexture", false);
-      SettingVisibilityCondition condition6 = () -> this.isChestRenderTextureVisible();
-      this.renderTexture = (BooleanValue)booleanValue7.withVisibility(condition6);
+      this.coloredChestChams = (BooleanValue)booleanValue4.withVisibility(() -> booleanValue5.getValue());
+      this.onlyThroughWalls = (BooleanValue)new BooleanValue(this, "OnlyThroughWalls", false).withVisibility(() -> this.isChestOnlyThroughWallsVisible());
+      this.renderTexture = (BooleanValue)new BooleanValue(this, "RenderTexture", false).withVisibility(() -> this.isChestRenderTextureVisible());
       ColorSetting colorSetting2 = new ColorSetting(this, "ColorChest", new Color(0, 233, 255, 100));
       SettingVisibilityCondition condition7 = () -> {
          return this.coloredChestChams.isVisible() && this.coloredChestChams.getValue();
       };
       this.chestColor = (ColorSetting)colorSetting2.withVisibility(condition7);
-      ColorSetting colorSetting3 = new ColorSetting(this, "ColorEnderChest", new Color(0, 233, 255, 100));
-      SettingVisibilityCondition condition8 = () -> this.isEnderChestColorVisible();
-      this.enderChestColor = (ColorSetting)colorSetting3.withVisibility(condition8);
+      this.enderChestColor = (ColorSetting)new ColorSetting(this, "ColorEnderChest", new Color(0, 233, 255, 100)).withVisibility(() -> this.isEnderChestColorVisible());
    }
 
    @Override

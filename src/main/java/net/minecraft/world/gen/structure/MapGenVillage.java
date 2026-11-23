@@ -56,8 +56,7 @@ public class MapGenVillage extends MapGenStructure {
       n5 += rand2.nextInt(this.distance - this.minTownSeparation);
       n6 += rand2.nextInt(this.distance - this.minTownSeparation);
       if (n3 == n5 && n4 == n6) {
-         boolean flag = this.worldObj.getWorldChunkManager().areBiomesViable(n3 * 16 + 8, n4 * 16 + 8, 0, villageSpawnBiomes);
-         if (flag) {
+         if (this.worldObj.getWorldChunkManager().areBiomesViable(n3 * 16 + 8, n4 * 16 + 8, 0, villageSpawnBiomes)) {
             return true;
          }
       }
@@ -105,13 +104,9 @@ public class MapGenVillage extends MapGenStructure {
 
          while (!pendingRoads.isEmpty() || !pendingHouses.isEmpty()) {
             if (pendingRoads.isEmpty()) {
-               int n4 = rand.nextInt(pendingHouses.size());
-               StructureComponent structureComponent = (StructureComponent)pendingHouses.remove(n4);
-               structureComponent.buildComponent(start, this.components, rand);
+               ((StructureComponent)pendingHouses.remove(rand.nextInt(pendingHouses.size()))).buildComponent(start, this.components, rand);
             } else {
-               int n5 = rand.nextInt(pendingRoads.size());
-               StructureComponent structureComponent2 = (StructureComponent)pendingRoads.remove(n5);
-               structureComponent2.buildComponent(start, this.components, rand);
+               ((StructureComponent)pendingRoads.remove(rand.nextInt(pendingRoads.size()))).buildComponent(start, this.components, rand);
             }
          }
 

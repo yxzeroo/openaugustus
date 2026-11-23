@@ -17,16 +17,13 @@ public final class CapeVector3f {
 
    public void transform(CapeQuaternion capeQuaternion) {
       CapeQuaternion capeQuaternion2 = new CapeQuaternion(capeQuaternion);
-      CapeQuaternion capeQuaternion3 = new CapeQuaternion(this.getX(), this.getY(), this.getZ(), 0.0F);
-      capeQuaternion2.mul(capeQuaternion3);
+      capeQuaternion2.mul(new CapeQuaternion(this.getX(), this.getY(), this.getZ(), 0.0F));
       CapeQuaternion capeQuaternion4 = new CapeQuaternion(capeQuaternion);
       capeQuaternion4.conj();
       capeQuaternion2.mul(capeQuaternion4);
       float i = capeQuaternion2.getI();
       float k = capeQuaternion2.getK();
-      float j = capeQuaternion2.getJ();
-      float f = i;
-      this.set(f, j, k);
+      this.set(i, capeQuaternion2.getJ(), k);
    }
 
    public float getY() {

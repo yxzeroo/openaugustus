@@ -14,7 +14,7 @@ import net.augustus.modules.movement.helper.MotionModifierProvider;
 import net.augustus.settings.CustomSubModeFactory;
 import net.augustus.modules.Module;
 import net.augustus.modules.misc.Dummy;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class MotionModifierSubMode extends AbstractSubMode implements PacketDelayListener, PacketListener, MoveInputListener, MotionModifierProvider, UpdateListener, MoveEntityListener {
    private final MotionModifierEngine motionModifierEngine;
@@ -27,16 +27,11 @@ public class MotionModifierSubMode extends AbstractSubMode implements PacketDela
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 25;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override
@@ -44,7 +39,7 @@ public class MotionModifierSubMode extends AbstractSubMode implements PacketDela
       this.motionModifierEngine.onMoveEntity(event);
    }
 
-   public MotionModifierSubMode(Module module, DoubleValue doubleValue, String str) {
+   public MotionModifierSubMode(Module module, SettingGroup doubleValue, String str) {
        super(module, doubleValue, str);
       this.dummy = new Dummy();
       this.motionModifierEngine = new MotionModifierEngine(this.dummy);
@@ -57,7 +52,7 @@ public class MotionModifierSubMode extends AbstractSubMode implements PacketDela
    }
 
    public static CustomSubModeFactory factory() {
-      return (obj, obj2, obj3) -> new MotionModifierSubMode((Module)obj, (DoubleValue)obj2, (String)obj3);
+      return (obj, obj2, obj3) -> new MotionModifierSubMode((Module)obj, (SettingGroup)obj2, (String)obj3);
    }
 
    @Override

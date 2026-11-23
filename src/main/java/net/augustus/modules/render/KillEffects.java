@@ -15,8 +15,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,7 +26,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
 public class KillEffects extends Module implements LoadWorldListener, AttackEntityListener, TickListener {
-   private final BooleansSetting executionMode;
+   private final StringValue executionMode;
    private final BooleanValue flash;
    private final BooleanValue dragonDeathSound;
    private final BooleanValue fireSound;
@@ -37,7 +37,7 @@ public class KillEffects extends Module implements LoadWorldListener, AttackEnti
 
    public KillEffects() {
        super("KillEffects", "TötungsEffekte", new Color(168, 255, 176), Categorys.RENDER);
-      this.executionMode = new BooleansSetting(this, "ExecutionMode", "RemovedEntity", new String[]{"RemovedEntity", "ZeroHealth"});
+      this.executionMode = new StringValue(this, "ExecutionMode", "RemovedEntity", new String[]{"RemovedEntity", "ZeroHealth"});
       this.flash = new BooleanValue(this, "Flash", true);
       this.dragonDeathSound = new BooleanValue(this, "Dragon Death Sound", true);
       this.fireSound = new BooleanValue(this, "Fire Sound", true);
@@ -52,13 +52,11 @@ public class KillEffects extends Module implements LoadWorldListener, AttackEnti
          BooleanValue booleanValue = new BooleanValue(this, sb.append(this.formatEnumName(str)).toString(), false);
          sb = new StringBuilder();
          String str2 = enumParticleTypes.name();
-         StringValue stringValue = new StringValue(
+         DoubleValue stringValue = new DoubleValue(
             this, sb.append(this.formatEnumName(str2)).append(" Count ").toString(), 1.0, 1.0, 20.0, 0
          );
          booleanValue.getClass();
-         BooleanValue booleanValue2 = booleanValue;
-         SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-         StringValue stringValue2 = stringValue.visibleWhen(condition);
+         DoubleValue stringValue2 = stringValue.visibleWhen(() -> booleanValue.getValue());
          this.particleSettingsMap.put(enumParticleTypes, new TuplePair(booleanValue, stringValue2));
       }
    }
@@ -94,8 +92,7 @@ public class KillEffects extends Module implements LoadWorldListener, AttackEnti
          this.lastAttackedEntity = null;
       }
 
-      long l = 2000L;
-      if (!this.timeHelper.reached2(l)
+      if (!this.timeHelper.reached2(2000L)
          && this.lastAttackedEntity != null
          && this.lastAttackedEntity != this.lastKilledEntity
          && (
@@ -150,7 +147,7 @@ public class KillEffects extends Module implements LoadWorldListener, AttackEnti
          for (Entry entry : (Iterable<Entry>)(this.particleSettingsMap.entrySet())) {
             if (((BooleanValue)((TuplePair)entry.getValue()).getFirst()).getValue()) {
                try {
-                  for (int i = 0; (double)i < ((StringValue)((TuplePair)entry.getValue()).getSecond()).getValue(); i++) {
+                  for (int i = 0; (double)i < ((DoubleValue)((TuplePair)entry.getValue()).getSecond()).getValue(); i++) {
                      mc.effectRenderer.emitParticleAtEntity(this.lastAttackedEntity, (EnumParticleTypes)entry.getKey());
                   }
                } catch (Exception e) {

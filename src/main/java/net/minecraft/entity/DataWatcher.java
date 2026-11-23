@@ -31,8 +31,7 @@ public class DataWatcher {
    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
    private static void writeWatchableObjectToPacketBuffer(PacketBuffer buf, DataWatcher.WatchableObject watchableObject) throws IOException {
-      int n = (watchableObject.getObjectType() << 5 | watchableObject.getDataValueId() & 31) & 0xFF;
-      buf.writeByte(n);
+      buf.writeByte((watchableObject.getObjectType() << 5 | watchableObject.getDataValueId() & 31) & 0xFF);
       switch (watchableObject.getObjectType()) {
          case 0:
             buf.writeByte((Byte)watchableObject.getObject());
@@ -50,8 +49,7 @@ public class DataWatcher {
             buf.writeString((String)watchableObject.getObject());
             break;
          case 5:
-            ItemStack object = (ItemStack)watchableObject.getObject();
-            buf.writeItemStackToBuffer(object);
+            buf.writeItemStackToBuffer((ItemStack)watchableObject.getObject());
             break;
          case 6:
             BlockPos object2 = (BlockPos)watchableObject.getObject();
@@ -155,8 +153,7 @@ public class DataWatcher {
          watchableObject = (DataWatcher.WatchableObject)this.watchedObjects.get(n);
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Getting synched entity data");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Synched entity data");
-         crashReportCategory.addCrashSection("Data ID", n);
+         crashReport.makeCategory("Synched entity data").addCrashSection("Data ID", n);
          throw new ReportedException(crashReport);
       }
 

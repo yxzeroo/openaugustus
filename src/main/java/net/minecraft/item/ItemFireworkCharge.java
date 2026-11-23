@@ -39,8 +39,7 @@ public class ItemFireworkCharge extends Item {
          if (!(explosionTag instanceof NBTTagIntArray)) {
             return 9079434;
          } else {
-            NBTTagIntArray nbtTagIntArray = (NBTTagIntArray)explosionTag;
-            int[] intArray = nbtTagIntArray.getIntArray();
+            int[] intArray = ((NBTTagIntArray)explosionTag).getIntArray();
             if (intArray.length == 1) {
                return intArray[0];
             } else {
@@ -129,13 +128,11 @@ public class ItemFireworkCharge extends Item {
          list.add(str2);
       }
 
-      boolean flag5 = tag.getBoolean("Trail");
-      if (flag5) {
+      if (tag.getBoolean("Trail")) {
          list.add(StatCollector.translateToLocal("item.fireworksCharge.trail"));
       }
 
-      boolean flag6 = tag.getBoolean("Flicker");
-      if (flag6) {
+      if (tag.getBoolean("Flicker")) {
          list.add(StatCollector.translateToLocal("item.fireworksCharge.flicker"));
       }
    }

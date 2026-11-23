@@ -180,8 +180,7 @@ public abstract class MinecraftServer implements IThreadListener, Runnable, ICom
             this.saveAllWorlds(false);
 
             for (int i = 0; i < this.worldServers.length; i++) {
-               WorldServer world = this.worldServers[i];
-               world.flush();
+               this.worldServers[i].flush();
             }
          }
       }

@@ -67,15 +67,12 @@ public class GuiDisconnected extends GuiScreen {
          && Minecraft.getMinecraft().getSession() != null
          && (Minecraft.getMinecraft().getSession().getAccountEntry() != null || GuiConnecting.lastRawServerIp.isEmpty())) {
          String unformattedText = component.getUnformattedText();
-         boolean isBanMessage = BanMessageParser.isBanMessage(unformattedText);
-         if (isBanMessage) {
+         if (BanMessageParser.isBanMessage(unformattedText)) {
             long l = BanMessageParser.parseBanDurationMillis(unformattedText);
             AccountEntry accountEntry = Minecraft.getMinecraft().getSession().getAccountEntry();
             String lastRawServerIp = GuiConnecting.lastRawServerIp;
             Long val = l;
-            Long val2 = val;
-            String str2 = lastRawServerIp;
-            accountEntry.markBannedOnServer(str2, val2);
+            accountEntry.markBannedOnServer(lastRawServerIp, val);
          }
       }
    }
@@ -87,17 +84,13 @@ public class GuiDisconnected extends GuiScreen {
          this.mc.displayGuiScreen(parentScreen2);
       } else if (button.id == 1) {
          String str = GuiConnecting.lastServerIp + ":" + GuiConnecting.lastServerPort;
-         Minecraft mc2 = this.mc;
-         GuiConnecting guiConnecting = new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), this.mc, new ServerData(str, str, false));
-         mc2.displayGuiScreen(guiConnecting);
+         this.mc.displayGuiScreen(new GuiConnecting(new GuiMultiplayer(AbstractMainMenuScreen.createMainMenuScreen()), this.mc, new ServerData(str, str, false)));
       } else if (button.id == 2) {
          Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(this.message.getFormattedText()), null);
       } else if (button.id == 3) {
          DnsCacheFlusher.flushDns();
       } else if (button.id == 4) {
-         Minecraft mc3 = this.mc;
-         ClientTabContainerScreen clientTabContainerScreen = new ClientTabContainerScreen(this, 0);
-         mc3.displayGuiScreen(clientTabContainerScreen);
+         this.mc.displayGuiScreen(new ClientTabContainerScreen(this, 0));
       }
    }
 

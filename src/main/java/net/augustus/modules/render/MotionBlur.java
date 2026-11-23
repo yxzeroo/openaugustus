@@ -7,32 +7,24 @@ import net.augustus.render.GpuVendorDetector;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 public class MotionBlur extends Module implements TickListener {
-   public final StringValue frameMultiplier;
-   public final StringValue additionalFramePrecision;
-   public final StringValue brightness;
+   public final DoubleValue frameMultiplier;
+   public final DoubleValue additionalFramePrecision;
+   public final DoubleValue brightness;
    public final BooleanValue onlyWhenFocused;
    public final BooleanValue unsupportedDeviceWarningMessage;
    private boolean pendingGpuWarning;
 
    public MotionBlur() {
        super("MotionBlur", "BewegungsUnschärfe", new Color(50, 168, 151), Categorys.RENDER);
-      StringValue stringValue = new StringValue(this, "Frame Multiplier", 50.0, 0.0, 100.0, 1);
-      SettingVisibilityCondition condition = () -> GpuVendorDetector.isNvidia();
-      this.frameMultiplier = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "Additional frame precision", 0.0, 0.0, 100.0, 1);
-      SettingVisibilityCondition condition2 = () -> GpuVendorDetector.isNvidia();
-      this.additionalFramePrecision = stringValue2.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this, "Brightness", 50.0, 5.0, 100.0, 1);
-      SettingVisibilityCondition condition3 = () -> GpuVendorDetector.isNvidia();
-      this.brightness = stringValue3.visibleWhen(condition3);
-      BooleanValue booleanValue = new BooleanValue(this, "Only when focused", true);
-      SettingVisibilityCondition condition4 = () -> GpuVendorDetector.isNvidia();
-      this.onlyWhenFocused = (BooleanValue)booleanValue.withVisibility(condition4);
+      this.frameMultiplier = new DoubleValue(this, "Frame Multiplier", 50.0, 0.0, 100.0, 1).visibleWhen(() -> GpuVendorDetector.isNvidia());
+      this.additionalFramePrecision = new DoubleValue(this, "Additional frame precision", 0.0, 0.0, 100.0, 1).visibleWhen(() -> GpuVendorDetector.isNvidia());
+      this.brightness = new DoubleValue(this, "Brightness", 50.0, 5.0, 100.0, 1).visibleWhen(() -> GpuVendorDetector.isNvidia());
+      this.onlyWhenFocused = (BooleanValue)new BooleanValue(this, "Only when focused", true).withVisibility(() -> GpuVendorDetector.isNvidia());
       this.unsupportedDeviceWarningMessage = new BooleanValue(this, "UnsupportedDeviceWarningMessage", true);
       this.pendingGpuWarning = false;
    }
@@ -50,15 +42,13 @@ public class MotionBlur extends Module implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick() {
       if (this.pendingGpuWarning && this.unsupportedDeviceWarningMessage.getValue()) {
-         String str = "§cWe detected that your GPU may not support Motion Blur properly. This could lead to graphical issues or crashes.";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("§cWe detected that your GPU may not support Motion Blur properly. This could lead to graphical issues or crashes.");
          this.pendingGpuWarning = false;
       }
    }

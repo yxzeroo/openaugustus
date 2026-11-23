@@ -5,32 +5,24 @@ import net.augustus.events.EventMotion;
 import net.augustus.events.listeners.MotionListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.movement.FastLadder;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 
 public class PositionFastLadderMode extends FastLadderMode implements MotionListener {
-   public final StringValue positionSpeed;
-   public final StringValue positionTickDelay;
+   public final DoubleValue positionSpeed;
+   public final DoubleValue positionTickDelay;
 
-   public PositionFastLadderMode(FastLadder fastLadder, DoubleValue doubleValue) {
+   public PositionFastLadderMode(FastLadder fastLadder, SettingGroup doubleValue) {
        super(fastLadder, doubleValue, "Position");
-      FastLadderMode.getControlFlowState2();
-      StringValue stringValue = new StringValue(this.parentModule, "PositionSpeed", 0.4, 0.2, 2.0, 3, this.modeSetting);
-      String str = "Speed";
-      stringValue = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.positionSpeed = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this.parentModule, "PositionTickDelay", 0.0, 0.0, 20.0, 0, this.modeSetting);
-      String str2 = "TickDelay";
-      StringValue stringValue3 = stringValue2.named(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.positionTickDelay = stringValue3.visibleWhen(condition2);
+      DoubleValue stringValue = new DoubleValue(this.parentModule, "PositionSpeed", 0.4, 0.2, 2.0, 3, this.modeSetting);
+      stringValue = stringValue.named("Speed");
+      this.positionSpeed = stringValue.visibleWhen(() -> this.isSelected());
+      this.positionTickDelay = new DoubleValue(this.parentModule, "PositionTickDelay", 0.0, 0.0, 20.0, 0, this.modeSetting).named("TickDelay").visibleWhen(() -> this.isSelected());
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
@@ -43,7 +35,6 @@ public class PositionFastLadderMode extends FastLadderMode implements MotionList
 
    @Override
    public void onMotion(EventMotion event) {
-      int[] controlFlowState22 = FastLadderMode.getControlFlowState2();
       if (((FastLadder)this.parentModule).isClimbing()) {
          if ((double)mc.thePlayer.ticksExisted % (this.positionTickDelay.getValue() + 1.0) == 0.0) {
             mc.thePlayer

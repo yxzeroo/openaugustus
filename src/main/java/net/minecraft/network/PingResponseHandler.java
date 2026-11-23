@@ -32,12 +32,10 @@ public class PingResponseHandler extends ChannelInboundHandlerAdapter {
          if (buf.readUnsignedByte() == 254) {
             InetSocketAddress inetSocketAddress = (InetSocketAddress)ctx.channel().remoteAddress();
             MinecraftServer server = this.networkSystem.getServer();
-            int n = buf.readableBytes();
-            switch (n) {
+            switch (buf.readableBytes()) {
                case 0:
                   LOGGER.debug("Ping: (<1.3.x) from {}:{}", new Object[]{inetSocketAddress.getAddress(), inetSocketAddress.getPort()});
-                  String str = String.format("%s§%d§%d", server.getMOTD(), server.getCurrentPlayerCount(), server.getMaxPlayers());
-                  this.writeAndFlush(ctx, this.getStringBuffer(str));
+                  this.writeAndFlush(ctx, this.getStringBuffer(String.format("%s§%d§%d", server.getMOTD(), server.getCurrentPlayerCount(), server.getMaxPlayers())));
                   break;
                case 1:
                   if (buf.readUnsignedByte() != 1) {

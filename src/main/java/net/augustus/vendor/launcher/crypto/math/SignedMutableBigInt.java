@@ -5,70 +5,57 @@ public class SignedMutableBigInt extends MutableBigInt {
 
    public SignedMutableBigInt(MutableBigInt mutableBigInt) {
        super(mutableBigInt);
-      byte b = 1;
-      this.sign = b;
+      this.sign = (byte)1;
    }
 
    public void signedAdd(SignedMutableBigInt signedMutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.sign == signedMutableBigInt.sign) {
          this.add(signedMutableBigInt);
       } else {
-         int n = this.sign * this.subtract(signedMutableBigInt);
-         this.sign = n;
+         this.sign = this.sign * this.subtract(signedMutableBigInt);
       }
    }
 
    @Override
    public String toString() {
-      int sign2 = this.sign;
-      return this.toBigInteger(sign2).toString();
+      return this.toBigInteger(this.sign).toString();
    }
 
    public SignedMutableBigInt() {
        super();
-      byte b = 1;
-      this.sign = b;
+      this.sign = (byte)1;
    }
 
    public SignedMutableBigInt(int n) {
        super(n);
-      byte b = 1;
-      this.sign = b;
+      this.sign = (byte)1;
    }
 
    public void signedSubtract(SignedMutableBigInt signedMutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.sign == signedMutableBigInt.sign) {
-         int n = this.sign * this.subtract(signedMutableBigInt);
-         this.sign = n;
+         this.sign = this.sign * this.subtract(signedMutableBigInt);
       } else {
          this.add(signedMutableBigInt);
       }
    }
 
    public void signedSubtract2(MutableBigInt mutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.sign == 1) {
-         int n = this.sign * this.subtract(mutableBigInt);
-         this.sign = n;
+         this.sign = this.sign * this.subtract(mutableBigInt);
       } else {
          this.add(mutableBigInt);
       }
 
       if (this.intLen == 0) {
-         byte b = 1;
-         this.sign = b;
+         this.sign = (byte)1;
       }
    }
 
    public void signedAdd2(MutableBigInt mutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.sign == 1) {
          this.add(mutableBigInt);
       } else {
-         int n = this.sign * this.subtract(mutableBigInt);
-         this.sign = n;
+         this.sign = this.sign * this.subtract(mutableBigInt);
       }
    }
 }

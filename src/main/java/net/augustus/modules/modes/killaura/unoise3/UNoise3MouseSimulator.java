@@ -12,7 +12,7 @@ import net.augustus.utils.rotation.RotationOvershootController;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.util.MathHelper;
 
 public class UNoise3MouseSimulator {
@@ -59,7 +59,6 @@ public class UNoise3MouseSimulator {
    }
 
    public MouseSimulationDelta simulateSingleSubstep(double d, double d2, double d3, int n) {
-      int[] controlFlowState = UNoise3SettingContext.getControlFlowState();
       if (Math.signum(d3) != Math.signum(d) && d != 0.0) {
          d3 = 0.0;
       } else {
@@ -68,22 +67,15 @@ public class UNoise3MouseSimulator {
 
       double baseAcceleration2 = this.baseAcceleration;
       double baseAcceleration3 = this.baseAcceleration;
-      double d4 = this.currentVelocity.y;
-      ArrayList list = this.simulateSimpleAxis(d2, d4, baseAcceleration2, baseAcceleration2);
+      ArrayList list = this.simulateSimpleAxis(d2, this.currentVelocity.y, baseAcceleration2, baseAcceleration2);
       int size = list.size();
       MouseSimulationStep mouseSimulationStep = new MouseSimulationStep(0.0, 0.0, 0.0);
-      MouseTrajectoryConfig mouseTrajectoryConfig = new MouseTrajectoryConfig(d, this.currentVelocity.x, d3, baseAcceleration3, baseAcceleration3, baseAcceleration3);
-      MouseTrajectoryConfig mouseTrajectoryConfig2 = this.solveAccelerationForSteps(size, mouseTrajectoryConfig);
+      MouseTrajectoryConfig mouseTrajectoryConfig2 = this.solveAccelerationForSteps(size, new MouseTrajectoryConfig(d, this.currentVelocity.x, d3, baseAcceleration3, baseAcceleration3, baseAcceleration3));
       ArrayList list2 = this.simulateTrajectory(mouseTrajectoryConfig2);
       ArrayList list3 = list;
       if (list2.size() > size || mouseTrajectoryConfig2.maxAcceleration > baseAcceleration3) {
-         MouseTrajectoryConfig mouseTrajectoryConfig3 = new MouseTrajectoryConfig(d, this.currentVelocity.x, d3, baseAcceleration3, baseAcceleration3, baseAcceleration3);
-         list2 = this.simulateTrajectory(mouseTrajectoryConfig3);
-         int size2 = list2.size();
-         MouseTrajectoryConfig mouseTrajectoryConfig4 = new MouseTrajectoryConfig(d2, this.currentVelocity.y, 0.0, baseAcceleration2, baseAcceleration2, baseAcceleration2);
-         int n2 = size2;
-         MouseTrajectoryConfig mouseTrajectoryConfig5 = this.solveAccelerationForSteps(n2, mouseTrajectoryConfig4);
-         list3 = this.simulateTrajectory(mouseTrajectoryConfig5);
+         list2 = this.simulateTrajectory(new MouseTrajectoryConfig(d, this.currentVelocity.x, d3, baseAcceleration3, baseAcceleration3, baseAcceleration3));
+         list3 = this.simulateTrajectory(this.solveAccelerationForSteps(list2.size(), new MouseTrajectoryConfig(d2, this.currentVelocity.y, 0.0, baseAcceleration2, baseAcceleration2, baseAcceleration2)));
       }
 
       if (this.resyncStepThreshold >= list2.size() || this.resyncStepThreshold >= list3.size()) {
@@ -96,29 +88,24 @@ public class UNoise3MouseSimulator {
 
       if (this.resyncStepThreshold == -1) {
          this.resyncStepThreshold = (int)((double)Math.max(list2.size(), list3.size()) * this.currentResyncRate);
-         boolean flag = true;
-         this.currentResyncRate = this.uNoise3ResyncRate.nextValue(flag);
+         this.currentResyncRate = this.uNoise3ResyncRate.nextValue(true);
       }
 
-      byte b = 0;
-      double velocity = this.getStepOrFallback(list2, b, mouseSimulationStep).velocity;
-      byte b2 = 0;
-      double velocity2 = this.getStepOrFallback(list3, b2, mouseSimulationStep).velocity;
+      double velocity = this.getStepOrFallback(list2, (byte)0, mouseSimulationStep).velocity;
+      double velocity2 = this.getStepOrFallback(list3, (byte)0, mouseSimulationStep).velocity;
       if (this.uNoise3AdditionalSmoothing.getValue()) {
          if (Math.abs(this.prevYawVelocity) > Math.abs(this.lastYawVelocity)
             && Math.abs(velocity) > Math.abs(this.lastYawVelocity)
             && Math.signum(this.prevYawVelocity) == Math.signum(this.lastYawVelocity)
             && Math.signum(this.lastYawVelocity) == Math.signum(velocity)) {
-            boolean flag2 = true;
-            velocity = MathStatisticsUtil.lerp(this.lastYawVelocity, velocity, 1.0 - this.uNoise3HorizontalSmoothingValue.nextValue(flag2) / 100.0);
+            velocity = MathStatisticsUtil.lerp(this.lastYawVelocity, velocity, 1.0 - this.uNoise3HorizontalSmoothingValue.nextValue(true) / 100.0);
          }
 
          if (Math.abs(this.prevPitchVelocity) > Math.abs(this.lastPitchVelocity)
             && Math.abs(velocity2) > Math.abs(this.lastPitchVelocity)
             && Math.signum(this.prevPitchVelocity) == Math.signum(this.lastPitchVelocity)
             && Math.signum(this.lastPitchVelocity) == Math.signum(velocity2)) {
-            boolean flag3 = true;
-            velocity2 = MathStatisticsUtil.lerp(this.lastPitchVelocity, velocity2, 1.0 - this.uNoise3VerticalSmoothingValue.nextValue(flag3) / 100.0);
+            velocity2 = MathStatisticsUtil.lerp(this.lastPitchVelocity, velocity2, 1.0 - this.uNoise3VerticalSmoothingValue.nextValue(true) / 100.0);
          }
       }
 
@@ -129,11 +116,8 @@ public class UNoise3MouseSimulator {
       this.disturbance.stepLayers();
       double d5 = this.disturbance.sample();
       float f = this.verticalDisturbanceOffset;
-      boolean flag4 = false;
-      double d6 = this.disturbance.sampleWithOffset(flag4, f);
-      byte b3 = 0;
-      byte b4 = 0;
-      Vec2d vec2d = new Vec2d(this.getStepOrFallback(list2, b3, mouseSimulationStep).position, this.getStepOrFallback(list3, b4, mouseSimulationStep).position);
+      double d6 = this.disturbance.sampleWithOffset(false, f);
+      Vec2d vec2d = new Vec2d(this.getStepOrFallback(list2, (byte)0, mouseSimulationStep).position, this.getStepOrFallback(list3, (byte)0, mouseSimulationStep).position);
       double d7 = vec2d.x;
       double d8 = this.horizontalOvershoot.computeOvershootMultiplier(d7);
       double d9 = vec2d.y;
@@ -160,21 +144,18 @@ public class UNoise3MouseSimulator {
    }
 
    public double getEffectiveAcceleration() {
-      int[] controlFlowState = UNoise3SettingContext.getControlFlowState();
       return this.accelerationCapped ? Math.min(this.baseAcceleration, this.cappedAcceleration) : this.baseAcceleration;
    }
 
    public MouseTrajectoryConfig solveAccelerationForSteps(int n, MouseTrajectoryConfig mouseTrajectoryConfig) {
       double d = 0.001;
-      UNoise3SettingContext.getControlFlowState();
       double maxAcceleration = mouseTrajectoryConfig.maxAcceleration;
 
       for (int i = 0; i < 100; i++) {
          double d2 = 0.5 * (d + maxAcceleration);
          MouseTrajectoryConfig mouseTrajectoryConfig2 = mouseTrajectoryConfig.copy();
          mouseTrajectoryConfig2.maxAcceleration = mouseTrajectoryConfig2.deceleration = d2;
-         ArrayList list = this.simulateTrajectory(mouseTrajectoryConfig2);
-         int size = list.size();
+         int size = this.simulateTrajectory(mouseTrajectoryConfig2).size();
          if (size < n) {
             maxAcceleration = d2;
          } else {
@@ -208,7 +189,6 @@ public class UNoise3MouseSimulator {
       this.preDecelerationFactor = 1.0;
       this.postDecelerationFactor = 1.0;
       this.postHighSpeedDecelFactor = 1.0;
-      UNoise3SettingContext.getControlFlowState();
       this.highSpeedThresholdDeg = 10.0;
       this.accelerationCapped = false;
       this.cappedAcceleration = this.baseAcceleration;
@@ -220,73 +200,34 @@ public class UNoise3MouseSimulator {
       this.verticalDisturbanceOffset = (float)ThreadLocalRandom.current().nextDouble(-200.0, 200.0);
       this.degreesPerStep = 0.15;
       VarianceNoiseSetting varianceNoiseSetting = new VarianceNoiseSetting(uNoise3SettingContext, "disturbance", false);
-      byte b = 2;
       double d = 0.5;
       double d2 = 0.0;
-      double d3 = 0.2;
-      varianceNoiseSetting = varianceNoiseSetting.withStrength(d3, d2, d, b);
-      String str = "Disturbance";
-      this.disturbance = varianceNoiseSetting.named(str);
-      VarianceNoiseSetting disturbance2 = this.disturbance;
-      NoiseLayerBuilder noiseLayerBuilder = this.disturbance.newLayerBuilder();
-      float f = 16.6F;
-      NoiseLayerSetting noiseLayerSetting = noiseLayerBuilder.withStepDeltaMs(f).build();
-      disturbance2.addLayer(noiseLayerSetting);
-      VarianceNoiseSetting disturbance3 = this.disturbance;
-      NoiseLayerBuilder noiseLayerBuilder2 = this.disturbance.newLayerBuilder();
-      float f2 = 16.6F;
-      NoiseLayerSetting noiseLayerSetting2 = noiseLayerBuilder2.withStepDeltaMs(f2).build();
-      disturbance3.addLayer(noiseLayerSetting2);
+      varianceNoiseSetting = varianceNoiseSetting.withStrength(0.2, d2, d, (byte)2);
+      this.disturbance = varianceNoiseSetting.named("Disturbance");
+      this.disturbance.addLayer(this.disturbance.newLayerBuilder().withStepDeltaMs(16.6F).build());
+      this.disturbance.addLayer(this.disturbance.newLayerBuilder().withStepDeltaMs(16.6F).build());
       VarianceNoiseSetting disturbance4 = this.disturbance;
-      NoiseLayerBuilder noiseLayerBuilder3 = this.disturbance.newLayerBuilder();
-      float f3 = 16.6F;
-      NoiseLayerSetting noiseLayerSetting3 = noiseLayerBuilder3.withStepDeltaMs(f3).build();
-      disturbance4.addLayer(noiseLayerSetting3);
-      DoubleValue doubleValue = new DoubleValue(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_overshoot", uNoise3SettingContext.getParentGroup());
-      String str2 = "Overshoot";
-      DoubleValue doubleValue2 = (DoubleValue)doubleValue.withDisplayName(str2);
-      SettingVisibilityCondition visibilityCondition = uNoise3SettingContext.getVisibilityCondition();
-      DoubleValue doubleValue3 = doubleValue2.visibleWhen(visibilityCondition);
+      disturbance4.addLayer(this.disturbance.newLayerBuilder().withStepDeltaMs(16.6F).build());
+      SettingGroup doubleValue3 = ((SettingGroup)new SettingGroup(uNoise3SettingContext.getModule(), uNoise3SettingContext.getParentGroup().getName() + "_overshoot", uNoise3SettingContext.getParentGroup()).withDisplayName("Overshoot")).visibleWhen(uNoise3SettingContext.getVisibilityCondition());
       this.horizontalOvershoot = new RotationOvershootController(uNoise3SettingContext.withParentGroup(doubleValue3), "Horizontal");
       this.verticalOvershoot = new RotationOvershootController(uNoise3SettingContext.withParentGroup(doubleValue3), "Vertical");
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3ResyncRate", 0.4, 0.6, 0.0, 1.0, 2, uNoise3SettingContext.getParentGroup());
-      String str3 = "Resync rate";
-      this.uNoise3ResyncRate = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str3);
+      this.uNoise3ResyncRate = (RandomizedRangeSettings)new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3ResyncRate", 0.4, 0.6, 0.0, 1.0, 2, uNoise3SettingContext.getParentGroup()).withDisplayNamePrefix("Resync rate");
       disturbance4 = this.disturbance;
-      SettingVisibilityCondition visibilityCondition2 = uNoise3SettingContext.getVisibilityCondition();
-      SettingVisibilityCondition condition = visibilityCondition2;
-      disturbance4.withNoiseVisibility(condition);
-      RandomizedRangeSettings uNoise3ResyncRate2 = this.uNoise3ResyncRate;
-      SettingVisibilityCondition visibilityCondition3 = uNoise3SettingContext.getVisibilityCondition();
-      uNoise3ResyncRate2.withVisibility(visibilityCondition3);
-      DoubleValue doubleValue4 = new DoubleValue(uNoise3SettingContext.getModule(), "UNoise3AdditionalSmoothingGroup", uNoise3SettingContext.getParentGroup());
-      String str4 = "Additional Smoothing";
-      DoubleValue doubleValue5 = (DoubleValue)doubleValue4.withDisplayName(str4);
-      SettingVisibilityCondition visibilityCondition4 = uNoise3SettingContext.getVisibilityCondition();
-      DoubleValue doubleValue6 = doubleValue5.visibleWhen(visibilityCondition4);
-      BooleanValue booleanValue = new BooleanValue(uNoise3SettingContext.getModule(), "UNoise3AdditionalSmoothing", false, doubleValue6);
-      String str5 = "Additional Smoothing";
-      this.uNoise3AdditionalSmoothing = (BooleanValue)booleanValue.withDisplayName(str5);
+      disturbance4.withNoiseVisibility(uNoise3SettingContext.getVisibilityCondition());
+      this.uNoise3ResyncRate.withVisibility(uNoise3SettingContext.getVisibilityCondition());
+      SettingGroup doubleValue6 = ((SettingGroup)new SettingGroup(uNoise3SettingContext.getModule(), "UNoise3AdditionalSmoothingGroup", uNoise3SettingContext.getParentGroup()).withDisplayName("Additional Smoothing")).visibleWhen(uNoise3SettingContext.getVisibilityCondition());
+      this.uNoise3AdditionalSmoothing = (BooleanValue)new BooleanValue(uNoise3SettingContext.getModule(), "UNoise3AdditionalSmoothing", false, doubleValue6).withDisplayName("Additional Smoothing");
       RandomizedRangeSettings randomizedRangeSettings2 = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3HorizontalSmoothingValue", 50.0, 50.0, 0.0, 100.0, 0, doubleValue6);
       BooleanValue booleanValue2 = this.uNoise3AdditionalSmoothing;
       this.uNoise3AdditionalSmoothing.getClass();
-      BooleanValue booleanValue3 = booleanValue2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      RandomizedRangeSettings randomizedRangeSettings3 = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2);
-      String str6 = "Horizontal smoothing";
-      this.uNoise3HorizontalSmoothingValue = (RandomizedRangeSettings)randomizedRangeSettings3.withDisplayNamePrefix(str6);
+      this.uNoise3HorizontalSmoothingValue = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> booleanValue2.getValue())).withDisplayNamePrefix("Horizontal smoothing");
       RandomizedRangeSettings randomizedRangeSettings4 = new RandomizedRangeSettings(uNoise3SettingContext.getModule(), "UNoise3VerticalSmoothingValue", 50.0, 50.0, 0.0, 100.0, 0, doubleValue6);
       BooleanValue booleanValue4 = this.uNoise3AdditionalSmoothing;
       this.uNoise3AdditionalSmoothing.getClass();
-      BooleanValue booleanValue5 = booleanValue4;
-      SettingVisibilityCondition condition3 = () -> booleanValue5.getValue();
-      RandomizedRangeSettings randomizedRangeSettings5 = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition3);
-      String str7 = "Vertical smoothing";
-      this.uNoise3VerticalSmoothingValue = (RandomizedRangeSettings)randomizedRangeSettings5.withDisplayNamePrefix(str7);
+      this.uNoise3VerticalSmoothingValue = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(() -> booleanValue4.getValue())).withDisplayNamePrefix("Vertical smoothing");
    }
 
    public void setAcceleration(double d, boolean flag) {
-      int[] controlFlowState = UNoise3SettingContext.getControlFlowState();
       if (flag) {
          this.cappedAcceleration = d;
          this.accelerationCapped = true;
@@ -297,25 +238,16 @@ public class UNoise3MouseSimulator {
 
    public MouseSimulationDelta simulateTickSubsteps(MutableDoubleRef mutableDoubleRef, MutableDoubleRef mutableDoubleRef2, double d, int n, MouseSimulationStepCallback callback) {
       Vec2d vec2d = new Vec2d(0.0, 0.0);
-      UNoise3SettingContext.getControlFlowState();
       Vec2d vec2d2 = new Vec2d(0.0, 0.0);
       boolean flag = false;
 
       for (int i = 0; i < n; i++) {
-         double d2 = mutableDoubleRef.getValue() / this.degreesPerStep - vec2d2.x;
-         double d3 = mutableDoubleRef2.getValue() / this.degreesPerStep - vec2d2.y;
-         int n2 = n - i;
-         double d4 = d3;
-         double d5 = d2;
-         MouseSimulationDelta mouseSimulationDelta = this.simulateSingleSubstep(d5, d4, d, n2);
-         Vec2d noisyDelta = mouseSimulationDelta.noisyDelta;
-         vec2d = vec2d.add(noisyDelta);
-         Vec2d baseDelta = mouseSimulationDelta.baseDelta;
-         vec2d2 = vec2d2.add(baseDelta);
+         MouseSimulationDelta mouseSimulationDelta = this.simulateSingleSubstep(mutableDoubleRef.getValue() / this.degreesPerStep - vec2d2.x, mutableDoubleRef2.getValue() / this.degreesPerStep - vec2d2.y, d, n - i);
+         vec2d = vec2d.add(mouseSimulationDelta.noisyDelta);
+         vec2d2 = vec2d2.add(mouseSimulationDelta.baseDelta);
          flag |= mouseSimulationDelta.reachedGoal;
          double d6 = vec2d.y;
-         double d7 = vec2d.x;
-         callback.onStep(i, d7, d6);
+         callback.onStep(i, vec2d.x, d6);
       }
 
       if (flag) {
@@ -328,14 +260,12 @@ public class UNoise3MouseSimulator {
 
    public ArrayList simulateTrajectory(MouseTrajectoryConfig mouseTrajectoryConfig) {
       ArrayList list = new ArrayList();
-      UNoise3SettingContext.getControlFlowState();
       double d = 0.0;
       double targetDistance = mouseTrajectoryConfig.targetDistance;
       double d2 = targetDistance;
 
       for (int i = 0; i < 1000 && d2 != 0.0; i++) {
-         double d3 = mouseTrajectoryConfig.targetVelocity + Math.sqrt(2.0 * mouseTrajectoryConfig.deceleration * this.preDecelerationFactor * Math.abs(d2));
-         double d4 = d3 * Math.signum(d2) - mouseTrajectoryConfig.currentVelocity;
+         double d4 = (mouseTrajectoryConfig.targetVelocity + Math.sqrt(2.0 * mouseTrajectoryConfig.deceleration * this.preDecelerationFactor * Math.abs(d2))) * Math.signum(d2) - mouseTrajectoryConfig.currentVelocity;
          double maxAcceleration = mouseTrajectoryConfig.maxAcceleration;
          if (Math.signum(d2) != Math.signum(mouseTrajectoryConfig.currentVelocity)) {
             double postDecelerationFactor2 = this.postDecelerationFactor;
@@ -368,7 +298,6 @@ public class UNoise3MouseSimulator {
    }
 
    private MouseSimulationStep getStepOrFallback(ArrayList list, int n, MouseSimulationStep mouseSimulationStep) {
-      int[] controlFlowState = UNoise3SettingContext.getControlFlowState();
       if (list.isEmpty()) {
          return mouseSimulationStep;
       } else if (n >= list.size()) {

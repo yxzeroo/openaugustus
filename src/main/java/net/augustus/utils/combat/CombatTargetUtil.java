@@ -43,12 +43,7 @@ public class CombatTargetUtil {
       boolean flag10,
       boolean flag11
    ) {
-      byte b = 0;
-      boolean flag12 = false;
-      boolean flag13 = true;
-      boolean flag14 = true;
-      boolean flag15 = false;
-      return evaluateTarget(entity, flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, flag10, flag15, flag11, flag14, flag13, flag12, b);
+      return evaluateTarget(entity, flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, flag10, false, flag11, true, true, false, (byte)0);
    }
 
    public static EntityLivingBase getActiveTarget() {
@@ -58,23 +53,14 @@ public class CombatTargetUtil {
    public static boolean isValidTarget(
       Entity entity, boolean flag, boolean flag2, boolean flag3, boolean flag4, boolean flag5, boolean flag6, boolean flag7, boolean flag8, boolean flag9
    ) {
-      byte b = 0;
-      boolean flag10 = false;
-      boolean flag11 = true;
-      boolean flag12 = false;
-      boolean flag13 = false;
-      boolean flag14 = true;
-      boolean flag15 = false;
-      return evaluateTarget(entity, flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, flag15, flag14, flag13, flag12, flag11, flag10, b);
+      return evaluateTarget(entity, flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, false, true, false, false, true, false, (byte)0);
    }
 
    public static boolean hasProtectionEffect(EntityPlayer player) {
       if (player.getGameProfile() == null) {
          return false;
       } else {
-         byte b = 2;
-         PlayerEffectEntry playerEffect = PlayerEffectRegistry.getPlayerEffect(player, b);
-         return playerEffect != null;
+         return PlayerEffectRegistry.getPlayerEffect(player, (byte)2) != null;
       }
    }
 
@@ -126,9 +112,7 @@ public class CombatTargetUtil {
                      || flag7 && ClientManagers.moduleManager.teams.isTeammate(entity2)
                      || flag8 && !ClientManagers.moduleManager.midClick.autoUnfriendTriggered && ClientManagers.moduleManager.midClick.isFriend(entity2)) {
                      if (flag15) {
-                        AlertCommand alertCommand = Augustus.getInstance().getCommandManager().alertCommand;
-                        String name2 = entity2.getName();
-                        if (alertCommand.hasAlert(name2)) {
+                        if (Augustus.getInstance().getCommandManager().alertCommand.hasAlert(entity2.getName())) {
                            break exitBlock4;
                         }
                      }

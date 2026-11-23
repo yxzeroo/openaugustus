@@ -17,8 +17,7 @@ public class IRCChat extends Module implements LoadWorldListener {
    }
 
    public void onClientInit() {
-      boolean flag = true;
-      this.setToggled(flag);
+      this.setToggled(true);
    }
 
    public void onEnable() {
@@ -29,8 +28,7 @@ public class IRCChat extends Module implements LoadWorldListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 17;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)17);
    }
 
    public void receiveMessage(String str, String str2, String str3, String str4, int n, int n2, String str5, boolean flag) {

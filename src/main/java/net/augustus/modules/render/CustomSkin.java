@@ -18,37 +18,31 @@ import net.augustus.utils.file.DirectoryWatcher;
 import net.augustus.utils.file.ClientPaths;
 import net.augustus.settings.ActionSetting;
 import net.augustus.settings.SettingChangeListener;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 
 public class CustomSkin extends Module {
    private final String customSkinsDir;
-   public final BooleansSetting skinMode;
-   public final BooleansSetting skins;
+   public final StringValue skinMode;
+   public final StringValue skins;
    public final ActionSetting openFolder;
    public final HashMap skinTextures;
 
    public CustomSkin() {
        super("CustomSkin", "KundenspezifischeHaut", new Color(67, 209, 174), Categorys.RENDER);
       this.customSkinsDir = ClientPaths.CLIENT_DIR + File.separator + "customskins";
-      this.skinMode = new BooleansSetting(this, "SkinMode", "default", new String[]{"default", "slim"});
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Skins", "", new String[0]);
-      SettingChangeListener listener = () -> this.reloadPlayerTextures();
-      SettingChangeListener listener2 = listener;
-      this.skins = (BooleansSetting)booleansSetting.withChangeListener(listener2);
+      this.skinMode = new StringValue(this, "SkinMode", "default", new String[]{"default", "slim"});
+      this.skins = (StringValue)new StringValue(this, "Skins", "", new String[0]).withChangeListener(() -> this.reloadPlayerTextures());
       this.openFolder = new ActionSetting(this, "OpenFolder", () -> this.openCustomSkinsFolder());
       this.skinTextures = new HashMap();
       ClientFileUtil.ensureDirectory(this.customSkinsDir);
       this.loadCustomSkins();
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(this.customSkinsDir);
-      Consumer consumer = obj -> this.onSkinFileCreated((Path)obj);
-      directoryWatcher = directoryWatcher.onCreate(consumer);
-      Consumer consumer2 = obj2 -> this.onSkinFileModified((Path)obj2);
-      directoryWatcher = directoryWatcher.onModify(consumer2);
-      Consumer consumer3 = obj3 -> this.onSkinFileDeleted((Path)obj3);
-      directoryWatcher.onDelete(consumer3).register();
+      directoryWatcher = directoryWatcher.onCreate(obj -> this.onSkinFileCreated((Path)obj));
+      directoryWatcher = directoryWatcher.onModify(obj2 -> this.onSkinFileModified((Path)obj2));
+      directoryWatcher.onDelete(obj3 -> this.onSkinFileDeleted((Path)obj3)).register();
    }
 
    @Override
@@ -77,8 +71,7 @@ public class CustomSkin extends Module {
 
    public void loadCustomSkins() {
       this.skinTextures.clear();
-      File file = new File(this.customSkinsDir);
-      File[] files = file.listFiles();
+      File[] files = new File(this.customSkinsDir).listFiles();
       if (files != null) {
          for (File file2 : files) {
             this.loadSkinFile(file2);
@@ -109,14 +102,11 @@ public class CustomSkin extends Module {
    }
 
    private void updateSkinOptions() {
-      boolean flag = this.skinTextures.keySet().stream().anyMatch(obj -> this.isSelectedSkin((String)obj));
-      if (!flag && !this.skinTextures.isEmpty()) {
-         BooleansSetting skins2 = this.skins;
-         String str = (String)this.skinTextures.keySet().iterator().next();
-         skins2.setSelectedValue(str);
+      if (!this.skinTextures.keySet().stream().anyMatch(obj -> this.isSelectedSkin((String)obj)) && !this.skinTextures.isEmpty()) {
+         this.skins.setSelectedValue((String)this.skinTextures.keySet().iterator().next());
       }
 
-      BooleansSetting skins3 = this.skins;
+      StringValue skins3 = this.skins;
       String[] strings = ((Map<String, ?>)this.skinTextures).keySet().stream().sorted(Comparator.comparing(String::toLowerCase)).toArray(String[]::new);
       skins3.setOptions(strings);
    }
@@ -143,14 +133,12 @@ public class CustomSkin extends Module {
    }
 
    private void onSkinFileModified(Path path) {
-      File file = path.toFile();
-      this.loadSkinFile(file);
+      this.loadSkinFile(path.toFile());
       this.updateSkinOptions();
    }
 
    private void onSkinFileCreated(Path path) {
-      File file = path.toFile();
-      this.loadSkinFile(file);
+      this.loadSkinFile(path.toFile());
       this.updateSkinOptions();
    }
 

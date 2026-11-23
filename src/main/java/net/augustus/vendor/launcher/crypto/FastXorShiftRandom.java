@@ -9,7 +9,6 @@ public class FastXorShiftRandom {
 
    public void nextBytes(long l, byte[] bytes) {
       int n = 0;
-      Sha256Digest.getFlowState();
       int length = bytes.length;
 
       while (n < length) {
@@ -17,8 +16,7 @@ public class FastXorShiftRandom {
          long state12 = this.state1;
          state12 ^= state12 << 23;
          long l2 = state02 + state12;
-         long l3 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-         this.state0 = l3;
+         this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
          this.state1 = state02;
          l2 ^= l2 >>> 33;
          l2 *= 2685821657736338717L;
@@ -38,9 +36,7 @@ public class FastXorShiftRandom {
       long state12 = this.state1;
       state12 ^= state12 << 23;
       long l = state02 + state12;
-      Sha256Digest.getFlowState();
-      long l2 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-      this.state0 = l2;
+      this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
       this.state1 = state02;
       l ^= l >>> 33;
       l *= 2685821657736338717L;
@@ -77,34 +73,24 @@ public class FastXorShiftRandom {
    }
 
    public FastXorShiftRandom(long l) {
-      long l2 = System.nanoTime() ^ Runtime.getRuntime().freeMemory();
-      this.state0 = l2;
-      long l3 = System.currentTimeMillis() ^ Runtime.getRuntime().totalMemory();
-      this.state1 = l3;
-      Sha256Digest.getFlowState();
+      this.state0 = System.nanoTime() ^ Runtime.getRuntime().freeMemory();
+      this.state1 = System.currentTimeMillis() ^ Runtime.getRuntime().totalMemory();
 
       for (int i = 0; i < 15; i++) {
-         long l4 = this.state0 ^ System.nanoTime();
-         this.state0 = l4;
-         long l5 = (this.state0 ^ this.state0 >>> 30) * 2685821657736338717L ^ (this.state0 << i) + (long)i;
-         this.state0 = l5;
+         this.state0 = this.state0 ^ System.nanoTime();
+         this.state0 = (this.state0 ^ this.state0 >>> 30) * 2685821657736338717L ^ (this.state0 << i) + (long)i;
          Object obj = new Object();
-         long l6 = this.state1 ^ (long)obj.hashCode() ^ System.nanoTime();
-         this.state1 = l6;
-         long l7 = (this.state1 ^ this.state1 >>> 27) * 6364136223846793005L ^ Thread.currentThread().getId() << i;
-         this.state1 = l7;
-         long l8 = this.state0 ^ this.state1;
-         this.state0 = l8;
-         long l9 = this.state1 ^ this.state0;
-         this.state1 = l9;
+         this.state1 = this.state1 ^ (long)obj.hashCode() ^ System.nanoTime();
+         this.state1 = (this.state1 ^ this.state1 >>> 27) * 6364136223846793005L ^ Thread.currentThread().getId() << i;
+         this.state0 = this.state0 ^ this.state1;
+         this.state1 = this.state1 ^ this.state0;
       }
 
       for (int j = 0; j < 20; j++) {
          long state02 = this.state0;
          long state12 = this.state1;
          state12 ^= state12 << 23;
-         long l10 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-         this.state0 = l10;
+         this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
          this.state1 = state02;
       }
    }

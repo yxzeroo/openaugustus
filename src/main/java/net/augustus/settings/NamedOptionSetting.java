@@ -32,8 +32,7 @@ public class NamedOptionSetting extends Setting {
    }
 
    private void selectOptionByName(String str) {
-      EnumSettingOption enumSettingOption = this.findOptionByName(str);
-      this.setSelectedOption(enumSettingOption);
+      this.setSelectedOption(this.findOptionByName(str));
    }
 
    public NamedOptionSetting(Module module, String str, EnumSettingOption enumSettingOption, EnumSettingOption[] enumSettingOptions) {
@@ -41,35 +40,23 @@ public class NamedOptionSetting extends Setting {
    }
 
    private void updateLabelWidth() {
-      boolean flag = this.labelWidth == -1;
-      boolean flag2 = flag;
-      if (this.consumeLabelDirty(flag2)) {
-         CustomFontUtil consolas30Booleans = FontManager.consolas30Booleans;
-         String str = this.getDisplayName() + ": ";
-         String str2 = str;
-         this.labelWidth = (int)consolas30Booleans.getStringWidth(str2);
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
+         this.labelWidth = (int)FontManager.consolas30Booleans.getStringWidth(this.getDisplayName() + ": ");
       }
    }
 
-   private NamedOptionSetting(String str, Module module, DoubleValue doubleValue, EnumSettingOption enumSettingOption, EnumSettingOption[] enumSettingOptions) {
+   private NamedOptionSetting(String str, Module module, SettingGroup doubleValue, EnumSettingOption enumSettingOption, EnumSettingOption[] enumSettingOptions) {
        super(module, doubleValue, str);
       this.optionsByName = new HashMap();
-      StringProperty stringProperty = new StringProperty(this, "S", "");
-      Consumer consumer = obj -> this.selectOptionByName((String)obj);
-      StringProperty stringProperty2 = (StringProperty)stringProperty.withOnValueChanged(consumer);
-      Supplier supplier = () -> this.selectedOption.getDisplayName();
-      this.s = (StringProperty)stringProperty2.withValueSupplier(supplier);
+      this.s = (StringProperty)((StringProperty)new StringProperty(this, "S", "").withOnValueChanged(obj -> this.selectOptionByName((String)obj))).withValueSupplier(() -> this.selectedOption.getDisplayName());
       this.renderedHeight = 0;
       this.labelWidth = -1;
       this.optionWidthCache = new ConcurrentHashMap();
       this.selectedOption = enumSettingOption;
       StringProperty stringProperty3 = this.s;
-      String displayName2 = enumSettingOption.getDisplayName();
-      String str2 = displayName2;
-      stringProperty3.setValue(str2);
+      stringProperty3.setValue(enumSettingOption.getDisplayName());
       stringProperty3 = this.s;
-      String displayName3 = enumSettingOption.getDisplayName();
-      stringProperty3.setDefaultValue(displayName3);
+      stringProperty3.setDefaultValue(enumSettingOption.getDisplayName());
       this.setOptions(enumSettingOptions);
    }
 
@@ -86,14 +73,10 @@ public class NamedOptionSetting extends Setting {
          this.updateLabelWidth();
          if (flag) {
             String str = this.getDisplayName() + ": ";
-            byte b = 0;
-            int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
-            byte b2 = 0;
-            int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b2);
+            int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+            int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
             double d = (double)n3;
-            double d2 = (double)n4;
-            double d3 = d;
-            customFontUtil.drawString(str, d3, d2, colorInt);
+            customFontUtil.drawString(str, d, (double)n4, colorInt);
             int n7 = n3 + this.labelWidth;
             int n8 = n4;
             int n9 = 0;
@@ -109,22 +92,18 @@ public class NamedOptionSetting extends Setting {
                         n7 = n3 + this.labelWidth;
                      }
 
-                     boolean flag2 = enumSettingOption.equals(this.getSelectedOption());
-                     int n10 = flag2
+                     int n10 = enumSettingOption.equals(this.getSelectedOption())
                         ? RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F))
                         : RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F));
                      boolean flag3 = n9 < this.getOptions().length - 1;
                      d = (double)n7;
-                     double d4 = (double)n8;
-                     double d5 = d;
-                     customFontUtil.drawString(displayName2, d5, d4, n10);
+                     customFontUtil.drawString(displayName2, d, (double)n8, n10);
                      n7 += num;
                      if (flag3) {
                         d = (double)n7;
                         double d6 = (double)n8;
                         double d7 = d;
-                        String str2 = ", ";
-                        customFontUtil.drawString(str2, d7, d6, colorInt);
+                        customFontUtil.drawString(", ", d7, d6, colorInt);
                         n7 += SEPARATOR_WIDTH;
                      }
 
@@ -155,8 +134,7 @@ public class NamedOptionSetting extends Setting {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    public EnumSettingOption[] getOptions() {
@@ -165,16 +143,13 @@ public class NamedOptionSetting extends Setting {
 
    @Override
    public void resetToDefault() {
-      String defaultValue = (String)this.s.getDefaultValue();
-      EnumSettingOption enumSettingOption = this.findOptionByName(defaultValue);
-      this.setSelectedOption(enumSettingOption);
+      this.setSelectedOption(this.findOptionByName((String)this.s.getDefaultValue()));
    }
 
    @Override
    public void randomize() {
       if (!this.getDisplayName().contains("Point selection mode")) {
-         EnumSettingOption enumSettingOption = this.options[ThreadLocalRandom.current().nextInt(this.options.length)];
-         this.setSelectedOption(enumSettingOption);
+         this.setSelectedOption(this.options[ThreadLocalRandom.current().nextInt(this.options.length)]);
       }
    }
 
@@ -227,7 +202,7 @@ public class NamedOptionSetting extends Setting {
       return this.selectedOption;
    }
 
-   public NamedOptionSetting(Module module, String str, EnumSettingOption enumSettingOption, EnumSettingOption[] enumSettingOptions, DoubleValue doubleValue) {
+   public NamedOptionSetting(Module module, String str, EnumSettingOption enumSettingOption, EnumSettingOption[] enumSettingOptions, SettingGroup doubleValue) {
        this(str, module, doubleValue, enumSettingOption, enumSettingOptions);
 
       for (EnumSettingOption enumSettingOption2 : enumSettingOptions) {
@@ -261,10 +236,7 @@ public class NamedOptionSetting extends Setting {
          }
 
          this.selectedOption = enumSettingOption;
-         StringProperty stringProperty = this.s;
-         String displayName2 = enumSettingOption.getDisplayName();
-         String str = displayName2;
-         stringProperty.setValue(str);
+         this.s.setValue(enumSettingOption.getDisplayName());
       }
    }
 

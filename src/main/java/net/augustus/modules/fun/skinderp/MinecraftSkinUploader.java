@@ -47,8 +47,7 @@ public class MinecraftSkinUploader implements MC {
    }
 
    public static int getRemainingUploads() {
-      long l = System.currentTimeMillis();
-      return l - rateLimitWindowStartMs >= 60000L ? 20 : 20 - uploadsInCurrentWindow;
+      return System.currentTimeMillis() - rateLimitWindowStartMs >= 60000L ? 20 : 20 - uploadsInCurrentWindow;
    }
 
    private static boolean checkRateLimit() {
@@ -156,8 +155,7 @@ public class MinecraftSkinUploader implements MC {
    }
 
    public static long getRateLimitResetMs() {
-      long l = System.currentTimeMillis();
-      long l2 = l - rateLimitWindowStartMs;
+      long l2 = System.currentTimeMillis() - rateLimitWindowStartMs;
       return l2 >= 60000L ? 0L : 60000L - l2;
    }
 

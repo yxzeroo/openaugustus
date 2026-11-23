@@ -14,33 +14,29 @@ import net.augustus.modules.movement.helper.MotionModifierProvider;
 import net.augustus.settings.CustomSubModeFactory;
 import net.augustus.modules.misc.Dummy;
 import net.augustus.modules.movement.HighJump;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class MotionModifierHighJumpMode extends HighJumpMode implements MotionModifierProvider, UpdateListener, MoveEntityListener, MoveInputListener, PacketListener, PacketDelayListener {
    private final Dummy dummy;
    private final MotionModifierEngine motionModifierEngine;
 
-   public MotionModifierHighJumpMode(HighJump highJump, DoubleValue doubleValue, String str) {
+   public MotionModifierHighJumpMode(HighJump highJump, SettingGroup doubleValue, String str) {
        super(highJump, doubleValue, str);
       this.dummy = new Dummy();
       this.motionModifierEngine = new MotionModifierEngine(this.dummy);
    }
 
    public static CustomSubModeFactory factory() {
-      return (obj, obj2, obj3) -> new MotionModifierHighJumpMode((HighJump)obj, (DoubleValue)obj2, (String)obj3);
+      return (obj, obj2, obj3) -> new MotionModifierHighJumpMode((HighJump)obj, (SettingGroup)obj2, (String)obj3);
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 25;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override

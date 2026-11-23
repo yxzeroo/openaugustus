@@ -6,7 +6,6 @@ import net.augustus.utils.interfaces.MC;
 
 public abstract class Command implements MC {
    public String command;
-   private static int[] controlFlowState;
 
    public Command(String str) {
       this.command = str;
@@ -28,17 +27,6 @@ public abstract class Command implements MC {
 
    public abstract void commandAction(String[] strings, String str);
 
-   public static void setControlFlowState(int[] ints) {
-      controlFlowState = ints;
-   }
 
-   public static int[] getControlFlowState() {
-      return controlFlowState;
-   }
 
-   static {
-      if (getControlFlowState() != null) {
-         setControlFlowState(new int[2]);
-      }
-   }
 }

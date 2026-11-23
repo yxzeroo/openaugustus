@@ -18,7 +18,6 @@ public boolean active;
 
 
    private ClientHoliday(int param3, String str) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yy");
-      this.active = simpleDateFormat.format(new Date()).startsWith(str);
+      this.active = new SimpleDateFormat("dd.MM.yy").format(new Date()).startsWith(str);
    }
 }

@@ -132,10 +132,7 @@ public class BlockStem extends BlockBush implements IGrowable {
          return super.getRenderColor(state);
       } else {
          int value = (Integer)state.getValue(AGE);
-         int n = value * 32;
-         int n2 = 255 - value * 8;
-         int n3 = value * 4;
-         return n << 16 | n2 << 8 | n3;
+         return (value * 32) << 16 | (255 - value * 8) << 8 | (value * 4);
       }
    }
 

@@ -38,14 +38,12 @@ public abstract class StatelessTransitionProtocol<CU extends ClientboundPacketTy
                if (i >= handlers.length) {
                   String str = String.valueOf(unmappedPacketType);
                   String str2 = String.valueOf(currentState);
-                  String str3 = str;
-                  throw new IllegalStateException("No handler found for packet " + str3 + " in state " + str2);
+                  throw new IllegalStateException("No handler found for packet " + str + " in state " + str2);
                }
 
                Object patt2681$temp = handlers[i];
                if (patt2681$temp instanceof State) {
-                  State state = (State)patt2681$temp;
-                  if (state == currentState) {
+                  if (((State)patt2681$temp) == currentState) {
                      break;
                   }
                } else {

@@ -29,7 +29,7 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.ItemPotion;
@@ -43,7 +43,7 @@ import net.minecraft.potion.PotionEffect;
 
 public class AutoPot extends Module implements TickListener, MotionListener, SilentSlotListener, ClickListener, PacketListener {
    public final RangeSetting pitchSpeed;
-   public final StringValue healHearts;
+   public final DoubleValue healHearts;
    public final BooleanValue instant;
    public final RangeSetting tickDelayBeforeClick;
    public final RandomizedRangeSettings tickDelayBetweenClick;
@@ -71,22 +71,16 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
    public AutoPot() {
        super("AutoPot", "AutoTrank", new Color(227, 66, 101), Categorys.COMBAT);
       this.pitchSpeed = new RangeSetting(this, "PitchSpeed", 30.0, 50.0, 0.0, 180.0, 0);
-      this.healHearts = new StringValue(this, "HealHearts", 14.0, 2.0, 20.0, 0);
+      this.healHearts = new DoubleValue(this, "HealHearts", 14.0, 2.0, 20.0, 0);
       this.instant = new BooleanValue(this, "Instant", true);
-      RangeSetting rangeSetting = new RangeSetting(this, "TickDelayBeforeClick", 0.0, 0.0, 0.0, 7.0, 0);
-      SettingVisibilityCondition condition = () -> this.isDelayBeforeClickVisible();
-      this.tickDelayBeforeClick = rangeSetting.visibleWhen(condition);
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "TickDelayBetweenClick", 0.0, 0.0, 0.0, 7.0, 0)).withoutNotInARow();
-      SettingVisibilityCondition condition2 = () -> this.isDelayBetweenClickVisible();
-      this.tickDelayBetweenClick = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
+      this.tickDelayBeforeClick = new RangeSetting(this, "TickDelayBeforeClick", 0.0, 0.0, 0.0, 7.0, 0).visibleWhen(() -> this.isDelayBeforeClickVisible());
+      this.tickDelayBetweenClick = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "TickDelayBetweenClick", 0.0, 0.0, 0.0, 7.0, 0)).withoutNotInARow().withVisibility(() -> this.isDelayBetweenClickVisible());
       RangeSetting rangeSetting2 = new RangeSetting(this, "TickDelayAfterClick", 1.0, 1.0, 0.0, 7.0, 0);
       SettingVisibilityCondition condition3 = () -> {
          return !this.instant.getValue();
       };
       this.tickDelayAfterClick = rangeSetting2.visibleWhen(condition3);
-      BooleanValue booleanValue = new BooleanValue(this, "SilentSlotSwitching", true);
-      SettingVisibilityCondition condition4 = () -> this.isSilentSlotSettingVisible();
-      this.silentSlotSwitching = (BooleanValue)booleanValue.withVisibility(condition4);
+      this.silentSlotSwitching = (BooleanValue)new BooleanValue(this, "SilentSlotSwitching", true).withVisibility(() -> this.isSilentSlotSettingVisible());
       this.hotbarOnly = new BooleanValue(this, "HotbarOnly", true);
       this.inInv = new BooleanValue(this, "InInv", false);
       this.notWhileKillAura = new BooleanValue(this, "NotWhileKillAura", true);
@@ -121,17 +115,11 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 18;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
-      byte b4 = 20;
-      byte b5 = 7;
-      this.toggleEventSubscription(b5, b4);
-      byte b6 = 26;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)7, (byte)20);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -149,11 +137,9 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
 
    @Override
    public void onTick() {
-      long l = 1000L;
-      if (this.timeHelper.reached2(l) || this.needsAdditionalHeal) {
+      if (this.timeHelper.reached2(1000L) || this.needsAdditionalHeal) {
          if (this.canThrowPotion()) {
-            boolean value = this.hotbarOnly.getValue();
-            TuplePair tuplePair = this.findBestPotionSlot(value);
+            TuplePair tuplePair = this.findBestPotionSlot(this.hotbarOnly.getValue());
             this.potionSlot = (Integer)tuplePair.getFirst();
             this.selectedPotionStack = (ItemStack)tuplePair.getSecond();
             this.selectedPotion = this.selectedPotionStack != null ? (ItemPotion)this.selectedPotionStack.getItem() : null;
@@ -168,11 +154,7 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
             RandomNumberGenerator instance = DefaultRandomGenerator.instance;
             double minValue = this.pitchSpeed.getMinValue();
             double maxValue = this.pitchSpeed.getMaxValue();
-            double d = minValue;
-            float f = RotationUtil.updatePitchWithGcd(pitch, 90.0F, instance.nextSecureFloat(d, maxValue));
-            byte b = 1;
-            float f2 = f;
-            rotationController.requestPitch(f2, b, this);
+            rotationController.requestPitch(RotationUtil.updatePitchWithGcd(pitch, 90.0F, instance.nextSecureFloat(minValue, maxValue)), (byte)1, this);
          }
       }
    }
@@ -182,25 +164,20 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
       this.ticksSinceLastClick++;
       if (!this.instant.getValue()) {
          if (this.canThrowPotion() && this.hasValidPotionTarget()) {
-            int potionSlot2 = this.potionSlot;
-            int n = this.resolveHotbarSlot(potionSlot2);
+            int n = this.resolveHotbarSlot(this.potionSlot);
             if (n != this.potionSlot - 36) {
-               int potionSlot3 = this.potionSlot;
-               this.swapToHotbar(potionSlot3, n);
+               this.swapToHotbar(this.potionSlot, n);
                this.potionSlot = n;
             }
 
             ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
             if (currentEquippedItem != null && currentEquippedItem.getItem() instanceof ItemPotion && n == mc.thePlayer.inventory.currentItem) {
-               ItemPotion item = (ItemPotion)currentEquippedItem.getItem();
-               if (item.equals(this.selectedPotion) && ClientManagers.rotationController.getPreviousRotation().pitch > 85.0F && this.ticksSinceSlotSwitch > this.delayBeforeClick && (this.ticksSinceLastClick > this.tickDelayBetweenClick.getLastIntValue() || !this.hasThrownInSequence)
+               if (((ItemPotion)currentEquippedItem.getItem()).equals(this.selectedPotion) && ClientManagers.rotationController.getPreviousRotation().pitch > 85.0F && this.ticksSinceSlotSwitch > this.delayBeforeClick && (this.ticksSinceLastClick > this.tickDelayBetweenClick.getLastIntValue() || !this.hasThrownInSequence)
                   )
                 {
                   this.tickDelayBetweenClick.nextValue();
-                  byte b = 1;
-                  event.addRightClicks(b);
-                  boolean flag = true;
-                  event.setRightMouseDown(flag);
+                  event.addRightClicks((byte)1);
+                  event.setRightMouseDown(true);
                   this.updateChainHealState();
                   this.ticksSinceThrow = 0;
                   this.hasThrownInSequence = true;
@@ -224,11 +201,7 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
       boolean flag = false;
       if (this.getTargetHotbarSlot() >= 0 && Augustus.getInstance().getRotationController().isOwnedBy(this) && ClientManagers.rotationController.getPreviousRotation().pitch > 85.0F
          || this.ticksSinceThrow < (this.needsAdditionalHeal ? Math.max(this.delayAfterClick, this.tickDelayBetweenClick.getLastIntValue()) : this.delayAfterClick)) {
-         int targetHotbarSlot = this.getTargetHotbarSlot();
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = targetHotbarSlot;
-         byte b = 4;
-         SilentSlotManager.requestSlot(this, b, n, value);
+         SilentSlotManager.requestSlot(this, (byte)4, this.getTargetHotbarSlot(), this.silentSlotSwitching.getValue());
          flag = true;
       }
 
@@ -246,11 +219,9 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
          if (this.canThrowPotion() && this.hasValidPotionTarget()) {
             int currentItem = mc.thePlayer.inventory.currentItem;
             if (currentItem != this.potionSlot - 36) {
-               int potionSlot2 = this.potionSlot;
-               int n = this.resolveHotbarSlot(potionSlot2);
+               int n = this.resolveHotbarSlot(this.potionSlot);
                if (n != this.potionSlot - 36) {
-                  int potionSlot3 = this.potionSlot;
-                  this.swapToHotbar(potionSlot3, n);
+                  this.swapToHotbar(this.potionSlot, n);
                }
 
                mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(n));
@@ -276,8 +247,7 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
             this.needsAdditionalHeal = false;
          } else {
             int n = (int)(1.0 * (double)(4 << potionEffect.getAmplifier()) + 0.5);
-            float f = mc.thePlayer.getMaxHealth() - this.predictedHealth;
-            this.needsAdditionalHeal = (double)((int)(f / (float)n)) > 0.85;
+            this.needsAdditionalHeal = (double)((int)((mc.thePlayer.getMaxHealth() - this.predictedHealth) / (float)n)) > 0.85;
             this.predictedHealth += (float)n;
             System.out.println(this.needsAdditionalHeal);
          }
@@ -288,15 +258,11 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
       RandomNumberGenerator instance = DefaultRandomGenerator.instance;
       double minValue = this.tickDelayBeforeClick.getMinValue();
       double maxValue = this.tickDelayBeforeClick.getMaxValue();
-      double d = maxValue;
-      double d2 = minValue;
-      this.delayBeforeClick = instance.nextInt(d2, d);
+      this.delayBeforeClick = instance.nextInt(minValue, maxValue);
       RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
       minValue = this.tickDelayAfterClick.getMinValue();
       maxValue = this.tickDelayAfterClick.getMaxValue();
-      double d3 = maxValue;
-      double d4 = minValue;
-      this.delayAfterClick = instance2.nextInt(d4, d3);
+      this.delayAfterClick = instance2.nextInt(minValue, maxValue);
       this.ticksSinceSlotSwitch = 0;
    }
 
@@ -339,18 +305,15 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
                   case 1:
                      if ((!((double)mc.thePlayer.getCurrentHealth() >= this.healHearts.getValue()) || potionEffect.getPotionID() != 10)
                         && (AutoPotPotionOption.SPEED.isSelected() || potionEffect.getPotionID() != 1)) {
-                        int potionID = potionEffect.getPotionID();
-                        if (this.lacksPotionEffect(potionID) && this.isBestPotionOfType(item, potionEffect, flag)) {
+                        if (this.lacksPotionEffect(potionEffect.getPotionID()) && this.isBestPotionOfType(item, potionEffect, flag)) {
                            this.needsAdditionalHeal = false;
                            return new TuplePair(i, stack);
                         }
                      }
                      break;
                   default:
-                     Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
-                     if (!potion.isBadEffect() && AutoPotPotionOption.ALL_POSITIVE.isSelected()) {
-                        int potionID2 = potionEffect.getPotionID();
-                        if (this.lacksPotionEffect(potionID2) && this.isBestPotionOfType(item, potionEffect, flag)) {
+                     if (!Potion.potionTypes[potionEffect.getPotionID()].isBadEffect() && AutoPotPotionOption.ALL_POSITIVE.isSelected()) {
+                        if (this.lacksPotionEffect(potionEffect.getPotionID()) && this.isBestPotionOfType(item, potionEffect, flag)) {
                            this.needsAdditionalHeal = false;
                            return new TuplePair(i, stack);
                         }
@@ -411,8 +374,7 @@ public class AutoPot extends Module implements TickListener, MotionListener, Sil
    }
 
    public int getTargetHotbarSlot() {
-      int potionSlot2 = this.potionSlot;
-      return this.resolveHotbarSlot(potionSlot2);
+      return this.resolveHotbarSlot(this.potionSlot);
    }
 
    private boolean hasValidPotionTarget() {

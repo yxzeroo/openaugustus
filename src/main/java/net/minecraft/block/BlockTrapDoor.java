@@ -43,8 +43,7 @@ public class BlockTrapDoor extends Block {
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
       if (!world.isRemote) {
-         BlockPos pos2 = pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite());
-         if (!isValidSupportBlock(world.getBlockState(pos2).getBlock())) {
+         if (!isValidSupportBlock(world.getBlockState(pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite())).getBlock())) {
             world.setBlockToAir(pos);
             this.dropBlockAsItem(world, pos, state, 0);
          } else {

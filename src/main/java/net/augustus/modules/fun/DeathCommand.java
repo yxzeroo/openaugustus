@@ -19,11 +19,9 @@ public class DeathCommand extends Module implements TickListener {
    public DeathCommand() {
        super("DeathCommand", "Tötungsbefehl", new Color(156, 194, 255), Categorys.FUN);
       this.delay = (new RandomizedRangeSettings(this, "Delay", 0.0, 0.0, 0.0, 2000.0, 0)).withoutNotInARow();
-      DynamicSettingList dynamicSettingList = new DynamicSettingList(this, "Message at death", n -> {
+      this.messageAtDeath = new DynamicSettingList(this, "Message at death", n -> {
          return new TextInputSetting(this, "Message_" + n, "/warp ffa");
-      }, 1, 50);
-      byte b = 1;
-      this.messageAtDeath = dynamicSettingList.withInitialCount(b);
+      }, 1, 50).withInitialCount((byte)1);
       this.timeHelper = new TimeHelper();
       this.commandSent = false;
       this.wasDead = false;
@@ -41,8 +39,7 @@ public class DeathCommand extends Module implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -59,9 +56,7 @@ public class DeathCommand extends Module implements TickListener {
             this.wasDead = false;
          }
 
-         TimeHelper timeHelper2 = this.timeHelper;
-         long lastIntValue = (long)this.delay.getLastIntValue();
-         if (timeHelper2.reached2(lastIntValue) && !this.commandSent) {
+         if (this.timeHelper.reached2((long)this.delay.getLastIntValue()) && !this.commandSent) {
             this.messageAtDeath.nextEntry();
             TextInputSetting textInputSetting = (TextInputSetting)this.messageAtDeath.nextEntry();
             if (textInputSetting != null) {

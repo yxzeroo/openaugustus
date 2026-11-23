@@ -148,16 +148,12 @@ public class ItemRenderer {
    }
 
    private void renderPlayerArm(AbstractClientPlayer clientPlayer, float f, float f2) {
-      float f3 = -0.3F * MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F);
-      float f4 = 0.4F * MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F * 2.0F);
-      float f5 = -0.4F * MathHelper.sin(f2 * 3.1415927F);
-      GlStateManager.translate(f3, f4, f5);
+      GlStateManager.translate(-0.3F * MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F), 0.4F * MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F * 2.0F), -0.4F * MathHelper.sin(f2 * 3.1415927F));
       GlStateManager.translate(0.64000005F, -0.6F, -0.71999997F);
       GlStateManager.translate(0.0F, f * -0.6F, 0.0F);
       GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
       float f6 = MathHelper.sin(f2 * f2 * 3.1415927F);
-      float f7 = MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F);
-      GlStateManager.rotate(f7 * 70.0F, 0.0F, 1.0F, 0.0F);
+      GlStateManager.rotate(MathHelper.sin(MathHelper.sqrt_float(f2) * 3.1415927F) * 70.0F, 0.0F, 1.0F, 0.0F);
       GlStateManager.rotate(f6 * -20.0F, 0.0F, 0.0F, 1.0F);
       this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
       GlStateManager.translate(-1.0F, 3.6F, 3.5F);
@@ -168,15 +164,13 @@ public class ItemRenderer {
       GlStateManager.translate(5.6F, 0.0F, 0.0F);
       Render entityRenderObject = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
       GlStateManager.disableCull();
-      RenderPlayer renderPlayer = (RenderPlayer)entityRenderObject;
-      renderPlayer.renderRightArm(this.mc.thePlayer);
+      ((RenderPlayer)entityRenderObject).renderRightArm(this.mc.thePlayer);
       GlStateManager.enableCull();
    }
 
    private void renderPlayerArms(AbstractClientPlayer clientPlayer) {
       this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
-      Render entityRenderObject = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
-      RenderPlayer renderPlayer = (RenderPlayer)entityRenderObject;
+      RenderPlayer renderPlayer = (RenderPlayer)this.renderManager.getEntityRenderObject(this.mc.thePlayer);
       if (!clientPlayer.isInvisible()) {
          GlStateManager.disableCull();
          this.renderRightArm(renderPlayer);
@@ -220,8 +214,7 @@ public class ItemRenderer {
       }
 
       float f = 0.4F;
-      float f2 = flag ? 0.0F : 1.0F;
-      float f3 = MathHelper.clamp_float(f2 - this.equippedProgress, -f, f);
+      float f3 = MathHelper.clamp_float((flag ? 0.0F : 1.0F) - this.equippedProgress, -f, f);
       this.equippedProgress += f3;
       if (this.equippedProgress < 0.1F) {
          this.itemToRender = stack;
@@ -243,8 +236,7 @@ public class ItemRenderer {
 
    public void renderItem(EntityLivingBase entity, ItemStack stack, ItemCameraTransforms.TransformType transformType) {
       if (stack != null) {
-         Item item = stack.getItem();
-         Block blockFromItem = Block.getBlockFromItem(item);
+         Block blockFromItem = Block.getBlockFromItem(stack.getItem());
          GlStateManager.pushMatrix();
          if (this.itemRenderer.shouldRenderItemIn3D(stack)) {
             GlStateManager.scale(2.0F, 2.0F, 2.0F);
@@ -285,10 +277,7 @@ public class ItemRenderer {
    }
 
    private void doItemUsedTransformations(float f) {
-      float f2 = -0.4F * MathHelper.sin(MathHelper.sqrt_float(f) * 3.1415927F);
-      float f3 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(f) * 3.1415927F * 2.0F);
-      float f4 = -0.2F * MathHelper.sin(f * 3.1415927F);
-      GlStateManager.translate(f2, f3, f4);
+      GlStateManager.translate(-0.4F * MathHelper.sin(MathHelper.sqrt_float(f) * 3.1415927F), 0.2F * MathHelper.sin(MathHelper.sqrt_float(f) * 3.1415927F * 2.0F), -0.2F * MathHelper.sin(f * 3.1415927F));
    }
 
    private void renderWaterOverlayTexture(float f) {
@@ -334,9 +323,7 @@ public class ItemRenderer {
       }
 
       if (f3 > 0.1F) {
-         float f4 = MathHelper.sin((f2 - 0.1F) * 1.3F);
-         float f5 = f3 - 0.1F;
-         float f6 = f4 * f5;
+         float f6 = MathHelper.sin((f2 - 0.1F) * 1.3F) * (f3 - 0.1F);
          GlStateManager.translate(f6 * 0.0F, f6 * 0.01F, f6 * 0.0F);
       }
 
@@ -350,8 +337,7 @@ public class ItemRenderer {
          EntityPlayerSP thePlayer = this.mc.thePlayer;
          float swingProgress = thePlayer.getSwingProgress(f);
          float f3 = thePlayer.prevRotationPitch + (thePlayer.rotationPitch - thePlayer.prevRotationPitch) * f;
-         float f4 = thePlayer.prevRotationYaw + (thePlayer.rotationYaw - thePlayer.prevRotationYaw) * f;
-         this.rotateAroundXAndY(f3, f4);
+         this.rotateAroundXAndY(f3, thePlayer.prevRotationYaw + (thePlayer.rotationYaw - thePlayer.prevRotationYaw) * f);
          this.setLightMapFromPlayer(thePlayer);
          this.rotateWithPlayerRotations(thePlayer, f);
          GlStateManager.enableRescaleNormal();
@@ -397,16 +383,14 @@ public class ItemRenderer {
                      }
 
                      if (((Module)ClientManagers.moduleManager.blockAnimation).isToggled()) {
-                        String selectedValue = ClientManagers.moduleManager.blockAnimation.blockAnimations.getSelectedValue();
-                        switch (selectedValue) {
+                        switch (ClientManagers.moduleManager.blockAnimation.blockAnimations.getSelectedValue()) {
                            case "1.7":
                               this.transformFirstPersonItem(f2, swingProgress);
                               this.doBlockTransformations();
                               break exitBlock;
                            case "Wiggle":
                               this.transformFirstPersonItem(f2 / 3.0F, 0.0F);
-                              float f5 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * 3.1415927F);
-                              GlStateManager.rotate(-f5 * 45.0F, 2.09F, 0.0F, 0.0F);
+                              GlStateManager.rotate(-MathHelper.sin(MathHelper.sqrt_float(swingProgress) * 3.1415927F) * 45.0F, 2.09F, 0.0F, 0.0F);
                               this.doBlockTransformations();
                               break exitBlock;
                            case "Minimalistic":
@@ -480,8 +464,7 @@ public class ItemRenderer {
                               this.doBlockTransformations();
                               GlStateManager.translate(-0.2, 1.0, 0.5);
                               GlStateManager.rotate(90.0F, 3.0F, 1.0F, 0.0F);
-                              float f13 = (float)Math.toDegrees((double)System.currentTimeMillis() / 200.0 % 6.283185307179586);
-                              GlStateManager.rotate(f13, 1.0F, 0.0F, 1.0F);
+                              GlStateManager.rotate((float)Math.toDegrees((double)System.currentTimeMillis() / 200.0 % 6.283185307179586), 1.0F, 0.0F, 1.0F);
                            default:
                               this.transformFirstPersonItem(f2, 0.0F);
                               this.doBlockTransformations();
@@ -587,10 +570,7 @@ public class ItemRenderer {
    }
 
    private void renderItemMap(AbstractClientPlayer clientPlayer, float f, float f2, float f3) {
-      float f4 = -0.4F * MathHelper.sin(MathHelper.sqrt_float(f3) * 3.1415927F);
-      float f5 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(f3) * 3.1415927F * 2.0F);
-      float f6 = -0.2F * MathHelper.sin(f3 * 3.1415927F);
-      GlStateManager.translate(f4, f5, f6);
+      GlStateManager.translate(-0.4F * MathHelper.sin(MathHelper.sqrt_float(f3) * 3.1415927F), 0.2F * MathHelper.sin(MathHelper.sqrt_float(f3) * 3.1415927F * 2.0F), -0.2F * MathHelper.sin(f3 * 3.1415927F));
       float mapAngleFromPitch = this.getMapAngleFromPitch(f);
       GlStateManager.translate(0.0F, 0.04F, -0.72F);
       GlStateManager.translate(0.0F, f2 * -1.2F, 0.0F);

@@ -69,8 +69,7 @@ public class SVertexBuilder {
 
    public static void drawArrays(int n, int n2, int n3, WorldRenderer worldRenderer) {
       if (n3 != 0) {
-         VertexFormat vertexFormat = worldRenderer.getVertexFormat();
-         int nextOffset = vertexFormat.getNextOffset();
+         int nextOffset = worldRenderer.getVertexFormat().getNextOffset();
          if (nextOffset == 56) {
             ByteBuffer byteBuffer = worldRenderer.getByteBuffer();
             ((Buffer)byteBuffer).position(32);
@@ -198,8 +197,7 @@ public class SVertexBuilder {
       float f47 = f41 * f44 + f42 * f45 + f43 * f46 < 0.0F ? -1.0F : 1.0F;
       int n2 = (int)(f27 * 127.0F) & 0xFF;
       int n3 = (int)(f28 * 127.0F) & 0xFF;
-      int n4 = (int)(f29 * 127.0F) & 0xFF;
-      int n5 = (n4 << 16) + (n3 << 8) + n2;
+      int n5 = (((int)(f29 * 127.0F) & 0xFF) << 16) + (n3 << 8) + n2;
       rawIntBuffer.put(n + 0 * this.vertexSize + this.offsetNormal, n5);
       rawIntBuffer.put(n + 1 * this.vertexSize + this.offsetNormal, n5);
       rawIntBuffer.put(n + 2 * this.vertexSize + this.offsetNormal, n5);
@@ -269,8 +267,7 @@ public class SVertexBuilder {
          n = mappedBlockId;
       }
 
-      int renderType = block.getRenderType();
-      int n3 = ((renderType & 65535) << 16) + (n & 65535);
+      int n3 = ((block.getRenderType() & 65535) << 16) + (n & 65535);
       int n4 = n2 & 65535;
       worldRenderer.sVertexBuilder.pushEntity(((long)n4 << 32) + (long)n3);
    }

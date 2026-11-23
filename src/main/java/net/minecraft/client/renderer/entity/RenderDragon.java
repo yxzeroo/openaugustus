@@ -83,8 +83,7 @@ public class RenderDragon extends RenderLiving {
    }
 
    public void drawRechargeRay(EntityDragon entityDragon, double d, double d2, double d3, float f) {
-      float f2 = (float)entityDragon.healingEnderCrystal.innerRotation + f;
-      float f3 = MathHelper.sin(f2 * 0.2F) / 2.0F + 0.5F;
+      float f3 = MathHelper.sin(((float)entityDragon.healingEnderCrystal.innerRotation + f) * 0.2F) / 2.0F + 0.5F;
       f3 = (f3 * f3 + f3) * 0.2F;
       float f4 = (float)(entityDragon.healingEnderCrystal.posX - entityDragon.posX - (entityDragon.prevPosX - entityDragon.posX) * (double)(1.0F - f));
       float f5 = (float)((double)f3 + entityDragon.healingEnderCrystal.posY - 1.0 - entityDragon.posY - (entityDragon.prevPosY - entityDragon.posY) * (double)(1.0F - f));

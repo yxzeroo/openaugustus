@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class EmojiRegistry {
    private final Map sprites = Maps.newLinkedHashMap();
-   private static int[] flowStateMarker;
 
    public int getComboTime() {
       return (int)Augustus.getInstance().getModuleManager().emojify.comboTime.getValue();
@@ -23,7 +22,6 @@ public class EmojiRegistry {
 
    public void registerDefaultSprites() {
       this.sprites.clear();
-      getFlowStateMarker();
       this.sprites.put("default1", new EmojiSprite("default1.png", 6, 16));
       this.sprites.put("default2", new EmojiSprite("default2.png", 4, 20));
       this.sprites.put("default3", new EmojiSprite("default3.png", 8, 17));
@@ -33,16 +31,6 @@ public class EmojiRegistry {
       this.sprites.put("trashmeme", new EmojiSprite("trashmeme.png", 0, 5, 15));
    }
 
-   public static void setFlowStateMarker(int[] ints) {
-      flowStateMarker = ints;
-   }
 
-   public static int[] getFlowStateMarker() {
-      return flowStateMarker;
-   }
 
-   static {
-      int[] ints = new int[3];
-      setFlowStateMarker(ints);
-   }
 }

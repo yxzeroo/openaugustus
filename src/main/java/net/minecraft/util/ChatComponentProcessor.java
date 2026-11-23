@@ -27,8 +27,7 @@ public class ChatComponentProcessor {
             : new ChatComponentScore(name, chatComponentScore.getObjective());
          ((ChatComponentScore)obj).setValue(chatComponentScore.getUnformattedTextForChat());
       } else if (component instanceof ChatComponentSelector) {
-         String selector = ((ChatComponentSelector)component).getSelector();
-         obj = PlayerSelector.matchEntitiesToChatComponent(commandSender, selector);
+         obj = PlayerSelector.matchEntitiesToChatComponent(commandSender, ((ChatComponentSelector)component).getSelector());
          if (obj == null) {
             obj = new ChatComponentText("");
          }

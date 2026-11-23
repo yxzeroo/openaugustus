@@ -14,7 +14,7 @@ import net.augustus.render.RenderUtil;
 import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,10 +30,10 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
    public final ColorSetting color2;
    public final BooleanValue blackLine;
    public final BooleanValue blockFill;
-   public final StringValue lineWidth;
+   public final DoubleValue lineWidth;
    public final BooleanValue inAdventureMode;
    public final BooleanValue onlyBlockFace;
-   public final StringValue blockExpand;
+   public final DoubleValue blockExpand;
    public final BlurShadowSettings blurShadowSettings;
 
    public BlockOverlay() {
@@ -41,10 +41,10 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
       this.color2 = new ColorSetting(this, "Color", new Color(21, 121, 230, 65));
       this.blackLine = new BooleanValue(this, "BlackLine", false);
       this.blockFill = new BooleanValue(this, "BlockFill", true);
-      this.lineWidth = new StringValue(this, "LineWidth", 5.0, 0.0, 10.0, 2);
+      this.lineWidth = new DoubleValue(this, "LineWidth", 5.0, 0.0, 10.0, 2);
       this.inAdventureMode = new BooleanValue(this, "InAdventureMode", true);
       this.onlyBlockFace = new BooleanValue(this, "OnlyBlockFace", false);
-      this.blockExpand = new StringValue(this, "BlockExpand", 2.0, 0.8, 20.0, 2);
+      this.blockExpand = new DoubleValue(this, "BlockExpand", 2.0, 0.8, 20.0, 2);
       this.blurShadowSettings = (new BlurShadowSettings(this)).disableBothByDefault();
    }
 
@@ -58,8 +58,7 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 4;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)4);
    }
 
    @Override
@@ -80,8 +79,7 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
          Block block = mc.theWorld.getBlockState(blockPos).getBlock();
          if (block.getMaterial() != Material.air && mc.theWorld.getWorldBorder().contains(blockPos)) {
             block.setBlockBoundsBasedOnState(mc.theWorld, blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            byte b = 0;
-            int colorInt = this.color2.getColorInt(b);
+            int colorInt = this.color2.getColorInt((byte)0);
             block.setBlockBoundsBasedOnState(mc.theWorld, blockPos.getX(), blockPos.getY(), blockPos.getZ());
             double d = mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * (double)mc.getTimer().renderPartialTicks;
             double d2 = mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * (double)mc.getTimer().renderPartialTicks;
@@ -89,12 +87,10 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
             double d4 = this.blockExpand.getValue() / 1000.0;
             AxisAlignedBB box = block.getSelectedBoundingBox(mc.theWorld, blockPos).expand(d4, d4, d4).offset(-d, -d2, -d3);
             if (this.onlyBlockFace.getValue()) {
-               EnumFacing sideHit = mc.objectMouseOver.sideHit;
-               box = getFaceBoundingBox(box, sideHit);
+               box = getFaceBoundingBox(box, mc.objectMouseOver.sideHit);
             }
 
-            boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+            BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
             AxisAlignedBB box2 = box;
             BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderOverlayPass(box2, colorInt, shaderRenderPass));
             event.cancel();
@@ -153,10 +149,7 @@ public class BlockOverlay extends Module implements BlockOverlayListener {
    }
 
    private void renderOverlayPass(AxisAlignedBB box, int n, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      int n3 = blurShadowSettings2.resolvePassColor(shaderRenderPass, n2);
-      this.renderBoundingBoxOverlay(box, n3);
+      this.renderBoundingBoxOverlay(box, this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n)));
    }
 
 }

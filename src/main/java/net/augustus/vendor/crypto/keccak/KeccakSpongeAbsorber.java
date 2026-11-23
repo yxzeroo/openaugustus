@@ -13,26 +13,17 @@ public class KeccakSpongeAbsorber {
       int n4 = 0;
       boolean flag = false;
       boolean flag2 = false;
-      int[] squeezeTrace = KeccakSqueezer.getSqueezeTrace();
       n4 = n;
       n3 = n2;
 
       for (int i = 0; i < 5; i++) {
          for (int j = 0; j < 5; j++) {
             if (n4 % 8 != 0 || n3 < 64) {
-               KeccakSpongeAbsorber keccakSpongeAbsorber = this;
-               long[][] longsArr2 = longsArr;
-               byte[] bytes2 = bytes;
-               long[][] longsArr3 = longsArr2;
-               keccakSpongeAbsorber.xorRemainingBits(longsArr3, bytes2, n4, n3, j, i);
+               this.xorRemainingBits(longsArr, bytes, n4, n3, j, i);
                return;
             }
 
-            KeccakSpongeAbsorber keccakSpongeAbsorber2 = this;
-            long[][] longsArr4 = longsArr;
-            byte[] bytes3 = bytes;
-            long[][] longsArr5 = longsArr4;
-            keccakSpongeAbsorber2.xorLaneBytes(longsArr5, bytes3, n4, j, i);
+            this.xorLaneBytes(longsArr, bytes, n4, j, i);
             n4 += 64;
             n3 -= 64;
          }
@@ -47,7 +38,6 @@ public class KeccakSpongeAbsorber {
    private boolean getBit(byte[] bytes, int n) {
       int n2 = 0;
       int n3 = 0;
-      int[] squeezeTrace = KeccakSqueezer.getSqueezeTrace();
       n3 = n / 8;
       n2 = n % 8;
       return 0 != (bytes[n3] & 1 << n2);
@@ -56,20 +46,14 @@ public class KeccakSpongeAbsorber {
    public void absorb(byte[] bytes, long[][] longsArr) {
       int n = 0;
       int n2 = 0;
-      KeccakSqueezer.getSqueezeTrace();
       int n3 = 0;
       n2 = bytes.length << 3;
       n3 = 0;
 
       do {
          n = Math.min(KeccakParameters.getRateBits(this.algorithm), n2 - n3);
-         KeccakSpongeAbsorber keccakSpongeAbsorber = this;
-         long[][] longsArr2 = longsArr;
-         byte[] bytes2 = bytes;
-         long[][] longsArr3 = longsArr2;
-         keccakSpongeAbsorber.absorbBlock(longsArr3, bytes2, n3, n);
-         long[][] longsArr4 = longsArr;
-         this.permutation.permute(longsArr4);
+         this.absorbBlock(longsArr, bytes, n3, n);
+         this.permutation.permute(longsArr);
          n3 += KeccakParameters.getRateBits(this.algorithm);
       } while (n3 < n2);
    }
@@ -77,7 +61,6 @@ public class KeccakSpongeAbsorber {
    private int readRateBlock(InputStream in, byte[] bytes) throws IOException {
       boolean flag = false;
       int n = 0;
-      int[] squeezeTrace = KeccakSqueezer.getSqueezeTrace();
       n = 0;
 
       for (int i = in.read(bytes); i > 0; i = in.read(bytes, n, bytes.length - n)) {
@@ -93,28 +76,17 @@ public class KeccakSpongeAbsorber {
 
    public int absorbStream(InputStream in, long[][] longsArr, byte[] bytes) throws IOException {
       int n = 0;
-      int[] squeezeTrace = KeccakSqueezer.getSqueezeTrace();
       KeccakSpongeAbsorber keccakSpongeAbsorber = this;
       InputStream in2 = in;
-      byte[] bytes2 = bytes;
-      InputStream in3 = in2;
-      n = keccakSpongeAbsorber.readRateBlock(in3, bytes2);
+      n = keccakSpongeAbsorber.readRateBlock(in2, bytes);
 
       while (n == KeccakParameters.getRateBits(this.algorithm)) {
          keccakSpongeAbsorber = this;
-         long[][] longsArr2 = longsArr;
-         byte[] bytes3 = bytes;
-         byte b = 0;
-         byte[] bytes4 = bytes3;
-         long[][] longsArr3 = longsArr2;
-         keccakSpongeAbsorber.absorbBlock(longsArr3, bytes4, b, n);
-         long[][] longsArr4 = longsArr;
-         this.permutation.permute(longsArr4);
+         keccakSpongeAbsorber.absorbBlock(longsArr, bytes, (byte)0, n);
+         this.permutation.permute(longsArr);
          keccakSpongeAbsorber = this;
          in2 = in;
-         byte[] bytes5 = bytes;
-         InputStream in4 = in2;
-         n = keccakSpongeAbsorber.readRateBlock(in4, bytes5);
+         n = keccakSpongeAbsorber.readRateBlock(in2, bytes);
       }
 
       return n;
@@ -124,7 +96,6 @@ public class KeccakSpongeAbsorber {
       int n5 = 0;
       int n6 = 0;
       int n7 = 0;
-      KeccakSqueezer.getSqueezeTrace();
       boolean flag = false;
       int n8 = 0;
       n6 = n + n2;
@@ -133,10 +104,7 @@ public class KeccakSpongeAbsorber {
       n7 = n4;
 
       for (int i = n; i < n6; i++) {
-         KeccakSpongeAbsorber keccakSpongeAbsorber = this;
-         byte[] bytes2 = bytes;
-         byte[] bytes3 = bytes2;
-         if (keccakSpongeAbsorber.getBit(bytes3, i)) {
+         if (this.getBit(bytes, i)) {
             longsArr[n8][n7] = longsArr[n8][n7] ^ 1L << n5;
          }
 
@@ -156,7 +124,6 @@ public class KeccakSpongeAbsorber {
       boolean flag = false;
       int n4 = 0;
       long l = 0L;
-      KeccakSqueezer.getSqueezeTrace();
       byte b = 0;
       b = 8;
       n4 = n / 8;

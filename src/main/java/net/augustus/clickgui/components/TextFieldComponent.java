@@ -64,9 +64,7 @@ public class TextFieldComponent extends GuiComponent {
 
       str = sb2.toString();
       sb.insert(this.cursorIndex, str);
-      String str2 = sb.toString();
-      String str3 = str2;
-      this.rebuildTextBuffer(str3);
+      this.rebuildTextBuffer(sb.toString());
       this.cursorIndex = this.cursorIndex + str.length();
       this.selectionAnchor = this.cursorIndex;
       this.cursorBlinkTime = System.currentTimeMillis();
@@ -80,14 +78,8 @@ public class TextFieldComponent extends GuiComponent {
       super.updateLayout(n, n2, n3, n4, customFontUtil);
       this.textFont = customFontUtil;
       if (this.textBuffer.length() > 2 && !this.isFocused()) {
-         MeasuredStringBuilder textBuffer2 = this.textBuffer;
-         int n6 = this.textBuffer.length() - 2;
-         int length = this.textBuffer.length();
-         int n7 = n6;
-         if (textBuffer2.substring(n7, length).equals(".0") && this.inputMode.numeric) {
-            String str = this.textBuffer.getCachedText().substring(0, this.textBuffer.length() - 2);
-            String str2 = str;
-            this.rebuildTextBuffer(str2);
+         if (this.textBuffer.substring(this.textBuffer.length() - 2, this.textBuffer.length()).equals(".0") && this.inputMode.numeric) {
+            this.rebuildTextBuffer(this.textBuffer.getCachedText().substring(0, this.textBuffer.length() - 2));
          }
       }
 
@@ -99,25 +91,16 @@ public class TextFieldComponent extends GuiComponent {
          n9 = Math.max(0, Math.min(n9, displayText.length()));
          String str3 = displayText.substring(0, n8);
          String str4 = displayText.substring(n8, n9);
-         float f = (float)n;
-         double d = (double)(f + customFontUtil.getStringWidth(str3));
-         double stringWidth = (double)customFontUtil.getStringWidth(str4);
-         RenderUtil.drawRect3((int)d, n2, (int)(d + stringWidth), n2 + (int)customFontUtil.getFontHeight(), new Color(0, 0, 255, 100).getRGB());
+         double d = (double)(((float)n) + customFontUtil.getStringWidth(str3));
+         RenderUtil.drawRect3((int)d, n2, (int)(d + ((double)customFontUtil.getStringWidth(str4))), n2 + (int)customFontUtil.getFontHeight(), new Color(0, 0, 255, 100).getRGB());
       }
 
-      double d2 = (double)n;
-      double d3 = (double)n2;
-      double d4 = d2;
-      customFontUtil.drawString(displayText, d4, d3, n5);
+      customFontUtil.drawString(displayText, (double)n, (double)n2, n5);
       if (this.focused) {
          anyFieldFocused = true;
          if (!hasElapsed(this.cursorBlinkTime, 500)) {
-            int n10 = Math.max(0, Math.min(this.cursorIndex, displayText.length()));
-            String str5 = displayText.substring(0, n10);
-            float f2 = (float)n;
-            double d5 = (double)(f2 + customFontUtil.getStringWidth(str5));
-            byte b = 0;
-            float[] floats = ColorUtil.toHsb(ClientManagers.moduleManager.clickGui.textColor.getColorInt(b));
+            double d5 = (double)(((float)n) + customFontUtil.getStringWidth(displayText.substring(0, Math.max(0, Math.min(this.cursorIndex, displayText.length())))));
+            float[] floats = ColorUtil.toHsb(ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0));
             float f3 = (float)((double)floats[2] + -0.2);
             if ((double)floats[2] + -0.2 > 1.0) {
                f3 = 1.0F;
@@ -235,8 +218,7 @@ public class TextFieldComponent extends GuiComponent {
                String selectedText2 = this.getSelectedText();
                if (!selectedText2.isEmpty()) {
                   this.setClipboardText(selectedText2);
-                  String str = "";
-                  this.insertFilteredText(str);
+                  this.insertFilteredText("");
                }
 
                return;
@@ -247,9 +229,7 @@ public class TextFieldComponent extends GuiComponent {
             } else {
                if (this.inputMode.isCharAllowed(typedChar)) {
                   if (!this.isControlDown()) {
-                     String str2 = String.valueOf(typedChar);
-                     String str3 = str2;
-                     this.insertFilteredText(str3);
+                     this.insertFilteredText(String.valueOf(typedChar));
                   }
                }
             }
@@ -284,9 +264,7 @@ public class TextFieldComponent extends GuiComponent {
          if (!this.isControlDown() && eventKey != 28 && eventKey != 15 && eventKey != 14) {
             flag = true;
             if (hasElapsed(this.keyHoldStartTime, 500) && hasElapsed(this.keyRepeatTime, 40)) {
-               String str = String.valueOf(eventCharacter);
-               String str2 = str;
-               this.insertFilteredText(str2);
+               this.insertFilteredText(String.valueOf(eventCharacter));
                this.keyRepeatTime = System.currentTimeMillis();
                this.cursorBlinkTime = System.currentTimeMillis();
             }
@@ -309,8 +287,7 @@ public class TextFieldComponent extends GuiComponent {
    private String getClipboardText() {
 
       try {
-         Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-         Transferable contents = systemClipboard.getContents(null);
+         Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
          if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
             return (String)contents.getTransferData(DataFlavor.stringFlavor);
          }
@@ -402,14 +379,11 @@ public class TextFieldComponent extends GuiComponent {
       if (this.cursorIndex == this.selectionAnchor && this.cursorIndex > 0) {
          StringBuilder sb = new StringBuilder(this.textBuffer.getCachedText());
          sb.deleteCharAt(this.cursorIndex - 1);
-         String str = sb.toString();
-         String str2 = str;
-         this.rebuildTextBuffer(str2);
+         this.rebuildTextBuffer(sb.toString());
          this.cursorIndex--;
          this.selectionAnchor = this.cursorIndex;
       } else if (this.cursorIndex != this.selectionAnchor) {
-         String str3 = "";
-         this.insertFilteredText(str3);
+         this.insertFilteredText("");
       }
    }
 

@@ -234,31 +234,17 @@ public class CustomBase64Encoder {
       Object obj2 = null;
       int n2 = 0;
       CustomBase64Encoder customBase64Encoder = this;
-      int n3 = buf.remaining();
-      n = customBase64Encoder.outLength(n3);
+      n = customBase64Encoder.outLength(buf.remaining());
       obj2 = new byte[n];
       n2 = 0;
       if (!buf.hasArray()) {
          obj = new byte[buf.remaining()];
          buf.get((byte[])obj);
          customBase64Encoder = this;
-         byte[] bytes = (byte[])obj;
-         int length = ((byte[])obj).length;
-         byte[] bytes2 = (byte[])obj2;
-         int n4 = length;
-         byte b = 0;
-         byte[] bytes3 = bytes;
-         n2 = customBase64Encoder.encode0(bytes3, b, n4, bytes2);
+         n2 = customBase64Encoder.encode0((byte[])obj, (byte)0, ((byte[])obj).length, (byte[])obj2);
       } else {
          customBase64Encoder = this;
-         byte[] bytes4 = buf.array();
-         int n5 = buf.arrayOffset() + buf.position();
-         int n6 = buf.arrayOffset() + buf.limit();
-         byte[] bytes5 = (byte[])obj2;
-         int n7 = n6;
-         int n8 = n5;
-         byte[] bytes6 = bytes4;
-         n2 = customBase64Encoder.encode0(bytes6, n8, n7, bytes5);
+         n2 = customBase64Encoder.encode0(buf.array(), buf.arrayOffset() + buf.position(), buf.arrayOffset() + buf.limit(), (byte[])obj2);
          ((Buffer)buf).position(buf.limit());
       }
 
@@ -272,17 +258,10 @@ public class CustomBase64Encoder {
    public int encode(byte[] bytes, byte[] bytes2) {
       int n = 0;
       CustomBase64Encoder customBase64Encoder = this;
-      int length = bytes.length;
-      n = customBase64Encoder.outLength(length);
+      n = customBase64Encoder.outLength(bytes.length);
       if (bytes2.length >= n) {
          customBase64Encoder = this;
-         byte[] bytes3 = bytes;
-         int length2 = bytes.length;
-         byte[] bytes4 = bytes2;
-         int n2 = length2;
-         byte b = 0;
-         byte[] bytes5 = bytes3;
-         return customBase64Encoder.encode0(bytes5, b, n2, bytes4);
+         return customBase64Encoder.encode0(bytes, (byte)0, bytes.length, bytes2);
       } else {
          throw new IllegalArgumentException("Output byte array is too small for encoding all input bytes");
       }
@@ -303,17 +282,10 @@ public class CustomBase64Encoder {
       Object obj = null;
       int n2 = 0;
       CustomBase64Encoder customBase64Encoder = this;
-      int length = bytes.length;
-      n2 = customBase64Encoder.outLength(length);
+      n2 = customBase64Encoder.outLength(bytes.length);
       obj = new byte[n2];
       customBase64Encoder = this;
-      byte[] bytes2 = bytes;
-      int length2 = bytes.length;
-      byte[] bytes3 = (byte[])obj;
-      int n3 = length2;
-      byte b = 0;
-      byte[] bytes4 = bytes2;
-      n = customBase64Encoder.encode0(bytes4, b, n3, bytes3);
+      n = customBase64Encoder.encode0(bytes, (byte)0, bytes.length, (byte[])obj);
       return n == ((byte[])obj).length ? (byte[])obj : Arrays.copyOf((byte[])obj, n);
    }
 

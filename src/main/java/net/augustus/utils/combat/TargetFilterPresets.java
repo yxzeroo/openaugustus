@@ -8,57 +8,33 @@ public class TargetFilterPresets {
 
    public static EntityTargetFilter createRenderFilter() {
       EntityTargetFilterOption[] entityTargetFilterOptions = new EntityTargetFilterOption[11];
-      boolean flag = false;
-      entityTargetFilterOptions[0] = TargetFilterPreset.MYSELF.createOption(flag);
-      boolean flag2 = true;
-      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(flag2);
-      boolean flag3 = true;
-      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(flag3);
-      boolean flag4 = false;
-      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(flag4);
-      boolean flag5 = true;
-      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(flag5);
-      boolean flag6 = false;
-      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(flag6);
-      boolean flag7 = true;
-      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(flag7);
-      boolean flag8 = true;
-      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(flag8);
-      boolean flag9 = false;
-      entityTargetFilterOptions[8] = TargetFilterPreset.ANTI_BOT.createOption(flag9);
-      boolean flag10 = true;
-      entityTargetFilterOptions[9] = TargetFilterPreset.INVISIBLE.createOption(flag10);
-      boolean flag11 = true;
-      entityTargetFilterOptions[10] = TargetFilterPreset.SLEEPING.createOption(flag11);
+      entityTargetFilterOptions[0] = TargetFilterPreset.MYSELF.createOption(false);
+      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(true);
+      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(true);
+      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(false);
+      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(true);
+      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(false);
+      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(true);
+      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(true);
+      entityTargetFilterOptions[8] = TargetFilterPreset.ANTI_BOT.createOption(false);
+      entityTargetFilterOptions[9] = TargetFilterPreset.INVISIBLE.createOption(true);
+      entityTargetFilterOptions[10] = TargetFilterPreset.SLEEPING.createOption(true);
       return createFilter(entityTargetFilterOptions);
    }
 
    public static EntityTargetFilter createRenderFilterWithSelf() {
       EntityTargetFilterOption[] entityTargetFilterOptions = new EntityTargetFilterOption[11];
-      boolean flag = false;
-      EntityTargetFilterOption entityTargetFilterOption = TargetFilterPreset.MYSELF.createOption(flag);
-      boolean flag2 = true;
-      entityTargetFilterOptions[0] = entityTargetFilterOption.withVisible(flag2);
-      boolean flag3 = true;
-      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(flag3);
-      boolean flag4 = true;
-      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(flag4);
-      boolean flag5 = false;
-      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(flag5);
-      boolean flag6 = true;
-      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(flag6);
-      boolean flag7 = false;
-      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(flag7);
-      boolean flag8 = true;
-      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(flag8);
-      boolean flag9 = true;
-      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(flag9);
-      boolean flag10 = false;
-      entityTargetFilterOptions[8] = TargetFilterPreset.ANTI_BOT.createOption(flag10);
-      boolean flag11 = true;
-      entityTargetFilterOptions[9] = TargetFilterPreset.INVISIBLE.createOption(flag11);
-      boolean flag12 = true;
-      entityTargetFilterOptions[10] = TargetFilterPreset.SLEEPING.createOption(flag12);
+      entityTargetFilterOptions[0] = TargetFilterPreset.MYSELF.createOption(false).withVisible(true);
+      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(true);
+      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(true);
+      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(false);
+      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(true);
+      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(false);
+      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(true);
+      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(true);
+      entityTargetFilterOptions[8] = TargetFilterPreset.ANTI_BOT.createOption(false);
+      entityTargetFilterOptions[9] = TargetFilterPreset.INVISIBLE.createOption(true);
+      entityTargetFilterOptions[10] = TargetFilterPreset.SLEEPING.createOption(true);
       return createFilter(entityTargetFilterOptions);
    }
 
@@ -81,32 +57,19 @@ public class TargetFilterPresets {
 
    public static EntityTargetFilter createCombatFilter() {
       EntityTargetFilterOption[] entityTargetFilterOptions = new EntityTargetFilterOption[13];
-      boolean flag = false;
-      entityTargetFilterOptions[0] = TargetFilterPreset.MYSELF.createOption(flag);
-      boolean flag2 = true;
-      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(flag2);
-      boolean flag3 = true;
-      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(flag3);
-      boolean flag4 = false;
-      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(flag4);
-      boolean flag5 = false;
-      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(flag5);
-      boolean flag6 = false;
-      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(flag6);
-      boolean flag7 = false;
-      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(flag7);
-      boolean flag8 = false;
-      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(flag8);
-      boolean flag9 = false;
-      entityTargetFilterOptions[8] = TargetFilterPreset.SHOP.createOption(flag9);
-      boolean flag10 = false;
-      entityTargetFilterOptions[9] = TargetFilterPreset.ANTI_BOT.createOption(flag10);
-      boolean flag11 = true;
-      entityTargetFilterOptions[10] = TargetFilterPreset.INVISIBLE.createOption(flag11);
-      boolean flag12 = true;
-      entityTargetFilterOptions[11] = TargetFilterPreset.SLEEPING.createOption(flag12);
-      boolean flag13 = true;
-      entityTargetFilterOptions[12] = TargetFilterPreset.DEAD.createOption(flag13);
+      entityTargetFilterOptions[0] = TargetFilterPreset.MYSELF.createOption(false);
+      entityTargetFilterOptions[1] = TargetFilterPreset.PLAYER.createOption(true);
+      entityTargetFilterOptions[2] = TargetFilterPreset.MOB.createOption(true);
+      entityTargetFilterOptions[3] = TargetFilterPreset.ANIMAL.createOption(false);
+      entityTargetFilterOptions[4] = TargetFilterPreset.VILLAGER.createOption(false);
+      entityTargetFilterOptions[5] = TargetFilterPreset.ARMOR_STAND.createOption(false);
+      entityTargetFilterOptions[6] = TargetFilterPreset.TEAMMATE.createOption(false);
+      entityTargetFilterOptions[7] = TargetFilterPreset.FRIEND.createOption(false);
+      entityTargetFilterOptions[8] = TargetFilterPreset.SHOP.createOption(false);
+      entityTargetFilterOptions[9] = TargetFilterPreset.ANTI_BOT.createOption(false);
+      entityTargetFilterOptions[10] = TargetFilterPreset.INVISIBLE.createOption(true);
+      entityTargetFilterOptions[11] = TargetFilterPreset.SLEEPING.createOption(true);
+      entityTargetFilterOptions[12] = TargetFilterPreset.DEAD.createOption(true);
       return createFilter(entityTargetFilterOptions);
    }
 

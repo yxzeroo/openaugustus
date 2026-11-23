@@ -3,12 +3,12 @@ package net.augustus.modules.modes.skinderp;
 import net.augustus.modules.fun.SkinPartSwitchMap;
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
 public abstract class SkinDerpMode extends AbstractSubMode {
 
-   public SkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue, String str) {
+   public SkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue, String str) {
       super(skinDerp, doubleValue, str);
    }
 
@@ -52,11 +52,9 @@ public abstract class SkinDerpMode extends AbstractSubMode {
    }
 
    public void enableAllParts() {
-      EnumPlayerModelParts[] modelParts = this.getModelParts();
 
-      for (EnumPlayerModelParts enumPlayerModelParts : modelParts) {
-         boolean flag = true;
-         this.setModelPartEnabled(enumPlayerModelParts, flag);
+      for (EnumPlayerModelParts enumPlayerModelParts : this.getModelParts()) {
+         this.setModelPartEnabled(enumPlayerModelParts, true);
       }
    }
 

@@ -19,8 +19,7 @@ public class DynamicFontUtil extends CustomFontUtil {
       this.sizedFontCache = new Int2ObjectOpenHashMap();
       this.currentFontSize = this.awtFont.getSize();
       this.resourcePath = str2;
-      int maxvalue = Integer.MAX_VALUE;
-      this.preloadFontSizes(maxvalue);
+      this.preloadFontSizes(Integer.MAX_VALUE);
    }
 
    public DynamicFontUtil(String str, File file, int n, int n2) {
@@ -36,7 +35,6 @@ public class DynamicFontUtil extends CustomFontUtil {
    }
 
    private void preloadFontSizes(int n) {
-      int[] fontStateFlags2 = CustomFontUtil.getFontStateFlags();
 
       try {
          Font font;
@@ -61,7 +59,6 @@ public class DynamicFontUtil extends CustomFontUtil {
    }
 
    public void setFontSize(int n) {
-      int[] fontStateFlags2 = CustomFontUtil.getFontStateFlags();
       if (n != this.currentFontSize) {
          UnicodeFontRenderer unicodeFontRenderer2 = (UnicodeFontRenderer)this.sizedFontCache.get(n);
          if (unicodeFontRenderer2 != null) {

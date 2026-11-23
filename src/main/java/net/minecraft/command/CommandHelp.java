@@ -45,8 +45,7 @@ public class CommandHelp extends CommandBase {
       try {
          n2 = strings.length == 0 ? 0 : parseInt(strings[0], 1, n + 1) - 1;
       } catch (NumberInvalidException e) {
-         Map commands = this.getCommands();
-         ICommand command = (ICommand)commands.get(strings[0]);
+         ICommand command = (ICommand)this.getCommands().get(strings[0]);
          if (command != null) {
             throw new WrongUsageException(command.getCommandUsage(commandSender), new Object[0]);
          }

@@ -20,8 +20,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.EventMoveEntity;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -32,19 +32,19 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 
 public class Phase extends Module implements NoClipListener, MoveInputListener, MoveEntityListener, TickListener, BlockBreakListener, BlockPlaceListener {
-   private final DoubleValue horizontal;
+   private final SettingGroup horizontal;
    private final BooleanValue customizeHorizontalMovespeedInBlocks;
    private final BooleanValue useSneakMotionInBlocks;
-   private final StringValue movespeedInBlocks;
-   private final DoubleValue vertical;
+   private final DoubleValue movespeedInBlocks;
+   private final SettingGroup vertical;
    private final BooleanValue fallIfNoBlockIsUnderPlayer;
    private final BooleanValue upAndDown;
-   private final StringValue upwardsSteps;
-   private final StringValue upwardsTickDelay;
-   private final StringValue downwardsSteps;
-   private final StringValue downwardsTickDelay;
+   private final DoubleValue upwardsSteps;
+   private final DoubleValue upwardsTickDelay;
+   private final DoubleValue downwardsSteps;
+   private final DoubleValue downwardsTickDelay;
    private final BooleanValue clipDownByBreaking;
-   private final StringValue packetCount;
+   private final DoubleValue packetCount;
    private int verticalStepTicks;
    private float cachedYaw;
    private boolean insideBlock;
@@ -52,51 +52,43 @@ public class Phase extends Module implements NoClipListener, MoveInputListener, 
 
    public Phase() {
        super("Phase", "DurchWändeGehen", new Color(45, 196, 148), Categorys.PLAYER);
-      this.horizontal = new DoubleValue(this, "Horizontal");
+      this.horizontal = new SettingGroup(this, "Horizontal");
       this.customizeHorizontalMovespeedInBlocks = new BooleanValue(this, "Customize horizontal Movespeed in blocks", false, this.horizontal);
       BooleanValue booleanValue = new BooleanValue(this, "Use sneak motion in blocks", false, this.horizontal);
       BooleanValue booleanValue2 = this.customizeHorizontalMovespeedInBlocks;
       this.customizeHorizontalMovespeedInBlocks.getClass();
       BooleanValue booleanValue3 = booleanValue2;
-      SettingVisibilityCondition condition = () -> booleanValue3.getValue();
-      this.useSneakMotionInBlocks = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "Movespeed in blocks", 0.1, 1.0E-4, 1.0, 4, this.horizontal);
-      SettingVisibilityCondition condition2 = () -> this.isMovespeedInBlocksVisible();
-      this.movespeedInBlocks = stringValue.visibleWhen(condition2);
-      this.vertical = new DoubleValue(this, "Vertical");
+      this.useSneakMotionInBlocks = (BooleanValue)booleanValue.withVisibility(() -> booleanValue3.getValue());
+      this.movespeedInBlocks = new DoubleValue(this, "Movespeed in blocks", 0.1, 1.0E-4, 1.0, 4, this.horizontal).visibleWhen(() -> this.isMovespeedInBlocksVisible());
+      this.vertical = new SettingGroup(this, "Vertical");
       this.fallIfNoBlockIsUnderPlayer = new BooleanValue(this, "Fall if no block is under player", false, this.vertical);
       this.upAndDown = new BooleanValue(this, "UpAndDown", true, this.vertical);
-      StringValue stringValue2 = new StringValue(this, "UpwardsSteps", 1.0, 0.0, 2.0, 2, this.vertical);
+      DoubleValue stringValue2 = new DoubleValue(this, "UpwardsSteps", 1.0, 0.0, 2.0, 2, this.vertical);
       booleanValue2 = this.upAndDown;
       this.upAndDown.getClass();
       BooleanValue booleanValue4 = booleanValue2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.upwardsSteps = stringValue2.visibleWhen(condition3);
-      StringValue stringValue3 = new StringValue(this, "UpwardsTickDelay", 5.0, 0.0, 20.0, 0, this.vertical);
+      this.upwardsSteps = stringValue2.visibleWhen(() -> booleanValue4.getValue());
+      DoubleValue stringValue3 = new DoubleValue(this, "UpwardsTickDelay", 5.0, 0.0, 20.0, 0, this.vertical);
       booleanValue2 = this.upAndDown;
       this.upAndDown.getClass();
       BooleanValue booleanValue5 = booleanValue2;
-      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
-      this.upwardsTickDelay = stringValue3.visibleWhen(condition4);
-      StringValue stringValue4 = new StringValue(this, "DownwardsSteps", 1.0, 0.0, 2.0, 2, this.vertical);
+      this.upwardsTickDelay = stringValue3.visibleWhen(() -> booleanValue5.getValue());
+      DoubleValue stringValue4 = new DoubleValue(this, "DownwardsSteps", 1.0, 0.0, 2.0, 2, this.vertical);
       booleanValue2 = this.upAndDown;
       this.upAndDown.getClass();
       BooleanValue booleanValue6 = booleanValue2;
-      SettingVisibilityCondition condition5 = () -> booleanValue6.getValue();
-      this.downwardsSteps = stringValue4.visibleWhen(condition5);
-      StringValue stringValue5 = new StringValue(this, "DownwardsTickDelay", 5.0, 0.0, 20.0, 0, this.vertical);
+      this.downwardsSteps = stringValue4.visibleWhen(() -> booleanValue6.getValue());
+      DoubleValue stringValue5 = new DoubleValue(this, "DownwardsTickDelay", 5.0, 0.0, 20.0, 0, this.vertical);
       booleanValue2 = this.upAndDown;
       this.upAndDown.getClass();
       BooleanValue booleanValue7 = booleanValue2;
-      SettingVisibilityCondition condition6 = () -> booleanValue7.getValue();
-      this.downwardsTickDelay = stringValue5.visibleWhen(condition6);
+      this.downwardsTickDelay = stringValue5.visibleWhen(() -> booleanValue7.getValue());
       this.clipDownByBreaking = new BooleanValue(this, "Clip down by breaking", false, this.vertical);
-      StringValue stringValue6 = new StringValue(this, "Packet count", 1.0, 1.0, 10.0, 0, this.vertical);
+      DoubleValue stringValue6 = new DoubleValue(this, "Packet count", 1.0, 1.0, 10.0, 0, this.vertical);
       booleanValue2 = this.clipDownByBreaking;
       this.clipDownByBreaking.getClass();
       BooleanValue booleanValue8 = booleanValue2;
-      SettingVisibilityCondition condition7 = () -> booleanValue8.getValue();
-      this.packetCount = stringValue6.visibleWhen(condition7);
+      this.packetCount = stringValue6.visibleWhen(() -> booleanValue8.getValue());
       this.verticalStepTicks = 0;
       this.cachedYaw = 0.0F;
       this.clippedByBreaking = false;
@@ -115,24 +107,17 @@ public class Phase extends Module implements NoClipListener, MoveInputListener, 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 27;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 20;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 59;
-      this.toggleEventSubscription(b5);
-      byte b6 = 60;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)27);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)59);
+      this.toggleEventSubscription((byte)60);
    }
 
    @Override
    public void onNoClip2() {
-      AxisAlignedBB entityBoundingBox = mc.thePlayer.getEntityBoundingBox();
-      this.insideBlock = this.isInsideBlock(entityBoundingBox);
+      this.insideBlock = this.isInsideBlock(mc.thePlayer.getEntityBoundingBox());
       if (this.insideBlock) {
          if (this.fallIfNoBlockIsUnderPlayer.getValue()) {
             if (!this.hasBlockUnderPlayer()) {
@@ -185,9 +170,8 @@ public class Phase extends Module implements NoClipListener, MoveInputListener, 
    }
 
    private boolean isInsideBlock(AxisAlignedBB box) {
-      List list = mc.theWorld.getCollidingBoundingBoxesCapped(mc.thePlayer, mc.thePlayer.getEntityBoundingBox());
 
-      for (AxisAlignedBB box2 : (Iterable<AxisAlignedBB>)(list)) {
+      for (AxisAlignedBB box2 : (Iterable<AxisAlignedBB>)(mc.theWorld.getCollidingBoundingBoxesCapped(mc.thePlayer, mc.thePlayer.getEntityBoundingBox()))) {
          if (box2.intersectsWith(box)) {
             return true;
          }
@@ -217,18 +201,15 @@ public class Phase extends Module implements NoClipListener, MoveInputListener, 
 
       if (this.insideBlock) {
          if (event.isSneak() && this.upAndDown.getValue()) {
-            boolean flag = false;
-            event.setSneak(flag);
+            event.setSneak(false);
          }
 
          if (this.useSneakMotionInBlocks.getValue()) {
-            boolean flag2 = true;
-            event.setSneak(flag2);
+            event.setSneak(true);
          }
 
          if (event.isJump()) {
-            boolean flag3 = false;
-            event.setJump(flag3);
+            event.setJump(false);
          }
       }
    }
@@ -237,10 +218,8 @@ public class Phase extends Module implements NoClipListener, MoveInputListener, 
    public void onMoveEntity(EventMoveEntity event) {
       if (mc.thePlayer.noClip && this.customizeHorizontalMovespeedInBlocks.getValue() && !this.useSneakMotionInBlocks.getValue()) {
          MoveUtil.setMotionWithOffsetAndSprint(this.movespeedInBlocks.getValue(), 0.0, mc.thePlayer.rotationYaw, false);
-         double motionX = mc.thePlayer.motionX;
-         event.setX(motionX);
-         double motionZ = mc.thePlayer.motionZ;
-         event.setZ(motionZ);
+         event.setX(mc.thePlayer.motionX);
+         event.setZ(mc.thePlayer.motionZ);
       }
    }
 

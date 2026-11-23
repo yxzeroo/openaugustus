@@ -215,8 +215,7 @@ public abstract class EntityLiving extends EntityLivingBase {
          this.equipmentDropChances[i] = 0.085F;
       }
 
-      UUID uniqueID = this.getUniqueID();
-      uniqueID.getLeastSignificantBits();
+      this.getUniqueID().getLeastSignificantBits();
    }
 
    public boolean isNoDespawnRequired() {
@@ -384,8 +383,7 @@ public abstract class EntityLiving extends EntityLivingBase {
             Entity entity = (Entity)entityWorld2.playerEntities.get(0);
             double d = Math.max(Math.abs(this.posX - entity.posX) - 16.0, 0.0);
             double d2 = Math.max(Math.abs(this.posZ - entity.posZ) - 16.0, 0.0);
-            double d3 = d * d + d2 * d2;
-            return !this.isInRangeToRenderDist(d3);
+            return !this.isInRangeToRenderDist(d * d + d2 * d2);
          }
       }
    }
@@ -502,8 +500,7 @@ public abstract class EntityLiving extends EntityLivingBase {
    private void onUpdateMinimal() {
       this.age++;
       if (this instanceof EntityMob) {
-         float brightness = this.getBrightness(1.0F);
-         if (brightness > 0.5F) {
+         if (this.getBrightness(1.0F) > 0.5F) {
             this.age += 2;
          }
       }

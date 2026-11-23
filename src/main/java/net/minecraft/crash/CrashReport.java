@@ -100,8 +100,7 @@ public class CrashReport {
 
          this.firstCategoryInCrashReport = crashReportCategory.firstTwoElementsOfStackTraceMatch(stackTraceElement, stackTraceElement2);
          if (prunedStackTrace > 0 && !this.crashReportSections.isEmpty()) {
-            CrashReportCategory crashReportCategory2 = (CrashReportCategory)this.crashReportSections.get(this.crashReportSections.size() - 1);
-            crashReportCategory2.trimStackTraceEntriesFromBottom(prunedStackTrace);
+            ((CrashReportCategory)this.crashReportSections.get(this.crashReportSections.size() - 1)).trimStackTraceEntriesFromBottom(prunedStackTrace);
          } else if (stackTrace.length >= prunedStackTrace && 0 <= n2 && n2 < stackTrace.length) {
             this.stacktrace = new StackTraceElement[n2];
             System.arraycopy(stackTrace, 0, this.stacktrace, 0, this.stacktrace.length);
@@ -137,8 +136,7 @@ public class CrashReport {
          return l3 + " bytes (" + l6 + " MB) / " + l2 + " bytes (" + l5 + " MB) up to " + l + " bytes (" + l4 + " MB)";
       });
       this.theReportCategory.addCrashSectionCallable("JVM Flags", () -> {
-         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-         List inputArguments = runtimeMXBean.getInputArguments();
+         List inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
          int n = 0;
          StringBuilder sb = new StringBuilder();
 

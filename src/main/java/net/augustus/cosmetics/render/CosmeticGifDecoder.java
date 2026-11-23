@@ -27,8 +27,7 @@ public class CosmeticGifDecoder {
       int n2 = -1;
       IIOMetadata streamMetadata = imageReader.getStreamMetadata();
       if (streamMetadata != null) {
-         IIOMetadataNode asTree = (IIOMetadataNode)streamMetadata.getAsTree(streamMetadata.getNativeMetadataFormatName());
-         NodeList elementsByTagName = asTree.getElementsByTagName("LogicalScreenDescriptor");
+         NodeList elementsByTagName = ((IIOMetadataNode)streamMetadata.getAsTree(streamMetadata.getNativeMetadataFormatName())).getElementsByTagName("LogicalScreenDescriptor");
          if (elementsByTagName != null && elementsByTagName.getLength() > 0) {
             IIOMetadataNode ioMetadataNode = (IIOMetadataNode)elementsByTagName.item(0);
             if (ioMetadataNode != null) {

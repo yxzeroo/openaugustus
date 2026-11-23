@@ -3,9 +3,9 @@ package net.augustus.modules.combat;
 import net.augustus.settings.KeybindSetting;
 import net.augustus.settings.RandomizedRangeSettings;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
-public class KBDisplacementHotkeyGroup extends DoubleValue {
+public class KBDisplacementHotkeyGroup extends SettingGroup {
    public KeybindSetting keybind;
    private RandomizedRangeSettings degreeRange;
 
@@ -13,7 +13,7 @@ public class KBDisplacementHotkeyGroup extends DoubleValue {
        super(module, str);
    }
 
-   public KBDisplacementHotkeyGroup(Module module, String str, DoubleValue doubleValue) {
+   public KBDisplacementHotkeyGroup(Module module, String str, SettingGroup doubleValue) {
        super(module, str, doubleValue);
    }
 
@@ -21,7 +21,7 @@ public class KBDisplacementHotkeyGroup extends DoubleValue {
        super(module, str, flag);
    }
 
-   public KBDisplacementHotkeyGroup(Module module, String str, boolean flag, DoubleValue doubleValue) {
+   public KBDisplacementHotkeyGroup(Module module, String str, boolean flag, SettingGroup doubleValue) {
        super(module, str, flag, doubleValue);
    }
 

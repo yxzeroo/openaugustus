@@ -65,12 +65,9 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 7;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)7);
    }
 
    @Override
@@ -84,21 +81,15 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
       RotationUtil rotationUtil2 = this.rotationUtil;
       float f = 24.0F;
       float f2 = 18.0F;
-      float f3 = DefaultRandomGenerator.instance.nextFloat(f2, f);
-      float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
-      float f4 = f3;
-      float f5 = rotationUtil2.stepYawWithGcd(f4, yaw, backwardYaw);
+      float f5 = rotationUtil2.stepYawWithGcd(DefaultRandomGenerator.instance.nextFloat(f2, f), ClientManagers.rotationController.getPreviousRotation().yaw, backwardYaw);
       float pitch = ClientManagers.rotationController.getPreviousRotation().pitch;
-      long l = 200L;
-      if (!this.timeHelper.reached2(l)) {
+      if (!this.timeHelper.reached2(200L)) {
          rotationUtil2 = this.rotationUtil;
          float f6 = 24.0F;
          float f7 = 18.0F;
          float f8 = DefaultRandomGenerator.instance.nextFloat(f7, f6);
          float f9 = 80.34F;
-         float pitch2 = ClientManagers.rotationController.getPreviousRotation().pitch;
-         float f10 = f8;
-         pitch = rotationUtil2.updatePitchWithIntaveSin(f10, pitch2, f9);
+         pitch = rotationUtil2.updatePitchWithIntaveSin(f8, ClientManagers.rotationController.getPreviousRotation().pitch, f9);
       }
 
       boolean flag = !this.rotationLocked;
@@ -110,9 +101,7 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
       }
 
       if (flag && this.isLicenseValid() && !mc.theWorld.getBlockState(pos).getBlock().isFullBlock()) {
-         byte b = 1;
-         byte b2 = 1;
-         this.predictTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+         this.predictTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)1);
          double[] doubles = PlayerUtil.predictPlayerPosition(this.predictTicks - 1, mc.thePlayer, f5);
          System.out.println(doubles[0] + "   " + mc.thePlayer.posX + "    :   " + doubles[2] + "  " + mc.thePlayer.posZ);
          Vec3 vec = new Vec3(doubles[0], doubles[1], doubles[2]);
@@ -142,33 +131,23 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
             list.sort(Comparator.comparingDouble(obj -> this.scoreRaycastCandidate(f5, vec, (ScaffoldRaycastResult)obj)));
             ScaffoldRaycastResult scaffoldRaycastResult = (ScaffoldRaycastResult)list.get(0);
             float[] floats = new float[]{f5, scaffoldRaycastResult.pitch};
-            byte b3 = -1;
-            float[] floats2 = floats;
-            ClientManagers.rotationController.requestRotation2(floats2, b3, this);
+            ClientManagers.rotationController.requestRotation2(floats, (byte)-1, this);
             this.rotationLocked = true;
             return;
          }
       }
 
       this.rotationLocked = this.lockedMoveTicks > 0;
-      RotationController rotationController = ClientManagers.rotationController;
-      Rotation rotation = new Rotation(f5, pitch);
-      byte b4 = -1;
-      Rotation rotation2 = rotation;
-      rotationController.requestRotation(rotation2, b4, this);
+      ClientManagers.rotationController.requestRotation(new Rotation(f5, pitch), (byte)-1, this);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-      event.setMoveFixMode(moveFixMode);
+      event.setMoveFixMode(MoveFixMode.DEFAULT);
       if (this.lockedMoveTicks > 0) {
-         float savedMoveForward2 = this.savedMoveForward;
-         event.setMoveStrafe(savedMoveForward2);
-         float savedMoveStrafe2 = this.savedMoveStrafe;
-         event.setMoveForward(savedMoveStrafe2);
-         boolean savedSneaking2 = this.savedSneaking;
-         event.setSneak(savedSneaking2);
+         event.setMoveStrafe(this.savedMoveForward);
+         event.setMoveForward(this.savedMoveStrafe);
+         event.setSneak(this.savedSneaking);
       }
 
       this.lockedMoveTicks--;
@@ -180,12 +159,9 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
    @Override
    public void onClick(EventClick event) {
       if (this.lockedMoveTicks <= 0) {
-         byte b = 1;
-         event.addRightClicks(b);
-         boolean flag = false;
-         event.setBlockAllClicks(flag);
-         boolean flag2 = true;
-         event.setIgnoreVanillaClicks(flag2);
+         event.addRightClicks((byte)1);
+         event.setBlockAllClicks(false);
+         event.setIgnoreVanillaClicks(true);
       }
    }
 
@@ -204,8 +180,7 @@ public class NewScaffold extends Module implements TickListener, MoveInputListen
    }
 
    private float getBackwardYaw() {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      return realYaw - 180.0F;
+      return Augustus.getInstance().getYawPitchHelper().realYaw - 180.0F;
    }
 
    private double scoreRaycastCandidate(float f, Vec3 vec, ScaffoldRaycastResult scaffoldRaycastResult) {

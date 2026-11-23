@@ -20,15 +20,13 @@ public class InvisMode extends Module {
    @Override
    public void onEnable() {
       Display.setTitle("Minecraft 1.8.9");
-      boolean flag = true;
-      mc.setWindowIcon(flag);
+      mc.setWindowIcon(true);
    }
 
    @Override
    public void onDisable() {
       Display.setTitle(Augustus.getInstance().getName() + " " + Augustus.getInstance().getVersion());
-      boolean flag = false;
-      mc.setWindowIcon(flag);
+      mc.setWindowIcon(false);
    }
 
    @Override

@@ -25,8 +25,7 @@ public enum DefaultSchematicFormats implements ISchematicFormat {
       @Override
          public IStaticSchematic parse(InputStream in) throws IOException {
             NBTTagCompound tag = CompressedStreamTools.readCompressed(in);
-            int integer = tag.getInteger("Version");
-            switch (integer) {
+            switch (tag.getInteger("Version")) {
                case 1:
                case 2:
                   return new SpongeSchematic(tag);
@@ -38,9 +37,7 @@ public enum DefaultSchematicFormats implements ISchematicFormat {
    LITEMATICA("litematic") {
       @Override
          public IStaticSchematic parse(InputStream in) throws IOException {
-            NBTTagCompound tag = CompressedStreamTools.readCompressed(in);
-            int integer = tag.getInteger("Version");
-            switch (integer) {
+            switch (CompressedStreamTools.readCompressed(in).getInteger("Version")) {
                case 5:
                case 6:
                   throw new UnsupportedOperationException("This litematic Verion is too new.");

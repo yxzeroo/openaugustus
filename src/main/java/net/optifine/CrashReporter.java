@@ -64,8 +64,7 @@ public class CrashReporter {
          }
 
          String str = "http://optifine.net/crashReport";
-         String str2 = makeReport(crashReport);
-         byte[] bytes = str2.getBytes("ASCII");
+         byte[] bytes = makeReport(crashReport).getBytes("ASCII");
          CrashReportUploadListener listener = new CrashReportUploadListener();
          HashMap map = new HashMap();
          map.put("OF-Version", Config.getVersion());

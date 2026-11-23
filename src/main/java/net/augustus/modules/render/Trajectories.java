@@ -20,7 +20,7 @@ import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.utils.simulation.ProjectileSimulator;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,7 +46,7 @@ import org.lwjgl.opengl.GL11;
 public class Trajectories extends Module implements RenderListener {
    public final BooleanValue calculateColor;
    public final ColorSetting color2;
-   public final StringValue lineWidth;
+   public final DoubleValue lineWidth;
    public final BooleanValue noLine;
    public final BlurShadowSettings blurShadowSettings;
    private final MultiOptionSetting items;
@@ -60,11 +60,9 @@ public class Trajectories extends Module implements RenderListener {
          return !this.calculateColor.getValue();
       };
       this.color2 = (ColorSetting)colorSetting.withVisibility(condition);
-      this.lineWidth = new StringValue(this, "LineWidth", 5.0, 1.0, 12.0, 0);
+      this.lineWidth = new DoubleValue(this, "LineWidth", 5.0, 1.0, 12.0, 0);
       this.noLine = new BooleanValue(this, "NoLine", false);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black).disableBothByDefault();
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black).disableBothByDefault();
       this.items = new MultiOptionSetting(this, "Items", TrajectoriesItemOption.values());
       this.trajectoryPoints = new java.util.ArrayList();
    }
@@ -80,8 +78,7 @@ public class Trajectories extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -100,17 +97,13 @@ public class Trajectories extends Module implements RenderListener {
             || item instanceof ItemFishingRod && TrajectoriesItemOption.ROD.isSelected()
             || item instanceof ItemFireball && TrajectoriesItemOption.FIREBALL.isSelected()) {
             ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-            EntityPlayerSP thePlayer = mc.thePlayer;
-            projectileSimulator.initFromShooter(thePlayer, currentEquippedItem);
+            projectileSimulator.initFromShooter(mc.thePlayer, currentEquippedItem);
             if (item instanceof ItemBow) {
-               short s = 300;
-               this.trajectoryPoints = projectileSimulator.simulateArrowTrajectory(s);
+               this.trajectoryPoints = projectileSimulator.simulateArrowTrajectory((short)300);
             } else if (item instanceof ItemFishingRod) {
-               short s2 = 300;
-               this.trajectoryPoints = projectileSimulator.simulateFishingHookTrajectory(s2);
+               this.trajectoryPoints = projectileSimulator.simulateFishingHookTrajectory((short)300);
             } else if (!(item instanceof ItemFireball)) {
-               short s3 = 300;
-               this.trajectoryPoints = projectileSimulator.simulateThrowableTrajectory(s3);
+               this.trajectoryPoints = projectileSimulator.simulateThrowableTrajectory((short)300);
             } else {
                double d;
                double d2;
@@ -186,16 +179,13 @@ public class Trajectories extends Module implements RenderListener {
       if (this.calculateColor.getValue()) {
          Vec3 vec = (Vec3)this.trajectoryPoints.get(this.trajectoryPoints.size() - 1);
          double d = Math.min(Math.max(mc.thePlayer.getDistance(vec.xCoord, vec.yCoord, vec.zCoord), 6.0), 36.0) - 6.0;
-         byte b = 0;
-         float[] floats = ColorUtil.toHsb(this.color2.getColorInt(b));
+         float[] floats = ColorUtil.toHsb(this.color2.getColorInt((byte)0));
          n = Color.HSBtoRGB((float)(0.011415525F * d), floats[1], floats[2]);
       } else {
-         byte b2 = 0;
-         n = this.color2.getColorInt(b2);
+         n = this.color2.getColorInt((byte)0);
       }
 
-      boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+      BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
       int n2 = n;
       BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderTrajectoryPass(n2, hit, shaderRenderPass));
       GL11.glLineWidth(1.0F);
@@ -309,9 +299,7 @@ public class Trajectories extends Module implements RenderListener {
    private void renderTrajectoryPass(int n, MovingObjectPosition hit, ShaderRenderPass shaderRenderPass) {
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
-      BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      int n3 = blurShadowSettings2.resolvePassColor(shaderRenderPass, n2);
+      int n3 = this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n));
       RenderUtil.setGlColorWithAlpha(n3, 0.85F);
       if (!this.noLine.getValue()) {
          worldRenderer.begin(3, DefaultVertexFormats.POSITION);
@@ -336,15 +324,11 @@ public class Trajectories extends Module implements RenderListener {
             float f3 = (float)(entityHit.lastTickPosZ + (entityHit.posZ - entityHit.lastTickPosZ) * (double)mc.getTimer().renderPartialTicks - mc.getRenderManager().getRenderPosZ());
             RenderUtil.setGlColorWithAlpha(n3, 0.3F);
             double d = (double)(entityHit.width / 1.5F);
-            double height = (double)entityHit.height;
-            double d2 = d;
-            RenderUtil.drawRotatedEntityBox(entityHit, f, f2, f3, d2, height);
+            RenderUtil.drawRotatedEntityBox(entityHit, f, f2, f3, d, (double)entityHit.height);
             GL11.glLineWidth(2.5F);
             RenderUtil.setGlColorWithAlpha(n3, 1.0F);
             d = (double)(entityHit.width / 1.5F);
-            double height2 = (double)entityHit.height;
-            double d3 = d;
-            RenderUtil.drawRotatedEntityBoxOutline(entityHit, f, f2, f3, d3, height2);
+            RenderUtil.drawRotatedEntityBoxOutline(entityHit, f, f2, f3, d, (double)entityHit.height);
             GL11.glLineWidth(1.0F);
          } else {
             this.renderBlockImpactMarker(worldRenderer, n3, hit, instance);

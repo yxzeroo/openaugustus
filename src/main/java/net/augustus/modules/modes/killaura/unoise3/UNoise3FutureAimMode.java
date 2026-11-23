@@ -8,10 +8,8 @@ public class UNoise3FutureAimMode extends UNoise3AimMode {
 
    @Override
    public double computeTargetAngle(UNoise3AimContext uNoise3AimContext) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       if (this.isSurfaceRestrictionActive()) {
-         double delayedFuturePitch = uNoise3AimContext.delayedFuturePitch;
-         return this.clampToUnoccludedBounds(uNoise3AimContext, delayedFuturePitch);
+         return this.clampToUnoccludedBounds(uNoise3AimContext, uNoise3AimContext.delayedFuturePitch);
       } else {
          return uNoise3AimContext.delayedFuturePitch;
       }
@@ -23,9 +21,7 @@ public class UNoise3FutureAimMode extends UNoise3AimMode {
 
    public UNoise3FutureAimMode(UNoise3SettingContext uNoise3SettingContext2) {
        super(uNoise3SettingContext2, "Future", UNoise3AimConstraintType.POINT, false, true);
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext2.getModule(), "UNoise3FutureDelay", 0.0, 0.0, 0.0, 3.0, 0, this.getSettingsGroup());
-      String str = "Delay";
-      this.uNoise3FutureDelay = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
+      this.uNoise3FutureDelay = (RandomizedRangeSettings)new RandomizedRangeSettings(uNoise3SettingContext2.getModule(), "UNoise3FutureDelay", 0.0, 0.0, 0.0, 3.0, 0, this.getSettingsGroup()).withDisplayNamePrefix("Delay");
    }
 
 }

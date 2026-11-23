@@ -20,8 +20,7 @@ public class BlockAlias {
 
    public boolean matches(int n, int n2) {
       for (int i = 0; i < this.matchBlocks.length; i++) {
-         MatchBlock matchBlock = this.matchBlocks[i];
-         if (matchBlock.matches(n, n2)) {
+         if (this.matchBlocks[i].matches(n, n2)) {
             return true;
          }
       }
@@ -51,12 +50,9 @@ public class BlockAlias {
       HashSet set = new HashSet();
 
       for (int i = 0; i < this.matchBlocks.length; i++) {
-         MatchBlock matchBlock = this.matchBlocks[i];
-         int blockId = matchBlock.getBlockId();
-         set.add(blockId);
+         set.add(this.matchBlocks[i].getBlockId());
       }
 
-      Integer[] nums = (Integer[])set.toArray(new Integer[set.size()]);
-      return Config.toPrimitive(nums);
+      return Config.toPrimitive((Integer[])set.toArray(new Integer[set.size()]));
    }
 }

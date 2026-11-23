@@ -39,8 +39,7 @@ public class TargetPositionTracker {
          d5 = 0.0;
       }
 
-      double d6 = MathHelper.clamp_double(Math.max(Math.max(Math.max(d3, d4), d5), -0.5), -1.0, 1.0) + Math.random() * 0.1;
-      d = Math.max(d, d6);
+      d = Math.max(d, MathHelper.clamp_double(Math.max(Math.max(Math.max(d3, d4), d5), -0.5), -1.0, 1.0) + Math.random() * 0.1);
       this.lastPosX = this.trackedPosX;
       this.lastPosY = this.trackedPosY;
       this.lastPosZ = this.trackedPosZ;

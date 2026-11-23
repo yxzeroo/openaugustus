@@ -10,34 +10,23 @@ import net.augustus.utils.math.DefaultRandomGenerator;
 import java.security.SecureRandom;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 
 public class DeviationClickPatternMode extends AbstractClickPatternMode {
    private final RandomizedRangeSettings deviationCPS;
    private final BooleanValue deviationDoubleClick;
-   private final StringValue deviationAirMultiplier;
+   private final DoubleValue deviationAirMultiplier;
    private long nextClickTimeMs;
 
-   public DeviationClickPatternMode(Module module, DoubleValue doubleValue) {
+   public DeviationClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "Deviation");
       this.nextClickTimeMs = 0L;
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(module, "DeviationCPS", 13.0, 20.0, 0.0, 40.0, 0, doubleValue)).withoutNotInARow();
       String str = "MaxCPS";
-      String str2 = "MinCPS";
-      RandomizedRangeSettings randomizedRangeSettings2 = randomizedRangeSettings.withRangeNames(str2, str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.deviationCPS = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition);
-      BooleanValue booleanValue = new BooleanValue(module, "DeviationDoubleClick", true, doubleValue);
-      String str3 = "DoubleClick";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str3);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.deviationDoubleClick = (BooleanValue)booleanValue2.withVisibility(condition2);
-      StringValue stringValue = new StringValue(module, "DeviationAirMultiplier", 0.4, 0.0, 1.0, 2, doubleValue);
-      String str4 = "AirMultiplier";
-      StringValue stringValue2 = stringValue.named(str4);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.deviationAirMultiplier = stringValue2.visibleWhen(condition3);
+      this.deviationCPS = (RandomizedRangeSettings)randomizedRangeSettings.withRangeNames("MinCPS", str).withVisibility(() -> this.isSelected());
+      this.deviationDoubleClick = (BooleanValue)((BooleanValue)new BooleanValue(module, "DeviationDoubleClick", true, doubleValue).withDisplayName("DoubleClick")).withVisibility(() -> this.isSelected());
+      this.deviationAirMultiplier = new DoubleValue(module, "DeviationAirMultiplier", 0.4, 0.0, 1.0, 2, doubleValue).named("AirMultiplier").visibleWhen(() -> this.isSelected());
    }
 
    @Override
@@ -87,10 +76,7 @@ public class DeviationClickPatternMode extends AbstractClickPatternMode {
    }
 
    public void resetNextClickTime() {
-      long l = System.currentTimeMillis();
-      byte b = 45;
-      byte b2 = 0;
-      this.nextClickTimeMs = l - (long)DefaultRandomGenerator.instance.nextInt2(b2, b);
+      this.nextClickTimeMs = System.currentTimeMillis() - (long)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)45);
    }
 
 }

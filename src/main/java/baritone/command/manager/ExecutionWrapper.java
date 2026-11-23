@@ -34,8 +34,7 @@ public final class ExecutionWrapper {
       try {
          this.command.execute(this.label, this.args);
       } catch (Throwable e) {
-         Object obj = e instanceof ICommandException ? (ICommandException)e : new CommandUnhandledException(e);
-         ((ICommandException)obj).handle(this.command, this.args.getArgs());
+         ((ICommandException)(e instanceof ICommandException ? (ICommandException)e : new CommandUnhandledException(e))).handle(this.command, this.args.getArgs());
       }
    }
 

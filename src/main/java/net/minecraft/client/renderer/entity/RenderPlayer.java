@@ -69,8 +69,7 @@ public class RenderPlayer extends RendererLivingEntity {
          Scoreboard worldScoreboard = clientPlayer.getWorldScoreboard();
          ScoreObjective objectiveInDisplaySlot = worldScoreboard.getObjectiveInDisplaySlot(2);
          if (objectiveInDisplaySlot != null) {
-            Score valueFromObjective = worldScoreboard.getValueFromObjective(clientPlayer.getName(), objectiveInDisplaySlot);
-            super.renderOffsetLivingLabel(clientPlayer, d, d2, d3, valueFromObjective.getScorePoints() + " " + objectiveInDisplaySlot.getDisplayName(), d5, false);
+            super.renderOffsetLivingLabel(clientPlayer, d, d2, d3, worldScoreboard.getValueFromObjective(clientPlayer.getName(), objectiveInDisplaySlot).getScorePoints() + " " + objectiveInDisplaySlot.getDisplayName(), d5, false);
             if (ClientManagers.moduleManager.nameTags.isToggled() && ClientManagers.moduleManager.nameTags.mode.getSelectedValue().equals("Custom")) {
                float renderPartialTicks2 = Minecraft.getMinecraft().getTimer().renderPartialTicks;
                double d7 = this.renderManager.getRenderPosX() - (clientPlayer.lastTickPosX + (clientPlayer.posX - clientPlayer.lastTickPosX) * (double)renderPartialTicks2);

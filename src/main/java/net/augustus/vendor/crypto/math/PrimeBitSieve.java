@@ -53,7 +53,6 @@ public class PrimeBitSieve {
       Object obj = null;
       int n2 = 0;
       byte b = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n3 = 0;
       long l2 = 0L;
       l2 = 5903054056774736943L ^ (long)"ꍄ⩚\uf153蔖\ue5b9箖镳\uf606\ue95d咾蜡脠㰰햸鉛튝ꉾ⽣뤷짟㸡樊徻㊱".hashCode();
@@ -76,12 +75,10 @@ public class PrimeBitSieve {
             } else {
                l2 = l2 + 120271549378631993L ^ 5647143142673624201L;
                CustomBigInteger customBigInteger2 = customBigInteger;
-               CustomBigInteger customBigInteger3 = CustomBigInteger.valueOf((long)b);
-               obj = customBigInteger2.add2(customBigInteger3);
+               obj = customBigInteger2.add2(CustomBigInteger.valueOf((long)b));
                l2 = l2 + -7620482389353213670L ^ 9112964045003031263L;
                customBigInteger2 = (CustomBigInteger)obj;
-               Random rand2 = rand;
-               if (customBigInteger2.primeToCertainty(n, rand2)) {
+               if (customBigInteger2.primeToCertainty(n, rand)) {
                   l2 = (l2 ^ -2718505282163047679L) - 2685270582744089189L;
                   return (CustomBigInteger)obj;
                }
@@ -126,10 +123,8 @@ public class PrimeBitSieve {
             n2 += n4;
          }
 
-         int n5 = (n2 - 1) / 2;
-         this.sieveSingle(n, n5, n4);
-         int n6 = n3 + 1;
-         int n7 = n6;
+         this.sieveSingle(n, (n2 - 1) / 2, n4);
+         int n7 = n3 + 1;
          int length3 = smallSieve.length;
          n3 = smallSieve.sieveSearch(length3, n7);
          n4 = n3 * 2 + 1;
@@ -161,19 +156,15 @@ public class PrimeBitSieve {
       super();
       this.length = 9600;
       this.bits = new long[unitIndex(this.length - 1) + 1];
-      byte b = 0;
-      this.set(b);
+      this.set((byte)0);
       int n = 1;
       int n2 = 3;
 
       do {
          int n3 = n + n2;
-         int length2 = this.length;
-         this.sieveSingle(length2, n3, n2);
-         int n4 = n + 1;
-         int n5 = n4;
-         int length3 = this.length;
-         n = this.sieveSearch(length3, n5);
+         this.sieveSingle(this.length, n3, n2);
+         int n5 = n + 1;
+         n = this.sieveSearch(this.length, n5);
          n2 = 2 * n + 1;
       } while (n > 0 && n2 < this.length);
    }

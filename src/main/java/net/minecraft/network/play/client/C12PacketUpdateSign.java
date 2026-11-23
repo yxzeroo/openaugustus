@@ -34,8 +34,7 @@ public class C12PacketUpdateSign implements Packet {
       this.lines = new IChatComponent[4];
 
       for (int i = 0; i < 4; i++) {
-         String str = buf.readStringFromBuffer(384);
-         IChatComponent component = IChatComponent.Serializer.jsonToComponent(str);
+         IChatComponent component = IChatComponent.Serializer.jsonToComponent(buf.readStringFromBuffer(384));
          this.lines[i] = component;
       }
    }
@@ -45,9 +44,7 @@ public class C12PacketUpdateSign implements Packet {
       buf.writeBlockPos(this.pos);
 
       for (int i = 0; i < 4; i++) {
-         IChatComponent component = this.lines[i];
-         String str = IChatComponent.Serializer.componentToJson(component);
-         buf.writeString(str);
+         buf.writeString(IChatComponent.Serializer.componentToJson(this.lines[i]));
       }
    }
 

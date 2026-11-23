@@ -4,7 +4,6 @@ public interface IGeoAnimatableModel {
    String d = "Could not find bone: ";
 
    default IGeoBone getBone(String str) {
-      int[] flowState = GeoPlayState.getFlowState();
       IGeoBone bone = this.getAnimationProcessor().getBone(str);
       if (bone == null) {
          throw new RuntimeException(d + str);
@@ -14,8 +13,7 @@ public interface IGeoAnimatableModel {
    }
 
    default void setLivingAnimations(Object obj, Integer num) {
-      GeoAnimationEvent geoAnimationEvent = (GeoAnimationEvent)null;
-      this.setLivingAnimations(obj, num, geoAnimationEvent);
+      this.setLivingAnimations(obj, num, (GeoAnimationEvent)null);
    }
 
    void setLivingAnimations(Object obj, Integer num, GeoAnimationEvent geoAnimationEvent);

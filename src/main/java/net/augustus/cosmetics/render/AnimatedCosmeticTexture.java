@@ -31,9 +31,8 @@ public class AnimatedCosmeticTexture {
    }
 
    public void deleteTextures() {
-      CosmeticBufferedTexture[] frames2 = this.frames;
 
-      for (CosmeticBufferedTexture cosmeticBufferedTexture : frames2) {
+      for (CosmeticBufferedTexture cosmeticBufferedTexture : this.frames) {
          cosmeticBufferedTexture.releaseTexture();
       }
    }

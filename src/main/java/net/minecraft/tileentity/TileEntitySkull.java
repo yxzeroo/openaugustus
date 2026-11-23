@@ -29,8 +29,7 @@ public class TileEntitySkull extends TileEntity {
             if (gameProfileForUsername == null) {
                return profile;
             } else {
-               Property first = (Property)Iterables.getFirst(gameProfileForUsername.getProperties().get("textures"), null);
-               if (first == null) {
+               if (((Property)Iterables.getFirst(gameProfileForUsername.getProperties().get("textures"), null)) == null) {
                   gameProfileForUsername = MinecraftServer.getServer().getMinecraftSessionService().fillProfileProperties(gameProfileForUsername, true);
                }
 

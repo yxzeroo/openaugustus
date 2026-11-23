@@ -17,7 +17,6 @@ public final class Mgf1MaskGenerator {
 
    public void generateAndXor(byte[] bytes, int n, int n2, int n3, byte[] bytes2, int n4) throws RuntimeException {
       byte[] bytes3 = new byte[4];
-      RsaPublicKeyCipher.getFlowState();
       byte[] bytes4 = new byte[this.md.getDigestLength()];
 
       while (n3 > 0) {

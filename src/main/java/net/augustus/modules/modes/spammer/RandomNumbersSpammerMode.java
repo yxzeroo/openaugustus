@@ -3,19 +3,17 @@ package net.augustus.modules.modes.spammer;
 import net.augustus.utils.math.DefaultRandomGenerator;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.Spammer;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class RandomNumbersSpammerMode extends SpammerRandomMode {
 
-   public RandomNumbersSpammerMode(Spammer spammer, DoubleValue doubleValue) {
+   public RandomNumbersSpammerMode(Spammer spammer, SettingGroup doubleValue) {
       super(spammer, doubleValue, "RandomNumbers");
    }
 
    @Override
    public String generateRandomSuffix() {
-      long l = 100000000000000L;
-      long l2 = 1000000000L;
-      return String.valueOf(DefaultRandomGenerator.instance.nextLong2(l2, l));
+      return String.valueOf(DefaultRandomGenerator.instance.nextLong2(1000000000L, 100000000000000L));
    }
 
    @Override
@@ -31,7 +29,7 @@ public class RandomNumbersSpammerMode extends SpammerRandomMode {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new RandomNumbersSpammerMode((Spammer)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new RandomNumbersSpammerMode((Spammer)obj, (SettingGroup)obj2);
    }
 
 }

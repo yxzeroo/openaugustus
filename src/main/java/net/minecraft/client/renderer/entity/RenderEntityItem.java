@@ -48,9 +48,7 @@ public class RenderEntityItem extends Render {
 
    public void doRender(EntityItem entityItem, double d, double d2, double d3, float f, float f2) {
       if (ClientManagers.moduleManager.m2DItems.isToggled() && ClientManagers.moduleManager.m2DItems.remove3DItems.getValue() && entityItem.getEntityItem() != null) {
-         M2DItems m2DItems = ClientManagers.moduleManager.m2DItems;
-         ItemStack entityItem2 = entityItem.getEntityItem();
-         if (m2DItems.shouldRenderItem2D(entityItem2)) {
+         if (ClientManagers.moduleManager.m2DItems.shouldRenderItem2D(entityItem.getEntityItem())) {
             return;
          }
       }
@@ -80,18 +78,14 @@ public class RenderEntityItem extends Render {
          if (itemModel.isGui3d()) {
             GlStateManager.pushMatrix();
             if (i > 0) {
-               float f3 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-               float f4 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-               float f5 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-               GlStateManager.translate(f3, f4, f5);
+               GlStateManager.translate((this.random.nextFloat() * 2.0F - 1.0F) * 0.15F, (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F, (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F);
             }
 
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
             itemModel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GROUND);
             this.itemRenderer.renderItem(entityItem3, itemModel, true, false, false);
             if (ClientManagers.moduleManager.itemESP.isToggled() && ClientManagers.moduleManager.itemESP.mode.getSelectedValue().equals("Box") && entityItem.getEntityItem() != null) {
-               Item item = entityItem.getEntityItem().getItem();
-               if (ItemESP.isItemWhitelisted(item)) {
+               if (ItemESP.isItemWhitelisted(entityItem.getEntityItem().getItem())) {
                   if (Config.isShaderPackLoaded() && EntityRenderer.shaderProgramSwitchEnabled) {
                      Shaders.useProgram(Shaders.ProgramNone);
                   }
@@ -102,8 +96,7 @@ public class RenderEntityItem extends Render {
                   RenderUtil.begin3DRender();
                   RenderHelper.disableStandardItemLighting();
                   GL11.glScaled(2.0, 2.0, 2.0);
-                  byte b = 0;
-                  RenderUtil.setGlColor(ClientManagers.moduleManager.itemESP.boxColor.getColorInt(b));
+                  RenderUtil.setGlColor(ClientManagers.moduleManager.itemESP.boxColor.getColorInt((byte)0));
                   RenderUtil.drawFilledBox2(0.0F - f6, entityItem.height / -2.0F, 0.0F - f6, 0.0F + f6, entityItem.height / 2.0F, 0.0F + f6);
                   RenderUtil.end3DRender();
                   GlStateManager.enableLighting();
@@ -133,8 +126,7 @@ public class RenderEntityItem extends Render {
       }
 
       if (!itemModel.isGui3d() && ClientManagers.moduleManager.itemESP.isToggled() && ClientManagers.moduleManager.itemESP.mode.getSelectedValue().equals("Box") && entityItem.getEntityItem() != null) {
-         Item item2 = entityItem.getEntityItem().getItem();
-         if (ItemESP.isItemWhitelisted(item2)) {
+         if (ItemESP.isItemWhitelisted(entityItem.getEntityItem().getItem())) {
             if (Config.isShaderPackLoaded()) {
                Shaders.useProgram(Shaders.ProgramNone);
             }
@@ -147,8 +139,7 @@ public class RenderEntityItem extends Render {
             RenderUtil.begin3DRender();
             RenderHelper.disableStandardItemLighting();
             GL11.glScaled(2.0, 2.0, 2.0);
-            byte b2 = 0;
-            RenderUtil.setGlColor(ClientManagers.moduleManager.itemESP.boxColor.getColorInt(b2));
+            RenderUtil.setGlColor(ClientManagers.moduleManager.itemESP.boxColor.getColorInt((byte)0));
             RenderUtil.drawFilledBox2(0.0F - f11, entityItem.height / -2.0F, 0.0F - f11, 0.0F + f11, entityItem.height / 2.0F, 0.0F + f11);
             RenderUtil.end3DRender();
             GlStateManager.enableLighting();
@@ -193,8 +184,7 @@ public class RenderEntityItem extends Render {
 
    private int transformItemModel(EntityItem entityItem, double d, double d2, double d3, float f, IBakedModel bakedModel) {
       ItemStack entityItem2 = entityItem.getEntityItem();
-      Item item = entityItem2.getItem();
-      if (item == null) {
+      if (entityItem2.getItem() == null) {
          return 0;
       } else {
          boolean isGui3d = bakedModel.isGui3d();
@@ -204,15 +194,11 @@ public class RenderEntityItem extends Render {
          float f4 = bakedModel.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
          GlStateManager.translate((float)d, (float)d2 + f3 + 0.25F * f4, (float)d3);
          if (isGui3d || this.renderManager.options != null) {
-            float f5 = (((float)entityItem.getAge() + f) / 20.0F + entityItem.hoverStart) * 57.295776F;
-            GlStateManager.rotate(f5, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate((((float)entityItem.getAge() + f) / 20.0F + entityItem.hoverStart) * 57.295776F, 0.0F, 1.0F, 0.0F);
          }
 
          if (!isGui3d) {
-            float f6 = -0.0F * (float)(modelCount - 1) * 0.5F;
-            float f7 = -0.0F * (float)(modelCount - 1) * 0.5F;
-            float f8 = -0.046875F * (float)(modelCount - 1) * 0.5F;
-            GlStateManager.translate(f6, f7, f8);
+            GlStateManager.translate(-0.0F * (float)(modelCount - 1) * 0.5F, -0.0F * (float)(modelCount - 1) * 0.5F, -0.046875F * (float)(modelCount - 1) * 0.5F);
          }
 
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -231,8 +217,7 @@ public class RenderEntityItem extends Render {
          && entityItem.getEntityItem().hasDisplayName()
          && ClientManagers.moduleManager.itemESP.isToggled()
          && ClientManagers.moduleManager.itemESP.renderCustomItemnames.getValue()) {
-         Item item = entityItem.getEntityItem().getItem();
-         if (ItemESP.isItemWhitelisted(item)) {
+         if (ItemESP.isItemWhitelisted(entityItem.getEntityItem().getItem())) {
             if (ClientManagers.moduleManager.itemESP.applyNametagsRendering.getValue()) {
                this.renderVanillaNameTag(entityItem, entityItem.getEntityItem().getDisplayName(), d, d2, d3, 64, false);
             } else {

@@ -40,7 +40,6 @@ public abstract class MessageTypeCategory {
 
    @Override
    public int hashCode() {
-      byte b = 1;
-      return 31 * b + (this.internalName == null ? 0 : this.internalName.hashCode());
+      return 31 * ((byte)1) + (this.internalName == null ? 0 : this.internalName.hashCode());
    }
 }

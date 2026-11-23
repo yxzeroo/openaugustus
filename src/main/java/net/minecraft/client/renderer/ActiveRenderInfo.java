@@ -77,9 +77,7 @@ public class ActiveRenderInfo {
       GlStateManager.getFloat(2982, MODELVIEW);
       GlStateManager.getFloat(2983, PROJECTION);
       GL11.glGetInteger(2978, VIEWPORT);
-      float f = (float)((VIEWPORT.get(0) + VIEWPORT.get(2)) / 2);
-      float f2 = (float)((VIEWPORT.get(1) + VIEWPORT.get(3)) / 2);
-      GLU.gluUnProject(f, f2, 0.0F, MODELVIEW, PROJECTION, VIEWPORT, OBJECTCOORDS);
+      GLU.gluUnProject((float)((VIEWPORT.get(0) + VIEWPORT.get(2)) / 2), (float)((VIEWPORT.get(1) + VIEWPORT.get(3)) / 2), 0.0F, MODELVIEW, PROJECTION, VIEWPORT, OBJECTCOORDS);
       position = new Vec3((double)OBJECTCOORDS.get(0), (double)OBJECTCOORDS.get(1), (double)OBJECTCOORDS.get(2));
       int n = flag ? 1 : 0;
       float rotationPitch = player.rotationPitch;

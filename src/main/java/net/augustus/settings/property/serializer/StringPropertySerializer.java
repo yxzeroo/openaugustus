@@ -15,8 +15,7 @@ public final class StringPropertySerializer implements PrimitivePropertySerializ
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      String str2 = (String)obj;
-      this.writeString(str, str2, json);
+      this.writeString(str, (String)obj, json);
    }
 
    public String readString(JsonPrimitive primitive) {

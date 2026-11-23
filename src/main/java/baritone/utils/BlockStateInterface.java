@@ -111,8 +111,7 @@ public class BlockStateInterface {
       Long2ObjectOpenHashMap long2ObjectOpenHashMap = new Long2ObjectOpenHashMap();
 
       for (long l : ((ChunkProviderClient)world.getChunkProvider()).chunkMapping.getKeys()) {
-         Chunk valueByKey = (Chunk)((ChunkProviderClient)world.getChunkProvider()).chunkMapping.getValueByKey(l);
-         long2ObjectOpenHashMap.put(l, valueByKey);
+         long2ObjectOpenHashMap.put(l, (Chunk)((ChunkProviderClient)world.getChunkProvider()).chunkMapping.getValueByKey(l));
       }
 
       if (flag) {

@@ -47,8 +47,7 @@ public class BlockOldLog extends BlockLog {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockPlanks.EnumType.class, new BlockOldLog.FilterPredicate());
+      VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, new BlockOldLog.FilterPredicate());
    }
 
    public BlockOldLog() {

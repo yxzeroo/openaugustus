@@ -27,8 +27,8 @@ import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,56 +45,44 @@ public class TargetESP extends Module implements RenderListener, AttackEntityLis
    private final BooleanValue critVisualizer;
    private final ColorSetting critVisualizerColor;
    private final BooleanValue bestAimPoint;
-   private final StringValue bestAimPointSize;
+   private final DoubleValue bestAimPointSize;
    public final ColorSetting bestAimPointColor;
-   private final StringValue duration;
+   private final DoubleValue duration;
    private final CopyOnWriteArrayList hitMarkerPopups;
 
    public TargetESP() {
        super("TargetESP", "ZielAußersinnlicheWahrnehmung", new Color(212, 133, 76), Categorys.RENDER);
       this.modules = new MultiOptionSetting(this, "Modules", TargetEspModuleOption.values());
       BiFunction[] biFunctions = new BiFunction[]{
-         (obj, obj2) -> new NoneTargetEspMode((TargetESP)obj, (DoubleValue)obj2),
-         (obj3, obj4) -> new BoxTargetEspMode((TargetESP)obj3, (DoubleValue)obj4),
-         (obj5, obj6) -> new HitBoxTargetEspMode((TargetESP)obj5, (DoubleValue)obj6),
-         (obj7, obj8) -> new SigmaTargetEspMode((TargetESP)obj7, (DoubleValue)obj8)
+         (obj, obj2) -> new NoneTargetEspMode((TargetESP)obj, (SettingGroup)obj2),
+         (obj3, obj4) -> new BoxTargetEspMode((TargetESP)obj3, (SettingGroup)obj4),
+         (obj5, obj6) -> new HitBoxTargetEspMode((TargetESP)obj5, (SettingGroup)obj6),
+         (obj7, obj8) -> new SigmaTargetEspMode((TargetESP)obj7, (SettingGroup)obj8)
       };
       this.mode = new ModeSetting(this, "Mode", "Box", biFunctions);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
-      SettingVisibilityCondition condition = () -> this.isBlurShadowVisible();
-      this.blurShadowSettings = ((BlurShadowSettings)blurShadowSettings3.withVisibility(condition)).disableBlurByDefault();
+      this.blurShadowSettings = ((BlurShadowSettings)new BlurShadowSettings(this).withCustomShadowColor(Color.black).withVisibility(() -> this.isBlurShadowVisible())).disableBlurByDefault();
       this.critVisualizer = new BooleanValue(this, "CritVisualizer", true);
-      ColorSetting colorSetting = new ColorSetting(this, "CritVisualizerColor", new Color(255, 164, 75));
-      boolean flag = true;
-      ColorSetting colorSetting2 = colorSetting.withRainbowDefault(flag);
-      byte b = 50;
-      ColorSetting colorSetting3 = colorSetting2.withDefaultRainbowSpeed(b);
+      ColorSetting colorSetting3 = new ColorSetting(this, "CritVisualizerColor", new Color(255, 164, 75)).withRainbowDefault(true).withDefaultRainbowSpeed((byte)50);
       BooleanValue critVisualizer2 = this.critVisualizer;
       this.critVisualizer.getClass();
       BooleanValue booleanValue = critVisualizer2;
-      SettingVisibilityCondition condition2 = () -> booleanValue.getValue();
-      this.critVisualizerColor = (ColorSetting)colorSetting3.withVisibility(condition2);
+      this.critVisualizerColor = (ColorSetting)colorSetting3.withVisibility(() -> booleanValue.getValue());
       this.bestAimPoint = new BooleanValue(this, "BestAimPoint", false);
-      StringValue stringValue = new StringValue(this, "BestAimPointSize", 0.3, 0.01, 1.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "BestAimPointSize", 0.3, 0.01, 1.0, 2);
       critVisualizer2 = this.bestAimPoint;
       this.bestAimPoint.getClass();
       BooleanValue booleanValue2 = critVisualizer2;
-      SettingVisibilityCondition condition3 = () -> booleanValue2.getValue();
-      this.bestAimPointSize = stringValue.visibleWhen(condition3);
+      this.bestAimPointSize = stringValue.visibleWhen(() -> booleanValue2.getValue());
       ColorSetting colorSetting4 = new ColorSetting(this, "bestAimPointColor", new Color(41, 146, 222));
       critVisualizer2 = this.bestAimPoint;
       this.bestAimPoint.getClass();
       BooleanValue booleanValue3 = critVisualizer2;
-      SettingVisibilityCondition condition4 = () -> booleanValue3.getValue();
-      this.bestAimPointColor = (ColorSetting)colorSetting4.withVisibility(condition4);
-      StringValue stringValue2 = new StringValue(this, "Duration", 1000.0, 100.0, 4000.0, 0);
+      this.bestAimPointColor = (ColorSetting)colorSetting4.withVisibility(() -> booleanValue3.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "Duration", 1000.0, 100.0, 4000.0, 0);
       critVisualizer2 = this.critVisualizer;
       this.critVisualizer.getClass();
       BooleanValue booleanValue4 = critVisualizer2;
-      SettingVisibilityCondition condition5 = () -> booleanValue4.getValue();
-      this.duration = stringValue2.visibleWhen(condition5);
+      this.duration = stringValue2.visibleWhen(() -> booleanValue4.getValue());
       this.hitMarkerPopups = new CopyOnWriteArrayList();
    }
 
@@ -114,8 +102,7 @@ public class TargetESP extends Module implements RenderListener, AttackEntityLis
 
    @Override
    public void onAttackEntity(EventAttackEntity event) {
-      EntityLivingBase activeTarget = this.getActiveTarget();
-      if (activeTarget != null) {
+      if (this.getActiveTarget() != null) {
          boolean flag = mc.thePlayer.fallDistance > 0.0F
             && !mc.thePlayer.onGround
             && !mc.thePlayer.isOnLadder()
@@ -176,14 +163,9 @@ public class TargetESP extends Module implements RenderListener, AttackEntityLis
 
       if (this.bestAimPoint.getValue() && activeTarget != null) {
          RenderUtil.begin3DRender();
-         byte b = 80;
-         byte b2 = 100;
-         Vec3 interpolatedBestHitVec = RotationUtil.getInterpolatedBestHitVec(activeTarget, f, b2, b);
-         Vec3 vec = interpolatedBestHitVec.addVector(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
+         Vec3 vec = RotationUtil.getInterpolatedBestHitVec(activeTarget, f, (byte)100, (byte)80).addVector(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
          float f3 = (float)this.bestAimPointSize.getValue() / 10.0F;
-         byte b3 = 0;
-         int colorInt2 = this.bestAimPointColor.getColorInt(b3);
-         RenderUtil.setGlColor(colorInt2);
+         RenderUtil.setGlColor(this.bestAimPointColor.getColorInt((byte)0));
          RenderUtil.drawFilledBox(
             vec.xCoord - (double)f3,
             vec.yCoord - (double)f3,

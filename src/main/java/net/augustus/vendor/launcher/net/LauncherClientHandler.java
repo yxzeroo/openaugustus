@@ -629,26 +629,16 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
 
    public LauncherClientHandler(PacketCipherEncoder packetCipherEncoder2, PacketCipherDecoder packetCipherDecoder2, PipelineStageGuard pipelineStageGuard) {
        super();
-      byte[] bytes = new byte[0];
-      this.sessionToken = bytes;
-      Object obj = null;
-      this.sessionSecret = (byte[])obj;
-      boolean flag = false;
-      this.added = flag;
-      byte b = 0;
-      this.pendingPacketCounter = b;
-      byte b2 = 0;
-      this.handshakeRetryCount = b2;
-      boolean flag2 = true;
-      this.autoRelease = flag2;
-      String str = "";
-      this.lastDownloadPercent = str;
-      boolean flag3 = false;
-      this.loggedIn = flag3;
-      Object obj2 = null;
-      this.remoteClassResponseBytes = (byte[])obj2;
-      Object obj3 = null;
-      this.availableClientsList = (String)obj3;
+      this.sessionToken = new byte[0];
+      this.sessionSecret = (byte[])null;
+      this.added = false;
+      this.pendingPacketCounter = (byte)0;
+      this.handshakeRetryCount = (byte)0;
+      this.autoRelease = true;
+      this.lastDownloadPercent = "";
+      this.loggedIn = false;
+      this.remoteClassResponseBytes = (byte[])null;
+      this.availableClientsList = (String)null;
       this.outboundPacketQueue = new ConcurrentLinkedQueue<>();
       this.packetQueueLock = new ReentrantReadWriteLock();
       this.sha256Digest = new Sha256Digest();
@@ -1283,8 +1273,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          | ((ShadedByteBuffer)obj8).get() & 255;
       obj = new byte[n7];
       ShadedByteBuffer shadedByteBuffer = (ShadedByteBuffer)obj8;
-      byte[] bytes5 = (byte[])obj;
-      shadedByteBuffer.get(bytes5);
+      shadedByteBuffer.get((byte[])obj);
       obj2 = new ShadedBigInteger((byte[])obj);
       n7 = (((ShadedByteBuffer)obj8).get() & 255) << 24
          | (((ShadedByteBuffer)obj8).get() & 255) << 16
@@ -1292,8 +1281,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          | ((ShadedByteBuffer)obj8).get() & 255;
       obj = new byte[n7];
       shadedByteBuffer = (ShadedByteBuffer)obj8;
-      byte[] bytes6 = (byte[])obj;
-      shadedByteBuffer.get(bytes6);
+      shadedByteBuffer.get((byte[])obj);
       obj12 = new ShadedBigInteger((byte[])obj);
       n15 = (((ShadedBigInteger)obj2).bitLength() + 7) / 8;
       short s2 = 18521;
@@ -1304,16 +1292,10 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          l3 >>= 8;
       }
 
-      byte[] bytes7 = bytes4;
-      obj4 = Pkcs1Padding.pad(bytes7, n15);
+      obj4 = Pkcs1Padding.pad(bytes4, n15);
       obj6 = new ShadedBigInteger(1, (byte[])obj4);
-      ShadedBigInteger shadedBigInteger = (ShadedBigInteger)obj6;
-      ShadedBigInteger shadedBigInteger2 = (ShadedBigInteger)obj12;
-      ShadedBigInteger shadedBigInteger3 = (ShadedBigInteger)obj2;
-      ShadedBigInteger shadedBigInteger4 = shadedBigInteger2;
-      obj7 = shadedBigInteger.modPow(shadedBigInteger4, shadedBigInteger3);
-      ShadedBigInteger shadedBigInteger5 = (ShadedBigInteger)obj7;
-      obj10 = shadedBigInteger5.toByteArray();
+      obj7 = ((ShadedBigInteger)obj6).modPow((ShadedBigInteger)obj12, (ShadedBigInteger)obj2);
+      obj10 = ((ShadedBigInteger)obj7).toByteArray();
       if (((byte[])obj10)[0] == 0 && ((byte[])obj10).length > n7) {
          obj9 = new byte[((byte[])obj10).length - 1];
          System.arraycopy((byte[])obj10, 1, (byte[])obj9, 0, ((byte[])obj9).length);
@@ -1327,22 +1309,12 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
       }
 
       obj3 = ShadedByteBuffer.allocate(1 + ((byte[])obj10).length);
-      ShadedHeapByteBuffer shadedHeapByteBuffer = (ShadedHeapByteBuffer)obj3;
-      byte b4 = 1;
-      shadedHeapByteBuffer.put(b4);
-      ShadedHeapByteBuffer shadedHeapByteBuffer2 = (ShadedHeapByteBuffer)obj3;
-      byte[] bytes8 = (byte[])obj10;
-      shadedHeapByteBuffer2.put2(bytes8);
+      ((ShadedHeapByteBuffer)obj3).put((byte)1);
+      ((ShadedHeapByteBuffer)obj3).put2((byte[])obj10);
       obj5 = ((ShadedHeapByteBuffer)obj3).array();
-      LauncherClientHandler launcherClientHandler = this;
-      C2SHandshakeInitPacket packet = new C2SHandshakeInitPacket((n26 ^ 116) << 5, (byte[])obj5);
-      launcherClientHandler.sendPacket(packet);
-      LauncherClientHandler launcherClientHandler2 = this;
-      byte[] bytes9 = bytes2;
-      launcherClientHandler2.inboundSessionKey = bytes9;
-      LauncherClientHandler launcherClientHandler3 = this;
-      byte[] bytes10 = bytes3;
-      launcherClientHandler3.outboundSessionKey = bytes10;
+      this.sendPacket(new C2SHandshakeInitPacket((n26 ^ 116) << 5, (byte[])obj5));
+      this.inboundSessionKey = bytes2;
+      this.outboundSessionKey = bytes3;
       this.sleepBriefly();
       if (l5 < System.nanoTime()
          && l4 < System.currentTimeMillis()
@@ -1350,13 +1322,9 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          && l4 > 0L
          && System.nanoTime() > 0L
          && System.currentTimeMillis() > 0L) {
-         LauncherClientHandler launcherClientHandler4 = this;
-         boolean flag2 = false;
-         launcherClientHandler4.handshakeCompleted = flag2;
+         this.handshakeCompleted = false;
       } else {
-         LauncherClientHandler launcherClientHandler5 = this;
-         boolean flag3 = true;
-         launcherClientHandler5.handshakeCompleted = flag3;
+         this.handshakeCompleted = true;
       }
    }
 
@@ -1376,17 +1344,13 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          l = (l ^ -8632073834291174243L) - -8882418271208740780L;
       } else {
          l = l + -5129206639868748358L ^ 5829998392733203603L;
-         LauncherClientHandler instance2 = getInstance();
-         instance2.flushOutboundQueue();
+         getInstance().flushOutboundQueue();
          l = (l ^ -184521238059119404L) - 5262840157763303892L;
       }
    }
 
    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-      long l = a ^ 46830477429449L;
-      long l2 = l ^ 104777076537036L;
-      LauncherPacket packet = (LauncherPacket)msg;
-      this.handleIncomingPacket(l2, ctx, packet);
+      this.handleIncomingPacket((a ^ 46830477429449L) ^ 104777076537036L, ctx, (LauncherPacket)msg);
    }
 
    private void clearDirectoryFiles(File file) {
@@ -1478,10 +1442,8 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             .append(System.getenv("PROCESSOR_IDENTIFIER"))
             .append(System.getenv("USERNAME"))
             .append(System.getenv("HOMEPATH"));
-         byte[] bytes = fileStore.toString().getBytes(StandardCharsets.UTF_8);
-         sb = sb.append(rfc46482.encodeToString(bytes));
-         byte[] bytes2 = fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8);
-         return sb.append(rfc46482.encodeToString(bytes2)).toString().getBytes(StandardCharsets.UTF_8);
+         sb = sb.append(rfc46482.encodeToString(fileStore.toString().getBytes(StandardCharsets.UTF_8)));
+         return sb.append(rfc46482.encodeToString(fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8))).toString().getBytes(StandardCharsets.UTF_8);
       } catch (IOException e) {
          return null;
       }
@@ -1514,10 +1476,8 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             .append(System.getenv("PROCESSOR_IDENTIFIER"))
             .append(System.getenv("USERNAME"))
             .append(System.getenv("HOMEPATH"));
-         byte[] bytes = fileStore.toString().getBytes(StandardCharsets.UTF_8);
-         sb = sb.append(rfc46482.encodeToString(bytes));
-         byte[] bytes2 = fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8);
-         return sb.append(rfc46482.encodeToString(bytes2)).toString();
+         sb = sb.append(rfc46482.encodeToString(fileStore.toString().getBytes(StandardCharsets.UTF_8)));
+         return sb.append(rfc46482.encodeToString(fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8))).toString();
       } catch (IOException e) {
          return null;
       }
@@ -1552,8 +1512,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
 
    private void handleRemoteClassResponse(S2CRemoteClassResponsePacket packet) {
       synchronized (RemoteClassFetcher.RESPONSE_LOCK) {
-         byte[] classData = packet.getClassData();
-         this.remoteClassResponseBytes = classData;
+         this.remoteClassResponseBytes = packet.getClassData();
          RemoteClassFetcher.RESPONSE_LOCK.notifyAll();
       }
    }
@@ -1592,9 +1551,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             l = (l ^ 1249591944826871788L) + -3586695658819510481L;
          } else {
             l = (l ^ -1602875449330366361L) + -3235923124367721373L;
-            LauncherClientHandler launcherClientHandler2 = instance;
-            C2SRemoteClassRequestPacket packet = new C2SRemoteClassRequestPacket(instance.sessionToken, "net/l/");
-            launcherClientHandler2.sendPacket(packet);
+            instance.sendPacket(new C2SRemoteClassRequestPacket(instance.sessionToken, "net/l/"));
             l = (l ^ -7744044562147811602L) - -3967721576262509231L;
          }
       }
@@ -2050,8 +2007,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             | ((ShadedByteBuffer)obj16).get() & 255;
          obj9 = new byte[n14];
          ShadedByteBuffer shadedByteBuffer = (ShadedByteBuffer)obj16;
-         byte[] bytes6 = (byte[])obj9;
-         shadedByteBuffer.get(bytes6);
+         shadedByteBuffer.get((byte[])obj9);
          obj = new ShadedBigInteger((byte[])obj9);
          n14 = (((ShadedByteBuffer)obj16).get() & 255) << 24
             | (((ShadedByteBuffer)obj16).get() & 255) << 16
@@ -2059,22 +2015,15 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             | ((ShadedByteBuffer)obj16).get() & 255;
          obj9 = new byte[n14];
          shadedByteBuffer = (ShadedByteBuffer)obj16;
-         byte[] bytes7 = (byte[])obj9;
-         shadedByteBuffer.get(bytes7);
+         shadedByteBuffer.get((byte[])obj9);
          obj38 = new ShadedBigInteger((byte[])obj9);
-         S2CHandshakeChallengePacket packet3 = packet2;
-         obj44 = packet3.getEncryptedAesKey();
+         obj44 = packet2.getEncryptedAesKey();
          obj35 = new byte[((byte[])obj44).length - 1];
          System.arraycopy((byte[])obj44, 1, (byte[])obj35, 0, ((byte[])obj35).length);
          n32 = (((ShadedBigInteger)obj).bitLength() + 7) / 8;
          obj47 = new ShadedBigInteger(1, (byte[])obj35);
-         ShadedBigInteger shadedBigInteger = (ShadedBigInteger)obj47;
-         ShadedBigInteger shadedBigInteger2 = (ShadedBigInteger)obj38;
-         ShadedBigInteger shadedBigInteger3 = (ShadedBigInteger)obj;
-         ShadedBigInteger shadedBigInteger4 = shadedBigInteger2;
-         obj46 = shadedBigInteger.modPow(shadedBigInteger4, shadedBigInteger3);
-         ShadedBigInteger shadedBigInteger5 = (ShadedBigInteger)obj46;
-         obj42 = shadedBigInteger5.toByteArray();
+         obj46 = ((ShadedBigInteger)obj47).modPow((ShadedBigInteger)obj38, (ShadedBigInteger)obj);
+         obj42 = ((ShadedBigInteger)obj46).toByteArray();
          if (((byte[])obj42)[0] == 0 && ((byte[])obj42).length > n32) {
             obj3 = new byte[((byte[])obj42).length - 1];
             System.arraycopy((byte[])obj42, 1, (byte[])obj3, 0, ((byte[])obj3).length);
@@ -2532,8 +2481,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          for (int i41 = 0; i41 < 32; i41 += 1) {
             byte b8 = -128;
             short s8 = 19725;
-            byte b9 = 127;
-            n16 = b9 - b8 + 1;
+            n16 = ((byte)127) - b8 + 1;
             l3 = (l3 * 1103515245L + 12345L) % (long)n16;
             if (l3 < 0L) {
                l3 *= -1L;
@@ -2571,8 +2519,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             | ((ShadedByteBuffer)obj45).get() & 255;
          obj5 = new byte[n23];
          shadedByteBuffer = (ShadedByteBuffer)obj45;
-         byte[] bytes8 = (byte[])obj5;
-         shadedByteBuffer.get(bytes8);
+         shadedByteBuffer.get((byte[])obj5);
          obj54 = new ShadedBigInteger((byte[])obj5);
          n23 = (((ShadedByteBuffer)obj45).get() & 255) << 24
             | (((ShadedByteBuffer)obj45).get() & 255) << 16
@@ -2580,8 +2527,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             | ((ShadedByteBuffer)obj45).get() & 255;
          obj5 = new byte[n23];
          shadedByteBuffer = (ShadedByteBuffer)obj45;
-         byte[] bytes9 = (byte[])obj5;
-         shadedByteBuffer.get(bytes9);
+         shadedByteBuffer.get((byte[])obj5);
          obj2 = new ShadedBigInteger((byte[])obj5);
          n7 = (((ShadedBigInteger)obj54).bitLength() + 7) / 8;
          short s9 = 15877;
@@ -2609,9 +2555,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          for (int i48 = 0; i48 < n53; i48 += 1) {
             do {
                obj50 = new byte[1];
-               EntropyXorShiftRandom entropyXorShiftRandom = (EntropyXorShiftRandom)obj6;
-               byte[] bytes10 = (byte[])obj50;
-               entropyXorShiftRandom.nextBytes(bytes10);
+               ((EntropyXorShiftRandom)obj6).nextBytes((byte[])obj50);
                b2 = ((byte[])obj50)[0];
             } while (b2 == 0);
 
@@ -2621,13 +2565,8 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          ((byte[])obj52)[n53 + 2] = 0;
          System.arraycopy((byte[])obj18, 0, (byte[])obj52, n53 + 3, ((byte[])obj18).length);
          obj26 = new ShadedBigInteger(1, (byte[])obj52);
-         ShadedBigInteger shadedBigInteger6 = (ShadedBigInteger)obj26;
-         ShadedBigInteger shadedBigInteger7 = (ShadedBigInteger)obj2;
-         ShadedBigInteger shadedBigInteger8 = (ShadedBigInteger)obj54;
-         ShadedBigInteger shadedBigInteger9 = shadedBigInteger7;
-         obj11 = shadedBigInteger6.modPow(shadedBigInteger9, shadedBigInteger8);
-         ShadedBigInteger shadedBigInteger10 = (ShadedBigInteger)obj11;
-         obj50 = shadedBigInteger10.toByteArray();
+         obj11 = ((ShadedBigInteger)obj26).modPow((ShadedBigInteger)obj2, (ShadedBigInteger)obj54);
+         obj50 = ((ShadedBigInteger)obj11).toByteArray();
          if (((byte[])obj50)[0] == 0 && ((byte[])obj50).length > n23) {
             obj49 = new byte[((byte[])obj50).length - 1];
             System.arraycopy((byte[])obj50, 1, (byte[])obj49, 0, ((byte[])obj49).length);
@@ -2641,17 +2580,11 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          }
 
          obj51 = ShadedByteBuffer.allocate(1 + ((byte[])obj50).length);
-         ShadedHeapByteBuffer shadedHeapByteBuffer = (ShadedHeapByteBuffer)obj51;
-         byte b10 = 1;
-         shadedHeapByteBuffer.put(b10);
-         ShadedHeapByteBuffer shadedHeapByteBuffer2 = (ShadedHeapByteBuffer)obj51;
-         byte[] bytes11 = (byte[])obj50;
-         shadedHeapByteBuffer2.put2(bytes11);
+         ((ShadedHeapByteBuffer)obj51).put((byte)1);
+         ((ShadedHeapByteBuffer)obj51).put2((byte[])obj50);
          obj29 = ((ShadedHeapByteBuffer)obj51).array();
          obj4 = CodeSourceIntegrityHasher.computeCodeSourceHash(this.sha256Digest);
-         LauncherClientHandler launcherClientHandler = this;
-         C2SHandshakeCompletePacket packet4 = new C2SHandshakeCompletePacket((byte[])obj29, (byte[])obj4);
-         launcherClientHandler.sendPacket(packet4);
+         this.sendPacket(new C2SHandshakeCompletePacket((byte[])obj29, (byte[])obj4));
          this.packetCipherDecoder.setSessionKey((byte[])obj19);
          this.packetCipherEncoder.setSessionKey((byte[])obj48);
          this.sleepBriefly();
@@ -2661,15 +2594,11 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             && l5 > 0L
             && System.nanoTime() > 0L
             && System.currentTimeMillis() > 0L) {
-            LauncherClientHandler launcherClientHandler2 = this;
-            boolean flag12 = false;
-            launcherClientHandler2.handshakeCompleted = flag12;
+            this.handshakeCompleted = false;
             break;
          }
 
-         LauncherClientHandler launcherClientHandler3 = this;
-         boolean flag13 = true;
-         launcherClientHandler3.handshakeCompleted = flag13;
+         this.handshakeCompleted = true;
          break;
       }
 
@@ -2681,47 +2610,31 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             }
 
             LauncherClientHandler launcherClientHandler4 = this;
-            byte[] sessionToken2 = packet5.getSessionToken();
-            launcherClientHandler4.sessionToken = sessionToken2;
+            launcherClientHandler4.sessionToken = packet5.getSessionToken();
             launcherClientHandler4 = this;
-            byte[] sessionSecret2 = packet5.getSessionSecret();
-            launcherClientHandler4.sessionSecret = sessionSecret2;
+            launcherClientHandler4.sessionSecret = packet5.getSessionSecret();
             launcherClientHandler4 = this;
-            String availableClients = packet5.getAvailableClients();
-            launcherClientHandler4.availableClientsList = availableClients;
-            Text loginFailedText = ElectricLauncherController.getInstance().getLoginFailedText();
-            S2CLoginResponsePacket packet6 = packet5;
-            loginFailedText.setText(packet6.getMessage());
+            launcherClientHandler4.availableClientsList = packet5.getAvailableClients();
+            ElectricLauncherController.getInstance().getLoginFailedText().setText(packet5.getMessage());
             ElectricLauncherController.getInstance().getLoginFailedText().setFill(Paint.valueOf("#22d451"));
             launcherClientHandler4 = this;
-            boolean flag14 = true;
-            launcherClientHandler4.loggedIn = flag14;
+            launcherClientHandler4.loggedIn = true;
          } else {
-            Text loginFailedText2 = ElectricLauncherController.getInstance().getLoginFailedText();
-            S2CLoginResponsePacket packet7 = packet5;
-            loginFailedText2.setText(packet7.getMessage());
+            ElectricLauncherController.getInstance().getLoginFailedText().setText(packet5.getMessage());
             ElectricLauncherController.getInstance().getLoginFailedText().setFill(Paint.valueOf("#f70202"));
          }
 
-         LauncherClientHandler launcherClientHandler5 = this;
-         boolean flag15 = true;
-         launcherClientHandler5.added = flag15;
+         this.added = true;
       }
 
       if (packet instanceof S2CIntegrityChallengePacket) {
          S2CIntegrityChallengePacket packet8 = (S2CIntegrityChallengePacket)packet;
-         Sha256Digest sha256Digest2 = this.sha256Digest;
-         LauncherClientHandler launcherClientHandler6 = this;
-         byte[] bytes12 = launcherClientHandler6.buildHardwareIdBytes();
-         byte[] bytes13 = bytes12;
-         obj25 = sha256Digest2.digest(bytes13);
+         obj25 = this.sha256Digest.digest(this.buildHardwareIdBytes());
          obj40 = AesCipherUtil.concatByteArrays(l2, new byte[][]{packet8.getChallengeNonce(), this.sessionToken, this.sessionSecret, (byte[])obj25});
-         byte[] bytes14 = (byte[])obj40;
-         byte[] bytes15 = bytes14;
+         byte[] bytes15 = (byte[])obj40;
          byte[] bytes16 = this.sha256Digest.digest(bytes15);
          obj20 = ClassIntegrityWatchdog.getClassHashes();
-         C2SIntegrityProofPacket packet9 = new C2SIntegrityProofPacket(this.sessionToken, bytes16, (Map)obj20);
-         this.sendPacket(packet9);
+         this.sendPacket(new C2SIntegrityProofPacket(this.sessionToken, bytes16, (Map)obj20));
          obj33 = this.availableClientsList == null ? null : this.availableClientsList.split(":");
          if ((String[])obj33 != null && ((String[])obj33).length > 0) {
             ElectricLauncherController.getInstance().clientList.getItems().clear();
@@ -2742,9 +2655,8 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          S2CRegisterResponsePacket packet10 = (S2CRegisterResponsePacket)packet;
          ElectricLauncherController.getInstance().getRegisterFailedText().setText(packet10.getMessage());
          Text registerFailedText = ElectricLauncherController.getInstance().getRegisterFailedText();
-         S2CRegisterResponsePacket packet11 = packet10;
          String str3;
-         if (packet11.getStatusCode() == 1) {
+         if (packet10.getStatusCode() == 1) {
             str3 = "#f70202";
          } else {
             short s10 = 19697;
@@ -2752,18 +2664,15 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          }
 
          registerFailedText.setFill(Paint.valueOf(str3));
-         LauncherClientHandler launcherClientHandler7 = this;
-         boolean flag16 = true;
-         launcherClientHandler7.added = flag16;
+         this.added = true;
       }
 
       if (packet instanceof S2CHwidResetResponsePacket) {
          S2CHwidResetResponsePacket packet12 = (S2CHwidResetResponsePacket)packet;
          ElectricLauncherController.getInstance().getHwidErrorMessage().setText(packet12.getMessage());
          Text hwidErrorMessage = ElectricLauncherController.getInstance().getHwidErrorMessage();
-         S2CHwidResetResponsePacket packet13 = packet12;
          String str4;
-         if (packet13.getStatusCode() == 1) {
+         if (packet12.getStatusCode() == 1) {
             str4 = "#f70202";
          } else {
             short s11 = 19697;
@@ -2771,18 +2680,15 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          }
 
          hwidErrorMessage.setFill(Paint.valueOf(str4));
-         LauncherClientHandler launcherClientHandler8 = this;
-         boolean flag17 = true;
-         launcherClientHandler8.added = flag17;
+         this.added = true;
       }
 
       if (packet instanceof S2CActivateClientResponsePacket) {
          S2CActivateClientResponsePacket packet14 = (S2CActivateClientResponsePacket)packet;
          ElectricLauncherController.getInstance().activateClientResponse.setText(packet14.getMessage());
          Text activateClientResponse = ElectricLauncherController.getInstance().activateClientResponse;
-         S2CActivateClientResponsePacket packet15 = packet14;
          String str5;
-         if (packet15.getStatusCode() == 1) {
+         if (packet14.getStatusCode() == 1) {
             str5 = "#f70202";
          } else {
             short s12 = 19697;
@@ -2797,98 +2703,63 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          obj25 = packet16.getNativesChunk();
          obj40 = packet16.getResourcesChunk();
          if (this.resourcesJarBuffer == null && ((byte[])obj40).length > 1) {
-            LauncherClientHandler launcherClientHandler9 = this;
-            byte[] bytes17 = new byte[packet16.getResourcesTotalSize()];
-            launcherClientHandler9.resourcesJarBuffer = bytes17;
+            this.resourcesJarBuffer = new byte[packet16.getResourcesTotalSize()];
          } else {
-            LauncherClientHandler launcherClientHandler10 = this;
-            boolean flag18 = true;
-            launcherClientHandler10.resourcesReady = flag18;
+            this.resourcesReady = true;
          }
 
          if (this.nativesArchiveBuffer == null && ((byte[])obj25).length > 1) {
-            LauncherClientHandler launcherClientHandler11 = this;
-            byte[] bytes18 = new byte[packet16.getNativesTotalSize()];
-            launcherClientHandler11.nativesArchiveBuffer = bytes18;
+            this.nativesArchiveBuffer = new byte[packet16.getNativesTotalSize()];
          } else {
-            LauncherClientHandler launcherClientHandler12 = this;
-            boolean flag19 = true;
-            launcherClientHandler12.nativesReady = flag19;
+            this.nativesReady = true;
          }
 
          if (this.resourcesJarBuffer != null) {
             System.arraycopy((byte[])obj40, 0, this.resourcesJarBuffer, this.resourcesBytesReceived, ((byte[])obj40).length);
-            int n56 = this.resourcesBytesReceived + ((byte[])obj40).length;
-            this.resourcesBytesReceived = n56;
+            this.resourcesBytesReceived = this.resourcesBytesReceived + ((byte[])obj40).length;
             if (this.resourcesBytesReceived == this.resourcesJarBuffer.length) {
-               StringBuilder sb = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-               S2CResourceChunkPacket packet17 = packet16;
-               CredentialStorage.ensureDirectoryExists(sb.append(packet17.getClientName()).toString());
+               CredentialStorage.ensureDirectoryExists(new StringBuilder().append(CredentialStorage.dataDirectory).append("data/").append(packet16.getClientName()).toString());
                StringBuilder sb2 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-               S2CResourceChunkPacket packet18 = packet16;
-               obj15 = new File(sb2.append(packet18.getClientName()).append("/resources.jar").toString());
+               obj15 = new File(sb2.append(packet16.getClientName()).append("/resources.jar").toString());
                if (((File)obj15).exists()) {
                   ((File)obj15).delete();
                }
 
-               LauncherClientHandler launcherClientHandler13 = this;
                StringBuilder sb3 = new StringBuilder().append(CredentialStorage.dataDirectory).append("/data/");
-               S2CResourceChunkPacket packet19 = packet16;
-               Path path = new File(sb3.append(packet19.getClientName()).append("/resources.jar").toString()).toPath();
-               byte[] resourcesJarBuffer2 = this.resourcesJarBuffer;
-               OpenOption[] openOptions = new OpenOption[]{StandardOpenOption.CREATE};
-               byte[] bytes19 = resourcesJarBuffer2;
-               Path path2 = path;
-               launcherClientHandler13.writeFileBytes(path2, bytes19, openOptions);
-               LauncherClientHandler launcherClientHandler14 = this;
-               boolean flag20 = true;
-               launcherClientHandler14.resourcesReady = flag20;
+               this.writeFileBytes(new File(sb3.append(packet16.getClientName()).append("/resources.jar").toString()).toPath(), this.resourcesJarBuffer, new OpenOption[]{StandardOpenOption.CREATE});
+               this.resourcesReady = true;
             }
          }
 
          if (this.nativesArchiveBuffer != null) {
             System.arraycopy((byte[])obj25, 0, this.nativesArchiveBuffer, this.nativesBytesReceived, ((byte[])obj25).length);
-            int n57 = this.nativesBytesReceived + ((byte[])obj25).length;
-            this.nativesBytesReceived = n57;
+            this.nativesBytesReceived = this.nativesBytesReceived + ((byte[])obj25).length;
             if (this.nativesBytesReceived == this.nativesArchiveBuffer.length) {
                exitBlock: {
-                  StringBuilder sb4 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-                  S2CResourceChunkPacket packet20 = packet16;
-                  obj15 = sb4.append(packet20.getClientName()).toString();
+                  obj15 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/").append(packet16.getClientName()).toString();
                   CredentialStorage.ensureDirectoryExists((String)obj15);
                   obj20 = new File((String)obj15 + "/nativezip.zip");
                   if (((File)obj20).exists()) {
-                     LauncherClientHandler launcherClientHandler15 = this;
-                     File file = (File)obj20;
-                     if (!launcherClientHandler15.isFileWritable(file)) {
+                     if (!this.isFileWritable((File)obj20)) {
                         break exitBlock;
                      }
                   }
 
-                  LauncherClientHandler launcherClientHandler16 = this;
-                  Path path3 = Paths.get((String)obj15 + "/nativezip.zip");
-                  byte[] nativesArchiveBuffer2 = this.nativesArchiveBuffer;
-                  OpenOption[] openOptions2 = new OpenOption[]{StandardOpenOption.CREATE};
-                  byte[] bytes20 = nativesArchiveBuffer2;
-                  Path path4 = path3;
-                  launcherClientHandler16.writeFileBytes(path4, bytes20, openOptions2);
+                  this.writeFileBytes(Paths.get((String)obj15 + "/nativezip.zip"), this.nativesArchiveBuffer, new OpenOption[]{StandardOpenOption.CREATE});
                }
 
                obj16 = new File((String)obj15 + "/natives");
                LauncherClientHandler launcherClientHandler17 = this;
-               File file2 = (File)obj16;
-               if (launcherClientHandler17.areAllFilesWritable(file2)) {
+               if (launcherClientHandler17.areAllFilesWritable((File)obj16)) {
                   launcherClientHandler17 = this;
-                  File file3 = (File)obj16;
-                  launcherClientHandler17.clearDirectoryFiles(file3);
+                  launcherClientHandler17.clearDirectoryFiles((File)obj16);
                   launcherClientHandler17 = this;
                   String str6 = (String)obj15 + "/natives";
                   ZipArchiveExtractor.extractZipBytes(launcherClientHandler17.nativesArchiveBuffer, str6);
                }
 
                launcherClientHandler17 = this;
-               boolean flag21 = true;
-               launcherClientHandler17.nativesReady = flag21;
+               launcherClientHandler17.nativesReady = true;
             }
          }
 
@@ -2898,32 +2769,19 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
             && (this.resourcesBytesReceived == packet16.getResourcesTotalSize() || packet16.getResourcesTotalSize() == 1)) {
             if (this.nativesArchiveBuffer == null) {
                StringBuilder sb5 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-               S2CResourceChunkPacket packet21 = packet16;
-               obj15 = new File(sb5.append(packet21.getClientName()).append("/natives").toString());
+               obj15 = new File(sb5.append(packet16.getClientName()).append("/natives").toString());
                LauncherClientHandler launcherClientHandler18 = this;
-               File file4 = (File)obj15;
-               if (launcherClientHandler18.areAllFilesWritable(file4)) {
+               if (launcherClientHandler18.areAllFilesWritable((File)obj15)) {
                   launcherClientHandler18 = this;
-                  File file5 = (File)obj15;
-                  launcherClientHandler18.clearDirectoryFiles(file5);
+                  launcherClientHandler18.clearDirectoryFiles((File)obj15);
                   launcherClientHandler18 = this;
-                  StringBuilder sb6 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-                  S2CResourceChunkPacket packet22 = packet16;
-                  Path path5 = Paths.get(sb6.append(packet22.getClientName()).append("/nativezip.zip").toString());
-                  byte[] bytes21 = launcherClientHandler18.readFileBytes(path5);
-                  StringBuilder sb7 = new StringBuilder().append(CredentialStorage.dataDirectory).append("data/");
-                  S2CResourceChunkPacket packet23 = packet16;
-                  String str7 = sb7.append(packet23.getClientName()).append("/natives").toString();
-                  ZipArchiveExtractor.extractZipBytes(bytes21, str7);
+                  ZipArchiveExtractor.extractZipBytes(launcherClientHandler18.readFileBytes(Paths.get(new StringBuilder().append(CredentialStorage.dataDirectory).append("data/").append(packet16.getClientName()).append("/nativezip.zip").toString())), new StringBuilder().append(CredentialStorage.dataDirectory).append("data/").append(packet16.getClientName()).append("/natives").toString());
                }
             }
 
-            LauncherClientHandler launcherClientHandler19 = this;
-            S2CResourceChunkPacket packet24 = packet16;
-            String clientName = packet24.getClientName();
+            String clientName = packet16.getClientName();
             Sha256Digest sha256Digest3 = this.sha256Digest;
-            byte[] bytes22 = this.buildHardwareIdString().getBytes(StandardCharsets.UTF_8);
-            byte[] bytes23 = bytes22;
+            byte[] bytes23 = this.buildHardwareIdString().getBytes(StandardCharsets.UTF_8);
             C2SResourcesReadyPacket packet25 = new C2SResourcesReadyPacket(
                clientName,
                sha256Digest3.digest(bytes23),
@@ -2931,7 +2789,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
                System.currentTimeMillis(),
                LaunchEnvironmentCheck.isEnvironmentClean()
             );
-            launcherClientHandler19.sendPacket(packet25);
+            this.sendPacket(packet25);
             Platform.runLater(() -> showWaitingForServerStatus(0L));
          }
 
@@ -2941,9 +2799,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
                String var281f = (String)obj15; Platform.runLater(() -> updateResourcesDownloadText(var281f, 0L));
             }
 
-            LauncherClientHandler launcherClientHandler20 = this;
-            String str8 = (String)obj15;
-            launcherClientHandler20.lastDownloadPercent = str8;
+            this.lastDownloadPercent = (String)obj15;
          }
       }
 
@@ -2951,68 +2807,46 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
          S2CClientArchiveChunkPacket packet26 = (S2CClientArchiveChunkPacket)packet;
          ClientArchiveHolder.encryptedArchiveKey = packet26.getEncryptedArchiveKey();
          if (ClientArchiveHolder.archiveBytes == null) {
-            byte[] sessionToken3 = this.sessionToken;
-            int totalSize = packet26.getTotalSize();
-            ClientArchiveHolder.archiveBytes = ArchiveAllocationGuard.allocateArchiveBuffer(sessionToken3, totalSize);
+            ClientArchiveHolder.archiveBytes = ArchiveAllocationGuard.allocateArchiveBuffer(this.sessionToken, packet26.getTotalSize());
             if (ClientArchiveHolder.archiveBytes.length != packet26.getTotalSize()) {
                this.channel.close();
             }
          }
 
          System.arraycopy(packet26.getChunkData(), 0, ClientArchiveHolder.archiveBytes, this.archiveBytesReceived, packet26.getChunkData().length);
-         int n58 = this.archiveBytesReceived + packet26.getChunkData().length;
-         this.archiveBytesReceived = n58;
+         this.archiveBytesReceived = this.archiveBytesReceived + packet26.getChunkData().length;
          obj30 = formatDecimal((double)this.archiveBytesReceived / (double)ClientArchiveHolder.archiveBytes.length * 100.0, 1);
          if (!this.lastDownloadPercent.equals((String)obj30)) {
             String var228f = (String)obj30; Platform.runLater(() -> updateClientDownloadText(var228f, 0L));
          }
 
-         LauncherClientHandler launcherClientHandler21 = this;
-         String str9 = (String)obj30;
-         launcherClientHandler21.lastDownloadPercent = str9;
+         this.lastDownloadPercent = (String)obj30;
          if (this.archiveBytesReceived == ClientArchiveHolder.archiveBytes.length) {
             Platform.runLater(() -> showStartingClientStatus(0L, (short)0));
-            S2CClientArchiveChunkPacket packet27 = packet26;
-            ClientArchiveHolder.clientName = packet27.getClientName();
+            ClientArchiveHolder.clientName = packet26.getClientName();
             archiveHolder = new ClientArchiveHolder();
             archiveHolder.start();
          }
       }
 
       if (packet instanceof S2CClassLoaderKeyPacket) {
-         S2CClassLoaderKeyPacket packet28 = (S2CClassLoaderKeyPacket)packet;
-         LauncherClientHandler launcherClientHandler22 = this;
-         S2CClassLoaderKeyPacket packet29 = packet28;
-         launcherClientHandler22.handleClassLoaderKey(packet29);
+         this.handleClassLoaderKey((S2CClassLoaderKeyPacket)packet);
       }
 
       if (packet instanceof S2CHardwareChallengePacket) {
          S2CHardwareChallengePacket packet30 = (S2CHardwareChallengePacket)packet;
-         S2CHardwareChallengePacket packet31 = packet30;
-         obj30 = decodeRsaPublicKey(packet31.getEncodedPublicKey());
-         RsaPublicKeyCipher rsaPublicKeyCipher = new RsaPublicKeyCipher();
-         RSAPublicKey rsaPublicKey = (RSAPublicKey)obj30;
-         byte[] encryptedAesKey = packet30.getEncryptedAesKey();
-         RSAPublicKey rsaPublicKey2 = rsaPublicKey;
-         obj40 = rsaPublicKeyCipher.decrypt(rsaPublicKey2, encryptedAesKey);
+         obj30 = decodeRsaPublicKey(packet30.getEncodedPublicKey());
+         obj40 = new RsaPublicKeyCipher().decrypt((RSAPublicKey)obj30, packet30.getEncryptedAesKey());
          if ((byte[])obj40 == null) {
             return;
          }
 
-         LauncherClientHandler launcherClientHandler23 = this;
-         C2SHardwareInfoPacket packet32 = HardwareFingerprintCollector.collectHardwareInfo((byte[])obj40);
-         launcherClientHandler23.sendPacket(packet32);
-         LauncherClientHandler launcherClientHandler24 = this;
-         boolean flag22 = false;
-         launcherClientHandler24.setAutoRelease(flag22);
+         this.sendPacket(HardwareFingerprintCollector.collectHardwareInfo((byte[])obj40));
+         this.setAutoRelease(false);
       }
 
       if (packet instanceof S2CRemoteClassResponsePacket) {
-         S2CRemoteClassResponsePacket packet33 = (S2CRemoteClassResponsePacket)packet;
-         LauncherClientHandler launcherClientHandler25 = this;
-         S2CRemoteClassResponsePacket packet34 = packet33;
-         S2CRemoteClassResponsePacket packet35 = packet34;
-         launcherClientHandler25.handleRemoteClassResponse(packet35);
+         this.handleRemoteClassResponse((S2CRemoteClassResponsePacket)packet);
          ctx.close();
       }
 
@@ -3029,11 +2863,9 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
    public void channelActive(ChannelHandlerContext ctx) throws Exception {
       this.channelActive(ctx);
       LauncherClientHandler launcherClientHandler = this;
-      Channel channel2 = ctx.channel();
-      launcherClientHandler.channel = channel2;
+      launcherClientHandler.channel = ctx.channel();
       instance = this;
-      LauncherClientHandler launcherClientHandler2 = this;
-      ClassIntegrityWatchdog.registerInstance("1", launcherClientHandler2);
+      ClassIntegrityWatchdog.registerInstance("1", this);
       connected = true;
       launcherClientHandler = this;
       launcherClientHandler.initiateHandshake();
@@ -3042,9 +2874,7 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
    public void sendPacket(LauncherPacket packet) {
       byte b = 5;
       if (!this.isChannelOpen()) {
-         LauncherClientHandler launcherClientHandler = this;
-         LauncherPacket packet2 = packet;
-         launcherClientHandler.enqueueOutboundPacket(packet2);
+         this.enqueueOutboundPacket(packet);
       }
 
       while (true) {
@@ -3054,12 +2884,9 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
                   return;
                }
 
-               LauncherClientHandler launcherClientHandler2 = this;
-               launcherClientHandler2.flushOutboundQueue();
+               this.flushOutboundQueue();
             } else {
-               LauncherClientHandler launcherClientHandler3 = this;
-               LauncherPacket packet3 = packet;
-               launcherClientHandler3.dispatchPacket(packet3);
+               this.dispatchPacket(packet);
             }
          }
       }
@@ -3086,11 +2913,10 @@ public class LauncherClientHandler extends SimpleChannelInboundHandler {
    }
 
    private boolean isChannelOpen() {
-      byte b = 2;
 
       boolean flag;
       while (true) {
-         if (1 >= b) {
+         if (1 >= ((byte)2)) {
             if (this.channel != null) {
                continue;
             }

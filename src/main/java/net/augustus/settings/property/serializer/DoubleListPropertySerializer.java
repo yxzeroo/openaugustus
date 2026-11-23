@@ -17,7 +17,6 @@ public final class DoubleListPropertySerializer implements JsonListPropertyCodec
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Double d = (Double)obj;
-      this.writeDoubleElement(array, d);
+      this.writeDoubleElement(array, (Double)obj);
    }
 }

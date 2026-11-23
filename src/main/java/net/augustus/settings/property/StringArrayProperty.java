@@ -8,13 +8,7 @@ import net.augustus.modules.FeatureBase;
 public class StringArrayProperty extends AbstractConfigProperty {
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      ArrayPropertySerializer stringArrayCodec = configSerializerProvider.getStringArrayCodec();
-      String name2 = this.getName();
-      String[] strings = flag ? (String[])this.getDefaultValue() : (String[])this.getValue();
-      String str = name2;
-      Object[] array = stringArrayCodec.readArray(str, strings, json);
-      Object[] array2 = array;
-      this.applyValue(array2);
+      this.applyValue(configSerializerProvider.getStringArrayCodec().readArray(this.getName(), flag ? (String[])this.getDefaultValue() : (String[])this.getValue(), json));
    }
 
    public StringArrayProperty(FeatureBase featureBase2, String str, String[] strings, String[] strings2) {
@@ -28,11 +22,7 @@ public class StringArrayProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      ArrayPropertySerializer stringArrayCodec = configSerializerProvider.getStringArrayCodec();
-      String name2 = this.getName();
-      Object[] value2 = (Object[])this.getValue();
-      String str = name2;
-      stringArrayCodec.writeArray(str, value2, json);
+      configSerializerProvider.getStringArrayCodec().writeArray(this.getName(), (Object[])this.getValue(), json);
       return json;
    }
 }

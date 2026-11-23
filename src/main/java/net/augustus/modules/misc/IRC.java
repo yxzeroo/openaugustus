@@ -13,13 +13,13 @@ import net.augustus.events.EventManager;
 import net.augustus.vendor.ElectricFriendManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class IRC extends Module implements TickListener {
-   public final BooleansSetting yourVisibility;
-   public final BooleansSetting ircFormatting;
+   public final StringValue yourVisibility;
+   public final StringValue ircFormatting;
    public final BooleanValue clientFriends;
    public final BooleanValue yourFriendsOnly;
    public final BooleanValue autoUnfriend;
@@ -29,34 +29,30 @@ public class IRC extends Module implements TickListener {
 
    public IRC() {
        super("IRC", "ZwischennetzWeiterleitung", new Color(66, 245, 200), Categorys.MISC);
-      this.yourVisibility = (BooleansSetting)(new BooleansSetting(this, "Your visibility", "All", new String[]{"All", "Friends"})).markVisualOnly();
-      this.ircFormatting = (BooleansSetting)(new BooleansSetting(
+      this.yourVisibility = (StringValue)(new StringValue(this, "Your visibility", "All", new String[]{"All", "Friends"})).markVisualOnly();
+      this.ircFormatting = (StringValue)(new StringValue(
             this, "IRC-Formatting", "Xanax", new String[]{"Xanax", "Xanax2", "Centaurus", "Centaurus2", "Skid", "Simple"}
          ))
          .markVisualOnly();
       this.clientFriends = (BooleanValue)(new BooleanValue(this, "ClientFriends", true)).markVisualOnly();
       BooleanValue booleanValue = new BooleanValue(this, "YourFriendsOnly", false);
-      SettingVisibilityCondition condition = () -> this.clientFriends.getValue();
-      this.yourFriendsOnly = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition)).markVisualOnly();
+      this.yourFriendsOnly = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> this.clientFriends.getValue())).markVisualOnly();
       booleanValue = new BooleanValue(this, "AutoUnfriend", true);
-      SettingVisibilityCondition condition2 = () -> this.clientFriends.getValue();
-      this.autoUnfriend = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition2)).markVisualOnly();
+      this.autoUnfriend = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> this.clientFriends.getValue())).markVisualOnly();
       this.lastVisibilityMode = 0;
       this.needsVisibilitySync = false;
       this.pendingDisconnect = false;
    }
 
    public void onClientInit() {
-      boolean flag = true;
-      this.setToggled(flag);
+      this.setToggled(true);
    }
 
    public void onEnable() {
       EventManager.getEventBus().subscribe(40, this);
       this.needsVisibilitySync = true;
       if (mc.theWorld != null && mc.thePlayer != null) {
-         String str = "Information: IRC has an delay up to 10 seconds";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("Information: IRC has an delay up to 10 seconds");
       }
    }
 

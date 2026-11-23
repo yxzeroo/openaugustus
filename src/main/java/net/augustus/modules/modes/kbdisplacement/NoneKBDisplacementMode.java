@@ -2,13 +2,13 @@ package net.augustus.modules.modes.kbdisplacement;
 
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.KBDisplacement;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
 public class NoneKBDisplacementMode extends KBDisplacementMode {
 
-   public NoneKBDisplacementMode(KBDisplacement kbDisplacement, DoubleValue doubleValue) {
+   public NoneKBDisplacementMode(KBDisplacement kbDisplacement, SettingGroup doubleValue) {
       super(kbDisplacement, doubleValue, "None");
    }
 
@@ -18,7 +18,7 @@ public class NoneKBDisplacementMode extends KBDisplacementMode {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new NoneKBDisplacementMode((KBDisplacement)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new NoneKBDisplacementMode((KBDisplacement)obj, (SettingGroup)obj2);
    }
 
 }

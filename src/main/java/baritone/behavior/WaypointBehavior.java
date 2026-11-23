@@ -36,9 +36,7 @@ public class WaypointBehavior extends Behavior {
                   betterBlockPos = betterBlockPos.offset2((EnumFacing)state.getValue(BlockBed.FACING));
                }
 
-               Set byTag = this.baritone.getWorldProvider2().getCurrentWorld2().getWaypoints().getByTag(WaypointTag.BED);
-               boolean isPresent = byTag.stream().map(obj -> ((IWaypoint)obj).getLocation()).filter(betterBlockPos::equals).findFirst().isPresent();
-               if (!isPresent) {
+               if (!this.baritone.getWorldProvider2().getCurrentWorld2().getWaypoints().getByTag(WaypointTag.BED).stream().map(obj -> ((IWaypoint)obj).getLocation()).filter(betterBlockPos::equals).findFirst().isPresent()) {
                   this.baritone.getWorldProvider2().getCurrentWorld2().getWaypoints().addWaypoint(new Waypoint("bed", WaypointTag.BED, betterBlockPos));
                }
             }

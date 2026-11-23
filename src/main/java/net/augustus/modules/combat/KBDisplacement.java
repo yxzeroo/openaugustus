@@ -33,8 +33,8 @@ import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
@@ -49,11 +49,11 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
    private final RandomizedRangeSettings pitchOffset;
    private final BooleanValue forceAttack;
    private final BooleanValue onlyAtKillAuraTarget;
-   private final StringValue maxHurtTime;
-   public final DoubleValue hud;
+   private final DoubleValue maxHurtTime;
+   public final SettingGroup hud;
    public final BooleanValue showCompass;
-   public final StringValue posX;
-   public final StringValue posY;
+   public final DoubleValue posX;
+   public final DoubleValue posY;
    public final ColorSetting hudSelectedColor;
    public final BooleanValue debug;
    public DisplacementTargetBinding displacementTargetBinding;
@@ -70,40 +70,34 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
       this.mode = new ModeSetting(this, "Mode", "Constant", biFunctions);
       this.directionForceKeys = new DynamicSettingList(this, "DirectionForceKeys", n -> {
          KBDisplacementHotkeyGroup group = new KBDisplacementHotkeyGroup(this, "Hotkey_" + n, true);
-         KeybindSetting keybindSetting = new KeybindSetting(this, "Key_" + n, group);
-         group.setKeybind(keybindSetting);
-         RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(this, "Degree_" + n, 80.0, 100.0, -180.0, 180.0, 2, group);
-         group.setDegreeRange(randomizedRangeSettings);
+         group.setKeybind(new KeybindSetting(this, "Key_" + n, group));
+         group.setDegreeRange(new RandomizedRangeSettings(this, "Degree_" + n, 80.0, 100.0, -180.0, 180.0, 2, group));
          return group;
       }, 0, 6);
       this.pitchOffset = new RandomizedRangeSettings(this, "PitchOffset", -5.0, 5.0, -90.0, 90.0, 2);
       this.forceAttack = new BooleanValue(this, "ForceAttack", true);
       this.onlyAtKillAuraTarget = new BooleanValue(this, "OnlyAtKillAuraTarget", false);
-      this.maxHurtTime = new StringValue(this, "MaxHurtTime", 0.0, 0.0, 4.0, 0);
-      this.hud = new DoubleValue(this, "HUD", true);
+      this.maxHurtTime = new DoubleValue(this, "MaxHurtTime", 0.0, 0.0, 4.0, 0);
+      this.hud = new SettingGroup(this, "HUD", true);
       this.showCompass = new BooleanValue(this, "ShowCompass", true, this.hud);
-      StringValue stringValue = new StringValue(this, "PosX", 50.0, 0.0, 100.0, 2, this.hud);
+      DoubleValue stringValue = new DoubleValue(this, "PosX", 50.0, 0.0, 100.0, 2, this.hud);
       BooleanValue showCompass2 = this.showCompass;
       this.showCompass.getClass();
       BooleanValue booleanValue = showCompass2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.posX = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "PosY", 50.0, 0.0, 100.0, 2, this.hud);
+      this.posX = stringValue.visibleWhen(() -> booleanValue.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "PosY", 50.0, 0.0, 100.0, 2, this.hud);
       showCompass2 = this.showCompass;
       this.showCompass.getClass();
       BooleanValue booleanValue2 = showCompass2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.posY = stringValue2.visibleWhen(condition2);
+      this.posY = stringValue2.visibleWhen(() -> booleanValue2.getValue());
       Color color2 = new Color(125, 211, 252, 220);
-      DoubleValue hud2 = this.hud;
-      Color color3 = color2;
+      SettingGroup hud2 = this.hud;
       String str = "HudSelectedColor";
-      ColorSetting colorSetting = new ColorSetting(this, str, color3, hud2);
+      ColorSetting colorSetting = new ColorSetting(this, str, color2, hud2);
       showCompass2 = this.showCompass;
       this.showCompass.getClass();
       BooleanValue booleanValue3 = showCompass2;
-      SettingVisibilityCondition condition3 = () -> booleanValue3.getValue();
-      this.hudSelectedColor = (ColorSetting)colorSetting.withVisibility(condition3);
+      this.hudSelectedColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue3.getValue());
       this.debug = new BooleanValue(this, "Debug", false);
       this.displacementTargetBinding = null;
       this.displacing = false;
@@ -127,12 +121,8 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
    public void updateEventSubscriptions() {
       this.onAttackEntity();
       this.onAttackEntity();
-      int n = 100000;
-      byte b = 40;
-      this.toggleEventSubscription(b, n);
-      int n2 = 100010;
-      byte b2 = 7;
-      this.toggleEventSubscription(b2, n2);
+      this.toggleEventSubscription((byte)40, 100000);
+      this.toggleEventSubscription((byte)7, 100010);
       this.onAttackEntity();
    }
 
@@ -163,31 +153,21 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
          EntityPlayerSP thePlayer = mc.thePlayer;
          float f2 = f;
          double[] doubles = PlayerUtil.predictPlayerPosition(0, thePlayer, f2);
-         Vec3 vec = new Vec3(doubles[0], doubles[1], doubles[2]);
-         Vec3 vec2 = vec.addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
-         Vec3 nearestPointOnEntityAt = RotationUtil.getNearestPointOnEntityAt(vec2, entity, predictedPosition);
-         double d = nearestPointOnEntityAt.distanceTo(vec2);
-         double effectiveAttackRange = this.getEffectiveAttackRange();
-         if (d <= effectiveAttackRange) {
+         Vec3 vec2 = new Vec3(doubles[0], doubles[1], doubles[2]).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
+         if (RotationUtil.getNearestPointOnEntityAt(vec2, entity, predictedPosition).distanceTo(vec2) <= this.getEffectiveAttackRange()) {
             this.savedRotation = ClientManagers.rotationController.getCurrentRotation();
-            RotationController rotationController = ClientManagers.rotationController;
-            Rotation rotation = RotationUtil.applyGcdFix(f, (float)((double)ClientManagers.rotationController.getCurrentRotation().pitch + this.pitchOffset.nextValue()), ClientManagers.rotationController.getPreviousRotation());
-            byte b = -100;
-            Rotation rotation2 = rotation;
-            rotationController.requestRotation(rotation2, b, this);
+            ClientManagers.rotationController.requestRotation(RotationUtil.applyGcdFix(f, (float)((double)ClientManagers.rotationController.getCurrentRotation().pitch + this.pitchOffset.nextValue()), ClientManagers.rotationController.getPreviousRotation()), (byte)-100, this);
             this.displacing = true;
             this.displacementTargetBinding = null;
             if (this.debug.getValue()) {
                StringBuilder sb = new StringBuilder().append("Displaced knockback by: ");
                float f3 = f;
-               String str = sb.append(KnockbackTrajectoryUtil.calculateKnockbackAngleDelta(predictedPosition, f3)).toString();
-               this.sendChatMessage2(str);
+               this.sendChatMessage2(sb.append(KnockbackTrajectoryUtil.calculateKnockbackAngleDelta(predictedPosition, f3)).toString());
             }
          }
       } else {
-         byte b2 = -100;
          Rotation savedRotation2 = this.savedRotation;
-         ClientManagers.rotationController.requestRotation(savedRotation2, b2, this);
+         ClientManagers.rotationController.requestRotation(savedRotation2, (byte)-100, this);
          this.displacing = false;
       }
    }
@@ -201,8 +181,7 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
 
       if (this.pendingForceAttack) {
          if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit instanceof EntityLivingBase && n == 0 && this.forceAttack.getValue()) {
-            byte b = 1;
-            event.addLeftClicks(b);
+            event.addLeftClicks((byte)1);
          }
 
          this.pendingForceAttack = false;
@@ -269,8 +248,7 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
                );
                int n5;
                if (flag2) {
-                  byte b = 0;
-                  n5 = this.hudSelectedColor.getColorInt(b);
+                  n5 = this.hudSelectedColor.getColorInt((byte)0);
                } else {
                   n5 = this.hudBoxBorderColor;
                }
@@ -309,8 +287,7 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
       if (this.onlyAtKillAuraTarget.getValue()) {
          return CombatTargetUtil.getActiveTarget();
       } else {
-         long l = 250L;
-         if (!this.timeHelper.reached2(l)) {
+         if (!this.timeHelper.reached2(250L)) {
             return null;
          } else {
             Rotation currentRotation = ClientManagers.rotationController.getCurrentRotation();

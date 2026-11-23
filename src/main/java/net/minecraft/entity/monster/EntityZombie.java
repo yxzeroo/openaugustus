@@ -515,8 +515,7 @@ public class EntityZombie extends EntityMob {
    public void setEquipmentBasedOnDifficulty(DifficultyInstance difficultyInstance) {
       super.setEquipmentBasedOnDifficulty(difficultyInstance);
       if (this.rand.nextFloat() < (this.entityWorld.getDifficulty() == EnumDifficulty.HARD ? 0.05F : 0.01F)) {
-         int n = this.rand.nextInt(3);
-         if (n == 0) {
+         if (this.rand.nextInt(3) == 0) {
             this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
          } else {
             this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_shovel));

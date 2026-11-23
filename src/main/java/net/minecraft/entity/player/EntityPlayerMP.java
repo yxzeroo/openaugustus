@@ -331,8 +331,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
       }
 
       for (ScoreObjective scoreObjective : (Iterable<ScoreObjective>)(this.entityWorld.getScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.deathCount))) {
-         Score valueFromObjective = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreObjective);
-         valueFromObjective.incrementScore();
+         this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreObjective).incrementScore();
       }
 
       EntityLivingBase attackingEntity = this.getAttackingEntity();
@@ -417,8 +416,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
       if (this.isEntityInvulnerable(damageSource)) {
          return false;
       } else {
-         boolean flag = this.mcServer.isDedicatedServer() && this.canPlayersAttack() && "fall".equals(damageSource.damageType);
-         if (!flag && this.respawnInvulnerabilityTicks > 0 && damageSource != DamageSource.outOfWorld) {
+         if (!(this.mcServer.isDedicatedServer() && this.canPlayersAttack() && "fall".equals(damageSource.damageType)) && this.respawnInvulnerabilityTicks > 0 && damageSource != DamageSource.outOfWorld) {
             return false;
          } else {
             if (damageSource instanceof EntityDamageSource) {
@@ -486,8 +484,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
          }
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Ticking player");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Player being ticked");
-         this.addEntityCrashInfo(crashReportCategory);
+         this.addEntityCrashInfo(crashReport.makeCategory("Player being ticked"));
          throw new ReportedException(crashReport);
       }
    }
@@ -510,8 +507,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
 
    @Override
    public void displayGUIBook(ItemStack stack) {
-      Item item = stack.getItem();
-      if (item == Items.written_book) {
+      if (stack.getItem() == Items.written_book) {
          this.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload("MC|BOpen", new PacketBuffer(Unpooled.buffer())));
       }
    }
@@ -872,8 +868,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
    }
 
    public void updateBiomesExplored() {
-      BiomeGenBase biomeGenForCoords = this.entityWorld.getBiomeGenForCoords(new BlockPos(MathHelper.floor_double(this.posX), 0, MathHelper.floor_double(this.posZ)));
-      String biomeName = biomeGenForCoords.biomeName;
+      String biomeName = this.entityWorld.getBiomeGenForCoords(new BlockPos(MathHelper.floor_double(this.posX), 0, MathHelper.floor_double(this.posZ))).biomeName;
       JsonSerializableSet progress = (JsonSerializableSet)this.getStatFile().getProgress(AchievementList.exploreAllBiomes);
       if (progress == null) {
          progress = (JsonSerializableSet)this.getStatFile().setProgress(AchievementList.exploreAllBiomes, new JsonSerializableSet());
@@ -887,8 +882,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting {
             Iterator it = set.iterator();
 
             while (it.hasNext()) {
-               BiomeGenBase biomeGenBase = (BiomeGenBase)it.next();
-               if (biomeGenBase.biomeName.equals(str)) {
+               if (((BiomeGenBase)it.next()).biomeName.equals(str)) {
                   it.remove();
                }
             }

@@ -27,8 +27,7 @@ public class PlayerConfiguration {
    public void renderPlayerItems(ModelBiped modelBiped, AbstractClientPlayer clientPlayer, float f, float f2) {
       if (this.initialized) {
          for (int i = 0; i < this.playerItemModels.length; i++) {
-            PlayerItemModel playerItemModel = this.playerItemModels[i];
-            playerItemModel.render(modelBiped, clientPlayer, f, f2);
+            this.playerItemModels[i].render(modelBiped, clientPlayer, f, f2);
          }
       }
    }

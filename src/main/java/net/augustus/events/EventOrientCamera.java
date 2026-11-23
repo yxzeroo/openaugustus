@@ -50,9 +50,7 @@ public class EventOrientCamera extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      OrientCameraListener listener = (OrientCameraListener)obj;
-      OrientCameraListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((OrientCameraListener)obj);
    }
 
    public boolean isOverrideRotation() {

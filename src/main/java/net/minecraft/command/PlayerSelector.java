@@ -71,14 +71,11 @@ public class PlayerSelector {
       Predicate predicate = Predicates.and(list);
       Predicate predicate2 = Predicates.and(EntitySelectors.selectAnything, predicate);
       if (pos != null) {
-         int size = world.playerEntities.size();
-         int size2 = world.loadedEntityList.size();
-         boolean flag3 = size < size2 / 16;
+         boolean flag3 = world.playerEntities.size() < world.loadedEntityList.size() / 16;
          if (map.containsKey("dx") || map.containsKey("dy") || map.containsKey("dz")) {
             AxisAlignedBB area = getArea(pos, n, n2, n3);
             if (flag && flag3 && !flag2) {
-               PlayerSelector.FilterPredicate11 obj = new PlayerSelector.FilterPredicate11(area);
-               list2.addAll(world.getPlayers(clazz, Predicates.and(predicate2, obj)));
+               list2.addAll(world.getPlayers(clazz, Predicates.and(predicate2, new PlayerSelector.FilterPredicate11(area))));
             } else {
                list2.addAll(world.getEntitiesWithinAABB(clazz, area, predicate2));
             }
@@ -502,8 +499,7 @@ public class PlayerSelector {
          if (!(entity instanceof EntityPlayerMP)) {
             return false;
          } else {
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)entity;
-            return entityPlayerMP.theItemInWorldManager.getGameType().getID() == this.gameModeId;
+            return ((EntityPlayerMP)entity).theItemInWorldManager.getGameType().getID() == this.gameModeId;
          }
       }
    }
@@ -520,10 +516,8 @@ public class PlayerSelector {
          if (!(entity instanceof EntityLivingBase)) {
             return false;
          } else {
-            EntityLivingBase entity2 = (EntityLivingBase)entity;
-            Team team = entity2.getTeam();
-            String str = team == null ? "" : team.getRegisteredName();
-            return str.equals(this.teamName) != this.invert;
+            Team team = ((EntityLivingBase)entity).getTeam();
+            return (team == null ? "" : team.getRegisteredName()).equals(this.teamName) != this.invert;
          }
       }
 
@@ -565,8 +559,7 @@ public class PlayerSelector {
                return false;
             }
 
-            Score valueFromObjective = scoreboard.getValueFromObjective(str, objective);
-            int scorePoints = valueFromObjective.getScorePoints();
+            int scorePoints = scoreboard.getValueFromObjective(str, objective).getScorePoints();
             if (scorePoints < (Integer)entry.getValue() && flag) {
                return false;
             }

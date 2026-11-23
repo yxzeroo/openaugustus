@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.augustus.modules.FeatureBase;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import org.lwjgl.opengl.Display;
 
 public class ModuleSettingsPanel {
@@ -62,15 +62,13 @@ public class ModuleSettingsPanel {
          int n = (int)(this.headerFont.getFontHeight() + 7.0F + this.settingFont.getFontHeight() + 9.0F);
 
          for (Setting setting2 : (Iterable<Setting>)(this.currentModule.getSettings())) {
-            boolean isVisible = setting2.isVisible();
-            setting2.setCachedVisible(isVisible);
+            setting2.setCachedVisible(setting2.isVisible());
             if (setting2.isVisible() && setting2.isCachedVisible()) {
                if (!setting2.isVisualOnly() && this.currentModule.isLoadFromConfig() && !Augustus.getInstance().isConfigEditingEnabled()) {
                   Augustus.getInstance().getClass();
                } else {
                   int n2 = n + this.currentModule.getScrollOffsetY();
-                  boolean flag = n2 + setting2.getHeight() > -20 && n2 < this.panelHeight + 20;
-                  if (flag) {
+                  if (n2 + setting2.getHeight() > -20 && n2 < this.panelHeight + 20) {
                      if (setting2.mouseClicked(mouseX, mouseY, mouseButton)) {
                         break;
                      }
@@ -95,25 +93,15 @@ public class ModuleSettingsPanel {
       this.cornerRadius = n7;
       CustomFontUtil headerFont2 = this.headerFont;
       String str = module.getName2() + ":";
-      byte b = 0;
-      int colorInt = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b);
+      int colorInt = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
       double d = 6.0;
-      double d2 = 0.0;
-      String str2 = str;
-      headerFont2.drawString(str2, d2, d, colorInt);
+      headerFont2.drawString(str, 0.0, d, colorInt);
       headerFont2 = this.settingFont;
       double d3 = (double)(n3 - 60);
-      byte b2 = 0;
-      int hoveredColor = RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.textColor.getColorInt(b2), 0.2, n, n2, n3 - 60, 4, 40, 17);
+      int hoveredColor = RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0), 0.2, n, n2, n3 - 60, 4, 40, 17);
       double d4 = 4.0;
-      double d5 = d3;
-      String str3 = "Reset";
-      headerFont2.drawString(str3, d5, d4, hoveredColor);
-      int n8 = (int)(this.headerFont.getFontHeight() + 10.0F);
-      CustomFontUtil settingFont2 = this.settingFont;
-      int n9 = n8;
-      byte b3 = 0;
-      int n10 = module.renderSettingsHeader(b3, n9, n, n2, settingFont2, flag);
+      headerFont2.drawString("Reset", d3, d4, hoveredColor);
+      int n10 = module.renderSettingsHeader((byte)0, (int)(this.headerFont.getFontHeight() + 10.0F), n, n2, this.settingFont, flag);
       int n11 = (int)(this.headerFont.getFontHeight() + 7.0F + this.settingFont.getFontHeight() + 9.0F);
       RenderUtil.scissorRectScaled(
          (float)(this.screenX - 3), (float)(this.screenY + n11 - 5), (float)(this.screenX + n3), (float)(this.screenY + this.panelHeight), 1.0
@@ -121,17 +109,11 @@ public class ModuleSettingsPanel {
       int n12 = (int)(this.headerFont.getFontHeight() + 7.0F + this.settingFont.getFontHeight() + 9.0F);
 
       for (Setting setting : (Iterable<Setting>)(module.getSettings())) {
-         boolean isVisible = setting.isVisible();
-         setting.setCachedVisible(isVisible);
+         setting.setCachedVisible(setting.isVisible());
          if (setting.isVisible() && setting.isCachedVisible() && (setting.isVisualOnly() || !module.isLoadFromConfig() || Augustus.getInstance().isConfigEditingEnabled())) {
             int n13 = n12 + module.getScrollOffsetY();
             boolean flag2 = n13 + setting.getHeight() > -20 && n13 < n4 + 20;
-            int scrollOffsetX = module.getScrollOffsetX();
-            int n14 = n12 + module.getScrollOffsetY();
-            CustomFontUtil settingFont3 = this.settingFont;
-            int n15 = n14;
-            int n16 = scrollOffsetX;
-            setting.render(n, n2, n16, n15, n3, n4, settingFont3, flag2);
+            setting.render(n, n2, module.getScrollOffsetX(), n12 + module.getScrollOffsetY(), n3, n4, this.settingFont, flag2);
             n12 += setting.getHeight();
             if (n10 < setting.getContentWidth()) {
                n10 = setting.getContentWidth();
@@ -146,63 +128,32 @@ public class ModuleSettingsPanel {
       }
 
       this.anySettingFocused = false;
-      ArrayList settings = module.getSettings();
-      this.checkFocusedSettings(settings);
+      this.checkFocusedSettings(module.getSettings());
       RenderUtil.scissorRectScaled((float)this.screenX, (float)(this.screenY + n11 - 5), (float)(this.screenX + n3), (float)(this.screenY + this.panelHeight), 1.0);
-      byte b4 = 0;
-      int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt(b4);
-      SmoothScrollBar verticalScrollBar2 = this.verticalScrollBar;
-      int n17 = n3 - 10;
-      int n18 = n11 - module.getScrollOffsetY();
-      int n19 = n17;
-      this.verticalScrollVisible = verticalScrollBar2.drawVerticalBar(n19, n11, n3, n4, n18, n12, colorInt2);
+      int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt((byte)0);
+      this.verticalScrollVisible = this.verticalScrollBar.drawVerticalBar(n3 - 10, n11, n3, n4, n11 - module.getScrollOffsetY(), n12, colorInt2);
       SmoothScrollBar horizontalScrollBar2 = this.horizontalScrollBar;
       int n20 = n4 - 10;
       int n21 = -module.getScrollOffsetX();
-      int n22 = n21;
-      int n23 = n20;
-      byte b5 = 0;
-      this.horizontalScrollVisible = horizontalScrollBar2.drawHorizontalBar(b5, n23, n3, n4, n22, n10, colorInt2);
+      this.horizontalScrollVisible = horizontalScrollBar2.drawHorizontalBar((byte)0, n20, n3, n4, n21, n10, colorInt2);
       if (this.horizontalScrollVisible) {
          SmoothScrollBar verticalScrollBar3 = this.verticalScrollBar;
          n21 = module.getScrollOffsetY();
-         int n24 = n4 - 50;
-         byte b6 = 0;
-         byte b7 = 0;
-         int n25 = n21;
-         int n26 = verticalScrollBar3.updateScrollOffset(n12, n11, n4, n25, b7, b6, n3, n24, n, n2);
-         module.setScrollOffsetY(n26);
+         module.setScrollOffsetY(verticalScrollBar3.updateScrollOffset(n12, n11, n4, n21, (byte)0, (byte)0, n3, n4 - 50, n, n2));
       } else {
          SmoothScrollBar verticalScrollBar4 = this.verticalScrollBar;
          n21 = module.getScrollOffsetY();
-         byte b8 = 0;
-         byte b9 = 0;
-         int n27 = n21;
-         int n28 = verticalScrollBar4.updateScrollOffset(n12, n11, n4, n27, b9, b8, n3, n4, n, n2);
-         module.setScrollOffsetY(n28);
+         module.setScrollOffsetY(verticalScrollBar4.updateScrollOffset(n12, n11, n4, n21, (byte)0, (byte)0, n3, n4, n, n2));
       }
 
       if (this.verticalScrollVisible) {
          SmoothScrollBar horizontalScrollBar3 = this.horizontalScrollBar;
          n21 = module.getScrollOffsetX();
-         int n29 = n4 - 50;
-         int n30 = n29;
-         byte b10 = 0;
-         int n31 = n21;
-         byte b11 = 0;
-         int n32 = horizontalScrollBar3.updateScrollOffset(n10, b11, n3, n31, b10, n30, n3, n4, n, n2);
-         int n33 = n32;
-         module.setScrollOffsetX(n33);
+         module.setScrollOffsetX(horizontalScrollBar3.updateScrollOffset(n10, (byte)0, n3, n21, (byte)0, n4 - 50, n3, n4, n, n2));
       } else {
          SmoothScrollBar horizontalScrollBar4 = this.horizontalScrollBar;
          n21 = module.getScrollOffsetX();
-         byte b12 = 0;
-         byte b13 = 0;
-         int n34 = n21;
-         byte b14 = 0;
-         int n35 = horizontalScrollBar4.updateScrollOffset(n10, b14, n3, n34, b13, b12, n3, n4, n, n2);
-         int n36 = n35;
-         module.setScrollOffsetX(n36);
+         module.setScrollOffsetX(horizontalScrollBar4.updateScrollOffset(n10, (byte)0, n3, n21, (byte)0, (byte)0, n3, n4, n, n2));
       }
    }
 
@@ -228,15 +179,13 @@ public class ModuleSettingsPanel {
             switch (keyCode) {
                case 45:
                case 46:
-                  boolean flag = ClipboardConfigCodec.exportModule(this.currentModule);
-                  if (!flag) {
+                  if (!ClipboardConfigCodec.exportModule(this.currentModule)) {
                      ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
                      ChatUtil.sendChat3("Failed to export " + ((FeatureBase)this.currentModule).getName() + " to clipboard");
                   }
                   break;
                case 47:
-                  boolean flag2 = ClipboardConfigCodec.importModule(this.currentModule);
-                  if (!flag2) {
+                  if (!ClipboardConfigCodec.importModule(this.currentModule)) {
                      ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
                      ChatUtil.sendChat3("Failed to import " + ((FeatureBase)this.currentModule).getName() + " to clipboard");
                   }
@@ -282,13 +231,11 @@ public class ModuleSettingsPanel {
                return;
             }
 
-            if (setting instanceof DoubleValue || setting instanceof DynamicSettingList) {
-               if (setting instanceof DoubleValue) {
-                  ArrayList children = ((DoubleValue)setting).getChildren();
-                  this.checkFocusedSettings(children);
+            if (setting instanceof SettingGroup || setting instanceof DynamicSettingList) {
+               if (setting instanceof SettingGroup) {
+                  this.checkFocusedSettings(((SettingGroup)setting).getChildren());
                } else {
-                  List entries = ((DynamicSettingList)setting).getEntries();
-                  this.checkFocusedSettings(entries);
+                  this.checkFocusedSettings(((DynamicSettingList)setting).getEntries());
                }
             }
          }

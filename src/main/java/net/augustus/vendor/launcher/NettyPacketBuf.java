@@ -1,6 +1,5 @@
 package net.augustus.vendor.launcher;
 
-import net.augustus.vendor.launcher.net.PacketCipherEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.ByteProcessor;
@@ -54,7 +53,6 @@ public class NettyPacketBuf extends ByteBuf {
       int n = 0;
       boolean flag = false;
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       n = this.readInt();
       obj = new byte[n][];
 
@@ -82,7 +80,6 @@ public class NettyPacketBuf extends ByteBuf {
    public int readVarInt() {
       int n = 0;
       int n2 = 0;
-      PacketCipherEncoder.getControlFlowMarker();
       byte b = 0;
       n = 0;
       n2 = 0;
@@ -112,7 +109,6 @@ public class NettyPacketBuf extends ByteBuf {
       Object obj = null;
       Object obj2 = null;
       boolean flag = false;
-      PacketCipherEncoder.getControlFlowMarker();
       int n = 0;
       Object obj3 = null;
       n = this.readInt();
@@ -154,7 +150,6 @@ public class NettyPacketBuf extends ByteBuf {
 
    public static int getVarIntSize(int n) {
       boolean flag = false;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
 
       for (int i = 1; i < 5; i++) {
          if ((n & -1 << i * 7) == 0) {
@@ -173,7 +168,6 @@ public class NettyPacketBuf extends ByteBuf {
    public String readNullTerminatedString() {
       byte b = 0;
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       obj = new StringBuilder();
 
       while ((b = this.buf.readByte()) != 0) {
@@ -189,7 +183,6 @@ public class NettyPacketBuf extends ByteBuf {
    }
 
    public void writeNullTerminatedString(String str) {
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       this.buf.writeBytes(str.getBytes(StandardCharsets.US_ASCII));
       this.buf.writeByte(0);
    }
@@ -316,7 +309,6 @@ public class NettyPacketBuf extends ByteBuf {
 
    public void writeStringByteArrayMap(Map<String, byte[]> map) {
       Object obj = null;
-      PacketCipherEncoder.getControlFlowMarker();
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
@@ -334,7 +326,6 @@ public class NettyPacketBuf extends ByteBuf {
 
    public List<byte[]> readByteArrayList() {
       boolean flag = false;
-      PacketCipherEncoder.getControlFlowMarker();
       int n = 0;
       Object obj = null;
       n = this.readInt();
@@ -373,7 +364,6 @@ public class NettyPacketBuf extends ByteBuf {
    }
 
    public void writeUuid(UUID uuid) {
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       this.buf.writeLong(uuid.getMostSignificantBits());
       this.buf.writeLong(uuid.getLeastSignificantBits());
    }
@@ -400,7 +390,6 @@ public class NettyPacketBuf extends ByteBuf {
 
    public void writeByteArrayList(List<byte[]> list) {
       Object obj = null;
-      PacketCipherEncoder.getControlFlowMarker();
       Object obj2 = null;
       this.writeInt(list.size());
       obj = list.iterator();
@@ -505,7 +494,6 @@ public class NettyPacketBuf extends ByteBuf {
       Object obj = null;
       Object obj2 = null;
       int n = 0;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       this.writeInt(bytesArr.length);
       obj2 = bytesArr;
       n = ((byte[][])obj2).length;
@@ -626,7 +614,6 @@ public class NettyPacketBuf extends ByteBuf {
    }
 
    public void writeVarInt(int n) {
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
 
       while ((n & -128) != 0) {
          this.writeByte(n & 127 | 128);
@@ -718,7 +705,6 @@ public class NettyPacketBuf extends ByteBuf {
 
    public void writeUtf8String(String str) {
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       obj = str.getBytes(StandardCharsets.UTF_8);
       if (((byte[])obj).length <= 32767) {
          this.buf.writeInt(((byte[])obj).length);
@@ -754,7 +740,6 @@ public class NettyPacketBuf extends ByteBuf {
    public byte[] readByteArray() {
       int n = 0;
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       n = this.readInt();
       obj = new byte[n];
       this.buf.readBytes((byte[])obj);
@@ -792,7 +777,6 @@ public class NettyPacketBuf extends ByteBuf {
    }
 
    public void writeByteArray(byte[] bytes) {
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       this.writeInt(bytes.length);
       this.buf.writeBytes(bytes);
    }
@@ -845,7 +829,6 @@ public class NettyPacketBuf extends ByteBuf {
    public String readUtf8String() {
       int n = 0;
       Object obj = null;
-      int[] controlFlowMarker = PacketCipherEncoder.getControlFlowMarker();
       n = this.buf.readInt();
       obj = this.toString(this.buf.readerIndex(), n, StandardCharsets.UTF_8);
       this.readerIndex(this.readerIndex() + n);

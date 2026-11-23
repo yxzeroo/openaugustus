@@ -10,8 +10,7 @@ public interface JsonListPropertyCodec extends JsonPropertyCodec {
 
    @Override
    default void write(String str, Object obj, JsonObject json) {
-      List list = (List)obj;
-      this.writeList(str, list, json);
+      this.writeList(str, (List)obj, json);
    }
 
    default void collectElement(List list, JsonElement elem) {
@@ -30,16 +29,14 @@ public interface JsonListPropertyCodec extends JsonPropertyCodec {
 
    @Override
    default Object read(String str, Object obj, JsonObject json) {
-      List list = (List)obj;
-      return this.readList(str, list, json);
+      return this.readList(str, (List)obj, json);
    }
 
    default List readList(String str, List list, JsonObject json) {
       JsonElement elem = json.get(str);
       if (elem != null && elem.isJsonArray()) {
          list.clear();
-         JsonArray asJsonArray = elem.getAsJsonArray();
-         List list2 = asJsonArray.asList();
+         List list2 = elem.getAsJsonArray().asList();
          list2.forEach(obj -> this.collectElement(list, (JsonElement)obj));
          return list;
       } else {

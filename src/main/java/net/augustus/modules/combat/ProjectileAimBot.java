@@ -32,8 +32,8 @@ import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -46,14 +46,14 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class ProjectileAimBot extends Module implements TickListener, ClickListener, SilentSlotListener, MoveInputListener {
-   private final DoubleValue rotations;
-   private final StringValue maxTargetLookFovDiff;
+   private final SettingGroup rotations;
+   private final DoubleValue maxTargetLookFovDiff;
    private final BooleanValue combat;
    private final BooleanValue predict;
    private final BooleanValue silentSlotSwitching;
    private final BooleanValue onlyAtKillAura;
    private final BooleanValue onlyKillAuraTarget;
-   private final StringValue aimRange;
+   private final DoubleValue aimRange;
    private final BooleanValue assistAtRightClick;
    private final TargetSelectionSettings targetSelection;
    private final LookDownDisableSettings lookDownDisable;
@@ -66,23 +66,17 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
 
    public ProjectileAimBot() {
        super("ProjectileAimBot", "ProjektilZielhilfe", new Color(250, 233, 85), Categorys.COMBAT);
-      this.rotations = new DoubleValue(this, "Rotations", true);
-      this.maxTargetLookFovDiff = new StringValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
+      this.rotations = new SettingGroup(this, "Rotations", true);
+      this.maxTargetLookFovDiff = new DoubleValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
       this.combat = new BooleanValue(this, "Combat", true);
       this.predict = new BooleanValue(this, "Predict", true);
       this.silentSlotSwitching = new BooleanValue(this, "SilentSlotSwitching", true);
       BooleanValue booleanValue = new BooleanValue(this, "OnlyAtKillAura", true);
       BooleanValue combat2 = this.combat;
       this.combat.getClass();
-      BooleanValue booleanValue2 = combat2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.onlyAtKillAura = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue3 = new BooleanValue(this, "OnlyKillAuraTarget", true);
-      SettingVisibilityCondition condition2 = () -> this.isOnlyKillAuraTargetVisible();
-      this.onlyKillAuraTarget = (BooleanValue)booleanValue3.withVisibility(condition2);
-      StringValue stringValue = new StringValue(this, "AimRange", 10.0, 3.0, 15.0, 1);
-      SettingVisibilityCondition condition3 = () -> this.isAimRangeVisible();
-      this.aimRange = stringValue.visibleWhen(condition3);
+      this.onlyAtKillAura = (BooleanValue)booleanValue.withVisibility(() -> combat2.getValue());
+      this.onlyKillAuraTarget = (BooleanValue)new BooleanValue(this, "OnlyKillAuraTarget", true).withVisibility(() -> this.isOnlyKillAuraTargetVisible());
+      this.aimRange = new DoubleValue(this, "AimRange", 10.0, 3.0, 15.0, 1).visibleWhen(() -> this.isAimRangeVisible());
       this.assistAtRightClick = new BooleanValue(this, "AssistAtRightClick", false);
       this.targetSelection = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter())).withSorting();
       this.lookDownDisable = new LookDownDisableSettings(this);
@@ -100,20 +94,15 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
    @Override
    public void onDisable() {
       this.target = null;
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
-      byte b4 = 21;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -121,24 +110,20 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
       if (mc.isNotInGui()) {
          this.ticksSinceThrow++;
          if (this.isHoldingProjectileForAssist() && event.isRightMouseDown()) {
-            boolean flag = false;
-            event.setAllowRightClick(flag);
+            event.setAllowRightClick(false);
          }
 
          if (this.target != null && ClientManagers.rotationController.isOwnedBy(this)) {
             if (mc.thePlayer.ticksExisted - 1 == this.lastPredictionTick || this.predict.getValue()) {
-               EntityLivingBase target2 = this.target;
-               if (!this.willProjectileHitTarget(target2)) {
+               if (!this.willProjectileHitTarget(this.target)) {
                   return;
                }
             }
 
             if (this.ticksSinceThrow > 10) {
                this.ticksSinceThrow = 0;
-               byte b = 1;
-               event.addRightClicks(b);
-               boolean flag2 = true;
-               event.setAllowRightClick(flag2);
+               event.addRightClicks((byte)1);
+               event.setAllowRightClick(true);
             }
          }
       }
@@ -149,14 +134,8 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
       EntityPlayerSP thePlayer = mc.thePlayer;
       ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
       float lastReportedPitch = mc.thePlayer.lastReportedPitch;
-      float lastReportedYaw = mc.thePlayer.lastReportedYaw;
-      ItemStack stack = currentEquippedItem;
-      EntityPlayerSP player = thePlayer;
-      projectileSimulator.initFromShooterAngles(player, stack, lastReportedYaw, lastReportedPitch);
-      AxisAlignedBB predictedTargetBox2 = this.predictedTargetBox;
-      short s = 200;
-      int n = projectileSimulator.simulateThrowableHitTick(s, entity, predictedTargetBox2);
-      return n != Integer.MAX_VALUE;
+      projectileSimulator.initFromShooterAngles(thePlayer, currentEquippedItem, mc.thePlayer.lastReportedYaw, lastReportedPitch);
+      return projectileSimulator.simulateThrowableHitTick((short)200, entity, this.predictedTargetBox) != Integer.MAX_VALUE;
    }
 
    @Override
@@ -165,9 +144,7 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
          if (this.target != null && this.combat.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
             int n = this.findProjectileHotbarSlot();
             if (n >= 0) {
-               boolean value = this.silentSlotSwitching.getValue();
-               byte b = -1;
-               SilentSlotManager.requestSlot(this, b, n, value);
+               SilentSlotManager.requestSlot(this, (byte)-1, n, this.silentSlotSwitching.getValue());
             }
          }
       }
@@ -181,15 +158,13 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
       if (mc.isNotInGui() && this.findProjectileHotbarSlot() >= 0) {
          this.target = this.findTarget();
          if (this.target != null) {
-            double d = (double)RotationUtil.getEntityLookAngleToPlayer(this.target);
-            if (d > this.maxTargetLookFovDiff.getValue()) {
+            if (((double)RotationUtil.getEntityLookAngleToPlayer(this.target)) > this.maxTargetLookFovDiff.getValue()) {
                this.target = null;
             }
          }
 
          if (this.target != null) {
-            EntityLivingBase target3 = this.target;
-            if (!EntityMovementPredictor.hasInvalidPositionHistory(target3)) {
+            if (!EntityMovementPredictor.hasInvalidPositionHistory(this.target)) {
                if (!mc.gameSettings.keyBindUseItem.isKeyDown() && !this.combat.getValue()) {
                   this.target = null;
                   return;
@@ -202,9 +177,7 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
                   }
                }
 
-               byte b = 3;
-               EntityLivingBase target4 = this.target;
-               Rotation rotation = this.calculateProjectileRotation(target4, b);
+               Rotation rotation = this.calculateProjectileRotation(this.target, (byte)3);
                if (rotation.yaw == 0.0F && rotation.pitch == 0.0F) {
                   this.target = null;
                   return;
@@ -216,11 +189,8 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
                   }
                }
 
-               RotationEngine rotationEngine2 = this.rotationEngine;
-               Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               Rotation rotation2 = rotationEngine2.rotateTowards(rotation, previousRotation);
-               byte b2 = 0;
-               ClientManagers.rotationController.requestRotation(rotation2, b2, this);
+               Rotation rotation2 = this.rotationEngine.rotateTowards(rotation, ClientManagers.rotationController.getPreviousRotation());
+               ClientManagers.rotationController.requestRotation(rotation2, (byte)0, this);
                return;
             }
          }
@@ -238,8 +208,7 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
 
    private int findProjectileHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
       Predicate predicate = obj -> {
          return obj instanceof ItemSnowball || obj instanceof ItemEgg;
       };
@@ -260,13 +229,11 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
          float f2 = 0.0F;
          ArrayList list = new ArrayList();
          int n2 = mc.thePlayer.ticksExisted + 1;
-         byte b = 0;
          int ticksExisted = mc.thePlayer.ticksExisted;
          int ticksExisted2 = mc.thePlayer.ticksExisted;
-         ArrayList list2 = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, b, n2);
+         ArrayList list2 = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, (byte)0, n2);
          int n3;
-         byte b2 = 0;
-         Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, b2);
+         Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, (byte)0);
 
          for (int i = 0; i < n; i++) {
             ArrayList list3;
@@ -274,14 +241,12 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
                list3 = list;
             } else {
                n3 = mc.thePlayer.ticksExisted + this.predictedFlightTicks;
-               boolean flag = true;
                int n4 = n3;
                int ticksExisted3 = mc.thePlayer.ticksExisted;
-               list3 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted3, n4, flag);
+               list3 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted3, n4, true);
             }
 
-            int predictedFlightTicks2 = this.predictedFlightTicks;
-            Vec3 clampedPosition2 = TrajectoryPredictionUtil.getClampedPosition(list3, predictedFlightTicks2);
+            Vec3 clampedPosition2 = TrajectoryPredictionUtil.getClampedPosition(list3, this.predictedFlightTicks);
             double xCoord = clampedPosition2.xCoord;
             double yCoord = clampedPosition2.yCoord;
             double zCoord = clampedPosition2.zCoord;
@@ -313,11 +278,8 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
                   double zCoord2 = clampedPosition.zCoord;
                   double yCoord2 = clampedPosition.yCoord;
                   double xCoord2 = clampedPosition.xCoord;
-                  EntityPlayerSP thePlayer = mc.thePlayer;
-                  projectileSimulator.initWithAngles(thePlayer, stack, xCoord2, yCoord2, zCoord2, f5, f11);
-                  AxisAlignedBB box = new AxisAlignedBB(xCoord - d, yCoord + 0.2, zCoord - d, xCoord + d, yCoord + (double)entity.height, zCoord + d);
-                  byte b3 = 100;
-                  int n5 = projectileSimulator.simulateThrowableHitTick(b3, entity, box);
+                  projectileSimulator.initWithAngles(mc.thePlayer, stack, xCoord2, yCoord2, zCoord2, f5, f11);
+                  int n5 = projectileSimulator.simulateThrowableHitTick((byte)100, entity, new AxisAlignedBB(xCoord - d, yCoord + 0.2, zCoord - d, xCoord + d, yCoord + (double)entity.height, zCoord + d));
                   if (n5 != Integer.MAX_VALUE) {
                      this.predictedFlightTicks = n5;
                      flag2 = true;
@@ -347,15 +309,8 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
       } else {
          if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
             EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-            EntityTargetFilter targetFilter = this.targetSelection.getTargetFilter();
-            EntityTargetFilter entityTargetFilter = targetFilter;
-            entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter).filterFocus();
-            TargetSelectionSettings targetSelection2 = this.targetSelection;
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            double d = -1.0;
-            Rotation rotation = previousRotation;
-            ToDoubleFunction toDoubleFunction = targetSelection2.createTargetComparatorKey(rotation, d);
-            Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
+            entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelection.getTargetFilter()).filterFocus();
+            Optional optional = entityTargetSelector.sortBy(this.targetSelection.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), -1.0)).findBest();
             if (optional.isPresent()) {
                return (EntityLivingBase)optional.get();
             }
@@ -363,17 +318,9 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
 
          if (this.combat.getValue() && (ClientManagers.moduleManager.killAura.isToggled() && !this.onlyKillAuraTarget.getValue() || !this.onlyAtKillAura.getValue())) {
             EntityTargetSelector entityTargetSelector2 = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-            EntityTargetFilter targetFilter2 = this.targetSelection.getTargetFilter();
-            EntityTargetFilter entityTargetFilter2 = targetFilter2;
-            entityTargetSelector2 = entityTargetSelector2.withTargetFilter(entityTargetFilter2).filterFocus();
-            double value = this.aimRange.getValue();
-            entityTargetSelector2 = entityTargetSelector2.maxDistance(value);
-            TargetSelectionSettings targetSelection3 = this.targetSelection;
-            Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-            double d2 = -1.0;
-            Rotation rotation2 = previousRotation2;
-            ToDoubleFunction toDoubleFunction2 = targetSelection3.createTargetComparatorKey(rotation2, d2);
-            Optional optional2 = entityTargetSelector2.sortBy(toDoubleFunction2).findBest();
+            entityTargetSelector2 = entityTargetSelector2.withTargetFilter(this.targetSelection.getTargetFilter()).filterFocus();
+            entityTargetSelector2 = entityTargetSelector2.maxDistance(this.aimRange.getValue());
+            Optional optional2 = entityTargetSelector2.sortBy(this.targetSelection.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), -1.0)).findBest();
             EntityLivingBase entity = optional2.isPresent() && optional2.get() instanceof EntityLivingBase ? (EntityLivingBase)optional2.get() : null;
             if (entity != null && (double)mc.thePlayer.getDistanceToEntityBox(entity) < 3.2) {
                entity = null;
@@ -389,8 +336,7 @@ public class ProjectileAimBot extends Module implements TickListener, ClickListe
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (ClientManagers.rotationController.isOwnedBy(this)) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 

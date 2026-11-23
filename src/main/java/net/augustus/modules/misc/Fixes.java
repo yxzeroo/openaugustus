@@ -9,7 +9,7 @@ import net.augustus.events.listeners.DownloadTerrainListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -18,7 +18,7 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
    private final BooleanValue intave;
    private final BooleanValue intaveBlocking;
    private final BooleanValue mouseDelayFix;
-   public final BooleansSetting hitDelayFixMode;
+   public final StringValue hitDelayFixMode;
    public final IntervalNoiseSetting hitdelayfixNonliteChance;
    public final BooleanValue alwaysFixUrgentHits;
    public final BooleanValue memoryFix;
@@ -33,26 +33,15 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
       this.intave = new BooleanValue(this, "Intave", false);
       this.intaveBlocking = new BooleanValue(this, "IntaveBlocking", false);
       this.mouseDelayFix = new BooleanValue(this, "MouseDelayFix", true);
-      this.hitDelayFixMode = new BooleansSetting(
+      this.hitDelayFixMode = new StringValue(
          this, "HitDelayFixMode", "Default", new String[]{"None", "Default", "WithoutDoubleClick", "OnlyAtTarget", "OnlyAtTargetLite"}
       );
       IntervalNoiseSetting intervalNoiseSetting = new IntervalNoiseSetting(this, "hitdelayfix_nonlite_chance", null, true);
-      byte b = 1;
       double d = 100.0;
       double d2 = 100.0;
       double d3 = 100.0;
-      double d4 = 0.0;
-      IntervalNoiseSetting intervalNoiseSetting2 = intervalNoiseSetting.withInterval(d4, d3, d2, d, b);
-      String str = "Chance";
-      IntervalNoiseSetting intervalNoiseSetting3 = intervalNoiseSetting2.named(str);
-      SettingVisibilityCondition condition = () -> this.isHitDelayChanceVisible();
-      SettingVisibilityCondition condition2 = condition;
-      this.hitdelayfixNonliteChance = intervalNoiseSetting3.visibleWhen(condition2);
-      BooleanValue booleanValue = new BooleanValue(this, "AlwaysFixUrgentHits", true);
-      String str2 = "Always Fix Urgent Hits";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str2);
-      SettingVisibilityCondition condition3 = () -> this.isAlwaysFixUrgentHitsVisible();
-      this.alwaysFixUrgentHits = (BooleanValue)booleanValue2.withVisibility(condition3);
+      this.hitdelayfixNonliteChance = intervalNoiseSetting.withInterval(0.0, d3, d2, d, (byte)1).named("Chance").visibleWhen(() -> this.isHitDelayChanceVisible());
+      this.alwaysFixUrgentHits = (BooleanValue)((BooleanValue)new BooleanValue(this, "AlwaysFixUrgentHits", true).withDisplayName("Always Fix Urgent Hits")).withVisibility(() -> this.isAlwaysFixUrgentHitsVisible());
       this.memoryFix = new BooleanValue(this, "MemoryFix", false);
       this.placeWhileBreak = new BooleanValue(this, "PlaceWhileBreak", true);
       this.noTerrainDownload = new BooleanValue(this, "NoTerrainDownload", true);
@@ -64,8 +53,7 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
 
    @Override
    public void onClientInit() {
-      boolean flag = true;
-      this.setToggled(flag);
+      this.setToggled(true);
    }
 
    @Override
@@ -78,20 +66,15 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 8;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)8);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onDownloadTerrain() {
       if (this.memoryFix.getValue()) {
          long l = Runtime.getRuntime().maxMemory();
-         long l2 = Runtime.getRuntime().totalMemory();
-         long l3 = Runtime.getRuntime().freeMemory();
-         long l4 = l2 - l3;
-         if (l4 * 100L / l > 50L) {
+         if ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 100L / l > 50L) {
             System.gc();
          }
       }
@@ -99,8 +82,7 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
 
    @Override
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S08PacketPlayerPosLook) {
+      if (event.getPacket() instanceof S08PacketPlayerPosLook) {
          this.lastTeleportTimer.reset();
       }
    }
@@ -119,8 +101,7 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
 
    public boolean shouldApplyIntaveBlockingFix() {
       if (this.isToggled() && this.intaveBlocking.getValue()) {
-         long l = 500L;
-         if (!this.lastTeleportTimer.reached2(l)) {
+         if (!this.lastTeleportTimer.reached2(500L)) {
             return true;
          }
       }
@@ -142,10 +123,8 @@ public class Fixes extends Module implements DownloadTerrainListener, PacketList
       } else if (flag && this.alwaysFixUrgentHits.getValue()) {
          return true;
       } else {
-         boolean flag2 = true;
-         if (this.hitdelayfixNonliteChance.intervalRange.getMaxValue(flag2) == 100.0) {
-            boolean flag3 = true;
-            if (this.hitdelayfixNonliteChance.intervalRange.getMinValue(flag3) == 100.0) {
+         if (this.hitdelayfixNonliteChance.intervalRange.getMaxValue(true) == 100.0) {
+            if (this.hitdelayfixNonliteChance.intervalRange.getMinValue(true) == 100.0) {
                return true;
             }
          }

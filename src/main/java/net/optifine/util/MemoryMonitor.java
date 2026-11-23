@@ -27,9 +27,7 @@ public class MemoryMonitor {
       gcEvent = memoryUsed < lastMemory;
       if (gcEvent) {
          long l2 = lastTimeMs - startTimeMs;
-         long l3 = lastMemory - startMemory;
-         double d = (double)l2 / 1000.0;
-         int n = (int)((double)l3 / d);
+         int n = (int)((double)(lastMemory - startMemory) / ((double)l2 / 1000.0));
          if (n > 0) {
             memBytesSec = n;
          }

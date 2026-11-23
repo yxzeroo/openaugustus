@@ -14,7 +14,7 @@ import net.augustus.utils.render.ColorUtil;
 import net.augustus.Augustus;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -26,13 +26,13 @@ import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class FovArrows extends Module {
-   private final StringValue maxTargetDistance;
-   private final StringValue crossHairDistance;
+   private final DoubleValue maxTargetDistance;
+   private final DoubleValue crossHairDistance;
    private final BooleanValue displayOnlyArrowsForTargetsThatAreNotInMyViewfrustum;
    private final BooleanValue useMinRotationDistance;
-   private final StringValue minRotationDistance;
+   private final DoubleValue minRotationDistance;
    private final BooleanValue horizontalOnly;
-   private final StringValue scale;
+   private final DoubleValue scale;
    private final ColorSetting color2;
    private final BooleanValue distAlpha;
    private final BooleanValue distColor;
@@ -46,18 +46,17 @@ public class FovArrows extends Module {
 
    public FovArrows() {
        super("FovArrows", "SichtfeldPfeile", new Color(124, 83, 245), Categorys.RENDER);
-      this.maxTargetDistance = new StringValue(this, "MaxTargetDistance", 20.0, 1.0, 30.0, 0);
-      this.crossHairDistance = new StringValue(this, "CrossHairDistance", 30.0, 0.0, 50.0, 0);
+      this.maxTargetDistance = new DoubleValue(this, "MaxTargetDistance", 20.0, 1.0, 30.0, 0);
+      this.crossHairDistance = new DoubleValue(this, "CrossHairDistance", 30.0, 0.0, 50.0, 0);
       this.displayOnlyArrowsForTargetsThatAreNotInMyViewfrustum = new BooleanValue(this, "Display only arrows for targets that are not in my viewfrustum", true);
       this.useMinRotationDistance = new BooleanValue(this, "UseMinRotationDistance", true);
-      StringValue stringValue = new StringValue(this, "MinRotationDistance", 0.0, 0.0, 180.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "MinRotationDistance", 0.0, 0.0, 180.0, 0);
       BooleanValue useMinRotationDistance2 = this.useMinRotationDistance;
       this.useMinRotationDistance.getClass();
       BooleanValue booleanValue = useMinRotationDistance2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.minRotationDistance = stringValue.visibleWhen(condition);
+      this.minRotationDistance = stringValue.visibleWhen(() -> booleanValue.getValue());
       this.horizontalOnly = new BooleanValue(this, "Horizontal only", true);
-      this.scale = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2);
       this.color2 = new ColorSetting(this, "Color", Color.red);
       this.distAlpha = new BooleanValue(this, "DistAlpha", true);
       this.distColor = new BooleanValue(this, "DistColor", true);
@@ -67,14 +66,9 @@ public class FovArrows extends Module {
       useMinRotationDistance2 = this.outline;
       this.outline.getClass();
       BooleanValue booleanValue3 = useMinRotationDistance2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.differentOutlineColor = (BooleanValue)booleanValue2.withVisibility(condition2);
-      ColorSetting colorSetting = new ColorSetting(this, "OutlineColor", Color.black);
-      SettingVisibilityCondition condition3 = () -> this.isOutlineColorVisible();
-      this.outlineColor = (ColorSetting)colorSetting.withVisibility(condition3);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black).disableBlurByDefault();
+      this.differentOutlineColor = (BooleanValue)booleanValue2.withVisibility(() -> booleanValue3.getValue());
+      this.outlineColor = (ColorSetting)new ColorSetting(this, "OutlineColor", Color.black).withVisibility(() -> this.isOutlineColorVisible());
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black).disableBlurByDefault();
       this.targetPlayers = new java.util.ArrayList();
       this.frustum = new Frustum();
    }
@@ -134,12 +128,7 @@ public class FovArrows extends Module {
             float f5 = (float)((double)(sr.getScaledHeight() / 2) + this.crossHairDistance.getValue() * Math.sin(d));
             if (this.renderNames.getValue()) {
                GlStateManager.scale(0.5, 0.5, 1.0);
-               FontRenderer fontRendererObj = mc.fontRendererObj;
-               String name2 = player.getName();
-               float f6 = (f4 - (float)mc.fontRendererObj.getStringWidth(player.getName()) / 4.0F) * 2.0F;
-               float f7 = (f5 + 8.0F) * 2.0F;
-               byte b = -1;
-               fontRendererObj.drawStringUnfiltered(name2, f6, f7, this.blurShadowSettings.resolvePassColor(shaderRenderPass, b));
+               mc.fontRendererObj.drawStringUnfiltered(player.getName(), (f4 - (float)mc.fontRendererObj.getStringWidth(player.getName()) / 4.0F) * 2.0F, (f5 + 8.0F) * 2.0F, this.blurShadowSettings.resolvePassColor(shaderRenderPass, (byte)-1));
                GlStateManager.scale(2.0F, 2.0F, 1.0F);
             }
 
@@ -175,8 +164,7 @@ public class FovArrows extends Module {
 
                colorInt = this.blurShadowSettings.resolvePassColor(shaderRenderPass, colorInt);
                int n3 = this.differentOutlineColor.getValue() ? ColorUtil.withAlpha(colorInt, 255) : colorInt;
-               float f9 = 10.0F;
-               RenderUtil.drawOutlinedTriangle(f4, f5, f9, n3);
+               RenderUtil.drawOutlinedTriangle(f4, f5, 10.0F, n3);
                GL11.glLineWidth(1.0F);
             }
 
@@ -196,16 +184,7 @@ public class FovArrows extends Module {
 
          for (Entity entity : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
             if (entity instanceof EntityPlayer && !(entity instanceof EntityPlayerSP)) {
-               boolean flag = false;
-               boolean flag2 = false;
-               boolean flag3 = false;
-               boolean flag4 = true;
-               boolean flag5 = false;
-               boolean flag6 = false;
-               boolean flag7 = false;
-               boolean flag8 = false;
-               boolean flag9 = true;
-               if (CombatTargetUtil.isValidTarget(entity, flag9, flag8, flag7, flag6, flag5, flag4, flag3, flag2, flag)) {
+               if (CombatTargetUtil.isValidTarget(entity, true, false, false, false, false, true, false, false, false)) {
                   EntityPlayer player = (EntityPlayer)entity;
                   if (this.isValidArrowTarget(player)
                      && (!value || !this.frustum.isBoundingBoxInFrustum(player.getEntityBoundingBox()))

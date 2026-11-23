@@ -97,8 +97,7 @@ public class Decoder implements DecoderErrors {
 
       int hLayer = header.getHLayer();
       this.output.clear_buffer();
-      FrameDecoder frameDecoder = this.retrieveDecoder(header, bitstream, hLayer);
-      frameDecoder.decodeFrame();
+      this.retrieveDecoder(header, bitstream, hLayer).decodeFrame();
       this.output.write_buffer(1);
       return this.output;
    }

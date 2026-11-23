@@ -15,7 +15,6 @@ public class ExpFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.exp(this.getArg(b));
+      return Math.exp(this.getArg((byte)0));
    }
 }

@@ -41,26 +41,21 @@ public class CubeCraftFlyMode extends FlyMode {
    public void onMoveEntity(EventMoveEntity event) {
       if (mc.gameSettings.keyBindJump.isKeyDown()) {
          if ((double)this.moveTickCounter % this.fly.cubeCraftStopDuration.getValue() == 0.0) {
-            double d = event.getY() + 2.0;
-            event.setY(d);
+            event.setY(event.getY() + 2.0);
             this.baseY += 2.0;
          }
       } else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
          if ((double)this.moveTickCounter % this.fly.cubeCraftStopDuration.getValue() == 0.0) {
-            double d2 = event.getY() - 2.0;
-            event.setY(d2);
+            event.setY(event.getY() - 2.0);
             this.baseY -= 2.0;
          }
       } else if (!MoveUtil.isMoving()) {
-         double d3 = 0.0;
-         event.setY(d3);
+         event.setY(0.0);
       }
 
       if (!MoveUtil.isMoving()) {
-         double d4 = 0.0;
-         event.setX(d4);
-         double d5 = 0.0;
-         event.setZ(d5);
+         event.setX(0.0);
+         event.setZ(0.0);
       }
 
       this.moveTickCounter++;

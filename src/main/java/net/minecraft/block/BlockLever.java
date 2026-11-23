@@ -144,8 +144,7 @@ public class BlockLever extends Block {
             (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, "random.click", 0.3F, (Boolean)state.getValue(POWERED) ? 0.6F : 0.5F
          );
          world.notifyNeighborsOfStateChange(pos, this);
-         EnumFacing facing2 = ((BlockLever.EnumOrientation)state.getValue(FACING)).getFacing();
-         world.notifyNeighborsOfStateChange(pos.offset(facing2.getOpposite()), this);
+         world.notifyNeighborsOfStateChange(pos.offset(((BlockLever.EnumOrientation)state.getValue(FACING)).getFacing().getOpposite()), this);
       }
 
       return true;
@@ -160,8 +159,7 @@ public class BlockLever extends Block {
    public void breakBlock(World world, BlockPos pos, IBlockState state) {
       if ((Boolean)state.getValue(POWERED)) {
          world.notifyNeighborsOfStateChange(pos, this);
-         EnumFacing facing = ((BlockLever.EnumOrientation)state.getValue(FACING)).getFacing();
-         world.notifyNeighborsOfStateChange(pos.offset(facing.getOpposite()), this);
+         world.notifyNeighborsOfStateChange(pos.offset(((BlockLever.EnumOrientation)state.getValue(FACING)).getFacing().getOpposite()), this);
       }
 
       super.breakBlock(world, pos, state);

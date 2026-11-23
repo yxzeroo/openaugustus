@@ -151,9 +151,8 @@ public class StructureNetherBridgePieces {
 
          for (int i = 0; i <= 4; i++) {
             for (int j = 3; j <= 4; j++) {
-               int n = rand2.nextInt(8);
                this.fillWithBlocks(
-                  world, structureBoundingBox, i, j, 0, i, j, n, Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false
+                  world, structureBoundingBox, i, j, 0, i, j, rand2.nextInt(8), Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false
                );
             }
          }
@@ -164,15 +163,13 @@ public class StructureNetherBridgePieces {
          this.fillWithBlocks(world, structureBoundingBox, 4, 5, 0, 4, 5, n2, Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false);
 
          for (int k = 0; k <= 4; k++) {
-            int n3 = rand2.nextInt(5);
-            this.fillWithBlocks(world, structureBoundingBox, k, 2, 0, k, 2, n3, Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false);
+            this.fillWithBlocks(world, structureBoundingBox, k, 2, 0, k, 2, rand2.nextInt(5), Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false);
          }
 
          for (int m = 0; m <= 4; m++) {
             for (int idx = 0; idx <= 1; idx++) {
-               int n4 = rand2.nextInt(3);
                this.fillWithBlocks(
-                  world, structureBoundingBox, m, idx, 0, m, idx, n4, Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false
+                  world, structureBoundingBox, m, idx, 0, m, idx, rand2.nextInt(3), Blocks.nether_brick.getDefaultState(), Blocks.nether_brick.getDefaultState(), false
                );
             }
          }

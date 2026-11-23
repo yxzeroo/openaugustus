@@ -48,8 +48,7 @@ public class ItemModelGenerator {
 
          String str2 = modelBlock.resolveTextureName(str);
          map.put(str, str2);
-         TextureAtlasSprite atlasSprite = textureMap.getAtlasSprite(new ResourceLocation(str2).toString());
-         list.addAll(this.getBlockParts(i, str, atlasSprite));
+         list.addAll(this.getBlockParts(i, str, textureMap.getAtlasSprite(new ResourceLocation(str2).toString())));
       }
 
       if (list.isEmpty()) {
@@ -195,8 +194,7 @@ public class ItemModelGenerator {
    }
 
    private void checkTransition(ItemModelGenerator.SpanFacing spanFacing, List list, int[] ints, int n, int n2, int n3, int n4, boolean flag) {
-      boolean flag2 = this.isTransparent(ints, n + spanFacing.getXOffset(), n2 + spanFacing.getYOffset(), n3, n4) && flag;
-      if (flag2) {
+      if (this.isTransparent(ints, n + spanFacing.getXOffset(), n2 + spanFacing.getYOffset(), n3, n4) && flag) {
          this.createOrExpandSpan(list, spanFacing, n, n2);
       }
    }

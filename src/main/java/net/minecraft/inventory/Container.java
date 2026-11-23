@@ -107,8 +107,7 @@ public abstract class Container {
 
          while (!flag && n3 < n2 || flag && n3 >= n) {
             Slot slot2 = (Slot)this.inventorySlots.get(n3);
-            ItemStack stack3 = slot2.getStack();
-            if (stack3 == null) {
+            if (slot2.getStack() == null) {
                slot2.putStack(stack.copy());
                slot2.onSlotChanged();
                stack.stackSize = 0;
@@ -334,9 +333,7 @@ public abstract class Container {
                   }
                } else if (slot4.canTakeStack(player)) {
                   if (itemStack == null) {
-                     int n6 = n2 == 0 ? stack5.stackSize : (stack5.stackSize + 1) / 2;
-                     ItemStack stack6 = slot4.decrStackSize(n6);
-                     inventory.setItemStack(stack6);
+                     inventory.setItemStack(slot4.decrStackSize(n2 == 0 ? stack5.stackSize : (stack5.stackSize + 1) / 2));
                      if (stack5.stackSize == 0) {
                         slot4.putStack((ItemStack)null);
                      }

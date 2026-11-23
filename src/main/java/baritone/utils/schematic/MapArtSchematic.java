@@ -15,8 +15,7 @@ public class MapArtSchematic extends MaskSchematic {
 
       for (int i = 0; i < staticSchematic.widthX(); i++) {
          for (int j = 0; j < staticSchematic.lengthZ(); j++) {
-            IBlockState[] column = staticSchematic.getColumn(i, j);
-            OptionalInt optionalInt = lastIndexMatching(column, obj -> !(((IBlockState)obj).getBlock() instanceof BlockAir));
+            OptionalInt optionalInt = lastIndexMatching(staticSchematic.getColumn(i, j), obj -> !(((IBlockState)obj).getBlock() instanceof BlockAir));
             if (optionalInt.isPresent()) {
                intsArr[i][j] = optionalInt.getAsInt();
             } else {

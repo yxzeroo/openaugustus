@@ -26,14 +26,9 @@ public class UserConfigListItem extends AbstractConfigListItem {
 
    @Override
    public void loadConfig() {
-      ConfigManager configManager = Augustus.getInstance().getConfigManager();
-      configManager.snapshotAll();
+      Augustus.getInstance().getConfigManager().snapshotAll();
       if (this.localFileExists) {
-         ModuleConfigStorage moduleConfigStorage = Augustus.getInstance().getConfigManager().moduleConfigStorage;
-         String configName2 = this.getConfigName();
-         String str = "configs";
-         String str2 = configName2;
-         moduleConfigStorage.loadConfig(str2, str);
+         Augustus.getInstance().getConfigManager().moduleConfigStorage.loadConfig(this.getConfigName(), "configs");
       } else {
       }
    }

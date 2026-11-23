@@ -25,8 +25,7 @@ public class ModelResolver implements IModelResolver {
          ModelRenderer modelRenderer = this.getModelRenderer(strings[0]);
 
          for (int i = 1; i < strings.length; i++) {
-            String str2 = strings[i];
-            ModelRenderer childDeep = modelRenderer.getChildDeep(str2);
+            ModelRenderer childDeep = modelRenderer.getChildDeep(strings[i]);
             if (childDeep == null) {
                return null;
             }
@@ -45,8 +44,7 @@ public class ModelResolver implements IModelResolver {
             return modelRenderer2;
          } else {
             for (int j = 0; j < this.customModelRenderers.length; j++) {
-               CustomModelRenderer customModelRenderer = this.customModelRenderers[j];
-               ModelRenderer modelRenderer3 = customModelRenderer.getModelRenderer();
+               ModelRenderer modelRenderer3 = this.customModelRenderers[j].getModelRenderer();
                if (str.equals(modelRenderer3.getId())) {
                   return modelRenderer3;
                }

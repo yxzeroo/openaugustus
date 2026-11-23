@@ -13,13 +13,7 @@ public class IntegerListProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonListPropertyCodec integerListCodec = configSerializerProvider.getIntegerListCodec();
-      String name2 = this.getName();
-      List list = flag ? (List)this.getDefaultValue() : (List)this.getValue();
-      String str = name2;
-      List list2 = integerListCodec.readList(str, list, json);
-      List list3 = list2;
-      this.applyValue(list3);
+      this.applyValue(configSerializerProvider.getIntegerListCodec().readList(this.getName(), flag ? (List)this.getDefaultValue() : (List)this.getValue(), json));
    }
 
    public IntegerListProperty(FeatureBase featureBase2, String str, List list) {
@@ -29,11 +23,7 @@ public class IntegerListProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonListPropertyCodec integerListCodec = configSerializerProvider.getIntegerListCodec();
-      String name2 = this.getName();
-      List value2 = (List)this.getValue();
-      String str = name2;
-      integerListCodec.writeList(str, value2, json);
+      configSerializerProvider.getIntegerListCodec().writeList(this.getName(), (List)this.getValue(), json);
       return json;
    }
 }

@@ -39,8 +39,7 @@ public class Plugins {
       try {
          System.out.println("Scanning jar: " + f.getName());
          PluginLoader loader = new PluginLoader(f);
-         JarFile jf = new JarFile(f);
-         Enumeration en = jf.entries();
+         Enumeration en = new JarFile(f).entries();
 
          while (en.hasMoreElements()) {
             JarEntry je = (JarEntry)en.nextElement();
@@ -81,8 +80,7 @@ public class Plugins {
          }
       }
 
-      Class[] pluginArray = new Class[matchList.size()];
-      return (Class[])matchList.toArray(pluginArray);
+      return (Class[])matchList.toArray(new Class[matchList.size()]);
    }
 
    private boolean classImplementsAny(Class testClass, Set interfaces) {
@@ -121,8 +119,7 @@ public class Plugins {
          }
       }
 
-      Class[] pluginArray = new Class[matchList.size()];
-      return (Class[])matchList.toArray(pluginArray);
+      return (Class[])matchList.toArray(new Class[matchList.size()]);
    }
 
    private boolean classImplementsAll(Class testClass, Set interfaces) {
@@ -159,8 +156,7 @@ public class Plugins {
          }
       }
 
-      Class[] pluginArray = new Class[matchList.size()];
-      return (Class[])matchList.toArray(pluginArray);
+      return (Class[])matchList.toArray(new Class[matchList.size()]);
    }
 
    private boolean classExtends(Class testClass, Class superclass) {

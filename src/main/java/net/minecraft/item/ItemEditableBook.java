@@ -84,8 +84,7 @@ public class ItemEditableBook extends Item {
    @Override
    public String getItemStackDisplayName(ItemStack stack) {
       if (stack.hasTagCompound()) {
-         NBTTagCompound tagCompound = stack.getTagCompound();
-         String string = tagCompound.getString("title");
+         String string = stack.getTagCompound().getString("title");
          if (!StringUtils.isNullOrEmpty(string)) {
             return string;
          }

@@ -89,16 +89,14 @@ public class Converter {
                      decoder.setOutput(waveFileObuffer);
                   }
 
-                  Obuffer obuffer = decoder.decodeFrame(header, bitstream);
-                  if (obuffer != waveFileObuffer) {
+                  if (decoder.decodeFrame(header, bitstream) != waveFileObuffer) {
                      throw new InternalError("Output buffers are different.");
                   }
 
                   ((ConverterProgressListener)listener).decodedFrame(n2, header, waveFileObuffer);
                   bitstream.closeFrame();
                } catch (Exception e) {
-                  boolean flag = !((ConverterProgressListener)listener).converterException(e);
-                  if (flag) {
+                  if (!((ConverterProgressListener)listener).converterException(e)) {
                      throw new JavaLayerException(e.getLocalizedMessage(), e);
                   }
                }

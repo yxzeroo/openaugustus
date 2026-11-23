@@ -45,8 +45,7 @@ public class TextRewriter {
       TextUtils.iterateAll(component, c -> {
          HoverEvent patt22237$temp = c.getStyle().getHoverEvent();
          if (patt22237$temp instanceof ItemHoverEvent) {
-            ItemHoverEvent itemHoverEvent = (ItemHoverEvent)patt22237$temp;
-            DataHolder patt22306$temp = itemHoverEvent.getData();
+            DataHolder patt22306$temp = ((ItemHoverEvent)patt22237$temp).getData();
             if (patt22306$temp instanceof LegacyHolder) {
                LegacyHolder legacyHolder = (LegacyHolder)patt22306$temp;
 

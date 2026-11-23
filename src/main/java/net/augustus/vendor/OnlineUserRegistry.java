@@ -71,10 +71,7 @@ public class OnlineUserRegistry {
          int n3;
          for (n3 = 0; n2 != -1; n2 = str.indexOf(str2, n3)) {
             sb.append(str, n3, n2);
-            String str6 = str.substring(0, n2);
-            char ch = 167;
-            String str7 = TextFormatUtil.extractFormattingSequence(str6, ch);
-            sb.append(formatUserTag(str4, str2, str3, str5, n, str7));
+            sb.append(formatUserTag(str4, str2, str3, str5, n, TextFormatUtil.extractFormattingSequence(str.substring(0, n2), (char)167)));
             n3 = n2 + str2.length();
          }
 
@@ -95,8 +92,7 @@ public class OnlineUserRegistry {
             String str2 = instance.getUserRankColor() + instance.getUserRank();
             int userLevel = instance.getUserLevel();
             if (!displayName2.isEmpty() && !str2.isEmpty()) {
-               String selectedValue = customName.nameFormatting.getSelectedValue();
-               return replaceUsernameOccurrences(str, username, displayName2, selectedValue, str2, userLevel);
+               return replaceUsernameOccurrences(str, username, displayName2, customName.nameFormatting.getSelectedValue(), str2, userLevel);
             } else {
                return str;
             }

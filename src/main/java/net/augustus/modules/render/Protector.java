@@ -5,12 +5,12 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.utils.math.DefaultRandomGenerator;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class Protector extends Module {
    public BooleanValue time;
-   public final BooleansSetting nameGeneration;
+   public final StringValue nameGeneration;
    private int randomXOffset;
    private int randomZOffset;
    private int fakeMinute;
@@ -19,22 +19,14 @@ public class Protector extends Module {
    public Protector() {
        super("Protector", "Versicherung", Color.yellow, Categorys.RENDER);
       this.time = new BooleanValue(this, "Time", true);
-      this.nameGeneration = new BooleansSetting(this, "NameGeneration", "List", new String[]{"List", "Esound", "Generated"});
+      this.nameGeneration = new StringValue(this, "NameGeneration", "List", new String[]{"List", "Esound", "Generated"});
    }
 
    public void onEnable() {
-      short s = 1000;
-      short s2 = -1000;
-      this.randomXOffset = DefaultRandomGenerator.instance.nextInt2(s2, s);
-      short s3 = 1000;
-      short s4 = -1000;
-      this.randomZOffset = DefaultRandomGenerator.instance.nextInt2(s4, s3);
-      byte b = 60;
-      byte b2 = 10;
-      this.fakeMinute = DefaultRandomGenerator.instance.nextInt2(b2, b);
-      byte b3 = 11;
-      byte b4 = 0;
-      this.fakeHour = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+      this.randomXOffset = DefaultRandomGenerator.instance.nextInt2((short)-1000, (short)1000);
+      this.randomZOffset = DefaultRandomGenerator.instance.nextInt2((short)-1000, (short)1000);
+      this.fakeMinute = DefaultRandomGenerator.instance.nextInt2((byte)10, (byte)60);
+      this.fakeHour = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)11);
       if (mc.thePlayer != null) {
          for (NetworkPlayerInfo networkPlayerInfo : (Iterable<NetworkPlayerInfo>)(mc.getNetHandler().getPlayerInfoMap())) {
             networkPlayerInfo.playerTexturesLoaded = false;

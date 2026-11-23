@@ -12,22 +12,22 @@ import net.augustus.render.RenderUtil;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.animation.AnimationUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class MoveCircles extends Module implements RenderListener, UpdateListener {
-   private final StringValue circleRadius;
-   private final StringValue circleWidth;
+   private final DoubleValue circleRadius;
+   private final DoubleValue circleWidth;
    private final ColorSetting circleColor;
-   private final BooleansSetting circleAnimation;
-   private final StringValue animationTime;
+   private final StringValue circleAnimation;
+   private final DoubleValue animationTime;
    private final BooleanValue fadeOut;
-   private final BooleansSetting fadeOutAnimation;
-   private final StringValue fadeOutTime;
-   private final StringValue ticksBetweenCircles;
+   private final StringValue fadeOutAnimation;
+   private final DoubleValue fadeOutTime;
+   private final DoubleValue ticksBetweenCircles;
    private final BooleanValue onlyAfterJump;
    private final CopyOnWriteArrayList activeCircles;
    private boolean wasOnGround;
@@ -36,25 +36,23 @@ public class MoveCircles extends Module implements RenderListener, UpdateListene
 
    public MoveCircles() {
        super("MoveCircles", "BewegungsKreise", new Color(245, 152, 217), Categorys.RENDER);
-      this.circleRadius = new StringValue(this, "CircleRadius", 1.5, 0.1, 3.0, 2);
-      this.circleWidth = new StringValue(this, "CircleWidth", 1.0, 0.1, 7.0, 2);
+      this.circleRadius = new DoubleValue(this, "CircleRadius", 1.5, 0.1, 3.0, 2);
+      this.circleWidth = new DoubleValue(this, "CircleWidth", 1.0, 0.1, 7.0, 2);
       this.circleColor = new ColorSetting(this, "CircleColor", new Color(75, 209, 242));
-      this.circleAnimation = new BooleansSetting(this, "CircleAnimation", "easeInSine", AnimationUtil.getEasingNames(false));
-      this.animationTime = new StringValue(this, "AnimationTime", 500.0, 50.0, 1500.0, 0);
+      this.circleAnimation = new StringValue(this, "CircleAnimation", "easeInSine", AnimationUtil.getEasingNames(false));
+      this.animationTime = new DoubleValue(this, "AnimationTime", 500.0, 50.0, 1500.0, 0);
       this.fadeOut = new BooleanValue(this, "FadeOut", true);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "FadeOutAnimation", "easeInSine", AnimationUtil.getEasingNames(false));
+      StringValue booleansSetting = new StringValue(this, "FadeOutAnimation", "easeInSine", AnimationUtil.getEasingNames(false));
       BooleanValue fadeOut2 = this.fadeOut;
       this.fadeOut.getClass();
       BooleanValue booleanValue = fadeOut2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.fadeOutAnimation = (BooleansSetting)booleansSetting.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "FadeOutTime", 500.0, 50.0, 1500.0, 0);
+      this.fadeOutAnimation = (StringValue)booleansSetting.withVisibility(() -> booleanValue.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "FadeOutTime", 500.0, 50.0, 1500.0, 0);
       fadeOut2 = this.fadeOut;
       this.fadeOut.getClass();
       BooleanValue booleanValue2 = fadeOut2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.fadeOutTime = stringValue.visibleWhen(condition2);
-      this.ticksBetweenCircles = new StringValue(this, "TicksBetweenCircles", 5.0, 0.0, 10.0, 0);
+      this.fadeOutTime = stringValue.visibleWhen(() -> booleanValue2.getValue());
+      this.ticksBetweenCircles = new DoubleValue(this, "TicksBetweenCircles", 5.0, 0.0, 10.0, 0);
       this.onlyAfterJump = new BooleanValue(this, "OnlyAfterJump", false);
       this.activeCircles = new CopyOnWriteArrayList();
       this.circleCounter = 0;
@@ -73,10 +71,8 @@ public class MoveCircles extends Module implements RenderListener, UpdateListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -146,11 +142,11 @@ public class MoveCircles extends Module implements RenderListener, UpdateListene
       }
    }
 
-   public static StringValue getAnimationTimeSetting(MoveCircles moveCircles) {
+   public static DoubleValue getAnimationTimeSetting(MoveCircles moveCircles) {
       return moveCircles.animationTime;
    }
 
-   public static BooleansSetting getCircleAnimationSetting(MoveCircles moveCircles) {
+   public static StringValue getCircleAnimationSetting(MoveCircles moveCircles) {
       return moveCircles.circleAnimation;
    }
 

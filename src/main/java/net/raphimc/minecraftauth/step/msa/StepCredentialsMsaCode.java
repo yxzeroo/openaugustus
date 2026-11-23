@@ -37,10 +37,7 @@ public class StepCredentialsMsaCode extends MsaCodeStep<StepCredentialsMsaCode.M
       if (msaCredentials == null) {
          throw new IllegalStateException("Missing StepCredentialsMsaCode.MsaCredentials input");
       } else {
-         CookieManager cookieManager = new CookieManager();
-         PostRequest loginPostRequest = this.prepareLoginPostRequest(httpClient, msaCredentials, cookieManager);
-         HttpResponse loginResponse = this.sendLoginRequest(httpClient, loginPostRequest);
-         Optional<String> locationHeader = loginResponse.getFirstHeader("Location");
+         Optional<String> locationHeader = this.sendLoginRequest(httpClient, this.prepareLoginPostRequest(httpClient, msaCredentials, new CookieManager())).getFirstHeader("Location");
          if (!locationHeader.isPresent()) {
             throw new IllegalStateException("Could not get redirect url");
          } else {

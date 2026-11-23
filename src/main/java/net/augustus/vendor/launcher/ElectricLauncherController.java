@@ -126,15 +126,11 @@ public class ElectricLauncherController implements Initializable {
          String text = this.hwidResetUsername.getText();
          String str2 = this.hwidResetPassword.getText().trim();
          if (!str.isEmpty()) {
-            byte b = 3;
-            if (InputCredentialValidator.validateUsername((Text)null, text, b)) {
-               byte b2 = 8;
-               if (InputCredentialValidator.validatePassword((Text)null, str2, b2)) {
+            if (InputCredentialValidator.validateUsername((Text)null, text, (byte)3)) {
+               if (InputCredentialValidator.validatePassword((Text)null, str2, (byte)8)) {
                   try {
-                     long l = 1000L;
-                     if (this.timeHelper.hasReached(l)) {
-                        Base64Decoder rfc4648 = Base64Codec.getRfc4648();
-                        byte[] bytes = rfc4648.decode3(str);
+                     if (this.timeHelper.hasReached(1000L)) {
+                        byte[] bytes = Base64Codec.getRfc4648().decode3(str);
                         if (bytes.length > 132) {
                            this.hwidErrorMessage.setText("Please convert your activation-key!");
                            this.hwidErrorMessage.setFill(Paint.valueOf("#f70202"));
@@ -149,23 +145,14 @@ public class ElectricLauncherController implements Initializable {
                            + System.getenv("PROCESSOR_REVISION");
                         this.bypass();
                         LauncherClientHandler instance2 = LauncherClientHandler.getInstance();
-                        Sha256Digest sha2562 = this.sha256;
-                        byte[] bytes2 = text.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes3 = bytes2;
-                        byte[] bytes4 = sha2562.digest(bytes3);
+                        byte[] bytes4 = this.sha256.digest(text.getBytes(StandardCharsets.UTF_8));
                         Sha256Digest sha2563 = this.sha256;
                         byte[] bytes5 = str2.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes6 = bytes5;
-                        bytes5 = sha2563.digest(bytes6);
-                        Sha256Digest sha2564 = this.sha256;
-                        byte[] bytes7 = this.generateLicenseKey().getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes8 = bytes7;
-                        byte[] bytes9 = sha2564.digest(bytes8);
+                        bytes5 = sha2563.digest(bytes5);
+                        byte[] bytes9 = this.sha256.digest(this.generateLicenseKey().getBytes(StandardCharsets.UTF_8));
                         Sha256Digest sha2565 = this.sha256;
-                        byte[] bytes10 = str3.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes11 = bytes10;
-                        C2SHwidResetPacket packet = new C2SHwidResetPacket(bytes4, bytes5, bytes9, sha2565.digest(bytes11), bytes);
-                        instance2.sendPacket(packet);
+                        byte[] bytes11 = str3.getBytes(StandardCharsets.UTF_8);
+                        instance2.sendPacket(new C2SHwidResetPacket(bytes4, bytes5, bytes9, sha2565.digest(bytes11), bytes));
                      } else {
                         this.hwidErrorMessage.setText("Click slower! (3 seconds delay)");
                         this.hwidErrorMessage.setFill(Paint.valueOf("#f70202"));
@@ -240,48 +227,30 @@ public class ElectricLauncherController implements Initializable {
                .append(System.getenv("PROCESSOR_IDENTIFIER"))
                .append(System.getenv("USERNAME"))
                .append(System.getenv("HOMEPATH"));
-            byte[] bytes = fileStore.toString().getBytes(StandardCharsets.UTF_8);
-            StringBuilder sb2 = sb.append(rfc46482.encodeToString(bytes));
-            byte[] bytes2 = fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8);
-            str3 = sb2.append(rfc46482.encodeToString(bytes2)).toString();
+            str3 = sb.append(rfc46482.encodeToString(fileStore.toString().getBytes(StandardCharsets.UTF_8))).append(rfc46482.encodeToString(fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8))).toString();
          } catch (IOException e) {
          }
 
-         long l = 1000L;
-         if (this.timeHelper.hasReached(l)) {
+         if (this.timeHelper.hasReached(1000L)) {
             if (!this.started) {
                if (LauncherClientHandler.getInstance().handshakeCompleted) {
                   LauncherClientHandler instance2 = LauncherClientHandler.getInstance();
                   Sha256Digest sha2562 = this.sha256;
                   byte[] bytes3 = this.userName.getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes4 = bytes3;
-                  byte[] bytes5 = sha2562.digest(bytes4);
+                  byte[] bytes5 = sha2562.digest(bytes3);
                   Sha256Digest sha2563 = this.sha256;
                   byte[] bytes6 = "aplksdflasdjflasd".getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes7 = bytes6;
-                  bytes3 = sha2563.digest(bytes7);
-                  Sha256Digest sha2564 = this.sha256;
-                  byte[] bytes8 = "jkhkgugjkjhjkgjk".getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes9 = bytes8;
-                  bytes6 = sha2564.digest(bytes9);
-                  Sha256Digest sha2565 = this.sha256;
-                  byte[] bytes10 = "alsdjhfdlkshoa".getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes11 = bytes10;
-                  byte[] bytes12 = sha2565.digest(bytes11);
+                  bytes3 = sha2563.digest(bytes6);
+                  bytes6 = this.sha256.digest("jkhkgugjkjhjkgjk".getBytes(StandardCharsets.UTF_8));
+                  byte[] bytes12 = this.sha256.digest("alsdjhfdlkshoa".getBytes(StandardCharsets.UTF_8));
                   Sha256Digest sha2566 = this.sha256;
-                  byte[] bytes13 = "alsjdlkasjdaa".getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes14 = bytes13;
-                  C2SRegisterPacket packet = new C2SRegisterPacket(bytes5, bytes3, bytes6, bytes12, sha2566.digest(bytes14), this.userName);
-                  instance2.sendPacket(packet);
+                  byte[] bytes14 = "alsjdlkasjdaa".getBytes(StandardCharsets.UTF_8);
+                  instance2.sendPacket(new C2SRegisterPacket(bytes5, bytes3, bytes6, bytes12, sha2566.digest(bytes14), this.userName));
                }
 
-               boolean flag = true;
-               this.started = flag;
+               this.started = true;
                this.timeHelper.reset();
-               Sha256Digest sha2567 = this.sha256;
-               byte[] bytes15 = str3.getBytes(StandardCharsets.UTF_8);
-               byte[] bytes16 = bytes15;
-               yeets = sha2567.digest(bytes16);
+               yeets = this.sha256.digest(str3.getBytes(StandardCharsets.UTF_8));
                this.infoText.setFill(Paint.valueOf("#22d451"));
                this.infoText.setText("Checking resource files...");
                String str5 = str3;
@@ -289,9 +258,7 @@ public class ElectricLauncherController implements Initializable {
                   byte[] bytes17 = new byte[32];
                   if (file2.exists()) {
                      try {
-                        MessageDigest instance3 = MessageDigest.getInstance("SHA-256");
-                        byte[] bytes18 = Files.readAllBytes(file2.toPath());
-                        bytes17 = instance3.digest(bytes18);
+                        bytes17 = MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(file2.toPath()));
                      } catch (Exception e2) {
                      }
                   }
@@ -299,9 +266,7 @@ public class ElectricLauncherController implements Initializable {
                   byte[] bytes19 = new byte[32];
                   if (file.exists()) {
                      try {
-                        MessageDigest instance4 = MessageDigest.getInstance("SHA-256");
-                        byte[] bytes20 = Files.readAllBytes(file.toPath());
-                        bytes19 = instance4.digest(bytes20);
+                        bytes19 = MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(file.toPath()));
                      } catch (Exception e3) {
                      }
                   }
@@ -309,10 +274,8 @@ public class ElectricLauncherController implements Initializable {
                   LauncherClientHandler instance5 = LauncherClientHandler.getInstance();
                   byte[] sessionToken = LauncherClientHandler.getInstance().sessionToken;
                   Sha256Digest sha2568 = this.sha256;
-                  byte[] bytes21 = str5.getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes22 = bytes21;
-                  C2SStartClientPacket packet2 = new C2SStartClientPacket(str, bytes17, bytes19, sessionToken, sha2568.digest(bytes22));
-                  instance5.sendPacket(packet2);
+                  byte[] bytes22 = str5.getBytes(StandardCharsets.UTF_8);
+                  instance5.sendPacket(new C2SStartClientPacket(str, bytes17, bytes19, sessionToken, sha2568.digest(bytes22)));
                   this.startText.setText("Started client successfully!");
                   this.infoText.setText("Waiting for server response...");
                   this.startText.setFill(Paint.valueOf("#22d451"));
@@ -337,29 +300,20 @@ public class ElectricLauncherController implements Initializable {
          this.loginFailedText.setText("");
          String text = this.usernameLoginField.getText();
          String text2 = this.passwordLoginField.getText();
-         byte b = 8;
-         if (InputCredentialValidator.validatePassword((Text)null, text2, b)) {
-            byte b2 = 3;
-            if (InputCredentialValidator.validateUsername((Text)null, text, b2)) {
-               long l = 1000L;
-               if (this.timeHelper.hasReached(l)) {
+         if (InputCredentialValidator.validatePassword((Text)null, text2, (byte)8)) {
+            if (InputCredentialValidator.validateUsername((Text)null, text, (byte)3)) {
+               if (this.timeHelper.hasReached(1000L)) {
                   CredentialStorage.saveCredentials(text, text2);
                   this.timeHelper.reset();
                   this.bypass();
                   LauncherClientHandler instance2 = LauncherClientHandler.getInstance();
                   Sha256Digest sha2562 = this.sha256;
                   byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes2 = bytes;
-                  byte[] bytes3 = sha2562.digest(bytes2);
-                  Sha256Digest sha2563 = this.sha256;
-                  byte[] bytes4 = text2.getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes5 = bytes4;
-                  bytes = sha2563.digest(bytes5);
+                  byte[] bytes3 = sha2562.digest(bytes);
+                  bytes = this.sha256.digest(text2.getBytes(StandardCharsets.UTF_8));
                   Sha256Digest sha2564 = this.sha256;
-                  byte[] bytes6 = this.generateLicenseKey().getBytes(StandardCharsets.UTF_8);
-                  byte[] bytes7 = bytes6;
-                  C2SLoginPacket packet = new C2SLoginPacket(bytes3, bytes, sha2564.digest(bytes7), text);
-                  instance2.sendPacket(packet);
+                  byte[] bytes7 = this.generateLicenseKey().getBytes(StandardCharsets.UTF_8);
+                  instance2.sendPacket(new C2SLoginPacket(bytes3, bytes, sha2564.digest(bytes7), text));
                   this.userName = text;
                } else {
                   this.loginFailedText.setText("Click slower! (3 seconds delay)");
@@ -420,10 +374,8 @@ public class ElectricLauncherController implements Initializable {
             .append(System.getenv("PROCESSOR_IDENTIFIER"))
             .append(System.getenv("USERNAME"))
             .append(System.getenv("HOMEPATH"));
-         byte[] bytes = fileStore.toString().getBytes(StandardCharsets.UTF_8);
-         sb = sb.append(rfc46482.encodeToString(bytes));
-         byte[] bytes2 = fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8);
-         return sb.append(rfc46482.encodeToString(bytes2)).toString();
+         sb = sb.append(rfc46482.encodeToString(fileStore.toString().getBytes(StandardCharsets.UTF_8)));
+         return sb.append(rfc46482.encodeToString(fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8))).toString();
       } catch (IOException e) {
          return null;
       }
@@ -467,8 +419,7 @@ public class ElectricLauncherController implements Initializable {
          boolean flag = this.hasServerConnection();
          if (!flag) {
             if (this.startTime < 0L) {
-               long l = System.currentTimeMillis();
-               this.startTime = l;
+               this.startTime = System.currentTimeMillis();
             }
 
             Paint paint = Paint.valueOf("#f70202");
@@ -506,17 +457,13 @@ public class ElectricLauncherController implements Initializable {
 
    public ElectricLauncherController() {
       super();
-      boolean flag = false;
-      this.started = flag;
+      this.started = false;
       this.timeHelper = new LauncherStopwatch();
-      boolean flag2 = false;
-      this.sent = flag2;
+      this.sent = false;
       this.tryTimeHelper = new LauncherStopwatch();
-      boolean flag3 = false;
-      this.wasConnectedToServer = flag3;
+      this.wasConnectedToServer = false;
       this.action = new CopyOnWriteArrayList<>();
-      long l = -10L;
-      this.startTime = l;
+      this.startTime = -10L;
       this.sha256 = new Sha256Digest();
    }
 
@@ -538,15 +485,10 @@ public class ElectricLauncherController implements Initializable {
          }
 
          if (flag) {
-            byte b = 8;
-            if (InputCredentialValidator.validatePassword(this.registerPassword1Error, text2, b)) {
-               byte b2 = 3;
-               if (InputCredentialValidator.validateUsername(this.registerUsernameError, text, b2)) {
+            if (InputCredentialValidator.validatePassword(this.registerPassword1Error, text2, (byte)8)) {
+               if (InputCredentialValidator.validateUsername(this.registerUsernameError, text, (byte)3)) {
                   try {
-                     Base64Decoder rfc4648 = Base64Codec.getRfc4648();
-                     String str = this.registerActivationKey.getText().trim();
-                     String str2 = str;
-                     byte[] bytes = rfc4648.decode3(str2);
+                     byte[] bytes = Base64Codec.getRfc4648().decode3(this.registerActivationKey.getText().trim());
                      String str3 = "00-00-00-00-00-00";
                      ((OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
                      FileStore fileStore = FileSystems.getDefault().getFileStores().iterator().next();
@@ -575,35 +517,22 @@ public class ElectricLauncherController implements Initializable {
                            .append(System.getenv("PROCESSOR_IDENTIFIER"))
                            .append(System.getenv("USERNAME"))
                            .append(System.getenv("HOMEPATH"));
-                        byte[] bytes2 = fileStore.toString().getBytes(StandardCharsets.UTF_8);
-                        StringBuilder sb2 = sb.append(rfc46482.encodeToString(bytes2));
-                        byte[] bytes3 = fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8);
-                        str4 = sb2.append(rfc46482.encodeToString(bytes3)).toString();
+                        str4 = sb.append(rfc46482.encodeToString(fileStore.toString().getBytes(StandardCharsets.UTF_8))).append(rfc46482.encodeToString(fileStore.getAttribute("volume:vsn").toString().getBytes(StandardCharsets.UTF_8))).toString();
                      } catch (IOException e) {
                      }
 
-                     long l = 1000L;
-                     if (this.timeHelper.hasReached(l)) {
+                     if (this.timeHelper.hasReached(1000L)) {
                         this.timeHelper.reset();
                         this.bypass();
                         LauncherClientHandler instance2 = LauncherClientHandler.getInstance();
                         Sha256Digest sha2562 = this.sha256;
                         byte[] bytes4 = text.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes5 = bytes4;
-                        byte[] bytes6 = sha2562.digest(bytes5);
-                        Sha256Digest sha2563 = this.sha256;
-                        byte[] bytes7 = text2.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes8 = bytes7;
-                        bytes4 = sha2563.digest(bytes8);
-                        Sha256Digest sha2564 = this.sha256;
-                        byte[] bytes9 = str4.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes10 = bytes9;
-                        byte[] bytes11 = sha2564.digest(bytes10);
+                        byte[] bytes6 = sha2562.digest(bytes4);
+                        bytes4 = this.sha256.digest(text2.getBytes(StandardCharsets.UTF_8));
+                        byte[] bytes11 = this.sha256.digest(str4.getBytes(StandardCharsets.UTF_8));
                         Sha256Digest sha2565 = this.sha256;
-                        byte[] bytes12 = str5.getBytes(StandardCharsets.UTF_8);
-                        byte[] bytes13 = bytes12;
-                        C2SRegisterPacket packet = new C2SRegisterPacket(bytes6, bytes4, bytes, bytes11, sha2565.digest(bytes13), text);
-                        instance2.sendPacket(packet);
+                        byte[] bytes13 = str5.getBytes(StandardCharsets.UTF_8);
+                        instance2.sendPacket(new C2SRegisterPacket(bytes6, bytes4, bytes, bytes11, sha2565.digest(bytes13), text));
                      } else {
                         this.getRegisterFailedText().setText("Click slower! (3 seconds delay)");
                         this.getRegisterFailedText().setFill(Paint.valueOf("#f70202"));
@@ -640,8 +569,7 @@ public class ElectricLauncherController implements Initializable {
          try {
             LauncherClientHandler instance2 = LauncherClientHandler.getInstance();
             Base64Decoder rfc4648 = Base64Codec.getRfc4648();
-            C2SActivateClientPacket packet = new C2SActivateClientPacket(rfc4648.decode3(text), LauncherClientHandler.getInstance().sessionToken);
-            instance2.sendPacket(packet);
+            instance2.sendPacket(new C2SActivateClientPacket(rfc4648.decode3(text), LauncherClientHandler.getInstance().sessionToken));
          } catch (Exception e) {
             this.activateClientResponse.setText("No valid activation-key!");
             this.activateClientResponse.setFill(Paint.valueOf("#f70202"));

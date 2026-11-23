@@ -6,7 +6,6 @@ public class MolangMathUtils {
    }
 
    public static double wrapDegrees(double d) {
-      int[] flowState = MolangInterpolations.getFlowState();
       d %= 360.0;
       if (d >= 180.0) {
          d -= 360.0;

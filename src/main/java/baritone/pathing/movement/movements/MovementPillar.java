@@ -97,8 +97,7 @@ public class MovementPillar extends Movement {
                } else {
                   if (miningDurationTicks != 0.0) {
                      if (block2 != Blocks.ladder && block2 != Blocks.vine) {
-                        IBlockState state4 = calculationContext.get(n, n2 + 3, n3);
-                        if (state4.getBlock() instanceof BlockFalling) {
+                        if (calculationContext.get(n, n2 + 3, n3).getBlock() instanceof BlockFalling) {
                            if (block3 == null) {
                               block3 = calculationContext.get(n, n2 + 1, n3).getBlock();
                            }
@@ -183,8 +182,7 @@ public class MovementPillar extends Movement {
 
                if (!flag3) {
                   IBlockState state2 = BlockStateInterface.get(this.ctx, this.src);
-                  Block block = state2.getBlock();
-                  if (!(block instanceof BlockAir) && !state2.getBlock().getMaterial().isReplaceable()) {
+                  if (!(state2.getBlock() instanceof BlockAir) && !state2.getBlock().getMaterial().isReplaceable()) {
                      RotationUtils.reachable3(this.ctx, this.src, this.ctx.playerController().getBlockReachDistance()).map(obj -> new MovementTarget((Rotation)obj, true)).ifPresent(obj2 -> movementState.setTarget((MovementTarget)obj2));
                      movementState.setInput(Input.JUMP, false);
                      movementState.setInput(Input.CLICK_LEFT, true);

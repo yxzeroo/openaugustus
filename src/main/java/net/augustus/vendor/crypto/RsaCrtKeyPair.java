@@ -17,14 +17,10 @@ public class RsaCrtKeyPair {
       this.privateExponent = customBigInteger3;
       this.primeP = customBigInteger4;
       this.primeQ = customBigInteger5;
-      CustomBigInteger one = CustomBigInteger.ONE;
-      CustomBigInteger customBigInteger6 = customBigInteger4.subtract(one);
-      CustomBigInteger customBigInteger7 = customBigInteger6;
-      this.primeExponentP = customBigInteger3.mod(customBigInteger7);
-      CustomBigInteger one2 = CustomBigInteger.ONE;
-      customBigInteger6 = customBigInteger5.subtract(one2);
-      CustomBigInteger customBigInteger8 = customBigInteger6;
-      this.primeExponentQ = customBigInteger3.mod(customBigInteger8);
+      CustomBigInteger customBigInteger6 = customBigInteger4.subtract(CustomBigInteger.ONE);
+      this.primeExponentP = customBigInteger3.mod(customBigInteger6);
+      customBigInteger6 = customBigInteger5.subtract(CustomBigInteger.ONE);
+      this.primeExponentQ = customBigInteger3.mod(customBigInteger6);
       this.crtCoefficient = customBigInteger5.modInverse(customBigInteger4);
    }
 

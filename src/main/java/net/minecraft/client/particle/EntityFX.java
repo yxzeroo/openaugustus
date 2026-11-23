@@ -107,8 +107,7 @@ public class EntityFX extends Entity {
    }
 
    public void setParticleIcon(TextureAtlasSprite textureAtlasSprite) {
-      int fxLayer = this.getFXLayer();
-      if (fxLayer == 1) {
+      if (this.getFXLayer() == 1) {
          this.particleIcon = textureAtlasSprite;
       } else {
          throw new RuntimeException("Invalid call to Particle.setTex, use coordinate methods");

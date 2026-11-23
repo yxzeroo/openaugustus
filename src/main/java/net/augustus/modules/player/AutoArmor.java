@@ -25,8 +25,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.enchantment.Enchantment;
@@ -38,22 +38,22 @@ import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 
 public class AutoArmor extends Module implements ClickListener, TickListener, RenderListener, SilentSlotListener, MoveInputListener, DropItemListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue noMove;
    public final BooleanValue interactCheck;
    public final BooleanValue stopMovement;
-   public final StringValue startDelay;
+   public final DoubleValue startDelay;
    public final RangeSetting delay;
    public final BooleanValue hotbar;
    public final BooleanValue gommeQSG;
-   public final StringValue hStartDelay;
+   public final DoubleValue hStartDelay;
    public final RangeSetting hotbarDelay;
    public final BooleanValue smartDelay;
    public final BooleanValue stopOnInteraction;
    public final BooleanValue visualize;
-   public final BooleansSetting sequence;
-   public final BooleansSetting eventToClick;
-   public final BooleansSetting clickMode;
+   public final StringValue sequence;
+   public final StringValue eventToClick;
+   public final StringValue clickMode;
    private final TimeHelper hotbarEquipTimer;
    private final TimeHelper hotbarStartTimer;
    private final TimeHelper invStartTimer;
@@ -71,27 +71,15 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
    public AutoArmor() {
        super("AutoArmor", "AutoRüstung", new Color(23, 123, 208, 255), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "OpenInv", new String[]{"OpenInv", "SpoofInv", "Basic"});
-      BooleanValue booleanValue = new BooleanValue(this, "NoMove", false);
-      SettingVisibilityCondition condition = () -> this.isNoMoveVisible();
-      this.noMove = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue2 = new BooleanValue(this, "InteractCheck", false);
-      SettingVisibilityCondition condition2 = () -> this.isInteractCheckVisible();
-      this.interactCheck = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this, "StopMovement", false);
-      SettingVisibilityCondition condition3 = () -> this.isStopMovementVisible();
-      this.stopMovement = (BooleanValue)booleanValue3.withVisibility(condition3);
-      this.startDelay = new StringValue(this, "StartDelay", 200.0, 0.0, 1000.0, 0);
+      this.mode = new StringValue(this, "Mode", "OpenInv", new String[]{"OpenInv", "SpoofInv", "Basic"});
+      this.noMove = (BooleanValue)new BooleanValue(this, "NoMove", false).withVisibility(() -> this.isNoMoveVisible());
+      this.interactCheck = (BooleanValue)new BooleanValue(this, "InteractCheck", false).withVisibility(() -> this.isInteractCheckVisible());
+      this.stopMovement = (BooleanValue)new BooleanValue(this, "StopMovement", false).withVisibility(() -> this.isStopMovementVisible());
+      this.startDelay = new DoubleValue(this, "StartDelay", 200.0, 0.0, 1000.0, 0);
       this.delay = new RangeSetting(this, "Delay", 50.0, 100.0, 0.0, 400.0, 0);
-      BooleanValue booleanValue4 = new BooleanValue(this, "Hotbar", false);
-      SettingVisibilityCondition condition4 = () -> this.isHotbarVisible();
-      this.hotbar = (BooleanValue)booleanValue4.withVisibility(condition4);
-      BooleanValue booleanValue5 = new BooleanValue(this, "GommeQSG", false);
-      SettingVisibilityCondition condition5 = () -> this.isGommeQsgVisible();
-      this.gommeQSG = (BooleanValue)booleanValue5.withVisibility(condition5);
-      StringValue stringValue = new StringValue(this, "HStartDelay", 200.0, 0.0, 1000.0, 0);
-      SettingVisibilityCondition condition6 = () -> this.isHotbarStartDelayVisible();
-      this.hStartDelay = stringValue.visibleWhen(condition6);
+      this.hotbar = (BooleanValue)new BooleanValue(this, "Hotbar", false).withVisibility(() -> this.isHotbarVisible());
+      this.gommeQSG = (BooleanValue)new BooleanValue(this, "GommeQSG", false).withVisibility(() -> this.isGommeQsgVisible());
+      this.hStartDelay = new DoubleValue(this, "HStartDelay", 200.0, 0.0, 1000.0, 0).visibleWhen(() -> this.isHotbarStartDelayVisible());
       RangeSetting rangeSetting = new RangeSetting(this, "HotbarDelay", 70.0, 120.0, 0.0, 400.0, 0);
       SettingVisibilityCondition condition7 = () -> {
          return this.hotbar.isVisible() ? this.hotbar.getValue() : this.mode.getSelectedValue().equals("OpenInv");
@@ -100,9 +88,9 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
       this.smartDelay = new BooleanValue(this, "SmartDelay", false);
       this.stopOnInteraction = new BooleanValue(this, "StopOnInteraction", false);
       this.visualize = new BooleanValue(this, "Visualize", false);
-      this.sequence = new BooleansSetting(this, "Sequence", "Basic", new String[]{"Basic", "Nearest"});
-      this.eventToClick = new BooleansSetting(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
-      this.clickMode = new BooleansSetting(this, "ClickMode", "Basic", new String[]{"Basic"});
+      this.sequence = new StringValue(this, "Sequence", "Basic", new String[]{"Basic", "Nearest"});
+      this.eventToClick = new StringValue(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
+      this.clickMode = new StringValue(this, "ClickMode", "Basic", new String[]{"Basic"});
       this.hotbarEquipTimer = new TimeHelper();
       this.hotbarStartTimer = new TimeHelper();
       this.invStartTimer = new TimeHelper();
@@ -122,14 +110,10 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
       RandomNumberGenerator instance = DefaultRandomGenerator.instance;
       double minValue = this.delay.getMinValue();
-      double maxValue = this.delay.getMaxValue();
-      double d = minValue;
-      this.equipDelayMs = instance.nextLong(d, maxValue);
+      this.equipDelayMs = instance.nextLong(minValue, this.delay.getMaxValue());
       RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
       minValue = this.hotbarDelay.getMinValue();
-      double maxValue2 = this.hotbarDelay.getMaxValue();
-      double d2 = minValue;
-      this.hotbarDelayMs = instance2.nextLong(d2, maxValue2);
+      this.hotbarDelayMs = instance2.nextLong(minValue, this.hotbarDelay.getMaxValue());
    }
 
    @Override
@@ -139,18 +123,12 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 32;
-      this.toggleEventSubscription(b3);
-      byte b4 = 34;
-      this.toggleEventSubscription(b4);
-      byte b5 = 21;
-      this.toggleEventSubscription(b5);
-      byte b6 = 9;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)9);
    }
 
    @Override
@@ -172,8 +150,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
       }
 
       if (this.mode.getSelectedValue().equalsIgnoreCase("OpenInv") && this.hotbar.getValue() && mc.currentScreen == null && this.hotbarEquipSlot >= 0) {
-         byte b = 1;
-         event.addRightClicks(b);
+         event.addRightClicks((byte)1);
          this.hotbarEquipSlot = -11;
       }
    }
@@ -183,17 +160,14 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
       if (this.mode.getSelectedValue().equalsIgnoreCase("OpenInv") && this.hotbar.getValue() && mc.currentScreen == null) {
          this.updateHotbarArmor();
          if (this.hotbar.getValue() && this.hotbarEquipSlot >= 0) {
-            int hotbarEquipSlot2 = this.hotbarEquipSlot;
-            byte b = 6;
-            SilentSlotManager.requestSlot(this, b, hotbarEquipSlot2);
+            SilentSlotManager.requestSlot(this, (byte)6, this.hotbarEquipSlot);
          }
       }
    }
 
    @Override
    public void onTick() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (mc.currentScreen != null) {
          this.hotbarStartTimer.reset();
       }
@@ -217,14 +191,10 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (mc.currentScreen == null && this.mode.getSelectedValue().equals("SpoofInv") && mc.thePlayer.getSpoofedScreen() != null && this.stopMovement.getValue()) {
-         boolean flag = false;
-         event.setJump(flag);
-         boolean flag2 = false;
-         event.setSneak(flag2);
-         float f = 0.0F;
-         event.setMoveForward(f);
-         float f2 = 0.0F;
-         event.setMoveStrafe(f2);
+         event.setJump(false);
+         event.setSneak(false);
+         event.setMoveForward(0.0F);
+         event.setMoveStrafe(0.0F);
       }
    }
 
@@ -233,10 +203,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
       this.helmets = new ArrayList();
       this.leggings = new ArrayList();
       this.boots = new ArrayList();
-      double value = this.hStartDelay.getValue();
-      long l = 35L;
-      long l2 = -35L;
-      long l3 = (long)(value + (double)DefaultRandomGenerator.instance.nextLong2(l2, l));
+      long l3 = (long)(this.hStartDelay.getValue() + (double)DefaultRandomGenerator.instance.nextLong2(-35L, 35L));
       ItemStack stack = null;
       ItemStack stack2 = null;
       ItemStack stack3 = null;
@@ -380,18 +347,13 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
                      || mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.MISS
                      || mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && !mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock().hasTileEntity()
                )) {
-               RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-               double minValue = this.hotbarDelay.getMinValue();
-               double maxValue = this.hotbarDelay.getMaxValue();
-               double d = minValue;
-               this.hotbarDelayMs = instance.nextLong(d, maxValue);
+               this.hotbarDelayMs = DefaultRandomGenerator.instance.nextLong(this.hotbarDelay.getMinValue(), this.hotbarDelay.getMaxValue());
                if (stack6 == null && stack8 == null && stack7 == null && stack5 == null) {
                   this.hotbarStartTimer.reset();
                } else {
                   if (stack7 != null) {
                      if (stack3 == null || value2) {
-                        int slotIndex = stack7.getSlotIndex();
-                        this.selectHotbarArmorSlot(slotIndex);
+                        this.selectHotbarArmorSlot(stack7.getSlotIndex());
                      }
 
                      this.hotbarEquipTimer.reset();
@@ -400,8 +362,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
                   if (stack8 != null) {
                      if (stack4 == null || value2) {
-                        int slotIndex2 = stack8.getSlotIndex();
-                        this.selectHotbarArmorSlot(slotIndex2);
+                        this.selectHotbarArmorSlot(stack8.getSlotIndex());
                      }
 
                      this.hotbarEquipTimer.reset();
@@ -410,8 +371,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
                   if (stack5 != null) {
                      if (stack == null || value2) {
-                        int slotIndex3 = stack5.getSlotIndex();
-                        this.selectHotbarArmorSlot(slotIndex3);
+                        this.selectHotbarArmorSlot(stack5.getSlotIndex());
                      }
 
                      this.hotbarEquipTimer.reset();
@@ -420,8 +380,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
 
                   if (stack6 != null) {
                      if (stack2 == null || value2) {
-                        int slotIndex4 = stack6.getSlotIndex();
-                        this.selectHotbarArmorSlot(slotIndex4);
+                        this.selectHotbarArmorSlot(stack6.getSlotIndex());
                      }
 
                      this.hotbarEquipTimer.reset();
@@ -444,9 +403,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
       this.helmets = new ArrayList();
       this.leggings = new ArrayList();
       this.boots = new ArrayList();
-      long l = 25L;
-      long l2 = -25L;
-      long l3 = DefaultRandomGenerator.instance.nextLong2(l2, l);
+      long l3 = DefaultRandomGenerator.instance.nextLong2(-25L, 25L);
       long l4 = 0L;
       if (flag) {
          l4 = (long)(this.startDelay.getValue() + (double)l3);
@@ -704,16 +661,14 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
                double d = Math.abs((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft) - InventoryUtil.getLastCursorPos().x);
                double d2 = Math.abs((double)(slot.yDisplayPosition + 2 + currentScreen.guiTop) - InventoryUtil.getLastCursorPos().y);
                double d3 = Math.sqrt(d * d + d2 * d2);
-               double minValue = this.delay.getMinValue();
-               double d4 = minValue + this.delay.getMaxValue() - this.delay.getMinValue() / 2.0;
+               double d4 = this.delay.getMinValue() + this.delay.getMaxValue() - this.delay.getMinValue() / 2.0;
                double d5 = d3 / 30.0;
                if (d3 > 36.0) {
                }
             }
 
             InventoryUtil.setLastCursorPos((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft), (double)(slot.yDisplayPosition + 2 + currentScreen.guiTop));
-            String selectedValue = this.clickMode.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.clickMode.getSelectedValue()) {
                case "Basic":
                   currentScreen.forceShiftClick = true;
                   currentScreen.mouseClicked(slot.xDisplayPosition + 2 + currentScreen.guiLeft, slot.yDisplayPosition + 2 + currentScreen.guiTop, 0);
@@ -728,8 +683,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
             e.printStackTrace();
          }
       } else {
-         String selectedValue2 = this.clickMode.getSelectedValue();
-         switch (selectedValue2) {
+         switch (this.clickMode.getSelectedValue()) {
             case "Basic":
                mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, n, 0, 1, mc.thePlayer);
                break;
@@ -761,8 +715,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
             double d = Math.abs((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft) - InventoryUtil.getLastCursorPos().x);
             double d2 = Math.abs((double)(slot.yDisplayPosition + 2 + currentScreen.guiTop) - InventoryUtil.getLastCursorPos().y);
             double d3 = Math.sqrt(d * d + d2 * d2);
-            double minValue = this.delay.getMinValue();
-            double d4 = minValue + this.delay.getMaxValue() - this.delay.getMinValue() / 2.0;
+            double d4 = this.delay.getMinValue() + this.delay.getMaxValue() - this.delay.getMinValue() / 2.0;
             double d5 = d3 / 30.0;
             if (d3 > 36.0) {
             }
@@ -771,8 +724,7 @@ public class AutoArmor extends Module implements ClickListener, TickListener, Re
          InventoryUtil.setLastCursorPos((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft), (double)(slot.yDisplayPosition + 2 + currentScreen.guiTop));
       }
 
-      String selectedValue = this.clickMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.clickMode.getSelectedValue()) {
          case "Basic":
             mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, n, 1, 4, mc.thePlayer);
             break;

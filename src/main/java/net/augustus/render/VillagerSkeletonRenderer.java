@@ -46,37 +46,31 @@ public class VillagerSkeletonRenderer extends AbstractSkeletonRenderer {
 
    @Override
    public ModelRenderer getLeftArm(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getLeftArm2(modelVillager);
+      return this.getLeftArm2((ModelVillager)modelBase);
    }
 
    @Override
    public ModelRenderer getRightArm(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getRightArm2(modelVillager);
+      return this.getRightArm2((ModelVillager)modelBase);
    }
 
    @Override
    public ModelRenderer getLeftLeg(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getLeftLeg2(modelVillager);
+      return this.getLeftLeg2((ModelVillager)modelBase);
    }
 
    @Override
    public ModelRenderer getRightLeg(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getRightLeg2(modelVillager);
+      return this.getRightLeg2((ModelVillager)modelBase);
    }
 
    @Override
    public ModelRenderer getBody(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getBody2(modelVillager);
+      return this.getBody2((ModelVillager)modelBase);
    }
 
    @Override
    public ModelRenderer getHead(ModelBase modelBase) {
-      ModelVillager modelVillager = (ModelVillager)modelBase;
-      return this.getHead2(modelVillager);
+      return this.getHead2((ModelVillager)modelBase);
    }
 }

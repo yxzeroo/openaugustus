@@ -20,37 +20,30 @@ public class UNoise3RangeBasedAimMode extends UNoise3AimMode {
    public UNoise3RangeBasedAimMode(UNoise3SettingContext uNoise3SettingContext2) {
        super(uNoise3SettingContext2, "Range based", UNoise3AimConstraintType.POINT, true, true);
       this.ticksUntilReaim = 0;
-      UNoise3CircleAimMode.getControlFlowState();
       this.ticksOffTarget = 0;
       RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(
          uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getKeyPrefix() + this.getSettingsGroup().getName() + "_distance", 2.9, 3.1, 2.0, 4.0, 2, this.getSettingsGroup()
       );
-      String str = "Distance";
-      this.distance = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
+      this.distance = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Distance");
       randomizedRangeSettings = new RandomizedRangeSettings(uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getKeyPrefix() + this.getSettingsGroup().getName() + "_tickoffset", 0.0, 2.0, 0.0, 8.0, 0, this.getSettingsGroup());
-      String str2 = "Tick Offset";
-      this.tickoffset = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2);
+      this.tickoffset = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Tick Offset");
       randomizedRangeSettings = new RandomizedRangeSettings(
          uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getKeyPrefix() + this.getSettingsGroup().getName() + "_ticksofftarget", 3.0, 5.0, 0.0, 20.0, 0, this.getSettingsGroup()
       );
-      String str3 = "Ticks off target until reaim";
-      this.ticksofftarget = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str3);
+      this.ticksofftarget = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Ticks off target until reaim");
       randomizedRangeSettings = new RandomizedRangeSettings(
          uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getKeyPrefix() + this.getSettingsGroup().getName() + "_reaimanyway", 15.0, 30.0, 0.0, 200.0, 0, this.getSettingsGroup()
       );
-      String str4 = "Reaim anyway";
-      this.reaimanyway = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str4);
+      this.reaimanyway = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Reaim anyway");
       RandomizedRangeSettings randomizedRangeSettings2 = new RandomizedRangeSettings(
          uNoise3SettingContext2.getModule(), uNoise3SettingContext2.getKeyPrefix() + this.getSettingsGroup().getName() + "_rotationoffset", -3.0, 3.0, -20.0, 20.0, 2, this.getSettingsGroup()
       );
-      String str5 = "Rotation offset";
-      this.rotationoffset = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix(str5);
+      this.rotationoffset = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix("Rotation offset");
    }
 
    @Override
    public double computeTargetAngle(UNoise3AimContext uNoise3AimContext) {
       double d = uNoise3AimContext.playerEyePos.distanceTo(uNoise3AimContext.closestTargetPoint);
-      UNoise3CircleAimMode.getControlFlowState();
       boolean flag = false;
       if (this.ticksUntilReaim > 0) {
          this.ticksUntilReaim--;
@@ -67,8 +60,7 @@ public class UNoise3RangeBasedAimMode extends UNoise3AimMode {
 
       if (!flag && d <= 3.0) {
          double d2 = uNoise3AimContext.closestTargetPoint.xCoord - uNoise3AimContext.playerEyePos.xCoord;
-         double d3 = uNoise3AimContext.closestTargetPoint.zCoord - uNoise3AimContext.playerEyePos.zCoord;
-         float f = (float)(MathHelper.atan2(d3, d2) * 180.0 / 3.141592653589793 - 90.0);
+         float f = (float)(MathHelper.atan2(uNoise3AimContext.closestTargetPoint.zCoord - uNoise3AimContext.playerEyePos.zCoord, d2) * 180.0 / 3.141592653589793 - 90.0);
          float lastGoalAngle = (float)uNoise3AimContext.lastGoalAngle;
          double xCoord = uNoise3AimContext.playerEyePos.xCoord;
          double d4 = uNoise3AimContext.playerEyePos.yCoord - (double)uNoise3AimContext.player.getEyeHeight();

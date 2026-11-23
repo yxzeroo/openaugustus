@@ -5,23 +5,21 @@ import net.augustus.events.EventSwim;
 import net.augustus.events.listeners.LiquidJumpListener;
 import net.augustus.events.listeners.SwimListener;
 import net.augustus.modules.movement.Jesus;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class Swim113JesusMode extends AbstractJesusMode implements SwimListener, LiquidJumpListener {
 
-   public Swim113JesusMode(Jesus jesus, DoubleValue doubleValue) {
+   public Swim113JesusMode(Jesus jesus, SettingGroup doubleValue) {
       super(jesus, doubleValue, "1.13");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 38;
-      this.toggleEventSubscription(b);
-      byte b2 = 67;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)38);
+      this.toggleEventSubscription((byte)67);
    }
 
    @Override
@@ -33,7 +31,6 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
    }
 
    public void onSwim(EventSwim event) {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (this.shouldApplyJesus()) {
          event.cancel();
          boolean flag = mc.thePlayer.motionY <= 0.0;
@@ -54,8 +51,7 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
             f2 += (mc.thePlayer.getAIMoveSpeed() - f2) * depthStriderModifier / 3.0F;
          }
 
-         Vec3 vec = new Vec3((double)event.getStrafe(), 0.0, (double)event.getForward());
-         this.applyRelativeMovement(f2, vec);
+         this.applyRelativeMovement(f2, new Vec3((double)event.getStrafe(), 0.0, (double)event.getForward()));
          mc.thePlayer.moveEntity(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
          Vec3 vec2 = new Vec3(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
          if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.isOnLadder()) {
@@ -66,8 +62,7 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
          mc.thePlayer.motionY = vec2.yCoord * 0.800000011920929;
          mc.thePlayer.motionZ = vec2.zCoord * (double)f;
          Vec3 vec3 = new Vec3(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
-         double d = 0.07999999821186066;
-         Vec3 vec4 = this.applyFluidFallingMovement(d, flag, vec3);
+         Vec3 vec4 = this.applyFluidFallingMovement(0.07999999821186066, flag, vec3);
          mc.thePlayer.motionX = vec4.xCoord;
          mc.thePlayer.motionY = vec4.yCoord;
          mc.thePlayer.motionZ = vec4.zCoord;
@@ -79,15 +74,13 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
    }
 
    public void applyRelativeMovement(float f, Vec3 vec) {
-      float rotationYaw = mc.thePlayer.rotationYaw;
-      Vec3 inputVector = getInputVector(vec, f, rotationYaw);
+      Vec3 inputVector = getInputVector(vec, f, mc.thePlayer.rotationYaw);
       mc.thePlayer.motionX = mc.thePlayer.motionX + inputVector.xCoord;
       mc.thePlayer.motionY = mc.thePlayer.motionY + inputVector.yCoord;
       mc.thePlayer.motionZ = mc.thePlayer.motionZ + inputVector.zCoord;
    }
 
    private static Vec3 getInputVector(Vec3 vec, float f, float f2) {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       double d = vec.lengthSquared();
       if (d < 1.0E-7) {
          return new Vec3(0.0, 0.0, 0.0);
@@ -100,7 +93,6 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
    }
 
    public Vec3 applyFluidFallingMovement(double d, boolean flag, Vec3 vec) {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (mc.thePlayer.isSprinting()) {
          return vec;
       } else {
@@ -117,8 +109,7 @@ public class Swim113JesusMode extends AbstractJesusMode implements SwimListener,
 
    @Override
    public void onLiquidJump(EventLiquidJump event) {
-      double d = 0.03999999910593033;
-      event.setWaterMotionY(d);
+      event.setWaterMotionY(0.03999999910593033);
    }
 
 }

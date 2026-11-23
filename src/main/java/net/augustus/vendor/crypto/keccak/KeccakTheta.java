@@ -7,13 +7,10 @@ public class KeccakTheta {
 
    public void applyTheta(long[][] longsArr) {
       KeccakTheta keccakTheta = this;
-      long[][] longsArr2 = longsArr;
-      keccakTheta.computeColumnParity(longsArr2);
+      keccakTheta.computeColumnParity(longsArr);
       this.computeParityEffect();
       keccakTheta = this;
-      long[][] longsArr3 = longsArr;
-      long[][] longsArr4 = longsArr3;
-      keccakTheta.xorParityEffect(longsArr4);
+      keccakTheta.xorParityEffect(longsArr);
    }
 
    private void xorParityEffect(long[][] longsArr) {

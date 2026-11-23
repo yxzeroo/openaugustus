@@ -46,8 +46,7 @@ public final class Slf4jJulLoggerAdapter extends Logger {
    @Override
    public void log(LogRecord logRecord) {
       String message = logRecord.getMessage();
-      Level level = logRecord.getLevel();
-      this.log(level, message);
+      this.log(logRecord.getLevel(), message);
    }
 
    @Override
@@ -67,8 +66,7 @@ public final class Slf4jJulLoggerAdapter extends Logger {
 
    @Override
    public void log(Level level, String str, Object[] array) {
-      String str2 = MessageFormat.format(str, array);
-      this.log(level, str2);
+      this.log(level, MessageFormat.format(str, array));
    }
 
 

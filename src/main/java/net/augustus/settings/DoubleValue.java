@@ -1,183 +1,306 @@
 package net.augustus.settings;
 
-import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Objects;
 import net.augustus.modules.Module;
-import net.augustus.modules.misc.Debug;
-import net.augustus.modules.misc.Dummy;
+import net.augustus.clickgui.components.SliderComponent;
+import net.augustus.clickgui.components.TextFieldComponent;
+import net.augustus.utils.input.KeyboardInputUtil;
 import net.augustus.font.CustomFontUtil;
 import net.augustus.ClientManagers;
-import net.augustus.utils.ChatUtil;
-import net.augustus.settings.property.BooleanProperty;
-import net.augustus.config.ClipboardConfigCodec;
-import net.augustus.utils.audio.ClientSounds;
+import net.augustus.settings.property.DoubleProperty;
+import net.augustus.font.FontManager;
+import net.augustus.utils.math.MathStatisticsUtil;
 import net.augustus.render.RenderUtil;
 import net.augustus.Augustus;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.MathHelper;
 
 public class DoubleValue extends Setting {
-   private int maxChildWidth;
-   private final BooleanProperty b;
-   private float labelWidth;
-   private static final Color TREE_LINE_COLOR = new Color(166, 136, 97);
-   private final ArrayList visibleChildren;
-   private int renderedHeight;
-   private static final Color HEADER_COLOR = new Color(217, 156, 46);
-   private int visibleChildCount;
-   private final ArrayList children;
+   private final TextFieldComponent textField;
+   private int decimalPlaces;
+   private boolean wasArrowAdjusting;
+   private long arrowPressStartTimeMs;
+   private long lastArrowRepeatTimeMs;
+   private boolean scrollAdjusted;
+   private final SliderComponent slider;
+   private double minValue;
+   private int labelWidth;
+   private final DoubleProperty v;
+   private double lastSyncedValue;
+   private boolean arrowAdjusting;
+   private double maxValue;
 
    @Override
-   public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-      super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-      if (this.isExpanded()) {
-         int n = 20;
+   public int getHeight() {
+      return 27;
+   }
 
-         for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-            Setting setting = (Setting)this.visibleChildren.get(i);
-            if (setting.isVisible() && setting.isCachedVisible()) {
-               if (this.renderY + n + setting.getHeight() > -20 && this.renderY + n < this.boundsHeight + 20) {
-                  setting.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+   public DoubleValue visibleWhen(SettingVisibilityCondition condition) {
+      this.visibilityCondition = condition;
+      return this;
+   }
+
+   @Override
+   public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
+      customFontUtil = FontManager.consolas30TextField;
+      super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
+      String str = this.getDisplayName() + ": ";
+      this.wasArrowAdjusting = this.arrowAdjusting;
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
+         this.labelWidth = (int)customFontUtil.getStringWidth(str);
+      }
+
+      if (flag) {
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
+         customFontUtil.drawString(str, (double)n3, (double)n4, colorInt);
+         n3 += this.labelWidth;
+         int hoveredColor = RenderUtil.getHoveredColor(
+            colorInt,
+            0.2,
+            n,
+            n2,
+            (int)((float)n3 + (float)(200 - this.textField.getTextWidth()) / 2.0F) - 4,
+            n4,
+            this.textField.getTextWidth() + 8,
+            (int)(customFontUtil.getFontHeight() + 1.0F)
+         );
+         if (RenderUtil.isHovered((float)this.slider.getX(), (float)this.slider.getY(), (float)this.slider.getSliderWidth(), (float)this.slider.getSliderHeight(), n, n2)) {
+            if (this.arrowAdjusting
+               && (KeyboardInputUtil.isKeyDown(203) || KeyboardInputUtil.isKeyDown(205))
+               && System.currentTimeMillis() - this.arrowPressStartTimeMs >= 400L
+               && System.currentTimeMillis() - this.lastArrowRepeatTimeMs >= 50L) {
+               double d4 = 1.0 / Math.pow(10.0, (double)Math.min(this.decimalPlaces, 3)) * (double)(KeyboardInputUtil.isKeyDown(203) ? -1 : 1);
+               if (this.getValue() + d4 <= this.maxValue) {
+                  if (this.getValue() + d4 >= this.minValue) {
+                     this.setValue(this.getValue() + d4);
+                     this.notifyValueChanged();
+                     this.notifyUserChanged();
+                  }
                }
 
-               n += setting.getHeight();
+               this.lastArrowRepeatTimeMs = System.currentTimeMillis();
+            }
+
+            this.scrollAdjusted = false;
+            if (KeyboardInputUtil.isCtrlDown()) {
+               int lastDelta = Augustus.getInstance().getMouseWheelTracker().lastDelta;
+               if (lastDelta != 0) {
+                  lastDelta = lastDelta > 0 ? 1 : -1;
+                  double d6 = (double)Math.abs(lastDelta) / Math.pow(10.0, (double)Math.min(this.decimalPlaces, 3)) * (double)lastDelta;
+                  if (this.getValue() + d6 <= this.maxValue && this.getValue() + d6 >= this.minValue) {
+                     this.setValue(this.getValue() + d6);
+                     this.notifyValueChanged();
+                     this.notifyUserChanged();
+                     this.scrollAdjusted = true;
+                  }
+               }
             }
          }
+
+         if (!KeyboardInputUtil.isKeyDown(203) && !KeyboardInputUtil.isKeyDown(205)) {
+            this.arrowAdjusting = false;
+         }
+
+         int colorInt3 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt((byte)0);
+         double d11 = this.slider.drawSlider(n3, n4 - 2, (short)200, (byte)20, n, n2, this.getValue(), this.minValue, this.maxValue, this.decimalPlaces, customFontUtil, colorInt3, RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n3, n4 - 2, 200, 20));
+         if (d11 != this.getValue()) {
+            this.notifyValueChanged();
+            this.notifyUserChanged();
+         }
+
+         this.setValue(d11);
+         int n10 = (int)((float)n3 + (float)(200 - this.textField.getTextWidth()) / 2.0F);
+         this.textField.drawTextField(n10, n4, n, n2, customFontUtil, hoveredColor);
+         if (this.textField.isFocused()) {
+            if (!Objects.equals(this.textField.getText(), "")) {
+               if (!this.textField.getText().equals("-") && !this.textField.getText().endsWith("-") && !this.textField.getText().endsWith("E")) {
+                  Double d12 = this.tryParseDouble(this.textField.getText());
+                  if (d12 != null) {
+                     double d13 = d12;
+                     double d15 = this.roundToDecimals(d13, this.decimalPlaces);
+                     if (d15 != this.getValue()) {
+                        this.notifyValueChanged();
+                        this.notifyUserChanged();
+                     }
+
+                     this.setValue(d15);
+                  }
+               } else {
+                  this.setValue(1.7976931348623157E308);
+               }
+            }
+         } else {
+            double value2 = this.getValue();
+            Double d17;
+            if (this.textField.getText() != null && !this.textField.getText().isEmpty()) {
+               d17 = this.tryParseDouble(this.textField.getText());
+            } else {
+               d17 = null;
+            }
+
+            Double d18 = d17;
+            if (this.lastSyncedValue != value2 || d18 != null && d18 != value2) {
+               int n12 = (int)value2;
+               if ((double)n12 != value2) {
+                  this.textField.setText(String.valueOf(value2));
+               } else {
+                  this.textField.setText(String.valueOf(n12));
+               }
+            } else if (this.textField.getText() != null && this.textField.getText().isEmpty()) {
+               int lastSyncedValue2 = (int)this.lastSyncedValue;
+               if ((double)lastSyncedValue2 != this.lastSyncedValue) {
+                  this.textField.setText(String.valueOf(this.lastSyncedValue));
+               } else {
+                  this.textField.setText(String.valueOf(lastSyncedValue2));
+               }
+            }
+
+            this.lastSyncedValue = this.getValue();
+         }
+
+         this.setFocused(this.textField.isFocused() || this.slider.isDragging());
+         this.contentWidth = n3 + 220;
       }
    }
 
-   public DoubleValue(Module module, String str, DoubleValue doubleValue) {
-       super(module, doubleValue, str + "Groupygroupy");
-      this.children = new ArrayList();
-      this.renderedHeight = 0;
-      this.maxChildWidth = 0;
-      this.b = new BooleanProperty(this, "B", false);
-      this.labelWidth = -1.0F;
-      this.visibleChildren = new ArrayList();
-      this.visibleChildCount = 0;
-      this.withDisplayName(str);
-      if (module != null && !(module instanceof Dummy)) {
-         ClientManagers.settingManager.registerSetting(this);
-         doubleValue.getChildren().removeIf(obj -> this.matchesSubGroupName((Setting)obj));
-         doubleValue.getChildren().add(this);
+   public TextFieldComponent getTextField() {
+      return this.textField;
+   }
+
+   public void setValue(double d) {
+      DoubleProperty doubleProperty = this.v;
+      Double d2 = d;
+      doubleProperty.setValue(d2);
+   }
+
+   public void setMaxValue(double d) {
+      this.maxValue = d;
+   }
+
+   public void setMinValue(double d) {
+      this.minValue = d;
+   }
+
+   private double roundToDecimals(double d, int n) {
+      if (n == 0) {
+         return (double)((int)d);
+      } else {
+         double d2 = Math.pow(10.0, (double)n);
+         return (double)Math.round(d * d2) / d2;
       }
+   }
+
+   private DoubleValue(String str, Module module, SettingGroup doubleValue, double d, double d2, double d3, int n) {
+       super(module, doubleValue, str);
+      this.v = new DoubleProperty(this, "V", 0.0);
+      this.slider = new SliderComponent();
+      this.lastArrowRepeatTimeMs = 0L;
+      this.arrowPressStartTimeMs = 0L;
+      this.arrowAdjusting = false;
+      this.labelWidth = -1;
+      this.lastSyncedValue = 0.0;
+      this.wasArrowAdjusting = false;
+      this.scrollAdjusted = false;
+      this.setValue(d);
+      DoubleProperty doubleProperty = this.v;
+      Double d4 = d;
+      doubleProperty.setDefaultValue(d4);
+      this.minValue = d2;
+      this.maxValue = d3;
+      this.decimalPlaces = n;
+      this.textField = new TextFieldComponent(String.valueOf(d), StringInputMode.NUMERIC);
+   }
+
+   public DoubleValue(String str, double d, double d2, double d3, int n) {
+       this(str, null, null, d, d2, d3, n);
+   }
+
+   public DoubleValue named(String str) {
+      this.setDisplayName(str);
+      return this;
+   }
+
+   public DoubleValue(Module module, String str, double d, double d2, double d3, int n) {
+       this(str, module, null, d, d2, d3, n);
    }
 
    @Override
    public void resetToDefault() {
-      this.b.resetToDefault();
+      this.v.resetToDefault();
    }
 
-   public DoubleValue visibleWhen(SettingVisibilityCondition condition) {
-      return (DoubleValue)super.withVisibility(condition);
+   public double getMaxValue() {
+      return this.maxValue;
    }
 
-   private boolean matchesExpandedGroupName(Setting setting) {
-      return setting.getName().equals(this.getName());
+   private Double tryParseDouble(String str) {
+      try {
+         return Double.parseDouble(str);
+      } catch (NumberFormatException e) {
+         return null;
+      }
    }
 
-   private boolean matchesGroupName(Setting setting) {
-      return setting.getName().equals(this.getName());
+   public double getValue() {
+      return (Double)this.v.getValue();
    }
 
-   public DoubleValue(Module module, String str, boolean flag) {
-       super(module, null, str + "Groupygroupy");
-      this.children = new ArrayList();
-      this.renderedHeight = 0;
-      this.maxChildWidth = 0;
-      this.b = new BooleanProperty(this, "B", false);
-      this.labelWidth = -1.0F;
-      this.visibleChildren = new ArrayList();
-      this.visibleChildCount = 0;
-      this.withDisplayName(str);
-      this.setExpanded(flag);
-      BooleanProperty booleanProperty = this.b;
-      Boolean bool = flag;
-      booleanProperty.setDefaultValue(bool);
-      if (module != null && !(module instanceof Dummy)) {
-         ClientManagers.settingManager.registerSetting(this);
-         this.getParentModule().getSettings().removeIf(obj -> this.matchesExpandedGroupName((Setting)obj));
-         this.getParentModule().getSettings().add(this);
+   @Override
+   public void randomize() {
+      if (this.getName().contains("frequency")) {
+         this.setValue(MathStatisticsUtil.lerp(this.minValue, 5.0, Math.random()));
+      } else if (this.getDisplayName().contains("Rate of change")) {
+         this.setValue(MathStatisticsUtil.lerp(this.minValue, 5.0, Math.random()));
+      } else {
+         this.setValue(MathStatisticsUtil.lerp(this.minValue, this.maxValue, Math.random()));
       }
    }
 
    @Override
-   public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-      super.mouseClicked(mouseX, mouseY, mouseButton);
-      boolean flag = false;
-      int n = 20;
-      if (this.isExpanded() && Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting != this) {
-         for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-            Setting setting = (Setting)this.visibleChildren.get(i);
-            if (setting.isVisible() && setting.isCachedVisible() && (setting.isVisualOnly() || !this.getParentModule().isLoadFromConfig() || Augustus.getInstance().isConfigEditingEnabled())) {
-               if (this.renderY + n + setting.getHeight() > -20 && this.renderY + n < this.boundsHeight + 20) {
-                  boolean flag2 = setting.mouseClicked(mouseX, mouseY, mouseButton);
-                  if (flag2) {
-                     flag = true;
-                     break;
-                  }
-               }
-
-               n += setting.getHeight();
-            }
-         }
-      }
-
-      if (mouseButton == 0 || mouseButton == 1) {
-         float f = this.labelWidth + 20.0F;
-         if (RenderUtil.isHovered((float)this.renderX, (float)this.renderY, f, this.renderFont.getFontHeight(), mouseX, mouseY)
-            && this != Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting) {
-            if (mouseButton == 0) {
-               boolean flag3 = !this.isExpanded();
-               this.setExpanded(flag3);
-            } else {
-               Augustus.getInstance().getClickGui().getMainWindow().contextMenuX = mouseX + 210;
-               Augustus.getInstance().getClickGui().getMainWindow().contextMenuY = mouseY + 95;
-               Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting = this;
-            }
-
-            flag = true;
-         } else if (this == Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting) {
-            if (RenderUtil.isHovered(
-               (float)Augustus.getInstance().getClickGui().getMainWindow().contextMenuX, (float)Augustus.getInstance().getClickGui().getMainWindow().contextMenuY, 130.0F, 59.0F, mouseX + 210, mouseY + 95
-            )) {
-               int n2 = mouseX + 210;
-               int n3 = mouseY + 95;
-               int n4 = n2;
-               this.handleContextMenuClick(n4, n3);
-               flag = true;
-            } else {
-               Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting = null;
-            }
-         }
-      }
-
-      return flag;
+   public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+      super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+      this.slider.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
    }
 
-
-   public boolean hasVisibleChildren() {
-      return this.visibleChildCount != 0;
+   public double getMinValue() {
+      return this.minValue;
    }
 
    @Override
-   public void keyTyped(char typedChar, int keyCode) throws IOException {
-      super.keyTyped(typedChar, keyCode);
-      if (this.isExpanded()) {
-         int n = 20;
+   public void mouseReleased(int mouseX, int mouseY, int state) {
+      super.mouseReleased(mouseX, mouseY, state);
+      this.slider.mouseReleased(mouseX, mouseY, state);
+   }
 
-         for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-            Setting setting = (Setting)this.visibleChildren.get(i);
-            if (setting.isVisible() && setting.isCachedVisible()) {
-               if (this.renderY + n + setting.getHeight() > -20 && this.renderY + n < this.boundsHeight + 20) {
-                  setting.keyTyped(typedChar, keyCode);
-               }
+   @Override
+   public void renderTooltip() {
+      this.drawDescriptionTooltip(this.labelWidth);
+   }
 
-               n += setting.getHeight();
-            }
-         }
-      }
+   public void setDecimalPlaces(int n) {
+      this.decimalPlaces = n;
+   }
+
+   public boolean isWasArrowAdjusting() {
+      return this.wasArrowAdjusting;
+   }
+
+   public double getValue(boolean flag) {
+      return flag ? MathHelper.clamp_double(this.getValue(), this.minValue, this.maxValue) : this.getValue();
+   }
+
+   public int getDecimalPlaces() {
+      return this.decimalPlaces;
+   }
+
+   @Override
+   public Setting withDisplayName(String str) {
+      return this.named(str);
+   }
+
+   public SliderComponent getSlider() {
+      return this.slider;
    }
 
    @Override
@@ -186,239 +309,41 @@ public class DoubleValue extends Setting {
    }
 
    @Override
-   public void mouseReleased(int mouseX, int mouseY, int state) {
-      super.mouseReleased(mouseX, mouseY, state);
-      if (this.isExpanded()) {
-         int n = 20;
+   public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+      super.mouseClicked(mouseX, mouseY, mouseButton);
+      this.textField.mouseClicked(mouseX, mouseY, mouseButton);
+      this.slider.mouseClicked(mouseX, mouseY, mouseButton);
+      return false;
+   }
 
-         for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-            Setting setting = (Setting)this.visibleChildren.get(i);
-            if (setting.isVisible() && setting.isCachedVisible()) {
-               if (this.renderY + n + setting.getHeight() > -20 && this.renderY + n < this.boundsHeight + 20) {
-                  setting.mouseReleased(mouseX, mouseY, state);
-               }
+   public DoubleValue(Module module, String str, double d, double d2, double d3, int n, SettingGroup doubleValue) {
+       this(str, module, doubleValue, d, d2, d3, n);
+   }
 
-               n += setting.getHeight();
-            }
+   @Override
+   public void keyTyped(char typedChar, int keyCode) throws IOException {
+      super.keyTyped(typedChar, keyCode);
+      this.textField.keyTyped(typedChar, keyCode);
+      this.slider.keyTyped(typedChar, keyCode);
+      if (RenderUtil.isHovered(
+            (float)this.slider.getX(), (float)this.slider.getY(), (float)this.slider.getSliderWidth(), (float)this.slider.getSliderHeight(), this.lastMouseX, this.lastMouseY
+         )
+         && (keyCode == 203 || keyCode == 205)) {
+         this.arrowAdjusting = true;
+         this.arrowPressStartTimeMs = System.currentTimeMillis();
+         this.lastArrowRepeatTimeMs = System.currentTimeMillis();
+         double d = 1.0 / Math.pow(10.0, (double)this.decimalPlaces) * (double)(keyCode == 203 ? -1 : 1);
+         if (this.getValue() + d <= this.maxValue && this.getValue() + d >= this.minValue) {
+            this.setValue(this.getValue() + d);
+            this.notifyValueChanged();
+            this.notifyUserChanged();
          }
       }
    }
 
-   private void handleContextMenuClick(int n, int n2) {
-      if (Augustus.getInstance().getClickGui().getMainWindow().contextMenuSetting == this && Augustus.getInstance().isConfigEditingEnabled()) {
-         int contextMenuX = Augustus.getInstance().getClickGui().getMainWindow().contextMenuX;
-         int contextMenuY = Augustus.getInstance().getClickGui().getMainWindow().contextMenuY;
-         if (RenderUtil.isHovered((float)contextMenuX, (float)contextMenuY, 130.0F, 19.0F, n, n2)) {
-            boolean flag = ClipboardConfigCodec.importSettingGroupFromClipboard(this.getParentModule(), this);
-            if (!flag) {
-               ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
-               ChatUtil.sendChat3("Failed to import " + this.getName() + " to clipboard");
-            }
-         } else if (RenderUtil.isHovered((float)contextMenuX, (float)(contextMenuY + 21), 130.0F, 19.0F, n, n2)) {
-            boolean flag2 = ClipboardConfigCodec.exportSettingGroup(this.getParentModule(), this);
-            if (!flag2) {
-               ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
-               ChatUtil.sendChat3("Failed to export " + this.getName() + " to clipboard");
-            }
-         }
-      }
+   public boolean isScrollAdjusted() {
+      return this.scrollAdjusted;
    }
 
-   public boolean isExpanded() {
-      return (Boolean)this.b.getValue();
-   }
-
-   @Override
-   public void renderTooltip() {
-      int n = (int)(this.labelWidth + 20.0F);
-      this.drawDescriptionTooltip(n);
-
-      for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-         Setting setting = (Setting)this.visibleChildren.get(i);
-         setting.renderTooltip();
-      }
-   }
-
-   public DoubleValue(Module module, String str) {
-       super(module, null, str + "Groupygroupy");
-      this.children = new ArrayList();
-      this.renderedHeight = 0;
-      this.maxChildWidth = 0;
-      this.b = new BooleanProperty(this, "B", false);
-      this.labelWidth = -1.0F;
-      this.visibleChildren = new ArrayList();
-      this.visibleChildCount = 0;
-      this.withDisplayName(str);
-      if (module != null && !(module instanceof Dummy)) {
-         ClientManagers.settingManager.registerSetting(this);
-         this.getParentModule().getSettings().removeIf(obj -> this.matchesGroupName((Setting)obj));
-         this.getParentModule().getSettings().add(this);
-      }
-   }
-
-   public void setExpanded(boolean flag) {
-      BooleanProperty booleanProperty = this.b;
-      Boolean bool = flag;
-      Boolean bool2 = bool;
-      booleanProperty.setValue(bool2);
-   }
-
-   @Override
-   public int getHeight() {
-      return this.renderedHeight;
-   }
-
-   @Override
-   public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
-      super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
-      String displayName2 = this.getDisplayName();
-      boolean flag2 = this.labelWidth == -1.0F;
-      int n7;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
-         this.labelWidth = (float)((int)customFontUtil.getStringWidth(displayName2));
-      }
-
-      if (flag) {
-         int hoveredColor = RenderUtil.getHoveredColor(HEADER_COLOR.getRGB(), 0.149, n, n2, this.renderX, this.renderY, (int)(this.labelWidth + 20.0F), (int)customFontUtil.getFontHeight());
-         double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(displayName2, d3, d2, hoveredColor);
-         if (this.isExpanded()) {
-            RenderUtil.drawFilledTriangle((float)n3 + this.labelWidth + 11.0F, (float)(n4 + 8), 10.0F, hoveredColor);
-         } else {
-            GL11.glPushMatrix();
-            float f = (float)n3 + this.labelWidth + 11.0F;
-            float f2 = (float)(n4 + 8);
-            GlStateManager.translate(f, f2, 0.0F);
-            GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.translate(-f, -f2, 0.0F);
-            RenderUtil.drawFilledTriangle(f, f2, 10.0F, hoveredColor);
-            GL11.glPopMatrix();
-         }
-      }
-
-      this.renderedHeight = 20;
-      if (this.isExpanded()) {
-         for (int i = 0; i < this.visibleChildCount && i < this.visibleChildren.size(); i++) {
-            Setting setting = (Setting)this.visibleChildren.get(i);
-            if (setting.isVisible() && setting.isCachedVisible() && (setting.isVisualOnly() || !this.getParentModule().isLoadFromConfig() || Augustus.getInstance().isConfigEditingEnabled())) {
-               boolean flag4 = n4 + this.renderedHeight + setting.getHeight() > -20 && n4 + this.renderedHeight < n6 + 20;
-               n7 = n3 + 11;
-               int n8 = n4 + this.renderedHeight;
-               int n9 = n5 - 10;
-               boolean flag5 = flag4 && flag;
-               int n10 = n9;
-               int n11 = n8;
-               int n12 = n7;
-               setting.render(n, n2, n12, n11, n10, n6, customFontUtil, flag5);
-               Setting setting2 = (Setting)this.visibleChildren.get(this.visibleChildCount - 1);
-               if (setting.equals(setting2)) {
-                  RenderUtil.drawRect(
-                     (double)(n3 + 5),
-                     (double)((float)n4 + customFontUtil.getFontHeight() / 2.0F + (float)this.renderedHeight),
-                     (double)(n3 + 8),
-                     (double)((float)n4 + customFontUtil.getFontHeight() / 2.0F + (float)this.renderedHeight - 2.0F),
-                     TREE_LINE_COLOR.getRGB()
-                  );
-                  RenderUtil.drawRect(
-                     (double)(n3 + 3),
-                     (double)((float)n4 + customFontUtil.getFontHeight()),
-                     (double)(n3 + 5),
-                     (double)((float)n4 + customFontUtil.getFontHeight() / 2.0F + (float)this.renderedHeight),
-                     TREE_LINE_COLOR.getRGB()
-                  );
-               } else {
-                  RenderUtil.drawRect(
-                     (double)(n3 + 5),
-                     (double)((float)n4 + customFontUtil.getFontHeight() / 2.0F + (float)this.renderedHeight),
-                     (double)(n3 + 7),
-                     (double)((float)n4 + customFontUtil.getFontHeight() / 2.0F + (float)this.renderedHeight - 2.0F),
-                     TREE_LINE_COLOR.getRGB()
-                  );
-                  RenderUtil.drawRect(
-                     (double)(n3 + 3),
-                     (double)((float)n4 + customFontUtil.getFontHeight()),
-                     (double)(n3 + 5),
-                     (double)((float)n4 + customFontUtil.getFontHeight() + (float)this.renderedHeight),
-                     TREE_LINE_COLOR.getRGB()
-                  );
-               }
-
-               this.renderedHeight = this.renderedHeight + setting.getHeight();
-               if (this.maxChildWidth < setting.getContentWidth()) {
-                  this.maxChildWidth = setting.getContentWidth();
-               }
-            }
-         }
-      } else {
-         this.renderedHeight = 27;
-      }
-   }
-
-   private boolean matchesSubGroupName(Setting setting) {
-      return setting.getName().equals(this.getName());
-   }
-
-   public DoubleValue(Module module, String str, boolean flag, DoubleValue doubleValue) {
-       super(module, doubleValue, str + "Groupygroupy");
-      this.children = new ArrayList();
-      this.renderedHeight = 0;
-      this.maxChildWidth = 0;
-      this.b = new BooleanProperty(this, "B", false);
-      this.labelWidth = -1.0F;
-      this.visibleChildren = new ArrayList();
-      this.visibleChildCount = 0;
-      this.withDisplayName(str);
-      this.setExpanded(flag);
-      BooleanProperty booleanProperty = this.b;
-      Boolean bool = flag;
-      booleanProperty.setDefaultValue(bool);
-      if (module != null && !(module instanceof Dummy)) {
-         ClientManagers.settingManager.registerSetting(this);
-         doubleValue.getChildren().removeIf(obj -> this.matchesNestedGroupName((Setting)obj));
-         doubleValue.getChildren().add(this);
-      }
-   }
-
-   public ArrayList getChildren() {
-      return this.children;
-   }
-
-   private boolean matchesNestedGroupName(Setting setting) {
-      return setting.getName().equals(this.getName());
-   }
-
-   @Override
-   public int getContentWidth() {
-      return this.maxChildWidth;
-   }
-
-   @Override
-   public void updateVisibility() {
-      super.updateVisibility();
-      this.visibleChildCount = 0;
-
-      for (Setting setting : (Iterable<Setting>)(this.children)) {
-         boolean isVisible = setting.isVisible();
-         setting.setCachedVisible(isVisible);
-         CustomFontUtil renderFont2 = this.renderFont;
-         setting.setRenderFont(renderFont2);
-         if (setting.isVisible() && setting.isCachedVisible() && (setting.isVisualOnly() || !this.getParentModule().isLoadFromConfig() || Augustus.getInstance().isConfigEditingEnabled())) {
-            if (this.visibleChildren.size() <= this.visibleChildCount) {
-               this.visibleChildren.add(setting);
-            } else {
-               this.visibleChildren.set(this.visibleChildCount, setting);
-            }
-
-            this.visibleChildCount++;
-         }
-      }
-
-      for (Setting setting2 : (Iterable<Setting>)(this.children)) {
-         setting2.updateVisibility();
-      }
-   }
 
 }

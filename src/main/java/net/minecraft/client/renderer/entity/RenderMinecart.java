@@ -46,10 +46,7 @@ public class RenderMinecart extends Render {
       this.bindEntityTexture(entityMinecart);
       long l = (long)entityMinecart.getEntityId() * 493286711L;
       l = l * l * 4392167121L + l * 98761L;
-      float f3 = (((float)(l >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-      float f4 = (((float)(l >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-      float f5 = (((float)(l >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-      GlStateManager.translate(f3, f4, f5);
+      GlStateManager.translate((((float)(l >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F, (((float)(l >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F, (((float)(l >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F);
       double d4 = entityMinecart.lastTickPosX + (entityMinecart.posX - entityMinecart.lastTickPosX) * (double)f2;
       double d5 = entityMinecart.lastTickPosY + (entityMinecart.posY - entityMinecart.lastTickPosY) * (double)f2;
       double d6 = entityMinecart.lastTickPosZ + (entityMinecart.posZ - entityMinecart.lastTickPosZ) * (double)f2;

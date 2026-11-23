@@ -23,8 +23,7 @@ public class WorldGenTaiga1 extends WorldGenAbstractTree {
    public boolean generate(World world, Random rand, BlockPos pos) {
       int n = rand.nextInt(5) + 7;
       int n2 = n - rand.nextInt(2) - 3;
-      int n3 = n - n2;
-      int n4 = 1 + rand.nextInt(n3 + 1);
+      int n4 = 1 + rand.nextInt((n - n2) + 1);
       boolean flag = true;
       if (pos.getY() >= 1 && pos.getY() + n + 1 <= 256) {
          for (int i = pos.getY(); i <= pos.getY() + 1 + n && flag; i++) {

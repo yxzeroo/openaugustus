@@ -73,8 +73,7 @@ public class ItemEnderEye extends Item {
          EnumFacing facing2 = value.rotateY();
 
          for (int j = -2; j <= 2; j++) {
-            BlockPos pos2 = pos.offset(facing2, j);
-            IBlockState blockState2 = world.getBlockState(pos2);
+            IBlockState blockState2 = world.getBlockState(pos.offset(facing2, j));
             if (blockState2.getBlock() == Blocks.end_portal_frame) {
                if (!(Boolean)blockState2.getValue(BlockEndPortalFrame.EYE)) {
                   flag2 = false;
@@ -93,8 +92,7 @@ public class ItemEnderEye extends Item {
             BlockPos pos3 = pos.offset(value, 4);
 
             for (int k = n; k <= n2; k++) {
-               BlockPos pos4 = pos3.offset(facing2, k);
-               IBlockState blockState3 = world.getBlockState(pos4);
+               IBlockState blockState3 = world.getBlockState(pos3.offset(facing2, k));
                if (blockState3.getBlock() != Blocks.end_portal_frame || !(Boolean)blockState3.getValue(BlockEndPortalFrame.EYE)) {
                   flag2 = false;
                   break;
@@ -105,8 +103,7 @@ public class ItemEnderEye extends Item {
                pos3 = pos.offset(facing2, m);
 
                for (int idx = 1; idx <= 3; idx++) {
-                  BlockPos pos5 = pos3.offset(value, idx);
-                  IBlockState blockState4 = world.getBlockState(pos5);
+                  IBlockState blockState4 = world.getBlockState(pos3.offset(value, idx));
                   if (blockState4.getBlock() != Blocks.end_portal_frame || !(Boolean)blockState4.getValue(BlockEndPortalFrame.EYE)) {
                      flag2 = false;
                      break;
@@ -119,8 +116,7 @@ public class ItemEnderEye extends Item {
                   pos3 = pos.offset(facing2, index);
 
                   for (int i2 = 1; i2 <= 3; i2++) {
-                     BlockPos pos6 = pos3.offset(value, i2);
-                     world.setBlockState(pos6, Blocks.end_portal.getDefaultState(), 2);
+                     world.setBlockState(pos3.offset(value, i2), Blocks.end_portal.getDefaultState(), 2);
                   }
                }
             }

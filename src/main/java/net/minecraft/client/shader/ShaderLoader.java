@@ -24,8 +24,7 @@ public class ShaderLoader {
       ShaderLoader shaderLoader = (ShaderLoader)shaderType2.getLoadedShaders().get(str);
       if (shaderLoader == null) {
          ResourceLocation location = new ResourceLocation("shaders/program/" + str + shaderType2.getShaderExtension());
-         BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceManager.getResource(location).getInputStream());
-         byte[] bytes = toByteArray(bufferedInputStream);
+         byte[] bytes = toByteArray(new BufferedInputStream(resourceManager.getResource(location).getInputStream()));
          ByteBuffer buf = BufferUtils.createByteBuffer(bytes.length);
          buf.put(bytes);
          ((Buffer)buf).position(0);

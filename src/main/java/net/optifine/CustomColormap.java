@@ -108,8 +108,7 @@ public class CustomColormap implements IColorizer {
          }
 
          String str = this.source + ".png";
-         ResourceLocation location = new ResourceLocation(str);
-         InputStream resourceStream = Config.getResourceStream(location);
+         InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
          if (resourceStream == null) {
             return;
          }
@@ -246,18 +245,15 @@ public class CustomColormap implements IColorizer {
       if (blockFromName != null) {
          return new MatchBlock[]{new MatchBlock(Block.getIdFromBlock(blockFromName))};
       } else {
-         Pattern pattern = Pattern.compile("^block([0-9]+).*$");
-         Matcher matcher = pattern.matcher(this.name);
+         Matcher matcher = Pattern.compile("^block([0-9]+).*$").matcher(this.name);
          if (matcher.matches()) {
-            String str = matcher.group(1);
-            int n = Config.parseInt(str, -1);
+            int n = Config.parseInt(matcher.group(1), -1);
             if (n >= 0) {
                return new MatchBlock[]{new MatchBlock(n)};
             }
          }
 
-         ConnectedParser connectedParser = new ConnectedParser("Colormap");
-         MatchBlock[] matchBlocks2 = connectedParser.parseMatchBlock(this.name);
+         MatchBlock[] matchBlocks2 = new ConnectedParser("Colormap").parseMatchBlock(this.name);
          return matchBlocks2 != null ? matchBlocks2 : null;
       }
    }
@@ -341,10 +337,7 @@ public class CustomColormap implements IColorizer {
          if (n8 == 0) {
             return 0;
          } else {
-            int n9 = n5 / n8;
-            int n10 = n6 / n8;
-            int n11 = n7 / n8;
-            return n9 << 16 | n10 << 8 | n11;
+            return (n5 / n8) << 16 | (n6 / n8) << 8 | (n7 / n8);
          }
       }
    }
@@ -377,8 +370,7 @@ public class CustomColormap implements IColorizer {
    }
 
    public int getColor2(IBlockAccess world, BlockPos pos) {
-      BiomeGenBase colorBiome = CustomColors.getColorBiome(world, pos);
-      return this.getColor(colorBiome, pos);
+      return this.getColor(CustomColors.getColorBiome(world, pos), pos);
    }
 
    private static float[][] toRgb(int[] ints) {
@@ -402,10 +394,7 @@ public class CustomColormap implements IColorizer {
       int biomeID = biomeGenBase.biomeID;
       int n = pos.getY() - this.yOffset;
       if (this.yVariance > 0) {
-         int n2 = pos.getX() << 16 + pos.getZ();
-         int n3 = Config.intHash(n2);
-         int n4 = this.yVariance * 2 + 1;
-         int n5 = (n3 & 0xFF) % n4 - this.yVariance;
+         int n5 = (Config.intHash(pos.getX() << 16 + pos.getZ()) & 0xFF) % (this.yVariance * 2 + 1) - this.yVariance;
          n += n5;
       }
 
@@ -425,9 +414,7 @@ public class CustomColormap implements IColorizer {
       double d = (double)MathHelper.clamp_float(biomeGenBase.getFloatTemperature(pos), 0.0F, 1.0F);
       double d2 = (double)MathHelper.clamp_float(biomeGenBase.getFloatRainfall(), 0.0F, 1.0F);
       d2 *= d;
-      int n = (int)((1.0 - d) * (double)(this.width - 1));
-      int n2 = (int)((1.0 - d2) * (double)(this.height - 1));
-      return this.getColor3(n, n2);
+      return this.getColor3((int)((1.0 - d) * (double)(this.width - 1)), (int)((1.0 - d2) * (double)(this.height - 1)));
    }
 
    public int getLength() {

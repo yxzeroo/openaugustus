@@ -10,22 +10,22 @@ import net.augustus.events.EventMouseMove;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.animation.AnimationUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class CustomZoom extends Module implements ZoomListener, MouseMoveListener {
-   public final StringValue zoomFactor;
-   public final BooleansSetting animationModes;
-   public final StringValue animationTime;
+   public final DoubleValue zoomFactor;
+   public final StringValue animationModes;
+   public final DoubleValue animationTime;
    public final BooleanValue fastZoom;
    private final AnimationUtil zoomAnimation;
    private boolean wasZoomKeyDown;
 
    public CustomZoom() {
        super("CustomZoom", "EinstellbarerZoom", new Color(252, 186, 3), Categorys.RENDER);
-      this.zoomFactor = new StringValue(this, "ZoomFactor", 4.0, 1.0, 10.0, 2);
-      this.animationModes = new BooleansSetting(this, "AnimationModes", "easeOutQuint", AnimationUtil.getEasingNames(true));
-      StringValue stringValue = new StringValue(this, "AnimationTime", 200.0, 0.0, 1000.0, 0);
+      this.zoomFactor = new DoubleValue(this, "ZoomFactor", 4.0, 1.0, 10.0, 2);
+      this.animationModes = new StringValue(this, "AnimationModes", "easeOutQuint", AnimationUtil.getEasingNames(true));
+      DoubleValue stringValue = new DoubleValue(this, "AnimationTime", 200.0, 0.0, 1000.0, 0);
       SettingVisibilityCondition condition = () -> {
          return !this.animationModes.getSelectedValue().equalsIgnoreCase("None");
       };
@@ -45,10 +45,8 @@ public class CustomZoom extends Module implements ZoomListener, MouseMoveListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 46;
-      this.toggleEventSubscription(b);
-      byte b2 = 19;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)46);
+      this.toggleEventSubscription((byte)19);
    }
 
    @Override

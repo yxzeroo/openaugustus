@@ -51,10 +51,7 @@ public class GoalNear implements IGoalRenderPos, Goal {
 
    @Override
    public double heuristic(int n, int n2, int n3) {
-      int n4 = n - this.x;
-      int n5 = n2 - this.y;
-      int n6 = n3 - this.z;
-      return GoalBlock.calculate((double)n4, n5, (double)n6);
+      return GoalBlock.calculate((double)(n - this.x), n2 - this.y, (double)(n3 - this.z));
    }
 
    @Override

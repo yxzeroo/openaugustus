@@ -23,8 +23,8 @@ import net.augustus.utils.player.PlayerUtil;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -44,9 +44,9 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
    public final TimeHelper activationDelayTimer;
    public final TimeHelper worldChangeTimer;
    private WorldClient lastWorld;
-   public final StringValue delay;
-   public final StringValue timerTicksForward;
-   public final StringValue tolerance;
+   public final DoubleValue delay;
+   public final DoubleValue timerTicksForward;
+   public final DoubleValue tolerance;
    public final BooleanValue balanceCheck;
    public final RangeSetting additionalStop;
    public final BooleanValue onlyOnGround;
@@ -55,7 +55,7 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
    public final BooleanValue notInLiquid;
    public final BooleanValue clickCheck;
    public final BooleanValue forbiddenSneak;
-   public final BooleansSetting fixMode;
+   public final StringValue fixMode;
    public int fastAttackScore;
    private long lastPosLookTimeMs;
    private boolean delayingIncoming;
@@ -71,9 +71,9 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
       this.activationDelayTimer = new TimeHelper();
       this.worldChangeTimer = new TimeHelper();
       this.lastWorld = null;
-      this.delay = new StringValue(this, "Delay", 0.0, 0.0, 20000.0, 0);
-      this.timerTicksForward = new StringValue(this, "TimerTicksForward", 5.0, 1.0, 10.0, 0);
-      this.tolerance = new StringValue(this, "Tolerance", 0.0, -1.0, 1.0, 2);
+      this.delay = new DoubleValue(this, "Delay", 0.0, 0.0, 20000.0, 0);
+      this.timerTicksForward = new DoubleValue(this, "TimerTicksForward", 5.0, 1.0, 10.0, 0);
+      this.tolerance = new DoubleValue(this, "Tolerance", 0.0, -1.0, 1.0, 2);
       this.balanceCheck = new BooleanValue(this, "BalanceCheck", true);
       this.additionalStop = new RangeSetting(this, "AdditionalStop", 1.0, 0.0, 0.0, 300.0, 0);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false);
@@ -82,7 +82,7 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
       this.notInLiquid = new BooleanValue(this, "NotInLiquid", false);
       this.clickCheck = new BooleanValue(this, "ClickCheck", false);
       this.forbiddenSneak = new BooleanValue(this, "ForbiddenSneak", true);
-      this.fixMode = new BooleansSetting(this, "FixMode", "None", new String[]{"None", "Fix1", "Fix2"});
+      this.fixMode = new StringValue(this, "FixMode", "None", new String[]{"None", "Fix1", "Fix2"});
       this.fastAttackScore = 0;
       this.lastPosLookTimeMs = System.currentTimeMillis();
       this.delayingIncoming = false;
@@ -108,16 +108,11 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
    }
 
    public void updateEventSubscriptions() {
-      byte b = 25;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 18;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 42;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)42);
    }
 
    public void onMotion(EventMotion event) {
@@ -125,8 +120,7 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
          this.worldChangeTimer.reset();
       }
 
-      long l = 500L;
-      if (!this.worldChangeTimer.reached2(l)) {
+      if (!this.worldChangeTimer.reached2(500L)) {
          this.timerBalanceMs = -1L;
          this.lastMotionTimeMs = System.currentTimeMillis();
       }
@@ -142,15 +136,13 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
    public void onPacketDelay2(EventPacketDelay event) {
       EntityPlayerSP thePlayer = mc.thePlayer;
       if (!this.fixMode.getSelectedValue().equals("None") && thePlayer != null && thePlayer.ticksExisted > 10) {
-         boolean delayingIncoming2 = this.delayingIncoming;
-         event.setDelayed(delayingIncoming2);
+         event.setDelayed(this.delayingIncoming);
       }
    }
 
    public void onMoveInput3(EventMoveInput event) {
       if (this.patternTickIndex < 2) {
-         float f = ((float[])this.forwardMovePatterns.get(this.selectedPatternIndex))[this.patternTickIndex] * event.getMoveForward();
-         event.setMoveForward(f);
+         event.setMoveForward(((float[])this.forwardMovePatterns.get(this.selectedPatternIndex))[this.patternTickIndex] * event.getMoveForward());
       }
 
       this.patternTickIndex++;
@@ -169,9 +161,7 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
          && (!this.forbiddenSneak.getValue() || !mc.thePlayer.isSneaking())
          && (!this.clickCheck.getValue() || mc.gameSettings.keyBindAttack.isKeyDown())
          && (!this.onlyOnGround.getValue() || mc.thePlayer.onGround)) {
-         TimeHelper activationDelayTimer2 = this.activationDelayTimer;
-         long value = (long)this.delay.getValue();
-         if (activationDelayTimer2.reached2(value)
+         if (this.activationDelayTimer.reached2((long)this.delay.getValue())
             && (
                ClientManagers.moduleManager.killAura.isToggled() && ClientManagers.moduleManager.killAura.target != null
                   || ClientManagers.moduleManager.aimBot.isToggled() && ClientManagers.moduleManager.aimBot.target != null
@@ -282,14 +272,8 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
 
                         if (n2 >= 0) {
                            this.selectedPatternIndex = n2;
-                           float f2 = (float)i;
-                           event.setElapsedPartialTicks(f2);
-                           RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-                           double minValue = this.additionalStop.getMinValue();
-                           double maxValue = this.additionalStop.getMaxValue();
-                           double d12 = maxValue;
-                           double d13 = minValue;
-                           this.additionalStopMs = instance.nextInt(d13, d12);
+                           event.setElapsedPartialTicks((float)i);
+                           this.additionalStopMs = DefaultRandomGenerator.instance.nextInt(this.additionalStop.getMinValue(), this.additionalStop.getMaxValue());
                            if (ClientManagers.moduleManager.debug.isToggled() && ClientManagers.moduleManager.debug.timerRangeDebug.getValue()) {
                               String str = "Timered:  " + d5 + "  " + d6;
                               ClientManagers.moduleManager.debug.outputDebugMessage(str);
@@ -315,8 +299,7 @@ public class TimerRange extends Module implements PacketDelayListener, MoveInput
       if (this.balanceCheck.getValue() && this.timerBalanceMs > 0L) {
          long l = this.timerBalanceMs + (long)this.additionalStopMs;
          if (!this.balanceRecoveryTimer.reached2(l)) {
-            float f3 = 0.0F;
-            event.setElapsedPartialTicks(f3);
+            event.setElapsedPartialTicks(0.0F);
             this.delayingIncoming = true;
          }
       }

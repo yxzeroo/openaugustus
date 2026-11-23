@@ -86,16 +86,12 @@ public class EntityEnderman extends EntityMob {
          );
          double d = vec2.lengthVector();
          vec2 = vec2.normalize();
-         double d2 = vec.dotProduct(vec2);
-         return d2 > 1.0 - 0.025 / d ? player.canEntityBeSeen(this) : false;
+         return vec.dotProduct(vec2) > 1.0 - 0.025 / d ? player.canEntityBeSeen(this) : false;
       }
    }
 
    public boolean teleportRandomly() {
-      double d = this.posX + (this.rand.nextDouble() - 0.5) * 64.0;
-      double d2 = this.posY + (double)(this.rand.nextInt(64) - 32);
-      double d3 = this.posZ + (this.rand.nextDouble() - 0.5) * 64.0;
-      return this.teleportTo(d, d2, d3);
+      return this.teleportTo(this.posX + (this.rand.nextDouble() - 0.5) * 64.0, this.posY + (double)(this.rand.nextInt(64) - 32), this.posZ + (this.rand.nextDouble() - 0.5) * 64.0);
    }
 
    @Override
@@ -126,8 +122,7 @@ public class EntityEnderman extends EntityMob {
 
          while (!flag2 && pos.getY() > 0) {
             BlockPos pos2 = pos.down();
-            Block block = this.entityWorld.getBlockState(pos2).getBlock();
-            if (block.getMaterial().blocksMovement()) {
+            if (this.entityWorld.getBlockState(pos2).getBlock().getMaterial().blocksMovement()) {
                flag2 = true;
             } else {
                this.posY--;
@@ -344,10 +339,7 @@ public class EntityEnderman extends EntityMob {
       );
       vec = vec.normalize();
       double d = 16.0;
-      double d2 = this.posX + (this.rand.nextDouble() - 0.5) * 8.0 - vec.xCoord * d;
-      double d3 = this.posY + (double)(this.rand.nextInt(16) - 8) - vec.yCoord * d;
-      double d4 = this.posZ + (this.rand.nextDouble() - 0.5) * 8.0 - vec.zCoord * d;
-      return this.teleportTo(d2, d3, d4);
+      return this.teleportTo(this.posX + (this.rand.nextDouble() - 0.5) * 8.0 - vec.xCoord * d, this.posY + (double)(this.rand.nextInt(16) - 8) - vec.yCoord * d, this.posZ + (this.rand.nextDouble() - 0.5) * 8.0 - vec.zCoord * d);
    }
 
    @Override
@@ -426,8 +418,7 @@ public class EntityEnderman extends EntityMob {
       public void resetTask() {
          this.player = null;
          this.enderman.setScreaming(false);
-         IAttributeInstance entityAttribute = this.enderman.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-         entityAttribute.removeModifier(EntityEnderman.accessAttackingSpeedBoostModifier());
+         this.enderman.getEntityAttribute(SharedMonsterAttributes.movementSpeed).removeModifier(EntityEnderman.accessAttackingSpeedBoostModifier());
          super.resetTask();
       }
 
@@ -475,8 +466,7 @@ public class EntityEnderman extends EntityMob {
                super.startExecuting();
                this.enderman.playSound("mob.endermen.stare", 1.0F, 1.0F);
                this.enderman.setScreaming(true);
-               IAttributeInstance entityAttribute = this.enderman.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-               entityAttribute.applyModifier(EntityEnderman.accessAttackingSpeedBoostModifier());
+               this.enderman.getEntityAttribute(SharedMonsterAttributes.movementSpeed).applyModifier(EntityEnderman.accessAttackingSpeedBoostModifier());
             }
          } else {
             if (this.targetEntity != null) {

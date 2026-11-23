@@ -96,8 +96,7 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener {
          }
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Tesselating block in world");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Block being tesselated");
-         CrashReportCategory.addBlockInfo(crashReportCategory, pos, state.getBlock(), state.getBlock().getMetaFromState(state));
+         CrashReportCategory.addBlockInfo(crashReport.makeCategory("Block being tesselated"), pos, state.getBlock(), state.getBlock().getMetaFromState(state));
          throw new ReportedException(crashReport);
       }
    }
@@ -122,8 +121,7 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener {
 
    public void renderBlockDamage(IBlockState state, BlockPos pos, TextureAtlasSprite textureAtlasSprite, IBlockAccess world) {
       Block block = state.getBlock();
-      int renderType = block.getRenderType();
-      if (renderType == 3) {
+      if (block.getRenderType() == 3) {
          state = block.getActualState(state, world, pos.getX(), pos.getY(), pos.getZ());
          IBakedModel modelForState = this.blockModelShapes.getModelForState(state);
          IBakedModel bakedModel = new SimpleBakedModel.Builder(modelForState, textureAtlasSprite).makeBakedModel();

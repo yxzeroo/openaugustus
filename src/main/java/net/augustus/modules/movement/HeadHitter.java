@@ -4,7 +4,6 @@ import java.awt.Color;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.ClientManagers;
-import net.augustus.settings.Setting;
 import net.augustus.utils.MoveUtil;
 import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.events.listeners.UpdateListener;
@@ -34,17 +33,13 @@ public class HeadHitter extends Module implements MoveInputListener, UpdateListe
    }
 
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)43);
    }
 
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!event.isJump()) {
-         boolean flag = this.shouldHeadHit();
-         event.setJump(flag);
+         event.setJump(this.shouldHeadHit());
       }
    }
 
@@ -55,7 +50,6 @@ public class HeadHitter extends Module implements MoveInputListener, UpdateListe
    }
 
    private boolean shouldHeadHit() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return (mc.currentScreen == null || this.inInventory.getValue())
          && (!ClientManagers.moduleManager.scaffold.isToggled() || !this.notWhileScaffold.getValue())
          && (!mc.gameSettings.keyBindSneak.isKeyDown() || !this.notWhileSneaking.getValue())

@@ -10,7 +10,6 @@ public class GeoModel {
    public ModelProperties properties;
 
    public Optional getBone(String str) {
-      int[] flowState = GeoVector3f.getFlowState();
 
       for (GeoBone geoBone : (Iterable<GeoBone>)(this.topLevelBones)) {
          GeoBone boneRecursively = this.getBoneRecursively(str, geoBone);
@@ -23,7 +22,6 @@ public class GeoModel {
    }
 
    private GeoBone getBoneRecursively(String str, GeoBone geoBone) {
-      int[] flowState = GeoVector3f.getFlowState();
       if (geoBone.name.equals(str)) {
          return geoBone;
       } else {

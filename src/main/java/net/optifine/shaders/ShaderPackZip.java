@@ -53,9 +53,7 @@ public class ShaderPackZip implements IShaderPack {
          Enumeration en = zipFile.entries();
 
          while (en.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry)en.nextElement();
-            String name = zipEntry.getName();
-            Matcher matcher = pattern.matcher(name);
+            Matcher matcher = pattern.matcher(((ZipEntry)en.nextElement()).getName());
             if (matcher.matches()) {
                String str = matcher.group(1);
                if (str != null) {
@@ -86,8 +84,7 @@ public class ShaderPackZip implements IShaderPack {
          }
 
          String str2 = StrUtils.removePrefix(str, "/");
-         ZipEntry entry = this.packZipFile.getEntry(this.baseFolder + str2);
-         return entry != null;
+         return this.packZipFile.getEntry(this.baseFolder + str2) != null;
       } catch (IOException e) {
          return false;
       }

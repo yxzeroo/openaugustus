@@ -22,8 +22,7 @@ public class EventLoadWorld extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      LoadWorldListener listener = (LoadWorldListener)obj;
-      this.call2(listener);
+      this.call2((LoadWorldListener)obj);
    }
 
    public void call2(LoadWorldListener listener) {

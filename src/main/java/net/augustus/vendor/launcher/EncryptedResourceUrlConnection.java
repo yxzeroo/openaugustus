@@ -15,9 +15,7 @@ public class EncryptedResourceUrlConnection extends URLConnection {
 
    @Override
    public InputStream getInputStream() throws IOException {
-      EncryptedClassLoader classLoader2 = this.classLoader;
-      String path = this.url.getPath();
-      return classLoader2.getResourceAsStream(path);
+      return this.classLoader.getResourceAsStream(this.url.getPath());
    }
 
    @Override

@@ -20,8 +20,7 @@ public class ShaderUniforms {
 
    public void setProgram(int n) {
       for (int i = 0; i < this.listUniforms.size(); i++) {
-         ShaderUniformBase shaderUniformBase = (ShaderUniformBase)this.listUniforms.get(i);
-         shaderUniformBase.setProgram(n);
+         ((ShaderUniformBase)this.listUniforms.get(i)).setProgram(n);
       }
    }
 
@@ -33,8 +32,7 @@ public class ShaderUniforms {
 
    public void reset() {
       for (int i = 0; i < this.listUniforms.size(); i++) {
-         ShaderUniformBase shaderUniformBase = (ShaderUniformBase)this.listUniforms.get(i);
-         shaderUniformBase.reset();
+         ((ShaderUniformBase)this.listUniforms.get(i)).reset();
       }
    }
 

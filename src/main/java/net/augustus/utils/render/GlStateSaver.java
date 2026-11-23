@@ -180,8 +180,7 @@ public class GlStateSaver {
    }
 
    public void restoreLight(int n, short s, short s2, int n2) {
-      boolean flag = (this.savedLightMask & 1 << n2) != 0;
-      if (flag) {
+      if ((this.savedLightMask & 1 << n2) != 0) {
          GlStateManager.enableLight(n2);
       } else {
          GlStateManager.disableLight(n2);
@@ -232,8 +231,7 @@ public class GlStateSaver {
    }
 
    public void setLight(long l, int n, short s, boolean flag) {
-      boolean isLightEnabled = GlStateManager.isLightEnabled(n);
-      if (isLightEnabled) {
+      if (GlStateManager.isLightEnabled(n)) {
          this.savedLightMask |= 1 << n;
       } else {
          this.savedLightMask &= ~(1 << n);

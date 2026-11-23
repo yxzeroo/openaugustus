@@ -63,8 +63,7 @@ public class EntitySilverfish extends EntityMob {
    @Override
    public boolean getCanSpawnHere() {
       if (super.getCanSpawnHere()) {
-         EntityPlayer closestPlayerToEntity = this.entityWorld.getClosestPlayerToEntity(this, 5.0);
-         return closestPlayerToEntity == null;
+         return this.entityWorld.getClosestPlayerToEntity(this, 5.0) == null;
       } else {
          return false;
       }
@@ -167,8 +166,7 @@ public class EntitySilverfish extends EntityMob {
             if (rng.nextInt(10) == 0) {
                this.facing = EnumFacing.random(rng);
                BlockPos pos = new BlockPos(this.silverfish.posX, this.silverfish.posY + 0.5, this.silverfish.posZ).offset(this.facing);
-               IBlockState blockState = this.silverfish.entityWorld.getBlockState(pos);
-               if (BlockSilverfish.canContainSilverfish(blockState)) {
+               if (BlockSilverfish.canContainSilverfish(this.silverfish.entityWorld.getBlockState(pos))) {
                   this.doMerge = true;
                   return true;
                }

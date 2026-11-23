@@ -90,15 +90,10 @@ public class LoadingScreenRenderer implements IProgressUpdate {
             WorldRenderer worldRenderer = instance.getWorldRenderer();
             AugustusServer augustusServer = Augustus.getInstance().getModuleManager().augustusServer;
             if (augustusServer.isToggled() && augustusServer.customBackground.getValue()) {
-               boolean flag = false;
-               this.glStateSaver.setCull(flag);
-               boolean flag2 = true;
-               this.glStateSaver.setTexture2D(flag2);
-               boolean flag3 = false;
-               this.glStateSaver.setBlend(flag3);
-               BackgroundShader currentShader = Augustus.getInstance().getBackgroundShaderManager().getCurrentShader();
-               float f = 1800.0F;
-               currentShader.render(f);
+               this.glStateSaver.setCull(false);
+               this.glStateSaver.setTexture2D(true);
+               this.glStateSaver.setBlend(false);
+               Augustus.getInstance().getBackgroundShaderManager().getCurrentShader().render(1800.0F);
                this.glStateSaver.restoreCull();
                this.glStateSaver.restoreTexture2D();
                this.glStateSaver.restoreBlend();

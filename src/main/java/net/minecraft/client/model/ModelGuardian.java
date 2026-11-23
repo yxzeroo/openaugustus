@@ -44,8 +44,7 @@ public class ModelGuardian extends ModelBase {
       if (renderViewEntity != null) {
          Vec3 positionEyes = ((Entity)renderViewEntity).getPositionEyes(0.0F);
          Vec3 positionEyes2 = entity.getPositionEyes(0.0F);
-         double d = positionEyes.yCoord - positionEyes2.yCoord;
-         if (d > 0.0) {
+         if ((positionEyes.yCoord - positionEyes2.yCoord) > 0.0) {
             this.guardianEye.rotationPointY = 0.0F;
          } else {
             this.guardianEye.rotationPointY = 1.0F;
@@ -53,8 +52,7 @@ public class ModelGuardian extends ModelBase {
 
          Vec3 look = entity.getLook(0.0F);
          look = new Vec3(look.xCoord, 0.0, look.zCoord);
-         Vec3 vec = new Vec3(positionEyes2.xCoord - positionEyes.xCoord, 0.0, positionEyes2.zCoord - positionEyes.zCoord).normalize().rotateYaw((float) (Math.PI / 2));
-         double d2 = look.dotProduct(vec);
+         double d2 = look.dotProduct(new Vec3(positionEyes2.xCoord - positionEyes.xCoord, 0.0, positionEyes2.zCoord - positionEyes.zCoord).normalize().rotateYaw((float) (Math.PI / 2)));
          this.guardianEye.rotationPointX = MathHelper.sqrt_float((float)Math.abs(d2)) * 2.0F * (float)Math.signum(d2);
       }
 

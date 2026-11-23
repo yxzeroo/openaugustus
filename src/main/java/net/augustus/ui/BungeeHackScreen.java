@@ -51,31 +51,16 @@ public class BungeeHackScreen extends AugustusGuiScreen {
       super.initContent();
       int n = this.height / 4 + 48;
       int n2 = this.width / 2 - 100;
-      byte b = 20;
-      short s = 200;
-      int n3 = n2;
-      this.targetAddressField = this.addTextField(n3, n, s, b);
+      this.targetAddressField = this.addTextField(n2, n, (short)200, (byte)20);
       n2 = this.width / 2 - 100;
-      int n4 = n + 20 + 3;
-      byte b2 = 20;
-      short s2 = 200;
-      int n5 = n4;
-      int n6 = n2;
-      this.playerUuidField = this.addTextField(n6, n5, s2, b2);
+      this.playerUuidField = this.addTextField(n2, n + 20 + 3, (short)200, (byte)20);
       this.targetAddressField.setText(spoofedIp);
       this.playerUuidField.setText(spoofedUuid);
       this.targetAddressField.setTextChangeListener(obj -> spoofedIp = (String)obj);
       this.playerUuidField.setTextChangeListener(obj2 -> spoofedUuid = (String)obj2);
       int n7 = this.width / 2 - 100;
       n2 = this.height / 2 + 40;
-      String toggleButtonLabel = this.getToggleButtonLabel();
-      GuiButtonClickHandler guiButtonClickHandler = button -> this.onToggleButtonClicked(button);
-      String str = toggleButtonLabel;
-      byte b3 = 20;
-      short s3 = 200;
-      int n8 = n2;
-      int n9 = n7;
-      this.addButton(n9, n8, s3, b3, str, guiButtonClickHandler);
+      this.addButton(n7, n2, (short)200, (byte)20, this.getToggleButtonLabel(), button -> this.onToggleButtonClicked(button));
    }
 
 }

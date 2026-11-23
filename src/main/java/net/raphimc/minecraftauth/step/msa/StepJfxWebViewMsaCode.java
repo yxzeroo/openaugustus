@@ -130,8 +130,7 @@ public class StepJfxWebViewMsaCode extends MsaCodeStep<StepJfxWebViewMsaCode.Jav
       @Deprecated
       public JavaFxWebView(BiConsumer<JFrame, WebView> openCallback, Consumer<JFrame> closeCallback) {
          this.openCallback = window -> {
-            WebView webView = (WebView)((JFXPanel)window.getContentPane()).getScene().getRoot();
-            openCallback.accept(window, webView);
+            openCallback.accept(window, (WebView)((JFXPanel)window.getContentPane()).getScene().getRoot());
          };
          this.closeCallback = closeCallback;
       }

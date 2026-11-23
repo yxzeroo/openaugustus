@@ -141,8 +141,7 @@ public class CommandScoreboard extends CommandBase {
             }
          }
 
-         Scoreboard scoreboard = this.getScoreboard();
-         Score valueFromObjective = scoreboard.getValueFromObjective(entityName, objective);
+         Score valueFromObjective = this.getScoreboard().getValueFromObjective(entityName, objective);
          if (str.equalsIgnoreCase("set")) {
             valueFromObjective.setScorePoints(n3);
          } else if (str.equalsIgnoreCase("add")) {
@@ -172,8 +171,7 @@ public class CommandScoreboard extends CommandBase {
 
             if (strings[1].equalsIgnoreCase("add")) {
                if (strings.length == 4) {
-                  Set keys = IScoreObjectiveCriteria.INSTANCES.keySet();
-                  return getListOfStringsMatchingLastWord(strings, keys);
+                  return getListOfStringsMatchingLastWord(strings, IScoreObjectiveCriteria.INSTANCES.keySet());
                }
             } else if (strings[1].equalsIgnoreCase("remove")) {
                if (strings.length == 3) {
@@ -300,9 +298,7 @@ public class CommandScoreboard extends CommandBase {
    }
 
    public void removeObjective(ICommandSender commandSender, String str) throws CommandException {
-      Scoreboard scoreboard = this.getScoreboard();
-      ScoreObjective objective = this.getObjective(str, false);
-      scoreboard.removeObjective(objective);
+      this.getScoreboard().removeObjective(this.getObjective(str, false));
       notifyOperators(commandSender, this, "commands.scoreboard.objectives.remove.success", new Object[]{str});
    }
 
@@ -523,8 +519,7 @@ public class CommandScoreboard extends CommandBase {
          if (objective.getCriteria() != IScoreObjectiveCriteria.TRIGGER) {
             throw new CommandException("commands.scoreboard.players.enable.noTrigger", new Object[]{objective.getName()});
          } else {
-            Score valueFromObjective = scoreboard.getValueFromObjective(playerName, objective);
-            valueFromObjective.setLocked(false);
+            scoreboard.getValueFromObjective(playerName, objective).setLocked(false);
             notifyOperators(commandSender, this, "commands.scoreboard.players.enable.success", new Object[]{objective.getName(), playerName});
          }
       }
@@ -801,8 +796,7 @@ public class CommandScoreboard extends CommandBase {
    }
 
    public ScoreObjective getObjective(String str, boolean flag) throws CommandException {
-      Scoreboard scoreboard = this.getScoreboard();
-      ScoreObjective objective = scoreboard.getObjective(str);
+      ScoreObjective objective = this.getScoreboard().getObjective(str);
       if (objective == null) {
          throw new CommandException("commands.scoreboard.objectiveNotFound", new Object[]{str});
       } else if (flag && objective.getCriteria().isReadOnly()) {
@@ -846,8 +840,7 @@ public class CommandScoreboard extends CommandBase {
    }
 
    public ScorePlayerTeam getTeam(String str) throws CommandException {
-      Scoreboard scoreboard = this.getScoreboard();
-      ScorePlayerTeam team = scoreboard.getTeam(str);
+      ScorePlayerTeam team = this.getScoreboard().getTeam(str);
       if (team == null) {
          throw new CommandException("commands.scoreboard.teamNotFound", new Object[]{str});
       } else {
@@ -948,8 +941,7 @@ public class CommandScoreboard extends CommandBase {
    }
 
    public void listObjectives(ICommandSender commandSender) throws CommandException {
-      Scoreboard scoreboard = this.getScoreboard();
-      Collection scoreObjectives = scoreboard.getScoreObjectives();
+      Collection scoreObjectives = this.getScoreboard().getScoreObjectives();
       if (scoreObjectives.size() <= 0) {
          throw new CommandException("commands.scoreboard.objectives.list.empty", new Object[0]);
       } else {

@@ -11,8 +11,7 @@ public class FrameTimer {
    }
 
    public int getLagometerValue(long l, int n) {
-      double d = (double)l / 1.6666666E7;
-      return (int)(d * (double)n);
+      return (int)(((double)l / 1.6666666E7) * (double)n);
    }
 
    public long[] getFrames() {

@@ -18,9 +18,7 @@ public class GoalXZ implements Goal {
 
    @Override
    public double heuristic(int n, int n2, int n3) {
-      int n4 = n - this.x;
-      int n5 = n3 - this.z;
-      return calculate((double)n4, (double)n5);
+      return calculate((double)(n - this.x), (double)(n3 - this.z));
    }
 
    public static GoalXZ fromDirection(Vec3 vec, float f, double d) {

@@ -81,10 +81,8 @@ public class StatisticalSampleBuffer {
 
    public double spearmanCorrelation(StatisticalSampleBuffer statisticalSampleBuffer) {
       int size = this.samples.size();
-      ArrayList samples2 = this.samples;
-      double[] doubles = this.computeRanks(samples2);
-      ArrayList samples3 = statisticalSampleBuffer.getSamples();
-      double[] doubles2 = this.computeRanks(samples3);
+      double[] doubles = this.computeRanks(this.samples);
+      double[] doubles2 = this.computeRanks(statisticalSampleBuffer.getSamples());
       double d = 0.0;
 
       for (int i = 0; i < size; i++) {
@@ -334,8 +332,7 @@ public class StatisticalSampleBuffer {
          double d = doubles[doubles.length / 2];
          double d2 = doubles[doubles.length / 2 + 1];
          double d3 = Math.min(d, d2);
-         double d4 = Math.max(d, d2);
-         return d3 + (d4 - d3) / 2.0;
+         return d3 + (Math.max(d, d2) - d3) / 2.0;
       } else {
          return doubles[doubles.length / 2 + 1];
       }

@@ -113,15 +113,13 @@ public class WDL implements MC {
       int n2 = n;
 
       for (int i = 0; n2 < size && i < sizeInventory; n2++) {
-         ItemStack stack = container.getSlot(n2).getStack();
-         inventory.setInventorySlotContents(i, stack);
+         inventory.setInventorySlotContents(i, container.getSlot(n2).getStack());
          i++;
       }
    }
 
    public static void cancelDownload() {
-      boolean flag = downloading;
-      if (flag) {
+      if (downloading) {
          mc.getSaveLoader().flushCache();
          saveHandler.flush();
          startOnChange = false;
@@ -460,8 +458,7 @@ public class WDL implements MC {
    public static void startSaveThread() {
       WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveStarted", new Object[0]);
       saving = true;
-      WDLSaveThread wdlSaveThread = new WDLSaveThread("WDL Save Thread");
-      wdlSaveThread.start();
+      new WDLSaveThread("WDL Save Thread").start();
    }
 
    public static void saveInventoryFields(IInventory inventory, IInventory inventory2) {
@@ -511,9 +508,7 @@ public class WDL implements MC {
          GuiWDLSaveProgress guiWDLSaveProgress = new GuiWDLSaveProgress(
             I18n.format("wdl.saveProgress.title", new Object[0]), (worldBackupType != WorldBackupType.NONE ? 6 : 5) + WDLApi.getImplementingExtensions(ISaveListener.class).size()
          );
-         Minecraft mc2 = mc;
-         DisplaySaveProgressTask displaySaveProgressTask = new DisplaySaveProgressTask(guiWDLSaveProgress);
-         mc2.addScheduledTask((Runnable)displaySaveProgressTask);
+         mc.addScheduledTask((Runnable)new DisplaySaveProgressTask(guiWDLSaveProgress));
          saveProps();
 
          try {
@@ -522,8 +517,7 @@ public class WDL implements MC {
             throw new RuntimeException("WorldDownloader: Couldn't get session lock for saving the world!", e);
          }
 
-         NBTTagCompound tag = savePlayer(guiWDLSaveProgress);
-         saveWorldInfo(guiWDLSaveProgress, tag);
+         saveWorldInfo(guiWDLSaveProgress, savePlayer(guiWDLSaveProgress));
          saveMapData(guiWDLSaveProgress);
          saveChunks(guiWDLSaveProgress);
          saveProps();
@@ -616,8 +610,7 @@ public class WDL implements MC {
    public static void saveChunks(GuiWDLSaveProgress guiWDLSaveProgress) throws IllegalArgumentException, IllegalAccessException {
       if (WDLPluginChannels.canDownloadAtAll()) {
          WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks", new Object[0]);
-         ChunkProviderClient chunkProvider = (ChunkProviderClient)worldClient.getChunkProvider();
-         List list = (List)ReflectionUtils.stealAndGetField(chunkProvider, List.class);
+         List list = (List)ReflectionUtils.stealAndGetField((ChunkProviderClient)worldClient.getChunkProvider(), List.class);
          guiWDLSaveProgress.startMajorTask(I18n.format("wdl.saveProgress.chunk.title", new Object[0]), list.size());
 
          for (int i = 0; i < list.size(); i++) {
@@ -640,8 +633,7 @@ public class WDL implements MC {
 
          try {
             List list = (List)ReflectionUtils.stealAndGetField(crashReport2, List.class);
-            List list2 = (List)ReflectionUtils.stealAndGetField(crashReport, List.class);
-            list2.addAll(list);
+            ((List)ReflectionUtils.stealAndGetField(crashReport, List.class)).addAll(list);
          } catch (Exception e) {
             crashReport.makeCategory("An exception occured while trying to copy the origional categories.").addCrashSectionThrowable(":(", e);
          }
@@ -660,13 +652,9 @@ public class WDL implements MC {
       worldClient = mc.theWorld;
       if (WDLPluginChannels.canDownloadAtAll()) {
          if (isMultiworld && worldName.isEmpty()) {
-            Minecraft mc2 = mc;
-            GuiWDLMultiworldSelect guiWDLMultiworldSelect = new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.startDownload", new Object[0]), new StartDownloadMultiworldSelectCallback());
-            mc2.displayGuiScreen((GuiScreen)guiWDLMultiworldSelect);
+            mc.displayGuiScreen((GuiScreen)new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.startDownload", new Object[0]), new StartDownloadMultiworldSelectCallback()));
          } else if (!propsFound) {
-            Minecraft mc3 = mc;
-            GuiWDLMultiworld guiWDLMultiworld = new GuiWDLMultiworld(new StartDownloadMultiworldCallback());
-            mc3.displayGuiScreen((GuiScreen)guiWDLMultiworld);
+            mc.displayGuiScreen((GuiScreen)new GuiWDLMultiworld(new StartDownloadMultiworldCallback()));
          } else {
             worldProps = loadWorldProps(worldName);
             saveHandler = (SaveHandler)mc.getSaveLoader().getSaveLoader(getWorldFolderName(worldName), true);
@@ -677,9 +665,7 @@ public class WDL implements MC {
                fileInputStream = new FileInputStream(new File(saveHandler.getWorldDirectory(), "level.dat"));
                long l2 = CompressedStreamTools.readCompressed(fileInputStream).getCompoundTag("Data").getLong("LastPlayed");
                if (!overrideLastModifiedCheck && l2 > l) {
-                  Minecraft mc4 = mc;
-                  GuiWDLOverwriteChanges guiWDLOverwriteChanges = new GuiWDLOverwriteChanges(l, l2);
-                  mc4.displayGuiScreen(guiWDLOverwriteChanges);
+                  mc.displayGuiScreen(new GuiWDLOverwriteChanges(l, l2));
                   return;
                }
             } catch (Exception e) {
@@ -762,8 +748,7 @@ public class WDL implements MC {
          tag.setFloat("foodExhaustionLevel", 0.0F);
       }
 
-      String property3 = worldProps.getProperty("PlayerPos");
-      if (property3.equals("xyz")) {
+      if (worldProps.getProperty("PlayerPos").equals("xyz")) {
          int n2 = Integer.parseInt(worldProps.getProperty("PlayerX"));
          int n3 = Integer.parseInt(worldProps.getProperty("PlayerY"));
          int n4 = Integer.parseInt(worldProps.getProperty("PlayerZ"));
@@ -798,8 +783,7 @@ public class WDL implements MC {
 
       try {
          String path = new File(WDL.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
-         String property = System.getProperty("user.name");
-         path = path.replace(property, "<USERNAME>");
+         path = path.replace(System.getProperty("user.name"), "<USERNAME>");
          sb.append(path);
       } catch (Exception e) {
          sb.append("Unknown (").append(e).append(')');

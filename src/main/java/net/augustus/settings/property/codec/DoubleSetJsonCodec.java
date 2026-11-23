@@ -17,7 +17,6 @@ public final class DoubleSetJsonCodec implements SetPropertySerializer {
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Double d = (Double)obj;
-      this.writeDoubleElement(array, d);
+      this.writeDoubleElement(array, (Double)obj);
    }
 }

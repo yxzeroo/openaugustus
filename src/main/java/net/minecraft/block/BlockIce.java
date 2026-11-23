@@ -43,8 +43,7 @@ public class BlockIce extends BlockBreakable {
             return;
          }
 
-         int fortuneModifier = EnchantmentHelper.getFortuneModifier(player);
-         this.dropBlockAsItem(world, pos, state, fortuneModifier);
+         this.dropBlockAsItem(world, pos, state, EnchantmentHelper.getFortuneModifier(player));
          Material material = world.getBlockState(pos.down()).getBlock().getMaterial();
          if (material.blocksMovement() || material.isLiquid()) {
             world.setBlockState(pos, Blocks.flowing_water.getDefaultState());

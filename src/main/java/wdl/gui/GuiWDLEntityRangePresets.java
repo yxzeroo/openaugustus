@@ -41,9 +41,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
                str2 = I18n.format("wdl.gui.rangePresets.server.warning", new Object[0]);
             }
 
-            Minecraft mc2 = this.mc;
-            GuiYesNo guiYesNo = new GuiYesNo(this, str, str2, button.id);
-            mc2.displayGuiScreen(guiYesNo);
+            this.mc.displayGuiScreen(new GuiYesNo(this, str, str2, button.id));
          }
 
          if (button.id == 100) {

@@ -10,8 +10,7 @@ public class ShadedHeapByteBuffer extends ShadedByteBuffer {
          throw new RuntimeException();
       } else {
          System.arraycopy(bytes, n, this.hb, this.ix(position2), n2);
-         int n3 = position2 + n2;
-         this.position(n3);
+         this.position(position2 + n2);
          return this;
       }
    }
@@ -22,9 +21,7 @@ public class ShadedHeapByteBuffer extends ShadedByteBuffer {
 
    @Override
    public ShadedByteBuffer put(byte b) {
-      byte[] hb2 = this.hb;
-      int n = this.nextPutIndex();
-      hb2[this.ix(n)] = b;
+      this.hb[this.ix(this.nextPutIndex())] = b;
       return this;
    }
 
@@ -40,17 +37,14 @@ public class ShadedHeapByteBuffer extends ShadedByteBuffer {
          throw new RuntimeException();
       } else {
          System.arraycopy(this.hb, this.ix(position2), bytes, n, n2);
-         int n3 = position2 + n2;
-         this.position(n3);
+         this.position(position2 + n2);
          return this;
       }
    }
 
    @Override
    public byte get() {
-      byte[] hb2 = this.hb;
-      int n = this.nextGetIndex();
-      return hb2[this.ix(n)];
+      return this.hb[this.ix(this.nextGetIndex())];
    }
 
    public ShadedHeapByteBuffer(byte[] bytes, int n, int n2) {

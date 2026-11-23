@@ -226,8 +226,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
    public void onLivingUpdate() {
       if (this.entityWorld.isRemote) {
          float f = MathHelper.cos(this.animTime * (float) Math.PI * 2.0F);
-         float f2 = MathHelper.cos(this.prevAnimTime * (float) Math.PI * 2.0F);
-         if (f2 <= -0.3F && f >= -0.3F && !this.isSilent()) {
+         if (MathHelper.cos(this.prevAnimTime * (float) Math.PI * 2.0F) <= -0.3F && f >= -0.3F && !this.isSilent()) {
             this.entityWorld.playSound(this.posX, this.posY, this.posZ, "mob.enderdragon.wings", 5.0F, 0.8F + this.rand.nextFloat() * 0.3F, false);
          }
       }
@@ -320,8 +319,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                d6 = MathHelper.clamp_double(d6, (double)(-f7), (double)f7);
                this.motionY += d6 * 0.1F;
                this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
-               double d13 = 180.0 - MathHelper.atan2(d5, d7) * 180.0 / Math.PI;
-               double d14 = MathHelper.wrapAngleTo180_double(d13 - (double)this.rotationYaw);
+               double d14 = MathHelper.wrapAngleTo180_double((180.0 - MathHelper.atan2(d5, d7) * 180.0 / Math.PI) - (double)this.rotationYaw);
                if (d14 > 50.0) {
                   d14 = 50.0;
                }
@@ -356,8 +354,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                   this.moveEntity(this.motionX, this.motionY, this.motionZ);
                }
 
-               Vec3 vec3 = new Vec3(this.motionX, this.motionY, this.motionZ).normalize();
-               float f12 = ((float)vec3.dotProduct(vec2) + 1.0F) / 2.0F;
+               float f12 = ((float)new Vec3(this.motionX, this.motionY, this.motionZ).normalize().dotProduct(vec2) + 1.0F) / 2.0F;
                f12 = 0.8F + 0.15F * f12;
                this.motionX *= (double)f12;
                this.motionZ *= (double)f12;

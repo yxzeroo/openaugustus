@@ -6,13 +6,12 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.events.EventPacket;
 import net.augustus.ClientManagers;
-import net.augustus.settings.Setting;
 import net.augustus.utils.world.BlockUtil;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockFence;
@@ -33,10 +32,10 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class VClip extends Module implements TickListener, PacketListener {
-   public final StringValue distance;
+   public final DoubleValue distance;
    public final BooleanValue smartDistance;
-   public final StringValue maxSmartDistance;
-   public final StringValue distanceToHeadBlock;
+   public final DoubleValue maxSmartDistance;
+   public final DoubleValue distanceToHeadBlock;
    public final BooleanValue intave;
    private boolean intaveClipping;
    private int intavePacketPhase;
@@ -45,22 +44,18 @@ public class VClip extends Module implements TickListener, PacketListener {
 
    public VClip() {
        super("VClip", "VKlammer", new Color(63, 255, 0, 255), Categorys.MOVEMENT);
-      StringValue stringValue = new StringValue(this, "Distance", -6.0, -10.0, 10.0, 2);
-      SettingVisibilityCondition condition = () -> isManualDistanceVisible();
-      this.distance = stringValue.visibleWhen(condition);
+      this.distance = new DoubleValue(this, "Distance", -6.0, -10.0, 10.0, 2).visibleWhen(() -> isManualDistanceVisible());
       this.smartDistance = new BooleanValue(this, "SmartDistance", true);
-      StringValue stringValue2 = new StringValue(this, "MaxSmartDistance", -9.9, -10.0, -1.0, 2);
+      DoubleValue stringValue2 = new DoubleValue(this, "MaxSmartDistance", -9.9, -10.0, -1.0, 2);
       BooleanValue smartDistance2 = this.smartDistance;
       this.smartDistance.getClass();
       BooleanValue booleanValue = smartDistance2;
-      SettingVisibilityCondition condition2 = () -> booleanValue.getValue();
-      this.maxSmartDistance = stringValue2.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this, "DistanceToHeadBlock", 0.1, 0.0, 1.0, 2);
+      this.maxSmartDistance = stringValue2.visibleWhen(() -> booleanValue.getValue());
+      DoubleValue stringValue3 = new DoubleValue(this, "DistanceToHeadBlock", 0.1, 0.0, 1.0, 2);
       smartDistance2 = this.smartDistance;
       this.smartDistance.getClass();
       BooleanValue booleanValue2 = smartDistance2;
-      SettingVisibilityCondition condition3 = () -> booleanValue2.getValue();
-      this.distanceToHeadBlock = stringValue3.visibleWhen(condition3);
+      this.distanceToHeadBlock = stringValue3.visibleWhen(() -> booleanValue2.getValue());
       this.intave = new BooleanValue(this, "Intave", false);
       this.intaveClipping = false;
       this.intavePacketPhase = 0;
@@ -70,7 +65,6 @@ public class VClip extends Module implements TickListener, PacketListener {
 
    @Override
    public void onEnable() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.intaveClipping) {
          if (this.intave.getValue()) {
             this.startIntaveClip();
@@ -94,7 +88,6 @@ public class VClip extends Module implements TickListener, PacketListener {
    }
 
    private void performDirectVClip() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.theWorld != null && mc.thePlayer != null) {
          if (!this.smartDistance.getValue()) {
             mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + this.distance.getValue(), mc.thePlayer.posZ);
@@ -104,8 +97,7 @@ public class VClip extends Module implements TickListener, PacketListener {
             for (int i = 1; i < 10; i++) {
                BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - (double)i, mc.thePlayer.posZ);
                if (BlockUtil.isSolidBlock(pos)) {
-                  Block block = mc.theWorld.getBlockState(pos).getBlock();
-                  double d2 = block.getBlockBoundsMaxY() + (double)pos.getY();
+                  double d2 = mc.theWorld.getBlockState(pos).getBlock().getBlockBoundsMaxY() + (double)pos.getY();
                   d = Math.abs(mc.thePlayer.posY - d2);
                   break;
                }
@@ -124,25 +116,21 @@ public class VClip extends Module implements TickListener, PacketListener {
                }
             }
 
-            String str = "No vclip possible";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("No vclip possible");
          }
       }
    }
 
    @Override
    public void onTick() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.intaveClipping) {
          this.intaveClipTicks++;
          if (this.intaveClipTicks == 1) {
-            String str = "Started clipping";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Started clipping");
          }
 
          if (this.intaveClipTicks >= 130) {
-            String str2 = "Stop clipping";
-            this.sendChatMessage2(str2);
+            this.sendChatMessage2("Stop clipping");
             this.toggle();
          } else {
             for (int i = 0; i < 9; i++) {
@@ -165,12 +153,9 @@ public class VClip extends Module implements TickListener, PacketListener {
 
    @Override
    public void onPacket(EventPacket event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.intaveClipping && event.getPacket() instanceof S08PacketPlayerPosLook) {
-         S08PacketPlayerPosLook packet = (S08PacketPlayerPosLook)event.getPacket();
-         if (packet.getY() > mc.thePlayer.posY + 0.5) {
-            String str = "Toggle at " + this.intaveClipTicks;
-            this.sendChatMessage2(str);
+         if (((S08PacketPlayerPosLook)event.getPacket()).getY() > mc.thePlayer.posY + 0.5) {
+            this.sendChatMessage2("Toggle at " + this.intaveClipTicks);
             this.toggle();
          }
 
@@ -184,14 +169,12 @@ public class VClip extends Module implements TickListener, PacketListener {
    }
 
    private void startIntaveClip() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.intaveClipping) {
          if (this.hasNearbyClipBlock()) {
             this.intaveClipping = true;
             this.intavePacketPhase = 0;
          } else {
-            String str = "Invalid clip position";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Invalid clip position");
             this.toggle();
          }
       }
@@ -199,7 +182,6 @@ public class VClip extends Module implements TickListener, PacketListener {
 
    private boolean hasNearbyClipBlock() {
       EntityPlayerSP thePlayer = mc.thePlayer;
-      Fly.getCachedSettings();
 
       for (int i = -1; i <= 1; i++) {
          for (int j = -1; j <= 1; j++) {
@@ -231,12 +213,10 @@ public class VClip extends Module implements TickListener, PacketListener {
    }
 
    private boolean isClosedBottomTrapdoor(IBlockState state) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return state.getBlock() instanceof BlockTrapDoor && !(Boolean)state.getValue(BlockTrapDoor.OPEN) && state.getValue(BlockTrapDoor.HALF) == BlockTrapDoor.DoorHalf.BOTTOM;
    }
 
    private static boolean isManualDistanceVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !ClientManagers.moduleManager.vClip.smartDistance.getValue();
    }
 

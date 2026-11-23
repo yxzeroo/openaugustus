@@ -28,12 +28,7 @@ public class EntityMovementPredictor implements MC {
          return list;
       } else {
          int[] ints = estimateStrafeForwardFromSnapshot(entity, entityMotionSnapshot);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         boolean flag2 = false;
-         int n4 = n3;
-         int n5 = n2;
-         return simulateTrajectoryFromSnapshot(entity, entityMotionSnapshot, n5, n4, n, flag2, d, d2, d3, flag);
+         return simulateTrajectoryFromSnapshot(entity, entityMotionSnapshot, ints[0], ints[1], n, false, d, d2, d3, flag);
       }
    }
 
@@ -84,8 +79,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -154,8 +148,7 @@ public class EntityMovementPredictor implements MC {
          double d7 = d;
          double d8 = d3;
          boolean isSneaking = entity.isSneaking();
-         boolean flag = entity.onGround && isSneaking;
-         if (flag) {
+         if (entity.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -269,9 +262,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -367,12 +358,7 @@ public class EntityMovementPredictor implements MC {
          return new Vec3(entity.posX, entity.posY, entity.posZ);
       } else {
          int[] ints = estimateStrafeForwardFromHistory(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         boolean flag = false;
-         int n4 = n3;
-         int n5 = n2;
-         return simulateConstantHorizontalFromHistory(entity, n5, n4, n, flag);
+         return simulateConstantHorizontalFromHistory(entity, ints[0], ints[1], n, false);
       }
    }
 
@@ -385,10 +371,7 @@ public class EntityMovementPredictor implements MC {
 
          for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-               boolean flag = true;
-               byte b = 1;
-               Vec3 vec = simulateFromHistory(entity, i, j, b, flag);
-               double d2 = vec.squareDistanceTo(entity.posX, entity.posY, entity.posZ);
+               double d2 = simulateFromHistory(entity, i, j, (byte)1, true).squareDistanceTo(entity.posX, entity.posY, entity.posZ);
                if (d > d2) {
                   d = d2;
                   ints = new int[]{i, j};
@@ -422,10 +405,7 @@ public class EntityMovementPredictor implements MC {
          };
       } else {
          int[] ints = estimateStrafeForwardFromServerPos(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         int n4 = n2;
-         return simulateStateFromServerPos(entity, n4, n3, n);
+         return simulateStateFromServerPos(entity, ints[0], ints[1], n);
       }
    }
 
@@ -434,10 +414,7 @@ public class EntityMovementPredictor implements MC {
          return new ArrayList();
       } else {
          int[] ints = estimateStrafeForwardFromServerPos(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         int n4 = n2;
-         return simulateTrajectoryFromClientPos(entity, n4, n3, n);
+         return simulateTrajectoryFromClientPos(entity, ints[0], ints[1], n);
       }
    }
 
@@ -468,8 +445,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -526,8 +502,7 @@ public class EntityMovementPredictor implements MC {
          }
 
          boolean sneaking = entityMotionSnapshot.sneaking;
-         boolean flag2 = entityMotionSnapshot.onGround && sneaking;
-         if (flag2) {
+         if (entityMotionSnapshot.onGround && sneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -641,9 +616,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -743,9 +716,7 @@ public class EntityMovementPredictor implements MC {
 
          for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-               byte b = 2;
-               Vec3 vec = simulateFromPrevServerPos(entity, i, j, b);
-               double d2 = vec.squareDistanceTo(entity.realPosX, entity.realPosY, entity.realPosZ);
+               double d2 = simulateFromPrevServerPos(entity, i, j, (byte)2).squareDistanceTo(entity.realPosX, entity.realPosY, entity.realPosZ);
                if (d > d2) {
                   d = d2;
                   ints = new int[]{i, j};
@@ -767,12 +738,7 @@ public class EntityMovementPredictor implements MC {
          return new Vec3(entity.posX, entity.posY, entity.posZ);
       } else {
          int[] ints = estimateStrafeForwardFromSnapshot(entity, entityMotionSnapshot);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         boolean flag = false;
-         int n4 = n3;
-         int n5 = n2;
-         return simulateFromSnapshot(entity, entityMotionSnapshot, n5, n4, n, flag);
+         return simulateFromSnapshot(entity, entityMotionSnapshot, ints[0], ints[1], n, false);
       }
    }
 
@@ -781,10 +747,7 @@ public class EntityMovementPredictor implements MC {
          return new Vec3(entity.posX, entity.posY, entity.posZ);
       } else {
          int[] ints = estimateStrafeForwardFromServerPos(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         int n4 = n2;
-         double[] doubles = simulateStateFromServerPos(entity, n4, n3, n);
+         double[] doubles = simulateStateFromServerPos(entity, ints[0], ints[1], n);
          return new Vec3(doubles[0], doubles[1], doubles[2]);
       }
    }
@@ -816,8 +779,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -890,8 +852,7 @@ public class EntityMovementPredictor implements MC {
          }
 
          boolean isSneaking = entity.isSneaking();
-         boolean flag2 = entity.onGround && isSneaking;
-         if (flag2) {
+         if (entity.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -1005,9 +966,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -1127,8 +1086,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -1201,8 +1159,7 @@ public class EntityMovementPredictor implements MC {
          }
 
          boolean isSneaking = entity.isSneaking();
-         boolean flag2 = entity.onGround && isSneaking;
-         if (flag2) {
+         if (entity.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -1316,9 +1273,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -1414,12 +1369,7 @@ public class EntityMovementPredictor implements MC {
          return new Vec3(entity.posX, entity.posY, entity.posZ);
       } else {
          int[] ints = estimateStrafeForwardFromHistory(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         boolean flag = false;
-         int n4 = n3;
-         int n5 = n2;
-         return simulateFromHistory(entity, n5, n4, n, flag);
+         return simulateFromHistory(entity, ints[0], ints[1], n, false);
       }
    }
 
@@ -1440,8 +1390,7 @@ public class EntityMovementPredictor implements MC {
       if (entity == null) {
          return new Vec3(0.0, 0.0, 0.0);
       } else {
-         double d = 0.15;
-         double[] doubles = MoveUtil.calculateMotion(d, 0.0F, 1.0F, entity.rotationYaw);
+         double[] doubles = MoveUtil.calculateMotion(0.15, 0.0F, 1.0F, entity.rotationYaw);
          double d2 = entity.posX + (entity.posX - entity.lastTickPosX);
          double d3 = entity.posZ + (entity.posZ - entity.lastTickPosZ);
 
@@ -1459,10 +1408,7 @@ public class EntityMovementPredictor implements MC {
          return new ArrayList();
       } else {
          int[] ints = estimateStrafeForwardFromServerPos(entity);
-         int n2 = ints[0];
-         int n3 = ints[1];
-         int n4 = n2;
-         return simulateTrajectoryFromServerPos(entity, n4, n3, n);
+         return simulateTrajectoryFromServerPos(entity, ints[0], ints[1], n);
       }
    }
 
@@ -1475,10 +1421,7 @@ public class EntityMovementPredictor implements MC {
 
          for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-               boolean flag = true;
-               byte b = 1;
-               Vec3 vec = simulateFromSnapshot(entity, entityMotionSnapshot, i, j, b, flag);
-               double d2 = vec.squareDistanceTo(entityMotionSnapshot.currentPos);
+               double d2 = simulateFromSnapshot(entity, entityMotionSnapshot, i, j, (byte)1, true).squareDistanceTo(entityMotionSnapshot.currentPos);
                if (d > d2) {
                   d = d2;
                   ints = new int[]{i, j};
@@ -1549,8 +1492,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -1623,8 +1565,7 @@ public class EntityMovementPredictor implements MC {
          double d7 = d;
          double d8 = d3;
          boolean isSneaking = entity.isSneaking();
-         boolean flag = entity.onGround && isSneaking;
-         if (flag) {
+         if (entity.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -1738,9 +1679,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -1868,8 +1807,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -1927,8 +1865,7 @@ public class EntityMovementPredictor implements MC {
          }
 
          boolean sneaking = entityMotionSnapshot.sneaking;
-         boolean flag3 = entityMotionSnapshot.onGround && sneaking;
-         if (flag3) {
+         if (entityMotionSnapshot.onGround && sneaking) {
             double d12;
             for (d12 = 0.05; d7 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d7, -1.0, 0.0)).isEmpty(); d10 = d7) {
                if (d7 < d12 && d7 >= -d12) {
@@ -2042,9 +1979,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d21);
-            double d22 = d17 * d17 + d18 * d18;
-            double d23 = d20 * d20 + d21 * d21;
-            if (d22 > d23) {
+            if ((d17 * d17 + d18 * d18) > (d20 * d20 + d21 * d21)) {
                d7 = d17;
                d9 = d18;
                d8 = -d16;
@@ -2137,9 +2072,8 @@ public class EntityMovementPredictor implements MC {
    }
 
    public static boolean isOnGroundAtBox(EntityPlayerSP player, AxisAlignedBB box) {
-      List list = mc.theWorld.getCollidingBoundingBoxesCapped(player, box);
 
-      for (AxisAlignedBB box2 : (Iterable<AxisAlignedBB>)(list)) {
+      for (AxisAlignedBB box2 : (Iterable<AxisAlignedBB>)(mc.theWorld.getCollidingBoundingBoxesCapped(player, box))) {
          if (box2.calculateYOffset(box, -0.078) != -0.078) {
             return true;
          }
@@ -2149,8 +2083,7 @@ public class EntityMovementPredictor implements MC {
    }
 
    public static ArrayList predictTrajectoryFromSnapshot(EntityLivingBase entity, EntityMotionSnapshot entityMotionSnapshot, int n, double d, double d2, double d3) {
-      boolean flag = false;
-      return predictTrajectoryFromSnapshot(entity, entityMotionSnapshot, n, d, d2, d3, flag);
+      return predictTrajectoryFromSnapshot(entity, entityMotionSnapshot, n, d, d2, d3, false);
    }
 
    private static ArrayList simulateTrajectoryFromServerPos(EntityLivingBase entity, int n, int n2, int n3) {
@@ -2202,8 +2135,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -2276,8 +2208,7 @@ public class EntityMovementPredictor implements MC {
          double d10 = d4;
          double d11 = d6;
          boolean isSneaking = entity.isSneaking();
-         boolean flag = entity.onGround && isSneaking;
-         if (flag) {
+         if (entity.onGround && isSneaking) {
             double d12;
             for (d12 = 0.05; d7 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d7, -1.0, 0.0)).isEmpty(); d10 = d7) {
                if (d7 < d12 && d7 >= -d12) {
@@ -2391,9 +2322,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d21);
-            double d22 = d17 * d17 + d18 * d18;
-            double d23 = d20 * d20 + d21 * d21;
-            if (d22 > d23) {
+            if ((d17 * d17 + d18 * d18) > (d20 * d20 + d21 * d21)) {
                d7 = d17;
                d9 = d18;
                d8 = -d16;
@@ -2508,8 +2437,7 @@ public class EntityMovementPredictor implements MC {
          f = (float)n2;
          f2 = (float)n;
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.isUsingItem() && !entity.isRiding()) {
+            if (((EntityPlayer)entity).isUsingItem() && !entity.isRiding()) {
                f *= 0.2F;
                f2 *= 0.2F;
             }
@@ -2582,8 +2510,7 @@ public class EntityMovementPredictor implements MC {
          }
 
          boolean isSneaking = entity.isSneaking();
-         boolean flag = entity.onGround && isSneaking;
-         if (flag) {
+         if (entity.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(entity, box2.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -2697,9 +2624,7 @@ public class EntityMovementPredictor implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;

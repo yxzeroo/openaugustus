@@ -8,8 +8,7 @@ public class IrcCommand extends AbstractIrcCommand {
 
    public void commandAction(String[] strings, String str) {
       if (!Augustus.getInstance().getModuleManager().ircChat.isToggled()) {
-         String str2 = "Please enable the IRCChat module";
-         this.sendChat(str2);
+         this.sendChat("Please enable the IRCChat module");
       } else {
          if (strings.length > 1) {
             StringBuilder sb = new StringBuilder();
@@ -29,8 +28,7 @@ public class IrcCommand extends AbstractIrcCommand {
             }
 
          } else {
-            String str5 = "§7" + this.getCommand() + " [§2message§7]";
-            this.sendChat(str5);
+            this.sendChat("§7" + this.getCommand() + " [§2message§7]");
          }
       }
    }
@@ -40,8 +38,7 @@ public class IrcCommand extends AbstractIrcCommand {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (send messages to other augustus users)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (send messages to other augustus users)");
    }
 
 }

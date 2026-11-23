@@ -21,9 +21,7 @@ public abstract class ShadedByteBuffer {
    }
 
    public ShadedByteBuffer get(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return this.get(bytes, b, length);
+      return this.get(bytes, (byte)0, bytes.length);
    }
 
    public abstract ShadedByteBuffer put(byte b);
@@ -35,9 +33,7 @@ public abstract class ShadedByteBuffer {
    public abstract byte get();
 
    public static ShadedByteBuffer wrap(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return wrap(bytes, b, length);
+      return wrap(bytes, (byte)0, bytes.length);
    }
 
    public ShadedByteBuffer(int n, int n2, int n3, int n4, byte[] bytes, int n5) {
@@ -47,23 +43,18 @@ public abstract class ShadedByteBuffer {
    }
 
    public final ShadedByteBuffer mark(long l) {
-      int position2 = this.position;
-      this.mark = position2;
+      this.mark = this.position;
       return this;
    }
 
    public final ShadedByteBuffer put2(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return this.put(bytes, b, length);
+      return this.put(bytes, (byte)0, bytes.length);
    }
 
    public ShadedByteBuffer(int n, int n2, int n3, int n4) {
        super();
-      byte b = -1;
-      this.mark = b;
-      byte b2 = 0;
-      this.position = b2;
+      this.mark = (byte)-1;
+      this.position = (byte)0;
       if (n4 < 0) {
          throw new RuntimeException();
       } else {
@@ -113,8 +104,7 @@ public abstract class ShadedByteBuffer {
          }
 
          if (this.mark > n) {
-            byte b = -1;
-            this.mark = b;
+            this.mark = (byte)-1;
          }
 
          return this;
@@ -137,8 +127,7 @@ public abstract class ShadedByteBuffer {
       if (position2 >= this.limit) {
          throw new RuntimeException();
       } else {
-         int n = position2 + 1;
-         this.position = n;
+         this.position = position2 + 1;
          return position2;
       }
    }
@@ -152,8 +141,7 @@ public abstract class ShadedByteBuffer {
       if (position2 >= this.limit) {
          throw new RuntimeException();
       } else {
-         int n = position2 + 1;
-         this.position = n;
+         this.position = position2 + 1;
          return position2;
       }
    }
@@ -161,8 +149,7 @@ public abstract class ShadedByteBuffer {
    public final ShadedByteBuffer position(int n) {
       if (n <= this.limit && n >= 0) {
          if (this.mark > n) {
-            byte b = -1;
-            this.mark = b;
+            this.mark = (byte)-1;
          }
 
          this.position = n;
@@ -180,8 +167,7 @@ public abstract class ShadedByteBuffer {
          int n3 = n + n2;
 
          for (int i = n; i < n3; i++) {
-            byte b = bytes[i];
-            this.put(b);
+            this.put(bytes[i]);
          }
 
          return this;

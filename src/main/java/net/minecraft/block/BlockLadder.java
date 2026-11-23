@@ -111,8 +111,7 @@ public class BlockLadder extends Block {
    }
 
    static {
-      String str = "facing";
-      FACING = PropertyDirection.create(str, EnumFacing.Plane.HORIZONTAL);
+      FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
    }
 
    @Override
@@ -132,8 +131,7 @@ public class BlockLadder extends Block {
 
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-      EnumFacing value = (EnumFacing)state.getValue(FACING);
-      if (!this.canBlockStay(world, pos, value)) {
+      if (!this.canBlockStay(world, pos, (EnumFacing)state.getValue(FACING))) {
          this.dropBlockAsItem(world, pos, state, 0);
          world.setBlockToAir(pos);
       }

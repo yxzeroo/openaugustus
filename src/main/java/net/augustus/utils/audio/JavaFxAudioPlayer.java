@@ -19,9 +19,7 @@ public class JavaFxAudioPlayer {
          sb.append(strings[i]);
       }
 
-      String str2 = "assets/augustus/" + str;
-      String str3 = sb.toString();
-      ClientFileUtil.extractResource(str2, str3, flag);
+      ClientFileUtil.extractResource("assets/augustus/" + str, sb.toString(), flag);
       this.audioClip = new AudioClip(ClientFileUtil.toFileUri(ClientFileUtil.WORKING_DIR + sb + "/" + strings[strings.length - 1]));
       this.audioClip.play();
    }
@@ -38,8 +36,7 @@ public class JavaFxAudioPlayer {
    }
 
    public void playResource(String str) {
-      boolean flag = false;
-      this.playResource(str, flag);
+      this.playResource(str, false);
    }
 
    public boolean isPlaying() {

@@ -54,8 +54,7 @@ public class VillageSiege {
 
          entityZombie.setLocationAndAngles(vec.xCoord, vec.yCoord, vec.zCoord, this.worldObj.rand.nextFloat() * 360.0F, 0.0F);
          this.worldObj.spawnEntityInWorld(entityZombie);
-         BlockPos center = this.theVillage.getCenter();
-         entityZombie.setHomePosAndDistance(center, this.theVillage.getVillageRadius());
+         entityZombie.setHomePosAndDistance(this.theVillage.getCenter(), this.theVillage.getVillageRadius());
          return true;
       }
    }
@@ -136,8 +135,7 @@ public class VillageSiege {
                   return false;
                }
 
-               Vec3 vec = this.findRandomSpawnPos(new BlockPos(this.spawnX, this.spawnY, this.spawnZ));
-               if (vec != null) {
+               if (this.findRandomSpawnPos(new BlockPos(this.spawnX, this.spawnY, this.spawnZ)) != null) {
                   this.nextSpawnTime = 0;
                   this.siegeCount = 20;
                   return true;

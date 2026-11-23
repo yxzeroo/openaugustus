@@ -46,8 +46,7 @@ public class ElectricFriendManager {
    }
 
    public static int getOpaqueGuardValue() {
-      int opaqueStateFlag2 = getOpaqueStateFlag();
-      return opaqueStateFlag2 == 0 ? 78 : 0;
+      return getOpaqueStateFlag() == 0 ? 78 : 0;
    }
 
    static {

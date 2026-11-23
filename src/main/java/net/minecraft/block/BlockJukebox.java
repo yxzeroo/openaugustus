@@ -34,8 +34,7 @@ public class BlockJukebox extends BlockContainer {
    }
 
    static {
-      String str = "has_record";
-      HAS_RECORD = PropertyBool.create(str);
+      HAS_RECORD = PropertyBool.create("has_record");
    }
 
    @Override

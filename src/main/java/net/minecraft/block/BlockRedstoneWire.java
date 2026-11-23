@@ -204,10 +204,7 @@ public class BlockRedstoneWire extends Block {
          f4 = 0.0F;
       }
 
-      int n2 = MathHelper.clamp_int((int)(f2 * 255.0F), 0, 255);
-      int n3 = MathHelper.clamp_int((int)(f3 * 255.0F), 0, 255);
-      int n4 = MathHelper.clamp_int((int)(f4 * 255.0F), 0, 255);
-      return 0xFF000000 | n2 << 16 | n3 << 8 | n4;
+      return 0xFF000000 | MathHelper.clamp_int((int)(f2 * 255.0F), 0, 255) << 16 | MathHelper.clamp_int((int)(f3 * 255.0F), 0, 255) << 8 | MathHelper.clamp_int((int)(f4 * 255.0F), 0, 255);
    }
 
    private void notifyWireNeighborsOfStateChange(World world, BlockPos pos) {
@@ -225,8 +222,7 @@ public class BlockRedstoneWire extends Block {
       IBlockState blockState2 = world.getBlockState(pos2);
       Block block = blockState2.getBlock();
       boolean isNormalCube = block.isNormalCube();
-      boolean isNormalCube2 = world.getBlockState(pos.up()).getBlock().isNormalCube();
-      return !isNormalCube2 && isNormalCube && canConnectUpwardsTo(world, pos2.up())
+      return !world.getBlockState(pos.up()).getBlock().isNormalCube() && isNormalCube && canConnectUpwardsTo(world, pos2.up())
          || canConnectTo(blockState2, facing)
          || block == Blocks.powered_repeater && blockState2.getValue(BlockRedstoneDiode.FACING) == facing
          || !isNormalCube && canConnectUpwardsTo(world, pos2.down());
@@ -262,8 +258,7 @@ public class BlockRedstoneWire extends Block {
       int n6 = n3 + facing.getFrontOffsetZ();
       Block block = world.getBlockState2(n4, n5, n6).getBlock();
       if (!canConnectTo(world.getBlockState2(n4, n5, n6), facing) && (block.isBlockNormalCube() || !canConnectUpwardsTo(world.getBlockState2(n4, n5 - 1, n6)))) {
-         Block block2 = world.getBlockState2(n, n2 + 1, n3).getBlock();
-         return !block2.isBlockNormalCube() && block.isBlockNormalCube() && canConnectUpwardsTo(world.getBlockState2(n4, n5 + 1, n6))
+         return !world.getBlockState2(n, n2 + 1, n3).getBlock().isBlockNormalCube() && block.isBlockNormalCube() && canConnectUpwardsTo(world.getBlockState2(n4, n5 + 1, n6))
             ? BlockRedstoneWire.EnumAttachPosition.UP
             : BlockRedstoneWire.EnumAttachPosition.NONE;
       } else {

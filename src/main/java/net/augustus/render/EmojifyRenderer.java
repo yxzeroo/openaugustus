@@ -21,7 +21,6 @@ public class EmojifyRenderer implements MC {
    private UUID targetPlayerUuid;
 
    public void onAttackEntity(Entity entity) {
-      int[] flowStateMarker = EmojiRegistry.getFlowStateMarker();
       if (entity instanceof EntityPlayer) {
          UUID uniqueID = entity.getUniqueID();
          if (!uniqueID.equals(this.targetPlayerUuid)) {
@@ -34,7 +33,6 @@ public class EmojifyRenderer implements MC {
    }
 
    public void renderEmoji(EntityPlayer player, double d, double d2, double d3) {
-      EmojiRegistry.getFlowStateMarker();
       EntityPlayerSP thePlayer = mc.thePlayer;
       if (this.emojiRegistry.getSelectedSprite() != null && mc.gameSettings.thirdPersonView == 0 && !player.equals(thePlayer) && !player.isInvisibleToPlayer(thePlayer)) {
          if (this.emojiRegistry.getComboHits() == 0 || player.getUniqueID() == this.targetPlayerUuid && System.currentTimeMillis() <= this.displayUntilMs) {
@@ -86,7 +84,6 @@ public class EmojifyRenderer implements MC {
    }
 
    public void onEntityHurt(Entity entity) {
-      int[] flowStateMarker = EmojiRegistry.getFlowStateMarker();
       if (entity != null) {
          if (!entity.equals(mc.thePlayer)) {
             UUID uniqueID = entity.getUniqueID();

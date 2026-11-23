@@ -273,8 +273,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
                this.villageObj.endMatingSeason();
             }
          } else {
-            EntityPlayer closestPlayerToEntity = this.entityWorld.getClosestPlayerToEntity(this, 16.0);
-            if (closestPlayerToEntity != null) {
+            if (this.entityWorld.getClosestPlayerToEntity(this, 16.0) != null) {
                this.villageObj.endMatingSeason();
             }
          }
@@ -357,9 +356,8 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
       int n2 = this.careerLevel - 1;
       EntityVillager.ITradeList[][] tradeListsArr = tradeListsArrs[n];
       if (n2 >= 0 && n2 < tradeListsArr.length) {
-         EntityVillager.ITradeList[] tradeLists = tradeListsArr[n2];
 
-         for (EntityVillager.ITradeList tradeList : tradeLists) {
+         for (EntityVillager.ITradeList tradeList : tradeListsArr[n2]) {
             tradeList.modifyMerchantRecipeList(this.buyingList, this.rand);
          }
       }
@@ -437,8 +435,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
    }
 
    public boolean wantsMoreFood() {
-      boolean flag = this.getProfession() == 0;
-      return flag ? !this.hasEnoughItems(5) : !this.hasEnoughItems(1);
+      return (this.getProfession() == 0) ? !this.hasEnoughItems(5) : !this.hasEnoughItems(1);
    }
 
    public boolean isTrading() {
@@ -502,8 +499,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
    @Override
    public boolean interact(EntityPlayer player) {
       ItemStack currentItem = player.inventory.getCurrentItem();
-      boolean flag = currentItem != null && currentItem.getItem() == Items.spawn_egg;
-      if (!flag && this.isEntityAlive() && !this.isTrading() && !this.isChild()) {
+      if (!(currentItem != null && currentItem.getItem() == Items.spawn_egg) && this.isEntityAlive() && !this.isTrading() && !this.isChild()) {
          if (!this.entityWorld.isRemote && (this.buyingList == null || this.buyingList.size() > 0)) {
             this.setCustomer(player);
             player.displayVillagerTradeGui(this);
@@ -550,8 +546,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
          if (this.villageObj == null) {
             this.detachHome();
          } else {
-            BlockPos center = this.villageObj.getCenter();
-            this.setHomePosAndDistance(center, (int)((float)this.villageObj.getVillageRadius() * 1.0F));
+            this.setHomePosAndDistance(this.villageObj.getCenter(), (int)((float)this.villageObj.getVillageRadius() * 1.0F));
             if (this.isLookingForHome) {
                this.isLookingForHome = false;
                this.villageObj.setDefaultPlayerReputation(5);
@@ -845,8 +840,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
    @Override
    public void updateEquipmentIfNeeded(EntityItem entityItem) {
       ItemStack entityItem2 = entityItem.getEntityItem();
-      Item item = entityItem2.getItem();
-      if (this.canVillagerPickupItem(item)) {
+      if (this.canVillagerPickupItem(entityItem2.getItem())) {
          ItemStack stack = this.villagerInventory.addItem(entityItem2);
          if (stack == null) {
             entityItem.setDead();

@@ -3,12 +3,12 @@ package net.augustus.modules.modes.criticals;
 import net.augustus.ClientManagers;
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.combat.Criticals;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.potion.Potion;
 
 public abstract class CriticalsMode extends AbstractSubMode {
 
-   public CriticalsMode(Criticals criticals, DoubleValue doubleValue, String str) {
+   public CriticalsMode(Criticals criticals, SettingGroup doubleValue, String str) {
       super(criticals, doubleValue, str);
    }
 

@@ -30,8 +30,8 @@ import java.util.stream.Stream;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.RotationModule;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarpet;
@@ -61,23 +61,23 @@ import org.lwjgl.opengl.GL11;
 public class AutoWalk extends RotationModule implements TickListener, SprintListener, MoveInputListener, RenderListener, LoadWorldListener {
    public final BooleanValue pathFinding;
    public final BooleanValue debugLine;
-   public final StringValue distance;
-   public final StringValue maxSearchTime;
-   public final StringValue updateTicks;
+   public final DoubleValue distance;
+   public final DoubleValue maxSearchTime;
+   public final DoubleValue updateTicks;
    public final BooleanValue smooth;
    public final BooleanValue keepRotation;
-   public final BooleansSetting movementmode;
-   public final StringValue rotationUpdateTicks;
+   public final StringValue movementmode;
+   public final DoubleValue rotationUpdateTicks;
    private final MultiOptionSetting targets;
    public final BooleanValue onlyWithKillAuraTarget;
-   public final StringValue noWalkDistanceToTarget;
+   public final DoubleValue noWalkDistanceToTarget;
    public final BooleanValue jump;
    public final BooleanValue stopWhileEating;
    public final BooleanValue stopWhileSlowness;
    public final BooleanValue stopWhileJumpBoost;
    public final BooleanValue adStafeOnHit;
    public final RandomizedRangeSettings adStafeTime;
-   public final StringValue delayAfterRespawn;
+   public final DoubleValue delayAfterRespawn;
    private final TimeHelper adStrafeTimer;
    private final HashSet pathNodeKeys;
    private final RotationUtil rotationUtil;
@@ -104,71 +104,56 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
       BooleanValue pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue2 = pathFinding2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.debugLine = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "Distance", 50.0, 3.0, 50.0, 1);
+      this.debugLine = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "Distance", 50.0, 3.0, 50.0, 1);
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue3 = pathFinding2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.distance = stringValue.visibleWhen(condition2);
-      StringValue stringValue2 = new StringValue(this, "MaxSearchTime", 50.0, 10.0, 1000.0, 0);
+      this.distance = stringValue.visibleWhen(() -> booleanValue3.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "MaxSearchTime", 50.0, 10.0, 1000.0, 0);
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue4 = pathFinding2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.maxSearchTime = stringValue2.visibleWhen(condition3);
-      StringValue stringValue3 = new StringValue(this, "UpdateTicks", 1.0, 1.0, 10.0, 0);
+      this.maxSearchTime = stringValue2.visibleWhen(() -> booleanValue4.getValue());
+      DoubleValue stringValue3 = new DoubleValue(this, "UpdateTicks", 1.0, 1.0, 10.0, 0);
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue5 = pathFinding2;
-      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
-      this.updateTicks = stringValue3.visibleWhen(condition4);
+      this.updateTicks = stringValue3.visibleWhen(() -> booleanValue5.getValue());
       BooleanValue booleanValue6 = new BooleanValue(this, "Smooth", true);
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue7 = pathFinding2;
-      SettingVisibilityCondition condition5 = () -> booleanValue7.getValue();
-      this.smooth = (BooleanValue)booleanValue6.withVisibility(condition5);
+      this.smooth = (BooleanValue)booleanValue6.withVisibility(() -> booleanValue7.getValue());
       BooleanValue booleanValue8 = new BooleanValue(this, "KeepRotation", true);
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue9 = pathFinding2;
-      SettingVisibilityCondition condition6 = () -> booleanValue9.getValue();
-      this.keepRotation = (BooleanValue)booleanValue8.withVisibility(condition6);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Movementmode", "Rotation", new String[]{"Rotation", "Silent"});
+      this.keepRotation = (BooleanValue)booleanValue8.withVisibility(() -> booleanValue9.getValue());
+      StringValue booleansSetting = new StringValue(this, "Movementmode", "Rotation", new String[]{"Rotation", "Silent"});
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue10 = pathFinding2;
-      SettingVisibilityCondition condition7 = () -> booleanValue10.getValue();
-      this.movementmode = (BooleansSetting)booleansSetting.withVisibility(condition7);
-      StringValue stringValue4 = new StringValue(this, "RotationUpdateTicks", 0.0, 0.0, 10.0, 0);
-      SettingVisibilityCondition condition8 = () -> this.isRotationUpdateTicksVisible();
-      this.rotationUpdateTicks = stringValue4.visibleWhen(condition8);
+      this.movementmode = (StringValue)booleansSetting.withVisibility(() -> booleanValue10.getValue());
+      this.rotationUpdateTicks = new DoubleValue(this, "RotationUpdateTicks", 0.0, 0.0, 10.0, 0).visibleWhen(() -> this.isRotationUpdateTicksVisible());
       MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "Targets", AutoWalkTargetOption.values());
       pathFinding2 = this.pathFinding;
       this.pathFinding.getClass();
       BooleanValue booleanValue11 = pathFinding2;
-      SettingVisibilityCondition condition9 = () -> booleanValue11.getValue();
-      this.targets = multiOptionSetting.visibleWhen(condition9);
+      this.targets = multiOptionSetting.visibleWhen(() -> booleanValue11.getValue());
       this.onlyWithKillAuraTarget = new BooleanValue(this, "OnlyWithKillAuraTarget", true);
-      this.noWalkDistanceToTarget = new StringValue(this, "NoWalkDistanceToTarget", 1.0, 0.0, 6.0, 2);
+      this.noWalkDistanceToTarget = new DoubleValue(this, "NoWalkDistanceToTarget", 1.0, 0.0, 6.0, 2);
       this.jump = new BooleanValue(this, "Jump", true);
       this.stopWhileEating = new BooleanValue(this, "StopWhileEating", true);
       this.stopWhileSlowness = new BooleanValue(this, "StopWhileSlowness", false);
       this.stopWhileJumpBoost = new BooleanValue(this, "StopWhileJumpBoost", false);
-      BooleanValue booleanValue12 = new BooleanValue(this, "AdStafeOnHit", true);
-      String str = "AdStrafeOnHit";
-      this.adStafeOnHit = (BooleanValue)booleanValue12.withDisplayName(str);
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(this, "AdStafeTime", 200.0, 200.0, 0.0, 1000.0, 0);
-      String str2 = "AdStrafeTime";
-      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2);
+      this.adStafeOnHit = (BooleanValue)new BooleanValue(this, "AdStafeOnHit", true).withDisplayName("AdStrafeOnHit");
+      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "AdStafeTime", 200.0, 200.0, 0.0, 1000.0, 0).withDisplayNamePrefix("AdStrafeTime");
       pathFinding2 = this.adStafeOnHit;
       this.adStafeOnHit.getClass();
       BooleanValue booleanValue13 = pathFinding2;
-      SettingVisibilityCondition condition10 = () -> booleanValue13.getValue();
-      this.adStafeTime = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition10);
-      this.delayAfterRespawn = new StringValue(this, "DelayAfterRespawn", 0.0, 2000.0, 10000.0, 0);
+      this.adStafeTime = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> booleanValue13.getValue());
+      this.delayAfterRespawn = new DoubleValue(this, "DelayAfterRespawn", 0.0, 2000.0, 10000.0, 0);
       this.adStrafeTimer = new TimeHelper();
       this.pathNodeKeys = new HashSet();
       this.rotationUtil = new RotationUtil();
@@ -194,21 +179,15 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 1;
-      byte b2 = 40;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 36;
-      this.toggleEventSubscription(b3);
-      byte b4 = 32;
-      this.toggleEventSubscription(b4);
-      byte b5 = 17;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)40, (byte)1);
+      this.toggleEventSubscription((byte)36);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
    public void onTick() {
       this.rotating = true;
-      Fly.getCachedSettings();
       String str = "None";
       this.silentMoveFix.setSelectedValue(str);
 
@@ -219,28 +198,11 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
          if (mc.isNotInGui() && this.pathFinding.getValue()) {
             if (this.keepRotation.getValue() && this.keptRotation != null && System.currentTimeMillis() - this.lastRotationApplyTime < 10000L) {
-               RotationController rotationController = ClientManagers.rotationController;
-               float[] floats = this.keptRotation.toArray();
-               byte b = 99;
-               float[] floats2 = floats;
-               rotationController.requestRotation2(floats2, b, this);
+               ClientManagers.rotationController.requestRotation2(this.keptRotation.toArray(), (byte)99, this);
             }
 
             EntityLivingBase entity = (EntityLivingBase)this.findClosestTarget();
-            RotationUtil rotationUtil2 = this.rotationUtil;
-            String selectedValue = ClientManagers.moduleManager.killAura.rotationMode.getSelectedValue();
-            int value = (int)ClientManagers.moduleManager.killAura.hitBoxPercentageVertical.getValue();
-            int value2 = (int)ClientManagers.moduleManager.killAura.hitBoxPercentageHorizontal.getValue();
-            int value3 = (int)ClientManagers.moduleManager.killAura.hitBoxPercentageVertical1.getValue();
-            int value4 = (int)ClientManagers.moduleManager.killAura.hitBoxPercentageHorizontal1.getValue();
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            Rotation rotation = previousRotation;
-            int n = value4;
-            int n2 = value3;
-            int n3 = value2;
-            int n4 = value;
-            String str2 = selectedValue;
-            Vec3 vec = rotationUtil2.selectEntityAimPoint(entity, str2, n4, n3, n2, n, rotation);
+            Vec3 vec = this.rotationUtil.selectEntityAimPoint(entity, ClientManagers.moduleManager.killAura.rotationMode.getSelectedValue(), (int)ClientManagers.moduleManager.killAura.hitBoxPercentageVertical.getValue(), (int)ClientManagers.moduleManager.killAura.hitBoxPercentageHorizontal.getValue(), (int)ClientManagers.moduleManager.killAura.hitBoxPercentageVertical1.getValue(), (int)ClientManagers.moduleManager.killAura.hitBoxPercentageHorizontal1.getValue(), ClientManagers.rotationController.getPreviousRotation());
             if (entity != null
                && (
                   !ClientManagers.moduleManager.killAura.isToggled()
@@ -279,8 +241,7 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
                   }
 
                   PathNode pathNode = (PathNode)this.pathNodes.get(this.pathNodes.size() - this.pathStepIndex - b2 - 1);
-                  Block block = mc.theWorld.getBlockState2(pathNode.getPos().x, pathNode.getPos().y, pathNode.getPos().z).getBlock();
-                  if (this.isSlowOrThinBlock(block)) {
+                  if (this.isSlowOrThinBlock(mc.theWorld.getBlockState2(pathNode.getPos().x, pathNode.getPos().y, pathNode.getPos().z).getBlock())) {
                      b2 = 2;
                      pathNode = (PathNode)this.pathNodes.get(this.pathNodes.size() - this.pathStepIndex - b2 - 1);
                   }
@@ -290,30 +251,20 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
                      pathNode = (PathNode)this.pathNodes.get(this.pathNodes.size() - this.pathStepIndex - b2 - 1);
                   }
 
-                  PathBlockPos pos = pathNode.getPos();
-                  Vec3 vec2 = pos.toVec3();
+                  Vec3 vec2 = pathNode.getPos().toVec3();
                   if ((double)pathNode.getPos().y > mc.thePlayer.posY) {
                      int n5 = MathHelper.floor_double(mc.thePlayer.posX);
                      int n6 = MathHelper.floor_double(mc.thePlayer.posY);
                      int n7 = MathHelper.floor_double(mc.thePlayer.posZ);
                      BlockPos pos2 = new BlockPos(n5, n6, n7);
                      IBlockState blockState = mc.theWorld.getBlockState(pos2);
-                     Block block2 = blockState.getBlock();
-                     if (block2 instanceof BlockLadder) {
-                        EnumFacing value5 = (EnumFacing)blockState.getValue(BlockLadder.FACING);
-                        Vec3i directionVec = value5.getOpposite().getDirectionVec();
+                     if (blockState.getBlock() instanceof BlockLadder) {
+                        Vec3i directionVec = ((EnumFacing)blockState.getValue(BlockLadder.FACING)).getOpposite().getDirectionVec();
                         vec2 = new Vec3(pos2.add(directionVec));
                      } else if (this.smooth.getValue()) {
                         for (int i = this.pathNodes.size() - this.pathStepIndex - b2 - 1; i > 0; i--) {
-                           PathNode pathNode2 = (PathNode)this.pathNodes.get(i);
-                           PathBlockPos pos3 = pathNode2.getPos();
-                           Vec3 vec3 = pos3.toVec3();
-                           double d = vec3.xCoord + 0.5;
-                           double d2 = vec3.yCoord + (double)mc.thePlayer.getEyeHeight();
-                           double d3 = vec3.zCoord + 0.5;
-                           double d4 = d2;
-                           double d5 = d;
-                           Rotation rotation2 = this.calculateRotationToPos(d5, d4, d3);
+                           Vec3 vec3 = ((PathNode)this.pathNodes.get(i)).getPos().toVec3();
+                           Rotation rotation2 = this.calculateRotationToPos(vec3.xCoord + 0.5, vec3.yCoord + (double)mc.thePlayer.getEyeHeight(), vec3.zCoord + 0.5);
                            MovingObjectPosition hit = mc.thePlayer
                               .rayTraceCustom(mc.thePlayer.getDistance(vec3.xCoord + 0.5, interpolatedPos.yCoord, vec3.zCoord + 0.5) + 0.2, 1.0F, rotation2.yaw, rotation2.pitch);
                            MovingObjectPosition hit2 = mc.thePlayer
@@ -333,15 +284,8 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
                      }
                   } else if (this.smooth.getValue()) {
                      for (int j = this.pathNodes.size() - this.pathStepIndex - b2 - 1; j > 0; j--) {
-                        PathNode pathNode3 = (PathNode)this.pathNodes.get(j);
-                        PathBlockPos pos4 = pathNode3.getPos();
-                        Vec3 vec4 = pos4.toVec3();
-                        double d6 = vec4.xCoord + 0.5;
-                        double d7 = vec4.yCoord + (double)mc.thePlayer.getEyeHeight();
-                        double d8 = vec4.zCoord + 0.5;
-                        double d9 = d7;
-                        double d10 = d6;
-                        Rotation rotation3 = this.calculateRotationToPos(d10, d9, d8);
+                        Vec3 vec4 = ((PathNode)this.pathNodes.get(j)).getPos().toVec3();
+                        Rotation rotation3 = this.calculateRotationToPos(vec4.xCoord + 0.5, vec4.yCoord + (double)mc.thePlayer.getEyeHeight(), vec4.zCoord + 0.5);
                         MovingObjectPosition hit3 = mc.thePlayer
                            .rayTraceCustom(mc.thePlayer.getDistance(vec4.xCoord + 0.5, interpolatedPos.yCoord, vec4.zCoord + 0.5) + 0.2, 1.0F, rotation3.yaw, rotation3.pitch);
                         MovingObjectPosition hit4 = mc.thePlayer
@@ -362,49 +306,33 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
                   if (this.movementmode.getSelectedValue().equalsIgnoreCase("rotation")) {
                      double d11 = vec2.xCoord + 0.5 - mc.thePlayer.posX;
-                     double d12 = vec2.zCoord + 0.5 - mc.thePlayer.posZ;
-                     float f = (float)(MathHelper.atan2(d12, d11) * 180.0 / Math.PI - 90.0);
-                     float f2 = (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0);
-                     Rotation rotation4 = this.applyRotation(f, f2);
-                     RotationController rotationController2 = ClientManagers.rotationController;
-                     float[] floats3 = rotation4.toArray();
-                     short s = -10000;
-                     float[] floats4 = floats3;
-                     rotationController2.requestRotation2(floats4, s, this);
+                     Rotation rotation4 = this.applyRotation((float)(MathHelper.atan2(vec2.zCoord + 0.5 - mc.thePlayer.posZ, d11) * 180.0 / Math.PI - 90.0), (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0));
+                     ClientManagers.rotationController.requestRotation2(rotation4.toArray(), (short)-10000, this);
                      this.lastRotationApplyTime = System.currentTimeMillis();
                      this.keptRotation = rotation4;
                   } else {
                      if (this.rotationUpdateTicks.getValue() > 0.0 && (double)mc.thePlayer.ticksExisted % this.rotationUpdateTicks.getValue() == 0.0) {
                         double d13 = vec2.xCoord + 0.5 - mc.thePlayer.posX;
-                        double d14 = vec2.zCoord + 0.5 - mc.thePlayer.posZ;
-                        float f3 = (float)(MathHelper.atan2(d14, d13) * 180.0 / Math.PI - 90.0);
-                        float f4 = (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0);
-                        this.silentRotation = this.applyRotation(f3, f4);
+                        this.silentRotation = this.applyRotation((float)(MathHelper.atan2(vec2.zCoord + 0.5 - mc.thePlayer.posZ, d13) * 180.0 / Math.PI - 90.0), (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0));
                         this.lastSilentRotationUpdateTime = System.currentTimeMillis();
                      }
 
                      if (this.silentRotation != null
                         && System.currentTimeMillis() - this.lastSilentMoveTime < 100L
                         && (double)(System.currentTimeMillis() - this.lastSilentRotationUpdateTime) < this.rotationUpdateTicks.getValue() * 50.0) {
-                        RotationController rotationController3 = ClientManagers.rotationController;
-                        float[] floats5 = this.silentRotation.toArray();
-                        short s2 = -10000;
-                        float[] floats6 = floats5;
-                        rotationController3.requestRotation2(floats6, s2, this);
+                        ClientManagers.rotationController.requestRotation2(this.silentRotation.toArray(), (short)-10000, this);
                         this.lastRotationApplyTime = System.currentTimeMillis();
                         this.keptRotation = this.silentRotation;
                      }
 
                      double d15 = vec2.xCoord + 0.5 - mc.thePlayer.posX;
-                     double d16 = vec2.zCoord + 0.5 - mc.thePlayer.posZ;
-                     float f5 = (float)(MathHelper.atan2(d16, d15) * 180.0 / Math.PI - 90.0);
+                     float f5 = (float)(MathHelper.atan2(vec2.zCoord + 0.5 - mc.thePlayer.posZ, d15) * 180.0 / Math.PI - 90.0);
                      this.silentMoveKeys = computeMoveKeysForYaw(ClientManagers.rotationController.getCurrentRotation().yaw, f5);
                      this.lastSilentMoveTime = System.currentTimeMillis();
                      this.shouldJumpForWaypoint = vec2.yCoord > mc.thePlayer.posY;
-                     float f6 = shortestAngleDiff(
+                     this.facingWaypoint = shortestAngleDiff(
                         MathHelper.wrapAngleTo180_float(ClientManagers.rotationController.getCurrentRotation().yaw) + 180.0F, MathHelper.wrapAngleTo180_float(f5) + 180.0F
-                     );
-                     this.facingWaypoint = f6 <= 45.0F;
+                     ) <= 45.0F;
                   }
                }
             }
@@ -414,7 +342,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    }
 
    private boolean isSlowOrThinBlock(Block block) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return block == Blocks.web || block instanceof BlockCarpet || block == Blocks.snow_layer;
    }
 
@@ -425,7 +352,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
    public static int[] computeMoveKeysForYaw(float f, float f2) {
       double[] doubles = calculateMotionVector(f2, 0.0F, 1.0F);
-      Fly.getCachedSettings();
       int[] ints = new int[]{0, 0};
       double d = -1.0;
 
@@ -444,7 +370,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    }
 
    public static double[] calculateMotionVector(float f, float f2, float f3) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       float f4 = f2 * f2 + f3 * f3;
       if (f4 >= 1.0E-4F) {
          f4 = MathHelper.sqrt_float(f4);
@@ -464,14 +389,11 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    }
 
    public void computePath(PathBlockPos pathBlockPos, PathBlockPos pathBlockPos2) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       boolean isToggled = Augustus.getInstance().getModuleManager().jesus.isToggled();
       boolean flag = isToggled && Augustus.getInstance().getModuleManager().jesus.mode.getSelectedValue().equalsIgnoreCase("dolphin");
       AStarPathFinder aStarPathFinder = new AStarPathFinder(pathBlockPos, pathBlockPos2, isToggled && !flag, flag, false);
       aStarPathFinder.smoothPath = true;
-      long value = (long)this.maxSearchTime.getValue();
-      boolean flag2 = true;
-      this.pathNodes = aStarPathFinder.computePath(flag2, value);
+      this.pathNodes = aStarPathFinder.computePath(true, (long)this.maxSearchTime.getValue());
       this.pathNodeKeys.clear();
       if (this.pathNodes != null) {
          for (PathNode pathNode : (Iterable<PathNode>)(this.pathNodes)) {
@@ -490,7 +412,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
       GL11.glEnable(2848);
       GlStateManager.disableDepth();
       GlStateManager.disableTexture2D();
-      Fly.getCachedSettings();
       GlStateManager.disableCull();
       GlStateManager.depthMask(false);
       GL11.glTranslated(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
@@ -517,15 +438,11 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
    @Override
    public void onSprint3(EventSprint event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.facingWaypoint && this.pathFinding.getValue() && this.movementmode.getSelectedValue().equalsIgnoreCase("silent")) {
-         Stream stream = mc.theWorld.loadedEntityList.stream().filter(obj -> this.isValidTarget((Entity)obj));
-         Object[] array = stream.sorted(Comparator.comparingDouble(obj2 -> (double)mc.thePlayer.getDistanceToEntity((Entity)obj2))).toArray();
+         Object[] array = mc.theWorld.loadedEntityList.stream().filter(obj -> this.isValidTarget((Entity)obj)).sorted(Comparator.comparingDouble(obj2 -> (double)mc.thePlayer.getDistanceToEntity((Entity)obj2))).toArray();
          if (array.length > 0 && this.pathNodes != null && !this.pathNodes.isEmpty()) {
-            EntityLivingBase entity = (EntityLivingBase)array[0];
-            if (entity != null) {
-               boolean flag = false;
-               event.setForceSprint(flag);
+            if (((EntityLivingBase)array[0]) != null) {
+               event.setForceSprint(false);
             }
          }
       }
@@ -533,7 +450,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!Augustus.getInstance().getModuleManager().freeCam.isToggled() && this.hasRespawnDelayElapsed()) {
          if (mc.isNotInGui() && this.canWalkWhileEating()) {
             EntityLivingBase entity = null;
@@ -547,33 +463,27 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
             if ((!ClientManagers.moduleManager.killAura.isToggled() || ClientManagers.moduleManager.killAura.target == null) && entity == null) {
                if (!this.onlyWithKillAuraTarget.getValue()) {
-                  float f = 1.0F;
-                  event.setMoveForward(f);
+                  event.setMoveForward(1.0F);
                }
             } else {
                EntityLivingBase entity2 = ClientManagers.moduleManager.killAura.isToggled() && ClientManagers.moduleManager.killAura.target != null ? ClientManagers.moduleManager.killAura.target : entity;
                if (entity2 != null) {
                   if (this.movementmode.getSelectedValue().equalsIgnoreCase("rotation") || !this.pathFinding.getValue()) {
                      if ((double)mc.thePlayer.getDistanceToEntityBox(entity2) > this.noWalkDistanceToTarget.getValue()) {
-                        float f2 = 1.0F;
-                        event.setMoveForward(f2);
+                        event.setMoveForward(1.0F);
                      }
                   } else if (this.silentMoveKeys != null) {
-                     float f3 = (float)this.silentMoveKeys[0];
-                     event.setMoveStrafe(f3);
-                     float f4 = (float)this.silentMoveKeys[1];
-                     event.setMoveForward(f4);
+                     event.setMoveStrafe((float)this.silentMoveKeys[0]);
+                     event.setMoveForward((float)this.silentMoveKeys[1]);
                      if (this.shouldJumpForWaypoint) {
-                        boolean flag = true;
-                        event.setJump(flag);
+                        event.setJump(true);
                      }
                   }
 
                   if (this.jump.getValue()
                      && mc.thePlayer.getDistanceToEntityBox(entity2) > 6.0F
                      && (!this.movementmode.getSelectedValue().equalsIgnoreCase("silent") || this.facingWaypoint || !this.pathFinding.getValue())) {
-                     boolean flag2 = true;
-                     event.setJump(flag2);
+                     event.setJump(true);
                   }
 
                   if (this.adStafeOnHit.getValue() && (double)mc.thePlayer.getDistanceToEntityBox(entity2) < 4.5) {
@@ -582,11 +492,8 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
                         this.strafeRight = !this.strafeRight;
                      }
 
-                     TimeHelper adStrafeTimer2 = this.adStrafeTimer;
-                     double lastValue = this.adStafeTime.getLastValue();
-                     if (!adStrafeTimer2.reached(lastValue)) {
-                        float f5 = this.strafeRight ? 1.0F : -1.0F;
-                        event.setMoveStrafe(f5);
+                     if (!this.adStrafeTimer.reached(this.adStafeTime.getLastValue())) {
+                        event.setMoveStrafe(this.strafeRight ? 1.0F : -1.0F);
                         this.adStafeTime.nextValue();
                      }
                   }
@@ -602,24 +509,19 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    }
 
    private boolean canWalkWhileEating() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !mc.thePlayer.isEating() || !this.stopWhileEating.getValue();
    }
 
    private boolean isBlockedByPotionEffect() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return mc.thePlayer.getActivePotionEffect(Potion.moveSlowdown) != null && this.stopWhileSlowness.getValue()
          || mc.thePlayer.getActivePotionEffect(Potion.jump) != null && this.stopWhileJumpBoost.getValue();
    }
 
    private boolean hasRespawnDelayElapsed() {
-      TimeHelper respawnDelayTimer2 = this.respawnDelayTimer;
-      double value = this.delayAfterRespawn.getValue();
-      return respawnDelayTimer2.reached(value);
+      return this.respawnDelayTimer.reached(this.delayAfterRespawn.getValue());
    }
 
    private boolean isValidTarget(Entity entity) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!(entity instanceof EntityPlayerSP)
          && this.hasRespawnDelayElapsed()
          && (
@@ -659,7 +561,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
 
    public Entity findClosestTarget() {
       Entity entity = null;
-      Fly.getCachedSettings();
       double d = 0.0;
 
       for (Entity entity2 : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
@@ -676,7 +577,6 @@ public class AutoWalk extends RotationModule implements TickListener, SprintList
    }
 
    private boolean isRotationUpdateTicksVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.movementmode.isVisible() && this.movementmode.getSelectedValue().equalsIgnoreCase("silent");
    }
 

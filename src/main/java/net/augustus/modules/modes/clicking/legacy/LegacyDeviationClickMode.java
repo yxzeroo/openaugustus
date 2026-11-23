@@ -6,32 +6,25 @@ import java.security.SecureRandom;
 import java.util.function.BiFunction;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.entity.EntityLivingBase;
 
 public class LegacyDeviationClickMode extends AbstractLegacyClickMode {
    private final RandomizedRangeSettings deviationCPS;
    private final BooleanValue deviationDoubleClick;
-   private final StringValue deviationAirMultiplier;
-   private final StringValue deviationWallMultiplier;
+   private final DoubleValue deviationAirMultiplier;
+   private final DoubleValue deviationWallMultiplier;
    private long nextClickTimeMs;
 
-   public LegacyDeviationClickMode(Module module, DoubleValue doubleValue) {
+   public LegacyDeviationClickMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "DeviationClickPattern");
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this.parentModule, "DeviationCPS", 13.0, 20.0, 0.0, 40.0, 0, this.modeSetting)).withoutNotInARow();
       String str = "MaxCPS";
-      String str2 = "MinCPS";
-      this.deviationCPS = randomizedRangeSettings.withRangeNames(str2, str);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "DeviationDoubleClick", true, this.modeSetting);
-      String str3 = "DoubleClick";
-      this.deviationDoubleClick = (BooleanValue)booleanValue.withDisplayName(str3);
-      StringValue stringValue = new StringValue(this.parentModule, "DeviationAirMultiplier", 0.4, 0.0, 1.0, 2, this.modeSetting);
-      String str4 = "AirMultiplier";
-      this.deviationAirMultiplier = stringValue.named(str4);
-      StringValue stringValue2 = new StringValue(this.parentModule, "DeviationWallMultiplier", 0.4, 0.0, 1.0, 2, this.modeSetting);
-      String str5 = "WallMultiplier";
-      this.deviationWallMultiplier = stringValue2.named(str5);
+      this.deviationCPS = randomizedRangeSettings.withRangeNames("MinCPS", str);
+      this.deviationDoubleClick = (BooleanValue)new BooleanValue(this.parentModule, "DeviationDoubleClick", true, this.modeSetting).withDisplayName("DoubleClick");
+      this.deviationAirMultiplier = new DoubleValue(this.parentModule, "DeviationAirMultiplier", 0.4, 0.0, 1.0, 2, this.modeSetting).named("AirMultiplier");
+      this.deviationWallMultiplier = new DoubleValue(this.parentModule, "DeviationWallMultiplier", 0.4, 0.0, 1.0, 2, this.modeSetting).named("WallMultiplier");
       this.nextClickTimeMs = 0L;
    }
 
@@ -85,7 +78,7 @@ public class LegacyDeviationClickMode extends AbstractLegacyClickMode {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new LegacyDeviationClickMode((Module)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new LegacyDeviationClickMode((Module)obj, (SettingGroup)obj2);
    }
 
 }

@@ -132,8 +132,7 @@ public class AugustusServerClient {
          try {
             this.bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 40000);
             this.bootstrap.resolver(DefaultAddressResolverGroup.INSTANCE);
-            ChannelFuture channelFuture = this.bootstrap.connect("connect.electriclauncher.de", 1338);
-            channelFuture.addListener((ChannelFutureListener)channelFuture2 -> this.onConnectComplete((ChannelFuture)channelFuture2));
+            this.bootstrap.connect("connect.electriclauncher.de", 1338).addListener((ChannelFutureListener)channelFuture2 -> this.onConnectComplete((ChannelFuture)channelFuture2));
          } catch (Exception e) {
             e.printStackTrace();
             this.scheduleReconnect();
@@ -151,13 +150,11 @@ public class AugustusServerClient {
       try {
          String str = "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW";
          KeyStore instance = KeyStore.getInstance("PKCS12");
-         InputStream resourceAsStream = AugustusServerClient.class.getClassLoader().getResourceAsStream("assets/augustus/certificates/client.p12");
-         instance.load(resourceAsStream, "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW".toCharArray());
+         instance.load(AugustusServerClient.class.getClassLoader().getResourceAsStream("assets/augustus/certificates/client.p12"), "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW".toCharArray());
          KeyManagerFactory instance2 = KeyManagerFactory.getInstance("SunX509");
          instance2.init(instance, "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW".toCharArray());
          KeyStore instance3 = KeyStore.getInstance("JKS");
-         InputStream resourceAsStream2 = AugustusServerClient.class.getClassLoader().getResourceAsStream("assets/augustus/certificates/truststore.jks");
-         instance3.load(resourceAsStream2, "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW".toCharArray());
+         instance3.load(AugustusServerClient.class.getClassLoader().getResourceAsStream("assets/augustus/certificates/truststore.jks"), "XNqTn785wCMbsXzFHLrm5ChMDdWBh8WM7nhpU3jJuvn8atqaf3mxJzFm37GxWdYW".toCharArray());
          TrustManagerFactory instance4 = TrustManagerFactory.getInstance("SunX509");
          instance4.init(instance3);
          Security.setProperty("ocsp.enable", "false");
@@ -171,15 +168,11 @@ public class AugustusServerClient {
 
          new KeyExchangeInitPacket();
          new PlayerPresenceUpdatePacket();
-         String str2 = this.launcherDataDir + File.separator + "proxy.txt";
-         Optional optional = VendorProxyConfig.loadFromFile(str2);
+         Optional optional = VendorProxyConfig.loadFromFile(this.launcherDataDir + File.separator + "proxy.txt");
          bootstrap2.handler(new VendorChannelInitializer(this, optional, sslContext));
          return bootstrap2;
       } catch (Exception e) {
-         VendorTelemetryReporter vendorTelemetryReporter = new VendorTelemetryReporter();
-         String str3 = Augustus.getInstance().getUsername() + " Bootstrap initialization failed";
-         String str4 = str3;
-         vendorTelemetryReporter.reportBootstrapFailure(str4);
+         new VendorTelemetryReporter().reportBootstrapFailure(Augustus.getInstance().getUsername() + " Bootstrap initialization failed");
          throw new RuntimeException(e);
       }
    }
@@ -245,8 +238,7 @@ public class AugustusServerClient {
                   AugustusServerHandler.clearActiveHandler();
                }
             } else {
-               AugustusServerClient augustusServerClient = this;
-               this.eventLoopGroup.schedule(() -> augustusServerClient.connect(), l, TimeUnit.SECONDS);
+               this.eventLoopGroup.schedule(() -> this.connect(), l, TimeUnit.SECONDS);
             }
          } else if (1 <= b) {
             if (b <= 1) {
@@ -271,9 +263,7 @@ public class AugustusServerClient {
                         if (b <= 15) {
                            this.eventLoopGroup.shutdownGracefully();
                         } else if (b <= 16) {
-                           AugustusServerClient augustusServerClient2 = this;
-                           AugustusServerClient augustusServerClient3 = this;
-                           augustusServerClient2.bootstrap = augustusServerClient3.createBootstrap();
+                           this.bootstrap = this.createBootstrap();
                         } else {
                            this.reconnecting = true;
                         }
@@ -317,8 +307,7 @@ public class AugustusServerClient {
 
                this.shuttingDown = true;
             } else {
-               AugustusServerClient augustusServerClient = this;
-               augustusServerClient.disconnectAndReconnect();
+               this.disconnectAndReconnect();
 
                while (b >= 1) {
                   if (b <= 1) {
@@ -433,10 +422,8 @@ public class AugustusServerClient {
             );
          }
 
-         AugustusServerClient augustusServerClient = this;
          HashMap outboundPacketIds2 = this.outboundPacketIds;
-         List outboundPacketClasses2 = this.outboundPacketClasses;
-         augustusServerClient.buildPacketIdMap(outboundPacketClasses2, outboundPacketIds2);
+         this.buildPacketIdMap(this.outboundPacketClasses, outboundPacketIds2);
       }
    }
 
@@ -515,9 +502,7 @@ public class AugustusServerClient {
                   continue;
                }
 
-               ChannelFuture channelFuture2 = this.channel.closeFuture();
-               AugustusServerClient augustusServerClient = this;
-               channelFuture2.addListener((ChannelFutureListener)channelFuture3 -> augustusServerClient.onChannelClosed((ChannelFuture)channelFuture3));
+               this.channel.closeFuture().addListener((ChannelFutureListener)channelFuture3 -> this.onChannelClosed((ChannelFuture)channelFuture3));
             }
          } else {
             this.channel = channelFuture.channel();
@@ -556,9 +541,7 @@ public class AugustusServerClient {
       outerLoop:
       while (true) {
          if (b <= 3) {
-            AugustusServerClient augustusServerClient = this;
-            AugustusServerClient augustusServerClient2 = this;
-            augustusServerClient.bootstrap = augustusServerClient2.createBootstrap();
+            this.bootstrap = this.createBootstrap();
          } else {
             if (b < 5) {
                return;

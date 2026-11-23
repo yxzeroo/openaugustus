@@ -40,8 +40,7 @@ public class BlockMarkerProfile {
          Block blockFromName = Block.getBlockFromName(key);
          if (blockFromName != null) {
             MarkedBlockGroup markedBlockGroup = new MarkedBlockGroup(this.blockMarker, key, blockFromName);
-            JsonArray array = (JsonArray)value;
-            markedBlockGroup.deserializeFromJson(array);
+            markedBlockGroup.deserializeFromJson((JsonArray)value);
             this.blockGroups.add(markedBlockGroup);
          } else {
             String str = "Failed to load block: " + key;

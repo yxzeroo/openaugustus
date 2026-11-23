@@ -121,11 +121,8 @@ public class SmoothScrollBar {
          return false;
       } else {
          double d = (double)n8 / 100.0;
-         double d2 = (double)(n5 - n);
-         double d3 = d2 / (double)n6 * 100.0;
-         int n9 = (int)(d3 * d) + n;
-         double d4 = (double)n8 / (double)n6 * 100.0;
-         int n10 = (int)(d4 * d);
+         int n9 = (int)((((double)(n5 - n)) / (double)n6 * 100.0) * d) + n;
+         int n10 = (int)(((double)n8 / (double)n6 * 100.0) * d);
          this.thumbLeftX = n9;
          this.thumbRightX = n9 + n10;
          RenderUtil.drawRoundedRect((float)this.thumbLeftX, (float)this.thumbTopY, (float)this.thumbRightX, (float)this.thumbBottomY, 4.0F, 1, n7);
@@ -143,11 +140,8 @@ public class SmoothScrollBar {
          return false;
       } else {
          double d = (double)n8 / 100.0;
-         double d2 = (double)(n5 - n2);
-         double d3 = d2 / (double)n6 * 100.0;
-         int n9 = (int)(d3 * d) + n2;
-         double d4 = (double)n8 / (double)n6 * 100.0;
-         int n10 = (int)(d4 * d);
+         int n9 = (int)((((double)(n5 - n2)) / (double)n6 * 100.0) * d) + n2;
+         int n10 = (int)(((double)n8 / (double)n6 * 100.0) * d);
          this.thumbLeftX = n;
          this.thumbTopY = n9;
          this.thumbRightX = n3;

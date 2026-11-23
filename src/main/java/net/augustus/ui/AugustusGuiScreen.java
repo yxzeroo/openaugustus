@@ -1,6 +1,5 @@
 package net.augustus.ui;
 
-import net.augustus.ui.widgets.ScrollBar;
 import net.augustus.utils.render.BlurShadowManager;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,14 +26,11 @@ public class AugustusGuiScreen extends GuiScreen {
    }
 
    public void navigateBack() {
-      Minecraft mc2 = this.mc;
-      GuiScreen parentScreen3 = this.getParentScreen();
-      mc2.displayGuiScreen(parentScreen3);
+      this.mc.displayGuiScreen(this.getParentScreen());
    }
 
    public void drawCenteredString(String str, float f, float f2) {
-      byte b = -1;
-      this.drawCenteredString(str, f, f2, b);
+      this.drawCenteredString(str, f, f2, (byte)-1);
    }
 
    public void disableDefaultBackground() {
@@ -86,8 +82,7 @@ public class AugustusGuiScreen extends GuiScreen {
       int n6 = n4 - n2;
       ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
       int scaleFactor = sr.getScaleFactor();
-      int n7 = sr.getScaledHeight() - n4;
-      GL11.glScissor(n * scaleFactor, n7 * scaleFactor, n5 * scaleFactor, n6 * scaleFactor);
+      GL11.glScissor(n * scaleFactor, (sr.getScaledHeight() - n4) * scaleFactor, n5 * scaleFactor, n6 * scaleFactor);
       GL11.glEnable(3089);
    }
 
@@ -101,7 +96,6 @@ public class AugustusGuiScreen extends GuiScreen {
 
    @Override
    public void keyTyped(char typedChar, int keyCode) throws IOException {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       if (keyCode == 1 && this.getParentScreen() != null) {
          this.navigateBack();
       } else {
@@ -130,8 +124,7 @@ public class AugustusGuiScreen extends GuiScreen {
    }
 
    public void drawString(String str, float f, float f2) {
-      byte b = -1;
-      this.drawString(str, f, f2, b);
+      this.drawString(str, f, f2, (byte)-1);
    }
 
    public void setParentScreen(GuiScreen screen) {
@@ -141,7 +134,6 @@ public class AugustusGuiScreen extends GuiScreen {
    @Override
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       super.mouseClicked(mouseX, mouseY, mouseButton);
-      ScrollBar.getControlFlowGuard();
 
       for (GuiTextField guiTextField : (Iterable<GuiTextField>)(this.textFields)) {
          guiTextField.mouseClicked(mouseX, mouseY, mouseButton);
@@ -153,10 +145,7 @@ public class AugustusGuiScreen extends GuiScreen {
    }
 
    public void drawCenteredScaledString(String str, float f, float f2, float f3) {
-      float f4 = f - (float)Minecraft.getMinecraft().fontRendererObj.getStringWidth(str) / 2.0F;
-      byte b = -1;
-      float f5 = f4;
-      this.drawScaledString(str, f5, f2, f3, b);
+      this.drawScaledString(str, f - (float)Minecraft.getMinecraft().fontRendererObj.getStringWidth(str) / 2.0F, f2, f3, (byte)-1);
    }
 
    public void drawScaledString(String str, float f, float f2, float f3, int n) {
@@ -176,7 +165,6 @@ public class AugustusGuiScreen extends GuiScreen {
    @Override
    public void updateScreen() {
       super.updateScreen();
-      ScrollBar.getControlFlowGuard();
 
       for (GuiTextField guiTextField : (Iterable<GuiTextField>)(this.textFields)) {
          guiTextField.updateCursorCounter();
@@ -189,12 +177,9 @@ public class AugustusGuiScreen extends GuiScreen {
 
    @Override
    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       if (this.renderDefaultBackground) {
          this.drawDefaultBackground();
-         ScaledResolution sr = new ScaledResolution(this.mc);
-         boolean flag = true;
-         BlurShadowManager.flushRenderQueues(sr, flag);
+         BlurShadowManager.flushRenderQueues(new ScaledResolution(this.mc), true);
       }
 
       for (GuiTextField guiTextField : (Iterable<GuiTextField>)(this.textFields)) {
@@ -212,8 +197,7 @@ public class AugustusGuiScreen extends GuiScreen {
    public GuiPasswordField addPasswordField(int n, int n2, int n3, int n4) {
       int nextControlId2 = this.nextControlId;
       GuiPasswordField guiPasswordField = new GuiPasswordField(nextControlId2, Minecraft.getMinecraft().fontRendererObj, n, n2, n3, n4);
-      short s = 1337;
-      guiPasswordField.setMaxStringLength(s);
+      guiPasswordField.setMaxStringLength((short)1337);
       this.nextControlId++;
       this.passwordFields.add(guiPasswordField);
       return guiPasswordField;
@@ -222,7 +206,6 @@ public class AugustusGuiScreen extends GuiScreen {
    @Override
    public final void initGui() {
       super.initGui();
-      ScrollBar.getControlFlowGuard();
       this.buttonClickHandlers.clear();
       this.buttonList.clear();
       this.textFields.clear();
@@ -230,20 +213,14 @@ public class AugustusGuiScreen extends GuiScreen {
       if (this.getParentScreen() != null) {
          int n = this.height - 26;
          GuiButtonClickHandler guiButtonClickHandler = button -> this.onBackButtonClicked(button);
-         String str = "<-";
-         byte b = 20;
-         byte b2 = 20;
-         int n2 = n;
-         byte b3 = 5;
-         this.addButton(b3, n2, b2, b, str, guiButtonClickHandler);
+         this.addButton((byte)5, n, (byte)20, (byte)20, "<-", guiButtonClickHandler);
       }
 
       this.initContent();
    }
 
    public void drawScaledString(String str, float f, float f2, float f3) {
-      byte b = -1;
-      this.drawScaledString(str, f, f2, f3, b);
+      this.drawScaledString(str, f, f2, f3, (byte)-1);
    }
 
    public int getStringWidth(String str) {

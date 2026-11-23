@@ -261,9 +261,7 @@ public abstract class BiomeGenBase {
    public WorldGenSwamp worldGeneratorSwamp = new WorldGenSwamp();
 
    public int getGrassColorAtPos(BlockPos pos) {
-      double d = (double)MathHelper.clamp_float(this.getFloatTemperature(pos), 0.0F, 1.0F);
-      double d2 = (double)MathHelper.clamp_float(this.getFloatRainfall(), 0.0F, 1.0F);
-      return ColorizerGrass.getGrassColor(d, d2);
+      return ColorizerGrass.getGrassColor((double)MathHelper.clamp_float(this.getFloatTemperature(pos), 0.0F, 1.0F), (double)MathHelper.clamp_float(this.getFloatRainfall(), 0.0F, 1.0F));
    }
 
    public WorldGenerator getRandomWorldGenForGrass(Random rand) {
@@ -453,9 +451,7 @@ public abstract class BiomeGenBase {
    }
 
    public int getFoliageColorAtPos(BlockPos pos) {
-      double d = (double)MathHelper.clamp_float(this.getFloatTemperature(pos), 0.0F, 1.0F);
-      double d2 = (double)MathHelper.clamp_float(this.getFloatRainfall(), 0.0F, 1.0F);
-      return ColorizerFoliage.getFoliageColor(d, d2);
+      return ColorizerFoliage.getFoliageColor((double)MathHelper.clamp_float(this.getFloatTemperature(pos), 0.0F, 1.0F), (double)MathHelper.clamp_float(this.getFloatRainfall(), 0.0F, 1.0F));
    }
 
    public boolean isEqualTo(BiomeGenBase biomeGenBase) {

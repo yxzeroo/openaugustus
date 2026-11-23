@@ -19,9 +19,7 @@ public class KeccakSha3Digest {
       if (n2 <= KeccakParameters.getRateBits(this.algorithm)) {
          bytes2 = bytes;
       } else {
-         KeccakSha3Digest keccakSha3Digest = this;
-         byte[] bytes3 = bytes;
-         bytes2 = keccakSha3Digest.resizeBlockBuffer(bytes3, n, n2);
+         bytes2 = this.resizeBlockBuffer(bytes, n, n2);
       }
 
       return bytes2;
@@ -71,9 +69,7 @@ public class KeccakSha3Digest {
                   throw new KeccakDigestException("File cannot be null");
                }
 
-               KeccakSha3Digest keccakSha3Digest = this;
-               byte[] bytes5 = bytes2;
-               keccakSha3Digest.appendDomainSuffix(bytes5, n);
+               this.appendDomainSuffix(bytes2, n);
                continue;
             }
 
@@ -96,35 +92,26 @@ public class KeccakSha3Digest {
          while (true) {
             while (2 > b) {
                if (0 < b) {
-                  int outputBitLength = this.algorithm.getOutputBitLength();
-                  bytes = this.allocateByteBufferForBits(outputBitLength);
+                  bytes = this.allocateByteBufferForBits(this.algorithm.getOutputBitLength());
                   continue outerLoop;
                }
 
-               InputStream in2 = in;
-               byte[] bytes7 = bytes3;
-               byte[] bytes8 = bytes7;
+               byte[] bytes8 = bytes3;
                long[][] state3 = this.state;
-               InputStream in3 = in2;
-               n = this.absorber.absorbStream(in3, state3, bytes8);
+               n = this.absorber.absorbStream(in, state3, bytes8);
             }
 
             if (2 >= b) {
                byte[] bytes9 = bytes2;
                long[][] state4 = this.state;
-               byte[] bytes10 = bytes9;
-               this.absorber.absorb(bytes10, state4);
+               this.absorber.absorb(bytes9, state4);
             } else {
                if (3 >= b) {
-                  KeccakSha3Digest keccakSha3Digest2 = this;
-                  byte[] bytes11 = bytes3;
-                  byte[] bytes12 = bytes11;
-                  bytes2 = keccakSha3Digest2.ensureBlockCapacity(bytes12, n);
+                  bytes2 = this.ensureBlockCapacity(bytes3, n);
                   break;
                }
 
-               int rateBits2 = KeccakParameters.getRateBits(this.algorithm);
-               bytes3 = this.allocateByteBufferForBits(rateBits2);
+               bytes3 = this.allocateByteBufferForBits(KeccakParameters.getRateBits(this.algorithm));
             }
          }
       }
@@ -274,8 +261,7 @@ public class KeccakSha3Digest {
             if (b <= 8) {
                byte[] bytes4 = bytes2;
                long[][] state2 = this.state;
-               byte[] bytes5 = bytes4;
-               this.absorber.absorb(bytes5, state2);
+               this.absorber.absorb(bytes4, state2);
                continue;
             }
 
@@ -283,9 +269,7 @@ public class KeccakSha3Digest {
                if (b <= 10) {
                   n = bytes.length << 3;
                } else {
-                  KeccakSha3Digest keccakSha3Digest = this;
-                  byte[] bytes6 = bytes2;
-                  keccakSha3Digest.appendDomainSuffix(bytes6, n);
+                  this.appendDomainSuffix(bytes2, n);
                }
             } else {
                bytes2 = this.allocateByteBufferForBits(n2);
@@ -296,8 +280,7 @@ public class KeccakSha3Digest {
                continue;
             }
 
-            int outputBitLength = this.algorithm.getOutputBitLength();
-            bytes3 = this.allocateByteBufferForBits(outputBitLength);
+            bytes3 = this.allocateByteBufferForBits(this.algorithm.getOutputBitLength());
          }
 
          if (b >= 2) {
@@ -318,11 +301,7 @@ public class KeccakSha3Digest {
                return this.squeezer.squeeze(state3, bytes8);
             }
 
-            KeccakSha3Digest keccakSha3Digest2 = this;
-            byte[] bytes9 = bytes;
-            byte[] bytes10 = bytes2;
-            byte[] bytes11 = bytes9;
-            keccakSha3Digest2.copyInputBytes(bytes11, bytes10);
+            this.copyInputBytes(bytes, bytes2);
          }
       }
    }
@@ -334,8 +313,7 @@ public class KeccakSha3Digest {
       byte b = 4;
 
       while (b <= 0) {
-         int rateBits2 = KeccakParameters.getRateBits(this.algorithm);
-         n3 = this.ceilDiv(n2, rateBits2);
+         n3 = this.ceilDiv(n2, KeccakParameters.getRateBits(this.algorithm));
       }
 
       obj = new byte[n3 * KeccakParameters.getRateBits(this.algorithm) / 8];
@@ -349,9 +327,7 @@ public class KeccakSha3Digest {
             System.arraycopy(bytes, 0, (byte[])obj, 0, n4);
          }
 
-         KeccakSha3Digest keccakSha3Digest = this;
-         byte b2 = 8;
-         n4 = keccakSha3Digest.ceilDiv(n, b2);
+         n4 = this.ceilDiv(n, (byte)8);
       }
    }
 

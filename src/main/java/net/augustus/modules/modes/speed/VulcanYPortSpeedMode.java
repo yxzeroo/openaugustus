@@ -5,7 +5,6 @@ import net.augustus.events.EventMotion;
 import net.augustus.events.EventMoveEntity;
 import net.augustus.events.EventMoveInput;
 import net.augustus.events.EventPacket;
-import net.augustus.settings.Setting;
 import net.augustus.utils.MoveUtil;
 import net.augustus.utils.math.Vec2d;
 import net.augustus.modules.movement.Speed;
@@ -52,7 +51,6 @@ public class VulcanYPortSpeedMode extends SpeedMode {
                         mc.thePlayer.motionY = -8.0;
                      }
 
-                     Setting.getControlFlowMarker();
                   }
                }
             }
@@ -87,10 +85,8 @@ public class VulcanYPortSpeedMode extends SpeedMode {
                            }
 
                            vec2d = vec2d.scale(d);
-                           double d2 = vec2d.x;
-                           event.setX(d2);
-                           double d3 = vec2d.y;
-                           event.setZ(d3);
+                           event.setX(vec2d.x);
+                           event.setZ(vec2d.y);
                         }
                      }
                   }
@@ -107,8 +103,7 @@ public class VulcanYPortSpeedMode extends SpeedMode {
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (this.blockJumpInput) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
       }
    }
 }

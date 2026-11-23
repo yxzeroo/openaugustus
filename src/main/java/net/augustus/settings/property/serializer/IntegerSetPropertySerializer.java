@@ -16,7 +16,6 @@ public final class IntegerSetPropertySerializer implements SetPropertySerializer
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Integer num = (Integer)obj;
-      this.writeIntegerElement(array, num);
+      this.writeIntegerElement(array, (Integer)obj);
    }
 }

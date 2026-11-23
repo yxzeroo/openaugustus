@@ -8,9 +8,7 @@ public class ReturnLeftoverStep implements CraftingStep {
       if (!craftingInventoryActions.hasHeldCursorStack()) {
          return true;
       } else {
-         byte b = 0;
-         Object obj = null;
-         int n = craftingInventoryActions.findInventorySlot(guiCrafting, (Item)obj, b);
+         int n = craftingInventoryActions.findInventorySlot(guiCrafting, (Item)null, (byte)0);
          return n < 0 ? false : craftingInventoryActions.pickupFromSlot(guiCrafting, n);
       }
    }

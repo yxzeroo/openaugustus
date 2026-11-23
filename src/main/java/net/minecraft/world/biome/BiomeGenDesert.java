@@ -23,9 +23,7 @@ public class BiomeGenDesert extends BiomeGenBase {
    public void decorate(World world, Random rand, BlockPos pos) {
       super.decorate(world, rand, pos);
       if (rand.nextInt(1000) == 0) {
-         int n = rand.nextInt(16) + 8;
-         int n2 = rand.nextInt(16) + 8;
-         BlockPos pos2 = world.getHeight(pos.add(n, 0, n2)).up();
+         BlockPos pos2 = world.getHeight(pos.add(rand.nextInt(16) + 8, 0, rand.nextInt(16) + 8)).up();
          new WorldGenDesertWells().generate(world, rand, pos2);
       }
    }

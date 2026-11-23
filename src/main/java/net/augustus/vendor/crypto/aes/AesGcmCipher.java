@@ -565,25 +565,11 @@ public class AesGcmCipher {
          obj5 = new byte[16];
          System.arraycopy(bytes, ((byte[])obj6).length + n3, (byte[])obj5, 0, 16);
          AesGcmCipher aesGcmCipher = this;
-         byte[] bytes4 = bytes2;
-         obj8 = aesGcmCipher.expandKey(bytes4);
+         obj8 = aesGcmCipher.expandKey(bytes2);
          aesGcmCipher = this;
-         byte[] bytes5 = bytes2;
-         int[] ints = (int[])obj8;
-         int[] ints2 = ints;
-         byte[] bytes6 = bytes5;
-         obj4 = aesGcmCipher.computeHashSubkey(bytes6, ints2);
+         obj4 = aesGcmCipher.computeHashSubkey(bytes2, (int[])obj8);
          aesGcmCipher = this;
-         byte[] bytes7 = (byte[])obj6;
-         byte[] bytes8 = (byte[])obj3;
-         byte[] bytes9 = bytes3;
-         int[] ints3 = (int[])obj8;
-         byte[] bytes10 = (byte[])obj4;
-         int[] ints4 = ints3;
-         byte[] bytes11 = bytes9;
-         byte[] bytes12 = bytes8;
-         byte[] bytes13 = bytes7;
-         obj9 = aesGcmCipher.computeAuthTag(bytes13, bytes12, bytes11, ints4, bytes10);
+         obj9 = aesGcmCipher.computeAuthTag((byte[])obj6, (byte[])obj3, bytes3, (int[])obj8, (byte[])obj4);
          n = 0;
 
          for (int i = 0; i < 16; i++) {
@@ -605,10 +591,7 @@ public class AesGcmCipher {
                }
 
                aesGcmCipher = this;
-               int[] ints5 = (int[])obj2;
-               int[] ints6 = (int[])obj8;
-               int[] ints7 = ints5;
-               aesGcmCipher.encryptBlock(ints7, ints6);
+               aesGcmCipher.encryptBlock((int[])obj2, (int[])obj8);
                n2 = Math.min(16, ((byte[])obj3).length - j);
 
                for (int m = 0; m < n2; m++) {
@@ -628,8 +611,7 @@ public class AesGcmCipher {
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.decrypt(bytes, bytes2, (byte[])obj);
+      return this.decrypt(bytes, bytes2, (byte[])null);
    }
 
    private static String bytesToHex(byte[] bytes, int n, int n2) {
@@ -738,9 +720,7 @@ public class AesGcmCipher {
    }
 
    private static String bytesToHex(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return bytesToHex(bytes, b, length);
+      return bytesToHex(bytes, (byte)0, bytes.length);
    }
 
    private byte[] computeAuthTag(byte[] bytes, byte[] bytes2, byte[] bytes3, int[] ints, byte[] bytes4) {
@@ -802,8 +782,7 @@ public class AesGcmCipher {
          this.counterBlockStateBuffer[i2] = bytes7[i2] & 255;
       }
 
-      int[] ints2 = this.counterBlockStateBuffer;
-      this.encryptBlock(ints2, ints);
+      this.encryptBlock(this.counterBlockStateBuffer, ints);
 
       for (int i3 = 0; i3 < 16; i3++) {
          this.counterBlockByteBuffer[i3] = (byte)this.counterBlockStateBuffer[i3];
@@ -924,14 +903,9 @@ public class AesGcmCipher {
          }
 
          AesGcmCipher aesGcmCipher = this;
-         byte[] bytes4 = bytes2;
-         obj3 = aesGcmCipher.expandKey(bytes4);
+         obj3 = aesGcmCipher.expandKey(bytes2);
          aesGcmCipher = this;
-         byte[] bytes5 = bytes2;
-         int[] ints = (int[])obj3;
-         int[] ints2 = ints;
-         byte[] bytes6 = bytes5;
-         obj2 = aesGcmCipher.computeHashSubkey(bytes6, ints2);
+         obj2 = aesGcmCipher.computeHashSubkey(bytes2, (int[])obj3);
          obj4 = new byte[16];
          System.arraycopy((byte[])obj8, 0, (byte[])obj4, 0, ((byte[])obj8).length);
          ((byte[])obj4)[15] = 1;
@@ -944,10 +918,7 @@ public class AesGcmCipher {
             }
 
             aesGcmCipher = this;
-            int[] ints3 = (int[])obj7;
-            int[] ints4 = (int[])obj3;
-            int[] ints5 = ints3;
-            aesGcmCipher.encryptBlock(ints5, ints4);
+            aesGcmCipher.encryptBlock((int[])obj7, (int[])obj3);
             n = Math.min(16, bytes.length - j);
 
             for (int m = 0; m < n; m++) {
@@ -962,16 +933,7 @@ public class AesGcmCipher {
          }
 
          aesGcmCipher = this;
-         byte[] bytes7 = (byte[])obj8;
-         byte[] bytes8 = (byte[])obj5;
-         byte[] bytes9 = bytes3;
-         int[] ints6 = (int[])obj3;
-         byte[] bytes10 = (byte[])obj2;
-         int[] ints7 = ints6;
-         byte[] bytes11 = bytes9;
-         byte[] bytes12 = bytes8;
-         byte[] bytes13 = bytes7;
-         obj = aesGcmCipher.computeAuthTag(bytes13, bytes12, bytes11, ints7, bytes10);
+         obj = aesGcmCipher.computeAuthTag((byte[])obj8, (byte[])obj5, bytes3, (int[])obj3, (byte[])obj2);
          obj6 = new byte[((byte[])obj8).length + ((byte[])obj5).length + ((byte[])obj).length];
          System.arraycopy((byte[])obj8, 0, (byte[])obj6, 0, ((byte[])obj8).length);
          System.arraycopy((byte[])obj5, 0, (byte[])obj6, ((byte[])obj8).length, ((byte[])obj5).length);
@@ -1010,10 +972,7 @@ public class AesGcmCipher {
          this.hashSubkeyStateBuffer[j] = 0;
       }
 
-      AesGcmCipher aesGcmCipher = this;
-      int[] ints2 = ints;
-      int[] hashSubkeyStateBuffer2 = this.hashSubkeyStateBuffer;
-      aesGcmCipher.encryptBlock(hashSubkeyStateBuffer2, ints2);
+      this.encryptBlock(this.hashSubkeyStateBuffer, ints);
 
       for (int k = 0; k < 16; k++) {
          this.hashSubkeyByteBuffer[k] = (byte)this.hashSubkeyStateBuffer[k];
@@ -1052,8 +1011,7 @@ public class AesGcmCipher {
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.encrypt(bytes, bytes2, (byte[])obj);
+      return this.encrypt(bytes, bytes2, (byte[])null);
    }
 
 }

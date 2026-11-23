@@ -12,7 +12,7 @@ import net.augustus.render.RenderUtil;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiCrafting;
@@ -30,8 +30,8 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
    private final BooleanValue showOverHotbar;
    private final BooleanValue inventoryFlags;
    private final BooleanValue textShadow;
-   private final StringValue xCoord;
-   private final StringValue yCoord;
+   private final DoubleValue xCoord;
+   private final DoubleValue yCoord;
    private Vec3 lastSentPosition;
    public final TimeHelper enderPearlTimer;
    private long flagCount;
@@ -45,18 +45,16 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
       this.showOverHotbar = (BooleanValue)(new BooleanValue(this, "ShowOverHotbar", false)).markVisualOnly();
       this.inventoryFlags = (BooleanValue)(new BooleanValue(this, "InventoryFlags", false)).markVisualOnly();
       this.textShadow = (BooleanValue)(new BooleanValue(this, "TextShadow", false)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "X-Coord", 50.0, 0.0, 100.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "X-Coord", 50.0, 0.0, 100.0, 2);
       BooleanValue showOverHotbar2 = this.showOverHotbar;
       this.showOverHotbar.getClass();
       BooleanValue booleanValue = showOverHotbar2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.xCoord = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
-      StringValue stringValue2 = new StringValue(this, "Y-Coord", 0.0, 0.0, 100.0, 2);
+      this.xCoord = (DoubleValue)stringValue.visibleWhen(() -> booleanValue.getValue()).markVisualOnly();
+      DoubleValue stringValue2 = new DoubleValue(this, "Y-Coord", 0.0, 0.0, 100.0, 2);
       showOverHotbar2 = this.showOverHotbar;
       this.showOverHotbar.getClass();
       BooleanValue booleanValue2 = showOverHotbar2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.yCoord = (StringValue)stringValue2.visibleWhen(condition2).markVisualOnly();
+      this.yCoord = (DoubleValue)stringValue2.visibleWhen(() -> booleanValue2.getValue()).markVisualOnly();
       this.lastSentPosition = new Vec3(0.0, 0.0, 0.0);
       this.enderPearlTimer = new TimeHelper();
       this.flagCount = 0L;
@@ -73,12 +71,9 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 32;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -90,8 +85,7 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
          exitBlock2: {
             S08PacketPlayerPosLook packet2 = (S08PacketPlayerPosLook)packet;
             if (this.lastSentPosition.distanceTo(new Vec3(packet2.getX(), packet2.getY(), packet2.getZ())) < 40.0) {
-               long l = 4000L;
-               if (this.enderPearlTimer.reached2(l)) {
+               if (this.enderPearlTimer.reached2(4000L)) {
                   break exitBlock2;
                }
             }
@@ -103,21 +97,17 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
 
          this.flagCount++;
          if (this.sendChatMessage.getValue()) {
-            StringBuilder sb = new StringBuilder();
-            String str = sb.append("§cFlag Detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString();
-            this.sendChatMessage2(str);
+            this.sendChatMessage2(new StringBuilder().append("§cFlag Detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString());
          }
       }
 
       if (packet instanceof S30PacketWindowItems && this.inventoryFlags.getValue()) {
-         long l2 = 150L;
-         if (!this.windowClickTimer.reached2(l2) && mc.currentScreen != null && !(mc.currentScreen instanceof GuiCrafting)) {
+         if (!this.windowClickTimer.reached2(150L) && mc.currentScreen != null && !(mc.currentScreen instanceof GuiCrafting)) {
             this.flagCount++;
             if (this.sendChatMessage.getValue()) {
                StringBuilder sb2 = new StringBuilder();
                short s = 16752;
-               String str2 = sb2.append("§cInventory flag detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString();
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2(sb2.append("§cInventory flag detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString());
             }
          }
       }
@@ -137,8 +127,7 @@ public class FlagDetector extends Module implements ClickListener, PacketListene
    public void onRender(float f, ScaledResolution sr) {
       if (this.showOverHotbar.getValue()) {
          ScaledResolution sr2 = new ScaledResolution(mc);
-         StringBuilder sb = new StringBuilder();
-         String str = sb.append("§cFlag Detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString();
+         String str = new StringBuilder().append("§cFlag Detected").append(this.flagCounter.getValue() ? ": §7" + this.flagCount : "").toString();
          int n = (int)((double)(sr2.getScaledHeight() - mc.fontRendererObj.FONT_HEIGHT) / 100.0 * this.yCoord.getValue());
          int n2 = (int)((double)(sr2.getScaledWidth() - mc.fontRendererObj.getStringWidth(str)) / 100.0 * this.xCoord.getValue());
          mc.fontRendererObj.drawStringInt(str, n2, n, Color.white.getRGB(), this.textShadow.getValue());

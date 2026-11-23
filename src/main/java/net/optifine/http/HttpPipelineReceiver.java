@@ -33,9 +33,7 @@ public class HttpPipelineReceiver extends Thread {
 
       int n;
       do {
-         String str = this.readLine(in);
-         String[] strings = Config.tokenize(str, "; ");
-         n = Integer.parseInt(strings[0], 16);
+         n = Integer.parseInt(Config.tokenize(this.readLine(in), "; ")[0], 16);
          byte[] bytes = new byte[n];
          this.readFull(bytes, in);
          byteArrayOutputStream.write(bytes);
@@ -86,8 +84,7 @@ public class HttpPipelineReceiver extends Thread {
 
          try {
             httpPipelineRequest = this.httpPipelineConnection.getNextRequestReceive();
-            InputStream inputStream = this.httpPipelineConnection.getInputStream();
-            HttpResponse httpResponse = this.readResponse(inputStream);
+            HttpResponse httpResponse = this.readResponse(this.httpPipelineConnection.getInputStream());
             this.httpPipelineConnection.onResponseReceived(httpPipelineRequest, httpResponse);
          } catch (InterruptedException e) {
             return;
@@ -120,8 +117,7 @@ public class HttpPipelineReceiver extends Thread {
                      this.readFull(bytes, in);
                   }
                } else {
-                  String str6 = (String)map.get("Transfer-Encoding");
-                  if (Config.equals(str6, "chunked")) {
+                  if (Config.equals((String)map.get("Transfer-Encoding"), "chunked")) {
                      bytes = this.readContentChunked(in);
                   }
                }
@@ -131,9 +127,7 @@ public class HttpPipelineReceiver extends Thread {
 
             int n3 = str4.indexOf(":");
             if (n3 > 0) {
-               String str7 = str4.substring(0, n3).trim();
-               String str8 = str4.substring(n3 + 1).trim();
-               map.put(str7, str8);
+               map.put(str4.substring(0, n3).trim(), str4.substring(n3 + 1).trim());
             }
          }
       }

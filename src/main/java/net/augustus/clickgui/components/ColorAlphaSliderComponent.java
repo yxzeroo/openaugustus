@@ -26,25 +26,12 @@ public class ColorAlphaSliderComponent extends SliderComponent {
       int n9 = n3 - 1;
       int n10 = n + 1;
       this.sliderWidth = n3;
-      SliderComponent.getSliderStateFlags();
       this.sliderHeight = n4;
 
       for (int i = 0; i < n9; i++) {
          Color color = new Color(Color.getHSBColor(floats[0], floats[1], floats[2]).getRGB());
          int n11 = n10 + i;
-         int n12 = n10 + 1 + i;
-         int n13 = n2 + n4;
-         float f = (float)color.getRed() / 255.0F;
-         float f2 = (float)color.getGreen() / 255.0F;
-         float f3 = (float)color.getBlue() / 255.0F;
-         float f4 = (float)i / (float)n9;
-         boolean flag = i == n9 - 1;
-         float f5 = f4;
-         float f6 = f3;
-         float f7 = f2;
-         float f8 = f;
-         int n14 = n13;
-         RenderUtil.drawBatchedRect(n11, n2, n12, n14, f8, f7, f6, f5, flag);
+         RenderUtil.drawBatchedRect(n11, n2, n10 + 1 + i, n2 + n4, (float)color.getRed() / 255.0F, (float)color.getGreen() / 255.0F, (float)color.getBlue() / 255.0F, (float)i / (float)n9, i == n9 - 1);
       }
 
       RenderUtil.drawRectOutline2((double)n, (double)n2, (double)(n + n3), (double)(n2 + n4), 2.0F, n8);
@@ -52,8 +39,7 @@ public class ColorAlphaSliderComponent extends SliderComponent {
          d = d2 + MathHelper.clamp_double((double)(n5 - n10) / (double)n9, 0.0, 1.0) * (d3 - d2);
       }
 
-      double d4 = MathHelper.clamp_double((d - d2) / (d3 - d2), 0.0, 1.0);
-      double d5 = (double)n10 + d4 * (double)(n9 - 2);
+      double d5 = (double)n10 + MathHelper.clamp_double((d - d2) / (d3 - d2), 0.0, 1.0) * (double)(n9 - 2);
       RenderUtil.drawRect(d5, (double)(n2 + 1), d5 + 2.0, (double)(n2 + n4 - 1), Color.black.getRGB());
       return MathHelper.clamp_double(d, 0.0, 255.0);
    }

@@ -15,7 +15,7 @@ import net.augustus.render.RenderUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
@@ -31,24 +31,20 @@ import org.lwjgl.opengl.GL11;
 
 public class TabList extends Module implements RenderListener {
    private final BooleanValue remove;
-   private final StringValue scale;
+   private final DoubleValue scale;
    public final BooleanValue pingNumber;
    public final BooleanValue forceRenderHeads;
    private final BooleanValue alwaysOpen;
    public final BooleanValue fontShadow;
-   private final StringValue rowSize;
-   private final StringValue columnSize;
+   private final DoubleValue rowSize;
+   private final DoubleValue columnSize;
    private final BlurShadowSettings blurShadowSettings;
 
    public TabList() {
        super("TabList", "TabulaturListe", new Color(162, 250, 115), Categorys.RENDER);
       this.remove = new BooleanValue(this, "Remove", false);
-      StringValue stringValue = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
-      SettingVisibilityCondition condition = () -> this.isScaleVisible();
-      this.scale = stringValue.visibleWhen(condition);
-      BooleanValue booleanValue = new BooleanValue(this, "PingNumber", false);
-      SettingVisibilityCondition condition2 = () -> this.isPingNumberVisible();
-      this.pingNumber = (BooleanValue)booleanValue.withVisibility(condition2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2).visibleWhen(() -> this.isScaleVisible());
+      this.pingNumber = (BooleanValue)new BooleanValue(this, "PingNumber", false).withVisibility(() -> this.isPingNumberVisible());
       BooleanValue booleanValue2 = new BooleanValue(this, "ForceRenderHeads", false);
       SettingVisibilityCondition condition3 = () -> {
          return !this.remove.getValue();
@@ -59,22 +55,10 @@ public class TabList extends Module implements RenderListener {
          return !this.remove.getValue();
       };
       this.alwaysOpen = (BooleanValue)booleanValue3.withVisibility(condition4);
-      BooleanValue booleanValue4 = new BooleanValue(this, "FontShadow", true);
-      SettingVisibilityCondition condition5 = () -> this.isFontShadowVisible();
-      this.fontShadow = (BooleanValue)booleanValue4.withVisibility(condition5);
-      StringValue stringValue2 = new StringValue(this, "RowSize", 80.0, 10.0, 200.0, 1);
-      String str = "MaxPlayersToRender";
-      StringValue stringValue3 = stringValue2.named(str);
-      SettingVisibilityCondition condition6 = () -> this.isRowSizeVisible();
-      this.rowSize = stringValue3.visibleWhen(condition6);
-      StringValue stringValue4 = new StringValue(this, "ColumnSize", 20.0, 1.0, 200.0, 1);
-      SettingVisibilityCondition condition7 = () -> this.isColumnSizeVisible();
-      this.columnSize = stringValue4.visibleWhen(condition7);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
-      SettingVisibilityCondition condition8 = () -> this.isBlurShadowVisible();
-      this.blurShadowSettings = (BlurShadowSettings)blurShadowSettings3.withVisibility(condition8);
+      this.fontShadow = (BooleanValue)new BooleanValue(this, "FontShadow", true).withVisibility(() -> this.isFontShadowVisible());
+      this.rowSize = new DoubleValue(this, "RowSize", 80.0, 10.0, 200.0, 1).named("MaxPlayersToRender").visibleWhen(() -> this.isRowSizeVisible());
+      this.columnSize = new DoubleValue(this, "ColumnSize", 20.0, 1.0, 200.0, 1).visibleWhen(() -> this.isColumnSizeVisible());
+      this.blurShadowSettings = (BlurShadowSettings)new BlurShadowSettings(this).withCustomShadowColor(Color.black).withVisibility(() -> this.isBlurShadowVisible());
    }
 
    @Override
@@ -87,8 +71,7 @@ public class TabList extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -99,8 +82,7 @@ public class TabList extends Module implements RenderListener {
          && !ClientManagers.moduleManager.antiStrike.shouldHideTabList()
          && (!ClientManagers.moduleManager.tabList.isToggled() || !ClientManagers.moduleManager.tabList.remove.getValue())) {
          GL11.glPushMatrix();
-         ScaledResolution sr2 = this.applyCustomScale(sr);
-         int scaledWidth = sr2.getScaledWidth();
+         int scaledWidth = this.applyCustomScale(sr).getScaledWidth();
          net.minecraft.scoreboard.Scoreboard scoreboard = mc.theWorld.getScoreboard();
          ScoreObjective objectiveInDisplaySlot = scoreboard.getObjectiveInDisplaySlot(0);
          NetHandlerPlayClient sendQueue = mc.thePlayer.sendQueue;
@@ -248,14 +230,7 @@ public class TabList extends Module implements RenderListener {
          if (list3 != null) {
             n8 = n8 + n3 * 9 + 1;
             n10 = scaledWidth / 2 - n9 / 2 - 1;
-            int n24 = n8 - 1;
-            int n25 = scaledWidth / 2 + n9 / 2 + 1;
-            int n26 = n8 + list3.size() * mc.fontRendererObj.FONT_HEIGHT;
-            int minvalue = Integer.MIN_VALUE;
-            int n27 = n26;
-            int n28 = n25;
-            int n29 = n24;
-            RenderUtil.drawRect3(n10, n29, n28, n27, minvalue);
+            RenderUtil.drawRect3(n10, n8 - 1, scaledWidth / 2 + n9 / 2 + 1, n8 + list3.size() * mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
 
             for (String str4 : (Iterable<String>)(list3)) {
                int stringWidth3 = mc.fontRendererObj.getStringWidth(str4);
@@ -309,12 +284,7 @@ public class TabList extends Module implements RenderListener {
       if (list2 != null) {
          int n5 = n / 2 - n2 / 2 - 1;
          int n6 = n3;
-         int n7 = n6 - 1;
-         int n8 = n / 2 + n2 / 2 + 1;
-         int n9 = n6 + list2.size() * mc.fontRendererObj.FONT_HEIGHT;
-         BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-         int rgb = Color.black.getRGB();
-         RenderUtil.drawRect3(n5, n7, n8, n9, blurShadowSettings2.resolveShadowColor(rgb));
+         RenderUtil.drawRect3(n5, n6 - 1, n / 2 + n2 / 2 + 1, n6 + list2.size() * mc.fontRendererObj.FONT_HEIGHT, this.blurShadowSettings.resolveShadowColor(Color.black.getRGB()));
          n3 = n6 + mc.fontRendererObj.FONT_HEIGHT * list2.size();
          n3++;
       }
@@ -331,9 +301,7 @@ public class TabList extends Module implements RenderListener {
          n11 = n3 - 1;
          n12 = n / 2 + n2 / 2 + 1;
          n13 = n3 + list.size() * mc.fontRendererObj.FONT_HEIGHT;
-         BlurShadowSettings blurShadowSettings3 = this.blurShadowSettings;
-         int rgb3 = Color.black.getRGB();
-         rgb2 = blurShadowSettings3.resolveShadowColor(rgb3);
+         rgb2 = this.blurShadowSettings.resolveShadowColor(Color.black.getRGB());
          RenderUtil.drawRect3(n10, n11, n12, n13, rgb2);
       }
    }

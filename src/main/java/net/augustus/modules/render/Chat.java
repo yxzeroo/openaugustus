@@ -25,30 +25,20 @@ public class Chat extends Module implements RenderListener {
    public Chat() {
        super("Chat", "Plaudern", new Color(169, 3, 252), Categorys.RENDER);
       this.remove = new BooleanValue(this, "Remove", false);
-      BooleanValue booleanValue = new BooleanValue(this, "NoChatLimit", true);
-      SettingVisibilityCondition condition = () -> this.isNoChatLimitVisible();
-      this.noChatLimit = (BooleanValue)booleanValue.withVisibility(condition);
+      this.noChatLimit = (BooleanValue)new BooleanValue(this, "NoChatLimit", true).withVisibility(() -> this.isNoChatLimitVisible());
       BooleanValue booleanValue2 = new BooleanValue(this, "FontShadow", true);
       SettingVisibilityCondition condition2 = () -> {
          return !this.remove.getValue();
       };
       this.fontShadow = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this, "BackGround", true);
-      SettingVisibilityCondition condition3 = () -> this.isBackgroundToggleVisible();
-      this.backGround = (BooleanValue)booleanValue3.withVisibility(condition3);
-      BooleanValue booleanValue4 = new BooleanValue(this, "CustomBackGroundColor", false);
-      SettingVisibilityCondition condition4 = () -> this.isCustomBackgroundColorToggleVisible();
-      this.customBackGroundColor = (BooleanValue)booleanValue4.withVisibility(condition4);
+      this.backGround = (BooleanValue)new BooleanValue(this, "BackGround", true).withVisibility(() -> this.isBackgroundToggleVisible());
+      this.customBackGroundColor = (BooleanValue)new BooleanValue(this, "CustomBackGroundColor", false).withVisibility(() -> this.isCustomBackgroundColorToggleVisible());
       ColorSetting colorSetting = new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 150));
       SettingVisibilityCondition condition5 = () -> {
          return !this.remove.getValue() && this.backGround.getValue() && this.customBackGroundColor.getValue();
       };
       this.backgroundColor = (ColorSetting)colorSetting.withVisibility(condition5);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
-      SettingVisibilityCondition condition6 = () -> this.isBlurShadowVisible();
-      this.blurShadowSettings = (BlurShadowSettings)blurShadowSettings3.withVisibility(condition6);
+      this.blurShadowSettings = (BlurShadowSettings)new BlurShadowSettings(this).withCustomShadowColor(Color.black).withVisibility(() -> this.isBlurShadowVisible());
    }
 
    @Override
@@ -61,8 +51,7 @@ public class Chat extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -77,8 +66,7 @@ public class Chat extends Module implements RenderListener {
          boolean value2 = this.backGround.getValue();
          int n;
          if (this.customBackGroundColor.getValue() && this.backGround.getValue()) {
-            byte b = 0;
-            n = this.backgroundColor.getColorInt(b);
+            n = this.backgroundColor.getColorInt((byte)0);
          } else {
             n = Integer.MIN_VALUE;
          }

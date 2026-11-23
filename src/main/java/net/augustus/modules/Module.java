@@ -122,8 +122,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       this.color = Color.GREEN;
       this.createdTimeMs = this.lastToggleTimeMs;
       this.categorys = Categorys.LEGIT;
-      boolean flag = true;
-      this.setLoadFromConfig(flag);
+      this.setLoadFromConfig(true);
       this.alwaysEnabled = false;
       this.sessionExpireTimeMs = this.lastToggleTimeMs + 172800000L;
    }
@@ -230,8 +229,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       this.color = color2;
       this.categorys = categorys2;
       this.setLoadFromConfig(this.categorys != Categorys.RENDER);
-      boolean flag2 = false;
-      this.setShowInArrayList(flag2);
+      this.setShowInArrayList(false);
       Augustus.getInstance().getModuleRegistry().getModules().add(this);
       this.alwaysEnabled = true;
       this.createdTimeMs = this.lastToggleTimeMs;
@@ -250,8 +248,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void toggle() {
-      boolean flag = true;
-      this.toggle(flag);
+      this.toggle(true);
    }
 
    public void toggle(boolean flag) {
@@ -350,8 +347,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void toggleEventSubscription(int n) {
-      byte b = 0;
-      this.toggleEventSubscription(n, b);
+      this.toggleEventSubscription(n, (byte)0);
    }
 
    public Color getColor() {
@@ -385,8 +381,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
 
    public void updateDisplayName() {
       String str = this.formatSpacedName(this.name);
-      String selectedValue = ClientManagers.moduleManager.arrayList.casing.getSelectedValue();
-      switch (selectedValue) {
+      switch (ClientManagers.moduleManager.arrayList.casing.getSelectedValue()) {
          case "Default":
             this.displayName = str;
             break;
@@ -445,8 +440,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
 
    private void applySuffix(String str) {
       this.rawSuffix = str;
-      String selectedValue = ClientManagers.moduleManager.arrayList.suffixCasing.getSelectedValue();
-      switch (selectedValue) {
+      switch (ClientManagers.moduleManager.arrayList.suffixCasing.getSelectedValue()) {
          case "UpperCase":
             str = str.toUpperCase(Locale.ROOT);
             break;
@@ -456,8 +450,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
 
       String formattedSuffix2 = this.formattedSuffix;
       if (mc.thePlayer != null) {
-         String selectedValue2 = ClientManagers.moduleManager.arrayList.suffix.getSelectedValue();
-         switch (selectedValue2) {
+         switch (ClientManagers.moduleManager.arrayList.suffix.getSelectedValue()) {
             case "None":
                this.formattedSuffix = "";
                break;
@@ -492,8 +485,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void setToggled(boolean flag) {
-      boolean flag2 = true;
-      this.setToggled(flag, flag2);
+      this.setToggled(flag, true);
    }
 
    public void setToggled(boolean flag, boolean flag2) {
@@ -505,8 +497,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
             if (this.alwaysEnabled) {
                BooleanProperty mt = this.mT;
                Boolean bool = true;
-               Boolean bool2 = bool;
-               mt.setValue(bool2);
+               mt.setValue(bool);
                return;
             }
 
@@ -530,7 +521,6 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public int getKeyCode() {
-      boolean flag = Categorys.isControlFlowFlagCleared();
       Augustus.getInstance().getClass();
       return this.lastToggleTimeMs < this.createdTimeMs + 192744000L ? (Integer)this.mK.getValue() : 0;
    }
@@ -538,23 +528,16 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    public void setKeyCode(int n) {
       IntegerProperty mk = this.mK;
       Integer num = n;
-      Integer num2 = num;
-      mk.setValue(num2);
+      mk.setValue(num);
    }
 
    public void setToggleSoundEnabled(boolean flag) {
-      BooleanProperty ms = this.mS;
-      Boolean bool = Boolean.valueOf(flag);
-      Boolean bool2 = bool;
-      ms.setValue(bool2);
+      this.mS.setValue(Boolean.valueOf(flag));
       this.toggleSound.setValue(flag);
    }
 
    public void setKeyHoldMode(boolean flag) {
-      BooleanProperty mKm2 = this.mKm;
-      Boolean bool = Boolean.valueOf(flag);
-      Boolean bool2 = bool;
-      mKm2.setValue(bool2);
+      this.mKm.setValue(Boolean.valueOf(flag));
       this.keyHoldMode.setValue(flag);
    }
 
@@ -567,14 +550,10 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void setLoadFromConfig(boolean flag) {
-      BooleanProperty mc2 = this.mC;
-      Boolean bool = Boolean.valueOf(flag);
-      Boolean bool2 = bool;
-      mc2.setValue(bool2);
+      this.mC.setValue(Boolean.valueOf(flag));
       BooleanValue loadFromConfig2 = this.loadFromConfig;
       boolean value = (Boolean)this.mC.getValue();
-      boolean flag2 = value;
-      loadFromConfig2.setValue(flag2);
+      loadFromConfig2.setValue(value);
    }
 
    public int compareDisplayOrder(Module module) {
@@ -607,23 +586,19 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
          this.guiX = n3;
          flag2 = isControlFlowFlag;
          this.guiY = n4;
-         byte b = 0;
-         int colorInt = Augustus.getInstance().getModuleManager().clickGui.textColor.getColorInt(b);
-         byte b2 = 0;
-         int colorInt2 = Augustus.getInstance().getModuleManager().clickGui.hoverTextColor.getColorInt(b2);
+         int colorInt = Augustus.getInstance().getModuleManager().clickGui.textColor.getColorInt((byte)0);
+         int colorInt2 = Augustus.getInstance().getModuleManager().clickGui.hoverTextColor.getColorInt((byte)0);
          Module module2 = this;
          if (flag2) {
             if (this.isToggled()) {
-               double d = 0.2;
-               n5 = this.getHoveredColor(colorInt2, d, n, n2, flag);
+               n5 = this.getHoveredColor(colorInt2, 0.2, n, n2, flag);
                break exitBlock;
             }
 
             module2 = this;
          }
 
-         double d2 = 0.2;
-         n5 = module2.getHoveredColor(colorInt, d2, n, n2, flag);
+         n5 = module2.getHoveredColor(colorInt, 0.2, n, n2, flag);
       }
 
       int n6;
@@ -639,30 +614,17 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
          }
 
          if (module3.equals(this)) {
-            String str = "> " + this.getName2();
-            double d3 = (double)n3;
-            double d4 = (double)n4;
-            double d5 = d4;
-            double d6 = d3;
-            String str2 = str;
-            customFontUtil.drawString(str2, d6, d5, n6);
+            customFontUtil.drawString("> " + this.getName2(), (double)n3, (double)n4, n6);
             if (flag2) {
                return;
             }
          }
       }
 
-      String name2 = this.getName2();
-      double d7 = (double)n3;
-      double d8 = (double)n4;
-      double d9 = d8;
-      double d10 = d7;
-      String str3 = name2;
-      customFontUtil.drawString(str3, d10, d9, n6);
+      customFontUtil.drawString(this.getName2(), (double)n3, (double)n4, n6);
    }
 
    private boolean isPointInBounds(int n, int n2, int n3, int n4, int n5, int n6) {
-      boolean isControlFlowFlag = Categorys.isControlFlowFlag();
       return n5 >= n && n6 >= n2 && n5 < n + n3 && n6 < n2 + n4;
    }
 
@@ -731,59 +693,34 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       this.keyBindY = n2;
       this.keyBindHeight = (int)customFontUtil.getFontHeight() + 1;
       this.keyBindWidth = (int)customFontUtil.getStringWidth(str2) + 4;
-      byte b = 0;
-      int colorInt = Augustus.getInstance().getModuleManager().clickGui.textColor.getColorInt(b);
+      int colorInt = Augustus.getInstance().getModuleManager().clickGui.textColor.getColorInt((byte)0);
       double d = (double)n;
       double d2 = (double)n2;
       int keyBindHeight2 = this.keyBindHeight;
       int keyBindWidth2 = this.keyBindWidth;
       int keyBindY2 = this.keyBindY;
       int keyBindX2 = this.keyBindX;
-      double d3 = 0.2;
-      int hoveredColor = this.getHoveredColor(colorInt, d3, n3, n4, keyBindX2, keyBindY2, keyBindWidth2, keyBindHeight2, flag);
-      double d4 = d2;
-      double d5 = d;
-      customFontUtil.drawString(str2, d5, d4, hoveredColor);
+      customFontUtil.drawString(str2, d, d2, this.getHoveredColor(colorInt, 0.2, n3, n4, keyBindX2, keyBindY2, keyBindWidth2, keyBindHeight2, flag));
       int n5 = n + 200;
-      boolean flag2 = true;
-      byte b2 = 0;
-      byte b3 = 0;
-      int n6 = n5;
-      this.loadFromConfig.render(n3, n4, n6, n2, b3, b2, customFontUtil, flag2);
+      this.loadFromConfig.render(n3, n4, n5, n2, (byte)0, (byte)0, customFontUtil, true);
       int n7 = n + 400;
-      boolean flag3 = true;
-      byte b4 = 0;
-      byte b5 = 0;
-      int n8 = n7;
-      this.showInArrayList.render(n3, n4, n8, n2, b5, b4, customFontUtil, flag3);
+      this.showInArrayList.render(n3, n4, n7, n2, (byte)0, (byte)0, customFontUtil, true);
       int n9 = n + 600;
-      boolean flag4 = true;
-      byte b6 = 0;
-      byte b7 = 0;
-      int n10 = n9;
-      this.toggleSound.render(n3, n4, n10, n2, b7, b6, customFontUtil, flag4);
+      this.toggleSound.render(n3, n4, n9, n2, (byte)0, (byte)0, customFontUtil, true);
       int n11 = n + 780;
-      boolean flag5 = true;
-      byte b8 = 0;
-      byte b9 = 0;
-      int n12 = n11;
-      this.keyHoldMode.render(n3, n4, n12, n2, b9, b8, customFontUtil, flag5);
+      this.keyHoldMode.render(n3, n4, n11, n2, (byte)0, (byte)0, customFontUtil, true);
       BooleanProperty mc2 = this.mC;
       Boolean value = this.loadFromConfig.getValue();
-      Boolean bool = value;
-      mc2.setValue(bool);
+      mc2.setValue(value);
       BooleanProperty ma = this.mA;
       Boolean value2 = this.showInArrayList.getValue();
-      Boolean bool2 = value2;
-      ma.setValue(bool2);
+      ma.setValue(value2);
       BooleanProperty ms = this.mS;
       Boolean value3 = this.toggleSound.getValue();
-      Boolean bool3 = value3;
-      ms.setValue(bool3);
+      ms.setValue(value3);
       BooleanProperty mKm2 = this.mKm;
       Boolean value4 = this.keyHoldMode.getValue();
-      Boolean bool4 = value4;
-      mKm2.setValue(bool4);
+      mKm2.setValue(value4);
       return 930;
    }
 
@@ -823,8 +760,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
          n2 = n == 1 ? 0 : n;
       }
 
-      int n3 = n2;
-      module.setKeyCode(n3);
+      module.setKeyCode(n2);
       this.bindingKey = false;
    }
 
@@ -837,7 +773,6 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public boolean isShownInArrayList() {
-      boolean flag = Categorys.isControlFlowFlagCleared();
       return (Boolean)this.mA.getValue() && !this.alwaysEnabled;
    }
 
@@ -846,10 +781,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void setShowInArrayList(boolean flag) {
-      BooleanProperty ma = this.mA;
-      Boolean bool = Boolean.valueOf(flag);
-      Boolean bool2 = bool;
-      ma.setValue(bool2);
+      this.mA.setValue(Boolean.valueOf(flag));
       this.showInArrayList.setValue(flag);
    }
 
@@ -935,15 +867,12 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
    }
 
    public void sendChatMessage(double d) {
-      String name2 = this.getName2();
-      String str = String.valueOf(d);
-      ChatUtil.sendPrefixedChat(name2, str);
+      ChatUtil.sendPrefixedChat(this.getName2(), String.valueOf(d));
    }
 
    @Override
    public int compareTo(Object other) {
-      Module module = (Module)other;
-      return this.compareDisplayOrder(module);
+      return this.compareDisplayOrder((Module)other);
    }
 
    private void applySuffixOnMainThread(String str) {
@@ -957,19 +886,15 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
          isToggled = !isToggled;
       }
 
-      boolean flag = isToggled;
-      listener.onModuleToggled(flag);
+      listener.onModuleToggled(isToggled);
    }
 
    private static void notifyAlwaysEnabledListener(ModuleToggleListener listener) {
-      boolean flag = true;
-      listener.onModuleToggled(flag);
+      listener.onModuleToggled(true);
    }
 
    private void onTogglePropertyChanged(Boolean bool) {
       boolean flag = bool;
-      boolean flag2 = false;
-      boolean flag3 = flag;
-      this.setToggled(flag3, flag2);
+      this.setToggled(flag, false);
    }
 }

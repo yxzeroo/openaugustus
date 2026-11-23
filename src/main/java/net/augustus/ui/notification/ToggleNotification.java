@@ -22,14 +22,11 @@ public class ToggleNotification extends AbstractNotification {
       GL11.glPushMatrix();
       GL11.glScaled(1.0 / (double)sr.getScaleFactor(), 1.0 / (double)sr.getScaleFactor(), 1.0);
       String str = this.module.getName2() + " toggled";
-      boolean isBlurActive = blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, blurShadowSettings.isShadowActive());
+      BlurShadowManager.enableOneShotPass(blurShadowSettings.isBlurActive(), blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(
          false,
          shaderRenderPass -> {
-            int accentColor2 = this.accentColor;
-            int n = ColorUtil.resolvePassColor(shaderRenderPass, accentColor2);
-            int n2 = blurShadowSettings.resolvePassColor(shaderRenderPass, n);
+            int n2 = blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, this.accentColor));
             if (this.startX < 0) {
                RenderUtil.drawRoundedRect(
                   (float)this.currentX,
@@ -62,33 +59,21 @@ public class ToggleNotification extends AbstractNotification {
          }
       );
       int n3 = (int)((float)(this.currentY + this.height / 2) - FontManager.esp32.getFontHeight() / 2.0F);
-      float f2 = (float)(this.currentX + this.width / 2);
-      int n4 = (int)(f2 - FontManager.esp32.getStringWidth(str) / 2.0F);
+      int n4 = (int)(((float)(this.currentX + this.width / 2)) - FontManager.esp32.getStringWidth(str) / 2.0F);
       CustomFontUtil esp32 = FontManager.esp32;
       String name2 = this.module.getName2();
       double d = (double)n4;
       double d2 = (double)n3;
       int rgb = Color.white.getRGB();
-      boolean flag = false;
-      int n5 = rgb;
-      double d3 = d2;
-      double d4 = d;
-      String str2 = name2;
-      esp32.drawString(str2, d4, d3, n5, flag);
+      esp32.drawString(name2, d, d2, rgb, false);
       CustomFontUtil esp322 = FontManager.esp32;
-      float f3 = (float)n4;
-      CustomFontUtil esp323 = FontManager.esp32;
-      String str3 = this.module.getName2() + " ";
-      String str4 = str3;
-      d = (double)(f3 + esp323.getStringWidth(str4));
+      d = (double)(((float)n4) + FontManager.esp32.getStringWidth(this.module.getName2() + " "));
       d2 = (double)n3;
       rgb = this.module.isToggled() ? Color.green.getRGB() : Color.red.getRGB();
-      boolean flag2 = false;
       int n6 = rgb;
       double d5 = d2;
       double d6 = d;
-      String str5 = "toggled";
-      esp322.drawString(str5, d6, d5, n6, flag2);
+      esp322.drawString("toggled", d6, d5, n6, false);
       GL11.glPopMatrix();
    }
 

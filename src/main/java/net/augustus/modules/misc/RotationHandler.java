@@ -24,21 +24,21 @@ import net.augustus.events.EventManager;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 
 public class RotationHandler extends Module implements LoadWorldListener, MoveListener, MoveInputListener, PacketListener, UpdateListener, AttackEntityListener {
-   public final BooleansSetting rotationMode;
-   public final BooleansSetting mouseSensMode;
-   public final BooleansSetting smoothBackRotate;
+   public final StringValue rotationMode;
+   public final StringValue mouseSensMode;
+   public final StringValue smoothBackRotate;
    public final RandomizedRangeSettings yawSpeed;
    public final RandomizedRangeSettings pitchSpeed;
-   public final StringValue rotationSpeed;
+   public final DoubleValue rotationSpeed;
    public final RandomizedRangeSettings smoothBackRotateTickDelayAfterClosingInventory;
-   public final DoubleValue movement;
+   public final SettingGroup movement;
    public final BooleanValue moveFix;
-   public final BooleansSetting silentMoveFix;
+   public final StringValue silentMoveFix;
    public final BooleanValue silentMoveFixIntave;
    public final BooleanValue randomizeDirections;
    public int framesSinceLastTick;
@@ -46,46 +46,33 @@ public class RotationHandler extends Module implements LoadWorldListener, MoveLi
 
    public RotationHandler() {
        super("RotationHandler", "DrehungsVerwalter", true, new Color(168, 145, 50), Categorys.MISC);
-      this.rotationMode = new BooleansSetting(this, "RotationMode", "Vanilla", new String[]{"Vanilla", "Tick"});
-      this.mouseSensMode = new BooleansSetting(this, "MouseSensMode", "Advanced", new String[]{"Default", "Advanced"});
-      this.smoothBackRotate = new BooleansSetting(this, "SmoothBackRotate", "None", new String[]{"None", "Default", "New"});
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(this, "YawSpeed", 18.0, 24.0, 0.0, 180.0, 0);
-      SettingVisibilityCondition condition = () -> this.isYawSpeedVisible();
-      this.yawSpeed = ((RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition)).withoutNotInARow();
-      RandomizedRangeSettings randomizedRangeSettings2 = new RandomizedRangeSettings(this, "PitchSpeed", 18.0, 24.0, 0.0, 180.0, 0);
-      SettingVisibilityCondition condition2 = () -> this.isPitchSpeedVisible();
-      this.pitchSpeed = ((RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2)).withoutNotInARow();
-      StringValue stringValue = new StringValue(this, "RotationSpeed", 75.0, 0.0, 100.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isRotationSpeedVisible();
-      this.rotationSpeed = stringValue.visibleWhen(condition3);
+      this.rotationMode = new StringValue(this, "RotationMode", "Vanilla", new String[]{"Vanilla", "Tick"});
+      this.mouseSensMode = new StringValue(this, "MouseSensMode", "Advanced", new String[]{"Default", "Advanced"});
+      this.smoothBackRotate = new StringValue(this, "SmoothBackRotate", "None", new String[]{"None", "Default", "New"});
+      this.yawSpeed = ((RandomizedRangeSettings)new RandomizedRangeSettings(this, "YawSpeed", 18.0, 24.0, 0.0, 180.0, 0).withVisibility(() -> this.isYawSpeedVisible())).withoutNotInARow();
+      this.pitchSpeed = ((RandomizedRangeSettings)new RandomizedRangeSettings(this, "PitchSpeed", 18.0, 24.0, 0.0, 180.0, 0).withVisibility(() -> this.isPitchSpeedVisible())).withoutNotInARow();
+      this.rotationSpeed = new DoubleValue(this, "RotationSpeed", 75.0, 0.0, 100.0, 0).visibleWhen(() -> this.isRotationSpeedVisible());
       RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "SmoothBackRotateTickDelayAfterClosingInventory", 2.0, 4.0, 0.0, 10.0, 0)).withoutNotInARow();
       SettingVisibilityCondition condition4 = () -> {
          return !this.smoothBackRotate.getSelectedValue().equals("None");
       };
       this.smoothBackRotateTickDelayAfterClosingInventory = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition4);
-      DoubleValue doubleValue = new DoubleValue(this, "Movement", true);
-      SettingVisibilityCondition condition5 = () -> this.isMovementGroupVisible();
-      this.movement = doubleValue.visibleWhen(condition5);
+      this.movement = new SettingGroup(this, "Movement", true).visibleWhen(() -> this.isMovementGroupVisible());
       BooleanValue booleanValue = new BooleanValue(this, "MoveFix", true, this.movement);
       SettingVisibilityCondition condition6 = () -> {
          return !this.smoothBackRotate.getSelectedValue().equals("None");
       };
       this.moveFix = (BooleanValue)booleanValue.withVisibility(condition6);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement);
-      SettingVisibilityCondition condition7 = () -> this.isSilentMoveFixVisible();
-      this.silentMoveFix = (BooleansSetting)booleansSetting.withVisibility(condition7);
+      this.silentMoveFix = (StringValue)new StringValue(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement).withVisibility(() -> this.isSilentMoveFixVisible());
       BooleanValue booleanValue2 = new BooleanValue(this, "SilentMoveFixIntave", true, this.movement);
       SettingVisibilityCondition condition8 = () -> {
          return this.silentMoveFix.isVisible() && !this.silentMoveFix.getSelectedValue().equals("None");
       };
       this.silentMoveFixIntave = (BooleanValue)booleanValue2.withVisibility(condition8);
-      BooleanValue booleanValue3 = new BooleanValue(this, "RandomizeDirections", false, this.movement);
-      SettingVisibilityCondition condition9 = () -> this.isRandomizeDirectionsVisible();
-      this.randomizeDirections = (BooleanValue)booleanValue3.withVisibility(condition9);
+      this.randomizeDirections = (BooleanValue)new BooleanValue(this, "RandomizeDirections", false, this.movement).withVisibility(() -> this.isRandomizeDirectionsVisible());
       this.framesSinceLastTick = 0;
       this.framesPerTick = 0;
-      boolean flag = true;
-      this.setToggled(flag);
+      this.setToggled(true);
       EventManager.getEventBus().subscribe(28, this, -2);
       EventManager.getEventBus().subscribe(21, this, 20);
       EventManager.getEventBus().subscribe(26, this, 20);
@@ -113,44 +100,37 @@ public class RotationHandler extends Module implements LoadWorldListener, MoveLi
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.moveFix.getValue() && ClientManagers.rotationController.isSmoothlyReturning()) {
-         MoveFixMode moveFixMode = this.silentMoveFix.getSelectedValue().equals("None")
+         event.setMoveFixMode(this.silentMoveFix.getSelectedValue().equals("None")
             ? MoveFixMode.NONE
-            : (this.silentMoveFix.getSelectedValue().equals("Default") ? MoveFixMode.DEFAULT : MoveFixMode.ADVANCED);
-         event.setMoveFixMode(moveFixMode);
+            : (this.silentMoveFix.getSelectedValue().equals("Default") ? MoveFixMode.DEFAULT : MoveFixMode.ADVANCED));
          if (!this.silentMoveFix.getSelectedValue().equals("None")) {
-            boolean value = this.silentMoveFixIntave.getValue();
-            event.setPreventInstantReverse(value);
+            event.setPreventInstantReverse(this.silentMoveFixIntave.getValue());
             if (this.randomizeDirections.getValue()) {
                float f = 30.0F;
                float f2 = 20.0F;
-               float f3 = Augustus.getInstance().getYawPitchHelper().realYaw
-                  + DefaultRandomGenerator.instance.nextFloat(f2, f) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1);
-               event.setYaw(f3);
+               event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw
+                  + DefaultRandomGenerator.instance.nextFloat(f2, f) * (float)(ThreadLocalRandom.current().nextBoolean() ? 1 : -1));
             }
          }
       }
 
       if (ClientManagers.rotationController.isHoldingRotation()) {
-         MoveFixMode moveFixMode2 = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode2);
-         boolean flag = true;
-         event.setPreventInstantReverse(flag);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
+         event.setPreventInstantReverse(true);
       }
    }
 
    @Override
    public void onMove(EventMove event) {
       if (!this.moveFix.getValue() && ClientManagers.rotationController.isSmoothlyReturning()) {
-         float movementYaw = MoveUtil.getMovementYaw();
-         event.setYaw(movementYaw);
+         event.setYaw(MoveUtil.getMovementYaw());
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
       if (!this.moveFix.getValue() && ClientManagers.rotationController.isSmoothlyReturning()) {
-         float movementYaw = MoveUtil.getMovementYaw();
-         event.setYaw(movementYaw);
+         event.setYaw(MoveUtil.getMovementYaw());
       }
    }
 

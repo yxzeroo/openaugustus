@@ -9,8 +9,7 @@ public class CustomSecureRandom {
    private long state1;
 
    public int nextInt(int n) {
-      byte b = 2;
-      return (int)this.nextValue(b, n);
+      return (int)this.nextValue((byte)2, n);
    }
 
    public CustomSecureRandom() {
@@ -61,9 +60,8 @@ public class CustomSecureRandom {
          l6 ^= (long)(array[k].hashCode() << k * 7);
       }
 
-      StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
-      for (StackTraceElement stackTraceElement : stackTrace) {
+      for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
          l5 ^= (long)stackTraceElement.hashCode();
          l6 ^= (long)(stackTraceElement.getLineNumber() * 31);
       }
@@ -377,27 +375,19 @@ public class CustomSecureRandom {
    }
 
    public long nextLong() {
-      byte b = 0;
-      byte b2 = 0;
-      return this.nextValue(b2, b);
+      return this.nextValue((byte)0, (byte)0);
    }
 
    public int nextInt() {
-      byte b = 0;
-      byte b2 = 1;
-      return (int)this.nextValue(b2, b);
+      return (int)this.nextValue((byte)1, (byte)0);
    }
 
    public double nextDouble() {
-      byte b = 0;
-      byte b2 = 3;
-      return (double)this.nextValue(b2, b);
+      return (double)this.nextValue((byte)3, (byte)0);
    }
 
    public boolean nextBoolean() {
-      byte b = 0;
-      byte b2 = 0;
-      return (this.nextValue(b2, b) & 1L) != 0L;
+      return (this.nextValue((byte)0, (byte)0) & 1L) != 0L;
    }
 
 }

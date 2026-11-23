@@ -6,8 +6,7 @@ import java.io.StringWriter;
 public class StackTraceUtil {
    public static String getStackTraceString(Throwable t) {
       StringWriter stringWriter = new StringWriter();
-      PrintWriter writer = new PrintWriter(stringWriter);
-      t.printStackTrace(writer);
+      t.printStackTrace(new PrintWriter(stringWriter));
       return stringWriter.toString();
    }
 }

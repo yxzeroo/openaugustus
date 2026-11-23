@@ -34,7 +34,6 @@ public class EventNightVision extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      NightVisionListener listener = (NightVisionListener)obj;
-      this.call2(listener);
+      this.call2((NightVisionListener)obj);
    }
 }

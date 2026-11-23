@@ -35,10 +35,8 @@ public class PathFinderDebug extends Module implements RenderListener, TickListe
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
@@ -51,10 +49,7 @@ public class PathFinderDebug extends Module implements RenderListener, TickListe
             this.lastStartPosKey = str;
             boolean isToggled = Augustus.getInstance().getModuleManager().jesus.isToggled();
             boolean flag = isToggled && Augustus.getInstance().getModuleManager().jesus.mode.getSelectedValue().equalsIgnoreCase("dolphin");
-            AStarPathFinder aStarPathFinder = new AStarPathFinder(pathBlockPos, pathBlockPos2, isToggled && !flag, flag, false);
-            long l = 50L;
-            boolean flag2 = true;
-            this.computedPath = aStarPathFinder.computePath(flag2, l);
+            this.computedPath = new AStarPathFinder(pathBlockPos, pathBlockPos2, isToggled && !flag, flag, false).computePath(true, 50L);
          }
       }
    }
@@ -77,9 +72,7 @@ public class PathFinderDebug extends Module implements RenderListener, TickListe
       for (BlockPos pos : (Iterable<BlockPos>)(this.highlightedBlocks)) {
          int n = ColorUtil.packRgba(0, 0, 1, 25);
          float f2 = 0.3F;
-         float f3 = 0.3F;
-         int n2 = n;
-         RenderUtil.drawBlockEspBox(pos, n2, f3, f2);
+         RenderUtil.drawBlockEspBox(pos, n, 0.3F, f2);
       }
 
       RenderUtil.end3DRender();

@@ -217,8 +217,7 @@ public final class BlockOptionalMeta {
    }
 
    public boolean matches3(IBlockState state) {
-      Block block2 = state.getBlock();
-      return block2 == this.block && this.stateHashes.contains(state.hashCode());
+      return state.getBlock() == this.block && this.stateHashes.contains(state.hashCode());
    }
 
    public boolean matches(Block block2) {

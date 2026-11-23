@@ -45,8 +45,7 @@ public class ModelAdapterEndermite extends ModelAdapter {
             return null;
          } else {
             ModelRenderer[] bodyParts = modelEnderMite.bodyParts;
-            String str3 = str.substring(str2.length());
-            int n = Config.parseInt(str3, -1);
+            int n = Config.parseInt(str.substring(str2.length()), -1);
             n--;
             return n >= 0 && n < bodyParts.length ? bodyParts[n] : null;
          }

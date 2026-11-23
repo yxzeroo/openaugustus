@@ -49,8 +49,7 @@ public class EmissiveTextures {
       } else if (!(textureObject instanceof SimpleTexture)) {
          return textureObject;
       } else {
-         SimpleTexture simpleTexture = (SimpleTexture)textureObject;
-         ResourceLocation locationEmissive = simpleTexture.locationEmissive;
+         ResourceLocation locationEmissive = ((SimpleTexture)textureObject).locationEmissive;
          if (!renderEmissive) {
             if (locationEmissive != null) {
                hasEmissive = true;
@@ -65,8 +64,7 @@ public class EmissiveTextures {
             Object obj = (ITextureObject)map.get(locationEmissive);
             if (obj == null) {
                obj = new SimpleTexture(locationEmissive, true);
-               TextureManager textureManager = Config.getTextureManager();
-               textureManager.loadTexture(locationEmissive, (ITextureObject)obj);
+               Config.getTextureManager().loadTexture(locationEmissive, (ITextureObject)obj);
             }
 
             return (ITextureObject)obj;
@@ -104,8 +102,7 @@ public class EmissiveTextures {
       if (Config.isEmissiveTextures()) {
          try {
             String str = "optifine/emissive.properties";
-            ResourceLocation location = new ResourceLocation(str);
-            InputStream resourceStream = Config.getResourceStream(location);
+            InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
             if (resourceStream == null) {
                return;
             }

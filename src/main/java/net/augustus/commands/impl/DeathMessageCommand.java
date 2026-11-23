@@ -8,8 +8,7 @@ import net.augustus.settings.TextInputSetting;
 public class DeathMessageCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (set the death message)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (set the death message)");
    }
 
    public DeathMessageCommand() {
@@ -27,14 +26,10 @@ public class DeathMessageCommand extends Command {
          sb.setLength(Math.max(0, sb.length() - 1));
          if (ClientManagers.moduleManager.deathCommand.messageAtDeath.getEntryCount() > 0) {
             String str2 = sb.toString();
-            byte b = 0;
-            TextInputSetting entry = (TextInputSetting)ClientManagers.moduleManager.deathCommand.messageAtDeath.getEntry(b);
-            entry.setValue(str2);
-            String str3 = "Set your first death message to: §c§l" + str2;
-            this.sendChat(str3);
+            ((TextInputSetting)ClientManagers.moduleManager.deathCommand.messageAtDeath.getEntry((byte)0)).setValue(str2);
+            this.sendChat("Set your first death message to: §c§l" + str2);
          } else {
-            String str4 = "§cNo messages available. Add one in the ClickGUI first.";
-            this.sendChat(str4);
+            this.sendChat("§cNo messages available. Add one in the ClickGUI first.");
          }
       }
    }

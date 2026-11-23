@@ -22,13 +22,11 @@ public class AntiHunger extends Module implements MotionListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
    public void onMotion(EventMotion event) {
-      boolean flag = false;
-      event.setOnGround(flag);
+      event.setOnGround(false);
    }
 }

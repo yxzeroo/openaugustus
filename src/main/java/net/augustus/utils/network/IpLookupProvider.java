@@ -6,13 +6,7 @@ public enum IpLookupProvider implements IpLookupService {
 
 private final IpLookupService service;
 private final String displayName;
-   private static int[] stateFlags;
 
-   static {
-      if (getStateFlags() == null) {
-         setStateFlags(new int[2]);
-      }
-   }
 
 
    public String getDisplayName() {
@@ -29,11 +23,5 @@ private final String displayName;
       this.service = ipLookupService;
    }
 
-   public static void setStateFlags(int[] ints) {
-      stateFlags = ints;
-   }
 
-   public static int[] getStateFlags() {
-      return stateFlags;
-   }
 }

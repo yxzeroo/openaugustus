@@ -39,9 +39,7 @@ public class CapePoseStack {
       float f = (float)d;
       float f2 = (float)d2;
       float f3 = (float)d3;
-      float f4 = f2;
-      float f5 = f;
-      last.pose.multiplyWithTranslation(f5, f4, f3);
+      last.pose.multiplyWithTranslation(f, f2, f3);
    }
 
    public CapePoseEntry last() {
@@ -50,9 +48,7 @@ public class CapePoseStack {
 
    public void scale(float f, float f2, float f3) {
       CapePoseEntry last = (CapePoseEntry)this.poseStack.getLast();
-      CapeMatrix4f pose = last.pose;
-      CapeMatrix4f capeMatrix4f = CapeMatrix4f.createScaleMatrix(f, f2, f3);
-      pose.multiply2(capeMatrix4f);
+      last.pose.multiply2(CapeMatrix4f.createScaleMatrix(f, f2, f3));
       if (f == f2 && f2 == f3) {
          if (f > 0.0F) {
             return;
@@ -66,8 +62,6 @@ public class CapePoseStack {
       float f6 = 1.0F / f2;
       float f7 = 1.0F / f3;
       float f8 = CapeMathHelper.fastInvCubeRoot(f5 * f6 * f7);
-      CapeMatrix3f normal = last.normal;
-      CapeMatrix3f capeMatrix3f = CapeMatrix3f.createScaleMatrix(f8 * f5, f8 * f6, f8 * f7);
-      normal.mul3(capeMatrix3f);
+      last.normal.mul3(CapeMatrix3f.createScaleMatrix(f8 * f5, f8 * f6, f8 * f7));
    }
 }

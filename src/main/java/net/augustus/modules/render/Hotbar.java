@@ -18,8 +18,8 @@ import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -34,11 +34,11 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import org.lwjgl.opengl.GL11;
 
 public class Hotbar extends Module implements RenderListener, PacketListener, TickListener {
-   public final StringValue hotbarScale;
+   public final DoubleValue hotbarScale;
    public final BooleanValue armor;
    public final BooleanValue armorDurability;
    public final BooleanValue armorShadow;
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BlurShadowSettings blurShadowSettings;
    public final BooleanValue silentSlot;
    public final BooleanValue inventoryItems;
@@ -55,33 +55,17 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
 
    public Hotbar() {
        super("Hotbar", "Schnellzugriffsleiste", new Color(235, 64, 52), Categorys.RENDER);
-      this.hotbarScale = new StringValue(this, "HotbarScale", 2.0, 1.0, 4.0, 2);
+      this.hotbarScale = new DoubleValue(this, "HotbarScale", 2.0, 1.0, 4.0, 2);
       this.armor = new BooleanValue(this, "Armor", true);
-      BooleanValue booleanValue = new BooleanValue(this, "ArmorDurability", true);
-      SettingVisibilityCondition condition = () -> this.isArmorDurabilityVisible();
-      this.armorDurability = (BooleanValue)booleanValue.withVisibility(condition);
+      this.armorDurability = (BooleanValue)new BooleanValue(this, "ArmorDurability", true).withVisibility(() -> this.isArmorDurabilityVisible());
       this.armorShadow = new BooleanValue(this, "ArmorShadow", true);
-      this.mode = new BooleansSetting(this, "Mode", "FullBar", new String[]{"Vanilla", "MinimalBar", "FullBar"});
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
-      SettingVisibilityCondition condition2 = () -> this.isCustomHotbarActive();
-      this.blurShadowSettings = (BlurShadowSettings)blurShadowSettings3.withVisibility(condition2);
-      BooleanValue booleanValue2 = new BooleanValue(this, "SilentSlot", false);
-      SettingVisibilityCondition condition3 = () -> this.isCustomHotbarActive();
-      this.silentSlot = (BooleanValue)booleanValue2.withVisibility(condition3);
-      BooleanValue booleanValue3 = new BooleanValue(this, "InventoryItems", false);
-      SettingVisibilityCondition condition4 = () -> this.isCustomHotbarActive();
-      this.inventoryItems = (BooleanValue)booleanValue3.withVisibility(condition4);
-      BooleanValue booleanValue4 = new BooleanValue(this, "ItemRectangle", true);
-      SettingVisibilityCondition condition5 = () -> this.isFullBarMode();
-      this.itemRectangle = (BooleanValue)booleanValue4.withVisibility(condition5);
-      BooleanValue booleanValue5 = new BooleanValue(this, "DebugInformation", true);
-      SettingVisibilityCondition condition6 = () -> this.isFullBarMode();
-      this.debugInformation = (BooleanValue)booleanValue5.withVisibility(condition6);
-      BooleanValue booleanValue6 = new BooleanValue(this, "OtherPingCalculation", true);
-      SettingVisibilityCondition condition7 = () -> this.isOtherPingCalculationVisible();
-      this.otherPingCalculation = (BooleanValue)booleanValue6.withVisibility(condition7);
+      this.mode = new StringValue(this, "Mode", "FullBar", new String[]{"Vanilla", "MinimalBar", "FullBar"});
+      this.blurShadowSettings = (BlurShadowSettings)new BlurShadowSettings(this).withCustomShadowColor(Color.black).withVisibility(() -> this.isCustomHotbarActive());
+      this.silentSlot = (BooleanValue)new BooleanValue(this, "SilentSlot", false).withVisibility(() -> this.isCustomHotbarActive());
+      this.inventoryItems = (BooleanValue)new BooleanValue(this, "InventoryItems", false).withVisibility(() -> this.isCustomHotbarActive());
+      this.itemRectangle = (BooleanValue)new BooleanValue(this, "ItemRectangle", true).withVisibility(() -> this.isFullBarMode());
+      this.debugInformation = (BooleanValue)new BooleanValue(this, "DebugInformation", true).withVisibility(() -> this.isFullBarMode());
+      this.otherPingCalculation = (BooleanValue)new BooleanValue(this, "OtherPingCalculation", true).withVisibility(() -> this.isOtherPingCalculationVisible());
       this.clicksPerTickHistory = new java.util.ArrayList();
       this.speedHistory = new java.util.ArrayList();
       this.clicksThisTick = 0;
@@ -98,12 +82,9 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -134,14 +115,11 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
 
       if (packet instanceof C03PacketPlayer) {
          if (!(packet instanceof C03PacketPlayer.C04PacketPlayerPosition) && !(packet instanceof C03PacketPlayer.C06PacketPlayerPosLook)) {
-            float f = 0.0F;
-            this.updateBlocksPerSecond(f);
+            this.updateBlocksPerSecond(0.0F);
          } else {
             C03PacketPlayer packet2 = (C03PacketPlayer)packet;
             double d = Math.abs(packet2.getPositionX() - this.lastPosX);
-            double d2 = Math.abs(packet2.getPositionZ() - this.lastPosZ);
-            float f2 = (float)(Math.hypot(d2, d) * 20.0);
-            this.updateBlocksPerSecond(f2);
+            this.updateBlocksPerSecond((float)(Math.hypot(Math.abs(packet2.getPositionZ() - this.lastPosZ), d) * 20.0));
             this.lastPosX = packet2.getPositionX();
             this.lastPosZ = packet2.getPositionZ();
          }
@@ -152,8 +130,7 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
    public void onRender(float f, ScaledResolution sr) {
       if (this.isCustomHotbarActive()) {
          GlStateManager.scale(1.0F / (float)sr.getScaleFactor(), 1.0F / (float)sr.getScaleFactor(), 1.0F);
-         boolean flag = true;
-         double value = this.hotbarScale.getValue(flag);
+         double value = this.hotbarScale.getValue(true);
          int n = (int)Math.round((double)mc.displayWidth / value);
          int n2 = (int)Math.round((double)mc.displayHeight / value);
          GlStateManager.scale(value, value, 1.0);
@@ -225,8 +202,7 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
             BlurShadowManager.submitRenderTask(false, shaderRenderPass3 -> this.renderInventoryBackgroundPass(f2, n8, shaderRenderPass3));
 
             for (int j = 0; j < containerPlayer.inventorySlots.size(); j++) {
-               Slot slot = (Slot)containerPlayer.inventorySlots.get(j);
-               this.renderInventorySlot(slot, n6, n7);
+               this.renderInventorySlot((Slot)containerPlayer.inventorySlots.get(j), n6, n7);
             }
          }
 
@@ -238,10 +214,8 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
             CustomFontUtil esp44 = FontManager.esp44;
             double d = (double)(n2 - 20);
             int rgb = Color.white.getRGB();
-            double d2 = d;
             double d3 = 1.5;
-            String str = "A";
-            esp44.drawStringWithShadow(str, d3, d2, rgb);
+            esp44.drawStringWithShadow("A", d3, d, rgb);
          }
 
          GL11.glScaled(1.0 / value, 1.0 / value, 1.0);
@@ -293,12 +267,7 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
 
    private void renderInventoryBackgroundPass(float f, int n, ShaderRenderPass shaderRenderPass) {
       if (shaderRenderPass == ShaderRenderPass.SHADOW) {
-         float f2 = (float)n;
-         float f3 = f + 182.0F;
-         float f4 = (float)(n + 60);
-         BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-         int rgb = Color.black.getRGB();
-         RenderUtil.drawRect2(f, f2, f3, f4, blurShadowSettings2.resolvePassColor(shaderRenderPass, rgb));
+         RenderUtil.drawRect2(f, (float)n, f + 182.0F, (float)(n + 60), this.blurShadowSettings.resolvePassColor(shaderRenderPass, Color.black.getRGB()));
       } else {
          RenderUtil.drawRect5(f, (float)n, f + 182.0F, (float)(n + 60), 0, 0, 0, 185);
       }
@@ -306,13 +275,7 @@ public class Hotbar extends Module implements RenderListener, PacketListener, Ti
 
    private void renderMinimalBarBackgroundPass(int n, int n2, ShaderRenderPass shaderRenderPass) {
       if (shaderRenderPass == ShaderRenderPass.SHADOW) {
-         float f = (float)n / 2.0F - 91.0F;
-         float f2 = (float)(n2 - 22);
-         float f3 = (float)n / 2.0F + 91.0F;
-         float f4 = (float)n2;
-         BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-         int rgb = Color.black.getRGB();
-         RenderUtil.drawRect2(f, f2, f3, f4, blurShadowSettings2.resolveShadowColor(rgb));
+         RenderUtil.drawRect2((float)n / 2.0F - 91.0F, (float)(n2 - 22), (float)n / 2.0F + 91.0F, (float)n2, this.blurShadowSettings.resolveShadowColor(Color.black.getRGB()));
       } else {
          RenderUtil.drawRect5(
             (float)n / 2.0F - 91.0F, (float)(n2 - 22), (float)n / 2.0F + 91.0F, (float)n2, 0, 0, 0, 185

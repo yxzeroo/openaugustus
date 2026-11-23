@@ -35,9 +35,9 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,10 +50,10 @@ import net.minecraft.util.Vec3;
 
 public class AutoClicker extends Module implements ClickModuleContext, LoadWorldListener, ClickListener, MouseMoveListener, TickListener, PacketListener {
    public final ModeSetting mode;
-   private final StringValue cpsLimiter;
+   private final DoubleValue cpsLimiter;
    private final BooleanValue cpsLimiterIntave;
-   private final BooleansSetting timing;
-   private final DoubleValue timingValues;
+   private final StringValue timing;
+   private final SettingGroup timingValues;
    private final RandomizedRangeSettings prediction;
    private final RandomizedRangeSettings loseDelay;
    private final RandomizedRangeSettings endurance;
@@ -68,7 +68,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
    private final BooleanValue attackFriends;
    private final BooleanValue longClick;
    private final BooleanValue breakBlocks;
-   private final StringValue breakTickDelay;
+   private final DoubleValue breakTickDelay;
    public final BooleanValue onlyOnClick;
    private final WeaponFilterSettings weaponFilterSettings;
    public boolean ignoreClickDelay;
@@ -87,61 +87,47 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
    public AutoClicker() {
        super("AutoClicker", "SelbstständigerClicker", new Color(82, 186, 74), Categorys.LEGIT);
       BiFunction[] biFunctions = new BiFunction[]{
-         (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (DoubleValue)obj2),
-         (obj3, obj4) -> new DragClickPatternMode((Module)obj3, (DoubleValue)obj4),
-         (obj5, obj6) -> new SimpleClickPatternMode((Module)obj5, (DoubleValue)obj6),
-         (obj7, obj8) -> new SimpleV2ClickPatternMode((Module)obj7, (DoubleValue)obj8),
-         (obj9, obj10) -> new AdvancedClickPatternMode((Module)obj9, (DoubleValue)obj10),
-         (obj11, obj12) -> new RecordedClickPatternMode((Module)obj11, (DoubleValue)obj12),
-         (obj13, obj14) -> new SmartClickPatternMode((Module)obj13, (DoubleValue)obj14),
-         (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (DoubleValue)obj16)
+         (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (SettingGroup)obj2),
+         (obj3, obj4) -> new DragClickPatternMode((Module)obj3, (SettingGroup)obj4),
+         (obj5, obj6) -> new SimpleClickPatternMode((Module)obj5, (SettingGroup)obj6),
+         (obj7, obj8) -> new SimpleV2ClickPatternMode((Module)obj7, (SettingGroup)obj8),
+         (obj9, obj10) -> new AdvancedClickPatternMode((Module)obj9, (SettingGroup)obj10),
+         (obj11, obj12) -> new RecordedClickPatternMode((Module)obj11, (SettingGroup)obj12),
+         (obj13, obj14) -> new SmartClickPatternMode((Module)obj13, (SettingGroup)obj14),
+         (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (SettingGroup)obj16)
       };
       this.mode = new ModeSetting(this, "Mode", "Smart", biFunctions);
-      this.cpsLimiter = new StringValue(this, "CPSLimiter", 20.0, 5.0, 40.0, 0);
+      this.cpsLimiter = new DoubleValue(this, "CPSLimiter", 20.0, 5.0, 40.0, 0);
       this.cpsLimiterIntave = new BooleanValue(this, "CPSLimiterIntave", false);
-      this.timing = new BooleansSetting(this, "Timing", "Always", new String[]{"Always", "Other"});
-      DoubleValue doubleValue = new DoubleValue(this, "TimingValues", true);
-      SettingVisibilityCondition condition = () -> this.isTimingValuesVisible();
-      this.timingValues = doubleValue.visibleWhen(condition);
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition2 = () -> this.isPredictionVisible();
-      this.prediction = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition3 = () -> this.isLoseDelayVisible();
-      this.loseDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition3);
+      this.timing = new StringValue(this, "Timing", "Always", new String[]{"Always", "Other"});
+      this.timingValues = new SettingGroup(this, "TimingValues", true).visibleWhen(() -> this.isTimingValuesVisible());
+      this.prediction = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isPredictionVisible());
+      this.loseDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isLoseDelayVisible());
       RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "Endurance", 90.0, 110.0, 1.0, 400.0, 0, this.timingValues)).withoutNotInARow();
       SettingVisibilityCondition condition4 = () -> {
          return this.timing.getSelectedValue().equals("Other");
       };
       this.endurance = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this, "EnduranceReduction", 5.0, 10.0, 1.0, 20.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition5 = () -> this.isEnduranceReductionVisible();
-      this.enduranceReduction = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition5);
+      this.enduranceReduction = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "EnduranceReduction", 5.0, 10.0, 1.0, 20.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isEnduranceReductionVisible());
       this.delayClicksAfterClosingGuiScreen = (new RandomizedRangeSettings(this, "DelayClicksAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0)).withoutNotInARow();
-      BooleanValue booleanValue = new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false);
-      String str = "ReduceCPSIfYouCanNotHitATarget";
-      this.reduceCPSIfYouCanNotHitATargett = (BooleanValue)booleanValue.withDisplayName(str);
+      this.reduceCPSIfYouCanNotHitATargett = (BooleanValue)new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false).withDisplayName("ReduceCPSIfYouCanNotHitATarget");
       this.critFix = new BooleanValue(this, "CritFix", true);
       BooleanValue booleanValue2 = new BooleanValue(this, "CritFixPacketCheck", true);
       BooleanValue critFix2 = this.critFix;
       this.critFix.getClass();
       BooleanValue booleanValue3 = critFix2;
-      SettingVisibilityCondition condition6 = () -> booleanValue3.getValue();
-      this.critFixPacketCheck = (BooleanValue)booleanValue2.withVisibility(condition6);
+      this.critFixPacketCheck = (BooleanValue)booleanValue2.withVisibility(() -> booleanValue3.getValue());
       this.onlyOnTarget = new BooleanValue(this, "OnlyOnTarget", false);
       this.perfectHit = new BooleanValue(this, "PerfectHit", false);
       this.noLoopHit = new BooleanValue(this, "NoLoopHit", false);
       this.attackFriends = new BooleanValue(this, "AttackFriends", false);
-      BooleanValue booleanValue4 = new BooleanValue(this, "LongClick", false);
-      SettingVisibilityCondition condition7 = () -> this.isLongClickVisible();
-      this.longClick = (BooleanValue)booleanValue4.withVisibility(condition7);
+      this.longClick = (BooleanValue)new BooleanValue(this, "LongClick", false).withVisibility(() -> this.isLongClickVisible());
       this.breakBlocks = (BooleanValue)(new BooleanValue(this, "BreakBlocks", false)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "BreakTickDelay", 5.0, 0.0, 20.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "BreakTickDelay", 5.0, 0.0, 20.0, 0);
       critFix2 = this.breakBlocks;
       this.breakBlocks.getClass();
       BooleanValue booleanValue5 = critFix2;
-      SettingVisibilityCondition condition8 = () -> booleanValue5.getValue();
-      this.breakTickDelay = (StringValue)stringValue.visibleWhen(condition8).markVisualOnly();
+      this.breakTickDelay = (DoubleValue)stringValue.visibleWhen(() -> booleanValue5.getValue()).markVisualOnly();
       this.onlyOnClick = (BooleanValue)(new BooleanValue(this, "OnlyOnClick", true)).markVisualOnly();
       this.weaponFilterSettings = new WeaponFilterSettings(this);
       this.ignoreClickDelay = false;
@@ -161,61 +147,47 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
    public AutoClicker(boolean flag) {
        super("AutoClicker");
       BiFunction[] biFunctions = new BiFunction[]{
-         (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (DoubleValue)obj2),
-         (obj3, obj4) -> new DragClickPatternMode((Module)obj3, (DoubleValue)obj4),
-         (obj5, obj6) -> new SimpleClickPatternMode((Module)obj5, (DoubleValue)obj6),
-         (obj7, obj8) -> new SimpleV2ClickPatternMode((Module)obj7, (DoubleValue)obj8),
-         (obj9, obj10) -> new AdvancedClickPatternMode((Module)obj9, (DoubleValue)obj10),
-         (obj11, obj12) -> new RecordedClickPatternMode((Module)obj11, (DoubleValue)obj12),
-         (obj13, obj14) -> new SmartClickPatternMode((Module)obj13, (DoubleValue)obj14),
-         (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (DoubleValue)obj16)
+         (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (SettingGroup)obj2),
+         (obj3, obj4) -> new DragClickPatternMode((Module)obj3, (SettingGroup)obj4),
+         (obj5, obj6) -> new SimpleClickPatternMode((Module)obj5, (SettingGroup)obj6),
+         (obj7, obj8) -> new SimpleV2ClickPatternMode((Module)obj7, (SettingGroup)obj8),
+         (obj9, obj10) -> new AdvancedClickPatternMode((Module)obj9, (SettingGroup)obj10),
+         (obj11, obj12) -> new RecordedClickPatternMode((Module)obj11, (SettingGroup)obj12),
+         (obj13, obj14) -> new SmartClickPatternMode((Module)obj13, (SettingGroup)obj14),
+         (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (SettingGroup)obj16)
       };
       this.mode = new ModeSetting(this, "Mode", "Smart", biFunctions);
-      this.cpsLimiter = new StringValue(this, "CPSLimiter", 20.0, 5.0, 40.0, 0);
+      this.cpsLimiter = new DoubleValue(this, "CPSLimiter", 20.0, 5.0, 40.0, 0);
       this.cpsLimiterIntave = new BooleanValue(this, "CPSLimiterIntave", false);
-      this.timing = new BooleansSetting(this, "Timing", "Always", new String[]{"Always", "Other"});
-      DoubleValue doubleValue = new DoubleValue(this, "TimingValues", true);
-      SettingVisibilityCondition condition = () -> this.isTimingValuesVisible();
-      this.timingValues = doubleValue.visibleWhen(condition);
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition2 = () -> this.isPredictionVisible();
-      this.prediction = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition3 = () -> this.isLoseDelayVisible();
-      this.loseDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition3);
+      this.timing = new StringValue(this, "Timing", "Always", new String[]{"Always", "Other"});
+      this.timingValues = new SettingGroup(this, "TimingValues", true).visibleWhen(() -> this.isTimingValuesVisible());
+      this.prediction = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isPredictionVisible());
+      this.loseDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isLoseDelayVisible());
       RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "Endurance", 90.0, 110.0, 1.0, 400.0, 0, this.timingValues)).withoutNotInARow();
       SettingVisibilityCondition condition4 = () -> {
          return this.timing.getSelectedValue().equals("Other");
       };
       this.endurance = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this, "EnduranceReduction", 5.0, 10.0, 1.0, 20.0, 0, this.timingValues)).withoutNotInARow();
-      SettingVisibilityCondition condition5 = () -> this.isEnduranceReductionVisible();
-      this.enduranceReduction = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition5);
+      this.enduranceReduction = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "EnduranceReduction", 5.0, 10.0, 1.0, 20.0, 0, this.timingValues)).withoutNotInARow().withVisibility(() -> this.isEnduranceReductionVisible());
       this.delayClicksAfterClosingGuiScreen = (new RandomizedRangeSettings(this, "DelayClicksAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0)).withoutNotInARow();
-      BooleanValue booleanValue = new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false);
-      String str = "ReduceCPSIfYouCanNotHitATarget";
-      this.reduceCPSIfYouCanNotHitATargett = (BooleanValue)booleanValue.withDisplayName(str);
+      this.reduceCPSIfYouCanNotHitATargett = (BooleanValue)new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false).withDisplayName("ReduceCPSIfYouCanNotHitATarget");
       this.critFix = new BooleanValue(this, "CritFix", true);
       BooleanValue booleanValue2 = new BooleanValue(this, "CritFixPacketCheck", true);
       BooleanValue critFix2 = this.critFix;
       this.critFix.getClass();
       BooleanValue booleanValue3 = critFix2;
-      SettingVisibilityCondition condition6 = () -> booleanValue3.getValue();
-      this.critFixPacketCheck = (BooleanValue)booleanValue2.withVisibility(condition6);
+      this.critFixPacketCheck = (BooleanValue)booleanValue2.withVisibility(() -> booleanValue3.getValue());
       this.onlyOnTarget = new BooleanValue(this, "OnlyOnTarget", false);
       this.perfectHit = new BooleanValue(this, "PerfectHit", false);
       this.noLoopHit = new BooleanValue(this, "NoLoopHit", false);
       this.attackFriends = new BooleanValue(this, "AttackFriends", false);
-      BooleanValue booleanValue4 = new BooleanValue(this, "LongClick", false);
-      SettingVisibilityCondition condition7 = () -> this.isLongClickVisible();
-      this.longClick = (BooleanValue)booleanValue4.withVisibility(condition7);
+      this.longClick = (BooleanValue)new BooleanValue(this, "LongClick", false).withVisibility(() -> this.isLongClickVisible());
       this.breakBlocks = (BooleanValue)(new BooleanValue(this, "BreakBlocks", false)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "BreakTickDelay", 5.0, 0.0, 20.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "BreakTickDelay", 5.0, 0.0, 20.0, 0);
       critFix2 = this.breakBlocks;
       this.breakBlocks.getClass();
       BooleanValue booleanValue5 = critFix2;
-      SettingVisibilityCondition condition8 = () -> booleanValue5.getValue();
-      this.breakTickDelay = (StringValue)stringValue.visibleWhen(condition8).markVisualOnly();
+      this.breakTickDelay = (DoubleValue)stringValue.visibleWhen(() -> booleanValue5.getValue()).markVisualOnly();
       this.onlyOnClick = (BooleanValue)(new BooleanValue(this, "OnlyOnClick", true)).markVisualOnly();
       this.weaponFilterSettings = new WeaponFilterSettings(this);
       this.ignoreClickDelay = false;
@@ -251,16 +223,11 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 17;
-      this.toggleEventSubscription(b2);
-      byte b3 = 19;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 26;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -307,8 +274,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
          this.timeHelper.reset();
       }
 
-      long l = 2000L;
-      if (this.timeHelper.reached2(l)) {
+      if (this.timeHelper.reached2(2000L)) {
          this.lastTarget = null;
       }
 
@@ -320,39 +286,31 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
          this.wasAttackKeyDown = mc.gameSettings.keyBindAttack.isKeyDown() || mc.gameSettings.keyBindAttack.getPressTime() > 0;
          if (this.canClick()) {
             int lastIntValue = this.prediction.getLastIntValue();
-            double d = 3.0;
-            if (this.checkTimingAndEndurance(d, lastIntValue)) {
+            if (this.checkTimingAndEndurance(3.0, lastIntValue)) {
                if (!this.shouldBreakBlock()) {
                   this.enduranceTicks++;
                   if (!mc.thePlayer.isUsingItem()) {
-                     int n = this.computeClickCount();
-                     this.applyClicks(event, n);
+                     this.applyClicks(event, this.computeClickCount());
                   }
 
-                  boolean value = this.longClick.getValue();
-                  event.setDelayBlockBreak(value);
+                  event.setDelayBlockBreak(this.longClick.getValue());
                   if (!this.longClick.getValue()) {
-                     boolean flag = false;
-                     event.setLeftMouseDown(flag);
+                     event.setLeftMouseDown(false);
                   }
 
                   if (this.isInstantClickMode()) {
-                     boolean flag2 = true;
-                     event.setOverrideBlockBreak(flag2);
-                     boolean ignoreClickDelay2 = this.ignoreClickDelay;
-                     event.setBreakingBlock(ignoreClickDelay2);
+                     event.setOverrideBlockBreak(true);
+                     event.setBreakingBlock(this.ignoreClickDelay);
                   }
                } else {
                   AbstractClickPatternMode abstractSubMode = (AbstractClickPatternMode)this.mode.getAbstractSubMode();
                   if (abstractSubMode instanceof DeviationClickPatternMode) {
-                     DeviationClickPatternMode mode2 = (DeviationClickPatternMode)abstractSubMode;
-                     mode2.resetNextClickTime();
+                     ((DeviationClickPatternMode)abstractSubMode).resetNextClickTime();
                   } else if (abstractSubMode instanceof RecordedClickPatternMode) {
                      ((RecordedClickPatternMode)abstractSubMode).resetTiming();
                   }
 
-                  boolean flag3 = true;
-                  event.setLeftMouseDown(flag3);
+                  event.setLeftMouseDown(true);
                }
                break exitBlock;
             }
@@ -361,8 +319,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
          this.recoverEndurance();
          AbstractClickPatternMode abstractSubMode2 = (AbstractClickPatternMode)this.mode.getAbstractSubMode();
          if (abstractSubMode2 instanceof DeviationClickPatternMode) {
-            DeviationClickPatternMode mode3 = (DeviationClickPatternMode)abstractSubMode2;
-            mode3.resetNextClickTime();
+            ((DeviationClickPatternMode)abstractSubMode2).resetNextClickTime();
          } else if (abstractSubMode2 instanceof RecordedClickPatternMode) {
             ((RecordedClickPatternMode)abstractSubMode2).resetTiming();
          }
@@ -385,8 +342,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
    }
 
    private void recoverEndurance() {
-      boolean flag = true;
-      this.enduranceTicks = Math.max(this.enduranceTicks - this.enduranceReduction.nextInt(flag), 0);
+      this.enduranceTicks = Math.max(this.enduranceTicks - this.enduranceReduction.nextInt(true), 0);
       if (this.enduranceTicks == 0) {
          this.enduranceExhausted = false;
       }
@@ -452,8 +408,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
       if (abstractSubMode == null) {
          return 0;
       } else {
-         Object obj = null;
-         return abstractSubMode.computeClicks((EventClick)obj);
+         return abstractSubMode.computeClicks((EventClick)null);
       }
    }
 
@@ -501,8 +456,7 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
 
       if (this.canCriticalHit() && n > 0) {
          this.critConfirmed = true;
-         boolean flag = true;
-         event.setCriticalHit(flag);
+         event.setCriticalHit(true);
       }
 
       mc.gameSettings.keyBindAttack.setPressTime(0);
@@ -536,12 +490,10 @@ public class AutoClicker extends Module implements ClickModuleContext, LoadWorld
                   EntityLivingBase entityHit = (EntityLivingBase)hit.entityHit;
 
                   for (int i = 1; i < n; i++) {
-                     Vec3 vec = EntityMovementPredictor.extrapolateLinearHorizontal((EntityLivingBase)hit.entityHit, i);
-                     AxisAlignedBB box = RotationUtil.createEntityBoxAt(entityHit, vec);
+                     AxisAlignedBB box = RotationUtil.createEntityBoxAt(entityHit, EntityMovementPredictor.extrapolateLinearHorizontal((EntityLivingBase)hit.entityHit, i));
                      double[] doubles = PlayerUtil.predictPlayerPosition(i - 1, mc.thePlayer);
                      Vec3 vec2 = new Vec3(doubles[0], doubles[1] + (double)mc.thePlayer.getEyeHeight(), doubles[2]);
-                     Vec3 vec3 = RotationUtil.clampPointToBox(vec2, box);
-                     if (vec2.distanceTo(vec3) < d) {
+                     if (vec2.distanceTo(RotationUtil.clampPointToBox(vec2, box)) < d) {
                         return true;
                      }
                   }

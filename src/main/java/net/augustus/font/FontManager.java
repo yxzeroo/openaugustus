@@ -46,7 +46,6 @@ public class FontManager {
    public static CustomFontUtil consolas32;
    public static final String CLIENT_DATA_DIR;
    public static DynamicFontUtil comfortaaArrayList;
-   private static int[] managerStateFlags;
 
    public static void initFonts() {
       esp44 = new CustomFontUtil("Esp", loadFontResource("esp.ttf", 44));
@@ -177,16 +176,9 @@ public class FontManager {
       return new DynamicFontUtil(str, file, 32, 1);
    }
 
-   public static void setManagerStateFlags(int[] ints) {
-      managerStateFlags = ints;
-   }
 
-   public static int[] getManagerStateFlags() {
-      return managerStateFlags;
-   }
 
    static {
-      setManagerStateFlags((int[])null);
       customDynamicFonts = new HashMap();
       customFormattedFonts = new HashMap();
       loadedFontFiles = new HashSet();

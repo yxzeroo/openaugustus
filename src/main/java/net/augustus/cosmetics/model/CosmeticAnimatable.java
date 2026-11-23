@@ -39,8 +39,7 @@ public class CosmeticAnimatable implements GeoAnimatable {
             GeoAnimationController controller2 = this.controller;
             GeoAnimationBuilder geoAnimationBuilder = new GeoAnimationBuilder();
             Boolean bool = true;
-            GeoAnimationBuilder geoAnimationBuilder2 = geoAnimationBuilder.addAnimation(str, bool);
-            controller2.setAnimation(geoAnimationBuilder2);
+            controller2.setAnimation(geoAnimationBuilder.addAnimation(str, bool));
          }
       }
    }
@@ -48,26 +47,21 @@ public class CosmeticAnimatable implements GeoAnimatable {
    @Override
    public void registerControllers(GeoAnimationData geoAnimationData) {
       this.controller = new GeoAnimationController(this, this.controllerName, 5.0F, geoAnimationEvent -> GeoPlayState.CONTINUE);
-      GeoAnimationFile animationFile = this.animatedModel.getAnimationFile();
-      String firstAnimationName = animationFile.getFirstAnimationName();
+      String firstAnimationName = this.animatedModel.getAnimationFile().getFirstAnimationName();
       if (firstAnimationName != null) {
          this.defaultAnimation = firstAnimationName;
          this.currentAnimation = firstAnimationName;
          GeoAnimationController controller2 = this.controller;
          GeoAnimationBuilder geoAnimationBuilder = new GeoAnimationBuilder();
          Boolean bool = true;
-         GeoAnimationBuilder geoAnimationBuilder2 = geoAnimationBuilder.addAnimation(firstAnimationName, bool);
-         controller2.setAnimation(geoAnimationBuilder2);
+         controller2.setAnimation(geoAnimationBuilder.addAnimation(firstAnimationName, bool));
 
          for (CosmeticAnimationTrigger cosmeticAnimationTrigger : CosmeticAnimationTrigger.VALUES) {
-            EnumMap triggerAnimations2 = this.triggerAnimations;
-            String animationName = cosmeticAnimationTrigger.getAnimationName();
-            triggerAnimations2.put(cosmeticAnimationTrigger, this.hasAnimation(animationName) ? cosmeticAnimationTrigger.getAnimationName() : this.defaultAnimation);
+            this.triggerAnimations.put(cosmeticAnimationTrigger, this.hasAnimation(cosmeticAnimationTrigger.getAnimationName()) ? cosmeticAnimationTrigger.getAnimationName() : this.defaultAnimation);
          }
       }
 
-      GeoAnimationController controller3 = this.controller;
-      geoAnimationData.addAnimationController(controller3);
+      geoAnimationData.addAnimationController(this.controller);
    }
 
    public boolean hasDefaultAnimation() {

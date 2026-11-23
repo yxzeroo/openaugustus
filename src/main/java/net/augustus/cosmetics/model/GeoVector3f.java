@@ -5,7 +5,6 @@ public class GeoVector3f {
    public float y;
    public float x;
    public static final GeoVector3f ZERO = new GeoVector3f(0.0F, 0.0F, 0.0F);
-   private static int[] flowState;
 
    public GeoVector3f(float f, float f2, float f3) {
       this.x = f;
@@ -21,9 +20,6 @@ public class GeoVector3f {
       this.z = f;
    }
 
-   static {
-      setFlowState((int[])null);
-   }
 
    public float getX() {
       return this.x;
@@ -77,16 +73,8 @@ public class GeoVector3f {
    public double distanceSq(GeoVector3f geoVector3f) {
       double x2 = (double)geoVector3f.getX();
       double z2 = (double)geoVector3f.getZ();
-      double y2 = (double)geoVector3f.getY();
-      double d = x2;
-      return this.distanceSq(d, y2, z2);
+      return this.distanceSq(x2, (double)geoVector3f.getY(), z2);
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 }

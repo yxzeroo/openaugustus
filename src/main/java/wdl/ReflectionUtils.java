@@ -14,8 +14,7 @@ public class ReflectionUtils {
       }
 
       try {
-         Field field = stealField(clazz2, clazz);
-         return clazz.cast(field.get(obj));
+         return clazz.cast(stealField(clazz2, clazz).get(obj));
       } catch (Exception e) {
          throw new RuntimeException("WorldDownloader: Couldn't get Field of type \"" + clazz + "\" from object \"" + obj + "\" !", e);
       }
@@ -24,8 +23,7 @@ public class ReflectionUtils {
    public static Object stealAndGetField(Object obj, Class clazz, Class clazz2) {
 
       try {
-         Field field = stealField(clazz, clazz2);
-         return clazz2.cast(field.get(obj));
+         return clazz2.cast(stealField(clazz, clazz2).get(obj));
       } catch (Exception e) {
          throw new RuntimeException("WorldDownloader: Couldn't get Field of type \"" + clazz2 + "\" from object \"" + obj + "\" !", e);
       }
@@ -41,17 +39,15 @@ public class ReflectionUtils {
       }
 
       try {
-         Field field = stealField(clazz2, clazz);
-         field.set(obj, obj2);
+         stealField(clazz2, clazz).set(obj, obj2);
       } catch (Exception e) {
          throw new RuntimeException("WorldDownloader: Couldn't set Field of type \"" + clazz + "\" from object \"" + obj + "\" to " + obj2 + "!", e);
       }
    }
 
    public static Field stealField(Class clazz, Class clazz2) {
-      Field[] declaredFields = clazz.getDeclaredFields();
 
-      for (Field field : declaredFields) {
+      for (Field field : clazz.getDeclaredFields()) {
          if (field.getType().equals(clazz2)) {
             try {
                field.setAccessible(true);
@@ -68,8 +64,7 @@ public class ReflectionUtils {
    public static void stealAndSetField(Object obj, Class clazz, Class clazz2, Object obj2) {
 
       try {
-         Field field = stealField(clazz, clazz2);
-         field.set(obj, obj2);
+         stealField(clazz, clazz2).set(obj, obj2);
       } catch (Exception e) {
          throw new RuntimeException("WorldDownloader: Couldn't set Field of type \"" + clazz2 + "\" from object \"" + obj + "\" to " + obj2 + "!", e);
       }

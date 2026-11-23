@@ -346,8 +346,7 @@ public class BlockPortal extends BlockBreakable {
             }
          }
 
-         Block block = this.world.getBlockState(pos.offset(facing, n)).getBlock();
-         return block == Blocks.obsidian ? n : 0;
+         return this.world.getBlockState(pos.offset(facing, n)).getBlock() == Blocks.obsidian ? n : 0;
       }
 
       public static int getPortalBlockCount(Size size) {

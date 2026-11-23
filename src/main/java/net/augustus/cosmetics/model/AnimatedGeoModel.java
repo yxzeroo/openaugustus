@@ -50,8 +50,7 @@ public abstract class AnimatedGeoModel implements IGeoAnimatableModel {
 
    @Override
    public void setLivingAnimations(Object obj, Integer num, GeoAnimationEvent geoAnimationEvent) {
-      GeoAnimatable geoAnimatable = (GeoAnimatable)obj;
-      this.setLivingAnimations2(geoAnimatable, num, geoAnimationEvent);
+      this.setLivingAnimations2((GeoAnimatable)obj, num, geoAnimationEvent);
    }
 
    public void setLivingAnimations2(GeoAnimatable geoAnimatable, Integer num, GeoAnimationEvent geoAnimationEvent) {
@@ -71,11 +70,7 @@ public abstract class AnimatedGeoModel implements IGeoAnimatableModel {
       }
 
       geoAnimationEvent2.animationTick = this.seekTime;
-      GeoAnimationProcessor animationProcessor2 = this.animationProcessor;
-      GeoAnimatable animatable = geoAnimationEvent2.getAnimatable();
-      double seekTime2 = this.seekTime;
-      GeoAnimatable geoAnimatable2 = animatable;
-      animationProcessor2.preAnimationSetup(geoAnimatable2, seekTime2);
+      this.animationProcessor.preAnimationSetup(geoAnimationEvent2.getAnimatable(), this.seekTime);
       if (!this.animationProcessor.getModelRendererList().isEmpty()) {
          boolean crashWhenOutOfBounds2 = this.crashWhenOutOfBounds;
          MolangParser molangparser = GeckoLibRegistry.MOLANG_PARSER;

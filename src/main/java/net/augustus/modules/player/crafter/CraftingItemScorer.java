@@ -11,8 +11,7 @@ public class CraftingItemScorer {
       if (!(stack.getItem() instanceof ItemSword)) {
          return -1.0;
       } else {
-         ItemSword item = (ItemSword)stack.getItem();
-         return (double)item.getAttackDamage()
+         return (double)((ItemSword)stack.getItem()).getAttackDamage()
             + (double)EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25
             + (double)EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack) / 11.0
             + (double)EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack) / 11.0

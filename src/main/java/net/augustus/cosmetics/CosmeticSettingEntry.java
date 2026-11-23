@@ -4,14 +4,14 @@ import net.augustus.cosmetics.model.CosmeticModel;
 import net.augustus.settings.ColorSetting;
 import net.augustus.modules.render.ClickGui;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class CosmeticSettingEntry {
    private final ColorSetting[] colorSettings;
    private final CosmeticModel model;
    private final BooleanValue enabledSetting;
-   private final StringValue scaleSetting;
-   private final StringValue heightSetting;
+   private final DoubleValue scaleSetting;
+   private final DoubleValue heightSetting;
    private int[] lastColors;
    private boolean[] lastRainbowStates;
    private boolean[] lastAstolfoStates;
@@ -21,7 +21,7 @@ public class CosmeticSettingEntry {
    private float lastScale = 1.0F;
    private float lastHeight = 0.0F;
 
-   private CosmeticSettingEntry(CosmeticModel cosmeticModel, BooleanValue booleanValue, StringValue stringValue, StringValue stringValue2, ColorSetting[] colorSettings2) {
+   private CosmeticSettingEntry(CosmeticModel cosmeticModel, BooleanValue booleanValue, DoubleValue stringValue, DoubleValue stringValue2, ColorSetting[] colorSettings2) {
       this.model = cosmeticModel;
       this.enabledSetting = booleanValue;
       this.scaleSetting = stringValue;
@@ -47,8 +47,7 @@ public class CosmeticSettingEntry {
    }
 
    public double getScale() {
-      boolean flag = true;
-      return this.scaleSetting.getValue(flag);
+      return this.scaleSetting.getValue(true);
    }
 
    public void setScale(double d) {
@@ -56,8 +55,7 @@ public class CosmeticSettingEntry {
    }
 
    public double getHeight() {
-      boolean flag = true;
-      return this.heightSetting.getValue(flag);
+      return this.heightSetting.getValue(true);
    }
 
    public void setHeight(double d) {
@@ -69,8 +67,7 @@ public class CosmeticSettingEntry {
 
       for (int i = 0; i < this.colorSettings.length; i++) {
          ColorSetting colorSetting = this.colorSettings[i];
-         byte b = 0;
-         int colorInt = colorSetting.getColorInt(b);
+         int colorInt = colorSetting.getColorInt((byte)0);
          boolean isRainbowEnabled = colorSetting.isRainbowEnabled();
          boolean isAstolfoEnabled = colorSetting.isAstolfoEnabled();
          double rainbowSpeed = colorSetting.getRainbowSpeed();
@@ -105,7 +102,7 @@ public class CosmeticSettingEntry {
       return flag;
    }
 
-   public CosmeticSettingEntry(CosmeticModel cosmeticModel, BooleanValue booleanValue, StringValue stringValue, StringValue stringValue2, ColorSetting[] colorSettings2, CosmeticSettingEntrySyntheticMarker marker) {
+   public CosmeticSettingEntry(CosmeticModel cosmeticModel, BooleanValue booleanValue, DoubleValue stringValue, DoubleValue stringValue2, ColorSetting[] colorSettings2, CosmeticSettingEntrySyntheticMarker marker) {
       this(cosmeticModel, booleanValue, stringValue, stringValue2, colorSettings2);
    }
 }

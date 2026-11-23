@@ -85,8 +85,7 @@ public class ShaderGroup {
                      ITextureObject texture = textureManager.getTexture(location);
                      int n2 = JsonUtils.getInt(jsonObject2, "width");
                      int n3 = JsonUtils.getInt(jsonObject2, "height");
-                     boolean flag = JsonUtils.getBoolean(jsonObject2, "bilinear");
-                     if (flag) {
+                     if (JsonUtils.getBoolean(jsonObject2, "bilinear")) {
                         GL11.glTexParameteri(3553, 10241, 9729);
                         GL11.glTexParameteri(3553, 10240, 9729);
                      } else {
@@ -259,8 +258,7 @@ public class ShaderGroup {
       InputStream in = null;
 
       try {
-         IResource resource = this.resourceManager.getResource(location);
-         in = resource.getInputStream();
+         in = this.resourceManager.getResource(location).getInputStream();
          JsonObject asJsonObject = jsonParser.parse(IOUtils.toString(in, Charsets.UTF_8)).getAsJsonObject();
          if (JsonUtils.isJsonArray(asJsonObject, "targets")) {
             JsonArray asJsonArray = asJsonObject.getAsJsonArray("targets");

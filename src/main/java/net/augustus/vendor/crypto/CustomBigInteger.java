@@ -90,12 +90,10 @@ public class CustomBigInteger implements Comparable {
    private int lowestSetBitPlusTwo;
    private static final int TOOM_COOK_THRESHOLD = 240;
    private static final int DEFAULT_PRIME_CERTAINTY = 100;
-   private static int[] opaqueStateTag;
 
    private static int[] makePositive2(byte[] bytes) {
       int n = 0;
       boolean flag = false;
-      getOpaqueStateTag();
       int n2 = 0;
       int n3 = 0;
       int n4 = 0;
@@ -183,7 +181,6 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger getLower(int n) {
       int n2 = 0;
-      getOpaqueStateTag();
       Object obj = null;
       n2 = this.mag.length;
       if (n2 > n) {
@@ -200,7 +197,6 @@ public class CustomBigInteger implements Comparable {
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
-      getOpaqueStateTag();
       Object obj5 = null;
       boolean flag = false;
       obj = valueOf((long)n);
@@ -209,69 +205,48 @@ public class CustomBigInteger implements Comparable {
 
       for (int i = customBigInteger.bitLength() - 2; i >= 0; i--) {
          CustomBigInteger customBigInteger3 = (CustomBigInteger)obj3;
-         CustomBigInteger customBigInteger4 = (CustomBigInteger)obj5;
-         customBigInteger3 = customBigInteger3.multiply2(customBigInteger4);
+         customBigInteger3 = customBigInteger3.multiply2((CustomBigInteger)obj5);
          CustomBigInteger customBigInteger5 = customBigInteger2;
-         CustomBigInteger customBigInteger6 = customBigInteger5;
-         obj2 = customBigInteger3.mod(customBigInteger6);
+         obj2 = customBigInteger3.mod(customBigInteger5);
          customBigInteger3 = ((CustomBigInteger)obj5).square();
-         CustomBigInteger customBigInteger7 = (CustomBigInteger)obj;
-         CustomBigInteger customBigInteger8 = ((CustomBigInteger)obj3).square();
-         CustomBigInteger customBigInteger9 = customBigInteger7.multiply2(customBigInteger8);
-         customBigInteger3 = customBigInteger3.add2(customBigInteger9);
+         customBigInteger3 = customBigInteger3.add2(((CustomBigInteger)obj).multiply2(((CustomBigInteger)obj3).square()));
          customBigInteger5 = customBigInteger2;
-         CustomBigInteger customBigInteger10 = customBigInteger5;
-         obj4 = customBigInteger3.mod(customBigInteger10);
+         obj4 = customBigInteger3.mod(customBigInteger5);
          customBigInteger3 = (CustomBigInteger)obj4;
-         byte b = 0;
-         if (customBigInteger3.testBit(b)) {
+         if (customBigInteger3.testBit((byte)0)) {
             customBigInteger3 = (CustomBigInteger)obj4;
-            CustomBigInteger customBigInteger11 = customBigInteger2;
-            obj4 = customBigInteger3.subtract(customBigInteger11);
+            obj4 = customBigInteger3.subtract(customBigInteger2);
          }
 
          customBigInteger3 = (CustomBigInteger)obj4;
-         byte b2 = 1;
-         obj4 = customBigInteger3.shiftRight(b2);
+         obj4 = customBigInteger3.shiftRight((byte)1);
          obj3 = (CustomBigInteger)obj2;
          obj5 = (CustomBigInteger)obj4;
          if (customBigInteger.testBit(i)) {
             customBigInteger3 = (CustomBigInteger)obj3;
-            CustomBigInteger customBigInteger12 = (CustomBigInteger)obj5;
-            customBigInteger3 = customBigInteger3.add2(customBigInteger12);
+            customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj5);
             customBigInteger5 = customBigInteger2;
-            CustomBigInteger customBigInteger13 = customBigInteger5;
-            obj2 = customBigInteger3.mod(customBigInteger13);
+            obj2 = customBigInteger3.mod(customBigInteger5);
             customBigInteger3 = (CustomBigInteger)obj2;
-            byte b3 = 0;
-            if (customBigInteger3.testBit(b3)) {
+            if (customBigInteger3.testBit((byte)0)) {
                customBigInteger3 = (CustomBigInteger)obj2;
-               CustomBigInteger customBigInteger14 = customBigInteger2;
-               obj2 = customBigInteger3.subtract(customBigInteger14);
+               obj2 = customBigInteger3.subtract(customBigInteger2);
             }
 
             customBigInteger3 = (CustomBigInteger)obj2;
-            byte b4 = 1;
-            obj2 = customBigInteger3.shiftRight(b4);
+            obj2 = customBigInteger3.shiftRight((byte)1);
             customBigInteger3 = (CustomBigInteger)obj5;
-            CustomBigInteger customBigInteger15 = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger16 = (CustomBigInteger)obj3;
-            CustomBigInteger customBigInteger17 = customBigInteger15.multiply2(customBigInteger16);
-            customBigInteger3 = customBigInteger3.add2(customBigInteger17);
+            customBigInteger3 = customBigInteger3.add2(((CustomBigInteger)obj).multiply2((CustomBigInteger)obj3));
             customBigInteger5 = customBigInteger2;
-            CustomBigInteger customBigInteger18 = customBigInteger5;
-            obj4 = customBigInteger3.mod(customBigInteger18);
+            obj4 = customBigInteger3.mod(customBigInteger5);
             customBigInteger3 = (CustomBigInteger)obj4;
-            byte b5 = 0;
-            if (customBigInteger3.testBit(b5)) {
+            if (customBigInteger3.testBit((byte)0)) {
                customBigInteger3 = (CustomBigInteger)obj4;
-               CustomBigInteger customBigInteger19 = customBigInteger2;
-               obj4 = customBigInteger3.subtract(customBigInteger19);
+               obj4 = customBigInteger3.subtract(customBigInteger2);
             }
 
             customBigInteger3 = (CustomBigInteger)obj4;
-            byte b6 = 1;
-            obj4 = customBigInteger3.shiftRight(b6);
+            obj4 = customBigInteger3.shiftRight((byte)1);
             obj3 = (CustomBigInteger)obj2;
             obj5 = (CustomBigInteger)obj4;
          }
@@ -281,7 +256,6 @@ public class CustomBigInteger implements Comparable {
    }
 
    public int intValueExact() {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.mag.length <= 1 && this.bitLength() <= 31) {
          return this.intValue();
       } else {
@@ -295,7 +269,6 @@ public class CustomBigInteger implements Comparable {
       int n3 = 0;
       int n4 = 0;
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n = 0;
 
       while (n < ((int[])ints).length && ((int[])ints)[n] == -1) {
@@ -330,7 +303,6 @@ public class CustomBigInteger implements Comparable {
       boolean flag = false;
       int n4 = 0;
       long l2 = 0L;
-      getOpaqueStateTag();
       long l3 = 0L;
       int n5 = 0;
       int n6 = 0;
@@ -371,7 +343,6 @@ public class CustomBigInteger implements Comparable {
 
    private static final int[] implSquareToLen(int[] ints, int n, int[] ints2, int n2) {
       int n3 = 0;
-      getOpaqueStateTag();
       int n4 = 0;
       long l = 0L;
       long l2 = 0L;
@@ -393,19 +364,13 @@ public class CustomBigInteger implements Comparable {
       for (int j = 1; n3 > 0; j += 2) {
          n5 = ints[n3 - 1];
          int[] ints3 = ints2;
-         int[] ints4 = ints;
-         int n6 = n3 - 1;
-         int[] ints5 = ints4;
-         n5 = mulAdd(ints3, ints5, j, n6, n5);
+         n5 = mulAdd(ints3, ints, j, n3 - 1, n5);
          ints3 = ints2;
-         int n7 = j - 1;
-         addOne(ints3, n7, n3, n5);
+         addOne(ints3, j - 1, n3, n5);
          n3--;
       }
 
-      int[] ints6 = ints2;
-      byte b = 1;
-      primitiveLeftShift(ints6, n2, b);
+      primitiveLeftShift(ints2, n2, (byte)1);
       ints2[n2 - 1] = ints2[n2 - 1] | ints[n - 1] & 1;
       return ints2;
    }
@@ -414,7 +379,6 @@ public class CustomBigInteger implements Comparable {
       int n2 = 0;
       int n3 = 0;
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n >= 0) {
          n3 = (int)(((long)n + 7L) / 8L);
          obj = new byte[n3];
@@ -451,7 +415,6 @@ public class CustomBigInteger implements Comparable {
 
    public static void primitiveRightShift(int[] ints, int n, int n2) {
       int n3 = 0;
-      getOpaqueStateTag();
       int n4 = 0;
       boolean flag = false;
       int n5 = 0;
@@ -474,7 +437,6 @@ public class CustomBigInteger implements Comparable {
       int n = 0;
       Object obj4 = null;
       Object obj5 = null;
-      getOpaqueStateTag();
       Object obj6 = null;
       Object obj7 = null;
       int n2 = 0;
@@ -498,120 +460,76 @@ public class CustomBigInteger implements Comparable {
       n5 = (n3 + 2) / 3;
       n2 = n3 - 2 * n5;
       CustomBigInteger customBigInteger3 = customBigInteger;
-      byte b = 0;
-      obj10 = customBigInteger3.getToomSlice(n5, n2, b, n3);
+      obj10 = customBigInteger3.getToomSlice(n5, n2, (byte)0, n3);
       customBigInteger3 = customBigInteger;
-      byte b2 = 1;
-      obj9 = customBigInteger3.getToomSlice(n5, n2, b2, n3);
+      obj9 = customBigInteger3.getToomSlice(n5, n2, (byte)1, n3);
       customBigInteger3 = customBigInteger;
-      byte b3 = 2;
-      obj11 = customBigInteger3.getToomSlice(n5, n2, b3, n3);
+      obj11 = customBigInteger3.getToomSlice(n5, n2, (byte)2, n3);
       customBigInteger3 = customBigInteger2;
-      byte b4 = 0;
-      obj2 = customBigInteger3.getToomSlice(n5, n2, b4, n3);
+      obj2 = customBigInteger3.getToomSlice(n5, n2, (byte)0, n3);
       customBigInteger3 = customBigInteger2;
-      byte b5 = 1;
-      obj7 = customBigInteger3.getToomSlice(n5, n2, b5, n3);
+      obj7 = customBigInteger3.getToomSlice(n5, n2, (byte)1, n3);
       customBigInteger3 = customBigInteger2;
-      byte b6 = 2;
-      obj12 = customBigInteger3.getToomSlice(n5, n2, b6, n3);
+      obj12 = customBigInteger3.getToomSlice(n5, n2, (byte)2, n3);
       customBigInteger3 = (CustomBigInteger)obj11;
       CustomBigInteger customBigInteger4 = (CustomBigInteger)obj12;
-      boolean flag = true;
-      CustomBigInteger customBigInteger5 = customBigInteger4;
-      obj = customBigInteger3.multiply(customBigInteger5, flag);
+      obj = customBigInteger3.multiply(customBigInteger4, true);
       customBigInteger3 = (CustomBigInteger)obj10;
-      CustomBigInteger customBigInteger6 = (CustomBigInteger)obj11;
-      obj4 = customBigInteger3.add2(customBigInteger6);
+      obj4 = customBigInteger3.add2((CustomBigInteger)obj11);
       customBigInteger3 = (CustomBigInteger)obj2;
-      CustomBigInteger customBigInteger7 = (CustomBigInteger)obj12;
-      obj3 = customBigInteger3.add2(customBigInteger7);
+      obj3 = customBigInteger3.add2((CustomBigInteger)obj12);
       customBigInteger3 = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger8 = (CustomBigInteger)obj9;
-      customBigInteger3 = customBigInteger3.subtract(customBigInteger8);
+      customBigInteger3 = customBigInteger3.subtract((CustomBigInteger)obj9);
       customBigInteger4 = (CustomBigInteger)obj3;
-      CustomBigInteger customBigInteger9 = (CustomBigInteger)obj7;
-      customBigInteger4 = customBigInteger4.subtract(customBigInteger9);
-      boolean flag2 = true;
-      CustomBigInteger customBigInteger10 = customBigInteger4;
-      obj14 = customBigInteger3.multiply(customBigInteger10, flag2);
+      customBigInteger4 = customBigInteger4.subtract((CustomBigInteger)obj7);
+      obj14 = customBigInteger3.multiply(customBigInteger4, true);
       customBigInteger3 = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger11 = (CustomBigInteger)obj9;
-      obj4 = customBigInteger3.add2(customBigInteger11);
+      obj4 = customBigInteger3.add2((CustomBigInteger)obj9);
       customBigInteger3 = (CustomBigInteger)obj3;
-      CustomBigInteger customBigInteger12 = (CustomBigInteger)obj7;
-      obj3 = customBigInteger3.add2(customBigInteger12);
+      obj3 = customBigInteger3.add2((CustomBigInteger)obj7);
       customBigInteger3 = (CustomBigInteger)obj4;
       customBigInteger4 = (CustomBigInteger)obj3;
-      boolean flag3 = true;
-      CustomBigInteger customBigInteger13 = customBigInteger4;
-      obj16 = customBigInteger3.multiply(customBigInteger13, flag3);
+      obj16 = customBigInteger3.multiply(customBigInteger4, true);
       customBigInteger3 = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger14 = (CustomBigInteger)obj10;
-      customBigInteger3 = customBigInteger3.add2(customBigInteger14);
-      byte b7 = 1;
-      customBigInteger3 = customBigInteger3.shiftLeft(b7);
-      CustomBigInteger customBigInteger15 = (CustomBigInteger)obj11;
-      customBigInteger3 = customBigInteger3.subtract(customBigInteger15);
+      customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj10);
+      customBigInteger3 = customBigInteger3.shiftLeft((byte)1);
+      customBigInteger3 = customBigInteger3.subtract((CustomBigInteger)obj11);
       customBigInteger4 = (CustomBigInteger)obj3;
-      CustomBigInteger customBigInteger16 = (CustomBigInteger)obj2;
-      customBigInteger4 = customBigInteger4.add2(customBigInteger16);
-      byte b8 = 1;
-      customBigInteger4 = customBigInteger4.shiftLeft(b8);
-      CustomBigInteger customBigInteger17 = (CustomBigInteger)obj12;
-      customBigInteger4 = customBigInteger4.subtract(customBigInteger17);
-      boolean flag4 = true;
-      CustomBigInteger customBigInteger18 = customBigInteger4;
-      obj5 = customBigInteger3.multiply(customBigInteger18, flag4);
+      customBigInteger4 = customBigInteger4.add2((CustomBigInteger)obj2);
+      customBigInteger4 = customBigInteger4.shiftLeft((byte)1);
+      customBigInteger4 = customBigInteger4.subtract((CustomBigInteger)obj12);
+      obj5 = customBigInteger3.multiply(customBigInteger4, true);
       customBigInteger3 = (CustomBigInteger)obj10;
       customBigInteger4 = (CustomBigInteger)obj2;
-      boolean flag5 = true;
-      CustomBigInteger customBigInteger19 = customBigInteger4;
-      obj17 = customBigInteger3.multiply(customBigInteger19, flag5);
+      obj17 = customBigInteger3.multiply(customBigInteger4, true);
       customBigInteger3 = (CustomBigInteger)obj5;
-      CustomBigInteger customBigInteger20 = (CustomBigInteger)obj14;
-      obj15 = customBigInteger3.subtract(customBigInteger20).exactDivideBy3();
+      obj15 = customBigInteger3.subtract((CustomBigInteger)obj14).exactDivideBy3();
       customBigInteger3 = (CustomBigInteger)obj16;
-      CustomBigInteger customBigInteger21 = (CustomBigInteger)obj14;
-      customBigInteger3 = customBigInteger3.subtract(customBigInteger21);
-      byte b9 = 1;
-      obj13 = customBigInteger3.shiftRight(b9);
+      customBigInteger3 = customBigInteger3.subtract((CustomBigInteger)obj14);
+      obj13 = customBigInteger3.shiftRight((byte)1);
       customBigInteger3 = (CustomBigInteger)obj16;
-      CustomBigInteger customBigInteger22 = (CustomBigInteger)obj;
-      obj8 = customBigInteger3.subtract(customBigInteger22);
+      obj8 = customBigInteger3.subtract((CustomBigInteger)obj);
       customBigInteger3 = (CustomBigInteger)obj15;
-      CustomBigInteger customBigInteger23 = (CustomBigInteger)obj8;
-      customBigInteger3 = customBigInteger3.subtract(customBigInteger23);
-      byte b10 = 1;
-      obj15 = customBigInteger3.shiftRight(b10);
+      customBigInteger3 = customBigInteger3.subtract((CustomBigInteger)obj8);
+      obj15 = customBigInteger3.shiftRight((byte)1);
       customBigInteger3 = (CustomBigInteger)obj8;
-      CustomBigInteger customBigInteger24 = (CustomBigInteger)obj13;
-      customBigInteger3 = customBigInteger3.subtract(customBigInteger24);
-      CustomBigInteger customBigInteger25 = (CustomBigInteger)obj17;
-      obj8 = customBigInteger3.subtract(customBigInteger25);
+      customBigInteger3 = customBigInteger3.subtract((CustomBigInteger)obj13);
+      obj8 = customBigInteger3.subtract((CustomBigInteger)obj17);
       customBigInteger3 = (CustomBigInteger)obj15;
       customBigInteger4 = (CustomBigInteger)obj17;
-      byte b11 = 1;
-      CustomBigInteger customBigInteger26 = customBigInteger4.shiftLeft(b11);
-      obj15 = customBigInteger3.subtract(customBigInteger26);
+      obj15 = customBigInteger3.subtract(customBigInteger4.shiftLeft((byte)1));
       customBigInteger3 = (CustomBigInteger)obj13;
-      CustomBigInteger customBigInteger27 = (CustomBigInteger)obj15;
-      obj13 = customBigInteger3.subtract(customBigInteger27);
+      obj13 = customBigInteger3.subtract((CustomBigInteger)obj15);
       n6 = n5 * 32;
       customBigInteger3 = ((CustomBigInteger)obj17).shiftLeft(n6);
-      CustomBigInteger customBigInteger28 = (CustomBigInteger)obj15;
-      customBigInteger3 = customBigInteger3.add2(customBigInteger28).shiftLeft(n6);
-      CustomBigInteger customBigInteger29 = (CustomBigInteger)obj8;
-      customBigInteger3 = customBigInteger3.add2(customBigInteger29).shiftLeft(n6);
-      CustomBigInteger customBigInteger30 = (CustomBigInteger)obj13;
-      customBigInteger3 = customBigInteger3.add2(customBigInteger30).shiftLeft(n6);
-      CustomBigInteger customBigInteger31 = (CustomBigInteger)obj;
-      obj6 = customBigInteger3.add2(customBigInteger31);
+      customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj15).shiftLeft(n6);
+      customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj8).shiftLeft(n6);
+      customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj13).shiftLeft(n6);
+      obj6 = customBigInteger3.add2((CustomBigInteger)obj);
       return customBigInteger.signum == customBigInteger2.signum ? (CustomBigInteger)obj6 : ((CustomBigInteger)obj6).negate();
    }
 
    static {
-      setOpaqueStateTag(new int[3]);
       SMALL_PRIME_PRODUCT = valueOf(152125131763605L);
 
       for (int i = 1; i <= 16; i++) {
@@ -740,7 +658,6 @@ public class CustomBigInteger implements Comparable {
    private CustomBigInteger square(boolean flag) {
       Object obj = null;
       int n = 0;
-      getOpaqueStateTag();
       long l = 0L;
       l = 1283695814953682787L ^ (long)"ᬸ쯗䊢쥉礂\ud831㧒攃\uaa3c⊂諲ộ꤬㢗\ue068\udfb0婃ꁋ\ue701샟퐃隗⫘蟓䃗ᩜ".hashCode();
       if (this.signum != 0) {
@@ -765,16 +682,14 @@ public class CustomBigInteger implements Comparable {
                   }
                }
 
-               CustomBigInteger customBigInteger = this;
-               return customBigInteger.squareToomCook3();
+               return this.squareToomCook3();
             } else {
                l = l - 7592453178835422844L ^ -4414292315579663916L;
                return this.squareKaratsuba();
             }
          } else {
             l = l - 768586883784523926L ^ 419963754479874608L;
-            Object obj2 = null;
-            obj = squareToLen(this.mag, n, (int[])obj2);
+            obj = squareToLen(this.mag, n, (int[])null);
             l = (l ^ -3476840565419333468L) - 8075129253977862740L;
             return new CustomBigInteger(trustedStripLeadingZeroInts((int[])obj), 1);
          }
@@ -786,7 +701,6 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger(byte[] bytes) {
       super();
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (bytes.length == 0) {
          throw new NumberFormatException("Zero length BigInteger");
       } else {
@@ -821,7 +735,6 @@ public class CustomBigInteger implements Comparable {
       long l = 0L;
       boolean flag = false;
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       int n = 0;
       int n2 = 0;
@@ -906,12 +819,10 @@ public class CustomBigInteger implements Comparable {
    }
 
    private static int bitLength(int[] ints, int n) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return n != 0 ? (n - 1 << 5) + bitLengthForInt(ints[0]) : 0;
    }
 
    public static CustomBigInteger probablePrime(int n, Random rand) {
-      getOpaqueStateTag();
       long l = 0L;
       l = 2562629296626168759L ^ (long)"₻䊵ꈄ油\ufbc3햙緬資ꏾ禠ါ껈گ暰蚥\u0b12玉嵏帽ს".hashCode();
       if (n >= 2) {
@@ -923,9 +834,7 @@ public class CustomBigInteger implements Comparable {
             customBigInteger = largePrime(n, 100, rand);
          } else {
             l = (l ^ -8791172916768821374L) - -347724312140345180L;
-            Random rand2 = rand;
-            byte b = 100;
-            customBigInteger = smallPrime(n, b, rand2);
+            customBigInteger = smallPrime(n, (byte)100, rand);
          }
 
          return customBigInteger;
@@ -936,7 +845,6 @@ public class CustomBigInteger implements Comparable {
    }
 
    private int signBit(short s, long l) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return this.signum < 0 ? 1 : 0;
    }
 
@@ -949,7 +857,6 @@ public class CustomBigInteger implements Comparable {
       int n5 = 0;
       Object obj = null;
       int n6 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n5 = this.mag.length;
       n4 = n5 != 0 ? (n5 - 1 << 5) + bitLengthForInt(this.mag[0]) : 0;
       n6 = n4 + 7 >>> 3;
@@ -975,7 +882,6 @@ public class CustomBigInteger implements Comparable {
 
    private static int[] stripLeadingZeroBytes(byte[] bytes) {
       int n = 0;
-      getOpaqueStateTag();
       boolean flag = false;
       int n2 = 0;
       boolean flag2 = false;
@@ -1010,25 +916,19 @@ public class CustomBigInteger implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      CustomBigInteger customBigInteger = (CustomBigInteger)other;
-      return this.compareTo2(customBigInteger);
+      return this.compareTo2((CustomBigInteger)other);
    }
 
    private CustomBigInteger remainderKnuth(CustomBigInteger customBigInteger) {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       obj2 = new ShadedMutableBigInteger();
       obj = new ShadedMutableBigInteger(this.mag);
       obj3 = new ShadedMutableBigInteger(customBigInteger.mag);
       ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj3;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-      shadedMutableBigInteger = shadedMutableBigInteger.divideKnuth(shadedMutableBigInteger4, shadedMutableBigInteger3);
-      int signum2 = this.signum;
-      return shadedMutableBigInteger.toBigInteger(signum2);
+      shadedMutableBigInteger = shadedMutableBigInteger.divideKnuth((ShadedMutableBigInteger)obj3, (ShadedMutableBigInteger)obj2);
+      return shadedMutableBigInteger.toBigInteger(this.signum);
    }
 
    private static void reportOverflow() {
@@ -1037,28 +937,20 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger divideKnuth(CustomBigInteger customBigInteger) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       obj3 = new ShadedMutableBigInteger();
       obj2 = new ShadedMutableBigInteger(this.mag);
       obj = new ShadedMutableBigInteger(customBigInteger.mag);
       ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj2;
-      ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj3;
-      boolean flag = false;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger3;
-      ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger2;
-      shadedMutableBigInteger.divideKnuth(shadedMutableBigInteger5, shadedMutableBigInteger4, flag);
+      shadedMutableBigInteger.divideKnuth((ShadedMutableBigInteger)obj, (ShadedMutableBigInteger)obj3, false);
       shadedMutableBigInteger = (ShadedMutableBigInteger)obj3;
-      int n = this.signum * customBigInteger.signum;
-      return shadedMutableBigInteger.toBigInteger(n);
+      return shadedMutableBigInteger.toBigInteger(this.signum * customBigInteger.signum);
    }
 
    public byte[] toByteArray() {
       int n = 0;
       int n2 = 0;
-      getOpaqueStateTag();
       int n3 = 0;
       int n4 = 0;
       Object obj = null;
@@ -1074,9 +966,7 @@ public class CustomBigInteger implements Comparable {
             n3 >>>= 8;
             n4++;
          } else {
-            CustomBigInteger customBigInteger = this;
-            int n5 = i++;
-            n3 = customBigInteger.getInt(n5);
+            n3 = this.getInt(i++);
             n4 = 1;
          }
 
@@ -1088,7 +978,6 @@ public class CustomBigInteger implements Comparable {
 
    public boolean primeToCertainty(int n, Random rand) {
       int n2 = 0;
-      getOpaqueStateTag();
       int n3 = 0;
       int n4 = 0;
       n3 = (Math.min(n, 2147483646) + 1) / 2;
@@ -1107,20 +996,15 @@ public class CustomBigInteger implements Comparable {
          }
 
          n4 = n3 < n4 ? n3 : n4;
-         CustomBigInteger customBigInteger = this;
-         Random rand2 = rand;
-         return customBigInteger.passesMillerRabin(n4, rand2) && this.passesLucasLehmer();
+         return this.passesMillerRabin(n4, rand) && this.passesLucasLehmer();
       } else {
          int n5 = 50;
          n5 = n3 >= n5 ? n5 : n3;
-         CustomBigInteger customBigInteger2 = this;
-         Random rand3 = rand;
-         return customBigInteger2.passesMillerRabin(n5, rand3);
+         return this.passesMillerRabin(n5, rand);
       }
    }
 
    private static int[] materialize(int[] ints, int n) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (ints == null || ints.length < n) {
          ints = new int[n];
       }
@@ -1139,7 +1023,6 @@ public class CustomBigInteger implements Comparable {
       Object obj2 = null;
       boolean flag = false;
       int n3 = 0;
-      getOpaqueStateTag();
       long l6 = 0L;
       l6 = -6460699474741310234L ^ (long)"濫㑮ꠄ郒皩蚜௴㛫쎈頖紱\udb6e혡땚몂緦她놯༐㿊⼴넲劤棱椋".hashCode();
       if (l == 0L) {
@@ -1150,9 +1033,7 @@ public class CustomBigInteger implements Comparable {
             l6 = (l6 ^ 7851934417143578726L) + -6368622982919271548L;
             if (l == Long.MIN_VALUE) {
                l6 = l6 - -2446038088506576659L ^ -6527181092642334591L;
-               CustomBigInteger customBigInteger = this;
-               CustomBigInteger customBigInteger2 = valueOf(l);
-               return customBigInteger.multiply2(customBigInteger2);
+               return this.multiply2(valueOf(l));
             }
 
             l6 = (l6 ^ 5742479183066566923L) + -357701382391357658L;
@@ -1213,7 +1094,6 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger(char[] chars, int n, int n2) {
       super();
-      getOpaqueStateTag();
       int n3 = 0;
 
       while (n3 < n2 && Character.digit(chars[n3], 10) == 0) {
@@ -1246,16 +1126,11 @@ public class CustomBigInteger implements Comparable {
 
          int n7 = n5 - 1;
          int n8;
-         int n9 = n8 = n3 + n6;
-         ints[n7] = this.parseInt(chars, n3, n9);
+         ints[n7] = this.parseInt(chars, n3, n8 = n3 + n6);
 
          while (n8 < n2) {
-            int n10 = n8;
-            int n11 = n8 += digitsPerInt[10];
-            int n12 = n10;
-            int n13 = this.parseInt(chars, n12, n11);
-            int n14 = intRadix[10];
-            destructiveMulAdd(ints, n14, n13);
+            int n13 = this.parseInt(chars, n8, n8 += digitsPerInt[10]);
+            destructiveMulAdd(ints, intRadix[10], n13);
          }
 
          this.mag = trustedStripLeadingZeroInts(ints);
@@ -1266,12 +1141,10 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger min(CustomBigInteger customBigInteger) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return this.compareTo2(customBigInteger) < 0 ? this : customBigInteger;
    }
 
    public CustomBigInteger abs() {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return this.signum >= 0 ? this : this.negate();
    }
 
@@ -1279,7 +1152,6 @@ public class CustomBigInteger implements Comparable {
       long l = 0L;
       int n2 = 0;
       long l2 = 0L;
-      getOpaqueStateTag();
       long l3 = 0L;
       l3 = 229629092787153606L ^ (long)"\udddd緷抯拴剙\ueac8럏簐\ue3c5ꡰ℧圊\uebd9侠\uf5f5믃콠禽慵㢴\uecd3깅".hashCode();
       n2 = 0;
@@ -1316,7 +1188,6 @@ public class CustomBigInteger implements Comparable {
       boolean flag = false;
       Object obj = null;
       int n2 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
@@ -1333,7 +1204,6 @@ public class CustomBigInteger implements Comparable {
    }
 
    private static void implMontgomeryMultiplyChecks(int[] ints, int[] ints2, int[] ints3, int n, int[] ints4) throws RuntimeException {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n % 2 == 0) {
          if (n < 1) {
             throw new IllegalArgumentException("invalid input length: " + n);
@@ -1347,8 +1217,7 @@ public class CustomBigInteger implements Comparable {
 
    private static int[] implMontgomeryMultiply(int[] ints, int[] ints2, int[] ints3, int n, long l, int[] ints4) {
       ints4 = multiplyToLen(ints, n, ints2, n, ints4);
-      int n2 = (int)l;
-      return montReduce(ints4, ints3, n, n2);
+      return montReduce(ints4, ints3, n, (int)l);
    }
 
    public CustomBigInteger(int[] ints, int n) {
@@ -1362,7 +1231,6 @@ public class CustomBigInteger implements Comparable {
 
    public int bitLength() {
       int n = 0;
-      getOpaqueStateTag();
       int n2 = 0;
       Object obj = null;
       boolean flag = false;
@@ -1400,23 +1268,20 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       int n3 = 0;
       Object obj2 = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       obj = ONE;
       CustomBigInteger customBigInteger2 = this;
       obj2 = customBigInteger2.mod2(n);
       n3 = 0;
       n2 = customBigInteger.bitLength();
       customBigInteger2 = this;
-      byte b = 0;
-      if (customBigInteger2.testBit(b)) {
+      if (customBigInteger2.testBit((byte)0)) {
          n2 = n - 1 >= n2 ? n2 : n - 1;
       }
 
       while (n3 < n2) {
          if (customBigInteger.testBit(n3)) {
             customBigInteger2 = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger3 = (CustomBigInteger)obj2;
-            customBigInteger2 = customBigInteger2.multiply2(customBigInteger3);
+            customBigInteger2 = customBigInteger2.multiply2((CustomBigInteger)obj2);
             obj = customBigInteger2.mod2(n);
          }
 
@@ -1432,7 +1297,6 @@ public class CustomBigInteger implements Comparable {
    private static int[] stripLeadingZeroInts(int[] ints) {
       int n = 0;
       int n2 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n = ints.length;
       n2 = 0;
 
@@ -1452,19 +1316,13 @@ public class CustomBigInteger implements Comparable {
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       obj = new ShadedMutableBigInteger();
       ShadedMutableBigInteger shadedMutableBigInteger = new ShadedMutableBigInteger(this);
-      ShadedMutableBigInteger shadedMutableBigInteger2 = new ShadedMutableBigInteger(customBigInteger);
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger3;
-      ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger2;
-      obj2 = shadedMutableBigInteger.divideAndRemainderBurnikelZiegler(shadedMutableBigInteger5, shadedMutableBigInteger4);
+      obj2 = shadedMutableBigInteger.divideAndRemainderBurnikelZiegler(new ShadedMutableBigInteger(customBigInteger), (ShadedMutableBigInteger)obj);
       CustomBigInteger customBigInteger2;
       if (!((ShadedMutableBigInteger)obj).isZero()) {
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj;
-         int n = this.signum * customBigInteger.signum;
-         customBigInteger2 = shadedMutableBigInteger.toBigInteger(n);
+         customBigInteger2 = shadedMutableBigInteger.toBigInteger(this.signum * customBigInteger.signum);
       } else {
          customBigInteger2 = ZERO;
       }
@@ -1475,8 +1333,7 @@ public class CustomBigInteger implements Comparable {
          customBigInteger3 = ZERO;
       } else {
          shadedMutableBigInteger = (ShadedMutableBigInteger)obj2;
-         int signum2 = this.signum;
-         customBigInteger3 = shadedMutableBigInteger.toBigInteger(signum2);
+         customBigInteger3 = shadedMutableBigInteger.toBigInteger(this.signum);
       }
 
       obj3 = customBigInteger3;
@@ -1574,15 +1431,11 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger not() {
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       obj = new int[this.intLength()];
 
       for (int i = 0; i < ((int[])obj).length; i++) {
-         int[] ints = (int[])obj;
-         CustomBigInteger customBigInteger = this;
-         int n = ((int[])obj).length - i - 1;
-         ints[i] = ~customBigInteger.getInt(n);
+         ((int[])obj)[i] = ~this.getInt(((int[])obj).length - i - 1);
       }
 
       return valueOf2((int[])obj);
@@ -1590,7 +1443,6 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger nextProbablePrime() {
       Object obj = null;
-      getOpaqueStateTag();
       int n = 0;
       long l = 0L;
       Object obj2 = null;
@@ -1607,24 +1459,20 @@ public class CustomBigInteger implements Comparable {
          } else {
             l2 = (l2 ^ -2516122261737304148L) - 4536460740630707385L;
             CustomBigInteger customBigInteger = this;
-            CustomBigInteger customBigInteger2 = ONE;
-            if (!customBigInteger.equals(customBigInteger2)) {
+            if (!customBigInteger.equals(ONE)) {
                l2 = l2 - -5185581359047882191L ^ 2367408011365775094L;
                customBigInteger = this;
-               CustomBigInteger customBigInteger3 = ONE;
-               obj2 = customBigInteger.add2(customBigInteger3);
+               obj2 = customBigInteger.add2(ONE);
                l2 = l2 - 7206627573463470819L ^ 8313780117570102144L;
                if (((CustomBigInteger)obj2).bitLength() >= 95) {
                   l2 = (l2 ^ 1675128445216981172L) + -5382126396105085138L;
                   customBigInteger = (CustomBigInteger)obj2;
-                  byte b = 0;
-                  if (!customBigInteger.testBit(b)) {
+                  if (!customBigInteger.testBit((byte)0)) {
                      l2 = l2 - -4769306242118416468L ^ -3667191869455687237L;
                   } else {
                      l2 = (l2 ^ -4792100454391043225L) - 2405066147296412284L;
                      customBigInteger = (CustomBigInteger)obj2;
-                     CustomBigInteger customBigInteger4 = ONE;
-                     obj2 = customBigInteger.subtract(customBigInteger4);
+                     obj2 = customBigInteger.subtract(ONE);
                      l2 = (l2 ^ -3402456919329072575L) - -4926098273235102117L;
                   }
 
@@ -1634,12 +1482,7 @@ public class CustomBigInteger implements Comparable {
                   while (true) {
                      obj = new PrimeBitSieve((CustomBigInteger)obj2, n);
                      l2 = (l2 ^ 5834496939486698261L) + 6055870793441547214L;
-                     PrimeBitSieve primeBitSieve = (PrimeBitSieve)obj;
-                     CustomBigInteger customBigInteger5 = (CustomBigInteger)obj2;
-                     Object obj4 = null;
-                     byte b2 = 100;
-                     CustomBigInteger customBigInteger6 = customBigInteger5;
-                     obj3 = primeBitSieve.retrieve(customBigInteger6, b2, (Random)obj4);
+                     obj3 = ((PrimeBitSieve)obj).retrieve((CustomBigInteger)obj2, (byte)100, (Random)null);
                      l2 = (l2 ^ -2198062454194234124L) - 8086229052485558479L;
                      if ((CustomBigInteger)obj3 != null) {
                         l2 = l2 + -8275227020085402456L ^ -2890168419806319278L;
@@ -1648,8 +1491,7 @@ public class CustomBigInteger implements Comparable {
 
                      l2 = (l2 ^ 1010580658101022752L) - -1204876248165915141L;
                      customBigInteger = (CustomBigInteger)obj2;
-                     CustomBigInteger customBigInteger7 = valueOf((long)(2 * n));
-                     obj2 = customBigInteger.add2(customBigInteger7);
+                     obj2 = customBigInteger.add2(valueOf((long)(2 * n)));
                      l2 = l2 - -2269165682368058594L ^ -3433638230985448170L;
                      l2 = (l2 ^ 6713390364285488257L) - -9108635218605819888L;
                   }
@@ -1657,14 +1499,12 @@ public class CustomBigInteger implements Comparable {
 
                l2 = (l2 ^ 7223124733986542810L) + -7470562948860177782L;
                customBigInteger = (CustomBigInteger)obj2;
-               byte b3 = 0;
-               if (customBigInteger.testBit(b3)) {
+               if (customBigInteger.testBit((byte)0)) {
                   l2 = (l2 ^ 5570802602461623122L) - -4498063795859805110L;
                } else {
                   l2 = (l2 ^ 6013098401682785120L) - 8443276199392400511L;
                   customBigInteger = (CustomBigInteger)obj2;
-                  CustomBigInteger customBigInteger8 = ONE;
-                  obj2 = customBigInteger.add2(customBigInteger8);
+                  obj2 = customBigInteger.add2(ONE);
                   l2 = l2 - 8043014133033061445L ^ -639657273611279224L;
                }
 
@@ -1677,8 +1517,7 @@ public class CustomBigInteger implements Comparable {
 
                      l2 = (l2 ^ -2707609198627166641L) + -3448717579860044592L;
                      customBigInteger = (CustomBigInteger)obj2;
-                     CustomBigInteger customBigInteger9 = SMALL_PRIME_PRODUCT;
-                     l = customBigInteger.remainder(customBigInteger9).longValue();
+                     l = customBigInteger.remainder(SMALL_PRIME_PRODUCT).longValue();
                      l2 = (l2 ^ 7241998563294424600L) + 2804513173275908681L;
                      if (l % 3L == 0L) {
                         l2 = l2 + 3446692990268405237L ^ -4717044137293373717L;
@@ -1743,8 +1582,7 @@ public class CustomBigInteger implements Comparable {
                      }
 
                      customBigInteger = (CustomBigInteger)obj2;
-                     CustomBigInteger customBigInteger10 = TWO;
-                     obj2 = customBigInteger.add2(customBigInteger10);
+                     obj2 = customBigInteger.add2(TWO);
                      l2 = (l2 ^ -8170611562192461252L) + 6711690782577839212L;
                      l2 = l2 - 8961757964211414498L ^ 8522175016174241068L;
                   }
@@ -1756,17 +1594,14 @@ public class CustomBigInteger implements Comparable {
 
                   l2 = (l2 ^ 7894722810051679415L) + 5107851734129695915L;
                   customBigInteger = (CustomBigInteger)obj2;
-                  Object obj5 = null;
-                  byte b4 = 100;
-                  if (customBigInteger.primeToCertainty(b4, (Random)obj5)) {
+                  if (customBigInteger.primeToCertainty((byte)100, (Random)null)) {
                      l2 = l2 - -3303406153938353584L ^ 1348366799722769486L;
                      return (CustomBigInteger)obj2;
                   }
 
                   l2 = (l2 ^ -6186326948656422030L) - -2800041517245985555L;
                   customBigInteger = (CustomBigInteger)obj2;
-                  CustomBigInteger customBigInteger11 = TWO;
-                  obj2 = customBigInteger.add2(customBigInteger11);
+                  obj2 = customBigInteger.add2(TWO);
                   l2 = l2 - 8563108411374013162L ^ -2735285905162788181L;
                   l2 = l2 - -956407928713909540L ^ -5112361354753755795L;
                }
@@ -1781,7 +1616,6 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger(int n, int[] ints) {
       super();
-      getOpaqueStateTag();
       this.mag = stripLeadingZeroInts(ints);
       if (n >= -1 && n <= 1) {
          if (this.mag.length == 0) {
@@ -1804,7 +1638,6 @@ public class CustomBigInteger implements Comparable {
 
    public long longValue() {
       long l = 0L;
-      getOpaqueStateTag();
       boolean flag = false;
       l = 0L;
 
@@ -1819,7 +1652,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       boolean flag = false;
       int n = 0;
-      getOpaqueStateTag();
       Object obj2 = null;
       int n2 = 0;
       long l2 = 0L;
@@ -1900,13 +1732,11 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger multiply2(CustomBigInteger customBigInteger) {
-      boolean flag = false;
-      return this.multiply(customBigInteger, flag);
+      return this.multiply(customBigInteger, false);
    }
 
    public CustomBigInteger add(long l) {
       int n = 0;
-      getOpaqueStateTag();
       Object obj = null;
       long l2 = 0L;
       l2 = 1044750515939055580L ^ (long)"ோ雜褮뮤䴡ំ馄ﲢ\uef1d⌴뗕\uedabӕ쀺҆\u0c5fᙳ\ud852璨鑸ᜌࠩ\uf1a9ꏚ鿎".hashCode();
@@ -1926,9 +1756,7 @@ public class CustomBigInteger implements Comparable {
                      ints = subtract2(Math.abs(l), this.mag);
                   } else {
                      l2 = l2 - 1322009190205014072L ^ 4529513473929066619L;
-                     int[] mag2 = this.mag;
-                     long l3 = Math.abs(l);
-                     ints = subtract3(mag2, l3);
+                     ints = subtract3(this.mag, Math.abs(l));
                   }
 
                   obj = ints;
@@ -1958,7 +1786,6 @@ public class CustomBigInteger implements Comparable {
       boolean flag = false;
       int n2 = 0;
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
       } else {
@@ -1977,30 +1804,24 @@ public class CustomBigInteger implements Comparable {
    private static CustomBigInteger largePrime(int n, int n2, Random rand) {
       Object obj = null;
       Object obj2 = null;
-      getOpaqueStateTag();
       int n3 = 0;
       Object obj3 = null;
       CustomBigInteger customBigInteger = new CustomBigInteger(n, rand);
-      int n4 = n - 1;
-      obj = customBigInteger.setBit(n4);
+      obj = customBigInteger.setBit(n - 1);
       ((CustomBigInteger)obj).mag[((int[])((CustomBigInteger)obj).mag).length - 1] = ((CustomBigInteger)obj).mag[((int[])((CustomBigInteger)obj).mag).length - 1]
          & -2;
       n3 = getPrimeSearchLen(n);
       obj3 = new PrimeBitSieve((CustomBigInteger)obj, n3);
       PrimeBitSieve primeBitSieve = (PrimeBitSieve)obj3;
       CustomBigInteger customBigInteger2 = (CustomBigInteger)obj;
-      Random rand2 = rand;
-      CustomBigInteger customBigInteger3 = customBigInteger2;
-      obj2 = primeBitSieve.retrieve(customBigInteger3, n2, rand2);
+      obj2 = primeBitSieve.retrieve(customBigInteger2, n2, rand);
 
       while ((CustomBigInteger)obj2 == null || ((CustomBigInteger)obj2).bitLength() != n) {
          customBigInteger = (CustomBigInteger)obj;
-         CustomBigInteger customBigInteger4 = valueOf((long)(2 * n3));
-         obj = customBigInteger.add2(customBigInteger4);
+         obj = customBigInteger.add2(valueOf((long)(2 * n3)));
          if (((CustomBigInteger)obj).bitLength() != n) {
             customBigInteger = new CustomBigInteger(n, rand);
-            int n5 = n - 1;
-            obj = customBigInteger.setBit(n5);
+            obj = customBigInteger.setBit(n - 1);
          }
 
          ((CustomBigInteger)obj).mag[((int[])((CustomBigInteger)obj).mag).length - 1] = ((CustomBigInteger)obj).mag[((int[])((CustomBigInteger)obj).mag).length - 1]
@@ -2008,9 +1829,7 @@ public class CustomBigInteger implements Comparable {
          obj3 = new PrimeBitSieve((CustomBigInteger)obj, n3);
          PrimeBitSieve primeBitSieve2 = (PrimeBitSieve)obj3;
          customBigInteger2 = (CustomBigInteger)obj;
-         Random rand3 = rand;
-         CustomBigInteger customBigInteger5 = customBigInteger2;
-         obj2 = primeBitSieve2.retrieve(customBigInteger5, n2, rand3);
+         obj2 = primeBitSieve2.retrieve(customBigInteger2, n2, rand);
       }
 
       return (CustomBigInteger)obj2;
@@ -2018,19 +1837,14 @@ public class CustomBigInteger implements Comparable {
 
    public int compareTo2(CustomBigInteger customBigInteger) {
       int n = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.signum != customBigInteger.signum) {
          return this.signum <= customBigInteger.signum ? -1 : 1;
       } else {
          n = this.signum;
          if (n == -1) {
-            CustomBigInteger customBigInteger2 = customBigInteger;
-            CustomBigInteger customBigInteger3 = this;
-            return customBigInteger2.compareMagnitude(customBigInteger3);
+            return customBigInteger.compareMagnitude(this);
          } else if (n == 1) {
-            CustomBigInteger customBigInteger4 = this;
-            CustomBigInteger customBigInteger5 = customBigInteger;
-            return customBigInteger4.compareMagnitude(customBigInteger5);
+            return this.compareMagnitude(customBigInteger);
          } else {
             return 0;
          }
@@ -2038,12 +1852,10 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger shiftRight(int n) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.signum != 0) {
          if (n <= 0) {
             if (n != 0) {
-               int n2 = -n;
-               return new CustomBigInteger(shiftLeft(this.mag, n2), this.signum);
+               return new CustomBigInteger(shiftLeft(this.mag, -n), this.signum);
             } else {
                return this;
             }
@@ -2061,7 +1873,6 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger(int[] ints) {
       super();
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (ints.length == 0) {
          throw new NumberFormatException("Zero length BigInteger");
       } else {
@@ -2081,21 +1892,16 @@ public class CustomBigInteger implements Comparable {
 
    public boolean isProbablePrime(int n) {
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n > 0) {
          obj = this.abs();
          CustomBigInteger customBigInteger = (CustomBigInteger)obj;
-         CustomBigInteger customBigInteger2 = TWO;
-         if (!customBigInteger.equals(customBigInteger2)) {
+         if (!customBigInteger.equals(TWO)) {
             customBigInteger = (CustomBigInteger)obj;
-            byte b = 0;
-            if (customBigInteger.testBit(b)) {
+            if (customBigInteger.testBit((byte)0)) {
                customBigInteger = (CustomBigInteger)obj;
-               CustomBigInteger customBigInteger3 = ONE;
-               if (!customBigInteger.equals(customBigInteger3)) {
+               if (!customBigInteger.equals(ONE)) {
                   customBigInteger = (CustomBigInteger)obj;
-                  Object obj2 = null;
-                  return customBigInteger.primeToCertainty(n, (Random)obj2);
+                  return customBigInteger.primeToCertainty(n, (Random)null);
                }
             }
 
@@ -2110,7 +1916,6 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger(byte[] bytes, int n) {
       super();
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       this.signum = bytes.length == 0 ? 0 : n;
       this.mag = stripLeadingZeroBytes(bytes);
       if (this.mag.length >= 67108864) {
@@ -2123,7 +1928,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       int n2 = 0;
       int n3 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.signum != 0 && this.signum != 0) {
          n = this.mag.length;
          if (customBigInteger == this && n > 20) {
@@ -2139,16 +1943,13 @@ public class CustomBigInteger implements Comparable {
                   int n5 = this.mag[0];
                   return multiplyByInt(customBigInteger.mag, n5, n2);
                } else {
-                  Object obj2 = null;
                   int[] mag2 = customBigInteger.mag;
-                  obj = multiplyToLen(this.mag, n, mag2, n3, (int[])obj2);
+                  obj = multiplyToLen(this.mag, n, mag2, n3, (int[])null);
                   obj = trustedStripLeadingZeroInts((int[])obj);
                   return new CustomBigInteger((int[])obj, n2);
                }
             } else if (n < 240 && n3 < 240) {
-               CustomBigInteger customBigInteger2 = this;
-               CustomBigInteger customBigInteger3 = customBigInteger;
-               return multiplyKaratsuba(customBigInteger2, customBigInteger3);
+               return multiplyKaratsuba(this, customBigInteger);
             } else {
                if (!flag) {
                   int length = this.mag.length;
@@ -2159,9 +1960,7 @@ public class CustomBigInteger implements Comparable {
                   }
                }
 
-               CustomBigInteger customBigInteger4 = this;
-               CustomBigInteger customBigInteger5 = customBigInteger;
-               return multiplyToomCook3(customBigInteger4, customBigInteger5);
+               return multiplyToomCook3(this, customBigInteger);
             }
          }
       } else {
@@ -2175,53 +1974,34 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger or(CustomBigInteger customBigInteger) {
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       obj = new int[Math.max(this.intLength(), customBigInteger.intLength())];
 
       for (int i = 0; i < ((int[])obj).length; i++) {
-         int[] ints = (int[])obj;
-         CustomBigInteger customBigInteger2 = this;
-         int n = ((int[])obj).length - i - 1;
-         int n2 = customBigInteger2.getInt(n);
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         int n3 = ((int[])obj).length - i - 1;
-         ints[i] = n2 | customBigInteger3.getInt(n3);
+         ((int[])obj)[i] = this.getInt(((int[])obj).length - i - 1) | customBigInteger.getInt(((int[])obj).length - i - 1);
       }
 
       return valueOf2((int[])obj);
    }
 
    private static int[] montgomerySquare(int[] ints, int[] ints2, int n, long l, int[] ints3) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       int[] ints4 = ints;
       int[] ints5 = ints;
-      int[] ints6 = ints2;
-      int[] ints7 = ints3;
-      int[] ints8 = ints6;
-      int[] ints9 = ints5;
-      implMontgomeryMultiplyChecks(ints4, ints9, ints8, n, ints7);
+      implMontgomeryMultiplyChecks(ints4, ints5, ints2, n, ints3);
       if (n <= 512) {
-         int[] ints10 = ints;
          ints5 = ints2;
-         int[] ints11 = materialize(ints3, n);
-         int[] ints12 = ints5;
-         return implMontgomerySquare(ints10, ints12, n, l, ints11);
+         return implMontgomerySquare(ints, ints5, n, l, materialize(ints3, n));
       } else {
          int[] ints13 = ints;
-         int[] ints14 = ints3;
-         ints3 = squareToLen(ints13, n, ints14);
+         ints3 = squareToLen(ints13, n, ints3);
          ints4 = ints3;
          ints13 = ints2;
-         int n2 = (int)l;
-         int[] ints15 = ints13;
-         return montReduce(ints4, ints15, n, n2);
+         return montReduce(ints4, ints13, n, (int)l);
       }
    }
 
    private static CustomBigInteger smallPrime(int n, int n2, Random rand) {
       long l = 0L;
-      getOpaqueStateTag();
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
@@ -2269,9 +2049,7 @@ public class CustomBigInteger implements Comparable {
             l2 = (l2 ^ 4826403150926858456L) - 613257860930103442L;
          } else {
             l2 = l2 + 2651124990663043471L ^ -1539515173904160004L;
-            CustomBigInteger customBigInteger = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger2 = SMALL_PRIME_PRODUCT;
-            l = customBigInteger.remainder(customBigInteger2).longValue();
+            l = ((CustomBigInteger)obj).remainder(SMALL_PRIME_PRODUCT).longValue();
             l2 = (l2 ^ -6129952114735484187L) - -3911329928906187147L;
             if (l % 3L == 0L) {
                l2 = l2 - -2876230499824025006L ^ -8135242959778714223L;
@@ -2354,9 +2132,7 @@ public class CustomBigInteger implements Comparable {
          }
 
          l2 = l2 + 4059861760267510291L ^ 224742660267746654L;
-         CustomBigInteger customBigInteger3 = (CustomBigInteger)obj;
-         Random rand2 = rand;
-         if (customBigInteger3.primeToCertainty(n2, rand2)) {
+         if (((CustomBigInteger)obj).primeToCertainty(n2, rand)) {
             l2 = l2 - 2508731453031037321L ^ 4445762874520615420L;
             return (CustomBigInteger)obj;
          }
@@ -2370,7 +2146,6 @@ public class CustomBigInteger implements Comparable {
       boolean flag = false;
       int n = 0;
       int n2 = 0;
-      getOpaqueStateTag();
       Object obj = null;
       long l2 = 0L;
       long l3 = 0L;
@@ -2399,9 +2174,8 @@ public class CustomBigInteger implements Comparable {
          l3 = (l3 ^ 4055456744833341134L) + 8906984329344930471L;
       } else {
          l3 = l3 - 5752834001341766480L ^ 5569757605701326435L;
-         int[] ints3 = ints;
          n--;
-         l2 = ((long)ints3[n] & 4294967295L) - l;
+         l2 = ((long)ints[n] & 4294967295L) - l;
          l3 = l3 - -5388777569251868728L ^ 3605811911537406628L;
          ((int[])obj)[n] = (int)l2;
          l3 = (l3 ^ 6219115938531895968L) - 3000277676175597021L;
@@ -2435,7 +2209,6 @@ public class CustomBigInteger implements Comparable {
    public CustomBigInteger clearBit(int n) {
       int n2 = 0;
       Object obj = null;
-      getOpaqueStateTag();
       boolean flag = false;
       if (n < 0) {
          throw new ArithmeticException("Negative bit address");
@@ -2454,7 +2227,6 @@ public class CustomBigInteger implements Comparable {
 
    public int bitCount(byte b, int n, int n2) {
       int n3 = 0;
-      getOpaqueStateTag();
       int n4 = 0;
       int n5 = 0;
       n3 = this.bitCountPlusOne - 1;
@@ -2520,7 +2292,6 @@ public class CustomBigInteger implements Comparable {
 
    public static int addOne(int[] ints, int n, int n2, int n3) {
       long l = 0L;
-      getOpaqueStateTag();
       long l2 = 0L;
       l2 = 4290260544061868583L ^ (long)"暾\u0b0eຫ鲁둺哕⇉ƫ댾◩⫑快㝹訰鯧棣럍슒\ue9ea\ud7ae㳇≉醏범\u0bc5ﰢ쥺ꃮ䋥".hashCode();
       n = ints.length - 1 - n2 - n;
@@ -2566,7 +2337,6 @@ public class CustomBigInteger implements Comparable {
 
    private static int jacobiSymbol(int n, CustomBigInteger customBigInteger) {
       int n2 = 0;
-      getOpaqueStateTag();
       int n3 = 0;
       int n4 = 0;
       if (n == 0) {
@@ -2600,10 +2370,7 @@ public class CustomBigInteger implements Comparable {
                n3 = -n3;
             }
 
-            CustomBigInteger customBigInteger2 = customBigInteger;
-            CustomBigInteger customBigInteger3 = valueOf((long)n);
-            CustomBigInteger customBigInteger4 = customBigInteger3;
-            n2 = customBigInteger2.mod(customBigInteger4).intValue();
+            n2 = customBigInteger.mod(valueOf((long)n)).intValue();
 
             while (n2 != 0) {
                while ((n2 & 3) == 0) {
@@ -2638,11 +2405,8 @@ public class CustomBigInteger implements Comparable {
    }
 
    public boolean testBit(int n) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n >= 0) {
-         CustomBigInteger customBigInteger = this;
-         int n2 = n >>> 5;
-         return (customBigInteger.getInt(n2) & 1 << (n & 31)) != 0;
+         return (this.getInt(n >>> 5) & 1 << (n & 31)) != 0;
       } else {
          throw new ArithmeticException("Negative bit address");
       }
@@ -2654,61 +2418,43 @@ public class CustomBigInteger implements Comparable {
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n = (this.mag.length + 1) / 2;
       obj4 = this.getLower(n);
       obj2 = this.getUpper(n);
       obj3 = ((CustomBigInteger)obj2).square();
       obj = ((CustomBigInteger)obj4).square();
       CustomBigInteger customBigInteger = (CustomBigInteger)obj3;
-      int n2 = n * 32;
-      customBigInteger = customBigInteger.shiftLeft(n2);
+      customBigInteger = customBigInteger.shiftLeft(n * 32);
       CustomBigInteger customBigInteger2 = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger3 = (CustomBigInteger)obj2;
-      customBigInteger2 = customBigInteger2.add2(customBigInteger3).square();
-      CustomBigInteger customBigInteger4 = (CustomBigInteger)obj3;
-      CustomBigInteger customBigInteger5 = (CustomBigInteger)obj;
-      CustomBigInteger customBigInteger6 = customBigInteger4.add2(customBigInteger5);
-      CustomBigInteger customBigInteger7 = customBigInteger2.subtract(customBigInteger6);
-      customBigInteger = customBigInteger.add2(customBigInteger7);
-      int n3 = n * 32;
-      customBigInteger = customBigInteger.shiftLeft(n3);
-      CustomBigInteger customBigInteger8 = (CustomBigInteger)obj;
-      return customBigInteger.add2(customBigInteger8);
+      customBigInteger2 = customBigInteger2.add2((CustomBigInteger)obj2).square();
+      customBigInteger = customBigInteger.add2(customBigInteger2.subtract(((CustomBigInteger)obj3).add2((CustomBigInteger)obj)));
+      customBigInteger = customBigInteger.shiftLeft(n * 32);
+      return customBigInteger.add2((CustomBigInteger)obj);
    }
 
    public CustomBigInteger max(CustomBigInteger customBigInteger) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return this.compareTo2(customBigInteger) > 0 ? this : customBigInteger;
    }
 
    private boolean passesLucasLehmer() {
       Object obj = null;
-      getOpaqueStateTag();
       int n = 0;
       Object obj2 = null;
       CustomBigInteger customBigInteger = this;
-      CustomBigInteger customBigInteger2 = ONE;
-      obj2 = customBigInteger.add2(customBigInteger2);
+      obj2 = customBigInteger.add2(ONE);
       n = 5;
 
       while (jacobiSymbol(n, this) != -1) {
          n = n >= 0 ? -(n + 2) : Math.abs(n) + 2;
       }
 
-      CustomBigInteger customBigInteger3 = (CustomBigInteger)obj2;
-      CustomBigInteger customBigInteger4 = this;
-      obj = lucasLehmerSequence(n, customBigInteger3, customBigInteger4);
+      obj = lucasLehmerSequence(n, (CustomBigInteger)obj2, this);
       customBigInteger = (CustomBigInteger)obj;
-      CustomBigInteger customBigInteger5 = this;
-      CustomBigInteger customBigInteger6 = customBigInteger5;
-      customBigInteger = customBigInteger.mod(customBigInteger6);
-      CustomBigInteger customBigInteger7 = ZERO;
-      return customBigInteger.equals(customBigInteger7);
+      customBigInteger = customBigInteger.mod(this);
+      return customBigInteger.equals(ZERO);
    }
 
    private static void implSquareToLenChecks(int[] ints, int n, int[] ints2, int n2) throws RuntimeException {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n >= 1) {
          if (n <= ints.length) {
             if (n * 2 <= ints2.length) {
@@ -2731,21 +2477,15 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger divide(CustomBigInteger customBigInteger) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.mag.length >= 80 && this.mag.length - customBigInteger.mag.length >= 40) {
-         CustomBigInteger customBigInteger2 = this;
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         return customBigInteger2.divideBurnikelZiegler(customBigInteger3);
+         return this.divideBurnikelZiegler(customBigInteger);
       } else {
-         CustomBigInteger customBigInteger4 = this;
-         CustomBigInteger customBigInteger5 = customBigInteger;
-         return customBigInteger4.divideKnuth(customBigInteger5);
+         return this.divideKnuth(customBigInteger);
       }
    }
 
    private static int getPrimeSearchLen(int n) {
       long l = 0L;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       l = 1668624293547879246L ^ (long)"萢ᒹ尴Ԙⶁ꣨猯纹轤⏃늹窦䟮뽮\u20c2펐ꌛ\ue3b8籿帠挭蓞ഔ".hashCode();
       if (n <= 500000001) {
          l = (l ^ 5132638716948668100L) - 4944514012641618026L;
@@ -2758,7 +2498,6 @@ public class CustomBigInteger implements Comparable {
 
    private CustomBigInteger oddModPow(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2) {
       long l = 0L;
-      getOpaqueStateTag();
       int n = 0;
       int n2 = 0;
       Object obj = null;
@@ -2786,9 +2525,7 @@ public class CustomBigInteger implements Comparable {
       int n10 = 0;
       Object obj13 = null;
       Object obj14 = null;
-      CustomBigInteger customBigInteger3 = customBigInteger;
-      CustomBigInteger customBigInteger4 = ONE;
-      if (customBigInteger3.equals(customBigInteger4)) {
+      if (customBigInteger.equals(ONE)) {
          return this;
       } else if (this.signum != 0) {
          obj10 = (int[])this.mag.clone();
@@ -2820,23 +2557,13 @@ public class CustomBigInteger implements Comparable {
 
          l2 = ((long)((int[])obj7)[n5 - 1] & 4294967295L) + (((long)((int[])obj7)[n5 - 2] & 4294967295L) << 32);
          l = -ShadedMutableBigInteger.inverseMod64(l2);
-         int[] ints = (int[])obj10;
-         int length2 = ((int[])obj10).length;
-         int n11 = n5 << 5;
-         int n12 = length2;
-         obj14 = leftShift(ints, n12, n11);
+         obj14 = leftShift((int[])obj10, ((int[])obj10).length, n5 << 5);
          obj9 = new ShadedMutableBigInteger();
          obj3 = new ShadedMutableBigInteger((int[])obj14);
          obj8 = new ShadedMutableBigInteger((int[])obj7);
          ((ShadedMutableBigInteger)obj8).normalize();
-         ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj3;
-         ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj8;
-         ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj9;
-         ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-         obj5 = shadedMutableBigInteger.divide2(shadedMutableBigInteger4, shadedMutableBigInteger3);
-         int[][] intsArr = (int[][])obj6;
-         ShadedMutableBigInteger shadedMutableBigInteger5 = (ShadedMutableBigInteger)obj5;
-         intsArr[0] = shadedMutableBigInteger5.toIntArray();
+         obj5 = ((ShadedMutableBigInteger)obj3).divide2((ShadedMutableBigInteger)obj8, (ShadedMutableBigInteger)obj9);
+         ((int[][])obj6)[0] = ((ShadedMutableBigInteger)obj5).toIntArray();
          if (((int[][])obj6)[0].length < n5) {
             n3 = n5 - ((int[][])obj6)[0].length;
             obj = new int[n5];
@@ -2844,22 +2571,11 @@ public class CustomBigInteger implements Comparable {
             ((int[][])obj6)[0] = (int[])obj;
          }
 
-         int[] ints2 = ((int[][])obj6)[0];
-         int[] ints3 = (int[])obj7;
-         Object obj15 = null;
-         int[] ints4 = ints3;
-         obj2 = montgomerySquare(ints2, ints4, n5, l, (int[])obj15);
+         obj2 = montgomerySquare(((int[][])obj6)[0], (int[])obj7, n5, l, (int[])null);
          obj = Arrays.copyOf((int[])obj2, n5);
 
          for (int j = 1; j < n6; j++) {
-            int[][] intsArr2 = (int[][])obj6;
-            int[] ints5 = (int[])obj;
-            int[] ints6 = ((int[][])obj6)[j - 1];
-            int[] ints7 = (int[])obj7;
-            Object obj16 = null;
-            int[] ints8 = ints7;
-            int[] ints9 = ints6;
-            intsArr2[j] = montgomeryMultiply(ints5, ints9, ints8, n5, l, (int[])obj16);
+            ((int[][])obj6)[j] = montgomeryMultiply((int[])obj, ((int[][])obj6)[j - 1], (int[])obj7, n5, l, (int[])null);
          }
 
          n10 = 1 << (n8 - 1 & 31);
@@ -2918,13 +2634,7 @@ public class CustomBigInteger implements Comparable {
                   flag2 = false;
                } else {
                   obj = (int[])obj2;
-                  int[] ints10 = (int[])obj;
-                  int[] ints11 = (int[])obj4;
-                  int[] ints12 = (int[])obj7;
-                  int[] ints13 = (int[])obj14;
-                  int[] ints14 = ints12;
-                  int[] ints15 = ints11;
-                  obj14 = montgomeryMultiply(ints10, ints15, ints14, n5, l, ints13);
+                  obj14 = montgomeryMultiply((int[])obj, (int[])obj4, (int[])obj7, n5, l, (int[])obj14);
                   obj = (int[])obj14;
                   obj14 = (int[])obj2;
                   obj2 = (int[])obj;
@@ -2934,22 +2644,14 @@ public class CustomBigInteger implements Comparable {
             if (n8 == 0) {
                obj11 = new int[2 * n5];
                System.arraycopy((int[])obj2, 0, (int[])obj11, n5, n5);
-               int[] ints16 = (int[])obj11;
-               int[] ints17 = (int[])obj7;
-               int n13 = (int)l;
-               int[] ints18 = ints17;
-               obj2 = montReduce(ints16, ints18, n5, n13);
+               obj2 = montReduce((int[])obj11, (int[])obj7, n5, (int)l);
                obj11 = Arrays.copyOf((int[])obj2, n5);
                return new CustomBigInteger(1, (int[])obj11);
             }
 
             if (!flag2) {
                obj = (int[])obj2;
-               int[] ints19 = (int[])obj;
-               int[] ints20 = (int[])obj7;
-               int[] ints21 = (int[])obj14;
-               int[] ints22 = ints20;
-               obj14 = montgomerySquare(ints19, ints22, n5, l, ints21);
+               obj14 = montgomerySquare((int[])obj, (int[])obj7, n5, l, (int[])obj14);
                obj = (int[])obj14;
                obj14 = (int[])obj2;
                obj2 = (int[])obj;
@@ -2966,7 +2668,6 @@ public class CustomBigInteger implements Comparable {
       int n2 = 0;
       int n3 = 0;
       Object obj2 = null;
-      getOpaqueStateTag();
       int n4 = 0;
       int n5 = 0;
       long l = 0L;
@@ -3025,16 +2726,12 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger mod(CustomBigInteger customBigInteger) {
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.signum > 0) {
          CustomBigInteger customBigInteger2 = this;
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         CustomBigInteger customBigInteger4 = customBigInteger3;
-         obj = customBigInteger2.remainder(customBigInteger4);
+         obj = customBigInteger2.remainder(customBigInteger);
          if (((CustomBigInteger)obj).signum < 0) {
             customBigInteger2 = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger5 = customBigInteger;
-            customBigInteger2 = customBigInteger2.add2(customBigInteger5);
+            customBigInteger2 = customBigInteger2.add2(customBigInteger);
          } else {
             customBigInteger2 = (CustomBigInteger)obj;
          }
@@ -3046,39 +2743,25 @@ public class CustomBigInteger implements Comparable {
    }
 
    private static int[] montgomeryMultiply(int[] ints, int[] ints2, int[] ints3, int n, long l, int[] ints4) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       int[] ints5 = ints;
       int[] ints6 = ints2;
       int[] ints7 = ints3;
-      int[] ints8 = ints4;
-      int[] ints9 = ints7;
-      int[] ints10 = ints6;
-      implMontgomeryMultiplyChecks(ints5, ints10, ints9, n, ints8);
+      implMontgomeryMultiplyChecks(ints5, ints6, ints7, n, ints4);
       if (n <= 512) {
          ints5 = ints;
-         int[] ints11 = ints2;
          ints6 = ints3;
-         int[] ints12 = materialize(ints4, n);
-         int[] ints13 = ints6;
-         int[] ints14 = ints11;
-         return implMontgomeryMultiply(ints5, ints14, ints13, n, l, ints12);
+         return implMontgomeryMultiply(ints5, ints2, ints6, n, l, materialize(ints4, n));
       } else {
          ints5 = ints;
          ints7 = ints2;
-         int[] ints15 = ints4;
-         int[] ints16 = ints7;
-         ints4 = multiplyToLen(ints5, n, ints16, n, ints15);
+         ints4 = multiplyToLen(ints5, n, ints7, n, ints4);
          ints5 = ints4;
-         int[] ints17 = ints3;
-         int n2 = (int)l;
-         int[] ints18 = ints17;
-         return montReduce(ints5, ints18, n, n2);
+         return montReduce(ints5, ints3, n, (int)l);
       }
    }
 
    public String toString(int n) {
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.signum == 0) {
          return "0";
       } else {
@@ -3089,17 +2772,9 @@ public class CustomBigInteger implements Comparable {
          if (this.mag.length > 20) {
             obj = new StringBuilder();
             if (this.signum >= 0) {
-               CustomBigInteger customBigInteger = this;
-               StringBuilder sb = (StringBuilder)obj;
-               byte b = 0;
-               StringBuilder sb2 = sb;
-               toString(customBigInteger, sb2, n, b);
+               toString(this, (StringBuilder)obj, n, (byte)0);
             } else {
-               CustomBigInteger customBigInteger2 = this.negate();
-               StringBuilder sb3 = (StringBuilder)obj;
-               byte b2 = 0;
-               StringBuilder sb4 = sb3;
-               toString(customBigInteger2, sb4, n, b2);
+               toString(this.negate(), (StringBuilder)obj, n, (byte)0);
                ((StringBuilder)obj).insert(0, '-');
             }
 
@@ -3143,13 +2818,10 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger shiftLeft(int n) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.signum != 0) {
          if (n <= 0) {
             if (n != 0) {
-               CustomBigInteger customBigInteger = this;
-               int n2 = -n;
-               return customBigInteger.shiftRightImpl(n2);
+               return this.shiftRightImpl(-n);
             } else {
                return this;
             }
@@ -3163,18 +2835,14 @@ public class CustomBigInteger implements Comparable {
 
    public int intValue() {
       boolean flag = false;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       flag = false;
-      CustomBigInteger customBigInteger = this;
-      byte b = 0;
-      return customBigInteger.getInt(b);
+      return this.getInt((byte)0);
    }
 
    private static CustomBigInteger multiplyByInt(int[] ints, int n, int n2) {
       int n3 = 0;
       long l = 0L;
       int n4 = 0;
-      getOpaqueStateTag();
       int n5 = 0;
       long l2 = 0L;
       Object obj = null;
@@ -3183,9 +2851,8 @@ public class CustomBigInteger implements Comparable {
       l4 = 6704258610777304508L ^ (long)"\ud7ac禚歮쟌\ueecb塯Ὥꓫ\uf225ﷇ↽铽\uf0c4\ue489맃範恰晲㣃\uedda낐뽷⒴꣙뺦㢐\ue676".hashCode();
       if (Integer.bitCount(n) == 1) {
          l4 = (l4 ^ 8603093930366330109L) - 7435126483041251787L;
-         int[] ints2 = ints;
          int n6 = Integer.numberOfTrailingZeros(n);
-         return new CustomBigInteger(shiftLeft(ints2, n6), n2);
+         return new CustomBigInteger(shiftLeft(ints, n6), n2);
       } else {
          l4 = l4 - -5924726146020576580L ^ 4249996684370731310L;
          n3 = ints.length;
@@ -3234,7 +2901,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       int n2 = 0;
       int n3 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.bitLength() > n) {
          n2 = n + 31 >>> 5;
          obj = new int[n2];
@@ -3249,43 +2915,33 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger modInverse(CustomBigInteger customBigInteger) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
       if (customBigInteger.signum == 1) {
          CustomBigInteger customBigInteger2 = customBigInteger;
-         CustomBigInteger customBigInteger3 = ONE;
-         if (customBigInteger2.equals(customBigInteger3)) {
+         if (customBigInteger2.equals(ONE)) {
             return ZERO;
          } else {
             exitBlock: {
                obj = this;
                if (this.signum >= 0) {
                   customBigInteger2 = this;
-                  CustomBigInteger customBigInteger4 = customBigInteger;
-                  if (customBigInteger2.compareMagnitude(customBigInteger4) < 0) {
+                  if (customBigInteger2.compareMagnitude(customBigInteger) < 0) {
                      break exitBlock;
                   }
                }
 
                customBigInteger2 = this;
-               CustomBigInteger customBigInteger5 = customBigInteger;
-               CustomBigInteger customBigInteger6 = customBigInteger5;
-               obj = customBigInteger2.mod(customBigInteger6);
+               obj = customBigInteger2.mod(customBigInteger);
             }
 
             customBigInteger2 = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger7 = ONE;
-            if (!customBigInteger2.equals(customBigInteger7)) {
+            if (!customBigInteger2.equals(ONE)) {
                obj4 = new ShadedMutableBigInteger((CustomBigInteger)obj);
                obj2 = new ShadedMutableBigInteger(customBigInteger);
-               ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj4;
-               ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj2;
-               obj3 = shadedMutableBigInteger.mutableModInverse(shadedMutableBigInteger2);
-               ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj3;
-               byte b = 1;
-               return shadedMutableBigInteger3.toBigInteger(b);
+               obj3 = ((ShadedMutableBigInteger)obj4).mutableModInverse((ShadedMutableBigInteger)obj2);
+               return ((ShadedMutableBigInteger)obj3).toBigInteger((byte)1);
             } else {
                return ONE;
             }
@@ -3296,13 +2952,11 @@ public class CustomBigInteger implements Comparable {
    }
 
    private CustomBigInteger square() {
-      boolean flag = false;
-      return this.square(flag);
+      return this.square(false);
    }
 
    private static int subN(int[] ints, int[] ints2, int n) {
       long l = 0L;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       long l2 = 0L;
       l2 = 6719526752654111540L ^ (long)"➳\uf377掼苙眺\uea97Ặ赲䩟螄\uf15d鵜嬻㙴ﲖ슅䰨鼲\uf833ꤓư漲깫Н헶䀘忤".hashCode();
       l = 0L;
@@ -3331,12 +2985,10 @@ public class CustomBigInteger implements Comparable {
       Object obj3 = null;
       int n2 = 0;
       Object obj4 = null;
-      getOpaqueStateTag();
       int n3 = 0;
       boolean flag = false;
       CustomBigInteger customBigInteger = this;
-      CustomBigInteger customBigInteger2 = ONE;
-      obj2 = customBigInteger.subtract(customBigInteger2);
+      obj2 = customBigInteger.subtract(ONE);
       obj4 = (CustomBigInteger)obj2;
       n3 = ((CustomBigInteger)obj4).getLowestSetBit();
       obj4 = ((CustomBigInteger)obj4).shiftRight(n3);
@@ -3349,37 +3001,29 @@ public class CustomBigInteger implements Comparable {
          while (true) {
             obj = new CustomBigInteger(this.bitLength(), (Random)rand);
             customBigInteger = (CustomBigInteger)obj;
-            CustomBigInteger customBigInteger3 = ONE;
-            if (customBigInteger.compareTo2(customBigInteger3) > 0) {
+            if (customBigInteger.compareTo2(ONE) > 0) {
                customBigInteger = (CustomBigInteger)obj;
-               CustomBigInteger customBigInteger4 = this;
-               if (customBigInteger.compareTo2(customBigInteger4) < 0) {
+               if (customBigInteger.compareTo2(this) < 0) {
                   n2 = 0;
                   customBigInteger = (CustomBigInteger)obj;
-                  CustomBigInteger customBigInteger5 = (CustomBigInteger)obj4;
-                  CustomBigInteger customBigInteger6 = this;
-                  CustomBigInteger customBigInteger7 = customBigInteger5;
-                  obj3 = customBigInteger.modPow(customBigInteger7, customBigInteger6);
+                  obj3 = customBigInteger.modPow((CustomBigInteger)obj4, this);
 
                   while (true) {
                      if (n2 == 0) {
                         customBigInteger = (CustomBigInteger)obj3;
-                        CustomBigInteger customBigInteger8 = ONE;
-                        if (customBigInteger.equals(customBigInteger8)) {
+                        if (customBigInteger.equals(ONE)) {
                            continue outerLoop;
                         }
                      }
 
                      customBigInteger = (CustomBigInteger)obj3;
-                     CustomBigInteger customBigInteger9 = (CustomBigInteger)obj2;
-                     if (customBigInteger.equals(customBigInteger9)) {
+                     if (customBigInteger.equals((CustomBigInteger)obj2)) {
                         continue outerLoop;
                      }
 
                      if (n2 > 0) {
                         customBigInteger = (CustomBigInteger)obj3;
-                        CustomBigInteger customBigInteger10 = ONE;
-                        if (customBigInteger.equals(customBigInteger10)) {
+                        if (customBigInteger.equals(ONE)) {
                            return false;
                         }
                      }
@@ -3389,9 +3033,7 @@ public class CustomBigInteger implements Comparable {
                      }
 
                      customBigInteger = (CustomBigInteger)obj3;
-                     CustomBigInteger customBigInteger11 = this;
-                     CustomBigInteger customBigInteger12 = TWO;
-                     obj3 = customBigInteger.modPow(customBigInteger12, customBigInteger11);
+                     obj3 = customBigInteger.modPow(TWO, this);
                   }
                }
             }
@@ -3403,18 +3045,15 @@ public class CustomBigInteger implements Comparable {
 
    private static final int[] squareToLen(int[] ints, int n, int[] ints2) {
       int n2 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n2 = n << 1;
       if (ints2 == null || ints2.length < n2) {
          ints2 = new int[n2];
       }
 
       int[] ints3 = ints;
-      int[] ints4 = ints2;
-      implSquareToLenChecks(ints3, n, ints4, n2);
+      implSquareToLenChecks(ints3, n, ints2, n2);
       ints3 = ints;
-      int[] ints5 = ints2;
-      return implSquareToLen(ints3, n, ints5, n2);
+      return implSquareToLen(ints3, n, ints2, n2);
    }
 
    private CustomBigInteger getToomSlice(int n, int n2, int n3, int n4) {
@@ -3424,7 +3063,6 @@ public class CustomBigInteger implements Comparable {
       int n7 = 0;
       int n8 = 0;
       int n9 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n6 = this.mag.length;
       n7 = n4 - n6;
       if (n3 != 0) {
@@ -3458,7 +3096,6 @@ public class CustomBigInteger implements Comparable {
    }
 
    private static void implMulAddCheck(int[] ints, int[] ints2, int n, int n2, int n3) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n2 <= ints2.length) {
          if (n >= 0) {
             if (n <= ints.length - 1) {
@@ -3478,14 +3115,12 @@ public class CustomBigInteger implements Comparable {
 
    private int getInt(int n) {
       int n2 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n >= 0) {
          if (n < this.mag.length) {
             n2 = this.mag[((int[])this.mag).length - n - 1];
             return this.signum < 0 ? (n <= this.firstNonzeroIntNum() ? -n2 : ~n2) : n2;
          } else {
-            CustomBigInteger customBigInteger = this;
-            return customBigInteger.signInt();
+            return this.signInt();
          }
       } else {
          return 0;
@@ -3494,7 +3129,6 @@ public class CustomBigInteger implements Comparable {
 
    public static void primitiveLeftShift(int[] ints, int n, int n2) {
       int n3 = 0;
-      getOpaqueStateTag();
       int n4 = 0;
       boolean flag = false;
       int n5 = 0;
@@ -3527,7 +3161,6 @@ public class CustomBigInteger implements Comparable {
       long l3 = 0L;
       int n2 = 0;
       long l4 = 0L;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       long l5 = 0L;
       l5 = -853100034311963879L ^ (long)"鼹禢\ue79c닂䣅ꍇ椽먿\uef8eꑃ⃘챎撣ﾳ왽쳻滨ᢀ鷐嬒\uefe3\ue881Ꮙ籣춢ဘ₱".hashCode();
       n = this.mag.length;
@@ -3587,7 +3220,6 @@ public class CustomBigInteger implements Comparable {
    }
 
    public long longValueExact() {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (this.mag.length <= 2 && this.bitLength() <= 63) {
          return this.longValue();
       } else {
@@ -3599,7 +3231,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       int n = 0;
       long l = 0L;
-      getOpaqueStateTag();
       boolean flag = false;
       int n2 = 0;
       long l2 = 0L;
@@ -3616,9 +3247,8 @@ public class CustomBigInteger implements Comparable {
       while (n > 0) {
          l2 = (l2 ^ -1814277291592834526L) + -933112143857955338L;
          long l3 = (long)ints[--n2] & 4294967295L;
-         int[] ints3 = ints2;
          n--;
-         l = l3 - ((long)ints3[n] & 4294967295L) + (l >> 32);
+         l = l3 - ((long)ints2[n] & 4294967295L) + (l >> 32);
          l2 = l2 - -7145624853614343478L ^ 3890302323638243483L;
          ((int[])obj)[n2] = (int)l;
          l2 = l2 - -2032975425831052387L ^ 4318787817064929730L;
@@ -3654,7 +3284,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       int n3 = 0;
       Object obj2 = null;
-      getOpaqueStateTag();
       Object obj3 = null;
       int n4 = 0;
       int n5 = 0;
@@ -3663,17 +3292,12 @@ public class CustomBigInteger implements Comparable {
          n5 = (int)Math.round(Math.log((double)n4 * LOG_TWO / logCache[n]) / LOG_TWO - 1.0);
          obj3 = getRadixConversionCache(n, n5);
          CustomBigInteger customBigInteger2 = customBigInteger;
-         CustomBigInteger customBigInteger3 = (CustomBigInteger)obj3;
-         obj = customBigInteger2.divideAndRemainder(customBigInteger3);
+         obj = customBigInteger2.divideAndRemainder((CustomBigInteger)obj3);
          n3 = 1 << n5;
          customBigInteger2 = ((CustomBigInteger[])obj)[0];
-         StringBuilder sb2 = sb;
-         int n6 = n2 - n3;
-         StringBuilder sb3 = sb2;
-         toString(customBigInteger2, sb3, n, n6);
+         toString(customBigInteger2, sb, n, n2 - n3);
          customBigInteger2 = ((CustomBigInteger[])obj)[1];
-         StringBuilder sb4 = sb;
-         toString(customBigInteger2, sb4, n, n3);
+         toString(customBigInteger2, sb, n, n3);
       } else {
          obj2 = customBigInteger.smallToString(n);
          if (((String)obj2).length() < n2 && sb.length() > 0) {
@@ -3689,7 +3313,6 @@ public class CustomBigInteger implements Comparable {
    private String smallToString(int n) {
       boolean flag = false;
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       int n2 = 0;
       Object obj3 = null;
@@ -3715,16 +3338,11 @@ public class CustomBigInteger implements Comparable {
             obj9 = new ShadedMutableBigInteger(((CustomBigInteger)obj3).mag);
             obj2 = new ShadedMutableBigInteger(((CustomBigInteger)obj4).mag);
             ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj9;
-            ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj2;
-            ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj7;
-            ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-            obj8 = shadedMutableBigInteger.divide2(shadedMutableBigInteger4, shadedMutableBigInteger3);
+            obj8 = shadedMutableBigInteger.divide2((ShadedMutableBigInteger)obj2, (ShadedMutableBigInteger)obj7);
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj7;
-            int n5 = ((CustomBigInteger)obj3).signum * ((CustomBigInteger)obj4).signum;
-            obj = shadedMutableBigInteger.toBigInteger(n5);
+            obj = shadedMutableBigInteger.toBigInteger(((CustomBigInteger)obj3).signum * ((CustomBigInteger)obj4).signum);
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj8;
-            int n6 = ((CustomBigInteger)obj3).signum * ((CustomBigInteger)obj4).signum;
-            obj6 = shadedMutableBigInteger.toBigInteger(n6);
+            obj6 = shadedMutableBigInteger.toBigInteger(((CustomBigInteger)obj3).signum * ((CustomBigInteger)obj4).signum);
             ((String[])obj5)[n3++] = Long.toString(((CustomBigInteger)obj6).longValue(), n);
             obj3 = (CustomBigInteger)obj;
          }
@@ -3752,17 +3370,10 @@ public class CustomBigInteger implements Comparable {
    public CustomBigInteger and(CustomBigInteger customBigInteger) {
       Object obj = null;
       boolean flag = false;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       obj = new int[Math.max(this.intLength(), customBigInteger.intLength())];
 
       for (int i = 0; i < ((int[])obj).length; i++) {
-         int[] ints = (int[])obj;
-         CustomBigInteger customBigInteger2 = this;
-         int n = ((int[])obj).length - i - 1;
-         int n2 = customBigInteger2.getInt(n);
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         int n3 = ((int[])obj).length - i - 1;
-         ints[i] = n2 & customBigInteger3.getInt(n3);
+         ((int[])obj)[i] = this.getInt(((int[])obj).length - i - 1) & customBigInteger.getInt(((int[])obj).length - i - 1);
       }
 
       return valueOf2((int[])obj);
@@ -3771,7 +3382,6 @@ public class CustomBigInteger implements Comparable {
    private CustomBigInteger getUpper(int n) {
       Object obj = null;
       int n2 = 0;
-      getOpaqueStateTag();
       int n3 = 0;
       n2 = this.mag.length;
       if (n2 > n) {
@@ -3785,21 +3395,15 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger remainder(CustomBigInteger customBigInteger) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.mag.length >= 80 && this.mag.length - customBigInteger.mag.length >= 40) {
-         CustomBigInteger customBigInteger2 = this;
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         return customBigInteger2.remainderBurnikelZiegler(customBigInteger3);
+         return this.remainderBurnikelZiegler(customBigInteger);
       } else {
-         CustomBigInteger customBigInteger4 = this;
-         CustomBigInteger customBigInteger5 = customBigInteger;
-         return customBigInteger4.remainderKnuth(customBigInteger5);
+         return this.remainderKnuth(customBigInteger);
       }
    }
 
    public CustomBigInteger pow(int n) {
       long l = 0L;
-      getOpaqueStateTag();
       int n2 = 0;
       Object obj = null;
       long l2 = 0L;
@@ -3876,9 +3480,7 @@ public class CustomBigInteger implements Comparable {
 
                while (n3 != 0) {
                   if ((n3 & 1) == 1) {
-                     CustomBigInteger customBigInteger = (CustomBigInteger)obj;
-                     CustomBigInteger customBigInteger2 = (CustomBigInteger)obj2;
-                     obj = customBigInteger.multiply2(customBigInteger2);
+                     obj = ((CustomBigInteger)obj).multiply2((CustomBigInteger)obj2);
                   }
 
                   if ((n3 >>>= 1) != 0) {
@@ -3900,18 +3502,11 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger xor(CustomBigInteger customBigInteger) {
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       obj = new int[Math.max(this.intLength(), customBigInteger.intLength())];
 
       for (int i = 0; i < ((int[])obj).length; i++) {
-         int[] ints = (int[])obj;
-         CustomBigInteger customBigInteger2 = this;
-         int n = ((int[])obj).length - i - 1;
-         int n2 = customBigInteger2.getInt(n);
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         int n3 = ((int[])obj).length - i - 1;
-         ints[i] = n2 ^ customBigInteger3.getInt(n3);
+         ((int[])obj)[i] = this.getInt(((int[])obj).length - i - 1) ^ customBigInteger.getInt(((int[])obj).length - i - 1);
       }
 
       return valueOf2((int[])obj);
@@ -3920,7 +3515,6 @@ public class CustomBigInteger implements Comparable {
    @Override
    public int hashCode() {
       int n = 0;
-      getOpaqueStateTag();
       boolean flag = false;
       n = 0;
 
@@ -3933,18 +3527,11 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger andNot(CustomBigInteger customBigInteger) {
       Object obj = null;
-      getOpaqueStateTag();
       boolean flag = false;
       obj = new int[Math.max(this.intLength(), customBigInteger.intLength())];
 
       for (int i = 0; i < ((int[])obj).length; i++) {
-         int[] ints = (int[])obj;
-         CustomBigInteger customBigInteger2 = this;
-         int n = ((int[])obj).length - i - 1;
-         int n2 = customBigInteger2.getInt(n);
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         int n3 = ((int[])obj).length - i - 1;
-         ints[i] = n2 & ~customBigInteger3.getInt(n3);
+         ((int[])obj)[i] = this.getInt(((int[])obj).length - i - 1) & ~customBigInteger.getInt(((int[])obj).length - i - 1);
       }
 
       return valueOf2((int[])obj);
@@ -3953,13 +3540,10 @@ public class CustomBigInteger implements Comparable {
    public CustomBigInteger subtract(CustomBigInteger customBigInteger) {
       Object obj = null;
       int n = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.signum != 0) {
          if (this.signum != 0) {
             if (customBigInteger.signum == this.signum) {
-               CustomBigInteger customBigInteger2 = this;
-               CustomBigInteger customBigInteger3 = customBigInteger;
-               n = customBigInteger2.compareMagnitude(customBigInteger3);
+               n = this.compareMagnitude(customBigInteger);
                if (n != 0) {
                   int[] ints;
                   if (n <= 0) {
@@ -3990,7 +3574,6 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger(int n, int n2, Random rand) {
       super();
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (n < 2) {
          throw new ArithmeticException("bitLength < 2");
       } else {
@@ -4003,7 +3586,6 @@ public class CustomBigInteger implements Comparable {
    public int[] javaIncrement(int[] ints) {
       int n = 0;
       boolean flag = false;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n = 0;
 
       for (int i = ints.length - 1; i >= 0 && n == 0; i--) {
@@ -4020,7 +3602,6 @@ public class CustomBigInteger implements Comparable {
 
    public CustomBigInteger(int n, byte[] bytes) {
       super();
-      getOpaqueStateTag();
       this.mag = stripLeadingZeroBytes(bytes);
       if (n >= -1 && n <= 1) {
          if (this.mag.length == 0) {
@@ -4043,7 +3624,6 @@ public class CustomBigInteger implements Comparable {
 
    public int getLowestSetBit() {
       int n = 0;
-      getOpaqueStateTag();
       int n2 = 0;
       int n3 = 0;
       n3 = this.lowestSetBitPlusTwo - 2;
@@ -4069,13 +3649,11 @@ public class CustomBigInteger implements Comparable {
 
    private static int[] implMontgomerySquare(int[] ints, int[] ints2, int n, long l, int[] ints3) {
       ints3 = squareToLen(ints, n, ints3);
-      int n2 = (int)l;
-      return montReduce(ints3, ints2, n, n2);
+      return montReduce(ints3, ints2, n, (int)l);
    }
 
    private static CustomBigInteger getRadixConversionCache(int n, int n2) {
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       Object obj2 = null;
       int n3 = 0;
@@ -4087,10 +3665,7 @@ public class CustomBigInteger implements Comparable {
          obj = (CustomBigInteger[])Arrays.copyOf((CustomBigInteger[])obj, n2 + 1);
 
          for (int i = n3; i <= n2; i++) {
-            CustomBigInteger[] customBigIntegers = (CustomBigInteger[])obj;
-            CustomBigInteger customBigInteger = ((CustomBigInteger[])obj)[i - 1];
-            byte b = 2;
-            customBigIntegers[i] = customBigInteger.pow(b);
+            ((CustomBigInteger[])obj)[i] = ((CustomBigInteger[])obj)[i - 1].pow((byte)2);
          }
 
          obj2 = powerCache;
@@ -4112,7 +3687,6 @@ public class CustomBigInteger implements Comparable {
       int n6 = 0;
       int n7 = 0;
       int n8 = 0;
-      getOpaqueStateTag();
       Object obj = null;
       Object obj2 = null;
       n6 = n >>> 5;
@@ -4156,9 +3730,7 @@ public class CustomBigInteger implements Comparable {
             }
 
             if (flag) {
-               CustomBigInteger customBigInteger = this;
-               int[] ints = (int[])obj2;
-               obj2 = customBigInteger.javaIncrement(ints);
+               obj2 = this.javaIncrement((int[])obj2);
             }
          }
 
@@ -4169,7 +3741,6 @@ public class CustomBigInteger implements Comparable {
    private static int[] montReduce(int[] ints, int[] ints2, int n, int n2) {
       int n3 = 0;
       int n4 = 0;
-      getOpaqueStateTag();
       int n5 = 0;
       int n6 = 0;
       int n7 = 0;
@@ -4179,31 +3750,21 @@ public class CustomBigInteger implements Comparable {
 
       do {
          n5 = ints[((int[])ints).length - 1 - n6];
-         int[] ints3 = ints;
-         int[] ints4 = ints2;
-         int n8 = n2 * n5;
-         int[] ints5 = ints4;
-         n3 = mulAdd(ints3, ints5, n6, n, n8);
+         n3 = mulAdd(ints, ints2, n6, n, n2 * n5);
          n4 += addOne(ints, n6, n, n3);
          n6++;
       } while (--n7 > 0);
 
       while (n4 > 0) {
-         int[] ints6 = ints;
-         int[] ints7 = ints2;
-         n4 += subN(ints6, ints7, n);
+         n4 += subN(ints, ints2, n);
       }
 
       while (true) {
-         int[] ints8 = ints;
-         int[] ints9 = ints2;
-         if (intArrayCmpToLen(ints8, ints9, n) < 0) {
+         if (intArrayCmpToLen(ints, ints2, n) < 0) {
             return ints;
          }
 
-         int[] ints10 = ints;
-         int[] ints11 = ints2;
-         subN(ints10, ints11, n);
+         subN(ints, ints2, n);
       }
    }
 
@@ -4212,7 +3773,6 @@ public class CustomBigInteger implements Comparable {
       int n2 = 0;
       int n3 = 0;
       int n4 = 0;
-      getOpaqueStateTag();
       Object obj = null;
       long l2 = 0L;
       l2 = 6271424112204302900L ^ (long)"⟨栨ͪ졛쓩\udea6ㇵ䴯䏡\ueb6d뮒\udb5dꅾ馒\uee03㒦듨ﱀ꽈ណꯄ㮁".hashCode();
@@ -4308,7 +3868,6 @@ public class CustomBigInteger implements Comparable {
       int n4 = 0;
       int n5 = 0;
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n5 = n2 >>> 5;
       n4 = n2 & 31;
       n3 = bitLengthForInt(ints[0]);
@@ -4316,24 +3875,16 @@ public class CustomBigInteger implements Comparable {
          if (n4 > 32 - n3) {
             obj = new int[n5 + n + 1];
             System.arraycopy(ints, 0, (int[])obj, 0, n);
-            int[] ints2 = (int[])obj;
-            int length = ((int[])obj).length;
-            int n6 = 32 - n4;
-            int n7 = length;
-            primitiveRightShift(ints2, n7, n6);
+            primitiveRightShift((int[])obj, ((int[])obj).length, 32 - n4);
             return (int[])obj;
          } else {
             obj = new int[n5 + n];
             System.arraycopy(ints, 0, (int[])obj, 0, n);
-            int[] ints3 = (int[])obj;
-            int length2 = ((int[])obj).length;
-            int n8 = length2;
-            primitiveLeftShift(ints3, n8, n4);
+            primitiveLeftShift((int[])obj, ((int[])obj).length, n4);
             return (int[])obj;
          }
       } else {
-         int[] ints4 = ints;
-         primitiveLeftShift(ints4, n, n4);
+         primitiveLeftShift(ints, n, n4);
          return ints;
       }
    }
@@ -4344,12 +3895,10 @@ public class CustomBigInteger implements Comparable {
 
    @Override
    public String toString() {
-      byte b = 10;
-      return this.toString(b);
+      return this.toString((byte)10);
    }
 
    private int signInt() {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       return this.signum < 0 ? -1 : 0;
    }
 
@@ -4360,22 +3909,16 @@ public class CustomBigInteger implements Comparable {
    }
 
    public CustomBigInteger[] divideAndRemainder(CustomBigInteger customBigInteger) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.mag.length >= 80 && this.mag.length - customBigInteger.mag.length >= 40) {
-         CustomBigInteger customBigInteger2 = this;
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         return customBigInteger2.divideAndRemainderBurnikelZiegler(customBigInteger3);
+         return this.divideAndRemainderBurnikelZiegler(customBigInteger);
       } else {
-         CustomBigInteger customBigInteger4 = this;
-         CustomBigInteger customBigInteger5 = customBigInteger;
-         return customBigInteger4.divideAndRemainderKnuth(customBigInteger5);
+         return this.divideAndRemainderKnuth(customBigInteger);
       }
    }
 
    public CustomBigInteger modPow(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2) {
       Object obj = null;
       Object obj2 = null;
-      getOpaqueStateTag();
       Object obj3 = null;
       Object obj4 = null;
       Object obj5 = null;
@@ -4390,31 +3933,23 @@ public class CustomBigInteger implements Comparable {
       Object obj12 = null;
       if (customBigInteger2.signum > 0) {
          if (customBigInteger.signum == 0) {
-            CustomBigInteger customBigInteger3 = customBigInteger2;
-            CustomBigInteger customBigInteger4 = ONE;
-            return !customBigInteger3.equals(customBigInteger4) ? ONE : ZERO;
+            return !customBigInteger2.equals(ONE) ? ONE : ZERO;
          } else {
             CustomBigInteger customBigInteger5 = this;
-            CustomBigInteger customBigInteger6 = ONE;
-            if (customBigInteger5.equals(customBigInteger6)) {
+            if (customBigInteger5.equals(ONE)) {
                customBigInteger5 = customBigInteger2;
-               CustomBigInteger customBigInteger7 = ONE;
-               return customBigInteger5.equals(customBigInteger7) ? ZERO : ONE;
+               return customBigInteger5.equals(ONE) ? ZERO : ONE;
             } else {
                customBigInteger5 = this;
-               CustomBigInteger customBigInteger8 = ZERO;
-               if (customBigInteger5.equals(customBigInteger8) && customBigInteger.signum >= 0) {
+               if (customBigInteger5.equals(ZERO) && customBigInteger.signum >= 0) {
                   return ZERO;
                } else {
                   customBigInteger5 = this;
-                  CustomBigInteger customBigInteger9 = negConst[1];
-                  if (customBigInteger5.equals(customBigInteger9)) {
+                  if (customBigInteger5.equals(negConst[1])) {
                      customBigInteger5 = customBigInteger;
-                     byte b = 0;
-                     if (!customBigInteger5.testBit(b)) {
+                     if (!customBigInteger5.testBit((byte)0)) {
                         customBigInteger5 = customBigInteger2;
-                        CustomBigInteger customBigInteger10 = ONE;
-                        return customBigInteger5.equals(customBigInteger10) ? ZERO : ONE;
+                        return customBigInteger5.equals(ONE) ? ZERO : ONE;
                      }
                   }
 
@@ -4425,28 +3960,21 @@ public class CustomBigInteger implements Comparable {
                   exitBlock: {
                      if (this.signum >= 0) {
                         customBigInteger5 = this;
-                        CustomBigInteger customBigInteger11 = customBigInteger2;
-                        if (customBigInteger5.compareTo2(customBigInteger11) < 0) {
+                        if (customBigInteger5.compareTo2(customBigInteger2) < 0) {
                            customBigInteger5 = this;
                            break exitBlock;
                         }
                      }
 
                      customBigInteger5 = this;
-                     CustomBigInteger customBigInteger12 = customBigInteger2;
-                     CustomBigInteger customBigInteger13 = customBigInteger12;
-                     customBigInteger5 = customBigInteger5.mod(customBigInteger13);
+                     customBigInteger5 = customBigInteger5.mod(customBigInteger2);
                   }
 
                   obj7 = customBigInteger5;
                   customBigInteger5 = customBigInteger2;
-                  byte b2 = 0;
-                  if (customBigInteger5.testBit(b2)) {
+                  if (customBigInteger5.testBit((byte)0)) {
                      customBigInteger5 = (CustomBigInteger)obj7;
-                     CustomBigInteger customBigInteger14 = customBigInteger;
-                     CustomBigInteger customBigInteger15 = customBigInteger2;
-                     CustomBigInteger customBigInteger16 = customBigInteger14;
-                     obj11 = customBigInteger5.oddModPow(customBigInteger16, customBigInteger15);
+                     obj11 = customBigInteger5.oddModPow(customBigInteger, customBigInteger2);
                   } else {
                      exitBlock2: {
                         n = customBigInteger2.getLowestSetBit();
@@ -4454,92 +3982,56 @@ public class CustomBigInteger implements Comparable {
                         obj = ONE.shiftLeft(n);
                         if (this.signum >= 0) {
                            customBigInteger5 = this;
-                           CustomBigInteger customBigInteger17 = (CustomBigInteger)obj8;
-                           if (customBigInteger5.compareTo2(customBigInteger17) < 0) {
+                           if (customBigInteger5.compareTo2((CustomBigInteger)obj8) < 0) {
                               customBigInteger5 = this;
                               break exitBlock2;
                            }
                         }
 
                         customBigInteger5 = this;
-                        CustomBigInteger customBigInteger18 = (CustomBigInteger)obj8;
-                        CustomBigInteger customBigInteger19 = customBigInteger18;
-                        customBigInteger5 = customBigInteger5.mod(customBigInteger19);
+                        customBigInteger5 = customBigInteger5.mod((CustomBigInteger)obj8);
                      }
 
                      obj3 = customBigInteger5;
                      customBigInteger5 = (CustomBigInteger)obj8;
-                     CustomBigInteger customBigInteger20 = ONE;
-                     if (customBigInteger5.equals(customBigInteger20)) {
+                     if (customBigInteger5.equals(ONE)) {
                         customBigInteger5 = ZERO;
                      } else {
                         customBigInteger5 = (CustomBigInteger)obj3;
-                        CustomBigInteger customBigInteger21 = customBigInteger;
-                        CustomBigInteger customBigInteger22 = (CustomBigInteger)obj8;
-                        CustomBigInteger customBigInteger23 = customBigInteger21;
-                        customBigInteger5 = customBigInteger5.oddModPow(customBigInteger23, customBigInteger22);
+                        customBigInteger5 = customBigInteger5.oddModPow(customBigInteger, (CustomBigInteger)obj8);
                      }
 
                      obj9 = customBigInteger5;
                      customBigInteger5 = (CustomBigInteger)obj7;
-                     CustomBigInteger customBigInteger24 = customBigInteger;
-                     obj5 = customBigInteger5.modPow2(customBigInteger24, n);
+                     obj5 = customBigInteger5.modPow2(customBigInteger, n);
                      customBigInteger5 = (CustomBigInteger)obj;
-                     CustomBigInteger customBigInteger25 = (CustomBigInteger)obj8;
-                     obj6 = customBigInteger5.modInverse(customBigInteger25);
+                     obj6 = customBigInteger5.modInverse((CustomBigInteger)obj8);
                      customBigInteger5 = (CustomBigInteger)obj8;
-                     CustomBigInteger customBigInteger26 = (CustomBigInteger)obj;
-                     obj4 = customBigInteger5.modInverse(customBigInteger26);
+                     obj4 = customBigInteger5.modInverse((CustomBigInteger)obj);
                      if (customBigInteger2.mag.length < 33554432) {
                         customBigInteger5 = (CustomBigInteger)obj9;
-                        CustomBigInteger customBigInteger27 = (CustomBigInteger)obj;
-                        customBigInteger5 = customBigInteger5.multiply2(customBigInteger27);
-                        CustomBigInteger customBigInteger28 = (CustomBigInteger)obj6;
-                        customBigInteger5 = customBigInteger5.multiply2(customBigInteger28);
-                        CustomBigInteger customBigInteger29 = (CustomBigInteger)obj5;
-                        CustomBigInteger customBigInteger30 = (CustomBigInteger)obj8;
-                        CustomBigInteger customBigInteger31 = customBigInteger29.multiply2(customBigInteger30);
-                        CustomBigInteger customBigInteger32 = (CustomBigInteger)obj4;
-                        CustomBigInteger customBigInteger33 = customBigInteger31.multiply2(customBigInteger32);
-                        customBigInteger5 = customBigInteger5.add2(customBigInteger33);
-                        CustomBigInteger customBigInteger34 = customBigInteger2;
-                        CustomBigInteger customBigInteger35 = customBigInteger34;
-                        obj11 = customBigInteger5.mod(customBigInteger35);
+                        customBigInteger5 = customBigInteger5.multiply2((CustomBigInteger)obj);
+                        customBigInteger5 = customBigInteger5.multiply2((CustomBigInteger)obj6);
+                        customBigInteger5 = customBigInteger5.add2(((CustomBigInteger)obj5).multiply2((CustomBigInteger)obj8).multiply2((CustomBigInteger)obj4));
+                        obj11 = customBigInteger5.mod(customBigInteger2);
                      } else {
                         obj2 = new ShadedMutableBigInteger();
                         CustomBigInteger customBigInteger36 = (CustomBigInteger)obj9;
                         CustomBigInteger customBigInteger37 = (CustomBigInteger)obj;
-                        ShadedMutableBigInteger shadedMutableBigInteger = new ShadedMutableBigInteger(customBigInteger36.multiply2(customBigInteger37));
-                        ShadedMutableBigInteger shadedMutableBigInteger2 = new ShadedMutableBigInteger((CustomBigInteger)obj6);
-                        ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj2;
-                        ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-                        shadedMutableBigInteger.multiply(shadedMutableBigInteger4, shadedMutableBigInteger3);
+                        new ShadedMutableBigInteger(customBigInteger36.multiply2(customBigInteger37)).multiply(new ShadedMutableBigInteger((CustomBigInteger)obj6), (ShadedMutableBigInteger)obj2);
                         obj12 = new ShadedMutableBigInteger();
                         customBigInteger36 = (CustomBigInteger)obj5;
                         CustomBigInteger customBigInteger38 = (CustomBigInteger)obj8;
-                        ShadedMutableBigInteger shadedMutableBigInteger5 = new ShadedMutableBigInteger(customBigInteger36.multiply2(customBigInteger38));
-                        ShadedMutableBigInteger shadedMutableBigInteger6 = new ShadedMutableBigInteger((CustomBigInteger)obj4);
-                        ShadedMutableBigInteger shadedMutableBigInteger7 = (ShadedMutableBigInteger)obj12;
-                        ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger6;
-                        shadedMutableBigInteger5.multiply(shadedMutableBigInteger8, shadedMutableBigInteger7);
-                        ShadedMutableBigInteger shadedMutableBigInteger9 = (ShadedMutableBigInteger)obj2;
-                        ShadedMutableBigInteger shadedMutableBigInteger10 = (ShadedMutableBigInteger)obj12;
-                        ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger10;
-                        shadedMutableBigInteger9.add(shadedMutableBigInteger11);
+                        new ShadedMutableBigInteger(customBigInteger36.multiply2(customBigInteger38)).multiply(new ShadedMutableBigInteger((CustomBigInteger)obj4), (ShadedMutableBigInteger)obj12);
+                        ((ShadedMutableBigInteger)obj2).add((ShadedMutableBigInteger)obj12);
                         obj10 = new ShadedMutableBigInteger();
-                        ShadedMutableBigInteger shadedMutableBigInteger12 = (ShadedMutableBigInteger)obj2;
-                        ShadedMutableBigInteger shadedMutableBigInteger13 = new ShadedMutableBigInteger(customBigInteger2);
-                        ShadedMutableBigInteger shadedMutableBigInteger14 = (ShadedMutableBigInteger)obj10;
-                        ShadedMutableBigInteger shadedMutableBigInteger15 = shadedMutableBigInteger13;
-                        ShadedMutableBigInteger shadedMutableBigInteger16 = shadedMutableBigInteger12.divide2(shadedMutableBigInteger15, shadedMutableBigInteger14);
-                        obj11 = shadedMutableBigInteger16.toBigInteger();
+                        obj11 = ((ShadedMutableBigInteger)obj2).divide2(new ShadedMutableBigInteger(customBigInteger2), (ShadedMutableBigInteger)obj10).toBigInteger();
                      }
                   }
 
                   if (flag) {
                      customBigInteger5 = (CustomBigInteger)obj11;
-                     CustomBigInteger customBigInteger39 = customBigInteger2;
-                     customBigInteger5 = customBigInteger5.modInverse(customBigInteger39);
+                     customBigInteger5 = customBigInteger5.modInverse(customBigInteger2);
                   } else {
                      customBigInteger5 = (CustomBigInteger)obj11;
                   }
@@ -4557,7 +4049,6 @@ public class CustomBigInteger implements Comparable {
       int n = 0;
       int n2 = 0;
       int n3 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n = this.firstNonzeroIntNumPlusTwo - 2;
       if (n == -2) {
          boolean flag = false;
@@ -4579,7 +4070,6 @@ public class CustomBigInteger implements Comparable {
       boolean flag = false;
       int n3 = 0;
       int n4 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n3 = Character.digit(chars[n++], 10);
       if (n3 == -1) {
          throw new NumberFormatException(new String(chars));
@@ -4600,13 +4090,10 @@ public class CustomBigInteger implements Comparable {
    public CustomBigInteger add2(CustomBigInteger customBigInteger) {
       int n = 0;
       Object obj = null;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (customBigInteger.signum != 0) {
          if (this.signum != 0) {
             if (customBigInteger.signum != this.signum) {
-               CustomBigInteger customBigInteger2 = this;
-               CustomBigInteger customBigInteger3 = customBigInteger;
-               n = customBigInteger2.compareMagnitude(customBigInteger3);
+               n = this.compareMagnitude(customBigInteger);
                if (n != 0) {
                   int[] ints;
                   if (n <= 0) {
@@ -4646,7 +4133,6 @@ public class CustomBigInteger implements Comparable {
       Object obj4 = null;
       Object obj5 = null;
       int n = 0;
-      getOpaqueStateTag();
       Object obj6 = null;
       Object obj7 = null;
       Object obj8 = null;
@@ -4661,87 +4147,56 @@ public class CustomBigInteger implements Comparable {
       n3 = (n + 2) / 3;
       n4 = n - 2 * n3;
       CustomBigInteger customBigInteger = this;
-      byte b = 0;
-      obj5 = customBigInteger.getToomSlice(n3, n4, b, n);
+      obj5 = customBigInteger.getToomSlice(n3, n4, (byte)0, n);
       customBigInteger = this;
-      byte b2 = 1;
-      obj12 = customBigInteger.getToomSlice(n3, n4, b2, n);
+      obj12 = customBigInteger.getToomSlice(n3, n4, (byte)1, n);
       customBigInteger = this;
-      byte b3 = 2;
-      obj9 = customBigInteger.getToomSlice(n3, n4, b3, n);
+      obj9 = customBigInteger.getToomSlice(n3, n4, (byte)2, n);
       customBigInteger = (CustomBigInteger)obj9;
-      boolean flag = true;
-      obj = customBigInteger.square(flag);
+      obj = customBigInteger.square(true);
       customBigInteger = (CustomBigInteger)obj5;
-      CustomBigInteger customBigInteger2 = (CustomBigInteger)obj9;
-      obj4 = customBigInteger.add2(customBigInteger2);
+      obj4 = customBigInteger.add2((CustomBigInteger)obj9);
       customBigInteger = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger3 = (CustomBigInteger)obj12;
-      customBigInteger = customBigInteger.subtract(customBigInteger3);
-      boolean flag2 = true;
-      obj10 = customBigInteger.square(flag2);
+      customBigInteger = customBigInteger.subtract((CustomBigInteger)obj12);
+      obj10 = customBigInteger.square(true);
       customBigInteger = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger4 = (CustomBigInteger)obj12;
-      obj4 = customBigInteger.add2(customBigInteger4);
+      obj4 = customBigInteger.add2((CustomBigInteger)obj12);
       customBigInteger = (CustomBigInteger)obj4;
-      boolean flag3 = true;
-      obj11 = customBigInteger.square(flag3);
+      obj11 = customBigInteger.square(true);
       customBigInteger = (CustomBigInteger)obj5;
-      boolean flag4 = true;
-      obj8 = customBigInteger.square(flag4);
+      obj8 = customBigInteger.square(true);
       customBigInteger = (CustomBigInteger)obj4;
-      CustomBigInteger customBigInteger5 = (CustomBigInteger)obj5;
-      customBigInteger = customBigInteger.add2(customBigInteger5);
-      byte b4 = 1;
-      customBigInteger = customBigInteger.shiftLeft(b4);
-      CustomBigInteger customBigInteger6 = (CustomBigInteger)obj9;
-      customBigInteger = customBigInteger.subtract(customBigInteger6);
-      boolean flag5 = true;
-      obj7 = customBigInteger.square(flag5);
+      customBigInteger = customBigInteger.add2((CustomBigInteger)obj5);
+      customBigInteger = customBigInteger.shiftLeft((byte)1);
+      customBigInteger = customBigInteger.subtract((CustomBigInteger)obj9);
+      obj7 = customBigInteger.square(true);
       customBigInteger = (CustomBigInteger)obj7;
-      CustomBigInteger customBigInteger7 = (CustomBigInteger)obj10;
-      obj2 = customBigInteger.subtract(customBigInteger7).exactDivideBy3();
+      obj2 = customBigInteger.subtract((CustomBigInteger)obj10).exactDivideBy3();
       customBigInteger = (CustomBigInteger)obj11;
-      CustomBigInteger customBigInteger8 = (CustomBigInteger)obj10;
-      customBigInteger = customBigInteger.subtract(customBigInteger8);
-      byte b5 = 1;
-      obj3 = customBigInteger.shiftRight(b5);
+      customBigInteger = customBigInteger.subtract((CustomBigInteger)obj10);
+      obj3 = customBigInteger.shiftRight((byte)1);
       customBigInteger = (CustomBigInteger)obj11;
-      CustomBigInteger customBigInteger9 = (CustomBigInteger)obj;
-      obj6 = customBigInteger.subtract(customBigInteger9);
+      obj6 = customBigInteger.subtract((CustomBigInteger)obj);
       customBigInteger = (CustomBigInteger)obj2;
-      CustomBigInteger customBigInteger10 = (CustomBigInteger)obj6;
-      customBigInteger = customBigInteger.subtract(customBigInteger10);
-      byte b6 = 1;
-      obj2 = customBigInteger.shiftRight(b6);
+      customBigInteger = customBigInteger.subtract((CustomBigInteger)obj6);
+      obj2 = customBigInteger.shiftRight((byte)1);
       customBigInteger = (CustomBigInteger)obj6;
-      CustomBigInteger customBigInteger11 = (CustomBigInteger)obj3;
-      customBigInteger = customBigInteger.subtract(customBigInteger11);
-      CustomBigInteger customBigInteger12 = (CustomBigInteger)obj8;
-      obj6 = customBigInteger.subtract(customBigInteger12);
+      customBigInteger = customBigInteger.subtract((CustomBigInteger)obj3);
+      obj6 = customBigInteger.subtract((CustomBigInteger)obj8);
       customBigInteger = (CustomBigInteger)obj2;
-      CustomBigInteger customBigInteger13 = (CustomBigInteger)obj8;
-      byte b7 = 1;
-      CustomBigInteger customBigInteger14 = customBigInteger13.shiftLeft(b7);
-      obj2 = customBigInteger.subtract(customBigInteger14);
+      obj2 = customBigInteger.subtract(((CustomBigInteger)obj8).shiftLeft((byte)1));
       customBigInteger = (CustomBigInteger)obj3;
-      CustomBigInteger customBigInteger15 = (CustomBigInteger)obj2;
-      obj3 = customBigInteger.subtract(customBigInteger15);
+      obj3 = customBigInteger.subtract((CustomBigInteger)obj2);
       n2 = n3 * 32;
       customBigInteger = ((CustomBigInteger)obj8).shiftLeft(n2);
-      CustomBigInteger customBigInteger16 = (CustomBigInteger)obj2;
-      customBigInteger = customBigInteger.add2(customBigInteger16).shiftLeft(n2);
-      CustomBigInteger customBigInteger17 = (CustomBigInteger)obj6;
-      customBigInteger = customBigInteger.add2(customBigInteger17).shiftLeft(n2);
-      CustomBigInteger customBigInteger18 = (CustomBigInteger)obj3;
-      customBigInteger = customBigInteger.add2(customBigInteger18).shiftLeft(n2);
-      CustomBigInteger customBigInteger19 = (CustomBigInteger)obj;
-      return customBigInteger.add2(customBigInteger19);
+      customBigInteger = customBigInteger.add2((CustomBigInteger)obj2).shiftLeft(n2);
+      customBigInteger = customBigInteger.add2((CustomBigInteger)obj6).shiftLeft(n2);
+      customBigInteger = customBigInteger.add2((CustomBigInteger)obj3).shiftLeft(n2);
+      return customBigInteger.add2((CustomBigInteger)obj);
    }
 
    public CustomBigInteger gcd(CustomBigInteger customBigInteger) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       if (customBigInteger.signum != 0) {
@@ -4749,11 +4204,9 @@ public class CustomBigInteger implements Comparable {
             obj3 = new ShadedMutableBigInteger(this);
             obj2 = new ShadedMutableBigInteger(customBigInteger);
             ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj3;
-            ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj2;
-            obj = shadedMutableBigInteger.hybridGCD(shadedMutableBigInteger2);
+            obj = shadedMutableBigInteger.hybridGCD((ShadedMutableBigInteger)obj2);
             shadedMutableBigInteger = (ShadedMutableBigInteger)obj;
-            byte b = 1;
-            return shadedMutableBigInteger.toBigInteger(b);
+            return shadedMutableBigInteger.toBigInteger((byte)1);
          } else {
             return customBigInteger.abs();
          }
@@ -4764,7 +4217,6 @@ public class CustomBigInteger implements Comparable {
 
    private static int[] subtract2(long l, int[] ints) {
       int n = 0;
-      getOpaqueStateTag();
       long l2 = 0L;
       boolean flag = false;
       Object obj = null;
@@ -4822,7 +4274,6 @@ public class CustomBigInteger implements Comparable {
       long l2 = 0L;
       int n4 = 0;
       long l3 = 0L;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       long l4 = 0L;
       l4 = -8820436693089587116L ^ (long)"ᜠꓜ⯻粿劬躔\uf01c﨤嗁純쒌้햕۷룞餞ࢮ鹦퀆⚛몚朞傎醇矕곡ⰴ".hashCode();
       l3 = (long)n3 & 4294967295L;
@@ -4861,7 +4312,6 @@ public class CustomBigInteger implements Comparable {
       int n6 = 0;
       int n7 = 0;
       int n8 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n2 = n >>> 5;
       n8 = n & 31;
       n3 = ints.length;
@@ -4894,7 +4344,6 @@ public class CustomBigInteger implements Comparable {
 
    private static CustomBigInteger multiplyKaratsuba(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       int n = 0;
@@ -4913,31 +4362,20 @@ public class CustomBigInteger implements Comparable {
       obj8 = customBigInteger2.getLower(n);
       obj5 = customBigInteger2.getUpper(n);
       CustomBigInteger customBigInteger3 = (CustomBigInteger)obj7;
-      CustomBigInteger customBigInteger4 = (CustomBigInteger)obj5;
-      obj3 = customBigInteger3.multiply2(customBigInteger4);
+      obj3 = customBigInteger3.multiply2((CustomBigInteger)obj5);
       customBigInteger3 = (CustomBigInteger)obj2;
-      CustomBigInteger customBigInteger5 = (CustomBigInteger)obj8;
-      obj6 = customBigInteger3.multiply2(customBigInteger5);
+      obj6 = customBigInteger3.multiply2((CustomBigInteger)obj8);
       customBigInteger3 = (CustomBigInteger)obj7;
-      CustomBigInteger customBigInteger6 = (CustomBigInteger)obj2;
-      customBigInteger3 = customBigInteger3.add2(customBigInteger6);
+      customBigInteger3 = customBigInteger3.add2((CustomBigInteger)obj2);
       CustomBigInteger customBigInteger7 = (CustomBigInteger)obj5;
-      CustomBigInteger customBigInteger8 = (CustomBigInteger)obj8;
-      CustomBigInteger customBigInteger9 = customBigInteger7.add2(customBigInteger8);
-      obj = customBigInteger3.multiply2(customBigInteger9);
+      obj = customBigInteger3.multiply2(customBigInteger7.add2((CustomBigInteger)obj8));
       customBigInteger3 = (CustomBigInteger)obj3;
-      int n4 = 32 * n;
-      customBigInteger3 = customBigInteger3.shiftLeft(n4);
+      customBigInteger3 = customBigInteger3.shiftLeft(32 * n);
       customBigInteger7 = (CustomBigInteger)obj;
-      CustomBigInteger customBigInteger10 = (CustomBigInteger)obj3;
-      customBigInteger7 = customBigInteger7.subtract(customBigInteger10);
-      CustomBigInteger customBigInteger11 = (CustomBigInteger)obj6;
-      CustomBigInteger customBigInteger12 = customBigInteger7.subtract(customBigInteger11);
-      customBigInteger3 = customBigInteger3.add2(customBigInteger12);
-      int n5 = 32 * n;
-      customBigInteger3 = customBigInteger3.shiftLeft(n5);
-      CustomBigInteger customBigInteger13 = (CustomBigInteger)obj6;
-      obj4 = customBigInteger3.add2(customBigInteger13);
+      customBigInteger7 = customBigInteger7.subtract((CustomBigInteger)obj3);
+      customBigInteger3 = customBigInteger3.add2(customBigInteger7.subtract((CustomBigInteger)obj6));
+      customBigInteger3 = customBigInteger3.shiftLeft(32 * n);
+      obj4 = customBigInteger3.add2((CustomBigInteger)obj6);
       return customBigInteger.signum == customBigInteger2.signum ? (CustomBigInteger)obj4 : ((CustomBigInteger)obj4).negate();
    }
 
@@ -4945,7 +4383,6 @@ public class CustomBigInteger implements Comparable {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      getOpaqueStateTag();
       Object obj4 = null;
       Object obj5 = null;
       obj3 = new CustomBigInteger[2];
@@ -4954,26 +4391,16 @@ public class CustomBigInteger implements Comparable {
       obj = new ShadedMutableBigInteger(customBigInteger.mag);
       ShadedMutableBigInteger shadedMutableBigInteger = (ShadedMutableBigInteger)obj5;
       ShadedMutableBigInteger shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj;
-      ShadedMutableBigInteger shadedMutableBigInteger3 = (ShadedMutableBigInteger)obj4;
-      ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-      obj2 = shadedMutableBigInteger.divideKnuth(shadedMutableBigInteger4, shadedMutableBigInteger3);
+      obj2 = shadedMutableBigInteger.divideKnuth(shadedMutableBigInteger2, (ShadedMutableBigInteger)obj4);
       CustomBigInteger[] customBigIntegers = (CustomBigInteger[])obj3;
       shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj4;
-      int n = this.signum == customBigInteger.signum ? 1 : -1;
-      customBigIntegers[0] = shadedMutableBigInteger2.toBigInteger(n);
+      customBigIntegers[0] = shadedMutableBigInteger2.toBigInteger(this.signum == customBigInteger.signum ? 1 : -1);
       CustomBigInteger[] customBigIntegers2 = (CustomBigInteger[])obj3;
       shadedMutableBigInteger2 = (ShadedMutableBigInteger)obj2;
-      int signum2 = this.signum;
-      customBigIntegers2[1] = shadedMutableBigInteger2.toBigInteger(signum2);
+      customBigIntegers2[1] = shadedMutableBigInteger2.toBigInteger(this.signum);
       return (CustomBigInteger[])obj3;
    }
 
-   public static void setOpaqueStateTag(int[] ints) {
-      opaqueStateTag = ints;
-   }
 
-   public static int[] getOpaqueStateTag() {
-      return opaqueStateTag;
-   }
 
 }

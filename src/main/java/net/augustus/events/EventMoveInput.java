@@ -151,8 +151,6 @@ public class EventMoveInput extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      MoveInputListener listener = (MoveInputListener)obj;
-      MoveInputListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((MoveInputListener)obj);
    }
 }

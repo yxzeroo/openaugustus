@@ -25,8 +25,8 @@ import net.augustus.settings.options.EspRenderModeOption;
 import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,10 +39,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 public class Shadow extends Module implements TickListener, RenderEntityListener {
-   public final BooleansSetting shadowMode;
+   public final StringValue shadowMode;
    public final BooleanValue customColor;
    public final ColorSetting shadowColor;
-   public final StringValue sigma;
+   public final DoubleValue sigma;
    public final BooleanValue shadowEntities;
    private final TargetSelectionSettings entities;
    private final MultiOptionSetting itemsToShadow;
@@ -55,24 +55,20 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
 
    public Shadow() {
        super("Shadow", "Schatten", new Color(170, 181, 182, 255), Categorys.RENDER);
-      this.shadowMode = new BooleansSetting(this, "ShadowMode", "Gaussian", new String[]{"Gaussian", "Box"});
+      this.shadowMode = new StringValue(this, "ShadowMode", "Gaussian", new String[]{"Gaussian", "Box"});
       this.customColor = new BooleanValue(this, "CustomColor", true);
       ColorSetting colorSetting = new ColorSetting(this, "Color", new Color(0, 0, 0, 1));
       BooleanValue customColor2 = this.customColor;
       this.customColor.getClass();
       BooleanValue booleanValue = customColor2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.shadowColor = (ColorSetting)colorSetting.withVisibility(condition);
-      this.sigma = new StringValue(this, "Sigma", 5.0, 0.0, 30.0, 1);
+      this.shadowColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue.getValue());
+      this.sigma = new DoubleValue(this, "Sigma", 5.0, 0.0, 30.0, 1);
       this.shadowEntities = new BooleanValue(this, "ShadowEntities", false);
-      TargetSelectionSettings targetSelectionSettings = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilterWithSelf());
-      String str = "Entities";
-      TargetSelectionSettings targetSelectionSettings2 = targetSelectionSettings.withTargetsDisplayName(str);
+      TargetSelectionSettings targetSelectionSettings2 = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilterWithSelf()).withTargetsDisplayName("Entities");
       customColor2 = this.shadowEntities;
       this.shadowEntities.getClass();
       BooleanValue booleanValue2 = customColor2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.entities = targetSelectionSettings2.withVisibility(condition2);
+      this.entities = targetSelectionSettings2.withVisibility(() -> booleanValue2.getValue());
       this.itemsToShadow = new MultiOptionSetting(this, "ItemsToShadow", ShadowItemOption.values());
       this.horizontalPassFramebuffer = new ResizableFramebuffer(mc.displayWidth, mc.displayHeight, false);
       this.verticalPassFramebuffer = new ResizableFramebuffer(mc.displayWidth, mc.displayHeight, false);
@@ -82,8 +78,7 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
    }
 
    private String getFragmentShaderPath() {
-      String selectedValue = this.shadowMode.getSelectedValue();
-      if (selectedValue.equals("Box")) {
+      if (this.shadowMode.getSelectedValue().equals("Box")) {
          String str;
          if (this.customColor.getValue()) {
             str = "boxShadow2.glsl";
@@ -114,10 +109,8 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 31;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)31);
    }
 
    @Override
@@ -161,18 +154,10 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
             RendererLivingEntity renderer = event.getRenderer();
             boolean flag = !entity.isRenderNameTag();
             RenderPassTask renderPassTask = shaderRenderPass -> {
-               double d = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)mc.getTimer().renderPartialTicks;
-               double d2 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)mc.getTimer().renderPartialTicks;
-               double d3 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)mc.getTimer().renderPartialTicks;
-               boolean flag2 = true;
-               double d4 = d3;
-               double d5 = d2;
-               double d6 = d;
-               event.renderEntityModel(entity2, renderer, d6, d5, d4, flag2);
+               event.renderEntityModel(entity2, renderer, entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)mc.getTimer().renderPartialTicks, entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)mc.getTimer().renderPartialTicks, entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)mc.getTimer().renderPartialTicks, true);
                BlurShadowManager.disableNormalPass();
             };
-            boolean flag3 = flag;
-            BlurShadowManager.submitRenderTask(flag3, renderPassTask);
+            BlurShadowManager.submitRenderTask(flag, renderPassTask);
          }
       }
    }
@@ -206,10 +191,7 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
 
    public void renderShadowOverlay(ScaledResolution sr) {
       if (Display.isActive()) {
-         Runnable runnable = () -> Gui.drawRect(-2001, -2001, -2000, -2000, Color.red.getRGB());
-         boolean flag = false;
-         Runnable runnable2 = runnable;
-         this.renderToShadowMask(runnable2, flag);
+         this.renderToShadowMask(() -> Gui.drawRect(-2001, -2001, -2000, -2000, Color.red.getRGB()), false);
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          GlStateManager.pushMatrix();
          GlStateManager.enableAlpha();
@@ -227,24 +209,18 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
          int n2 = (int)scaledHeightDouble;
          int n3 = n;
          Framebuffer framebuffer = this.horizontalPassFramebuffer;
-         int framebufferTexture = this.shadowMaskFramebuffer.framebufferTexture;
-         byte b = 0;
-         this.renderBlurPass(b, framebufferTexture, framebuffer, n3, n2);
+         this.renderBlurPass((byte)0, this.shadowMaskFramebuffer.framebufferTexture, framebuffer, n3, n2);
          n = (int)scaledWidthDouble;
          int n4 = (int)scaledHeightDouble;
          int n5 = n;
          Framebuffer framebuffer2 = this.verticalPassFramebuffer;
-         int framebufferTexture2 = this.horizontalPassFramebuffer.framebufferTexture;
-         byte b2 = 1;
-         this.renderBlurPass(b2, framebufferTexture2, framebuffer2, n5, n4);
+         this.renderBlurPass((byte)1, this.horizontalPassFramebuffer.framebufferTexture, framebuffer2, n5, n4);
          this.shadowShader.unbind();
          StencilUtil.initStencilToWrite();
          StencilUtil.beginStencilWrite();
-         int framebufferTexture3 = this.shadowMaskFramebuffer.framebufferTexture;
-         this.drawFullscreenTexture(framebufferTexture3, scaledWidthDouble, scaledHeightDouble);
+         this.drawFullscreenTexture(this.shadowMaskFramebuffer.framebufferTexture, scaledWidthDouble, scaledHeightDouble);
          StencilUtil.readStencilBuffer(0);
-         int framebufferTexture4 = this.verticalPassFramebuffer.framebufferTexture;
-         this.drawFullscreenTexture(framebufferTexture4, scaledWidthDouble, scaledHeightDouble);
+         this.drawFullscreenTexture(this.verticalPassFramebuffer.framebufferTexture, scaledWidthDouble, scaledHeightDouble);
          StencilUtil.uninitStencilBuffer();
          GlStateManager.bindTexture(0);
          GlStateManager.alphaFunc(516, 0.2F);
@@ -264,10 +240,8 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
       GL20.glUniform2f(this.shadowShader.getUniformLocation(str), (float)(1 - n), (float)n);
       GL11.glBindTexture(3553, n2);
       float f = (float)n3;
-      float f2 = (float)n4;
-      float f3 = f2;
-      float f4 = f;
-      this.shadowShader.drawFullscreenQuad(f4, f3);
+      float f3 = (float)n4;
+      this.shadowShader.drawFullscreenQuad(f, f3);
    }
 
    public void uploadShaderUniforms() {
@@ -281,8 +255,7 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
          String str3 = "radius";
          GL20.glUniform1f(this.shadowShader.getUniformLocation(str3), value);
          if (this.customColor.getValue()) {
-            byte b = 0;
-            this.shadowColor.getColorInt(b);
+            this.shadowColor.getColorInt((byte)0);
             String str4 = "startColor";
             GL20.glUniform3f(this.shadowShader.getUniformLocation(str4), this.shadowColor.getRedFloat(), this.shadowColor.getGreenFloat(), this.shadowColor.getBlueFloat());
          }
@@ -290,8 +263,7 @@ public class Shadow extends Module implements TickListener, RenderEntityListener
          String str5 = "sigma";
          GL20.glUniform1f(this.shadowShader.getUniformLocation(str5), value);
          if (this.customColor.getValue()) {
-            byte b2 = 0;
-            this.shadowColor.getColorInt(b2);
+            this.shadowColor.getColorInt((byte)0);
             String str6 = "startColor";
             GL20.glUniform3f(this.shadowShader.getUniformLocation(str6), this.shadowColor.getRedFloat(), this.shadowColor.getGreenFloat(), this.shadowColor.getBlueFloat());
          }

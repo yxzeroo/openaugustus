@@ -26,8 +26,7 @@ public class Panic extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick5() {
@@ -36,9 +35,7 @@ public class Panic extends Module implements TickListener {
             if (module.isToggled()) {
                for (PanicCategoryOption panicCategoryOption : PanicCategoryOption.values()) {
                   if (PanicCategoryOption.getCategory(panicCategoryOption).equals(module.getCategorys()) && PanicCategoryOption.isOptionSelected(panicCategoryOption)) {
-                     boolean flag = false;
-                     boolean flag2 = false;
-                     module.setToggled(flag2, flag);
+                     module.setToggled(false, false);
                   }
                }
             }
@@ -47,8 +44,7 @@ public class Panic extends Module implements TickListener {
          ClientManagers.moduleManager.sortModules();
       }
 
-      boolean flag3 = false;
-      this.setToggled(flag3);
+      this.setToggled(false);
       this.pendingDisable = false;
    }
 

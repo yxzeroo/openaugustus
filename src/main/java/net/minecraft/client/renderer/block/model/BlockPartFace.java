@@ -34,8 +34,7 @@ public class BlockPartFace {
       }
 
       private EnumFacing parseCullFace(JsonObject json) {
-         String string = JsonUtils.getString(json, "cullface", "");
-         return EnumFacing.byName(string);
+         return EnumFacing.byName(JsonUtils.getString(json, "cullface", ""));
       }
 
       public Object deserialize(JsonElement elem, Type type, JsonDeserializationContext context) throws JsonParseException {

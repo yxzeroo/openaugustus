@@ -72,8 +72,7 @@ public class ModInfo {
 
       try {
          String path = new File(this.mod.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
-         String property = System.getProperty("user.name");
-         path = path.replace(property, "<USERNAME>");
+         path = path.replace(System.getProperty("user.name"), "<USERNAME>");
          sb.append(path);
       } catch (Exception e) {
          sb.append("Unknown (").append(e).append(')');

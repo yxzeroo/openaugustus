@@ -13,13 +13,13 @@ import net.augustus.utils.combat.CombatTargetUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Criticals;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.EntityLivingBase;
 
 public class LagCriticalsMode extends CriticalsMode implements PacketDelayListener, RayCastListener, LoadWorldListener, ClickListener {
-   private final StringValue lagDuration;
+   private final DoubleValue lagDuration;
    private final BooleanValue forceHit;
    private static boolean delayingPackets = true;
    private final TimeHelper lagDurationTimer;
@@ -28,14 +28,10 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
    private int queuedClickCount;
    private boolean forceLagActive;
 
-   public LagCriticalsMode(Criticals criticals, DoubleValue doubleValue) {
+   public LagCriticalsMode(Criticals criticals, SettingGroup doubleValue) {
        super(criticals, doubleValue, "Lag");
-      StringValue stringValue = new StringValue(this.parentModule, "LagDuration", 200.0, 0.0, 400.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.lagDuration = stringValue.visibleWhen(condition);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "ForceHit", true, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.forceHit = (BooleanValue)booleanValue.withVisibility(condition2);
+      this.lagDuration = new DoubleValue(this.parentModule, "LagDuration", 200.0, 0.0, 400.0, 0, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.forceHit = (BooleanValue)new BooleanValue(this.parentModule, "ForceHit", true, this.modeSetting).withVisibility(() -> this.isSelected());
       this.lagDurationTimer = new TimeHelper();
       this.targetTimeoutTimer = new TimeHelper();
       this.currentTarget = null;
@@ -44,20 +40,15 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new LagCriticalsMode((Criticals)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new LagCriticalsMode((Criticals)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 25;
-      this.toggleEventSubscription(b);
-      byte b2 = 29;
-      this.toggleEventSubscription(b2);
-      short s = 10000;
-      byte b3 = 7;
-      this.toggleEventSubscription(b3, s);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)29);
+      this.toggleEventSubscription((byte)7, (short)10000);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -72,8 +63,7 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
 
    @Override
    public void onPacketDelay(EventPacketDelay event) {
-      boolean flag = delayingPackets;
-      event.setDelayed(flag);
+      event.setDelayed(delayingPackets);
    }
 
    @Override
@@ -87,8 +77,7 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
             this.targetTimeoutTimer.reset();
          }
 
-         long l = 500L;
-         if (this.targetTimeoutTimer.reached2(l)) {
+         if (this.targetTimeoutTimer.reached2(500L)) {
             this.currentTarget = null;
          }
 
@@ -111,9 +100,7 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
                this.stopLagging();
             }
 
-            TimeHelper lagDurationTimer2 = this.lagDurationTimer;
-            double value = this.lagDuration.getValue();
-            if (lagDurationTimer2.reached(value)) {
+            if (this.lagDurationTimer.reached(this.lagDuration.getValue())) {
                this.stopLagging();
             }
          }
@@ -138,8 +125,7 @@ public class LagCriticalsMode extends CriticalsMode implements PacketDelayListen
 
          if (delayingPackets) {
             if (n <= 0 && this.queuedClickCount == 0) {
-               byte b = 1;
-               event.addLeftClicks(b);
+               event.addLeftClicks((byte)1);
                n++;
             }
 

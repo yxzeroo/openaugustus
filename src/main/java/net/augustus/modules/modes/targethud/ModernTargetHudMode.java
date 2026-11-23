@@ -13,7 +13,7 @@ import net.augustus.utils.render.ShaderRenderPass;
 import java.awt.Color;
 import java.util.function.BiFunction;
 import net.augustus.modules.render.TargetHud;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -28,53 +28,34 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
    private final ColorSetting headDamageColor;
    private final ColorSetting textColor;
 
-   public ModernTargetHudMode(TargetHud targetHud, DoubleValue doubleValue) {
+   public ModernTargetHudMode(TargetHud targetHud, SettingGroup doubleValue) {
        super(targetHud, doubleValue, "Modern", false);
-      AbstractTargetHudMode.getControlFlowState2();
       String str = this.getName() + "BackGroundColor";
       Color color = new Color(0, 0, 0, 100);
       String str2 = str;
       ColorSetting colorSetting = new ColorSetting(targetHud, str2, color, doubleValue);
-      String str3 = "BackGroundColor";
-      colorSetting = (ColorSetting)colorSetting.withDisplayName(str3);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.backGroundColor = (ColorSetting)colorSetting.withVisibility(condition);
+      colorSetting = (ColorSetting)colorSetting.withDisplayName("BackGroundColor");
+      this.backGroundColor = (ColorSetting)colorSetting.withVisibility(() -> this.isSelected());
       String str4 = this.getName() + "HealthBackGroundColor";
       color = new Color(0, 0, 0);
       str2 = str4;
-      ColorSetting colorSetting2 = new ColorSetting(targetHud, str2, color, doubleValue);
-      String str5 = "HealthBackGroundColor";
-      ColorSetting colorSetting3 = (ColorSetting)colorSetting2.withDisplayName(str5);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.healthBackGroundColor = (ColorSetting)colorSetting3.withVisibility(condition2);
+      this.healthBackGroundColor = (ColorSetting)((ColorSetting)new ColorSetting(targetHud, str2, color, doubleValue).withDisplayName("HealthBackGroundColor")).withVisibility(() -> this.isSelected());
       str4 = this.getName() + "HealthColor";
       color = new Color(255, 0, 0);
       str2 = str4;
-      ColorSetting colorSetting4 = new ColorSetting(targetHud, str2, color, doubleValue);
-      String str6 = "HealthColor";
-      ColorSetting colorSetting5 = (ColorSetting)colorSetting4.withDisplayName(str6);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.healthColor = (ColorSetting)colorSetting5.withVisibility(condition3);
+      this.healthColor = (ColorSetting)((ColorSetting)new ColorSetting(targetHud, str2, color, doubleValue).withDisplayName("HealthColor")).withVisibility(() -> this.isSelected());
       str4 = this.getName() + "HeadDamageColor";
       color = new Color(255, 0, 0);
       str2 = str4;
-      ColorSetting colorSetting6 = new ColorSetting(targetHud, str2, color, doubleValue);
-      String str7 = "HeadDamageColor";
-      ColorSetting colorSetting7 = (ColorSetting)colorSetting6.withDisplayName(str7);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.headDamageColor = (ColorSetting)colorSetting7.withVisibility(condition4);
+      this.headDamageColor = (ColorSetting)((ColorSetting)new ColorSetting(targetHud, str2, color, doubleValue).withDisplayName("HeadDamageColor")).withVisibility(() -> this.isSelected());
       str4 = this.getName() + "TextColor";
       color = new Color(255, 255, 255);
       str2 = str4;
-      ColorSetting colorSetting8 = new ColorSetting(targetHud, str2, color, doubleValue);
-      String str8 = "TextColor";
-      ColorSetting colorSetting9 = (ColorSetting)colorSetting8.withDisplayName(str8);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.textColor = (ColorSetting)colorSetting9.withVisibility(condition5);
+      this.textColor = (ColorSetting)((ColorSetting)new ColorSetting(targetHud, str2, color, doubleValue).withDisplayName("TextColor")).withVisibility(() -> this.isSelected());
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new ModernTargetHudMode((TargetHud)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new ModernTargetHudMode((TargetHud)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -92,12 +73,9 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
       boolean isUpsideDownPlayer = this.isUpsideDownPlayer(clientPlayer);
       int halfWidth = this.getHalfWidth();
       int halfHeight = this.getHalfHeight();
-      byte b = 0;
-      int colorInt = this.backGroundColor.getColorInt(b);
-      boolean isBlurActive = ((TargetHud)this.parentModule).blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, ((TargetHud)this.parentModule).blurShadowSettings.isShadowActive());
+      int colorInt = this.backGroundColor.getColorInt((byte)0);
+      BlurShadowManager.enableOneShotPass(((TargetHud)this.parentModule).blurShadowSettings.isBlurActive(), ((TargetHud)this.parentModule).blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(true, shaderRenderPass -> {
-         int[] controlFlowState22 = AbstractTargetHudMode.getControlFlowState2();
          float f = (float)(-halfWidth);
          float f2 = (float)(-halfHeight);
          float f3 = (float)halfWidth;
@@ -121,7 +99,6 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
       int n3 = -33 + hurtTime / 2;
       StencilUtil.initStencilToWrite();
       StencilUtil.beginStencilWrite();
-      AbstractTargetHudMode.getControlFlowState2();
       RenderUtil.drawRoundedRectGl(
          (float)n2,
          (float)n3,
@@ -136,12 +113,10 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
          Color.white.getRGB()
       );
       StencilUtil.readStencilBuffer(1);
-      ResourceLocation locationSkin = clientPlayer.getLocationSkin();
-      this.drawPlayerHead(locationSkin, clientPlayer, flag, n2, n3, n);
+      this.drawPlayerHead(clientPlayer.getLocationSkin(), clientPlayer, flag, n2, n3, n);
       StencilUtil.uninitStencilBuffer();
       if (hurtTime > 0) {
-         byte b = 0;
-         int colorInt = this.headDamageColor.getColorInt(b);
+         int colorInt = this.headDamageColor.getColorInt((byte)0);
          RenderUtil.drawRoundedRect(
             (float)n2,
             (float)n3,
@@ -155,11 +130,9 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
    }
 
    private void renderHealthBar(AbstractClientPlayer clientPlayer, ShaderRenderPass shaderRenderPass) {
-      int[] controlFlowState22 = AbstractTargetHudMode.getControlFlowState2();
       short s = 147;
       if (shaderRenderPass == ShaderRenderPass.NONE) {
-         float playerHealth = this.getPlayerHealth(clientPlayer);
-         this.updateHealthAnimation(clientPlayer, playerHealth);
+         this.updateHealthAnimation(clientPlayer, this.getPlayerHealth(clientPlayer));
       }
 
       float f = this.currentHealth / clientPlayer.getMaxHealth();
@@ -173,13 +146,11 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
          && mc.getCurrentServerData() != null
          && !mc.getCurrentServerData().serverIP.contains("gommehd.net")) {
          BlurShadowSettings blurShadowSettings = ((TargetHud)this.parentModule).blurShadowSettings;
-         byte b = 0;
-         int colorInt = this.healthBackGroundColor.getColorInt(b);
+         int colorInt = this.healthBackGroundColor.getColorInt((byte)0);
          RenderUtil.drawRoundedRect(-37.0F, 0.0F, 110.0F, 20.0F, 8.0F, 1, blurShadowSettings.resolvePassColor(shaderRenderPass, colorInt));
          float f3 = MathHelper.clamp_float(-37.0F + this.healthAnimation.updateX(), -37.0F, 110.0F);
          blurShadowSettings = ((TargetHud)this.parentModule).blurShadowSettings;
-         byte b2 = 0;
-         int colorInt2 = this.healthColor.getColorInt(b2);
+         int colorInt2 = this.healthColor.getColorInt((byte)0);
          RenderUtil.drawRoundedRect(-37.0F, 0.0F, f3, 20.0F, 8.0F, 1, blurShadowSettings.resolvePassColor(shaderRenderPass, colorInt2));
       }
    }
@@ -188,17 +159,12 @@ public class ModernTargetHudMode extends AbstractTargetHudMode {
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 1);
       CustomFontUtil rubikBold32 = FontManager.rubikBold32;
       String name2 = clientPlayer.getGameProfile().getName();
-      String str = name2;
-      int stringWidth = (int)rubikBold32.getStringWidth(str);
+      int stringWidth = (int)rubikBold32.getStringWidth(name2);
       rubikBold32 = FontManager.rubikBold32;
       name2 = clientPlayer.getGameProfile().getName();
       double d = (double)((int)(33.0F + (float)(-stringWidth) / 2.0F));
-      byte b = 0;
-      int colorInt = this.textColor.getColorInt(b);
-      double d2 = -25.0;
-      double d3 = d;
-      String str2 = name2;
-      rubikBold32.drawString(str2, d3, d2, colorInt);
+      int colorInt = this.textColor.getColorInt((byte)0);
+      rubikBold32.drawString(name2, d, -25.0, colorInt);
    }
 
 }

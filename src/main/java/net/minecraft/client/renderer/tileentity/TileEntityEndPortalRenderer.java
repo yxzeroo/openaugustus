@@ -69,8 +69,7 @@ public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer {
 
             float f6 = (float)(-(d2 + (double)f2));
             float f7 = f6 + (float)ActiveRenderInfo.getPosition().yCoord;
-            float f8 = f6 + f3 + (float)ActiveRenderInfo.getPosition().yCoord;
-            float f9 = f7 / f8;
+            float f9 = f7 / (f6 + f3 + (float)ActiveRenderInfo.getPosition().yCoord);
             f9 = (float)(d2 + (double)f2) + f9;
             GlStateManager.translate(entityX, f9, entityZ);
             GlStateManager.texGen(GlStateManager.TexGen.S, 9217);

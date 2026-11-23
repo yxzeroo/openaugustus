@@ -629,8 +629,7 @@ public final class BuilderProcess extends BaritoneProcessHelper implements IBuil
             return false;
          }
 
-         ISchematic schematic2 = this.applyMapArtAndSelection(vec, staticSchematic);
-         this.build2(str, schematic2, vec);
+         this.build2(str, this.applyMapArtAndSelection(vec, staticSchematic), vec);
          return true;
       }
    }

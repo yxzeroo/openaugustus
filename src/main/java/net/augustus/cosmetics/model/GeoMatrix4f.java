@@ -205,7 +205,6 @@ public class GeoMatrix4f {
       float f10 = this.m20 * geoMatrix4f.m01 + this.m21 * geoMatrix4f.m11 + this.m22 * geoMatrix4f.m21 + this.m23 * geoMatrix4f.m31;
       float f11 = this.m20 * geoMatrix4f.m02 + this.m21 * geoMatrix4f.m12 + this.m22 * geoMatrix4f.m22 + this.m23 * geoMatrix4f.m32;
       float f12 = this.m20 * geoMatrix4f.m03 + this.m21 * geoMatrix4f.m13 + this.m22 * geoMatrix4f.m23 + this.m23 * geoMatrix4f.m33;
-      GeoVector3f.getFlowState();
       float f13 = this.m30 * geoMatrix4f.m00 + this.m31 * geoMatrix4f.m10 + this.m32 * geoMatrix4f.m20 + this.m33 * geoMatrix4f.m30;
       float f14 = this.m30 * geoMatrix4f.m01 + this.m31 * geoMatrix4f.m11 + this.m32 * geoMatrix4f.m21 + this.m33 * geoMatrix4f.m31;
       float f15 = this.m30 * geoMatrix4f.m02 + this.m31 * geoMatrix4f.m12 + this.m32 * geoMatrix4f.m22 + this.m33 * geoMatrix4f.m32;

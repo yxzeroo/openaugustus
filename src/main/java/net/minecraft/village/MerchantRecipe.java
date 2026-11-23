@@ -96,10 +96,8 @@ public class MerchantRecipe {
    }
 
    public void readFromTags(NBTTagCompound tag) {
-      NBTTagCompound compoundTag = tag.getCompoundTag("buy");
-      this.itemToBuy = ItemStack.loadItemStackFromNBT(compoundTag);
-      NBTTagCompound compoundTag2 = tag.getCompoundTag("sell");
-      this.itemToSell = ItemStack.loadItemStackFromNBT(compoundTag2);
+      this.itemToBuy = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("buy"));
+      this.itemToSell = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("sell"));
       if (tag.hasKey("buyB", 10)) {
          this.secondItemToBuy = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("buyB"));
       }

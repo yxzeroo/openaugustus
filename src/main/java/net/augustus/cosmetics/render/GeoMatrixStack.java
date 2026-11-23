@@ -30,21 +30,11 @@ public class GeoMatrixStack implements MatrixTransformBridge {
    }
 
    public void moveToPivot(GeoBone geoBone) {
-      float f = geoBone.rotationPointX / 16.0F;
-      float f2 = geoBone.rotationPointY / 16.0F;
-      float f3 = geoBone.rotationPointZ / 16.0F;
-      float f4 = f2;
-      float f5 = f;
-      this.translate(f5, f4, f3);
+      this.translate(geoBone.rotationPointX / 16.0F, geoBone.rotationPointY / 16.0F, geoBone.rotationPointZ / 16.0F);
    }
 
    public void moveBackFromPivot(GeoBone geoBone) {
-      float f = -geoBone.rotationPointX / 16.0F;
-      float f2 = -geoBone.rotationPointY / 16.0F;
-      float f3 = -geoBone.rotationPointZ / 16.0F;
-      float f4 = f2;
-      float f5 = f;
-      this.translate(f5, f4, f3);
+      this.translate(-geoBone.rotationPointX / 16.0F, -geoBone.rotationPointY / 16.0F, -geoBone.rotationPointZ / 16.0F);
    }
 
    public void pop() {
@@ -59,35 +49,27 @@ public class GeoMatrixStack implements MatrixTransformBridge {
    public void scale(GeoBone geoBone) {
       float scaleX = geoBone.getScaleX();
       float scaleZ = geoBone.getScaleZ();
-      float scaleY = geoBone.getScaleY();
-      float f = scaleX;
-      this.scale(f, scaleY, scaleZ);
+      this.scale(scaleX, geoBone.getScaleY(), scaleZ);
    }
 
    public void moveBackFromPivot2(GeoCube geoCube) {
       GeoVector3f pivot = geoCube.pivot;
       float f = -pivot.getX() / 16.0F;
       float f2 = -pivot.getZ() / 16.0F;
-      float f3 = -pivot.getY() / 16.0F;
-      float f4 = f;
-      this.translate(f4, f3, f2);
+      this.translate(f, -pivot.getY() / 16.0F, f2);
    }
 
    public void rotate(GeoBone geoBone) {
       if (geoBone.getRotationZ() != 0.0F) {
-         float rotationZ = geoBone.getRotationZ();
-         this.rotateZ(rotationZ);
+         this.rotateZ(geoBone.getRotationZ());
       }
 
       if (geoBone.getRotationY() != 0.0F) {
-         float rotationY = geoBone.getRotationY();
-         this.rotateY(rotationY);
+         this.rotateY(geoBone.getRotationY());
       }
 
       if (geoBone.getRotationX() != 0.0F) {
-         float rotationX = geoBone.getRotationX();
-         float f = rotationX;
-         this.rotateX(f);
+         this.rotateX(geoBone.getRotationX());
       }
    }
 
@@ -108,45 +90,30 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       GeoVector3f rotation = geoCube.rotation;
       this.tempModelMatrix.setIdentity();
       GeoMatrix4f tempMulMatrix4f2 = this.tempMulMatrix4f;
-      float z = rotation.getZ();
-      tempMulMatrix4f2.rotZ(z);
+      tempMulMatrix4f2.rotZ(rotation.getZ());
       GeoMatrix4f tempMulMatrix4f3 = this.tempMulMatrix4f;
       this.tempModelMatrix.mul(tempMulMatrix4f3);
       tempMulMatrix4f2 = this.tempMulMatrix4f;
-      float y = rotation.getY();
-      tempMulMatrix4f2.rotY(y);
+      tempMulMatrix4f2.rotY(rotation.getY());
       GeoMatrix4f tempMulMatrix4f4 = this.tempMulMatrix4f;
       this.tempModelMatrix.mul(tempMulMatrix4f4);
       tempMulMatrix4f2 = this.tempMulMatrix4f;
-      float x = rotation.getX();
-      float f = x;
-      tempMulMatrix4f2.rotX(f);
+      tempMulMatrix4f2.rotX(rotation.getX());
       GeoMatrix4f tempMulMatrix4f5 = this.tempMulMatrix4f;
       this.tempModelMatrix.mul(tempMulMatrix4f5);
       this.tempNormalMatrix.setIdentity();
-      GeoMatrix3f tempMulMatrix3f2 = this.tempMulMatrix3f;
-      float z2 = rotation.getZ();
-      tempMulMatrix3f2.rotZ(z2);
+      this.tempMulMatrix3f.rotZ(rotation.getZ());
       GeoMatrix3f tempMulMatrix3f3 = this.tempMulMatrix3f;
       this.tempNormalMatrix.mul(tempMulMatrix3f3);
-      GeoMatrix3f tempMulMatrix3f4 = this.tempMulMatrix3f;
-      float y2 = rotation.getY();
-      float f2 = y2;
-      tempMulMatrix3f4.rotY(f2);
+      this.tempMulMatrix3f.rotY(rotation.getY());
       GeoMatrix3f tempMulMatrix3f5 = this.tempMulMatrix3f;
       this.tempNormalMatrix.mul(tempMulMatrix3f5);
-      GeoMatrix3f tempMulMatrix3f6 = this.tempMulMatrix3f;
-      float x2 = rotation.getX();
-      float f3 = x2;
-      tempMulMatrix3f6.rotX(f3);
+      this.tempMulMatrix3f.rotX(rotation.getX());
       GeoMatrix3f tempMulMatrix3f7 = this.tempMulMatrix3f;
       this.tempNormalMatrix.mul(tempMulMatrix3f7);
       tempMulMatrix4f2 = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      tempMulMatrix4f2.mul(tempModelMatrix2);
-      GeoMatrix3f geoMatrix3f = (GeoMatrix3f)this.normalStack.peek();
-      GeoMatrix3f tempNormalMatrix2 = this.tempNormalMatrix;
-      geoMatrix3f.mul(tempNormalMatrix2);
+      tempMulMatrix4f2.mul(this.tempModelMatrix);
+      ((GeoMatrix3f)this.normalStack.peek()).mul(this.tempNormalMatrix);
    }
 
    public void rotateZ(float f) {
@@ -154,12 +121,8 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       this.tempModelMatrix.rotZ(f);
       this.tempNormalMatrix.setIdentity();
       this.tempNormalMatrix.rotZ(f);
-      GeoMatrix4f geoMatrix4f = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      geoMatrix4f.mul(tempModelMatrix2);
-      GeoMatrix3f geoMatrix3f = (GeoMatrix3f)this.normalStack.peek();
-      GeoMatrix3f tempNormalMatrix2 = this.tempNormalMatrix;
-      geoMatrix3f.mul(tempNormalMatrix2);
+      ((GeoMatrix4f)this.modelStack.peek()).mul(this.tempModelMatrix);
+      ((GeoMatrix3f)this.normalStack.peek()).mul(this.tempNormalMatrix);
    }
 
    public void scale(float f, float f2, float f3) {
@@ -167,9 +130,7 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       this.tempModelMatrix.setM00(f);
       this.tempModelMatrix.setM11(f2);
       this.tempModelMatrix.setM22(f3);
-      GeoMatrix4f geoMatrix4f = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      geoMatrix4f.mul(tempModelMatrix2);
+      ((GeoMatrix4f)this.modelStack.peek()).mul(this.tempModelMatrix);
       if (f < 0.0F || f2 < 0.0F || f3 < 0.0F) {
          this.tempNormalMatrix.setIdentity();
          float f4 = f < 0.0F ? -1.0F : 1.0F;
@@ -178,9 +139,7 @@ public class GeoMatrixStack implements MatrixTransformBridge {
          this.tempNormalMatrix.setM11(f5);
          float f6 = f3 < 0.0F ? -1.0F : 1.0F;
          this.tempNormalMatrix.setM22(f6);
-         GeoMatrix3f geoMatrix3f = (GeoMatrix3f)this.normalStack.peek();
-         GeoMatrix3f tempNormalMatrix2 = this.tempNormalMatrix;
-         geoMatrix3f.mul(tempNormalMatrix2);
+         ((GeoMatrix3f)this.normalStack.peek()).mul(this.tempNormalMatrix);
       }
    }
 
@@ -206,9 +165,7 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       GeoVector3f pivot = geoCube.pivot;
       float f = pivot.getX() / 16.0F;
       float f2 = pivot.getZ() / 16.0F;
-      float f3 = pivot.getY() / 16.0F;
-      float f4 = f;
-      this.translate(f4, f3, f2);
+      this.translate(f, pivot.getY() / 16.0F, f2);
    }
 
    public void transformVertex(GeoVertex geoVertex) {
@@ -225,9 +182,7 @@ public class GeoMatrixStack implements MatrixTransformBridge {
    public void translate(GeoBone geoBone) {
       float f = -geoBone.getPositionX() / 16.0F;
       float f2 = geoBone.getPositionZ() / 16.0F;
-      float f3 = geoBone.getPositionY() / 16.0F;
-      float f4 = f;
-      this.translate(f4, f3, f2);
+      this.translate(f, geoBone.getPositionY() / 16.0F, f2);
    }
 
    public void rotateX(float f) {
@@ -235,12 +190,8 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       this.tempModelMatrix.rotX(f);
       this.tempNormalMatrix.setIdentity();
       this.tempNormalMatrix.rotX(f);
-      GeoMatrix4f geoMatrix4f = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      geoMatrix4f.mul(tempModelMatrix2);
-      GeoMatrix3f geoMatrix3f = (GeoMatrix3f)this.normalStack.peek();
-      GeoMatrix3f tempNormalMatrix2 = this.tempNormalMatrix;
-      geoMatrix3f.mul(tempNormalMatrix2);
+      ((GeoMatrix4f)this.modelStack.peek()).mul(this.tempModelMatrix);
+      ((GeoMatrix3f)this.normalStack.peek()).mul(this.tempNormalMatrix);
    }
 
    public void rotateY(float f) {
@@ -248,12 +199,8 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       this.tempModelMatrix.rotY(f);
       this.tempNormalMatrix.setIdentity();
       this.tempNormalMatrix.rotY(f);
-      GeoMatrix4f geoMatrix4f = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      geoMatrix4f.mul(tempModelMatrix2);
-      GeoMatrix3f geoMatrix3f = (GeoMatrix3f)this.normalStack.peek();
-      GeoMatrix3f tempNormalMatrix2 = this.tempNormalMatrix;
-      geoMatrix3f.mul(tempNormalMatrix2);
+      ((GeoMatrix4f)this.modelStack.peek()).mul(this.tempModelMatrix);
+      ((GeoMatrix3f)this.normalStack.peek()).mul(this.tempNormalMatrix);
    }
 
    public void translate(float f, float f2, float f3) {
@@ -261,9 +208,7 @@ public class GeoMatrixStack implements MatrixTransformBridge {
       this.tempModelMatrix.m03 = f;
       this.tempModelMatrix.m13 = f2;
       this.tempModelMatrix.m23 = f3;
-      GeoMatrix4f geoMatrix4f = (GeoMatrix4f)this.modelStack.peek();
-      GeoMatrix4f tempModelMatrix2 = this.tempModelMatrix;
-      geoMatrix4f.mul(tempModelMatrix2);
+      ((GeoMatrix4f)this.modelStack.peek()).mul(this.tempModelMatrix);
    }
 
 }

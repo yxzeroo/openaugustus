@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
@@ -16,7 +16,7 @@ public class DiscoSkinDerpMode extends SkinDerpMode implements TickListener {
    private final Map partStates = new HashMap();
    private int stepCounter;
 
-   public DiscoSkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue) {
+   public DiscoSkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue) {
       super(skinDerp, doubleValue, "Disco");
       int n = 0;
       this.stepCounter = 0;
@@ -27,8 +27,7 @@ public class DiscoSkinDerpMode extends SkinDerpMode implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -50,9 +49,7 @@ public class DiscoSkinDerpMode extends SkinDerpMode implements TickListener {
    @Override
    public void onTick3() {
       if (mc.thePlayer != null && mc.theWorld != null) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double delayMs = this.getDelayMs();
-         if (timeHelper2.reached(delayMs)) {
+         if (this.timeHelper.reached(this.getDelayMs())) {
             this.timeHelper.reset();
             this.stepCounter++;
             EnumPlayerModelParts[] modelParts = this.getModelParts();
@@ -89,7 +86,7 @@ public class DiscoSkinDerpMode extends SkinDerpMode implements TickListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new DiscoSkinDerpMode((SkinDerp)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new DiscoSkinDerpMode((SkinDerp)obj, (SettingGroup)obj2);
    }
 
 }

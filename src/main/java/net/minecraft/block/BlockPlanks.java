@@ -16,8 +16,7 @@ public class BlockPlanks extends Block {
    public static final PropertyEnum VARIANT;
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockPlanks.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class);
    }
 
    @Override

@@ -62,9 +62,7 @@ public class EntityOtherPlayerMP extends AbstractClientPlayer implements MC {
 
    @Override
    public void spawnRunningParticles() {
-      byte b = 2;
-      PlayerEffectEntry playerEffect = PlayerEffectRegistry.getPlayerEffect(this, b);
-      if (playerEffect == null) {
+      if (PlayerEffectRegistry.getPlayerEffect(this, (byte)2) == null) {
          super.spawnRunningParticles();
       }
    }
@@ -142,9 +140,7 @@ public class EntityOtherPlayerMP extends AbstractClientPlayer implements MC {
       }
 
       if (this.ticksExisted > 5 && Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
-         BoundedHistoryList motionSnapshotHistory2 = this.motionSnapshotHistory;
-         EntityMotionSnapshot entityMotionSnapshot = new EntityMotionSnapshot(this);
-         motionSnapshotHistory2.add(entityMotionSnapshot);
+         this.motionSnapshotHistory.add(new EntityMotionSnapshot(this));
       }
 
       this.prevCameraYaw = this.cameraYaw;

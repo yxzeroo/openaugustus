@@ -15,7 +15,7 @@ import net.augustus.utils.rotation.RotationUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.Module;
 import net.augustus.modules.movement.LongJump;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 
@@ -24,21 +24,17 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
    private int chargeTicks = 0;
    private int bowSlot = -1;
 
-   public MinemenLongJumpMode(LongJump longJump, DoubleValue doubleValue) {
+   public MinemenLongJumpMode(LongJump longJump, SettingGroup doubleValue) {
       super(longJump, doubleValue, "Minemen");
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 43;
-      this.toggleEventSubscription(b3);
-      byte b4 = 34;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
@@ -52,7 +48,7 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new MinemenLongJumpMode((LongJump)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new MinemenLongJumpMode((LongJump)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -60,8 +56,7 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
       if (this.bowSlot != -1 && this.chargingBow) {
          this.chargeTicks++;
          if (this.chargeTicks < 4) {
-            boolean flag = true;
-            event.setRightMouseDown(flag);
+            event.setRightMouseDown(true);
          } else {
             this.chargingBow = false;
          }
@@ -74,13 +69,10 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      float f = 0.0F;
-      event.setMoveForward(f);
-      float f2 = 0.0F;
-      event.setMoveStrafe(f2);
+      event.setMoveForward(0.0F);
+      event.setMoveStrafe(0.0F);
       if (!this.chargingBow && this.chargeTicks > 14) {
-         float f3 = 1.0F;
-         event.setMoveForward(f3);
+         event.setMoveForward(1.0F);
       }
    }
 
@@ -93,20 +85,14 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
 
       if (this.bowSlot >= 0) {
          int bowSlot2 = this.bowSlot;
-         byte b = 7;
-         SilentSlotManager.requestSlot(this.parentModule, b, bowSlot2);
+         SilentSlotManager.requestSlot(this.parentModule, (byte)7, bowSlot2);
       }
    }
 
    @Override
    public void onTick() {
       if (this.chargingBow) {
-         RotationController rotationController = ClientManagers.rotationController;
-         float f = RotationUtil.applyPitchGcd(-90.0F, ClientManagers.rotationController.getPreviousRotation().pitch);
-         Module parentModule2 = this.parentModule;
-         byte b = -10;
-         float f2 = f;
-         rotationController.requestPitch(f2, b, parentModule2);
+         ClientManagers.rotationController.requestPitch(RotationUtil.applyPitchGcd(-90.0F, ClientManagers.rotationController.getPreviousRotation().pitch), (byte)-10, this.parentModule);
       }
    }
 
@@ -123,8 +109,7 @@ public class MinemenLongJumpMode extends AbstractLongJumpMode implements ClickLi
          }
 
          if (mc.thePlayer.hurtTime == 1) {
-            boolean flag = false;
-            this.setEnabled(flag);
+            this.setEnabled(false);
          }
       }
    }

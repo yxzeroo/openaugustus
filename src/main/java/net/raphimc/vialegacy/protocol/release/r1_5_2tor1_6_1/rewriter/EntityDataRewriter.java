@@ -42,8 +42,7 @@ public class EntityDataRewriter {
                         Logger logger = ViaLegacy.getPlatform().getLogger();
                         String str = String.valueOf(entityDataIndex.getNewType());
                         String str2 = String.valueOf(entry);
-                        String str3 = str;
-                        logger.warning("1.5.2 EntityDataRewriter: Unhandled Type: " + str3 + " " + str2);
+                        logger.warning("1.5.2 EntityDataRewriter: Unhandled Type: " + str + " " + str2);
                      }
 
                      list.remove(entry);
@@ -55,8 +54,7 @@ public class EntityDataRewriter {
                Level warning = Level.WARNING;
                String str4 = type.name();
                String str5 = String.valueOf(entry);
-               String str6 = str4;
-               logger2.log(warning, "Error rewriting entity data entry for " + str6 + ": " + str5, e);
+               logger2.log(warning, "Error rewriting entity data entry for " + str4 + ": " + str5, e);
             }
 
             list.remove(entry);

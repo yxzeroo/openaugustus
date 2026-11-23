@@ -9,9 +9,8 @@ public class TextWrapper {
    public static List wrapText(String str, int n, CustomFontUtil customFontUtil) {
       ArrayList list = new ArrayList();
       if (str != null && !str.isEmpty()) {
-         String[] strings = str.split("\n");
 
-         for (String str2 : strings) {
+         for (String str2 : str.split("\n")) {
             if (str2.trim().isEmpty()) {
                list.add("");
             } else {
@@ -34,8 +33,7 @@ public class TextWrapper {
 
       for (int i = 0; i < str.length(); i++) {
          char ch = str.charAt(i);
-         String str2 = sb.toString() + ch;
-         if (customFontUtil.getStringWidth(str2) <= (float)n) {
+         if (customFontUtil.getStringWidth(sb.toString() + ch) <= (float)n) {
             sb.append(ch);
          } else {
             if (sb.length() > 0) {
@@ -57,9 +55,7 @@ public class TextWrapper {
       StringBuilder sb = new StringBuilder();
 
       for (String str2 : strings) {
-         String str3 = sb.length() == 0 ? str2 : sb + " " + str2;
-         float stringWidth = customFontUtil.getStringWidth(str3);
-         if (stringWidth <= (float)n) {
+         if (customFontUtil.getStringWidth(sb.length() == 0 ? str2 : sb + " " + str2) <= (float)n) {
             if (sb.length() > 0) {
                sb.append(" ");
             }

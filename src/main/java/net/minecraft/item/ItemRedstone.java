@@ -12,13 +12,11 @@ import net.minecraft.world.World;
 public class ItemRedstone extends Item {
    @Override
    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float f, float f2, float f3) {
-      boolean isReplaceable = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
-      BlockPos pos2 = isReplaceable ? pos : pos.offset(facing);
+      BlockPos pos2 = world.getBlockState(pos).getBlock().isReplaceable(world, pos) ? pos : pos.offset(facing);
       if (!player.canPlayerEdit(pos2, facing, stack)) {
          return false;
       } else {
-         Block block = world.getBlockState(pos2).getBlock();
-         if (!world.canBlockBePlaced(block, pos2, false, facing, (Entity)null, stack)) {
+         if (!world.canBlockBePlaced(world.getBlockState(pos2).getBlock(), pos2, false, facing, (Entity)null, stack)) {
             return false;
          } else if (Blocks.redstone_wire.canPlaceBlockAt(world, pos2)) {
             stack.stackSize--;

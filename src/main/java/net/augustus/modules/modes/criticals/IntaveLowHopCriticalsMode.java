@@ -4,18 +4,17 @@ import net.augustus.events.EventAttackEntity;
 import net.augustus.events.listeners.AttackEntityListener;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Criticals;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class IntaveLowHopCriticalsMode extends CriticalsMode implements AttackEntityListener {
 
-   public IntaveLowHopCriticalsMode(Criticals criticals, DoubleValue doubleValue) {
+   public IntaveLowHopCriticalsMode(Criticals criticals, SettingGroup doubleValue) {
       super(criticals, doubleValue, "IntaveLowHop");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 1;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override
@@ -27,7 +26,7 @@ public class IntaveLowHopCriticalsMode extends CriticalsMode implements AttackEn
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new IntaveLowHopCriticalsMode((Criticals)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new IntaveLowHopCriticalsMode((Criticals)obj, (SettingGroup)obj2);
    }
 
    @Override

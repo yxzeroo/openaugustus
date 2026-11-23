@@ -7,8 +7,7 @@ import java.util.Set;
 public final class StringSetPropertySerializer implements SetPropertySerializer {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      String str = (String)obj;
-      this.writeStringElement(array, str);
+      this.writeStringElement(array, (String)obj);
    }
 
    public void writeStringElement(JsonArray array, String str) {

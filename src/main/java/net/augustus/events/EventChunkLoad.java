@@ -10,8 +10,7 @@ public class EventChunkLoad extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      ChunkLoadListener listener = (ChunkLoadListener)obj;
-      this.call2(listener);
+      this.call2((ChunkLoadListener)obj);
    }
 
    public EventChunkLoad(int n, int n2) {

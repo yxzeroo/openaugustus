@@ -15,8 +15,7 @@ public class EagleCEdgeDeviationCheck extends ModuleMode {
    @Override
    public void onClientPacket(Packet packet) {
       if (packet instanceof C0BPacketEntityAction) {
-         C0BPacketEntityAction packet2 = (C0BPacketEntityAction)packet;
-         if (packet2.getAction() == C0BPacketEntityAction.Action.START_SNEAKING) {
+         if (((C0BPacketEntityAction)packet).getAction() == C0BPacketEntityAction.Action.START_SNEAKING) {
             double d = Math.abs((double)((int)Math.round(mc.thePlayer.posX)) - mc.thePlayer.posX);
             double d2 = Math.abs((double)((int)Math.round(mc.thePlayer.posZ)) - mc.thePlayer.posZ);
             double d3 = Math.abs(mc.thePlayer.posX - this.lastSneakPosX);

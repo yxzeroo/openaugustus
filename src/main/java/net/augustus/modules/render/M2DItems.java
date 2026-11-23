@@ -19,7 +19,7 @@ import net.augustus.render.ProjectionUtil;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -31,7 +31,7 @@ import net.minecraft.util.Vec3;
 
 public class M2DItems extends Module implements RenderListener, TickListener, LoadWorldListener {
    private final MultiOptionSetting items;
-   private final StringValue scale;
+   private final DoubleValue scale;
    public final BooleanValue remove3DItems;
    private final BooleanValue showStackSize;
    private final BooleanValue background;
@@ -44,7 +44,7 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
    public M2DItems() {
        super("2DItems", "2DGegenstände", new Color(66, 135, 245), Categorys.RENDER);
       this.items = new MultiOptionSetting(this, "Items", M2DItemsFilterOption.values());
-      this.scale = new StringValue(this, "Scale", 1.0, 0.25, 4.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 1.0, 0.25, 4.0, 2);
       this.remove3DItems = new BooleanValue(this, "Remove3DItems", true);
       this.showStackSize = new BooleanValue(this, "ShowStackSize", false);
       this.background = new BooleanValue(this, "Background", false);
@@ -52,14 +52,12 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
       BooleanValue background3 = this.background;
       this.background.getClass();
       BooleanValue booleanValue = background3;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(condition);
+      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue.getValue());
       BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, "Background");
       background3 = this.background;
       this.background.getClass();
       BooleanValue booleanValue2 = background3;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.background2 = (BlurShadowSettings)blurShadowSettings.withVisibility(condition2);
+      this.background2 = (BlurShadowSettings)blurShadowSettings.withVisibility(() -> booleanValue2.getValue());
       this.onlyAtOptifineZoom = new BooleanValue(this, "OnlyAtOptifineZoom", false);
       this.filteredItemEntities = new java.util.ArrayList();
       this.projectedItemCoords = new HashMap();
@@ -77,12 +75,9 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 17;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -101,8 +96,7 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
             int xCoord = (int)vec.xCoord;
             int yCoord = (int)vec.yCoord;
             if (this.background.getValue()) {
-               boolean isBlurActive = this.background2.isBlurActive();
-               BlurShadowManager.enableOneShotPass(isBlurActive, this.background2.isShadowActive());
+               BlurShadowManager.enableOneShotPass(this.background2.isBlurActive(), this.background2.isShadowActive());
                BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderItemWithBackgroundPass(xCoord, yCoord, value, entityItem, shaderRenderPass));
             } else {
                this.beginItemTransform(xCoord, yCoord, value);
@@ -142,8 +136,7 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
 
       for (Entity entity : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
          if (entity instanceof EntityItem && ((EntityItem)entity).getEntityItem() != null) {
-            ItemStack entityItem = ((EntityItem)entity).getEntityItem();
-            if (this.shouldRenderItem2D(entityItem)) {
+            if (this.shouldRenderItem2D(((EntityItem)entity).getEntityItem())) {
                this.filteredItemEntities.add((EntityItem)entity);
             }
          }
@@ -187,19 +180,13 @@ public class M2DItems extends Module implements RenderListener, TickListener, Lo
    private void renderItemWithBackgroundPass(int n, int n2, float f, EntityItem entityItem, ShaderRenderPass shaderRenderPass) {
       this.beginItemTransform(n, n2, f);
       if (shaderRenderPass == ShaderRenderPass.SHADOW) {
-         BlurShadowSettings background22 = this.background2;
-         byte b = 0;
-         int colorInt = this.backgroundColor.getColorInt(b);
-         int n3 = ColorUtil.resolvePassColor(shaderRenderPass, colorInt);
-         RenderUtil.drawRect3(0, 0, 16, 16, background22.resolvePassColor(shaderRenderPass, n3));
+         RenderUtil.drawRect3(0, 0, 16, 16, this.background2.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, this.backgroundColor.getColorInt((byte)0))));
       } else if (shaderRenderPass == ShaderRenderPass.BLUR) {
-         byte b2 = 0;
-         RenderUtil.drawRect3(0, 0, 16, 16, this.backgroundColor.getColorInt(b2));
+         RenderUtil.drawRect3(0, 0, 16, 16, this.backgroundColor.getColorInt((byte)0));
       }
 
       if (shaderRenderPass == ShaderRenderPass.NONE) {
-         byte b3 = 0;
-         RenderUtil.drawRect3(0, 0, 16, 16, this.backgroundColor.getColorInt(b3));
+         RenderUtil.drawRect3(0, 0, 16, 16, this.backgroundColor.getColorInt((byte)0));
          RenderHelper.enableGUIStandardItemLighting();
          mc.getRenderItem().renderItemIntoGUI(entityItem.getEntityItem(), 0, 0);
          if (this.showStackSize.getValue()) {

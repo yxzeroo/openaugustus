@@ -49,8 +49,7 @@ public class EventPacket extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      PacketListener listener = (PacketListener)obj;
-      this.call2(listener);
+      this.call2((PacketListener)obj);
    }
 
    public EventPacket(Packet packet2, PacketStage packetStage) {

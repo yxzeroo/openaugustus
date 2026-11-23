@@ -15,7 +15,6 @@ public class SinFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.sin(this.getArg(b));
+      return Math.sin(this.getArg((byte)0));
    }
 }

@@ -485,8 +485,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
             if (d == d2) {
                return Optional.empty();
             } else {
-               double d3 = Math.abs(d - this.goal.heuristic()) * (double)this.ticksElapsedSoFar / Math.abs(d2 - d);
-               return Optional.of(d3);
+               return Optional.of(Math.abs(d - this.goal.heuristic()) * (double)this.ticksElapsedSoFar / Math.abs(d2 - d));
             }
          }
       } else {

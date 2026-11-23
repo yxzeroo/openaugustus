@@ -18,25 +18,25 @@ import net.augustus.settings.SettingChangeListener;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingDescriptionManager;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class ClickGui extends Module implements DownloadTerrainListener, TickListener {
-   public final BooleansSetting sorting;
+   public final StringValue sorting;
    public BooleanValue germanMode;
    public final BooleanValue openInInventory;
    public final BlurShadowSettings clickGui;
    public final BooleanValue outline;
-   public final StringValue alpha;
-   public final StringValue dynamicKeyTime;
-   public final BooleansSetting descriptions;
-   public final BooleansSetting settingNames;
+   public final DoubleValue alpha;
+   public final DoubleValue dynamicKeyTime;
+   public final StringValue descriptions;
+   public final StringValue settingNames;
    public final BooleanValue moduleDescriptions;
    public final BooleanValue settingDescriptions;
-   public final DoubleValue colors;
+   public final SettingGroup colors;
    public final ColorSetting backgroundColor;
    public final ColorSetting outlineColor;
    public final ColorSetting headerColor;
@@ -47,42 +47,35 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
 
    public ClickGui() {
        super("ClickGui", "KlickbareGrafischeBenutzeroberfläche", Color.BLACK, Categorys.RENDER);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Sorting", "Alphabet", new String[]{"Random", "Length", "Alphabet"});
+      StringValue booleansSetting = new StringValue(this, "Sorting", "Alphabet", new String[]{"Random", "Length", "Alphabet"});
       SettingChangeListener listener = () -> this.sortCategoryModules();
-      SettingChangeListener listener2 = listener;
-      this.sorting = (BooleansSetting)booleansSetting.withChangeListener(listener2);
+      this.sorting = (StringValue)booleansSetting.withChangeListener(listener);
       BooleanValue booleanValue = new BooleanValue(this, "GermanMode", false);
       listener = () -> {
 
          for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
-            String str = this.germanMode.getValue() ? module.getGermanName() : module.getName();
-            module.setName(str);
+            module.setName(this.germanMode.getValue() ? module.getGermanName() : module.getName());
          }
       };
-      SettingChangeListener listener3 = listener;
-      this.germanMode = (BooleanValue)booleanValue.withChangeListener(listener3);
+      this.germanMode = (BooleanValue)booleanValue.withChangeListener(listener);
       this.openInInventory = new BooleanValue(this, "OpenInInventory", true);
-      BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, "ClickGui");
-      Color black = Color.black;
-      this.clickGui = blurShadowSettings.withCustomShadowColor(black);
+      this.clickGui = new BlurShadowSettings(this, "ClickGui").withCustomShadowColor(Color.black);
       this.outline = new BooleanValue(this, "Outline", true);
-      this.alpha = new StringValue(this, "Alpha", 200.0, 0.0, 255.0, 0);
-      this.dynamicKeyTime = new StringValue(this, "DynamicKeyTime", 500.0, 0.0, 2000.0, 0);
-      BooleansSetting booleansSetting2 = new BooleansSetting(this, "Descriptions", "Default", new String[]{"Default"});
+      this.alpha = new DoubleValue(this, "Alpha", 200.0, 0.0, 255.0, 0);
+      this.dynamicKeyTime = new DoubleValue(this, "DynamicKeyTime", 500.0, 0.0, 2000.0, 0);
+      StringValue booleansSetting2 = new StringValue(this, "Descriptions", "Default", new String[]{"Default"});
       listener = () -> this.reloadSettingDescriptionsAsync();
-      SettingChangeListener listener4 = listener;
-      this.descriptions = (BooleansSetting)booleansSetting2.withChangeListener(listener4);
-      BooleansSetting booleansSetting3 = new BooleansSetting(this, "SettingNames", "English_Default", new String[]{"English_Default", "English_New"});
+      this.descriptions = (StringValue)booleansSetting2.withChangeListener(listener);
+      StringValue booleansSetting3 = new StringValue(this, "SettingNames", "English_Default", new String[]{"English_Default", "English_New"});
       listener = () -> {
          CompletableFuture.runAsync(() -> this.reloadSettingNames());
       };
-      SettingChangeListener listener5 = listener;
-      this.settingNames = (BooleansSetting)booleansSetting3.withChangeListener(listener5);
+      this.settingNames = (StringValue)booleansSetting3.withChangeListener(listener);
       this.moduleDescriptions = new BooleanValue(this, "ModuleDescriptions", true);
       this.settingDescriptions = new BooleanValue(this, "SettingDescriptions", true);
-      this.colors = new DoubleValue(this, "Colors");
+      this.colors = new SettingGroup(this, "Colors");
       Color color2 = new Color(40, 39, 39, 200);
-      DoubleValue colors2 = this.colors;
+      SettingGroup colors2 = this.colors;
       Color color3 = color2;
       String str2 = "BackgroundColor";
       this.backgroundColor = new ColorSetting(this, str2, color3, colors2);
@@ -105,11 +98,7 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
       colors2 = this.colors;
       color3 = color2;
       str2 = "TextColorHover";
-      ColorSetting colorSetting = new ColorSetting(this, str2, color3, colors2);
-      boolean flag = true;
-      ColorSetting colorSetting2 = colorSetting.withClientColorDefault(flag);
-      short s = 255;
-      this.hoverTextColor = colorSetting2.withDefaultClientColorAlpha(s);
+      this.hoverTextColor = new ColorSetting(this, str2, color3, colors2).withClientColorDefault(true).withDefaultClientColorAlpha((short)255);
       color2 = new Color(0, 214, 0);
       colors2 = this.colors;
       color3 = color2;
@@ -120,10 +109,8 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
       color3 = color2;
       str2 = "FalseColor";
       this.disabledColor = new ColorSetting(this, str2, color3, colors2);
-      byte b = 54;
-      this.setKeyCode(b);
-      boolean flag2 = false;
-      this.setToggleSoundEnabled(flag2);
+      this.setKeyCode((byte)54);
+      this.setToggleSoundEnabled(false);
    }
 
    @Override
@@ -131,33 +118,27 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
       if (mc.currentScreen instanceof GuiContainer && !this.openInInventory.getValue()) {
          this.toggle();
       } else {
-         ConfigManager configManager = Augustus.getInstance().getConfigManager();
-         configManager.snapshotAll();
+         Augustus.getInstance().getConfigManager().snapshotAll();
          Augustus.getInstance().getDiscordRpcManager().start();
          if (mc.thePlayer != null && mc.theWorld != null) {
             if (mc.currentScreen != null) {
                mc.thePlayer.closeScreen();
             }
 
-            Minecraft mc2 = mc;
-            ClickGuiScreen clickGui2 = Augustus.getInstance().getClickGui();
-            mc2.displayGuiScreen(clickGui2);
+            mc.displayGuiScreen(Augustus.getInstance().getClickGui());
          }
       }
    }
 
    @Override
    public void onDisable() {
-      ConfigManager configManager = Augustus.getInstance().getConfigManager();
-      configManager.snapshotAll();
+      Augustus.getInstance().getConfigManager().snapshotAll();
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 8;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)8);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -171,14 +152,12 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
    public void onDownloadTerrain() {
 
       for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
-         String str = this.germanMode.getValue() ? module.getGermanName() : module.getName();
-         module.setName(str);
+         module.setName(this.germanMode.getValue() ? module.getGermanName() : module.getName());
       }
    }
 
    private void sortCategoryModules() {
-      String selectedValue = this.sorting.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.sorting.getSelectedValue()) {
          case "Random":
             for (Categorys categorys2 : Categorys.values()) {
                if (!categorys2.hidden) {
@@ -205,15 +184,12 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
 
    private static double getModuleNameLengthSortKey(Module module) {
       CustomFontUtil moduleFont = Augustus.getInstance().getClickGui().getMainWindow().getModuleFont();
-      String name2 = module.getName2();
-      String str = name2;
+      String str = module.getName2();
       return (double)(1000.0F - moduleFont.getStringWidth(str));
    }
 
    private void reloadSettingNames() {
-      SettingNameManager settingNameManager = Augustus.getInstance().getSettingNameManager();
-      String selectedValue = this.settingNames.getSelectedValue();
-      settingNameManager.loadLanguageFile(selectedValue);
+      Augustus.getInstance().getSettingNameManager().loadLanguageFile(this.settingNames.getSelectedValue());
    }
 
    private void reloadSettingDescriptionsAsync() {
@@ -221,10 +197,7 @@ public class ClickGui extends Module implements DownloadTerrainListener, TickLis
    }
 
    private void reloadSettingDescriptions() {
-      SettingDescriptionManager manager = Augustus.getInstance().getSettingDescriptionManager();
-      String selectedValue = this.descriptions.getSelectedValue();
-      String str = selectedValue;
-      manager.loadDescriptions(str);
+      Augustus.getInstance().getSettingDescriptionManager().loadDescriptions(this.descriptions.getSelectedValue());
    }
 
 

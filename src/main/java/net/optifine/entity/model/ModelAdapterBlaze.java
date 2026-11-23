@@ -34,8 +34,7 @@ public class ModelAdapterBlaze extends ModelAdapter {
                return null;
             } else {
                ModelRenderer[] blazeSticks = modelBlaze.blazeSticks;
-               String str3 = str.substring(str2.length());
-               int n = Config.parseInt(str3, -1);
+               int n = Config.parseInt(str.substring(str2.length()), -1);
                n--;
                return n >= 0 && n < blazeSticks.length ? blazeSticks[n] : null;
             }

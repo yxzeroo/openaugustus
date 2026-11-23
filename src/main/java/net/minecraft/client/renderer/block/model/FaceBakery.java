@@ -36,8 +36,7 @@ public class FaceBakery {
    }
 
    private void storeVertexData(int[] ints, int n, int n2, Vector3f vector3f, int n3, TextureAtlasSprite textureAtlasSprite, BlockFaceUV blockFaceUV) {
-      int n4 = ints.length / 4;
-      int n5 = n * n4;
+      int n5 = n * (ints.length / 4);
       ints[n5] = Float.floatToRawIntBits(vector3f.x);
       ints[n5 + 1] = Float.floatToRawIntBits(vector3f.y);
       ints[n5 + 2] = Float.floatToRawIntBits(vector3f.z);
@@ -91,8 +90,7 @@ public class FaceBakery {
    }
 
    private int getFaceShadeColor(EnumFacing facing) {
-      float faceBrightness = getFaceBrightness(facing);
-      int n = MathHelper.clamp_int((int)(faceBrightness * 255.0F), 0, 255);
+      int n = MathHelper.clamp_int((int)(getFaceBrightness(facing) * 255.0F), 0, 255);
       return 0xFF000000 | n << 16 | n << 8 | n;
    }
 
@@ -252,8 +250,7 @@ public class FaceBakery {
 
       for (EnumFacing facing2 : EnumFacing.getValues()) {
          Vec3i directionVec = facing2.getDirectionVec();
-         Vector3f vector3f7 = new Vector3f((float)directionVec.getX(), (float)directionVec.getY(), (float)directionVec.getZ());
-         float f3 = Vector3f.dot(vector3f6, vector3f7);
+         float f3 = Vector3f.dot(vector3f6, new Vector3f((float)directionVec.getX(), (float)directionVec.getY(), (float)directionVec.getZ()));
          if (f3 >= 0.0F && f3 > f2) {
             f2 = f3;
             facing = facing2;

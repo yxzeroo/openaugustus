@@ -28,15 +28,11 @@ public class GuiInventory extends InventoryEffectRenderer {
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.id == 0) {
-         Minecraft mc2 = this.mc;
-         GuiAchievements guiAchievements = new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter());
-         mc2.displayGuiScreen(guiAchievements);
+         this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
       }
 
       if (button.id == 1) {
-         Minecraft mc3 = this.mc;
-         GuiStats guiStats = new GuiStats(this, this.mc.thePlayer.getStatFileWriter());
-         mc3.displayGuiScreen(guiStats);
+         this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
       }
    }
 
@@ -44,9 +40,7 @@ public class GuiInventory extends InventoryEffectRenderer {
    public void initGui() {
       this.buttonList.clear();
       if (this.mc.playerController.isInCreativeMode()) {
-         Minecraft mc2 = this.mc;
-         GuiContainerCreative guiContainerCreative = new GuiContainerCreative(this.mc.thePlayer);
-         mc2.displayGuiScreen(guiContainerCreative);
+         this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
       } else {
          super.initGui();
       }
@@ -108,9 +102,7 @@ public class GuiInventory extends InventoryEffectRenderer {
    @Override
    public void updateScreen() {
       if (this.mc.playerController.isInCreativeMode()) {
-         Minecraft mc2 = this.mc;
-         GuiContainerCreative guiContainerCreative = new GuiContainerCreative(this.mc.thePlayer);
-         mc2.displayGuiScreen(guiContainerCreative);
+         this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
       }
 
       this.updateActivePotionEffects();

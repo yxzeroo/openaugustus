@@ -75,8 +75,7 @@ public class CPacketPlayerTryUseItemOnBlock implements Packet {
 
    @Override
    public void processPacket(INetHandler handler) {
-      INetHandlerPlayServer netHandlerPlayServer = (INetHandlerPlayServer)handler;
-      this.processPacket2(netHandlerPlayServer);
+      this.processPacket2((INetHandlerPlayServer)handler);
    }
 
    public BlockPos getPosition() {

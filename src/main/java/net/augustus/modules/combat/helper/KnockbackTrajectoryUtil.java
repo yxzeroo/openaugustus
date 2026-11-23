@@ -25,8 +25,7 @@ public final class KnockbackTrajectoryUtil implements MC {
          double d8 = d / d3 * 0.4 - Math.sin(d5) * 0.5;
          double d9 = d2 / d3 * 0.4 + Math.cos(d5) * 0.5;
          float f2 = (float)Math.toDegrees(Math.atan2(d6, d7));
-         float f3 = (float)Math.toDegrees(Math.atan2(d8, d9));
-         return Math.abs(MathHelper.wrapAngleTo180_float(f3 - f2));
+         return Math.abs(MathHelper.wrapAngleTo180_float(((float)Math.toDegrees(Math.atan2(d8, d9))) - f2));
       }
    }
 

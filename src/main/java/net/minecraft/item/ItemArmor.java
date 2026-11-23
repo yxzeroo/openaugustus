@@ -39,8 +39,7 @@ public class ItemArmor extends Item {
    @Override
    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
       int n = EntityLiving.getArmorPosition(stack) - 1;
-      ItemStack currentArmor = player.getCurrentArmor(n);
-      if (currentArmor == null) {
+      if (player.getCurrentArmor(n) == null) {
          player.setCurrentItemOrArmor(n, stack.copy());
          stack.stackSize = 0;
       }

@@ -144,15 +144,13 @@ public class AnimationUtil {
             return d < 0.5 ? (1.0 - Math.sqrt(1.0 - Math.pow(2.0 * d, 2.0))) / 2.0 : (Math.sqrt(1.0 - Math.pow(-2.0 * d + 2.0, 2.0)) + 1.0) / 2.0;
          case 22:
             double d2 = 1.70158;
-            double d3 = d2 + 1.0;
-            return d3 * d * d * d - d2 * d * d;
+            return (d2 + 1.0) * d * d * d - d2 * d * d;
          case 23:
             double d4 = 1.70158;
             double d5 = d4 + 1.0;
             return 1.0 + d5 * Math.pow(d - 1.0, 3.0) + d4 * Math.pow(d - 1.0, 2.0);
          case 24:
-            double d6 = 1.70158;
-            double d7 = d6 * 1.525;
+            double d7 = 1.70158 * 1.525;
             double d8 = Math.pow(2.0 * d, 2.0) * ((d7 + 1.0) * 2.0 * d - d7) / 2.0;
             double d9 = (Math.pow(2.0 * d - 2.0, 2.0) * ((d7 + 1.0) * (d * 2.0 - 2.0) + d7) + 2.0) / 2.0;
             return d < 0.5 ? d8 : d9;

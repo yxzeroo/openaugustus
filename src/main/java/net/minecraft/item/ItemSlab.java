@@ -25,8 +25,7 @@ public class ItemSlab extends ItemBlock {
          }
       }
 
-      BlockPos pos2 = pos.offset(facing);
-      IBlockState blockState2 = world.getBlockState(pos2);
+      IBlockState blockState2 = world.getBlockState(pos.offset(facing));
       return blockState2.getBlock() == this.singleSlab && variant == blockState2.getValue(variantProperty) ? true : super.canPlaceBlockOnSide(world, pos, facing, player, stack);
    }
 

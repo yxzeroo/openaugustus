@@ -18,9 +18,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback {
          this.mc.theWorld.sendQuittingDisconnectingPacket();
          WorldClient world = (WorldClient)null;
          this.mc.loadWorld(world);
-         Minecraft mc2 = this.mc;
-         GuiMainMenu guiMainMenu = new GuiMainMenu();
-         mc2.displayGuiScreen(guiMainMenu);
+         this.mc.displayGuiScreen(new GuiMainMenu());
       } else {
          this.mc.thePlayer.respawnPlayer();
          GuiScreen screen = (GuiScreen)null;
@@ -78,9 +76,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback {
             break;
          case 1:
             if (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled()) {
-               Minecraft mc2 = this.mc;
-               GuiMainMenu guiMainMenu = new GuiMainMenu();
-               mc2.displayGuiScreen(guiMainMenu);
+               this.mc.displayGuiScreen(new GuiMainMenu());
             } else {
                GuiYesNo guiYesNo = new GuiYesNo(
                   this,

@@ -27,8 +27,7 @@ public class Mipmaps {
 
          for (int i = 0; i < dimensions.length; i++) {
             Dimension dimension = dimensions[i];
-            int n = dimension.width * dimension.height;
-            IntBuffer intBuffer = GLAllocation.createDirectIntBuffer(n);
+            IntBuffer intBuffer = GLAllocation.createDirectIntBuffer(dimension.width * dimension.height);
             int[] ints = intsArr[i];
             ((Buffer)intBuffer).clear();
             intBuffer.put(ints);
@@ -41,9 +40,7 @@ public class Mipmaps {
    }
 
    public static int alphaBlend(int n, int n2, int n3, int n4) {
-      int n5 = alphaBlend(n, n2);
-      int n6 = alphaBlend(n3, n4);
-      return alphaBlend(n5, n6);
+      return alphaBlend(alphaBlend(n, n2), alphaBlend(n3, n4));
    }
 
    public static Dimension[] makeMipmapDimensions(int n, int n2, String str) {
@@ -70,8 +67,7 @@ public class Mipmaps {
             }
 
             int n7 = n5 * n6 * 4;
-            Dimension dimension = new Dimension(n5, n6);
-            list.add(dimension);
+            list.add(new Dimension(n5, n6));
          }
       } else {
          Config.warn("Mipmaps not possible (power of 2 dimensions needed), texture: " + str + ", dim: " + n + "x" + n2);
@@ -94,12 +90,7 @@ public class Mipmaps {
          if (flag) {
             for (int j = 0; j < width2; j++) {
                for (int k = 0; k < height2; k++) {
-                  int n4 = ints2[j * 2 + 0 + (k * 2 + 0) * n3];
-                  int n5 = ints2[j * 2 + 1 + (k * 2 + 0) * n3];
-                  int n6 = ints2[j * 2 + 1 + (k * 2 + 1) * n3];
-                  int n7 = ints2[j * 2 + 0 + (k * 2 + 1) * n3];
-                  int n8 = alphaBlend(n4, n5, n6, n7);
-                  ints3[j + k * width2] = n8;
+                  ints3[j + k * width2] = alphaBlend(ints2[j * 2 + 0 + (k * 2 + 0) * n3], ints2[j * 2 + 1 + (k * 2 + 0) * n3], ints2[j * 2 + 1 + (k * 2 + 1) * n3], ints2[j * 2 + 0 + (k * 2 + 1) * n3]);
                }
             }
          }
@@ -119,10 +110,7 @@ public class Mipmaps {
 
       for (int i = 0; i < dimensions.length; i++) {
          Dimension dimension = dimensions[i];
-         int width2 = dimension.width;
-         int height2 = dimension.height;
-         int n3 = i + 1;
-         GL11.glTexImage2D(3553, n3, 6408, width2, height2, 0, 32993, 33639, (IntBuffer)null);
+         GL11.glTexImage2D(3553, i + 1, 6408, dimension.width, dimension.height, 0, 32993, 33639, (IntBuffer)null);
       }
    }
 
@@ -140,9 +128,7 @@ public class Mipmaps {
    }
 
    private int averageColor(int n, int n2) {
-      int n3 = (n & 0xFF000000) >> 24 & 0xFF;
-      int n4 = (n2 & 0xFF000000) >> 24 & 0xFF;
-      return (n3 + n4 >> 1 << 24) + ((n & 16711422) + (n2 & 16711422) >> 1);
+      return (((n & 0xFF000000) >> 24 & 0xFF) + ((n2 & 0xFF000000) >> 24 & 0xFF) >> 1 << 24) + ((n & 16711422) + (n2 & 16711422) >> 1);
    }
 
    private static int alphaBlend(int n, int n2) {
@@ -170,9 +156,6 @@ public class Mipmaps {
       int n9 = (n2 >> 16 & 0xFF) * n4;
       int n10 = (n2 >> 8 & 0xFF) * n4;
       int n11 = (n2 & 0xFF) * n4;
-      int n12 = (n6 + n9) / (n3 + n4);
-      int n13 = (n7 + n10) / (n3 + n4);
-      int n14 = (n8 + n11) / (n3 + n4);
-      return n5 << 24 | n12 << 16 | n13 << 8 | n14;
+      return n5 << 24 | ((n6 + n9) / (n3 + n4)) << 16 | ((n7 + n10) / (n3 + n4)) << 8 | ((n8 + n11) / (n3 + n4));
    }
 }

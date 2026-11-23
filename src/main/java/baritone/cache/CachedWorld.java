@@ -38,11 +38,8 @@ public final class CachedWorld implements ICachedWorld, Helper {
       for (int j = 0; j <= n4; j++) {
          for (int k = -j; k <= j; k++) {
             for (int m = -j; m <= j; m++) {
-               int n7 = k * k + m * m;
-               if (n7 == j) {
-                  int n8 = k + n5;
-                  int n9 = m + n6;
-                  CachedRegion regionOrLoad = this.getRegionOrLoad(n8, n9);
+               if ((k * k + m * m) == j) {
+                  CachedRegion regionOrLoad = this.getRegionOrLoad(k + n5, m + n6);
                   if (regionOrLoad != null) {
                      list.addAll(regionOrLoad.getLocationsOf(str));
                   }
@@ -92,8 +89,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
             if (cachedRegion != null) {
                int n = (cachedRegion.getX() << 9) + 256 - referencePos.getX();
                int n2 = (cachedRegion.getZ() << 9) + 256 - referencePos.getZ();
-               double d = Math.sqrt((double)(n * n + n2 * n2));
-               if (d > 1024.0) {
+               if (Math.sqrt((double)(n * n + n2 * n2)) > 1024.0) {
                   if (!(Boolean)Baritone.settings().censorCoordinates.value) {
                      this.logDebug("Deleting cached region " + cachedRegion.getX() + "," + cachedRegion.getZ() + " from ram");
                   }
@@ -222,8 +218,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
    }
 
    private void putChunk(CachedChunk cachedChunk) {
-      CachedRegion regionOrLoad = this.getRegionOrLoad(cachedChunk.x >> 5, cachedChunk.z >> 5);
-      regionOrLoad.putChunk(cachedChunk.x & 31, cachedChunk.z & 31, cachedChunk);
+      this.getRegionOrLoad(cachedChunk.x >> 5, cachedChunk.z >> 5).putChunk(cachedChunk.x & 31, cachedChunk.z & 31, cachedChunk);
    }
 
    private synchronized List getLoadedRegions() {

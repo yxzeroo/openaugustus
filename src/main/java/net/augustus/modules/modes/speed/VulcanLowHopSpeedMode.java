@@ -52,8 +52,7 @@ public class VulcanLowHopSpeedMode extends SpeedMode {
          } else {
             mc.getTimer().timerSpeed = 1.0F;
             if ((double)this.getHorizontalSpeed() > 0.332) {
-               double d2 = 0.331;
-               this.setMoveSpeed(d2);
+               this.setMoveSpeed(0.331);
             }
 
             if (this.airTicks == 4) {
@@ -86,9 +85,7 @@ public class VulcanLowHopSpeedMode extends SpeedMode {
    private void setMoveSpeed(double d) {
       double moveStrafe = (double)mc.thePlayer.movementInput.moveStrafe;
       double moveForward = (double)mc.thePlayer.movementInput.moveForward;
-      double d2 = moveStrafe;
-      float rotationYaw = mc.thePlayer.rotationYaw;
-      this.applyHorizontalMotion(d, rotationYaw, d2, moveForward);
+      this.applyHorizontalMotion(d, mc.thePlayer.rotationYaw, moveStrafe, moveForward);
    }
 
    private void applyHorizontalMotion(double d, float f, double d2, double d3) {

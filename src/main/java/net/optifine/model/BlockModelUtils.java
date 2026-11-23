@@ -28,15 +28,11 @@ public class BlockModelUtils {
 
    public static IBakedModel makeModel2(String str, String str2, String str3) {
       TextureMap textureMapBlocks = Config.getMc().getTextureMapBlocks();
-      TextureAtlasSprite spriteSafe = textureMapBlocks.getSpriteSafe(str2);
-      TextureAtlasSprite spriteSafe2 = textureMapBlocks.getSpriteSafe(str3);
-      return makeModel(str, spriteSafe, spriteSafe2);
+      return makeModel(str, textureMapBlocks.getSpriteSafe(str2), textureMapBlocks.getSpriteSafe(str3));
    }
 
    public static AxisAlignedBB getOffsetBoundingBox(AxisAlignedBB box, Block.EnumOffsetType enumOffsetType, BlockPos pos) {
-      int x = pos.getX();
-      int z = pos.getZ();
-      long l = (long)(x * 3129871) ^ (long)z * 116129781L;
+      long l = (long)(pos.getX() * 3129871) ^ (long)pos.getZ() * 116129781L;
       l = l * l * 42317861L + l * 11L;
       double d = ((double)((float)(l >> 16 & 15L) / 15.0F) - 0.5) * 0.5;
       double d2 = ((double)((float)(l >> 24 & 15L) / 15.0F) - 0.5) * 0.5;
@@ -49,8 +45,7 @@ public class BlockModelUtils {
    }
 
    public static IBakedModel makeModelCube2(String str, int n) {
-      TextureAtlasSprite atlasSprite = Config.getMc().getTextureMapBlocks().getAtlasSprite(str);
-      return makeModelCube(atlasSprite, n);
+      return makeModelCube(Config.getMc().getTextureMapBlocks().getAtlasSprite(str), n);
    }
 
    public static BakedQuad makeBakedQuad(EnumFacing facing, TextureAtlasSprite textureAtlasSprite, int n) {
@@ -59,11 +54,7 @@ public class BlockModelUtils {
       BlockFaceUV blockFaceUV = new BlockFaceUV(new float[]{0.0F, 0.0F, 16.0F, 16.0F}, 0);
       BlockPartFace blockPartFace = new BlockPartFace(facing, n, "#" + facing.getName(), blockFaceUV);
       ModelRotation x0Y0 = ModelRotation.X0_Y0;
-      Object obj = null;
-      boolean flag = false;
-      boolean flag2 = true;
-      FaceBakery faceBakery = new FaceBakery();
-      return faceBakery.makeBakedQuad(vector3f, vector3f2, blockPartFace, textureAtlasSprite, facing, x0Y0, (BlockPartRotation)obj, flag, flag2);
+      return new FaceBakery().makeBakedQuad(vector3f, vector3f2, blockPartFace, textureAtlasSprite, facing, x0Y0, (BlockPartRotation)null, false, true);
    }
 
    public static void snapVertexPosition(Vector3f vector3f) {
@@ -100,20 +91,16 @@ public class BlockModelUtils {
          if (modelManager == null) {
             return null;
          } else {
-            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(str, "normal");
-            IBakedModel model = modelManager.getModel(modelResourceLocation);
+            IBakedModel model = modelManager.getModel(new ModelResourceLocation(str, "normal"));
             if (model != null && model != modelManager.getMissingModel()) {
                IBakedModel bakedModel = ModelUtils.duplicateModel(model);
                EnumFacing[] values = EnumFacing.VALUES;
 
                for (int i = 0; i < values.length; i++) {
-                  EnumFacing facing = values[i];
-                  List faceQuads = bakedModel.getFaceQuads(facing);
-                  replaceTexture(faceQuads, textureAtlasSprite, textureAtlasSprite2);
+                  replaceTexture(bakedModel.getFaceQuads(values[i]), textureAtlasSprite, textureAtlasSprite2);
                }
 
-               List generalQuads = bakedModel.getGeneralQuads();
-               replaceTexture(generalQuads, textureAtlasSprite, textureAtlasSprite2);
+               replaceTexture(bakedModel.getGeneralQuads(), textureAtlasSprite, textureAtlasSprite2);
                return bakedModel;
             } else {
                return null;

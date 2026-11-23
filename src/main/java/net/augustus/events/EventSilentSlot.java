@@ -21,7 +21,6 @@ public class EventSilentSlot extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      SilentSlotListener listener = (SilentSlotListener)obj;
-      this.call2(listener);
+      this.call2((SilentSlotListener)obj);
    }
 }

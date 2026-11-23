@@ -94,8 +94,7 @@ public final class DiscordRPC {
          }
 
          File homeDir = new File(System.getenv("TEMP"));
-         boolean is64bit = System.getProperty("sun.arch.data.model").equals("64");
-         dir = is64bit ? "win-x64" : "win-x86";
+         dir = System.getProperty("sun.arch.data.model").equals("64") ? "win-x64" : "win-x86";
          String tempPath = homeDir + File.separator + "discord-rpc" + File.separator + name;
       }
 

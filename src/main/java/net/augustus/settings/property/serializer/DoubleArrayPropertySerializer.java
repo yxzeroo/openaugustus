@@ -7,8 +7,7 @@ import java.util.List;
 public final class DoubleArrayPropertySerializer implements ArrayPropertySerializer {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Double d = (Double)obj;
-      this.writeDoubleElement(array, d);
+      this.writeDoubleElement(array, (Double)obj);
    }
 
    public void writeDoubleElement(JsonArray array, Double d) {

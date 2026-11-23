@@ -102,9 +102,9 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.EventMotion;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -154,87 +154,87 @@ public class KillAura
    SilentSlotListener,
    MoveEntityListener {
    public final RotationUtil rotationUtil;
-   public final DoubleValue range;
+   public final SettingGroup range;
    public final RandomizedRangeSettings preAimRange;
-   public final StringValue range2;
-   public final BooleansSetting rangeMode;
-   public final StringValue hazeAdd;
-   public final StringValue hazeMax;
-   public final BooleansSetting actionToTrackInterval;
-   private final StringValue interval;
-   private final StringValue rangeAtInterval;
-   private final StringValue minReachToIntervalHit;
-   private final StringValue hurtTimeToHitWithReach;
+   public final DoubleValue range2;
+   public final StringValue rangeMode;
+   public final DoubleValue hazeAdd;
+   public final DoubleValue hazeMax;
+   public final StringValue actionToTrackInterval;
+   private final DoubleValue interval;
+   private final DoubleValue rangeAtInterval;
+   private final DoubleValue minReachToIntervalHit;
+   private final DoubleValue hurtTimeToHitWithReach;
    private final RangeSetting baseRange;
-   private final StringValue chanceOfExtendedRange;
-   public final DoubleValue rotations;
-   public final StringValue yawFov;
-   public final StringValue pitchFov;
+   private final DoubleValue chanceOfExtendedRange;
+   public final SettingGroup rotations;
+   public final DoubleValue yawFov;
+   public final DoubleValue pitchFov;
    public final RandomizedRangeSettings yawSpeed;
    public final RandomizedRangeSettings pitchSpeed;
    public final RandomizedRangeSettings yawAcceleration;
    public final RandomizedRangeSettings pitchAcceleration;
    public final BooleanValue betterAcceleration;
-   public final DoubleValue fixRotationGroup;
-   public final BooleansSetting fixRotationMode;
-   public final StringValue fixRotationChance;
+   public final SettingGroup fixRotationGroup;
+   public final StringValue fixRotationMode;
+   public final DoubleValue fixRotationChance;
    public final RandomizedRangeSettings maxFixRotationReach;
-   public final StringValue minFixRotationAngle;
-   public final BooleansSetting minDistanceToBestVecCalculation;
-   public final StringValue minDistanceToBestVecYaw;
-   public final StringValue minDistanceToBestVecPitch;
-   public final StringValue minDistanceToBestVec;
-   public final BooleansSetting heuristics;
-   public final BooleansSetting rotationMode;
-   public final StringValue hitBoxPercentageVertical;
-   public final StringValue hitBoxPercentageHorizontal;
-   public final StringValue hitBoxPercentageVertical1;
-   public final StringValue hitBoxPercentageHorizontal1;
-   private final DoubleValue randomize;
-   public final BooleansSetting randomType;
-   public BooleansSetting randomizeMode;
-   public final StringValue randomStrength;
+   public final DoubleValue minFixRotationAngle;
+   public final StringValue minDistanceToBestVecCalculation;
+   public final DoubleValue minDistanceToBestVecYaw;
+   public final DoubleValue minDistanceToBestVecPitch;
+   public final DoubleValue minDistanceToBestVec;
+   public final StringValue heuristics;
+   public final StringValue rotationMode;
+   public final DoubleValue hitBoxPercentageVertical;
+   public final DoubleValue hitBoxPercentageHorizontal;
+   public final DoubleValue hitBoxPercentageVertical1;
+   public final DoubleValue hitBoxPercentageHorizontal1;
+   private final SettingGroup randomize;
+   public final StringValue randomType;
+   public StringValue randomizeMode;
+   public final DoubleValue randomStrength;
    public final BooleanValue reducedRotate;
-   public final StringValue reduceRotationPercentage;
+   public final DoubleValue reduceRotationPercentage;
    public final BooleanValue smartRotate;
    public final BooleanValue pitchOutliers;
    public final RandomizedRangeSettings pitchOutliersAdd;
    public final RandomizedRangeSettings pitchOutliersDelay;
    public final RangeSetting innerRadius;
-   public final StringValue bestHitXMinDist;
-   public final StringValue bestHitYMInDist;
-   public final StringValue minAbsDist;
-   public final StringValue maxXAbsDist;
-   public final StringValue maxYAbsDist;
+   public final DoubleValue bestHitXMinDist;
+   public final DoubleValue bestHitYMInDist;
+   public final DoubleValue minAbsDist;
+   public final DoubleValue maxXAbsDist;
+   public final DoubleValue maxYAbsDist;
    public final RangeSetting xRelDist;
    public final RangeSetting yRelDist;
-   public final StringValue maxRotationAngle;
-   public final StringValue additionalMinAimspeed;
-   public final StringValue additionalDynamicSpeed;
-   public final StringValue additionalAimspeedIfNeeded;
-   public final StringValue probabilityOfAimingEvenWhenNotNeeded;
+   public final DoubleValue maxRotationAngle;
+   public final DoubleValue additionalMinAimspeed;
+   public final DoubleValue additionalDynamicSpeed;
+   public final DoubleValue additionalAimspeedIfNeeded;
+   public final DoubleValue probabilityOfAimingEvenWhenNotNeeded;
    public final BooleanValue test;
-   public final StringValue aimSpeed;
-   public final StringValue decelerationfactorPre;
-   public final StringValue decelerationfactorPost;
+   public final DoubleValue aimSpeed;
+   public final DoubleValue decelerationfactorPre;
+   public final DoubleValue decelerationfactorPost;
    public final RangeSetting reactionTime;
    public final RangeSetting lookaheadTime;
-   public final StringValue attention;
+   public final DoubleValue attention;
    public final RangeSetting predictionInaccuracy;
-   public final StringValue predictionInaccuracySmoothness;
-   public final DoubleValue superCorrection;
-   public final StringValue supercorrectionProbability;
+   public final DoubleValue predictionInaccuracySmoothness;
+   public final SettingGroup superCorrection;
+   public final DoubleValue supercorrectionProbability;
    public final RandomizedRangeSettings supercorrectionDelay;
    public final BooleanValue additionalAccuracy;
-   public final DoubleValue rotationOffset;
+   public final SettingGroup rotationOffset;
    public final RangeSetting rotationYawOffset;
    public final RangeSetting rotationPitchOffset;
-   public final StringValue rotationYawOffsetSpeed;
-   public final StringValue rotationPitchOffsetSpeed;
-   public final StringValue additionalInaccuracy;
+   public final DoubleValue rotationYawOffsetSpeed;
+   public final DoubleValue rotationPitchOffsetSpeed;
+   public final DoubleValue additionalInaccuracy;
    public final RangeSetting orthogonalScale;
-   public final StringValue maxOrthogonalMovement;
-   public final StringValue maxAimpointAnglediff;
+   public final DoubleValue maxOrthogonalMovement;
+   public final DoubleValue maxAimpointAnglediff;
    public final RandomizedRangeSettings bestvecPitchinterpolation;
    public final RangeSetting rotationOnTarget;
    public final BooleanValue noYawAdjustmentIfTargetOutOfReach;
@@ -244,12 +244,12 @@ public class KillAura
    public final BooleanValue adaptCurveIfNeeded;
    public final RandomizedRangeSettings noise3AimSpeed;
    public final RandomizedRangeSettings noise3Acceleration;
-   public final StringValue noise33BetterAcceleration;
-   public final StringValue noise3Scale;
+   public final DoubleValue noise33BetterAcceleration;
+   public final DoubleValue noise3Scale;
    public final RangeSetting noise3ResponseTarget;
    public final RangeSetting noise3PlayerResponse;
-   private final DoubleValue aiSettingsGroup;
-   public final BooleansSetting aiModel;
+   private final SettingGroup aiSettingsGroup;
+   public final StringValue aiModel;
    private final ActionSetting aiRefreshModels;
    public final BooleanValue smartAim;
    public final BooleanValue smartAimEntityCheck;
@@ -259,28 +259,28 @@ public class KillAura
    public final BooleanValue interpolation;
    public final BooleanValue lockView;
    public final BooleanValue stopRotationInsideTarget;
-   public final DoubleValue throughWallsGroup;
-   public final BooleansSetting throughWallsMode;
-   public final StringValue throughWallsRange;
+   public final SettingGroup throughWallsGroup;
+   public final StringValue throughWallsMode;
+   public final DoubleValue throughWallsRange;
    public final BooleanValue aimThroughWalls;
    public final RandomizedRangeSettings aimThroughWallsRange;
    public final BooleanValue noRotation;
-   public final DoubleValue clicking;
-   public final DoubleValue clickSettings;
+   public final SettingGroup clicking;
+   public final SettingGroup clickSettings;
    public final ModeSetting clickMode;
-   public final StringValue cpsLimiter;
+   public final DoubleValue cpsLimiter;
    public final BooleanValue cpsLimiterIntave;
-   private final DoubleValue interactions;
-   public final BooleansSetting attackMode;
-   public final StringValue maxTargets;
+   private final SettingGroup interactions;
+   public final StringValue attackMode;
+   public final DoubleValue maxTargets;
    public final BooleanValue optifineHitbox;
-   public final BooleansSetting blockMode;
+   public final StringValue blockMode;
    public final BooleanValue smartBlock;
    public final BooleanValue interactAutoBlock;
    public final BooleanValue onlyRightClickBlock;
    public final BooleanValue onlyWhileSwingInProgress;
    public final BooleanValue onlyWhileHurt;
-   public final StringValue unblockAAC;
+   public final DoubleValue unblockAAC;
    public final BooleanValue preHit;
    public final BooleanValue smartPreHit;
    private final RandomizedRangeSettings prediction;
@@ -291,12 +291,12 @@ public class KillAura
    public final RandomizedRangeSettings preHitFovYaw;
    public final RandomizedRangeSettings preHitFovPitch;
    public final BooleanValue missClick;
-   public final StringValue missClickPercentage;
+   public final DoubleValue missClickPercentage;
    public final BooleanValue perfectHit;
    public final BooleanValue longClick;
    public final BooleanValue critFix;
    public final BooleanValue critFixPacketCheck;
-   public final StringValue critFixChance;
+   public final DoubleValue critFixChance;
    public final BooleanValue noLoopHit;
    public final BooleanValue fixBeta;
    private final BooleanValue breakBlocks;
@@ -305,17 +305,17 @@ public class KillAura
    public final BooleanValue noSwing;
    public final BooleanValue slowDown;
    public final BooleanValue coolDown;
-   public final DoubleValue movement;
+   public final SettingGroup movement;
    private final BooleanValue jumpFix;
    public final BooleanValue moveFix;
-   public final BooleansSetting silentMoveFix;
+   public final StringValue silentMoveFix;
    public final BooleanValue silentMoveFixIntave;
-   public final DoubleValue targets;
+   public final SettingGroup targets;
    public final TargetSelectionSettings targetSelection;
-   public final StringValue targetDelay;
+   public final DoubleValue targetDelay;
    public final RandomizedRangeSettings targetLoseDelay;
    public final RandomizedRangeSettings maxDeathTime;
-   public final DoubleValue miscellaneous;
+   public final SettingGroup miscellaneous;
    public final BooleanValue closeGuisIfTargetArrives;
    public final BooleanValue inInv;
    public final MultiOptionSetting activeSlots;
@@ -326,9 +326,9 @@ public class KillAura
    private final RandomizedRangeSettings delayClicksAfterClosingGuiScreen;
    private final RandomizedRangeSettings delayRotationsAfterRespawn;
    private final RandomizedRangeSettings delayClicksAfterRespawn;
-   private final DoubleValue visuals;
+   private final SettingGroup visuals;
    public final BooleanValue dot;
-   public final StringValue dotSize;
+   public final DoubleValue dotSize;
    public final ColorSetting dotColor;
    public final BlurShadowSettings dotShadowSettings;
    private final TimeHelper targetSwitchTimer;
@@ -391,62 +391,50 @@ public class KillAura
    public KillAura() {
       super("KillAura", "AutomatischerTöter", new Color(102, 38, 28, 255), Categorys.COMBAT);
       this.rotationUtil = new RotationUtil();
-      this.range = new DoubleValue(this, "Range", true);
+      this.range = new SettingGroup(this, "Range", true);
       this.preAimRange = (new RandomizedRangeSettings(this, "PreAimRange", 6.0, 6.0, 0.0, 15.0, 1, this.range)).withoutNotInARow();
-      this.range2 = new StringValue(this, "Range", 3.0, 3.0, 6.0, 3, this.range);
-      this.rangeMode = new BooleansSetting(this, "RangeMode", "Simple", new String[]{"Simple", "HazeRange", "Grim", "IntervalRange", "Dual"}, this.range);
-      StringValue stringValue = new StringValue(this, "HazeAdd", 0.5, 0.0, 1.0, 2, this.range);
+      this.range2 = new DoubleValue(this, "Range", 3.0, 3.0, 6.0, 3, this.range);
+      this.rangeMode = new StringValue(this, "RangeMode", "Simple", new String[]{"Simple", "HazeRange", "Grim", "IntervalRange", "Dual"}, this.range);
+      DoubleValue stringValue = new DoubleValue(this, "HazeAdd", 0.5, 0.0, 1.0, 2, this.range);
       SettingVisibilityCondition condition = () -> {
          return this.rangeMode.getSelectedValue().equals("HazeRange");
       };
       this.hazeAdd = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "HazeMax", 4.5, 3.0, 6.0, 2, this.range);
-      SettingVisibilityCondition condition2 = () -> this.isHazeMaxVisible();
-      this.hazeMax = stringValue2.visibleWhen(condition2);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "ActionToTrackInterval", "Attacks", new String[]{"Attacks", "Swings"}, this.range);
-      SettingVisibilityCondition condition3 = () -> this.isActionToTrackIntervalVisible();
-      this.actionToTrackInterval = (BooleansSetting)booleansSetting.withVisibility(condition3);
-      stringValue2 = new StringValue(this, "Interval", 2.0, 1.0, 10.0, 0, this.range);
-      SettingVisibilityCondition condition4 = () -> this.isIntervalVisible();
-      this.interval = stringValue2.visibleWhen(condition4);
-      stringValue2 = new StringValue(this, "RangeAtInterval", 3.0, 3.0, 6.0, 3, this.range);
+      DoubleValue stringValue2 = new DoubleValue(this, "HazeMax", 4.5, 3.0, 6.0, 2, this.range);
+      this.hazeMax = stringValue2.visibleWhen(() -> this.isHazeMaxVisible());
+      this.actionToTrackInterval = (StringValue)new StringValue(this, "ActionToTrackInterval", "Attacks", new String[]{"Attacks", "Swings"}, this.range).withVisibility(() -> this.isActionToTrackIntervalVisible());
+      stringValue2 = new DoubleValue(this, "Interval", 2.0, 1.0, 10.0, 0, this.range);
+      this.interval = stringValue2.visibleWhen(() -> this.isIntervalVisible());
+      stringValue2 = new DoubleValue(this, "RangeAtInterval", 3.0, 3.0, 6.0, 3, this.range);
       SettingVisibilityCondition condition5 = () -> {
          return this.rangeMode.getSelectedValue().equals("IntervalRange");
       };
       this.rangeAtInterval = stringValue2.visibleWhen(condition5);
-      stringValue2 = new StringValue(this, "MinReachToIntervalHit", 4.0, 3.0, 6.0, 3, this.range);
-      SettingVisibilityCondition condition6 = () -> this.isMinReachToIntervalHitVisible();
-      this.minReachToIntervalHit = stringValue2.visibleWhen(condition6);
-      stringValue2 = new StringValue(this, "HurtTimeToHitWithReach", 2.0, 0.0, 9.0, 0, this.range);
-      SettingVisibilityCondition condition7 = () -> this.isHurtTimeToHitWithReachVisible();
-      this.hurtTimeToHitWithReach = stringValue2.visibleWhen(condition7);
+      stringValue2 = new DoubleValue(this, "MinReachToIntervalHit", 4.0, 3.0, 6.0, 3, this.range);
+      this.minReachToIntervalHit = stringValue2.visibleWhen(() -> this.isMinReachToIntervalHitVisible());
+      stringValue2 = new DoubleValue(this, "HurtTimeToHitWithReach", 2.0, 0.0, 9.0, 0, this.range);
+      this.hurtTimeToHitWithReach = stringValue2.visibleWhen(() -> this.isHurtTimeToHitWithReachVisible());
       RangeSetting rangeSetting = new RangeSetting(this, "BaseRange", "ExtendedRange", 3.0, 3.7, 3.0, 6.0, 2, this.range);
       SettingVisibilityCondition condition8 = () -> {
          return this.rangeMode.getSelectedValue().equals("Dual");
       };
       this.baseRange = rangeSetting.visibleWhen(condition8);
-      stringValue2 = new StringValue(this, "Chance of Extended Range", 50.0, 0.0, 100.0, 0, this.range);
+      stringValue2 = new DoubleValue(this, "Chance of Extended Range", 50.0, 0.0, 100.0, 0, this.range);
       SettingVisibilityCondition condition9 = () -> {
          return this.rangeMode.getSelectedValue().equals("Dual");
       };
       this.chanceOfExtendedRange = stringValue2.visibleWhen(condition9);
-      this.rotations = new DoubleValue(this, "Rotations", true);
-      this.yawFov = (StringValue)(new StringValue(this, "YawFov", 180.0, 0.0, 180.0, 0, this.rotations)).markVisualOnly();
-      this.pitchFov = (StringValue)(new StringValue(this, "PitchFov", 180.0, 0.0, 180.0, 0, this.rotations)).markVisualOnly();
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "YawSpeed", 30.0, 50.0, 1.0, 180.0, 0, this.rotations)).withoutNotInARow();
-      SettingVisibilityCondition condition10 = () -> this.isYawSpeedVisible();
-      this.yawSpeed = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition10);
+      this.rotations = new SettingGroup(this, "Rotations", true);
+      this.yawFov = (DoubleValue)(new DoubleValue(this, "YawFov", 180.0, 0.0, 180.0, 0, this.rotations)).markVisualOnly();
+      this.pitchFov = (DoubleValue)(new DoubleValue(this, "PitchFov", 180.0, 0.0, 180.0, 0, this.rotations)).markVisualOnly();
+      this.yawSpeed = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "YawSpeed", 30.0, 50.0, 1.0, 180.0, 0, this.rotations)).withoutNotInARow().withVisibility(() -> this.isYawSpeedVisible());
       RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "PitchSpeed", 30.0, 50.0, 1.0, 180.0, 0, this.rotations)).withoutNotInARow();
       SettingVisibilityCondition condition11 = () -> {
          return !this.randomizeMode.getSelectedValue().contains("Noise") && !this.randomizeMode.getSelectedValue().equals("Turbo") && !this.randomizeMode.getSelectedValue().equals("AI");
       };
       this.pitchSpeed = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition11);
-      RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "YawAcceleration", 15.0, 20.0, 1.0, 180.0, 1, this.rotations)).withoutNotInARow();
-      SettingVisibilityCondition condition12 = () -> this.isYawAccelerationVisible();
-      this.yawAcceleration = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition12);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this, "PitchAcceleration", 15.0, 20.0, 1.0, 180.0, 1, this.rotations)).withoutNotInARow();
-      SettingVisibilityCondition condition13 = () -> this.isPitchAccelerationVisible();
-      this.pitchAcceleration = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition13);
+      this.yawAcceleration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "YawAcceleration", 15.0, 20.0, 1.0, 180.0, 1, this.rotations)).withoutNotInARow().withVisibility(() -> this.isYawAccelerationVisible());
+      this.pitchAcceleration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "PitchAcceleration", 15.0, 20.0, 1.0, 180.0, 1, this.rotations)).withoutNotInARow().withVisibility(() -> this.isPitchAccelerationVisible());
       BooleanValue booleanValue = new BooleanValue(this, "BetterAcceleration", false, this.rotations);
       SettingVisibilityCondition condition14 = () -> {
          return !this.isInterpolationEnabled()
@@ -455,55 +443,29 @@ public class KillAura
             && !this.randomizeMode.getSelectedValue().equals("AI");
       };
       this.betterAcceleration = (BooleanValue)booleanValue.withVisibility(condition14);
-      DoubleValue doubleValue = new DoubleValue(this, "FixRotationGroup", true, this.rotations);
-      String str = "FixRotations";
-      this.fixRotationGroup = (DoubleValue)doubleValue.withDisplayName(str);
-      this.fixRotationMode = new BooleansSetting(this, "FixRotationMode", "None", new String[]{"None", "OnlyWhenNeed", "Always"}, this.fixRotationGroup);
-      StringValue stringValue3 = new StringValue(this, "FixRotationChance", 100.0, 1.0, 100.0, 0, this.fixRotationGroup);
-      SettingVisibilityCondition condition15 = () -> this.isFixRotationChanceVisible();
-      this.fixRotationChance = stringValue3.visibleWhen(condition15);
-      RandomizedRangeSettings randomizedRangeSettings5 = (new RandomizedRangeSettings(this, "MaxFixRotationReach", 2.96, 2.98, 2.5, 3.0, 3, this.fixRotationGroup)).withoutNotInARow();
-      SettingVisibilityCondition condition16 = () -> this.isMaxFixRotationReachVisible();
-      this.maxFixRotationReach = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(condition16);
-      StringValue stringValue4 = new StringValue(this, "MinFixRotationAngle", 90.0, 0.0, 180.0, 0, this.fixRotationGroup);
-      SettingVisibilityCondition condition17 = () -> this.isMinFixRotationAngleVisible();
-      this.minFixRotationAngle = stringValue4.visibleWhen(condition17);
-      BooleansSetting booleansSetting2 = new BooleansSetting(
+      this.fixRotationGroup = (SettingGroup)new SettingGroup(this, "FixRotationGroup", true, this.rotations).withDisplayName("FixRotations");
+      this.fixRotationMode = new StringValue(this, "FixRotationMode", "None", new String[]{"None", "OnlyWhenNeed", "Always"}, this.fixRotationGroup);
+      this.fixRotationChance = new DoubleValue(this, "FixRotationChance", 100.0, 1.0, 100.0, 0, this.fixRotationGroup).visibleWhen(() -> this.isFixRotationChanceVisible());
+      this.maxFixRotationReach = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "MaxFixRotationReach", 2.96, 2.98, 2.5, 3.0, 3, this.fixRotationGroup)).withoutNotInARow().withVisibility(() -> this.isMaxFixRotationReachVisible());
+      this.minFixRotationAngle = new DoubleValue(this, "MinFixRotationAngle", 90.0, 0.0, 180.0, 0, this.fixRotationGroup).visibleWhen(() -> this.isMinFixRotationAngleVisible());
+      this.minDistanceToBestVecCalculation = (StringValue)new StringValue(
          this, "MinDistanceToBestVecCalculation", "None", new String[]{"None", "Separate", "Combined"}, this.fixRotationGroup
-      );
-      SettingVisibilityCondition condition18 = () -> this.isMinDistanceCalculationVisible();
-      this.minDistanceToBestVecCalculation = (BooleansSetting)booleansSetting2.withVisibility(condition18);
-      StringValue stringValue5 = new StringValue(this, "MinDistanceToBestVecYaw", 2.5, 0.0, 10.0, 2, this.fixRotationGroup);
-      SettingVisibilityCondition condition19 = () -> this.isMinDistanceYawVisible();
-      this.minDistanceToBestVecYaw = stringValue5.visibleWhen(condition19);
-      StringValue stringValue6 = new StringValue(this, "MinDistanceToBestVecPitch", 2.5, 0.0, 10.0, 2, this.fixRotationGroup);
-      SettingVisibilityCondition condition20 = () -> this.isMinDistancePitchVisible();
-      this.minDistanceToBestVecPitch = stringValue6.visibleWhen(condition20);
-      StringValue stringValue7 = new StringValue(this, "MinDistanceToBestVec", 2.5, 0.0, 10.0, 2, this.fixRotationGroup);
-      SettingVisibilityCondition condition21 = () -> this.isMinDistanceCombinedVisible();
-      this.minDistanceToBestVec = stringValue7.visibleWhen(condition21);
-      this.heuristics = new BooleansSetting(this, "Heuristics", "None", new String[]{"None", "Pattern1", "IntaveTest"}, this.rotations);
-      this.rotationMode = new BooleansSetting(this, "RotationMode", "BestHitVec", new String[]{"Head", "BestHitVec", "NearestHitVec"}, this.rotations);
-      StringValue stringValue8 = new StringValue(this, "HitBoxPercentageVertical", 100.0, 1.0, 100.0, 0, this.rotations);
-      SettingVisibilityCondition condition22 = () -> this.isBestHitVecVerticalVisible();
-      this.hitBoxPercentageVertical = stringValue8.visibleWhen(condition22);
-      StringValue stringValue9 = new StringValue(this, "HitBoxPercentageHorizontal", 100.0, 1.0, 100.0, 0, this.rotations);
+      ).withVisibility(() -> this.isMinDistanceCalculationVisible());
+      this.minDistanceToBestVecYaw = new DoubleValue(this, "MinDistanceToBestVecYaw", 2.5, 0.0, 10.0, 2, this.fixRotationGroup).visibleWhen(() -> this.isMinDistanceYawVisible());
+      this.minDistanceToBestVecPitch = new DoubleValue(this, "MinDistanceToBestVecPitch", 2.5, 0.0, 10.0, 2, this.fixRotationGroup).visibleWhen(() -> this.isMinDistancePitchVisible());
+      this.minDistanceToBestVec = new DoubleValue(this, "MinDistanceToBestVec", 2.5, 0.0, 10.0, 2, this.fixRotationGroup).visibleWhen(() -> this.isMinDistanceCombinedVisible());
+      this.heuristics = new StringValue(this, "Heuristics", "None", new String[]{"None", "Pattern1", "IntaveTest"}, this.rotations);
+      this.rotationMode = new StringValue(this, "RotationMode", "BestHitVec", new String[]{"Head", "BestHitVec", "NearestHitVec"}, this.rotations);
+      this.hitBoxPercentageVertical = new DoubleValue(this, "HitBoxPercentageVertical", 100.0, 1.0, 100.0, 0, this.rotations).visibleWhen(() -> this.isBestHitVecVerticalVisible());
+      DoubleValue stringValue9 = new DoubleValue(this, "HitBoxPercentageHorizontal", 100.0, 1.0, 100.0, 0, this.rotations);
       SettingVisibilityCondition condition23 = () -> {
          return this.rotationMode.getSelectedValue().equalsIgnoreCase("BestHitVec");
       };
       this.hitBoxPercentageHorizontal = stringValue9.visibleWhen(condition23);
-      StringValue stringValue10 = new StringValue(this, "HitBoxPercentageVertical1", 100.0, 1.0, 100.0, 0, this.rotations);
-      String str2 = "HitBoxPercentageVertical";
-      StringValue stringValue11 = stringValue10.named(str2);
-      SettingVisibilityCondition condition24 = () -> this.isNearestHitVecVerticalVisible();
-      this.hitBoxPercentageVertical1 = stringValue11.visibleWhen(condition24);
-      StringValue stringValue12 = new StringValue(this, "HitBoxPercentageHorizontal1", 100.0, 1.0, 100.0, 0, this.rotations);
-      String str3 = "HitBoxPercentageHorizontal";
-      StringValue stringValue13 = stringValue12.named(str3);
-      SettingVisibilityCondition condition25 = () -> this.isNearestHitVecHorizontalVisible();
-      this.hitBoxPercentageHorizontal1 = stringValue13.visibleWhen(condition25);
-      this.randomize = new DoubleValue(this, "Randomize", true, this.rotations);
-      this.randomType = new BooleansSetting(this, "RandomType", "SecureRandom", new String[]{"Random", "SecureRandom", "Gaussian", "Intave"}, this.randomize);
+      this.hitBoxPercentageVertical1 = new DoubleValue(this, "HitBoxPercentageVertical1", 100.0, 1.0, 100.0, 0, this.rotations).named("HitBoxPercentageVertical").visibleWhen(() -> this.isNearestHitVecVerticalVisible());
+      this.hitBoxPercentageHorizontal1 = new DoubleValue(this, "HitBoxPercentageHorizontal1", 100.0, 1.0, 100.0, 0, this.rotations).named("HitBoxPercentageHorizontal").visibleWhen(() -> this.isNearestHitVecHorizontalVisible());
+      this.randomize = new SettingGroup(this, "Randomize", true, this.rotations);
+      this.randomType = new StringValue(this, "RandomType", "SecureRandom", new String[]{"Random", "SecureRandom", "Gaussian", "Intave"}, this.randomize);
       Augustus.getInstance().getClass();
       String[] strings = !Augustus.getInstance().getUsername().equals("7yns")
             && !Augustus.getInstance().getUsername().equals("xaelo")
@@ -514,12 +476,11 @@ public class KillAura
          : new String[]{
             "None", "Basic", "Doubled", "OnlyRotation", "Hybrid", "PolarTest", "Circle", "Advanced", "Noise", "Turbo", "Noise2", "Noise3", "LegitTest", "AI"
          };
-      DoubleValue randomize2 = this.randomize;
-      String[] strings2 = strings;
+      SettingGroup randomize2 = this.randomize;
       String str4 = "OnlyRotation";
       String str5 = "Randomize";
-      this.randomizeMode = new BooleansSetting(this, str5, str4, strings2, randomize2);
-      StringValue stringValue14 = new StringValue(this, "RandomStrength", 1.25, 0.01, 5.0, 2, this.randomize);
+      this.randomizeMode = new StringValue(this, str5, str4, strings, randomize2);
+      DoubleValue stringValue14 = new DoubleValue(this, "RandomStrength", 1.25, 0.01, 5.0, 2, this.randomize);
       SettingVisibilityCondition condition26 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Basic")
             || this.randomizeMode.getSelectedValue().equals("Doubled")
@@ -532,20 +493,14 @@ public class KillAura
          return this.randomizeMode.getSelectedValue().equals("Advanced");
       };
       this.reducedRotate = (BooleanValue)booleanValue2.withVisibility(condition27);
-      StringValue stringValue15 = new StringValue(this, "ReduceRotationPercentage", 100.0, 0.0, 100.0, 0, this.randomize);
+      DoubleValue stringValue15 = new DoubleValue(this, "ReduceRotationPercentage", 100.0, 0.0, 100.0, 0, this.randomize);
       SettingVisibilityCondition condition28 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Advanced") && this.reducedRotate.getValue();
       };
       this.reduceRotationPercentage = stringValue15.visibleWhen(condition28);
-      BooleanValue booleanValue3 = new BooleanValue(this, "SmartRotate", false, this.randomize);
-      SettingVisibilityCondition condition29 = () -> this.isSmartRotateVisible();
-      this.smartRotate = (BooleanValue)booleanValue3.withVisibility(condition29);
-      BooleanValue booleanValue4 = new BooleanValue(this, "PitchOutliers", false, this.randomize);
-      SettingVisibilityCondition condition30 = () -> this.isPitchOutliersVisible();
-      this.pitchOutliers = (BooleanValue)booleanValue4.withVisibility(condition30);
-      RandomizedRangeSettings randomizedRangeSettings6 = new RandomizedRangeSettings(this, "pitchOutliersAdd", 4.0, 10.0, 0.0, 20.0, 2, this.randomize);
-      SettingVisibilityCondition condition31 = () -> this.isPitchOutliersAddVisible();
-      this.pitchOutliersAdd = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition31);
+      this.smartRotate = (BooleanValue)new BooleanValue(this, "SmartRotate", false, this.randomize).withVisibility(() -> this.isSmartRotateVisible());
+      this.pitchOutliers = (BooleanValue)new BooleanValue(this, "PitchOutliers", false, this.randomize).withVisibility(() -> this.isPitchOutliersVisible());
+      this.pitchOutliersAdd = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "pitchOutliersAdd", 4.0, 10.0, 0.0, 20.0, 2, this.randomize).withVisibility(() -> this.isPitchOutliersAddVisible());
       RandomizedRangeSettings randomizedRangeSettings7 = (new RandomizedRangeSettings(this, "PitchOutliersDelay", 15.0, 20.0, 1.0, 40.0, 0, this.randomize)).withoutNotInARow();
       SettingVisibilityCondition condition32 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Advanced") && this.pitchOutliers.getValue();
@@ -556,99 +511,50 @@ public class KillAura
          return this.randomizeMode.getSelectedValue().equals("Advanced");
       };
       this.innerRadius = rangeSetting2.visibleWhen(condition33);
-      StringValue stringValue16 = new StringValue(this, "BestHitXMinDist", 2.0, 0.0, 10.0, 2, this.randomize);
+      DoubleValue stringValue16 = new DoubleValue(this, "BestHitXMinDist", 2.0, 0.0, 10.0, 2, this.randomize);
       SettingVisibilityCondition condition34 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Advanced");
       };
       this.bestHitXMinDist = stringValue16.visibleWhen(condition34);
-      StringValue stringValue17 = new StringValue(this, "BestHitYMInDist", 2.0, 0.0, 10.0, 2, this.randomize);
+      DoubleValue stringValue17 = new DoubleValue(this, "BestHitYMInDist", 2.0, 0.0, 10.0, 2, this.randomize);
       SettingVisibilityCondition condition35 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Advanced");
       };
       this.bestHitYMInDist = stringValue17.visibleWhen(condition35);
-      StringValue stringValue18 = new StringValue(this, "MinAbsDist", 0.5, 0.0, 10.0, 2, this.randomize);
-      SettingVisibilityCondition condition36 = () -> this.isMinAbsDistVisible();
-      this.minAbsDist = stringValue18.visibleWhen(condition36);
-      StringValue stringValue19 = new StringValue(this, "MaxXAbsDist", 5.0, 0.0, 20.0, 2, this.randomize);
-      SettingVisibilityCondition condition37 = () -> this.isMaxXAbsDistVisible();
-      this.maxXAbsDist = stringValue19.visibleWhen(condition37);
-      StringValue stringValue20 = new StringValue(this, "MaxYAbsDist", 20.0, 0.0, 20.0, 2, this.randomize);
-      SettingVisibilityCondition condition38 = () -> this.isMaxYAbsDistVisible();
-      this.maxYAbsDist = stringValue20.visibleWhen(condition38);
-      RangeSetting rangeSetting3 = new RangeSetting(this, "XRelDist", 0.5, 10.0, 0.0, 20.0, 2, this.randomize);
-      SettingVisibilityCondition condition39 = () -> this.isXRelDistVisible();
-      this.xRelDist = rangeSetting3.visibleWhen(condition39);
-      RangeSetting rangeSetting4 = new RangeSetting(this, "YRelDist", 0.5, 10.0, 0.0, 20.0, 2, this.randomize);
-      SettingVisibilityCondition condition40 = () -> this.isYRelDistVisible();
-      this.yRelDist = rangeSetting4.visibleWhen(condition40);
-      StringValue stringValue21 = new StringValue(this, "MaxRotationAngle", 90.0, 0.0, 180.0, 0, this.randomize);
+      this.minAbsDist = new DoubleValue(this, "MinAbsDist", 0.5, 0.0, 10.0, 2, this.randomize).visibleWhen(() -> this.isMinAbsDistVisible());
+      this.maxXAbsDist = new DoubleValue(this, "MaxXAbsDist", 5.0, 0.0, 20.0, 2, this.randomize).visibleWhen(() -> this.isMaxXAbsDistVisible());
+      this.maxYAbsDist = new DoubleValue(this, "MaxYAbsDist", 20.0, 0.0, 20.0, 2, this.randomize).visibleWhen(() -> this.isMaxYAbsDistVisible());
+      this.xRelDist = new RangeSetting(this, "XRelDist", 0.5, 10.0, 0.0, 20.0, 2, this.randomize).visibleWhen(() -> this.isXRelDistVisible());
+      this.yRelDist = new RangeSetting(this, "YRelDist", 0.5, 10.0, 0.0, 20.0, 2, this.randomize).visibleWhen(() -> this.isYRelDistVisible());
+      DoubleValue stringValue21 = new DoubleValue(this, "MaxRotationAngle", 90.0, 0.0, 180.0, 0, this.randomize);
       SettingVisibilityCondition condition41 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Advanced");
       };
       this.maxRotationAngle = stringValue21.visibleWhen(condition41);
-      StringValue stringValue22 = new StringValue(this, "Additional min Aimspeed", 100.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition42 = () -> this.isAdditionalMinAimSpeedVisible();
-      this.additionalMinAimspeed = stringValue22.visibleWhen(condition42);
-      StringValue stringValue23 = new StringValue(this, "Additional dynamic Speed", 100.0, 0.0, 100.0, 0, this.randomize);
+      this.additionalMinAimspeed = new DoubleValue(this, "Additional min Aimspeed", 100.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isAdditionalMinAimSpeedVisible());
+      DoubleValue stringValue23 = new DoubleValue(this, "Additional dynamic Speed", 100.0, 0.0, 100.0, 0, this.randomize);
       SettingVisibilityCondition condition43 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise");
       };
       this.additionalDynamicSpeed = stringValue23.visibleWhen(condition43);
-      StringValue stringValue24 = new StringValue(this, "Additional Aimspeed if needed", 100.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition44 = () -> this.isAdditionalAimSpeedIfNeededVisible();
-      this.additionalAimspeedIfNeeded = stringValue24.visibleWhen(condition44);
-      StringValue stringValue25 = new StringValue(this, "Probability of aiming even when not needed", 100.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition45 = () -> this.isAimProbabilityWhenNotNeededVisible();
-      this.probabilityOfAimingEvenWhenNotNeeded = stringValue25.visibleWhen(condition45);
-      BooleanValue booleanValue5 = new BooleanValue(this, "Test", false, this.randomize);
-      SettingVisibilityCondition condition46 = () -> this.isNoiseTestVisible();
-      this.test = (BooleanValue)booleanValue5.withVisibility(condition46);
-      StringValue stringValue26 = new StringValue(this, "AimSpeed", 75.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition47 = () -> this.isNoise2AimSpeedVisible();
-      this.aimSpeed = stringValue26.visibleWhen(condition47);
-      StringValue stringValue27 = new StringValue(this, "Decelerationfactor Pre", 12.5, 0.0, 100.0, 1, this.randomize);
-      SettingVisibilityCondition condition48 = () -> this.isDecelerationPreVisible();
-      this.decelerationfactorPre = stringValue27.visibleWhen(condition48);
-      StringValue stringValue28 = new StringValue(this, "Decelerationfactor Post", 0.0, 0.0, 100.0, 1, this.randomize);
-      SettingVisibilityCondition condition49 = () -> this.isDecelerationPostVisible();
-      this.decelerationfactorPost = stringValue28.visibleWhen(condition49);
-      RangeSetting rangeSetting5 = new RangeSetting(this, "Reaction Time", 2.0, 4.0, 0.0, 6.0, 0, this.randomize);
-      String str6 = " Reaction Time";
-      RangeSetting rangeSetting6 = rangeSetting5.named(str6);
-      SettingVisibilityCondition condition50 = () -> this.isReactionTimeVisible();
-      this.reactionTime = rangeSetting6.visibleWhen(condition50);
-      RangeSetting rangeSetting7 = new RangeSetting(this, "Lookahead Time", 2.0, 3.0, 0.0, 10.0, 0, this.randomize);
-      String str7 = " Lookahead Time";
-      RangeSetting rangeSetting8 = rangeSetting7.named(str7);
-      SettingVisibilityCondition condition51 = () -> this.isLookaheadTimeVisible();
-      this.lookaheadTime = rangeSetting8.visibleWhen(condition51);
-      StringValue stringValue29 = new StringValue(this, "Attention", 3.0, 2.0, 4.0, 0, this.randomize);
-      SettingVisibilityCondition condition52 = () -> this.isAttentionVisible();
-      this.attention = stringValue29.visibleWhen(condition52);
-      RangeSetting rangeSetting9 = new RangeSetting(this, "Prediction Inaccuracy", 0.0, 0.0, -100.0, 100.0, 0, this.randomize);
-      String str8 = " Prediction Inaccuracy";
-      RangeSetting rangeSetting10 = rangeSetting9.named(str8);
-      SettingVisibilityCondition condition53 = () -> this.isPredictionInaccuracyVisible();
-      this.predictionInaccuracy = rangeSetting10.visibleWhen(condition53);
-      StringValue stringValue30 = new StringValue(this, "Prediction Inaccuracy Smoothness", 0.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition54 = () -> this.isPredictionInaccuracySmoothnessVisible();
-      this.predictionInaccuracySmoothness = stringValue30.visibleWhen(condition54);
-      DoubleValue doubleValue2 = new DoubleValue(this, "SuperCorrection", this.randomize);
-      SettingVisibilityCondition condition55 = () -> this.isSuperCorrectionGroupVisible();
-      this.superCorrection = doubleValue2.visibleWhen(condition55);
-      StringValue stringValue31 = new StringValue(this, "SuperCorrection Probability", 100.0, 0.0, 100.0, 0, this.superCorrection);
-      SettingVisibilityCondition condition56 = () -> this.isSuperCorrectionProbabilityVisible();
-      this.supercorrectionProbability = stringValue31.visibleWhen(condition56);
-      RandomizedRangeSettings randomizedRangeSettings8 = new RandomizedRangeSettings(this, "SuperCorrection Delay", 0.0, 0.0, 0.0, 5.0, 0, this.superCorrection);
-      String str9 = " SuperCorrection Delay";
-      RandomizedRangeSettings randomizedRangeSettings9 = (RandomizedRangeSettings)randomizedRangeSettings8.withDisplayNamePrefix(str9);
-      SettingVisibilityCondition condition57 = () -> this.isSuperCorrectionDelayVisible();
-      this.supercorrectionDelay = ((RandomizedRangeSettings)randomizedRangeSettings9.withVisibility(condition57)).withoutNotInARow();
+      this.additionalAimspeedIfNeeded = new DoubleValue(this, "Additional Aimspeed if needed", 100.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isAdditionalAimSpeedIfNeededVisible());
+      this.probabilityOfAimingEvenWhenNotNeeded = new DoubleValue(this, "Probability of aiming even when not needed", 100.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isAimProbabilityWhenNotNeededVisible());
+      this.test = (BooleanValue)new BooleanValue(this, "Test", false, this.randomize).withVisibility(() -> this.isNoiseTestVisible());
+      this.aimSpeed = new DoubleValue(this, "AimSpeed", 75.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isNoise2AimSpeedVisible());
+      this.decelerationfactorPre = new DoubleValue(this, "Decelerationfactor Pre", 12.5, 0.0, 100.0, 1, this.randomize).visibleWhen(() -> this.isDecelerationPreVisible());
+      this.decelerationfactorPost = new DoubleValue(this, "Decelerationfactor Post", 0.0, 0.0, 100.0, 1, this.randomize).visibleWhen(() -> this.isDecelerationPostVisible());
+      this.reactionTime = new RangeSetting(this, "Reaction Time", 2.0, 4.0, 0.0, 6.0, 0, this.randomize).named(" Reaction Time").visibleWhen(() -> this.isReactionTimeVisible());
+      this.lookaheadTime = new RangeSetting(this, "Lookahead Time", 2.0, 3.0, 0.0, 10.0, 0, this.randomize).named(" Lookahead Time").visibleWhen(() -> this.isLookaheadTimeVisible());
+      this.attention = new DoubleValue(this, "Attention", 3.0, 2.0, 4.0, 0, this.randomize).visibleWhen(() -> this.isAttentionVisible());
+      this.predictionInaccuracy = new RangeSetting(this, "Prediction Inaccuracy", 0.0, 0.0, -100.0, 100.0, 0, this.randomize).named(" Prediction Inaccuracy").visibleWhen(() -> this.isPredictionInaccuracyVisible());
+      this.predictionInaccuracySmoothness = new DoubleValue(this, "Prediction Inaccuracy Smoothness", 0.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isPredictionInaccuracySmoothnessVisible());
+      this.superCorrection = new SettingGroup(this, "SuperCorrection", this.randomize).visibleWhen(() -> this.isSuperCorrectionGroupVisible());
+      this.supercorrectionProbability = new DoubleValue(this, "SuperCorrection Probability", 100.0, 0.0, 100.0, 0, this.superCorrection).visibleWhen(() -> this.isSuperCorrectionProbabilityVisible());
+      this.supercorrectionDelay = ((RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(this, "SuperCorrection Delay", 0.0, 0.0, 0.0, 5.0, 0, this.superCorrection).withDisplayNamePrefix(" SuperCorrection Delay")).withVisibility(() -> this.isSuperCorrectionDelayVisible())).withoutNotInARow();
       BooleanValue booleanValue6 = new BooleanValue(this, "Additional Accuracy", false, this.superCorrection);
       SettingVisibilityCondition condition58 = () -> {
          if (this.randomizeMode.getSelectedValue().equals("Noise2")) {
-            boolean flag = true;
-            if (this.supercorrectionProbability.getValue(flag) > 0.0) {
+            if (this.supercorrectionProbability.getValue(true) > 0.0) {
                return true;
             }
          }
@@ -656,56 +562,30 @@ public class KillAura
          return false;
       };
       this.additionalAccuracy = (BooleanValue)booleanValue6.withVisibility(condition58);
-      DoubleValue doubleValue3 = new DoubleValue(this, "Rotation Offset", this.randomize);
-      SettingVisibilityCondition condition59 = () -> this.isRotationOffsetGroupVisible();
-      this.rotationOffset = doubleValue3.visibleWhen(condition59);
-      RangeSetting rangeSetting11 = new RangeSetting(this, "Rotation Yaw Offset", 0.0, 0.0, -30.0, 30.0, 1, this.rotationOffset);
-      String str10 = " Rotation Yaw Offset";
-      RangeSetting rangeSetting12 = rangeSetting11.named(str10);
-      SettingVisibilityCondition condition60 = () -> this.isRotationYawOffsetVisible();
-      this.rotationYawOffset = rangeSetting12.visibleWhen(condition60);
-      RangeSetting rangeSetting13 = new RangeSetting(this, "Rotation Pitch Offset", 0.0, 0.0, -30.0, 30.0, 1, this.rotationOffset);
-      String str11 = " Rotation Pitch Offset";
-      RangeSetting rangeSetting14 = rangeSetting13.named(str11);
-      SettingVisibilityCondition condition61 = () -> this.isRotationPitchOffsetVisible();
-      this.rotationPitchOffset = rangeSetting14.visibleWhen(condition61);
-      StringValue stringValue32 = new StringValue(this, "Rotation Yaw Offset Speed", 0.0, 0.0, 100.0, 1, this.rotationOffset);
-      SettingVisibilityCondition condition62 = () -> this.isRotationYawOffsetSpeedVisible();
-      this.rotationYawOffsetSpeed = stringValue32.visibleWhen(condition62);
-      StringValue stringValue33 = new StringValue(this, "Rotation Pitch Offset Speed", 0.0, 0.0, 100.0, 1, this.rotationOffset);
-      SettingVisibilityCondition condition63 = () -> this.isRotationPitchOffsetSpeedVisible();
-      this.rotationPitchOffsetSpeed = stringValue33.visibleWhen(condition63);
-      StringValue stringValue34 = new StringValue(this, "Additional inaccuracy", 0.0, 0.0, 100.0, 0, this.randomize);
-      SettingVisibilityCondition condition64 = () -> this.isAdditionalInaccuracyVisible();
-      this.additionalInaccuracy = stringValue34.visibleWhen(condition64);
-      RangeSetting rangeSetting15 = new RangeSetting(this, "Orthogonal Scale", 0.0, 30.0, 0.0, 100.0, 0, this.randomize);
-      String str12 = " Orthogonal Scale";
-      RangeSetting rangeSetting16 = rangeSetting15.named(str12);
+      this.rotationOffset = new SettingGroup(this, "Rotation Offset", this.randomize).visibleWhen(() -> this.isRotationOffsetGroupVisible());
+      this.rotationYawOffset = new RangeSetting(this, "Rotation Yaw Offset", 0.0, 0.0, -30.0, 30.0, 1, this.rotationOffset).named(" Rotation Yaw Offset").visibleWhen(() -> this.isRotationYawOffsetVisible());
+      this.rotationPitchOffset = new RangeSetting(this, "Rotation Pitch Offset", 0.0, 0.0, -30.0, 30.0, 1, this.rotationOffset).named(" Rotation Pitch Offset").visibleWhen(() -> this.isRotationPitchOffsetVisible());
+      this.rotationYawOffsetSpeed = new DoubleValue(this, "Rotation Yaw Offset Speed", 0.0, 0.0, 100.0, 1, this.rotationOffset).visibleWhen(() -> this.isRotationYawOffsetSpeedVisible());
+      this.rotationPitchOffsetSpeed = new DoubleValue(this, "Rotation Pitch Offset Speed", 0.0, 0.0, 100.0, 1, this.rotationOffset).visibleWhen(() -> this.isRotationPitchOffsetSpeedVisible());
+      this.additionalInaccuracy = new DoubleValue(this, "Additional inaccuracy", 0.0, 0.0, 100.0, 0, this.randomize).visibleWhen(() -> this.isAdditionalInaccuracyVisible());
+      RangeSetting rangeSetting16 = new RangeSetting(this, "Orthogonal Scale", 0.0, 30.0, 0.0, 100.0, 0, this.randomize).named(" Orthogonal Scale");
       SettingVisibilityCondition condition65 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise2");
       };
       this.orthogonalScale = rangeSetting16.visibleWhen(condition65);
-      StringValue stringValue35 = new StringValue(this, "Max Orthogonal Movement", 10.0, 0.0, 90.0, 1, this.randomize);
-      SettingVisibilityCondition condition66 = () -> this.isMaxOrthogonalMovementVisible();
-      this.maxOrthogonalMovement = stringValue35.visibleWhen(condition66);
-      StringValue stringValue36 = new StringValue(this, "Max Aimpoint Anglediff", 60.0, 1.0, 180.0, 0, this.randomize);
-      SettingVisibilityCondition condition67 = () -> this.isMaxAimpointAngleDiffVisible();
-      this.maxAimpointAnglediff = stringValue36.visibleWhen(condition67);
+      this.maxOrthogonalMovement = new DoubleValue(this, "Max Orthogonal Movement", 10.0, 0.0, 90.0, 1, this.randomize).visibleWhen(() -> this.isMaxOrthogonalMovementVisible());
+      this.maxAimpointAnglediff = new DoubleValue(this, "Max Aimpoint Anglediff", 60.0, 1.0, 180.0, 0, this.randomize).visibleWhen(() -> this.isMaxAimpointAngleDiffVisible());
       RandomizedRangeSettings randomizedRangeSettings10 = (new RandomizedRangeSettings(this, "Bestvec Pitchinterpolation", 0.0, 0.0, 0.0, 100.0, 0, this.randomize)).withoutNotInARow();
       SettingVisibilityCondition condition68 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise2");
       };
       this.bestvecPitchinterpolation = (RandomizedRangeSettings)randomizedRangeSettings10.withVisibility(condition68);
-      RangeSetting rangeSetting17 = new RangeSetting(this, "Rotation on Target", 100.0, 100.0, 0.0, 100.0, 0, this.randomize);
-      String str13 = " Rotation on Target";
-      RangeSetting rangeSetting18 = rangeSetting17.named(str13);
+      RangeSetting rangeSetting18 = new RangeSetting(this, "Rotation on Target", 100.0, 100.0, 0.0, 100.0, 0, this.randomize).named(" Rotation on Target");
       SettingVisibilityCondition condition69 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise2");
       };
       this.rotationOnTarget = rangeSetting18.visibleWhen(condition69);
-      BooleanValue booleanValue7 = new BooleanValue(this, "No yaw adjustment if target out of reach", true, this.randomize);
-      SettingVisibilityCondition condition70 = () -> this.isNoYawOutOfReachVisible();
-      this.noYawAdjustmentIfTargetOutOfReach = (BooleanValue)booleanValue7.withVisibility(condition70);
+      this.noYawAdjustmentIfTargetOutOfReach = (BooleanValue)new BooleanValue(this, "No yaw adjustment if target out of reach", true, this.randomize).withVisibility(() -> this.isNoYawOutOfReachVisible());
       BooleanValue booleanValue8 = new BooleanValue(this, "No pitch adjustment if target out of reach", true, this.randomize);
       SettingVisibilityCondition condition71 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise2");
@@ -716,127 +596,89 @@ public class KillAura
          return this.randomizeMode.getSelectedValue().equals("Noise2");
       };
       this.applyRecordedMouseJitterMovementIfAvailable = (BooleanValue)booleanValue9.withVisibility(condition72);
-      BooleanValue booleanValue10 = new BooleanValue(this, "Ultimate Trashcode Bypass", true, this.randomize);
-      SettingVisibilityCondition condition73 = () -> this.isTrashcodeBypassVisible();
-      this.ultimateTrashcodeBypass = (BooleanValue)booleanValue10.withVisibility(condition73);
+      this.ultimateTrashcodeBypass = (BooleanValue)new BooleanValue(this, "Ultimate Trashcode Bypass", true, this.randomize).withVisibility(() -> this.isTrashcodeBypassVisible());
       BooleanValue booleanValue11 = new BooleanValue(this, "Adapt Curve if needed", false, this.randomize);
       SettingVisibilityCondition condition74 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Noise2");
       };
       this.adaptCurveIfNeeded = (BooleanValue)booleanValue11.withVisibility(condition74);
-      RandomizedRangeSettings randomizedRangeSettings11 = new RandomizedRangeSettings(this, "Noise3AimSpeed", 20.0, 30.0, 0.0, 180.0, 0, this.randomize);
-      String str14 = "AimSpeed";
-      RandomizedRangeSettings randomizedRangeSettings12 = ((RandomizedRangeSettings)randomizedRangeSettings11.withDisplayNamePrefix(str14)).withoutNotInARow();
-      SettingVisibilityCondition condition75 = () -> this.isTurboAimSpeedVisible();
-      this.noise3AimSpeed = (RandomizedRangeSettings)randomizedRangeSettings12.withVisibility(condition75);
-      RandomizedRangeSettings randomizedRangeSettings13 = new RandomizedRangeSettings(this, "Noise3Acceleration", 2.0, 4.0, 2.0, 20.0, 2, this.randomize);
-      String str15 = "Acceleration";
-      RandomizedRangeSettings randomizedRangeSettings14 = ((RandomizedRangeSettings)randomizedRangeSettings13.withDisplayNamePrefix(str15)).withoutNotInARow();
+      this.noise3AimSpeed = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(this, "Noise3AimSpeed", 20.0, 30.0, 0.0, 180.0, 0, this.randomize).withDisplayNamePrefix("AimSpeed")).withoutNotInARow().withVisibility(() -> this.isTurboAimSpeedVisible());
+      RandomizedRangeSettings randomizedRangeSettings14 = ((RandomizedRangeSettings)new RandomizedRangeSettings(this, "Noise3Acceleration", 2.0, 4.0, 2.0, 20.0, 2, this.randomize).withDisplayNamePrefix("Acceleration")).withoutNotInARow();
       SettingVisibilityCondition condition76 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Turbo");
       };
       this.noise3Acceleration = (RandomizedRangeSettings)randomizedRangeSettings14.withVisibility(condition76);
-      StringValue stringValue37 = new StringValue(this, "Noise33BetterAcceleration", 0.0, 0.0, 1.0, 2, this.randomize);
-      String str16 = "BetterAcceleration";
-      StringValue stringValue38 = stringValue37.named(str16);
+      DoubleValue stringValue38 = new DoubleValue(this, "Noise33BetterAcceleration", 0.0, 0.0, 1.0, 2, this.randomize).named("BetterAcceleration");
       SettingVisibilityCondition condition77 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Turbo");
       };
       this.noise33BetterAcceleration = stringValue38.visibleWhen(condition77);
-      StringValue stringValue39 = new StringValue(this, "Noise3Scale", 1.5, 1.0, 7.0, 2, this.randomize);
-      String str17 = "Scale";
-      StringValue stringValue40 = stringValue39.named(str17);
+      DoubleValue stringValue40 = new DoubleValue(this, "Noise3Scale", 1.5, 1.0, 7.0, 2, this.randomize).named("Scale");
       SettingVisibilityCondition condition78 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Turbo");
       };
       this.noise3Scale = stringValue40.visibleWhen(condition78);
-      RangeSetting rangeSetting19 = new RangeSetting(this, "Noise3ResponseTarget", 3.0, 5.0, 1.0, 10.0, 0, this.randomize);
-      String str18 = "TargetResponse";
-      RangeSetting rangeSetting20 = rangeSetting19.named(str18);
+      RangeSetting rangeSetting20 = new RangeSetting(this, "Noise3ResponseTarget", 3.0, 5.0, 1.0, 10.0, 0, this.randomize).named("TargetResponse");
       SettingVisibilityCondition condition79 = () -> {
          return this.randomizeMode.getSelectedValue().equals("Turbo");
       };
       this.noise3ResponseTarget = rangeSetting20.visibleWhen(condition79);
-      RangeSetting rangeSetting21 = new RangeSetting(this, "Noise3PlayerResponse", 3.0, 5.0, 1.0, 10.0, 0, this.randomize);
-      String str19 = "PlayerResponse";
-      RangeSetting rangeSetting22 = rangeSetting21.named(str19);
-      SettingVisibilityCondition condition80 = () -> this.isTurboPlayerResponseVisible();
-      this.noise3PlayerResponse = rangeSetting22.visibleWhen(condition80);
-      DoubleValue doubleValue4 = new DoubleValue(this, "AISettingsGroup", this.randomize);
-      String str20 = "AI Settings";
-      DoubleValue doubleValue5 = (DoubleValue)doubleValue4.withDisplayName(str20);
-      SettingVisibilityCondition condition81 = () -> this.isAiSettingsGroupVisible();
-      this.aiSettingsGroup = doubleValue5.visibleWhen(condition81);
-      BooleansSetting booleansSetting3 = new BooleansSetting(this, "AIModel", "None", new String[]{"None"}, this.aiSettingsGroup);
-      String str21 = "Model";
-      this.aiModel = (BooleansSetting)booleansSetting3.withDisplayName(str21);
-      ActionSetting actionSetting = new ActionSetting(this, "AIRefreshModels", () -> this.refreshAiModels(), this.aiSettingsGroup);
-      String str22 = "Refresh Models";
-      this.aiRefreshModels = (ActionSetting)actionSetting.withDisplayName(str22);
+      this.noise3PlayerResponse = new RangeSetting(this, "Noise3PlayerResponse", 3.0, 5.0, 1.0, 10.0, 0, this.randomize).named("PlayerResponse").visibleWhen(() -> this.isTurboPlayerResponseVisible());
+      this.aiSettingsGroup = ((SettingGroup)new SettingGroup(this, "AISettingsGroup", this.randomize).withDisplayName("AI Settings")).visibleWhen(() -> this.isAiSettingsGroupVisible());
+      this.aiModel = (StringValue)new StringValue(this, "AIModel", "None", new String[]{"None"}, this.aiSettingsGroup).withDisplayName("Model");
+      this.aiRefreshModels = (ActionSetting)new ActionSetting(this, "AIRefreshModels", () -> this.refreshAiModels(), this.aiSettingsGroup).withDisplayName("Refresh Models");
       this.smartAim = new BooleanValue(this, "SmartAim", true, this.rotations);
       BooleanValue booleanValue12 = new BooleanValue(this, "SmartAimEntityCheck", true, this.rotations);
       BooleanValue smartAim2 = this.smartAim;
       this.smartAim.getClass();
-      BooleanValue booleanValue13 = smartAim2;
-      SettingVisibilityCondition condition82 = () -> booleanValue13.getValue();
-      this.smartAimEntityCheck = (BooleanValue)booleanValue12.withVisibility(condition82);
+      this.smartAimEntityCheck = (BooleanValue)booleanValue12.withVisibility(() -> smartAim2.getValue());
       this.advancedRots = new BooleanValue(this, "AdvancedRots", true, this.rotations);
       BooleanValue booleanValue14 = new BooleanValue(this, "AdvancedRotsNotAtTarget", false, this.rotations);
       BooleanValue advancedRots2 = this.advancedRots;
       this.advancedRots.getClass();
-      BooleanValue booleanValue15 = advancedRots2;
-      SettingVisibilityCondition condition83 = () -> booleanValue15.getValue();
-      this.advancedRotsNotAtTarget = (BooleanValue)booleanValue14.withVisibility(condition83);
+      this.advancedRotsNotAtTarget = (BooleanValue)booleanValue14.withVisibility(() -> advancedRots2.getValue());
       this.timerRangeV2Fix = new BooleanValue(this, "TimerRangeV2Fix", false, this.rotations);
       this.interpolation = new BooleanValue(this, "Interpolation", false, this.rotations);
       this.lockView = new BooleanValue(this, "LockView", false, this.rotations);
       this.stopRotationInsideTarget = new BooleanValue(this, "StopRotationInsideTarget", false, this.rotations);
-      DoubleValue doubleValue6 = new DoubleValue(this, "ThroughWallsGroup", true, this.rotations);
-      String str23 = "ThroughWalls";
-      this.throughWallsGroup = (DoubleValue)((DoubleValue)doubleValue6.withDisplayName(str23)).markVisualOnly();
-      this.throughWallsMode = (BooleansSetting)(new BooleansSetting(
+      this.throughWallsGroup = (SettingGroup)((SettingGroup)new SettingGroup(this, "ThroughWallsGroup", true, this.rotations).withDisplayName("ThroughWalls")).markVisualOnly();
+      this.throughWallsMode = (StringValue)(new StringValue(
             this, "ThroughWallsMode", "None", new String[]{"None", "NoneFullBlocks", "AllBlocks"}, this.throughWallsGroup
          ))
          .markVisualOnly();
-      StringValue stringValue41 = new StringValue(this, "ThroughWallsRange", 3.0, 0.0, 3.0, 3, this.throughWallsGroup);
-      SettingVisibilityCondition condition84 = () -> this.isThroughWallsRangeVisible();
-      this.throughWallsRange = (StringValue)stringValue41.visibleWhen(condition84).markVisualOnly();
+      this.throughWallsRange = (DoubleValue)new DoubleValue(this, "ThroughWallsRange", 3.0, 0.0, 3.0, 3, this.throughWallsGroup).visibleWhen(() -> this.isThroughWallsRangeVisible()).markVisualOnly();
       BooleanValue booleanValue16 = new BooleanValue(this, "AimThroughWalls", false, this.throughWallsGroup);
       SettingVisibilityCondition condition85 = () -> {
          return !this.throughWallsMode.getSelectedValue().equals("AllBlocks");
       };
       this.aimThroughWalls = (BooleanValue)((BooleanValue)booleanValue16.withVisibility(condition85)).markVisualOnly();
-      RandomizedRangeSettings randomizedRangeSettings15 = (new RandomizedRangeSettings(this, "AimThroughWallsRange", 6.0, 6.0, 0.0, 6.0, 3, this.throughWallsGroup)).withoutNotInARow();
-      SettingVisibilityCondition condition86 = () -> this.isAimThroughWallsRangeVisible();
-      this.aimThroughWallsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings15.withVisibility(condition86)).markAllVisualOnly();
+      this.aimThroughWallsRange = (RandomizedRangeSettings)((RandomizedRangeSettings)(new RandomizedRangeSettings(this, "AimThroughWallsRange", 6.0, 6.0, 0.0, 6.0, 3, this.throughWallsGroup)).withoutNotInARow().withVisibility(() -> this.isAimThroughWallsRangeVisible())).markAllVisualOnly();
       this.noRotation = new BooleanValue(this, "NoRotation", false, this.rotations);
-      this.clicking = new DoubleValue(this, "Clicking", true);
-      this.clickSettings = new DoubleValue(this, "ClickSettings", true, this.clicking);
+      this.clicking = new SettingGroup(this, "Clicking", true);
+      this.clickSettings = new SettingGroup(this, "ClickSettings", true, this.clicking);
       this.clickMode = new ModeSetting(
          this,
          "ClickMode",
          "Advanced",
          this.clickSettings,
          new BiFunction[]{
-            (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (DoubleValue)obj2),
-            (obj3, obj4) -> new SimpleClickPatternMode((Module)obj3, (DoubleValue)obj4),
-            (obj5, obj6) -> new SimpleV2ClickPatternMode((Module)obj5, (DoubleValue)obj6),
-            (obj7, obj8) -> new AdvancedClickPatternMode((Module)obj7, (DoubleValue)obj8),
-            (obj9, obj10) -> new RecordedClickPatternMode((Module)obj9, (DoubleValue)obj10),
-            (obj11, obj12) -> new SmartClickPatternMode((Module)obj11, (DoubleValue)obj12),
-            (obj13, obj14) -> new DragClickPatternMode((Module)obj13, (DoubleValue)obj14),
-            (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (DoubleValue)obj16)
+            (obj, obj2) -> new DeviationClickPatternMode((Module)obj, (SettingGroup)obj2),
+            (obj3, obj4) -> new SimpleClickPatternMode((Module)obj3, (SettingGroup)obj4),
+            (obj5, obj6) -> new SimpleV2ClickPatternMode((Module)obj5, (SettingGroup)obj6),
+            (obj7, obj8) -> new AdvancedClickPatternMode((Module)obj7, (SettingGroup)obj8),
+            (obj9, obj10) -> new RecordedClickPatternMode((Module)obj9, (SettingGroup)obj10),
+            (obj11, obj12) -> new SmartClickPatternMode((Module)obj11, (SettingGroup)obj12),
+            (obj13, obj14) -> new DragClickPatternMode((Module)obj13, (SettingGroup)obj14),
+            (obj15, obj16) -> new DistributionClickPatternMode((Module)obj15, (SettingGroup)obj16)
          }
       );
-      this.cpsLimiter = new StringValue(this, "CPSLimiter", 15.0, 1.0, 40.0, 0, this.clickSettings);
+      this.cpsLimiter = new DoubleValue(this, "CPSLimiter", 15.0, 1.0, 40.0, 0, this.clickSettings);
       this.cpsLimiterIntave = new BooleanValue(this, "CPSLimiterIntave", true, this.clickSettings);
-      this.interactions = new DoubleValue(this, "Interactions", true, this.clicking);
-      this.attackMode = new BooleansSetting(this, "AttackMode", "Legit", new String[]{"Legit", "Packet", "Multi"}, this.interactions);
-      StringValue stringValue42 = new StringValue(this, "MaxTargets", 10.0, 1.0, 20.0, 0, this.interactions);
-      SettingVisibilityCondition condition87 = () -> this.isMaxTargetsVisible();
-      this.maxTargets = stringValue42.visibleWhen(condition87);
+      this.interactions = new SettingGroup(this, "Interactions", true, this.clicking);
+      this.attackMode = new StringValue(this, "AttackMode", "Legit", new String[]{"Legit", "Packet", "Multi"}, this.interactions);
+      this.maxTargets = new DoubleValue(this, "MaxTargets", 10.0, 1.0, 20.0, 0, this.interactions).visibleWhen(() -> this.isMaxTargetsVisible());
       this.optifineHitbox = new BooleanValue(this, "OptifineHitbox", false, this.interactions);
-      this.blockMode = new BooleansSetting(
+      this.blockMode = new StringValue(
          this,
          "BlockMode",
          "None",
@@ -859,12 +701,8 @@ public class KillAura
          },
          this.interactions
       );
-      BooleanValue booleanValue17 = new BooleanValue(this, "SmartBlock", true, this.interactions);
-      SettingVisibilityCondition condition88 = () -> this.isSmartBlockVisible();
-      this.smartBlock = (BooleanValue)booleanValue17.withVisibility(condition88);
-      BooleanValue booleanValue18 = new BooleanValue(this, "InteractAutoBlock", true, this.interactions);
-      SettingVisibilityCondition condition89 = () -> this.isInteractAutoBlockVisible();
-      this.interactAutoBlock = (BooleanValue)booleanValue18.withVisibility(condition89);
+      this.smartBlock = (BooleanValue)new BooleanValue(this, "SmartBlock", true, this.interactions).withVisibility(() -> this.isSmartBlockVisible());
+      this.interactAutoBlock = (BooleanValue)new BooleanValue(this, "InteractAutoBlock", true, this.interactions).withVisibility(() -> this.isInteractAutoBlockVisible());
       BooleanValue booleanValue19 = new BooleanValue(this, "OnlyRightClickBlock", false, this.interactions);
       SettingVisibilityCondition condition90 = () -> {
          return !this.blockMode.getSelectedValue().equals("None");
@@ -875,28 +713,16 @@ public class KillAura
          return !this.blockMode.getSelectedValue().equals("None");
       };
       this.onlyWhileSwingInProgress = (BooleanValue)booleanValue20.withVisibility(condition91);
-      BooleanValue booleanValue21 = new BooleanValue(this, "OnlyWhileHurt", false, this.interactions);
-      SettingVisibilityCondition condition92 = () -> this.isOnlyWhileHurtVisible();
-      this.onlyWhileHurt = (BooleanValue)booleanValue21.withVisibility(condition92);
-      StringValue stringValue43 = new StringValue(this, "UnblockAAC", 4.0, 0.0, 10.0, 0, this.interactions);
-      SettingVisibilityCondition condition93 = () -> this.isUnblockAacVisible();
-      this.unblockAAC = stringValue43.visibleWhen(condition93);
+      this.onlyWhileHurt = (BooleanValue)new BooleanValue(this, "OnlyWhileHurt", false, this.interactions).withVisibility(() -> this.isOnlyWhileHurtVisible());
+      this.unblockAAC = new DoubleValue(this, "UnblockAAC", 4.0, 0.0, 10.0, 0, this.interactions).visibleWhen(() -> this.isUnblockAacVisible());
       this.preHit = new BooleanValue(this, "PreHit", true, this.clicking);
       BooleanValue booleanValue22 = new BooleanValue(this, "SmartPreHit", false, this.clicking);
       BooleanValue preHit2 = this.preHit;
       this.preHit.getClass();
-      BooleanValue booleanValue23 = preHit2;
-      SettingVisibilityCondition condition94 = () -> booleanValue23.getValue();
-      this.smartPreHit = (BooleanValue)booleanValue22.withVisibility(condition94);
-      RandomizedRangeSettings randomizedRangeSettings16 = (new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.clicking)).withoutNotInARow();
-      SettingVisibilityCondition condition95 = () -> this.isPreHitPredictionVisible();
-      this.prediction = (RandomizedRangeSettings)randomizedRangeSettings16.withVisibility(condition95);
-      RandomizedRangeSettings randomizedRangeSettings17 = (new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.clicking)).withoutNotInARow();
-      SettingVisibilityCondition condition96 = () -> this.isPreHitLoseDelayVisible();
-      this.loseDelay = (RandomizedRangeSettings)randomizedRangeSettings17.withVisibility(condition96);
-      RandomizedRangeSettings randomizedRangeSettings18 = (new RandomizedRangeSettings(this, "Endurance", 90.0, 110.0, 1.0, 400.0, 0, this.clicking)).withoutNotInARow();
-      SettingVisibilityCondition condition97 = () -> this.isPreHitEnduranceVisible();
-      this.endurance = (RandomizedRangeSettings)randomizedRangeSettings18.withVisibility(condition97);
+      this.smartPreHit = (BooleanValue)booleanValue22.withVisibility(() -> preHit2.getValue());
+      this.prediction = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Prediction", 3.0, 5.0, 1.0, 10.0, 0, this.clicking)).withoutNotInARow().withVisibility(() -> this.isPreHitPredictionVisible());
+      this.loseDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "LoseDelay", 3.0, 5.0, 1.0, 10.0, 0, this.clicking)).withoutNotInARow().withVisibility(() -> this.isPreHitLoseDelayVisible());
+      this.endurance = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Endurance", 90.0, 110.0, 1.0, 400.0, 0, this.clicking)).withoutNotInARow().withVisibility(() -> this.isPreHitEnduranceVisible());
       RandomizedRangeSettings randomizedRangeSettings19 = (new RandomizedRangeSettings(this, "EnduranceReduction", 5.0, 10.0, 1.0, 20.0, 0, this.clicking)).withoutNotInARow();
       SettingVisibilityCondition condition98 = () -> {
          return this.smartPreHit.getValue() && this.smartPreHit.isVisible();
@@ -905,28 +731,20 @@ public class KillAura
       RandomizedRangeSettings randomizedRangeSettings20 = (new RandomizedRangeSettings(this, "PreHitRange", 6.0, 6.0, 3.0, 8.0, 2, this.clicking)).withoutNotInARow();
       BooleanValue preHit3 = this.preHit;
       this.preHit.getClass();
-      BooleanValue booleanValue24 = preHit3;
-      SettingVisibilityCondition condition99 = () -> booleanValue24.getValue();
-      this.preHitRange = (RandomizedRangeSettings)randomizedRangeSettings20.withVisibility(condition99);
+      this.preHitRange = (RandomizedRangeSettings)randomizedRangeSettings20.withVisibility(() -> preHit3.getValue());
       RandomizedRangeSettings randomizedRangeSettings21 = (new RandomizedRangeSettings(this, "PreHitFovYaw", 50.0, 60.0, 0.0, 180.0, 0, this.clicking)).withoutNotInARow();
       BooleanValue preHit4 = this.preHit;
       this.preHit.getClass();
-      BooleanValue booleanValue25 = preHit4;
-      SettingVisibilityCondition condition100 = () -> booleanValue25.getValue();
-      this.preHitFovYaw = (RandomizedRangeSettings)randomizedRangeSettings21.withVisibility(condition100);
+      this.preHitFovYaw = (RandomizedRangeSettings)randomizedRangeSettings21.withVisibility(() -> preHit4.getValue());
       RandomizedRangeSettings randomizedRangeSettings22 = (new RandomizedRangeSettings(this, "PreHitFovPitch", 50.0, 60.0, 0.0, 180.0, 0, this.clicking)).withoutNotInARow();
       BooleanValue preHit5 = this.preHit;
       this.preHit.getClass();
-      BooleanValue booleanValue26 = preHit5;
-      SettingVisibilityCondition condition101 = () -> booleanValue26.getValue();
-      this.preHitFovPitch = (RandomizedRangeSettings)randomizedRangeSettings22.withVisibility(condition101);
+      this.preHitFovPitch = (RandomizedRangeSettings)randomizedRangeSettings22.withVisibility(() -> preHit5.getValue());
       this.missClick = new BooleanValue(this, "MissClick", false, this.clicking);
-      StringValue stringValue44 = new StringValue(this, "MissClickPercentage", 5.0, 0.0, 100.0, 0, this.clicking);
+      DoubleValue stringValue44 = new DoubleValue(this, "MissClickPercentage", 5.0, 0.0, 100.0, 0, this.clicking);
       BooleanValue missClick2 = this.missClick;
       this.missClick.getClass();
-      BooleanValue booleanValue27 = missClick2;
-      SettingVisibilityCondition condition102 = () -> booleanValue27.getValue();
-      this.missClickPercentage = stringValue44.visibleWhen(condition102);
+      this.missClickPercentage = stringValue44.visibleWhen(() -> missClick2.getValue());
       this.perfectHit = new BooleanValue(this, "PerfectHit", true, this.clicking);
       BooleanValue booleanValue28 = new BooleanValue(this, "LongClick", false, this.clicking);
       SettingVisibilityCondition condition103 = () -> {
@@ -937,24 +755,16 @@ public class KillAura
       BooleanValue booleanValue29 = new BooleanValue(this, "CritFixPacketCheck", true, this.clicking);
       BooleanValue critFix2 = this.critFix;
       this.critFix.getClass();
-      BooleanValue booleanValue30 = critFix2;
-      SettingVisibilityCondition condition104 = () -> booleanValue30.getValue();
-      this.critFixPacketCheck = (BooleanValue)booleanValue29.withVisibility(condition104);
-      StringValue stringValue45 = new StringValue(this, "CritFixChance", 100.0, 0.0, 100.0, 1, this.clicking);
+      this.critFixPacketCheck = (BooleanValue)booleanValue29.withVisibility(() -> critFix2.getValue());
+      DoubleValue stringValue45 = new DoubleValue(this, "CritFixChance", 100.0, 0.0, 100.0, 1, this.clicking);
       BooleanValue critFix3 = this.critFix;
       this.critFix.getClass();
-      BooleanValue booleanValue31 = critFix3;
-      SettingVisibilityCondition condition105 = () -> booleanValue31.getValue();
-      this.critFixChance = stringValue45.visibleWhen(condition105);
+      this.critFixChance = stringValue45.visibleWhen(() -> critFix3.getValue());
       this.noLoopHit = new BooleanValue(this, "NoLoopHit", true, this.clicking);
       this.fixBeta = new BooleanValue(this, "Fix (Beta)", false, this.clicking);
       this.breakBlocks = new BooleanValue(this, "BreakBlocks", false, this.clicking);
-      BooleanValue booleanValue32 = new BooleanValue(this, "DoubleClickFirstHit", true, this.clicking);
-      SettingVisibilityCondition condition106 = () -> this.isDoubleClickFirstHitVisible();
-      this.doubleClickFirstHit = (BooleanValue)booleanValue32.withVisibility(condition106);
-      BooleanValue booleanValue33 = new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false, this.clicking);
-      String str24 = "ReduceCPSIfYouCanNotHitATarget";
-      BooleanValue booleanValue34 = (BooleanValue)booleanValue33.withDisplayName(str24);
+      this.doubleClickFirstHit = (BooleanValue)new BooleanValue(this, "DoubleClickFirstHit", true, this.clicking).withVisibility(() -> this.isDoubleClickFirstHitVisible());
+      BooleanValue booleanValue34 = (BooleanValue)new BooleanValue(this, "ReduceCPSIfYouCanNotHitATargett", false, this.clicking).withDisplayName("ReduceCPSIfYouCanNotHitATarget");
       SettingVisibilityCondition condition107 = () -> {
          return this.clickMode.getSelectedValue().equals("Advanced")
             || this.clickMode.getSelectedValue().equals("Smart")
@@ -970,73 +780,50 @@ public class KillAura
          return !this.attackMode.getSelectedValue().equals("Multi");
       };
       this.coolDown = (BooleanValue)booleanValue35.withVisibility(condition108);
-      this.movement = (DoubleValue)(new DoubleValue(this, "Movement", true)).markVisualOnly();
+      this.movement = (SettingGroup)(new SettingGroup(this, "Movement", true)).markVisualOnly();
       this.jumpFix = (BooleanValue)(new BooleanValue(this, "JumpFix", true, this.movement)).markVisualOnly();
-      BooleanValue booleanValue36 = new BooleanValue(this, "MoveFix", true, this.movement);
-      SettingVisibilityCondition condition109 = () -> this.isMoveFixVisible();
-      this.moveFix = (BooleanValue)((BooleanValue)booleanValue36.withVisibility(condition109)).markVisualOnly();
-      BooleansSetting booleansSetting4 = new BooleansSetting(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement);
-      SettingVisibilityCondition condition110 = () -> this.isSilentMoveFixVisible();
-      this.silentMoveFix = (BooleansSetting)((BooleansSetting)booleansSetting4.withVisibility(condition110)).markVisualOnly();
+      this.moveFix = (BooleanValue)((BooleanValue)new BooleanValue(this, "MoveFix", true, this.movement).withVisibility(() -> this.isMoveFixVisible())).markVisualOnly();
+      this.silentMoveFix = (StringValue)((StringValue)new StringValue(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement).withVisibility(() -> this.isSilentMoveFixVisible())).markVisualOnly();
       BooleanValue booleanValue37 = new BooleanValue(this, "SilentMoveFixIntave", true, this.movement);
       SettingVisibilityCondition condition111 = () -> {
          return this.silentMoveFix.isVisible() && !this.silentMoveFix.getSelectedValue().equals("None");
       };
       this.silentMoveFixIntave = (BooleanValue)((BooleanValue)booleanValue37.withVisibility(condition111)).markVisualOnly();
-      this.targets = (DoubleValue)(new DoubleValue(this, "Targets", true)).markVisualOnly();
+      this.targets = (SettingGroup)(new SettingGroup(this, "Targets", true)).markVisualOnly();
       this.targetSelection = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter(), this.targets)).withSorting();
-      this.targetDelay = (StringValue)(new StringValue(this, "TargetDelay", 0.0, 0.0, 1000.0, 0, this.targets)).markVisualOnly();
+      this.targetDelay = (DoubleValue)(new DoubleValue(this, "TargetDelay", 0.0, 0.0, 1000.0, 0, this.targets)).markVisualOnly();
       this.targetLoseDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "TargetLoseDelay", 0.0, 0.0, 0.0, 1000.0, 0, this.targets))
          .withoutNotInARow()
          .markAllVisualOnly();
       this.maxDeathTime = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "MaxDeathTime", 0.0, 0.0, 0.0, 30.0, 0, this.targets)).withoutNotInARow().markAllVisualOnly();
-      this.miscellaneous = (DoubleValue)(new DoubleValue(this, "Miscellaneous")).markVisualOnly();
+      this.miscellaneous = (SettingGroup)(new SettingGroup(this, "Miscellaneous")).markVisualOnly();
       this.closeGuisIfTargetArrives = (BooleanValue)(new BooleanValue(this, "CloseGuisIfTargetArrives", false, this.miscellaneous)).markVisualOnly();
       this.inInv = new BooleanValue(this, "InInv", false, this.miscellaneous);
       this.activeSlots = (MultiOptionSetting)(new MultiOptionSetting(this, "ActiveSlots", KillAuraActiveSlotOption.values(), this.miscellaneous)).markVisualOnly();
       this.weaponFilter = (WeaponFilterSettings)(new WeaponFilterSettings(this, this.miscellaneous)).markAllVisualOnly();
       this.lookDownDisable = new LookDownDisableSettings(this, this.miscellaneous);
-      BooleanValue booleanValue38 = new BooleanValue(this, "Intave13", false, this.miscellaneous);
-      SettingVisibilityCondition condition112 = () -> this.isIntave13Visible();
-      this.intave13 = (BooleanValue)booleanValue38.withVisibility(condition112);
-      RandomizedRangeSettings randomizedRangeSettings23 = (new RandomizedRangeSettings(this, "DelayRotationsAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow();
-      SettingVisibilityCondition condition113 = () -> this.isDelayRotationsAfterGuiVisible();
-      this.delayRotationsAfterClosingGuiScreen = (RandomizedRangeSettings)randomizedRangeSettings23.withVisibility(condition113);
-      RandomizedRangeSettings randomizedRangeSettings24 = (new RandomizedRangeSettings(this, "DelayClicksAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow();
-      SettingVisibilityCondition condition114 = () -> this.isDelayClicksAfterGuiVisible();
-      this.delayClicksAfterClosingGuiScreen = (RandomizedRangeSettings)randomizedRangeSettings24.withVisibility(condition114);
-      RandomizedRangeSettings randomizedRangeSettings25 = (new RandomizedRangeSettings(this, "DelayRotationsAfterRespawn", 4.0, 6.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow();
-      SettingVisibilityCondition condition115 = () -> this.isDelayRotationsAfterRespawnVisible();
-      this.delayRotationsAfterRespawn = (RandomizedRangeSettings)randomizedRangeSettings25.withVisibility(condition115);
-      RandomizedRangeSettings randomizedRangeSettings26 = (new RandomizedRangeSettings(this, "DelayClicksAfterRespawn", 4.0, 6.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow();
-      SettingVisibilityCondition condition116 = () -> this.isDelayClicksAfterRespawnVisible();
-      this.delayClicksAfterRespawn = (RandomizedRangeSettings)randomizedRangeSettings26.withVisibility(condition116);
-      this.visuals = (DoubleValue)(new DoubleValue(this, "Visuals")).markVisualOnly();
+      this.intave13 = (BooleanValue)new BooleanValue(this, "Intave13", false, this.miscellaneous).withVisibility(() -> this.isIntave13Visible());
+      this.delayRotationsAfterClosingGuiScreen = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DelayRotationsAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow().withVisibility(() -> this.isDelayRotationsAfterGuiVisible());
+      this.delayClicksAfterClosingGuiScreen = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DelayClicksAfterClosingGuiScreen", 3.0, 5.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow().withVisibility(() -> this.isDelayClicksAfterGuiVisible());
+      this.delayRotationsAfterRespawn = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DelayRotationsAfterRespawn", 4.0, 6.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow().withVisibility(() -> this.isDelayRotationsAfterRespawnVisible());
+      this.delayClicksAfterRespawn = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DelayClicksAfterRespawn", 4.0, 6.0, 1.0, 20.0, 0, this.miscellaneous)).withoutNotInARow().withVisibility(() -> this.isDelayClicksAfterRespawnVisible());
+      this.visuals = (SettingGroup)(new SettingGroup(this, "Visuals")).markVisualOnly();
       this.dot = (BooleanValue)(new BooleanValue(this, "Dot", false, this.visuals)).markVisualOnly();
-      StringValue stringValue46 = new StringValue(this, "DotSize", 0.3, 0.01, 1.0, 2, this.visuals);
+      DoubleValue stringValue46 = new DoubleValue(this, "DotSize", 0.3, 0.01, 1.0, 2, this.visuals);
       BooleanValue dot2 = this.dot;
       this.dot.getClass();
-      BooleanValue booleanValue39 = dot2;
-      SettingVisibilityCondition condition117 = () -> booleanValue39.getValue();
-      this.dotSize = (StringValue)stringValue46.visibleWhen(condition117).markVisualOnly();
+      this.dotSize = (DoubleValue)stringValue46.visibleWhen(() -> dot2.getValue()).markVisualOnly();
       Color color2 = new Color(41, 146, 222);
       randomize2 = this.visuals;
-      Color color3 = color2;
       str4 = "DotColor";
-      ColorSetting colorSetting = new ColorSetting(this, str4, color3, randomize2);
+      ColorSetting colorSetting = new ColorSetting(this, str4, color2, randomize2);
       BooleanValue dot3 = this.dot;
       this.dot.getClass();
-      BooleanValue booleanValue40 = dot3;
-      SettingVisibilityCondition condition118 = () -> booleanValue40.getValue();
-      this.dotColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(condition118)).markVisualOnly();
+      this.dotColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(() -> dot3.getValue())).markVisualOnly();
       BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, this.visuals);
       BooleanValue dot4 = this.dot;
       this.dot.getClass();
-      BooleanValue booleanValue41 = dot4;
-      SettingVisibilityCondition condition119 = () -> booleanValue41.getValue();
-      BlurShadowSettings blurShadowSettings2 = ((BlurShadowSettings)blurShadowSettings.withVisibility(condition119)).disableBlurByDefault();
-      Color black = Color.black;
-      this.dotShadowSettings = (BlurShadowSettings)blurShadowSettings2.withCustomShadowColor(black).markAllVisualOnly();
+      this.dotShadowSettings = (BlurShadowSettings)((BlurShadowSettings)blurShadowSettings.withVisibility(() -> dot4.getValue())).disableBlurByDefault().withCustomShadowColor(Color.black).markAllVisualOnly();
       this.targetSwitchTimer = new TimeHelper();
       this.lastAttackTimer = new TimeHelper();
       this.clickCycleTimer = new TimeHelper();
@@ -1099,8 +886,7 @@ public class KillAura
       this.firstHitReady = true;
       this.currentRange = this.range2.getValue();
       this.lockViewMouseDelta[0] = this.lockViewMouseDelta[1] = 0;
-      String str = "0";
-      this.setSuffix(str);
+      this.setSuffix("0");
       this.target = null;
       this.currentRotation = ClientManagers.rotationController.getPreviousRotation();
       this.previousTarget = null;
@@ -1114,9 +900,7 @@ public class KillAura
          f = 20.0F;
       }
 
-      short s = 1000;
-      float f2 = f;
-      rotationUtil2.generateDeltaCandidates(f2, s);
+      rotationUtil2.generateDeltaCandidates(f, (short)1000);
       this.activeAttackMode = this.attackMode.getSelectedValue();
       this.rotationUtil.reset();
       RandomizedRangeSettings preAimRange2 = this.preAimRange;
@@ -1148,42 +932,25 @@ public class KillAura
       this.unloadAiModel();
       this.preHitEnduranceUsed = 0;
       this.preHitEnduranceExhausted = false;
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      byte b2 = 28;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 2;
-      this.toggleEventSubscription(b3);
-      byte b4 = 7;
-      this.toggleEventSubscription(b4);
-      byte b5 = 6;
-      this.toggleEventSubscription(b5);
-      byte b6 = 40;
-      this.toggleEventSubscription(b6);
-      byte b7 = 21;
-      this.toggleEventSubscription(b7);
-      byte b8 = 18;
-      this.toggleEventSubscription(b8);
-      byte b9 = 32;
-      this.toggleEventSubscription(b9);
-      byte b10 = 18;
-      byte b11 = 29;
-      this.toggleEventSubscription(b11, b10);
-      byte b12 = 26;
-      this.toggleEventSubscription(b12);
-      byte b13 = 19;
-      this.toggleEventSubscription(b13);
-      byte b14 = 34;
-      this.toggleEventSubscription(b14);
-      byte b15 = 20;
-      this.toggleEventSubscription(b15);
-      byte b16 = 17;
-      this.toggleEventSubscription(b16);
+      this.toggleEventSubscription((byte)28, (byte)18);
+      this.toggleEventSubscription((byte)2);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)6);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)29, (byte)18);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -1210,8 +977,7 @@ public class KillAura
 
          if (packet instanceof S08PacketPlayerPosLook) {
             S08PacketPlayerPosLook packet3 = (S08PacketPlayerPosLook)packet;
-            Vec3 vec = new Vec3(packet3.getX(), packet3.getY(), packet3.getZ());
-            if (vec.distanceTo(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ) > 4.0) {
+            if (new Vec3(packet3.getX(), packet3.getY(), packet3.getZ()).distanceTo(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ) > 4.0) {
                this.ticksSinceTeleport = 0;
                this.rerollRespawnDelays();
             }
@@ -1230,9 +996,7 @@ public class KillAura
          && this.target.hurtTime <= 2
          && this.itemUseCleared) {
          int n = SilentSlotManager.realHotbarSlot == 0 ? 1 : -1;
-         int n2 = SilentSlotManager.realHotbarSlot + n;
-         byte b = 1;
-         SilentSlotManager.requestSlot(this, b, n2);
+         SilentSlotManager.requestSlot(this, (byte)1, SilentSlotManager.realHotbarSlot + n);
          this.itemUseCleared = false;
          this.ticksSinceBugBlockSwitch = 0;
       }
@@ -1248,40 +1012,23 @@ public class KillAura
    @Override
    public void onMoveEntity(EventMoveEntity event) {
       if (this.grimRangeActive && !BlockUtil.isScaffoldActiveAndValid()) {
-         double d = 0.0;
-         event.setX(d);
-         double d2 = 0.0;
-         event.setY(d2);
-         double d3 = 0.0;
-         event.setZ(d3);
+         event.setX(0.0);
+         event.setY(0.0);
+         event.setZ(0.0);
       }
    }
 
    public List getSortedTargets() {
-      double maxValue = this.preHitRange.getMaxValue();
-      double d = Math.max(maxValue, this.preAimRange.getMaxValue());
-      return this.findTargetsInRange(d);
+      return this.findTargetsInRange(Math.max(this.preHitRange.getMaxValue(), this.preAimRange.getMaxValue()));
    }
 
    private List findTargetsInRange(double d) {
       EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-      EntityTargetFilter targetFilter = this.targetSelection.getTargetFilter();
-      EntityTargetFilter entityTargetFilter = targetFilter;
-      entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter).maxDistance(d).filterFocus();
-      double value = this.yawFov.getValue();
-      double value2 = this.pitchFov.getValue();
-      double d2 = value;
-      entityTargetSelector = entityTargetSelector.withinFov(d2, value2);
-      int lastIntValue = this.maxDeathTime.getLastIntValue();
-      entityTargetSelector = entityTargetSelector.maxDeathTime(lastIntValue);
-      Predicate predicate = obj -> this.isEntityReachableThroughWalls((Entity)obj);
-      entityTargetSelector = entityTargetSelector.filter(predicate);
-      TargetSelectionSettings targetSelection2 = this.targetSelection;
-      Rotation effectiveRotation = this.getEffectiveRotation();
-      double currentRange2 = this.currentRange;
-      Rotation rotation = effectiveRotation;
-      ToDoubleFunction toDoubleFunction = targetSelection2.createTargetComparatorKey(rotation, currentRange2);
-      return entityTargetSelector.sortBy(toDoubleFunction).toList();
+      entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelection.getTargetFilter()).maxDistance(d).filterFocus();
+      entityTargetSelector = entityTargetSelector.withinFov(this.yawFov.getValue(), this.pitchFov.getValue());
+      entityTargetSelector = entityTargetSelector.maxDeathTime(this.maxDeathTime.getLastIntValue());
+      entityTargetSelector = entityTargetSelector.filter(obj -> this.isEntityReachableThroughWalls((Entity)obj));
+      return entityTargetSelector.sortBy(this.targetSelection.createTargetComparatorKey(this.getEffectiveRotation(), this.currentRange)).toList();
    }
 
    @Override
@@ -1322,20 +1069,12 @@ public class KillAura
       EntityLivingBase target5 = this.target;
       EntityLivingBase previousTarget5 = this.previousTarget;
       RandomizedRangeSettings preHitFovYaw2 = this.preHitFovYaw;
-      double d = (double)Math.abs(floats2[0]);
-      RandomizedRangeSettings randomizedRangeSettings = preHitFovYaw2;
-      EntityLivingBase entity = previousTarget5;
-      EntityLivingBase entity2 = target5;
-      preHitFovYawTracker2.updateRangeWithDistance(entity2, entity, randomizedRangeSettings, d);
+      preHitFovYawTracker2.updateRangeWithDistance(target5, previousTarget5, preHitFovYaw2, (double)Math.abs(floats2[0]));
       HysteresisRangeTracker preHitFovPitchTracker2 = this.preHitFovPitchTracker;
       EntityLivingBase target6 = this.target;
       previousTarget5 = this.previousTarget;
       preHitFovYaw2 = this.preHitFovPitch;
-      double d2 = (double)Math.abs(floats2[1]);
-      RandomizedRangeSettings randomizedRangeSettings2 = preHitFovYaw2;
-      EntityLivingBase entity3 = previousTarget5;
-      EntityLivingBase entity4 = target6;
-      preHitFovPitchTracker2.updateRangeWithDistance(entity4, entity3, randomizedRangeSettings2, d2);
+      preHitFovPitchTracker2.updateRangeWithDistance(target6, previousTarget5, preHitFovYaw2, (double)Math.abs(floats2[1]));
       this.lockViewMouseDelta[0] = this.lockViewMouseDelta[1] = 0;
       this.previousTarget = this.target;
       EntityLivingBase previousTarget6 = this.previousTarget;
@@ -1358,8 +1097,7 @@ public class KillAura
 
          this.targetHitVec = (Vec3)tuplePair.getFirst();
          EntityLivingBase second = (EntityLivingBase)tuplePair.getSecond();
-         String str = "" + (sortedTargets.isEmpty() ? 0 : sortedTargets.size());
-         this.setSuffix(str);
+         this.setSuffix("" + (sortedTargets.isEmpty() ? 0 : sortedTargets.size()));
          if (this.target != null) {
             if (this.closeGuisIfTargetArrives.getValue() && !this.canOperate() && !(mc.currentScreen instanceof ClickGuiScreen) && this.target != null) {
                mc.thePlayer.closeScreen();
@@ -1401,24 +1139,18 @@ public class KillAura
          }
 
          if (second == null && this.lastValidTarget != null) {
-            TimeHelper targetLoseTimer2 = this.targetLoseTimer;
-            long lastIntValue = (long)this.targetLoseDelay.getLastIntValue();
-            if (!targetLoseTimer2.reached2(lastIntValue) && (double)mc.thePlayer.getDistanceToEntityBox(this.lastValidTarget) < this.preAimRangeTracker.getCurrentThreshold()) {
+            if (!this.targetLoseTimer.reached2((long)this.targetLoseDelay.getLastIntValue()) && (double)mc.thePlayer.getDistanceToEntityBox(this.lastValidTarget) < this.preAimRangeTracker.getCurrentThreshold()) {
                second = this.lastValidTarget;
                this.target = second;
             }
          }
 
-         EntityLivingBase target8 = this.target;
-         this.target = this.filterByActiveSlotAndWeapon(target8);
+         this.target = this.filterByActiveSlotAndWeapon(this.target);
          second = this.filterByActiveSlotAndWeapon(second);
          if (second != null && this.previousTarget != null && this.target != null && !this.target.getName().equals(this.previousTarget.getName()) && this.targetDelay.getValue() != 0.0) {
             TimeHelper targetSwitchTimer2 = this.targetSwitchTimer;
             l2 = (long)this.targetDelay.getValue();
-            long l3 = 60L;
-            long l4 = 0L;
-            long l5 = l2 + DefaultRandomGenerator.instance.nextLong2(l4, l3);
-            if (!targetSwitchTimer2.reached2(l5)) {
+            if (!targetSwitchTimer2.reached2(l2 + DefaultRandomGenerator.instance.nextLong2(0L, 60L))) {
                this.target = this.previousTarget;
                second = this.target;
                this.targetHitVec = targetHitVec2;
@@ -1431,8 +1163,7 @@ public class KillAura
          if (second != null && this.target != null) {
             exitBlock: {
                if (mc.getTicksWithoutScreen() > this.delayRotationsAfterClosingGuiScreen.getLastIntValue()) {
-                  RandomizedRangeSettings randomizedRangeSettings3 = this.delayRotationsAfterRespawn;
-                  if (!this.isRespawnDelayActive(randomizedRangeSettings3)) {
+                  if (!this.isRespawnDelayActive(this.delayRotationsAfterRespawn)) {
                      break exitBlock;
                   }
                }
@@ -1440,11 +1171,7 @@ public class KillAura
                if (!this.inInv.getValue()) {
                   this.currentRotation = ClientManagers.rotationController.getPreviousRotation();
                   if (!this.noRotation.getValue()) {
-                     RotationController rotationController = ClientManagers.rotationController;
-                     Rotation currentRotation2 = this.currentRotation;
-                     int rotationPriority = this.getRotationPriority();
-                     Rotation rotation = currentRotation2;
-                     rotationController.requestRotation(rotation, rotationPriority, this);
+                     ClientManagers.rotationController.requestRotation(this.currentRotation, this.getRotationPriority(), this);
                   }
 
                   return;
@@ -1454,82 +1181,51 @@ public class KillAura
             this.rotationUtil.noiseMinAimSpeed = this.additionalMinAimspeed.getValue();
             this.rotationUtil.noiseDynamicSpeed = this.additionalDynamicSpeed.getValue();
             this.rotationUtil.noiseExtraAimSpeed = this.additionalAimspeedIfNeeded.getValue();
-            boolean flag2 = true;
-            this.rotationUtil.noiseIdleAimProbability = this.probabilityOfAimingEvenWhenNotNeeded.getValue(flag2) / 100.0;
+            this.rotationUtil.noiseIdleAimProbability = this.probabilityOfAimingEvenWhenNotNeeded.getValue(true) / 100.0;
             this.rotationUtil.noiseTestJitterEnabled = this.test.getValue();
-            boolean flag3 = true;
-            this.rotationUtil.bezierAimSpeed = this.aimSpeed.getValue(flag3) / 100.0 * 8.0 + 2.0;
-            boolean flag4 = true;
-            this.rotationUtil.bezierPreDecelerationFactor = this.decelerationfactorPre.getValue(flag4) / 100.0 * 4.0 + 0.5;
-            boolean flag5 = true;
-            this.rotationUtil.bezierPostDecelerationFactor = this.decelerationfactorPost.getValue(flag5) / 100.0 * 4.0 + 1.0;
+            this.rotationUtil.bezierAimSpeed = this.aimSpeed.getValue(true) / 100.0 * 8.0 + 2.0;
+            this.rotationUtil.bezierPreDecelerationFactor = this.decelerationfactorPre.getValue(true) / 100.0 * 4.0 + 0.5;
+            this.rotationUtil.bezierPostDecelerationFactor = this.decelerationfactorPost.getValue(true) / 100.0 * 4.0 + 1.0;
             this.rotationUtil.bezierMinReactionTime = MathHelper.clamp_int((int)this.reactionTime.getMinValue(), 0, 6);
             this.rotationUtil.bezierMaxReactionTime = MathHelper.clamp_int((int)this.reactionTime.getMaxValue(), 0, 6);
-            boolean flag6 = true;
-            this.rotationUtil.bezierAttentionWindow = (int)this.attention.getValue(flag6);
-            boolean flag7 = true;
-            this.rotationUtil.bezierAdditionalInaccuracy = this.additionalInaccuracy.getValue(flag7) / 100.0 * 20.0;
-            boolean flag8 = true;
-            this.rotationUtil.bezierSuperCorrectionDelay = this.supercorrectionDelay.nextInt(flag8);
-            boolean flag9 = true;
-            this.rotationUtil.bezierSuperCorrectionProbability = this.supercorrectionProbability.getValue(flag9) / 100.0;
+            this.rotationUtil.bezierAttentionWindow = (int)this.attention.getValue(true);
+            this.rotationUtil.bezierAdditionalInaccuracy = this.additionalInaccuracy.getValue(true) / 100.0 * 20.0;
+            this.rotationUtil.bezierSuperCorrectionDelay = this.supercorrectionDelay.nextInt(true);
+            this.rotationUtil.bezierSuperCorrectionProbability = this.supercorrectionProbability.getValue(true) / 100.0;
             this.rotationUtil.bezierAdditionalAccuracy = this.additionalAccuracy.getValue();
-            boolean flag10 = true;
-            this.rotationUtil.bezierMinLookaheadTicks = (int)this.lookaheadTime.getMinValue(flag10);
-            boolean flag11 = true;
-            this.rotationUtil.bezierMaxLookaheadTicks = (int)this.lookaheadTime.getMaxValue(flag11);
-            boolean flag12 = true;
-            this.rotationUtil.bezierMinPredictionInaccuracy = this.predictionInaccuracy.getMinValue(flag12) / 100.0;
-            boolean flag13 = true;
-            this.rotationUtil.bezierMaxPredictionInaccuracy = this.predictionInaccuracy.getMaxValue(flag13) / 100.0;
+            this.rotationUtil.bezierMinLookaheadTicks = (int)this.lookaheadTime.getMinValue(true);
+            this.rotationUtil.bezierMaxLookaheadTicks = (int)this.lookaheadTime.getMaxValue(true);
+            this.rotationUtil.bezierMinPredictionInaccuracy = this.predictionInaccuracy.getMinValue(true) / 100.0;
+            this.rotationUtil.bezierMaxPredictionInaccuracy = this.predictionInaccuracy.getMaxValue(true) / 100.0;
             this.rotationUtil.bezierPredictionInaccuracySmoothness = (float)MathStatisticsUtil.lerp(0.016666666666666666, 0.05, 1.0 - this.predictionInaccuracySmoothness.getValue() / 100.0);
-            boolean flag14 = true;
-            this.rotationUtil.bezierBestVecPitchInterpolation = this.bestvecPitchinterpolation.nextDouble(flag14) / 100.0;
-            boolean flag15 = true;
-            this.rotationUtil.bezierMinRotationOnTarget = this.rotationOnTarget.getMinValue(flag15) / 100.0;
-            boolean flag16 = true;
-            this.rotationUtil.bezierMaxRotationOnTarget = this.rotationOnTarget.getMaxValue(flag16) / 100.0;
-            boolean flag17 = true;
-            this.rotationUtil.bezierMaxOrthogonalMovement = this.maxOrthogonalMovement.getValue(flag17);
-            boolean flag18 = true;
-            this.rotationUtil.bezierMinOrthogonalScale = this.orthogonalScale.getMinValue(flag18) / 100.0;
-            boolean flag19 = true;
-            this.rotationUtil.bezierMaxOrthogonalScale = this.orthogonalScale.getMaxValue(flag19) / 100.0;
-            boolean flag20 = true;
-            this.rotationUtil.bezierMaxAimpointAngleDiff = this.maxAimpointAnglediff.getValue(flag20);
-            boolean flag21 = true;
-            this.rotationUtil.bezierMinYawOffset = this.rotationYawOffset.getMinValue(flag21);
-            boolean flag22 = true;
-            this.rotationUtil.bezierMaxYawOffset = this.rotationYawOffset.getMaxValue(flag22);
-            boolean flag23 = true;
-            this.rotationUtil.bezierMinPitchOffset = this.rotationPitchOffset.getMinValue(flag23);
-            boolean flag24 = true;
-            this.rotationUtil.bezierMaxPitchOffset = this.rotationPitchOffset.getMaxValue(flag24);
-            boolean flag25 = true;
-            this.rotationUtil.bezierYawOffsetSpeed = this.rotationYawOffsetSpeed.getValue(flag25) / 100.0 * 0.2;
-            boolean flag26 = true;
-            this.rotationUtil.bezierPitchOffsetSpeed = this.rotationPitchOffsetSpeed.getValue(flag26) / 100.0 * 0.2;
+            this.rotationUtil.bezierBestVecPitchInterpolation = this.bestvecPitchinterpolation.nextDouble(true) / 100.0;
+            this.rotationUtil.bezierMinRotationOnTarget = this.rotationOnTarget.getMinValue(true) / 100.0;
+            this.rotationUtil.bezierMaxRotationOnTarget = this.rotationOnTarget.getMaxValue(true) / 100.0;
+            this.rotationUtil.bezierMaxOrthogonalMovement = this.maxOrthogonalMovement.getValue(true);
+            this.rotationUtil.bezierMinOrthogonalScale = this.orthogonalScale.getMinValue(true) / 100.0;
+            this.rotationUtil.bezierMaxOrthogonalScale = this.orthogonalScale.getMaxValue(true) / 100.0;
+            this.rotationUtil.bezierMaxAimpointAngleDiff = this.maxAimpointAnglediff.getValue(true);
+            this.rotationUtil.bezierMinYawOffset = this.rotationYawOffset.getMinValue(true);
+            this.rotationUtil.bezierMaxYawOffset = this.rotationYawOffset.getMaxValue(true);
+            this.rotationUtil.bezierMinPitchOffset = this.rotationPitchOffset.getMinValue(true);
+            this.rotationUtil.bezierMaxPitchOffset = this.rotationPitchOffset.getMaxValue(true);
+            this.rotationUtil.bezierYawOffsetSpeed = this.rotationYawOffsetSpeed.getValue(true) / 100.0 * 0.2;
+            this.rotationUtil.bezierPitchOffsetSpeed = this.rotationPitchOffsetSpeed.getValue(true) / 100.0 * 0.2;
             this.rotationUtil.bezierSkipYawOutOfReach = this.noYawAdjustmentIfTargetOutOfReach.getValue();
             this.rotationUtil.bezierSkipPitchOutOfReach = this.noPitchAdjustmentIfTargetOutOfReach.getValue();
             this.rotationUtil.bezierApplyRecordedMouseJitter = this.applyRecordedMouseJitterMovementIfAvailable.getValue();
             this.rotationUtil.bezierDuplicateEndControlPoint = this.ultimateTrashcodeBypass.getValue();
             this.rotationUtil.bezierAdaptCurveIfNeeded = this.adaptCurveIfNeeded.getValue();
-            boolean flag27 = true;
-            this.rotationUtil.turboMinTargetResponseTicks = (int)this.noise3ResponseTarget.getMinValue(flag27);
-            boolean flag28 = true;
-            this.rotationUtil.turboMaxTargetResponseTicks = (int)this.noise3ResponseTarget.getMaxValue(flag28);
-            boolean flag29 = true;
-            this.rotationUtil.turboMinPlayerResponseTicks = (int)this.noise3PlayerResponse.getMinValue(flag29);
-            boolean flag30 = true;
-            this.rotationUtil.turboMaxPlayerResponseTicks = (int)this.noise3PlayerResponse.getMaxValue(flag30);
+            this.rotationUtil.turboMinTargetResponseTicks = (int)this.noise3ResponseTarget.getMinValue(true);
+            this.rotationUtil.turboMaxTargetResponseTicks = (int)this.noise3ResponseTarget.getMaxValue(true);
+            this.rotationUtil.turboMinPlayerResponseTicks = (int)this.noise3PlayerResponse.getMinValue(true);
+            this.rotationUtil.turboMaxPlayerResponseTicks = (int)this.noise3PlayerResponse.getMaxValue(true);
             this.rotationUtil.turboMinAcceleration = (float)((int)this.noise3Acceleration.getMinValue());
             this.rotationUtil.turboMaxAcceleration = (float)((int)this.noise3Acceleration.getMaxValue());
             this.rotationUtil.turboMinAimSpeed = (float)((int)this.noise3AimSpeed.getMinValue());
             this.rotationUtil.turboMaxAimSpeed = (float)((int)this.noise3AimSpeed.getMaxValue());
-            boolean flag31 = true;
-            this.rotationUtil.turboMinLeadDistanceScale = this.noise3Scale.getValue(flag31);
-            boolean flag32 = true;
-            this.rotationUtil.turboBetterAccelerationFactor = this.noise33BetterAcceleration.getValue(flag32);
+            this.rotationUtil.turboMinLeadDistanceScale = this.noise3Scale.getValue(true);
+            this.rotationUtil.turboBetterAccelerationFactor = this.noise33BetterAcceleration.getValue(true);
             if (this.randomizeMode.getSelectedValue().equals("AI")) {
                this.ensureAiModelLoaded();
                if (this.rotationUtil.aiRotationPredictor != null && this.target != null && this.target != this.previousTarget) {
@@ -1541,8 +1237,7 @@ public class KillAura
             }
 
             if (second != this.target) {
-               String str2 = "ERROR OCCURED. Please report this to the developer.";
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2("ERROR OCCURED. Please report this to the developer.");
             }
 
             RotationUtil rotationUtil2 = this.rotationUtil;
@@ -1589,122 +1284,63 @@ public class KillAura
             float value19 = (float)this.bestHitXMinDist.getValue();
             float value20 = (float)this.bestHitYMInDist.getValue();
             boolean value21 = this.betterAcceleration.getValue();
-            boolean flag33 = true;
-            int value22 = (int)this.fixRotationChance.getValue(flag33);
+            int value22 = (int)this.fixRotationChance.getValue(true);
             double d3 = this.maxFixRotationReach.nextValue();
-            double value23 = this.minFixRotationAngle.getValue();
-            double value24 = this.minDistanceToBestVecYaw.getValue();
-            double value25 = this.minDistanceToBestVecPitch.getValue();
-            double value26 = this.minDistanceToBestVec.getValue();
-            String selectedValue6 = this.minDistanceToBestVecCalculation.getSelectedValue();
-            boolean value27 = this.stopRotationInsideTarget.getValue();
-            String str3 = selectedValue6;
-            double d4 = value26;
-            double d5 = value25;
-            double d6 = value24;
-            double d7 = value23;
-            double d8 = d3;
-            int n = value22;
-            boolean flag34 = value21;
-            float f = value20;
-            float f2 = value19;
-            float f3 = minValue3;
-            float f4 = value18;
-            float f5 = maxValue2;
-            float f6 = maxValue;
-            float f7 = minValue2;
-            float f8 = minValue;
-            float f9 = value17;
-            float f10 = value16;
-            float f11 = value15;
-            double d9 = value14;
-            RandomizedRangeSettings randomizedRangeSettings4 = pitchOutliersDelay2;
-            RandomizedRangeSettings randomizedRangeSettings5 = pitchOutliersAdd2;
-            boolean flag35 = value13;
-            boolean flag36 = value12;
-            boolean flag37 = value11;
-            String str4 = selectedValue5;
-            String str5 = selectedValue4;
-            int n2 = intaveRotationFlags2;
-            int n3 = value10;
-            int n4 = value9;
-            int n5 = value8;
-            int n6 = value7;
-            double d10 = currentRange2;
-            String str6 = selectedValue3;
-            String str7 = selectedValue2;
-            boolean flag38 = value6;
-            boolean flag39 = value5;
-            Vec3 vec = targetHitVec3;
-            float f12 = value4;
-            boolean flag40 = value3;
-            boolean flag41 = value2;
-            boolean flag42 = value;
-            String str8 = selectedValue;
-            float f13 = pitch;
-            float f14 = yaw;
-            RandomizedRangeSettings randomizedRangeSettings6 = pitchSpeed2;
-            RandomizedRangeSettings randomizedRangeSettings7 = preHitFovYaw2;
-            RandomizedRangeSettings randomizedRangeSettings8 = pitchAcceleration2;
-            RandomizedRangeSettings randomizedRangeSettings9 = yawAcceleration2;
-            EntityLivingBase entity6 = target10;
             Rotation rotation2 = rotationUtil2.computeKillAuraRotation(
-               entity6,
-               randomizedRangeSettings9,
-               randomizedRangeSettings8,
-               randomizedRangeSettings7,
-               randomizedRangeSettings6,
-               f14,
-               f13,
-               str8,
-               flag42,
-               flag41,
-               flag40,
-               f12,
-               vec,
-               flag39,
-               flag38,
-               str7,
-               str6,
-               d10,
-               n6,
-               n5,
-               n4,
-               n3,
-               n2,
-               str5,
-               str4,
-               flag37,
-               flag36,
-               flag35,
-               randomizedRangeSettings5,
-               randomizedRangeSettings4,
-               d9,
-               f11,
-               f10,
-               f9,
-               f8,
-               f7,
-               f6,
-               f5,
-               f4,
-               f3,
-               f2,
-               f,
-               flag34,
-               n,
-               d8,
-               d7,
-               d6,
-               d5,
-               d4,
-               str3,
-               value27
+               target10,
+               yawAcceleration2,
+               pitchAcceleration2,
+               preHitFovYaw2,
+               pitchSpeed2,
+               yaw,
+               pitch,
+               selectedValue,
+               value,
+               value2,
+               value3,
+               value4,
+               targetHitVec3,
+               value5,
+               value6,
+               selectedValue2,
+               selectedValue3,
+               currentRange2,
+               value7,
+               value8,
+               value9,
+               value10,
+               intaveRotationFlags2,
+               selectedValue4,
+               selectedValue5,
+               value11,
+               value12,
+               value13,
+               pitchOutliersAdd2,
+               pitchOutliersDelay2,
+               value14,
+               value15,
+               value16,
+               value17,
+               minValue,
+               minValue2,
+               maxValue,
+               maxValue2,
+               value18,
+               minValue3,
+               value19,
+               value20,
+               value21,
+               value22,
+               d3,
+               this.minFixRotationAngle.getValue(),
+               this.minDistanceToBestVecYaw.getValue(),
+               this.minDistanceToBestVecPitch.getValue(),
+               this.minDistanceToBestVec.getValue(),
+               this.minDistanceToBestVecCalculation.getSelectedValue(),
+               this.stopRotationInsideTarget.getValue()
             );
             if (!this.noRotation.getValue()) {
-               RotationController rotationController2 = ClientManagers.rotationController;
-               int rotationPriority2 = this.getRotationPriority();
-               rotationController2.requestRotation(rotation2, rotationPriority2, this);
+               ClientManagers.rotationController.requestRotation(rotation2, this.getRotationPriority(), this);
             }
 
             this.lockViewMouseDelta = RotationUtil.computeMouseDeltas(rotation2.yaw, rotation2.pitch, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
@@ -1718,9 +1354,7 @@ public class KillAura
 
    private void refreshAiModels() {
       String absolutePath = new File(ClientPaths.CLIENT_DIR, "ai-7yns").getAbsolutePath();
-      OnnxModelRegistry aiModelRegistry2 = this.aiModelRegistry;
-      File file = new File(absolutePath.trim());
-      aiModelRegistry2.setModelsDirectory(file);
+      this.aiModelRegistry.setModelsDirectory(new File(absolutePath.trim()));
    }
 
    private void ensureAiModelLoaded() {
@@ -1750,9 +1384,7 @@ public class KillAura
    }
 
    private TuplePair selectTargetAndHitVec(List list) {
-      EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(list);
-      double currentThreshold = this.preAimRangeTracker.getCurrentThreshold();
-      List list2 = entityTargetSelector.maxDistance(currentThreshold).toList();
+      List list2 = EntityTargetSelector.of(list).maxDistance(this.preAimRangeTracker.getCurrentThreshold()).toList();
       this.targetHitVec = null;
       if (this.smartAim.getValue() && !this.throughWallsMode.getSelectedValue().equals("AllBlocks")) {
          Vec3 vec = this.findVisibleHitVec(list2);
@@ -1798,20 +1430,7 @@ public class KillAura
       for (int j = 0; j < list.size(); j++) {
          EntityLivingBase entity2 = (EntityLivingBase)list.get(j);
          if (!(mc.thePlayer.getDistanceToEntity(entity2) > 6.0F) || !flag) {
-            RotationUtil rotationUtil2 = this.rotationUtil;
-            String selectedValue = this.rotationMode.getSelectedValue();
-            int value = (int)this.hitBoxPercentageVertical.getValue();
-            int value2 = (int)this.hitBoxPercentageHorizontal.getValue();
-            int value3 = (int)this.hitBoxPercentageVertical1.getValue();
-            int value4 = (int)this.hitBoxPercentageHorizontal1.getValue();
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            Rotation rotation = previousRotation;
-            int n = value4;
-            int n2 = value3;
-            int n3 = value2;
-            int n4 = value;
-            String str = selectedValue;
-            Vec3 vec = rotationUtil2.selectEntityAimPoint(entity2, str, n4, n3, n2, n, rotation);
+            Vec3 vec = this.rotationUtil.selectEntityAimPoint(entity2, this.rotationMode.getSelectedValue(), (int)this.hitBoxPercentageVertical.getValue(), (int)this.hitBoxPercentageHorizontal.getValue(), (int)this.hitBoxPercentageVertical1.getValue(), (int)this.hitBoxPercentageHorizontal1.getValue(), ClientManagers.rotationController.getPreviousRotation());
             double d = vec.xCoord - mc.thePlayer.posX;
             double d2 = vec.yCoord - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
             double d3 = vec.zCoord - mc.thePlayer.posZ;
@@ -1819,11 +1438,9 @@ public class KillAura
                (float)(MathHelper.atan2(d3, d) * 180.0 / Math.PI - 90.0),
                (float)(-(MathHelper.atan2(d2, (double)MathHelper.sqrt_double(d * d + d3 * d3)) * 180.0 / Math.PI))
             );
-            double maxValue = this.preAimRange.getMaxValue();
-            double d4 = Math.max(maxValue, this.preHitRange.getMaxValue()) + 3.0;
+            double d4 = Math.max(this.preAimRange.getMaxValue(), this.preHitRange.getMaxValue()) + 3.0;
             double d5 = 0.0;
-            double d6 = d4;
-            MovingObjectPosition hit = RayTraceUtil.rayTraceEntity(1.0F, rotation2, d6, d5);
+            MovingObjectPosition hit = RayTraceUtil.rayTraceEntity(1.0F, rotation2, d4, d5);
             if (hit != null
                && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
                && hit.entityHit != null
@@ -1833,20 +1450,16 @@ public class KillAura
             }
 
             float collisionBorderSize = entity2.getCollisionBorderSize();
-            AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
-            HitVecCandidate hitVecCandidate = new HitVecCandidate(
+            List list2 = MathStatisticsUtil.sampleBoxSurfacePoints(entity2.getEntityBoundingBox().expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize), new HitVecCandidate(
                entity2.posX - mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), entity2.posZ - mc.thePlayer.posZ
-            );
-            AxisAlignedBB box2 = box;
-            List list2 = MathStatisticsUtil.sampleBoxSurfacePoints(box2, hitVecCandidate);
+            ));
             boolean flag2 = false;
             byte b = 1;
 
             for (HitVecCandidate hitVecCandidate2 : (Iterable<HitVecCandidate>)(list2)) {
                double d7 = hitVecCandidate2.z;
                double d8 = hitVecCandidate2.y;
-               double d9 = hitVecCandidate2.x;
-               hitVecCandidate2.visibilityFlags = this.evaluateHitVecVisibility(d9, d8, d7, entity2);
+               hitVecCandidate2.visibilityFlags = this.evaluateHitVecVisibility(hitVecCandidate2.x, d8, d7, entity2);
                if (hitVecCandidate2.visibilityFlags[0] || hitVecCandidate2.visibilityFlags[1]) {
                   flag2 = true;
                }
@@ -1898,8 +1511,7 @@ public class KillAura
 
       this.lastObjectMouseOver = mc.objectMouseOver;
       if (this.target != null && this.canOperate() && !BlockUtil.isScaffoldActiveAndValid()) {
-         String selectedValue = this.blockMode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.blockMode.getSelectedValue()) {
             case "Spam":
             case "Post":
                this.blockSword();
@@ -1938,8 +1550,7 @@ public class KillAura
          && !BlockUtil.isScaffoldActiveAndValid()
          && (!ClientManagers.moduleManager.targetStrafe.isToggled() || ClientManagers.moduleManager.targetStrafe.target == null)
          && !this.moveFix.getValue()) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
@@ -1949,8 +1560,7 @@ public class KillAura
          && !BlockUtil.isScaffoldActiveAndValid()
          && (!ClientManagers.moduleManager.targetStrafe.isToggled() || ClientManagers.moduleManager.targetStrafe.target == null)
          && !this.jumpFix.getValue()) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
@@ -1962,16 +1572,13 @@ public class KillAura
          && this.moveFix.getValue()
          && !this.silentMoveFix.getSelectedValue().equals("None")) {
          if (this.silentMoveFix.getSelectedValue().equals("Advanced")) {
-            MoveFixMode advanced = MoveFixMode.ADVANCED;
-            event.setMoveFixMode(advanced);
+            event.setMoveFixMode(MoveFixMode.ADVANCED);
          } else {
-            MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-            event.setMoveFixMode(moveFixMode);
+            event.setMoveFixMode(MoveFixMode.DEFAULT);
          }
 
          if (this.silentMoveFixIntave.getValue()) {
-            boolean flag = true;
-            event.setPreventInstantReverse(flag);
+            event.setPreventInstantReverse(true);
          }
       }
    }
@@ -1979,10 +1586,8 @@ public class KillAura
    @Override
    public void onAttackSlowdown(EventAttackSlowdown event) {
       if (!this.slowDown.getValue() && this.target != null) {
-         double d = 1.0;
-         event.setSlowDownFactor(d);
-         boolean flag = true;
-         event.setSprint(flag);
+         event.setSlowDownFactor(1.0);
+         event.setSprint(true);
       }
    }
 
@@ -1992,8 +1597,7 @@ public class KillAura
       if ((this.hasRotationControl() || this.noRotation.getValue()) && (!ClientManagers.moduleManager.autoGapple.isToggled() || ClientManagers.moduleManager.autoGapple.getGappleSlot() == -1) && this.canOperate()) {
          exitBlock: {
             if (this.target != null && (mc.getTicksWithoutScreen() > this.delayClicksAfterClosingGuiScreen.getLastIntValue() && mc.currentScreen == null || this.inInv.getValue())) {
-               RandomizedRangeSettings randomizedRangeSettings = this.delayClicksAfterRespawn;
-               if (!this.isRespawnDelayActive(randomizedRangeSettings) || this.inInv.getValue()) {
+               if (!this.isRespawnDelayActive(this.delayClicksAfterRespawn) || this.inInv.getValue()) {
                   if (this.needsClickPatternReset) {
                      this.resetClickPattern();
                      this.needsClickPatternReset = false;
@@ -2010,8 +1614,7 @@ public class KillAura
             this.firstHitReady = true;
          }
 
-         String selectedValue = this.rangeMode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.rangeMode.getSelectedValue()) {
             case "HazeRange":
                if (this.target != null && this.target.hurtTime == 10) {
                   this.currentRange = Math.min(this.currentRange + this.hazeAdd.getValue(), this.hazeMax.getValue());
@@ -2078,8 +1681,7 @@ public class KillAura
             mc.thePlayer.rotationPitch = this.currentRotation.pitch;
          }
 
-         float f = 1.0F;
-         this.updateRayTraceTarget(f);
+         this.updateRayTraceTarget(1.0F);
          if (this.optifineHitbox.getValue() && (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY)) {
             MovingObjectPosition hit = RayCastUtil.rayCast(1.0F, ClientManagers.rotationController.getPreviousRotation().yaw, ClientManagers.rotationController.getCurrentRotation().pitch);
             if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
@@ -2097,11 +1699,8 @@ public class KillAura
    @Override
    public void onRender(float f) {
       if (ClientManagers.moduleManager.line.isToggled() && ClientManagers.moduleManager.line.activateAuraLine.getValue() && !ClientManagers.moduleManager.line.displayLegitimateRotations.getValue()) {
-         boolean isBlurActive = ClientManagers.moduleManager.line.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, ClientManagers.moduleManager.line.blurShadowSettings.isShadowActive());
-         RenderPassTask renderPassTask = shaderRenderPass -> this.renderRotationLineTrail(shaderRenderPass);
-         boolean flag = false;
-         BlurShadowManager.submitRenderTask(flag, renderPassTask);
+         BlurShadowManager.enableOneShotPass(ClientManagers.moduleManager.line.blurShadowSettings.isBlurActive(), ClientManagers.moduleManager.line.blurShadowSettings.isShadowActive());
+         BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderRotationLineTrail(shaderRenderPass));
       }
 
       if (this.target != null) {
@@ -2109,11 +1708,8 @@ public class KillAura
             this.rotationUtil.uNoise3RotationEngine.onRender(f);
          }
 
-         boolean isBlurActive2 = this.dotShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive2, this.dotShadowSettings.isShadowActive());
-         RenderPassTask renderPassTask2 = shaderRenderPass2 -> this.renderTargetDotPass(f, shaderRenderPass2);
-         boolean flag2 = false;
-         BlurShadowManager.submitRenderTask(flag2, renderPassTask2);
+         BlurShadowManager.enableOneShotPass(this.dotShadowSettings.isBlurActive(), this.dotShadowSettings.isShadowActive());
+         BlurShadowManager.submitRenderTask(false, shaderRenderPass2 -> this.renderTargetDotPass(f, shaderRenderPass2));
       }
 
       if (RotationUtil.debugAimPoint1 != null) {
@@ -2199,10 +1795,8 @@ public class KillAura
                this.appliedMouseDelta[1] = this.appliedMouseDelta[1] + n3;
                event.setDeltaX(n2);
                event.setDeltaY(n3);
-               boolean flag = true;
-               event.setIgnoreInvertMouse(flag);
-               boolean flag2 = true;
-               event.setBypassSmoothCamera(flag2);
+               event.setIgnoreInvertMouse(true);
+               event.setBypassSmoothCamera(true);
                break exitBlock;
             }
 
@@ -2260,9 +1854,7 @@ public class KillAura
    }
 
    private boolean shouldMissClick() {
-      byte b = 99;
-      byte b2 = 0;
-      return (double)DefaultRandomGenerator.instance.nextInt2(b2, b) > 100.0 - this.missClickPercentage.getValue();
+      return (double)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)99) > 100.0 - this.missClickPercentage.getValue();
    }
 
    private boolean hasPendingClicks(int n) {
@@ -2277,8 +1869,7 @@ public class KillAura
       if (this.target != null && !BlockUtil.isScaffoldActiveAndValid()) {
          boolean flag = this.canAttackTarget();
          int n = this.computeClickCount(flag);
-         String selectedValue = this.blockMode.getSelectedValue();
-         if (!this.isEventBasedBlockMode(selectedValue)
+         if (!this.isEventBasedBlockMode(this.blockMode.getSelectedValue())
             && this.canAutoBlock()
             && mc.thePlayer.getCurrentEquippedItem() != null
             && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
@@ -2286,8 +1877,7 @@ public class KillAura
                   && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword
                   && !ClientManagers.moduleManager.fixes.shouldApplyIntaveBlockingFix()
                || this.blockMode.getSelectedValue().equals("Bug") && Math.abs(mc.thePlayer.inventory.currentItem - SilentSlotManager.realHotbarSlot) == 1 && this.ticksSinceBugBlockSwitch < 4) {
-               String selectedValue2 = this.blockMode.getSelectedValue();
-               switch (selectedValue2) {
+               switch (this.blockMode.getSelectedValue()) {
                   case "Constant":
                      if (this.hasPendingClicks(n)) {
                         this.performDirectAttacks(n);
@@ -2408,10 +1998,8 @@ public class KillAura
                }
 
                event.cancel();
-               boolean flag2 = true;
-               event.setBlockAllClicks(flag2);
-               boolean flag3 = this.shouldReleaseLongClick();
-               event.setLeftMouseDown(flag3);
+               event.setBlockAllClicks(true);
+               event.setLeftMouseDown(this.shouldReleaseLongClick());
             }
 
             this.ticksSinceBlockAttack++;
@@ -2422,15 +2010,12 @@ public class KillAura
                   && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword
                   && !ClientManagers.moduleManager.fixes.shouldApplyIntaveBlockingFix()
                   && this.canAutoBlock()) {
-                  String selectedValue3 = this.blockMode.getSelectedValue();
-                  switch (selectedValue3) {
+                  switch (this.blockMode.getSelectedValue()) {
                      case "Legit":
                         if (mc.thePlayer.isUsingItem()) {
-                           boolean flag4 = false;
-                           event.setRightMouseDown(flag4);
+                           event.setRightMouseDown(false);
                         } else {
-                           byte b = 1;
-                           this.performAttacks(b, event);
+                           this.performAttacks((byte)1, event);
                            this.blockSwordWithEvent(event);
                         }
                         break;
@@ -2446,11 +2031,9 @@ public class KillAura
                                  || hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
                            )) {
                            if (mc.thePlayer.isUsingItem()) {
-                              boolean flag5 = false;
-                              event.setRightMouseDown(flag5);
+                              event.setRightMouseDown(false);
                            } else {
-                              byte b2 = 1;
-                              this.performAttacks(b2, event);
+                              this.performAttacks((byte)1, event);
                               this.ticksSinceBlockAttack = 0;
                               this.blockSwordWithEvent(event);
                            }
@@ -2460,11 +2043,9 @@ public class KillAura
                         break;
                      case "Test":
                         if (mc.thePlayer.isUsingItem()) {
-                           boolean flag6 = false;
-                           event.setRightMouseDown(flag6);
+                           event.setRightMouseDown(false);
                         } else if (mc.thePlayer.hurtTime == 2) {
-                           byte b3 = 1;
-                           this.performAttacks(b3, event);
+                           this.performAttacks((byte)1, event);
                            this.blockSwordWithEvent(event);
                         } else if (this.hasPendingClicks(n)) {
                            this.performAttacks(n, event);
@@ -2474,17 +2055,13 @@ public class KillAura
                   this.performAttacks(n, event);
                }
 
-               boolean value = this.longClick.getValue();
-               event.setDelayBlockBreak(value);
+               event.setDelayBlockBreak(this.longClick.getValue());
                if (this.supportsHoldClicking() && flag) {
-                  boolean flag7 = true;
-                  event.setOverrideBlockBreak(flag7);
-                  boolean holdingLeftClick2 = this.holdingLeftClick;
-                  event.setBreakingBlock(holdingLeftClick2);
+                  event.setOverrideBlockBreak(true);
+                  event.setBreakingBlock(this.holdingLeftClick);
                }
             } else {
-               boolean flag8 = true;
-               event.setLeftMouseDown(flag8);
+               event.setLeftMouseDown(true);
             }
 
             this.ticksSinceBlockAttack++;
@@ -2499,9 +2076,7 @@ public class KillAura
          if (mc.currentScreen == null && mc.inGameHasFocus && mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             int longClickBlockDelay2 = this.longClickBlockDelay;
             if (this.tickCounter.hasReached2(longClickBlockDelay2)) {
-               byte b = 3;
-               byte b2 = 1;
-               this.longClickBlockDelay = DefaultRandomGenerator.instance.nextInt2(b2, b);
+               this.longClickBlockDelay = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
                this.tickCounter.reset();
                this.pendingLongClickRelease = false;
                return true;
@@ -2542,11 +2117,8 @@ public class KillAura
       int n2 = (int)((double)n + EventClick.recentClicksBuffer.sum());
       if (this.cpsLimiterIntave.getValue() ? !this.clickSpeedMonitor.isExceedsCpsLimit() : !((double)n2 > this.cpsLimiter.getValue())) {
          if (n == 0 && this.critFix.getValue() && mc.objectMouseOver != null) {
-            boolean flag2 = true;
-            if (this.critFixChance.getValue(flag2) != 100.0) {
-               double d = Math.random();
-               boolean flag3 = true;
-               if (!(d < this.critFixChance.getValue(flag3) / 100.0)) {
+            if (this.critFixChance.getValue(true) != 100.0) {
+               if (!(Math.random() < this.critFixChance.getValue(true) / 100.0)) {
                   return n;
                }
             }
@@ -2591,8 +2163,7 @@ public class KillAura
       } else {
          AbstractClickPatternMode abstractSubMode = (AbstractClickPatternMode)this.clickMode.getAbstractSubMode();
          if (abstractSubMode != null) {
-            Object obj = null;
-            return abstractSubMode.computeClicks((EventClick)obj);
+            return abstractSubMode.computeClicks((EventClick)null);
          } else {
             return 0;
          }
@@ -2639,8 +2210,7 @@ public class KillAura
    }
 
    private void blockSword() {
-      Object obj = null;
-      this.blockSwordWithEvent((EventClick)obj);
+      this.blockSwordWithEvent((EventClick)null);
    }
 
    private void blockSwordWithEvent(EventClick event) {
@@ -2654,14 +2224,11 @@ public class KillAura
             if (event == null) {
                mc.rightClickMouse();
             } else {
-               boolean flag = true;
-               event.setRightMouseDown(flag);
+               event.setRightMouseDown(true);
             }
          } else if (event != null) {
-            boolean flag2 = true;
-            event.setRightMouseDown(flag2);
-            Runnable runnable = () -> mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-            event.setRightClickAction(runnable);
+            event.setRightMouseDown(true);
+            event.setRightClickAction(() -> mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem()));
          } else {
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
          }
@@ -2675,8 +2242,7 @@ public class KillAura
    }
 
    private void performDirectAttacks(int n) {
-      Object obj = null;
-      this.performAttacks(n, (EventClick)obj);
+      this.performAttacks(n, (EventClick)null);
    }
 
    private boolean canAttackTarget() {
@@ -2684,8 +2250,7 @@ public class KillAura
          mc.playerController.syncCurrentPlayItem();
          ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(mc.playerController.currentPlayerItem + 36).getStack();
          if (stack == null || !(stack.getItem() instanceof ItemFishingRod)) {
-            long l = 90L;
-            if (!mc.playerController.timeHelper.reached2(l)) {
+            if (!mc.playerController.timeHelper.reached2(90L)) {
                this.decayPreHitEndurance();
                return false;
             }
@@ -2723,10 +2288,8 @@ public class KillAura
 
             AxisAlignedBB expandedEntityBox = RotationUtil.getExpandedEntityBox(this.target);
             Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
-            double rotationPitch = (double)mc.thePlayer.rotationPitch;
-            double normalizedPitchInBox = HitboxAngleUtil.getNormalizedPitchInBox(expandedEntityBox, positionEyes, rotationPitch);
-            double rotationYaw = (double)mc.thePlayer.rotationYaw;
-            double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(expandedEntityBox, positionEyes, rotationYaw);
+            double normalizedPitchInBox = HitboxAngleUtil.getNormalizedPitchInBox(expandedEntityBox, positionEyes, (double)mc.thePlayer.rotationPitch);
+            double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(expandedEntityBox, positionEyes, (double)mc.thePlayer.rotationYaw);
             if (normalizedPitchInBox < 0.0 || normalizedPitchInBox > 1.0 || normalizedYawInBox < 0.0 || normalizedYawInBox > 1.0) {
                float rotationPitch2 = mc.thePlayer.rotationPitch;
                float rotationYaw2 = mc.thePlayer.rotationYaw;
@@ -2737,8 +2300,7 @@ public class KillAura
             }
 
             int lastIntValue = this.prediction.getLastIntValue();
-            double d = 3.0;
-            if (!this.checkSmartPreHit(d, lastIntValue)) {
+            if (!this.checkSmartPreHit(3.0, lastIntValue)) {
                return false;
             }
          }
@@ -2748,8 +2310,7 @@ public class KillAura
    }
 
    private void decayPreHitEndurance() {
-      boolean flag = true;
-      this.preHitEnduranceUsed = Math.max(this.preHitEnduranceUsed - this.enduranceReduction.nextInt(flag), 0);
+      this.preHitEnduranceUsed = Math.max(this.preHitEnduranceUsed - this.enduranceReduction.nextInt(true), 0);
       if (this.preHitEnduranceUsed == 0) {
          this.preHitEnduranceExhausted = false;
       }
@@ -2778,15 +2339,10 @@ public class KillAura
                   for (int i = 1; i < n; i++) {
                      EntityLivingBase entityHit2 = (EntityLivingBase)hit.entityHit;
                      int n2 = ticksExisted + i;
-                     EntityLivingBase entity = entityHit2;
-                     ArrayList list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted, n2);
-                     int n3 = 99999;
-                     Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list, n3);
-                     AxisAlignedBB box = RotationUtil.createEntityBoxAt(entityHit, clampedPosition);
+                     AxisAlignedBB box = RotationUtil.createEntityBoxAt(entityHit, TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entityHit2, ticksExisted, n2), 99999));
                      double[] doubles = PlayerUtil.predictPlayerPosition(i - 1, mc.thePlayer);
                      Vec3 vec = new Vec3(doubles[0], doubles[1] + (double)mc.thePlayer.getEyeHeight(), doubles[2]);
-                     Vec3 vec2 = RotationUtil.clampPointToBox(vec, box);
-                     if (vec.distanceTo(vec2) < d) {
+                     if (vec.distanceTo(RotationUtil.clampPointToBox(vec, box)) < d) {
                         return true;
                      }
                   }
@@ -2812,8 +2368,7 @@ public class KillAura
    private void performAttacks(int n, EventClick event) {
       if (this.activeAttackMode.equals("Multi")) {
          if (n > 0) {
-            double currentThreshold = this.preAimRangeTracker.getCurrentThreshold();
-            List list = this.findTargetsInRange(currentThreshold);
+            List list = this.findTargetsInRange(this.preAimRangeTracker.getCurrentThreshold());
             if (!list.isEmpty()) {
                mc.thePlayer.swingItem();
             }
@@ -2860,8 +2415,7 @@ public class KillAura
                exitBlock2:
                if (this.doubleClickFirstHit.getValue()) {
                   if (!this.firstHitReady) {
-                     long l = 1500L;
-                     if (!this.doubleClickFirstHitTimer.reached2(l)) {
+                     if (!this.doubleClickFirstHitTimer.reached2(1500L)) {
                         break exitBlock2;
                      }
                   }
@@ -2900,8 +2454,7 @@ public class KillAura
                && !mc.thePlayer.isPotionActive(Potion.blindness)
                && mc.thePlayer.ridingEntity == null;
          if (!this.critLanded && flag2) {
-            boolean flag3 = true;
-            event.setCriticalHit(flag3);
+            event.setCriticalHit(true);
          }
       }
 
@@ -2911,10 +2464,8 @@ public class KillAura
             EventClick.clicksThisTick++;
          }
       } else {
-         byte b = 1;
-         event.addLeftClicks(b);
-         Runnable runnable = () -> this.runScheduledLeftClick(flag);
-         event.setLeftClickAction(runnable);
+         event.addLeftClicks((byte)1);
+         event.setLeftClickAction(() -> this.runScheduledLeftClick(flag));
       }
    }
 
@@ -2965,8 +2516,7 @@ public class KillAura
          }
 
          if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-            byte b = 0;
-            mc.leftClickCounter = b;
+            mc.leftClickCounter = (byte)0;
          }
       }
 
@@ -2986,8 +2536,7 @@ public class KillAura
 
          if (mc.objectMouseOver == null) {
             if (mc.playerController.isNotCreative()) {
-               byte b2 = 10;
-               mc.leftClickCounter = b2;
+               mc.leftClickCounter = (byte)10;
             }
          } else {
             if (flag) {
@@ -3021,14 +2570,12 @@ public class KillAura
                case 3:
                default:
                   if (mc.playerController.isNotCreative()) {
-                     byte b3 = 10;
-                     mc.leftClickCounter = b3;
+                     mc.leftClickCounter = (byte)10;
                   }
 
                   mc.thePlayer.resetTicksSinceLastSwing();
                   if (ClientManagers.moduleManager.fixes.isToggled() && ClientManagers.moduleManager.fixes.hitDelayFixMode.getSelectedValue().equals("Default")) {
-                     byte b4 = 0;
-                     mc.leftClickCounter = b4;
+                     mc.leftClickCounter = (byte)0;
                   }
             }
 
@@ -3042,8 +2589,7 @@ public class KillAura
    private void updateRayTraceTarget(float f) {
       Entity renderViewEntity = mc.getRenderViewEntity();
       if (renderViewEntity != null && mc.theWorld != null) {
-         Object obj = null;
-         mc.pointedEntity = (Entity)obj;
+         mc.pointedEntity = (Entity)null;
          double blockReachDistance = (double)mc.playerController.getBlockReachDistance();
          blockReachDistance = Math.max(blockReachDistance, this.currentRange);
          if (this.throughWallsMode.getSelectedValue().equals("NoneFullBlocks")) {
@@ -3051,8 +2597,7 @@ public class KillAura
          }
 
          Minecraft mc2 = mc;
-         MovingObjectPosition hit = renderViewEntity.rayTrace(blockReachDistance, f);
-         mc2.objectMouseOver = hit;
+         mc2.objectMouseOver = renderViewEntity.rayTrace(blockReachDistance, f);
          FullBlockRaytraceFilter.INSTANCE.disable();
          double d = blockReachDistance;
          Vec3 positionEyes = renderViewEntity.getPositionEyes(f);
@@ -3107,8 +2652,7 @@ public class KillAura
             } else if (hit2 != null) {
                double d3 = positionEyes.distanceTo(hit2.hitVec);
                if (d3 < d || d == 0.0) {
-                  boolean flag2 = false;
-                  if (this.target != renderViewEntity.ridingEntity || flag2) {
+                  if (this.target != renderViewEntity.ridingEntity || false) {
                      mc.entityRenderer.pointedEntity = this.target;
                      vec2 = hit2.hitVec;
                      d2 = d3;
@@ -3139,8 +2683,7 @@ public class KillAura
                } else if (hit3 != null) {
                   double d4 = positionEyes.distanceTo(hit3.hitVec);
                   if (d4 < d2 || d2 == 0.0) {
-                     boolean flag3 = false;
-                     if (entity != renderViewEntity.ridingEntity || flag3) {
+                     if (entity != renderViewEntity.ridingEntity || false) {
                         mc.entityRenderer.pointedEntity = entity;
                         vec2 = hit3.hitVec;
                         d2 = d4;
@@ -3156,14 +2699,12 @@ public class KillAura
          if (mc.entityRenderer.pointedEntity != null && flag && positionEyes.distanceTo(vec2) > this.currentRange) {
             mc.entityRenderer.pointedEntity = null;
             mc2 = mc;
-            MovingObjectPosition hit4 = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
-            mc2.objectMouseOver = hit4;
+            mc2.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
          }
 
          if (mc.entityRenderer.pointedEntity != null && (d2 < d || mc.objectMouseOver == null)) {
             mc2 = mc;
-            MovingObjectPosition hit5 = new MovingObjectPosition(mc.entityRenderer.pointedEntity, vec2);
-            mc2.objectMouseOver = hit5;
+            mc2.objectMouseOver = new MovingObjectPosition(mc.entityRenderer.pointedEntity, vec2);
             if (mc.entityRenderer.pointedEntity instanceof EntityLivingBase || mc.entityRenderer.pointedEntity instanceof EntityItemFrame) {
                Entity pointedEntity = mc.entityRenderer.pointedEntity;
                mc.pointedEntity = pointedEntity;
@@ -3250,18 +2791,14 @@ public class KillAura
       this.rotationTrailPoints.add(new double[]{(double)xCoord, (double)yCoord, (double)zCoord, (double)System.currentTimeMillis()});
 
       for (int i = 0; i < this.rotationTrailPoints.size(); i++) {
-         double d = ((double[])this.rotationTrailPoints.get(i))[3];
-         if (this.isTrailPointExpired(d)) {
+         if (this.isTrailPointExpired(((double[])this.rotationTrailPoints.get(i))[3])) {
             this.rotationTrailPoints.remove(i);
             i--;
          }
       }
 
       Line line = ClientManagers.moduleManager.line;
-      BlurShadowSettings blurShadowSettings = ClientManagers.moduleManager.line.blurShadowSettings;
-      byte b = 0;
-      int colorInt = line.color2.getColorInt(b);
-      RenderUtil.setGlColor(blurShadowSettings.resolvePassColor(shaderRenderPass, colorInt));
+      RenderUtil.setGlColor(ClientManagers.moduleManager.line.blurShadowSettings.resolvePassColor(shaderRenderPass, line.color2.getColorInt((byte)0)));
       GL11.glLineWidth((float)line.auraLineWidth.getValue());
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
@@ -3294,10 +2831,7 @@ public class KillAura
             .lerp(this.lastObjectMouseOver.hitVec, d)
             .addVector(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
          float f = (float)this.dotSize.getValue() / 10.0F;
-         BlurShadowSettings dotShadowSettings2 = this.dotShadowSettings;
-         byte b = 0;
-         int colorInt = this.dotColor.getColorInt(b);
-         RenderUtil.setGlColor(dotShadowSettings2.resolvePassColor(shaderRenderPass, colorInt));
+         RenderUtil.setGlColor(this.dotShadowSettings.resolvePassColor(shaderRenderPass, this.dotColor.getColorInt((byte)0)));
          RenderUtil.drawFilledBox(
             vec.xCoord - (double)f,
             vec.yCoord - (double)f,
@@ -3314,8 +2848,7 @@ public class KillAura
    private void resetClickPattern() {
       AbstractClickPatternMode abstractSubMode = (AbstractClickPatternMode)this.clickMode.getAbstractSubMode();
       if (abstractSubMode instanceof DeviationClickPatternMode) {
-         DeviationClickPatternMode mode = (DeviationClickPatternMode)abstractSubMode;
-         mode.resetNextClickTime();
+         ((DeviationClickPatternMode)abstractSubMode).resetNextClickTime();
       } else if (abstractSubMode instanceof RecordedClickPatternMode) {
          ((RecordedClickPatternMode)abstractSubMode).resetTiming();
       }
@@ -3324,8 +2857,7 @@ public class KillAura
    private void clearTargets() {
       this.target = null;
       this.previousTarget = null;
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
       this.lastTickTargets.clear();
    }
 
@@ -3380,9 +2912,7 @@ public class KillAura
    }
 
    private void renderTargetDotPass(float f, ShaderRenderPass shaderRenderPass) {
-      double d = (double)f;
-      double d2 = d;
-      this.renderTargetDot(shaderRenderPass, d2);
+      this.renderTargetDot(shaderRenderPass, (double)f);
    }
 
    private boolean isDelayClicksAfterRespawnVisible() {
@@ -3491,10 +3021,7 @@ public class KillAura
 
    private boolean isRotationPitchOffsetSpeedVisible() {
       if (this.randomizeMode.getSelectedValue().equals("Noise2")) {
-         boolean flag = true;
-         double maxValue = this.rotationPitchOffset.getMaxValue(flag);
-         boolean flag2 = true;
-         if (maxValue != this.rotationPitchOffset.getMinValue(flag2)) {
+         if (this.rotationPitchOffset.getMaxValue(true) != this.rotationPitchOffset.getMinValue(true)) {
             return true;
          }
       }
@@ -3504,10 +3031,7 @@ public class KillAura
 
    private boolean isRotationYawOffsetSpeedVisible() {
       if (this.randomizeMode.getSelectedValue().equals("Noise2")) {
-         boolean flag = true;
-         double maxValue = this.rotationYawOffset.getMaxValue(flag);
-         boolean flag2 = true;
-         if (maxValue != this.rotationYawOffset.getMinValue(flag2)) {
+         if (this.rotationYawOffset.getMaxValue(true) != this.rotationYawOffset.getMinValue(true)) {
             return true;
          }
       }
@@ -3529,8 +3053,7 @@ public class KillAura
 
    private boolean isSuperCorrectionDelayVisible() {
       if (this.randomizeMode.getSelectedValue().equals("Noise2")) {
-         boolean flag = true;
-         if (this.supercorrectionProbability.getValue(flag) > 0.0) {
+         if (this.supercorrectionProbability.getValue(true) > 0.0) {
             return true;
          }
       }

@@ -68,8 +68,7 @@ public class TileEntityUtils {
    }
 
    public static String getTileEntityName(IBlockAccess world, BlockPos pos) {
-      TileEntity tileEntity = world.getTileEntity(pos);
-      return getTileEntityName(tileEntity);
+      return getTileEntityName(world.getTileEntity(pos));
    }
 
    public static String getTileEntityName(TileEntity tileEntity) {
@@ -84,8 +83,7 @@ public class TileEntityUtils {
 
    public static void updateTileEntityName(TileEntity tileEntity) {
       BlockPos pos = tileEntity.getPos();
-      String tileEntityRawName = getTileEntityRawName(tileEntity);
-      if (tileEntityRawName == null) {
+      if (getTileEntityRawName(tileEntity) == null) {
          String str = getServerTileEntityRawName(pos);
          str = Config.normalize(str);
          setTileEntityRawName(tileEntity, str);

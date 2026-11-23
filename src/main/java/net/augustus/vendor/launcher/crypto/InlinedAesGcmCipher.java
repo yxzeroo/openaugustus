@@ -547,7 +547,6 @@ public class InlinedAesGcmCipher {
    }
 
    private byte[] computeHashSubkey(byte[] bytes, int[] ints) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.cachedKey != null && this.cachedHashSubkey != null) {
          boolean flag = true;
 
@@ -644,8 +643,7 @@ public class InlinedAesGcmCipher {
       }
 
       if (this.cachedHashSubkey == null) {
-         byte[] bytes2 = new byte[16];
-         this.cachedHashSubkey = bytes2;
+         this.cachedHashSubkey = new byte[16];
       }
 
       System.arraycopy(this.hashSubkeyBuffer, 0, this.cachedHashSubkey, 0, 16);
@@ -653,28 +651,22 @@ public class InlinedAesGcmCipher {
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.decrypt(bytes, bytes2, (byte[])obj);
+      return this.decrypt(bytes, bytes2, (byte[])null);
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.encrypt(bytes, bytes2, (byte[])obj);
+      return this.encrypt(bytes, bytes2, (byte[])null);
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2, byte[] bytes3) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes2.length != 16 && bytes2.length != 24 && bytes2.length != 32) {
          throw new IllegalArgumentException("Invalid key size. Must be 16, 24, or 32 bytes");
       } else {
          byte[] bytes4 = new byte[12];
          long l = System.nanoTime();
-         long l2 = 25214903917L;
-         long l3 = 11L;
-         long l4 = 281474976710655L;
 
          for (int i = 0; i < bytes4.length; i++) {
-            l = l * l2 + l3 & l4;
+            l = l * 25214903917L + 11L & 281474976710655L;
             bytes4[i] = (byte)((int)(l >> 16 & 255L));
          }
 
@@ -736,8 +728,7 @@ public class InlinedAesGcmCipher {
                ints3[4 * idx + 3] = ints2[idx] & 0xFF;
             }
 
-            byte[] bytes5 = new byte[bytes2.length];
-            this.cachedKey = bytes5;
+            this.cachedKey = new byte[bytes2.length];
             System.arraycopy(bytes2, 0, this.cachedKey, 0, bytes2.length);
             this.cachedRoundKeys = ints3;
             ints = ints3;
@@ -843,8 +834,7 @@ public class InlinedAesGcmCipher {
             }
 
             if (this.cachedHashSubkey == null) {
-               byte[] bytes6 = new byte[16];
-               this.cachedHashSubkey = bytes6;
+               this.cachedHashSubkey = new byte[16];
             }
 
             System.arraycopy(this.hashSubkeyBuffer, 0, this.cachedHashSubkey, 0, 16);
@@ -948,8 +938,7 @@ public class InlinedAesGcmCipher {
 
          int n24 = bytes3 != null ? bytes3.length : 0;
          if (this.ghashTable == null || !this.ghashTable.matchesHashSubkey(hashSubkeyBuffer2)) {
-            InlinedGhashLookupTable inlinedGhashLookupTable = new InlinedGhashLookupTable(hashSubkeyBuffer2);
-            this.ghashTable = inlinedGhashLookupTable;
+            this.ghashTable = new InlinedGhashLookupTable(hashSubkeyBuffer2);
          }
 
          byte[] bytes9 = new byte[16];
@@ -1142,11 +1131,9 @@ public class InlinedAesGcmCipher {
    }
 
    private byte[] computeGcmTag(byte[] bytes, byte[] bytes2, byte[] bytes3, int[] ints, byte[] bytes4) {
-      int[] flowState = Sha256Digest.getFlowState();
       int n = bytes3 != null ? bytes3.length : 0;
       if (this.ghashTable == null || !this.ghashTable.matchesHashSubkey(bytes4)) {
-         InlinedGhashLookupTable inlinedGhashLookupTable = new InlinedGhashLookupTable(bytes4);
-         this.ghashTable = inlinedGhashLookupTable;
+         this.ghashTable = new InlinedGhashLookupTable(bytes4);
       }
 
       byte[] bytes5 = new byte[16];
@@ -1334,26 +1321,20 @@ public class InlinedAesGcmCipher {
    }
 
    private static String toHexString(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return toHexString(bytes, b, length);
+      return toHexString(bytes, (byte)0, bytes.length);
    }
 
    public InlinedAesGcmCipher(long l) {
       this.tagCounterState = new int[16];
       this.hashSubkeyBuffer = new byte[16];
       this.encryptedCounterBlock = new byte[16];
-      Object obj = null;
-      this.cachedKey = (byte[])obj;
-      Object obj2 = null;
-      this.cachedRoundKeys = (int[])obj2;
-      Object obj3 = null;
-      this.cachedHashSubkey = (byte[])obj3;
+      this.cachedKey = (byte[])null;
+      this.cachedRoundKeys = (int[])null;
+      this.cachedHashSubkey = (byte[])null;
    }
 
    private void ghashMultiply(byte[] bytes, long l) {
       long l2 = 0L;
-      Sha256Digest.getFlowState();
       long l3 = 0L;
 
       for (int i = 0; i < 16; i++) {
@@ -1372,7 +1353,6 @@ public class InlinedAesGcmCipher {
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2, byte[] bytes3) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes2.length != 16 && bytes2.length != 24 && bytes2.length != 32) {
          throw new IllegalArgumentException("Invalid key size. Must be 16, 24, or 32 bytes");
       } else if (bytes.length < 28) {
@@ -1443,8 +1423,7 @@ public class InlinedAesGcmCipher {
                ints3[4 * m + 3] = ints2[m] & 0xFF;
             }
 
-            byte[] bytes7 = new byte[bytes2.length];
-            this.cachedKey = bytes7;
+            this.cachedKey = new byte[bytes2.length];
             System.arraycopy(bytes2, 0, this.cachedKey, 0, bytes2.length);
             this.cachedRoundKeys = ints3;
             ints = ints3;
@@ -1550,8 +1529,7 @@ public class InlinedAesGcmCipher {
             }
 
             if (this.cachedHashSubkey == null) {
-               byte[] bytes8 = new byte[16];
-               this.cachedHashSubkey = bytes8;
+               this.cachedHashSubkey = new byte[16];
             }
 
             System.arraycopy(this.hashSubkeyBuffer, 0, this.cachedHashSubkey, 0, 16);
@@ -1559,8 +1537,7 @@ public class InlinedAesGcmCipher {
 
          int n14 = bytes3 != null ? bytes3.length : 0;
          if (this.ghashTable == null || !this.ghashTable.matchesHashSubkey(hashSubkeyBuffer2)) {
-            InlinedGhashLookupTable inlinedGhashLookupTable = new InlinedGhashLookupTable(hashSubkeyBuffer2);
-            this.ghashTable = inlinedGhashLookupTable;
+            this.ghashTable = new InlinedGhashLookupTable(hashSubkeyBuffer2);
          }
 
          byte[] bytes9 = new byte[16];
@@ -1744,11 +1721,10 @@ public class InlinedAesGcmCipher {
             bytes12[i31] = (byte)(bytes9[i31] ^ this.encryptedCounterBlock[i31]);
          }
 
-         byte[] bytes13 = bytes12;
          int n31 = 0;
 
          for (int i32 = 0; i32 < 16; i32++) {
-            n31 |= bytes6[i32] ^ bytes13[i32];
+            n31 |= bytes6[i32] ^ bytes12[i32];
          }
 
          if (n31 != 0) {
@@ -1857,7 +1833,6 @@ public class InlinedAesGcmCipher {
 
    private void encryptBlock(int[] ints, int[] ints2, long l) {
       int n = ints2.length / 16 - 1;
-      Sha256Digest.getFlowState();
 
       for (int i = 0; i < 16; i++) {
          ints[i] ^= ints2[i];
@@ -1932,7 +1907,6 @@ public class InlinedAesGcmCipher {
 
    private static String toHexString(byte[] bytes, int n, int n2) {
       StringBuilder sb = new StringBuilder();
-      Sha256Digest.getFlowState();
 
       for (int i = n; i < n + n2; i++) {
          sb.append(String.format("%02X", bytes[i]));
@@ -1942,7 +1916,6 @@ public class InlinedAesGcmCipher {
    }
 
    private int[] expandKey(long l, byte[] bytes) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.cachedKey != null && bytes.length == this.cachedKey.length) {
          boolean flag = true;
 
@@ -1997,8 +1970,7 @@ public class InlinedAesGcmCipher {
          ints2[4 * m + 3] = ints[m] & 0xFF;
       }
 
-      byte[] bytes2 = new byte[bytes.length];
-      this.cachedKey = bytes2;
+      this.cachedKey = new byte[bytes.length];
       System.arraycopy(bytes, 0, this.cachedKey, 0, bytes.length);
       this.cachedRoundKeys = ints2;
       return ints2;

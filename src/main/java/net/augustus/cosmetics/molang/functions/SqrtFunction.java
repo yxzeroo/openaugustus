@@ -6,8 +6,7 @@ public class SqrtFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.sqrt(this.getArg(b));
+      return Math.sqrt(this.getArg((byte)0));
    }
 
    @Override

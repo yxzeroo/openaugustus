@@ -51,12 +51,9 @@ public class AutoEat extends Module implements ClickListener, PacketListener, Si
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)34);
    }
 
    public void onPacket(EventPacket event) {
@@ -69,8 +66,7 @@ public class AutoEat extends Module implements ClickListener, PacketListener, Si
    public void onClick(EventClick event) {
       if (mc.thePlayer.inventory.currentItem == this.foodHotbarSlot || this.foodHotbarSlot <= -1) {
          if (this.foodHotbarSlot >= 0 && mc.isNotInGui() && mc.getTicksWithoutScreen() > 3) {
-            boolean flag = true;
-            event.setRightMouseDown(flag);
+            event.setRightMouseDown(true);
          } else if (this.previousFoodHotbarSlot >= 0) {
             this.hunger.nextValue();
          }
@@ -104,17 +100,12 @@ public class AutoEat extends Module implements ClickListener, PacketListener, Si
          }
 
          this.foodHotbarSlot = n == -1 && this.useGapple.getValue() ? n2 : n;
-         long l = 250L;
-         if (!this.timeHelper.reached2(l)) {
+         if (!this.timeHelper.reached2(250L)) {
             this.foodHotbarSlot = -1;
          }
 
          if (this.foodHotbarSlot != -1) {
-            int foodHotbarSlot2 = this.foodHotbarSlot;
-            boolean value = this.silentSlotSwitching.getValue();
-            int n3 = foodHotbarSlot2;
-            byte b = 3;
-            SilentSlotManager.requestSlot(this, b, n3, value);
+            SilentSlotManager.requestSlot(this, (byte)3, this.foodHotbarSlot, this.silentSlotSwitching.getValue());
          }
       }
    }

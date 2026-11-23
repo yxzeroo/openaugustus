@@ -59,9 +59,8 @@ public class FlatGeneratorInfo {
 
                flatGeneratorInfo.setBiome(biomeID);
                if (n > 0 && strings.length > n2) {
-                  String[] strings2 = strings[n2++].toLowerCase().split(",");
 
-                  for (String str2 : strings2) {
+                  for (String str2 : strings[n2++].toLowerCase().split(",")) {
                      String[] strings3 = str2.split("\\(", 2);
                      HashMap map = Maps.newHashMap();
                      if (strings3[0].length() > 0) {

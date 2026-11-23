@@ -16,7 +16,6 @@ public class GeoCube {
 
    public static GeoCube createFromPojoCube(Cube cube, ModelProperties modelProperties, Double d, Boolean bool) {
       GeoCube geoCube = new GeoCube(cube.getSize());
-      GeoVector3f.getFlowState();
       UvUnion uv = cube.getUv();
       UvFaces faceUV = uv.faceUV;
       boolean isBoxUV = uv.isBoxUV;
@@ -33,12 +32,9 @@ public class GeoCube {
       GeoVector3f geoVector3f = GeoVectorUtil.convertDoubleToFloat(GeoVectorUtil.arrayToVector(cube.getRotation()));
       geoVector3f.x *= -1.0F;
       geoVector3f.y *= -1.0F;
-      float f3 = (float)Math.toRadians((double)geoVector3f.getX());
-      geoVector3f.setX(f3);
-      float f4 = (float)Math.toRadians((double)geoVector3f.getY());
-      geoVector3f.setY(f4);
-      float f5 = (float)Math.toRadians((double)geoVector3f.getZ());
-      geoVector3f.setZ(f5);
+      geoVector3f.setX((float)Math.toRadians((double)geoVector3f.getX()));
+      geoVector3f.setY((float)Math.toRadians((double)geoVector3f.getY()));
+      geoVector3f.setZ((float)Math.toRadians((double)geoVector3f.getZ()));
       GeoVector3f geoVector3f2 = GeoVectorUtil.convertDoubleToFloat(GeoVectorUtil.arrayToVector(cube.getPivot()));
       geoVector3f2.x *= -1.0F;
       geoCube.pivot = geoVector3f2;
@@ -196,16 +192,13 @@ public class GeoCube {
    }
 
    private GeoCube(double[] doubles) {
-      GeoVector3f.getFlowState();
       this.quads = new GeoQuad[6];
       this.size = new GeoVector3f(0.0F, 0.0F, 0.0F);
       if (doubles.length >= 3) {
          float f = (float)doubles[0];
          float f2 = (float)doubles[1];
          float f3 = (float)doubles[2];
-         float f4 = f2;
-         float f5 = f;
-         this.size.set(f5, f4, f3);
+         this.size.set(f, f2, f3);
       }
    }
 }

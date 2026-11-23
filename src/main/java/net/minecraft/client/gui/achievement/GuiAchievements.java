@@ -106,8 +106,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter {
             int n13 = rand.nextInt(1 + n10 + i) + (n10 + i) / 2;
             TextureAtlasSprite texture = this.getTexture(Blocks.sand);
             if (n13 > 37 || n10 + i == 35) {
-               Block bedrock = Blocks.bedrock;
-               texture = this.getTexture(bedrock);
+               texture = this.getTexture(Blocks.bedrock);
             } else if (n13 == 22) {
                if (rand.nextInt(2) == 0) {
                   texture = this.getTexture(Blocks.diamond_ore);
@@ -142,8 +141,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter {
             int n17 = achievement.parentAchievement.displayRow * 24 - n4 + 11;
             boolean flag = this.statFileWriter.hasAchievementUnlocked(achievement);
             boolean flag2 = this.statFileWriter.canUnlockAchievement(achievement);
-            int n18 = this.statFileWriter.countRequirementsUntilAvailable(achievement);
-            if (n18 <= 4) {
+            if (this.statFileWriter.countRequirementsUntilAvailable(achievement) <= 4) {
                int n19 = -16777216;
                if (flag) {
                   n19 = -6250336;
@@ -263,14 +261,12 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter {
             unformattedText = I18n.format("achievement.unknown", new Object[0]);
             int n28 = Math.max(this.fontRendererObj.getStringWidth(unformattedText), 120);
             String unformattedText2 = new ChatComponentTranslation("achievement.requires", new Object[]{achievement2.parentAchievement.getStatName()}).getUnformattedText();
-            int n29 = this.fontRendererObj.splitStringWidth(unformattedText2, n28);
-            this.drawGradientRect(n23 - 3, n24 - 3, n23 + n28 + 3, n24 + n29 + 12 + 3, -1073741824, -1073741824);
+            this.drawGradientRect(n23 - 3, n24 - 3, n23 + n28 + 3, n24 + this.fontRendererObj.splitStringWidth(unformattedText2, n28) + 12 + 3, -1073741824, -1073741824);
             this.fontRendererObj.drawSplitString(unformattedText2, n23, n24 + 12, n28, -9416624);
          } else if (n25 < 3) {
             int n30 = Math.max(this.fontRendererObj.getStringWidth(unformattedText), 120);
             String unformattedText3 = new ChatComponentTranslation("achievement.requires", new Object[]{achievement2.parentAchievement.getStatName()}).getUnformattedText();
-            int n31 = this.fontRendererObj.splitStringWidth(unformattedText3, n30);
-            this.drawGradientRect(n23 - 3, n24 - 3, n23 + n30 + 3, n24 + n31 + 12 + 3, -1073741824, -1073741824);
+            this.drawGradientRect(n23 - 3, n24 - 3, n23 + n30 + 3, n24 + this.fontRendererObj.splitStringWidth(unformattedText3, n30) + 12 + 3, -1073741824, -1073741824);
             this.fontRendererObj.drawSplitString(unformattedText3, n23, n24 + 12, n30, -9416624);
          } else {
             unformattedText = null;
@@ -325,10 +321,8 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter {
    public GuiAchievements(GuiScreen screen, StatFileWriter statFileWriter2) {
       super(screen);
       this.statFileWriter = statFileWriter2;
-      short s = 141;
-      short s2 = 141;
-      this.xScrollO = this.xScrollP = this.xScrollTarget = (double)(AchievementList.openInventory.displayColumn * 24 - s / 2 - 12);
-      this.yScrollO = this.yScrollP = this.yScrollTarget = (double)(AchievementList.openInventory.displayRow * 24 - s2 / 2);
+      this.xScrollO = this.xScrollP = this.xScrollTarget = (double)(AchievementList.openInventory.displayColumn * 24 - ((short)141) / 2 - 12);
+      this.yScrollO = this.yScrollP = this.yScrollTarget = (double)(AchievementList.openInventory.displayRow * 24 - ((short)141) / 2);
    }
 
    @Override

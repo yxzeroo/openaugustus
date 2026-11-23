@@ -19,8 +19,7 @@ public class CodeSourceIntegrityHasher {
          if (location == null) {
             return result;
          }
-         byte[] bytes = Files.readAllBytes(Paths.get(location.toURI()));
-         return sha256Digest.digest(bytes);
+         return sha256Digest.digest(Files.readAllBytes(Paths.get(location.toURI())));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }

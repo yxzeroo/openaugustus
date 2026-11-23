@@ -40,8 +40,7 @@ public abstract class AbstractAimTrackCheck extends ModuleMode {
 
    public void onTick() {
       if (this.antiCheatPlayerData.getTargetEntity() != null && !(mc.thePlayer.getDistanceToEntityBox(this.antiCheatPlayerData.getTargetEntity()) > 7.0F)) {
-         EntityLivingBase targetEntity = this.antiCheatPlayerData.getTargetEntity();
-         this.trackTarget(targetEntity);
+         this.trackTarget(this.antiCheatPlayerData.getTargetEntity());
       } else {
          this.antiCheatPlayerData.resetTarget();
       }

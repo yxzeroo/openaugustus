@@ -8,8 +8,8 @@ import net.augustus.modules.render.helper.ChunkAnimationEntry;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.animation.AnimationUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.util.BlockPos;
@@ -18,20 +18,18 @@ import net.minecraft.util.Vec3i;
 
 public final class ChunkAnimator extends Module {
    private final String[] animationModes;
-   public final BooleansSetting mode;
-   public final BooleansSetting animation;
-   public final StringValue animationTime;
+   public final StringValue mode;
+   public final StringValue animation;
+   public final DoubleValue animationTime;
    public final BooleanValue disableAroundPlayer;
    private final WeakHashMap chunkAnimations;
 
    public ChunkAnimator() {
        super("ChunkAnimator", "LadungsAnimationFürBereiche", new Color(54, 21, 230), Categorys.RENDER);
       this.animationModes = new String[]{"Below", "Above", "Horizon", "Cardinal", "Variation"};
-      this.mode = new BooleansSetting(this, "Mode", this.animationModes[0], this.animationModes);
-      this.animation = new BooleansSetting(this, "Animation", "easeOutBack", AnimationUtil.getEasingNames(true));
-      StringValue stringValue = new StringValue(this, "AnimationTime", 500.0, 0.0, 2000.0, 0);
-      SettingVisibilityCondition condition = () -> this.isAnimationTimeVisible();
-      this.animationTime = stringValue.visibleWhen(condition);
+      this.mode = new StringValue(this, "Mode", this.animationModes[0], this.animationModes);
+      this.animation = new StringValue(this, "Animation", "easeOutBack", AnimationUtil.getEasingNames(true));
+      this.animationTime = new DoubleValue(this, "AnimationTime", 500.0, 0.0, 2000.0, 0).visibleWhen(() -> this.isAnimationTimeVisible());
       this.disableAroundPlayer = new BooleanValue(this, "DisableAroundPlayer", false);
       this.chunkAnimations = new WeakHashMap();
    }
@@ -60,8 +58,7 @@ public final class ChunkAnimator extends Module {
                if (selectedIndex == 4) {
                   BlockPos position = mc.thePlayer.getPosition();
                   position = position.add(0, -position.getY(), 0);
-                  BlockPos pos = renderChunk.getPosition().add(8, -renderChunk.getPosition().getY(), 8);
-                  chunkAnimationEntry.slideDirection = getDominantHorizontalFacing(position.subtract(pos));
+                  chunkAnimationEntry.slideDirection = getDominantHorizontalFacing(position.subtract(renderChunk.getPosition().add(8, -renderChunk.getPosition().getY(), 8)));
                }
             }
 
@@ -87,18 +84,14 @@ public final class ChunkAnimator extends Module {
                      float f = (float)l;
                      float f2 = (float)y;
                      float f3 = (float)value;
-                     float f4 = f2;
-                     float f5 = f;
-                     GlStateManager.translate(0.0, d + this.evaluateEasingOffset(f5, f4, f3), 0.0);
+                     GlStateManager.translate(0.0, d + this.evaluateEasingOffset(f, f2, f3), 0.0);
                      break;
                   case 1:
                      double d2 = (double)(256 - y);
                      float f6 = (float)l;
                      float f7 = (float)(256 - y);
                      float f8 = (float)value;
-                     float f9 = f7;
-                     float f10 = f6;
-                     GlStateManager.translate(0.0, d2 - this.evaluateEasingOffset(f10, f9, f8), 0.0);
+                     GlStateManager.translate(0.0, d2 - this.evaluateEasingOffset(f6, f7, f8), 0.0);
                   case 2:
                   default:
                      break;
@@ -108,8 +101,7 @@ public final class ChunkAnimator extends Module {
                         float f11 = (float)l;
                         float f12 = (float)value;
                         float f13 = 200.0F;
-                        float f14 = f11;
-                        double d3 = -(200.0 - this.evaluateEasingOffset(f14, f13, f12));
+                        double d3 = -(200.0 - this.evaluateEasingOffset(f11, f13, f12));
                         GlStateManager.translate((double)directionVec.getX() * d3, 0.0, (double)directionVec.getZ() * d3);
                      }
                }

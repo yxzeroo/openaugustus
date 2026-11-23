@@ -48,8 +48,7 @@ public class SprintResetTimingCheck extends ModuleMode {
                double sprintStartCount2 = (double)this.sprintStartCount;
                this.resetCountBuffer.add(sprintStartCount2);
                if (this.resetCountBuffer.isFull()) {
-                  String str = "Count AVG: " + NumberFormatUtil.formatDecimal(this.resetCountBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.resetCountBuffer.stdDev(), 3);
-                  this.logMessage(str);
+                  this.logMessage("Count AVG: " + NumberFormatUtil.formatDecimal(this.resetCountBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.resetCountBuffer.stdDev(), 3));
                }
             }
 
@@ -73,8 +72,7 @@ public class SprintResetTimingCheck extends ModuleMode {
             this.startHurtTimeBuffer.add(ticksSinceHurt2);
             if (this.ticksSinceStopSprint != -1) {
                if (this.ticksSinceStopSprint == 0) {
-                  String str = "IMPOSSIBLE DURATION!";
-                  this.logMessage(str);
+                  this.logMessage("IMPOSSIBLE DURATION!");
                }
 
                double ticksSinceStopSprint2 = (double)this.ticksSinceStopSprint;
@@ -99,11 +97,9 @@ public class SprintResetTimingCheck extends ModuleMode {
                   this.logMessage(str3);
                }
 
-               String str4 = "Success AVG: " + NumberFormatUtil.formatDecimal(this.resetSuccessBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.resetSuccessBuffer.stdDev(), 3);
-               this.logMessage(str4);
+               this.logMessage("Success AVG: " + NumberFormatUtil.formatDecimal(this.resetSuccessBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.resetSuccessBuffer.stdDev(), 3));
                if (this.stopSprintDurationBuffer.isFull()) {
-                  String str5 = "Duration AVG: " + NumberFormatUtil.formatDecimal(this.stopSprintDurationBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.stopSprintDurationBuffer.stdDev(), 3);
-                  this.logMessage(str5);
+                  this.logMessage("Duration AVG: " + NumberFormatUtil.formatDecimal(this.stopSprintDurationBuffer.mean(), 3) + " " + NumberFormatUtil.formatDecimal(this.stopSprintDurationBuffer.stdDev(), 3));
                }
             }
          } else if (action == C0BPacketEntityAction.Action.STOP_SPRINTING) {

@@ -142,8 +142,7 @@ public class ChunkProviderServer implements IChunkProvider {
    @Override
    public boolean populateChunk(IChunkProvider chunkProvider, Chunk chunk, int n, int n2) {
       if (this.serverChunkGenerator != null && this.serverChunkGenerator.populateChunk(chunkProvider, chunk, n, n2)) {
-         Chunk chunk2 = this.provideChunk(n, n2);
-         chunk2.setChunkModified();
+         this.provideChunk(n, n2).setChunkModified();
          return true;
       } else {
          return false;

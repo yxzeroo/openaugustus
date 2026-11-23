@@ -27,9 +27,7 @@ public class Parkour extends Module implements MoveInputListener, TickListener {
       BooleanValue booleanValue = new BooleanValue(this, "MouseSensi", true);
       BooleanValue diagonal2 = this.diagonal;
       this.diagonal.getClass();
-      BooleanValue booleanValue2 = diagonal2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.mouseSensi = (BooleanValue)booleanValue.withVisibility(condition);
+      this.mouseSensi = (BooleanValue)booleanValue.withVisibility(() -> diagonal2.getValue());
    }
 
    @Override
@@ -42,57 +40,43 @@ public class Parkour extends Module implements MoveInputListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.diagonal.getValue() && this.canPerformParkour()) {
          if (this.shouldJumpAtEdge()
             || mc.thePlayer.onGround && KeyboardInputUtil.isValidKeyCode(mc.gameSettings.keyBindJump.getKeyCode()) && KeyboardInputUtil.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode())) {
-            RotationController rotationController = ClientManagers.rotationController;
-            float f = this.mouseSensi.getValue() ? RotationUtil.applyYawGcd(mc.thePlayer.rotationYaw, ClientManagers.rotationController.getPreviousRotation().yaw) : mc.thePlayer.rotationYaw;
-            byte b = 11;
-            float f2 = f;
-            rotationController.requestYaw(f2, b, this);
+            ClientManagers.rotationController.requestYaw(this.mouseSensi.getValue() ? RotationUtil.applyYawGcd(mc.thePlayer.rotationYaw, ClientManagers.rotationController.getPreviousRotation().yaw) : mc.thePlayer.rotationYaw, (byte)11, this);
          } else {
             int strafeDirectionSign = this.getStrafeDirectionSign();
             RotationController rotationController2 = ClientManagers.rotationController;
             float f3 = this.mouseSensi.getValue()
                ? RotationUtil.applyYawGcd(mc.thePlayer.rotationYaw - (float)(45 * strafeDirectionSign), ClientManagers.rotationController.getPreviousRotation().yaw)
                : mc.thePlayer.rotationYaw - (float)(45 * strafeDirectionSign);
-            byte b2 = 11;
-            float f4 = f3;
-            rotationController2.requestYaw(f4, b2, this);
+            rotationController2.requestYaw(f3, (byte)11, this);
          }
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.shouldJumpAtEdge()) {
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
       }
 
       if (this.diagonal.getValue() && this.canPerformParkour()) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 
    private boolean canPerformParkour() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return mc.isNotInGui() && MoveUtil.isMoving() && !mc.gameSettings.keyBindSneak.isKeyDown();
    }
 
    private boolean shouldJumpAtEdge() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.canPerformParkour()
          && mc.thePlayer.onGround
          && this.isLicenseTimestampValid()
@@ -100,14 +84,12 @@ public class Parkour extends Module implements MoveInputListener, TickListener {
    }
 
    private int getStrafeDirectionSign() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       int strafeAxis = KeyboardInputUtil.getStrafeAxis();
       return strafeAxis != 0 ? strafeAxis : 1;
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

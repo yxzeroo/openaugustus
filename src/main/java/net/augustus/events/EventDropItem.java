@@ -8,8 +8,7 @@ public class EventDropItem extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      DropItemListener listener = (DropItemListener)obj;
-      this.call2(listener);
+      this.call2((DropItemListener)obj);
    }
 
    public void call2(DropItemListener listener) {

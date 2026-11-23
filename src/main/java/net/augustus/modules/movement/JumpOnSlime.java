@@ -3,7 +3,6 @@ package net.augustus.modules.movement;
 import java.awt.Color;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
-import net.augustus.settings.Setting;
 import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.events.EventMoveInput;
 import net.augustus.settings.BooleanValue;
@@ -25,17 +24,14 @@ public class JumpOnSlime extends Module implements MoveInputListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if ((mc.currentScreen == null || this.inInv.getValue())
          && mc.thePlayer.onGround
          && mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ)).getBlock() instanceof BlockSlime) {
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
       }
    }
 

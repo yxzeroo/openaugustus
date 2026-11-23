@@ -86,8 +86,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
          }
       }
 
-      int stringWidth = this.mc.fontRendererObj.getStringWidth(resourcePackName);
-      if (stringWidth > 157) {
+      if (this.mc.fontRendererObj.getStringWidth(resourcePackName) > 157) {
          resourcePackName = this.mc.fontRendererObj.trimStringToWidth(resourcePackName, 157 - this.mc.fontRendererObj.getStringWidth("...")) + "...";
       }
 
@@ -113,9 +112,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
             if (resourcePackFormat != 1) {
                String str = I18n.format("resourcePack.incompatible.confirm.title", new Object[0]);
                String str2 = I18n.format("resourcePack.incompatible.confirm." + (resourcePackFormat > 1 ? "new" : "old"), new Object[0]);
-               Minecraft mc2 = this.mc;
-               GuiYesNo guiYesNo = new GuiYesNo(new ResourcePackListEntry.DefaultGuiYesNoCallback(this), str, str2, 0);
-               mc2.displayGuiScreen(guiYesNo);
+               this.mc.displayGuiScreen(new GuiYesNo(new ResourcePackListEntry.DefaultGuiYesNoCallback(this), str, str2, 0));
             } else {
                this.resourcePacksGUI.getListContaining(this).remove(this);
                this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);

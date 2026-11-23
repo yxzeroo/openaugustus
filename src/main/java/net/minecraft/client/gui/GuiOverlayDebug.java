@@ -47,8 +47,7 @@ public class GuiOverlayDebug extends Gui {
    public List getDebugInfoRight() {
       long l = Runtime.getRuntime().maxMemory();
       long l2 = Runtime.getRuntime().totalMemory();
-      long l3 = Runtime.getRuntime().freeMemory();
-      long l4 = l2 - l3;
+      long l4 = l2 - Runtime.getRuntime().freeMemory();
       ArrayList list = Lists.newArrayList(
          new String[]{
             String.format("Java: %s %dbit", System.getProperty("java.version"), this.mc.isJava64bit() ? 64 : 32),
@@ -64,8 +63,7 @@ public class GuiOverlayDebug extends Gui {
       );
       long bufferAllocated = NativeMemory.getBufferAllocated();
       long bufferMaximum = NativeMemory.getBufferMaximum();
-      String str = "Native: " + bytesToMb(bufferAllocated) + "/" + bytesToMb(bufferMaximum) + "MB";
-      list.add(4, str);
+      list.add(4, "Native: " + bytesToMb(bufferAllocated) + "/" + bytesToMb(bufferMaximum) + "MB");
       list.set(5, "GC: " + MemoryMonitor.getAllocationRateMb() + "MB/s");
       if (!this.isReducedDebug() && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.mc.objectMouseOver.getBlockPos() != null) {
          BlockPos blockPos = this.mc.objectMouseOver.getBlockPos();
@@ -175,9 +173,7 @@ public class GuiOverlayDebug extends Gui {
             sb.append(" sh");
          }
 
-         Minecraft mc2 = this.mc;
-         String str = sb.toString();
-         mc2.debug = str;
+         this.mc.debug = sb.toString();
          this.debugOF = this.mc.debug;
       }
 
@@ -304,11 +300,7 @@ public class GuiOverlayDebug extends Gui {
       int n8 = n2 >> 16 & 0xFF;
       int n9 = n2 >> 8 & 0xFF;
       int n10 = n2 & 0xFF;
-      int n11 = MathHelper.clamp_int((int)((float)n3 + (float)(n7 - n3) * f), 0, 255);
-      int n12 = MathHelper.clamp_int((int)((float)n4 + (float)(n8 - n4) * f), 0, 255);
-      int n13 = MathHelper.clamp_int((int)((float)n5 + (float)(n9 - n5) * f), 0, 255);
-      int n14 = MathHelper.clamp_int((int)((float)n6 + (float)(n10 - n6) * f), 0, 255);
-      return n11 << 24 | n12 << 16 | n13 << 8 | n14;
+      return MathHelper.clamp_int((int)((float)n3 + (float)(n7 - n3) * f), 0, 255) << 24 | MathHelper.clamp_int((int)((float)n4 + (float)(n8 - n4) * f), 0, 255) << 16 | MathHelper.clamp_int((int)((float)n5 + (float)(n9 - n5) * f), 0, 255) << 8 | MathHelper.clamp_int((int)((float)n6 + (float)(n10 - n6) * f), 0, 255);
    }
 
    public void renderDebugInfoRight(ScaledResolution sr) {

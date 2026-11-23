@@ -267,15 +267,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       PaddedAesCipher paddedAesCipher = null;
       byte b = 29;
       long l = -2500225118170331002L;
-      VendorPacketBuffer.getOpaqueStateTag();
       l = 3626613575623059513L ^ (long)"\ueeff㘎趱궒鮰⠍瀑궨숶ﶰŮ\ue104䲟\ud849\ue31c焁\uef8d䠺㼴穈檚\ue35c覀ᒘ\u008c⨀賝त".hashCode();
 
       outerLoop:
       while (true) {
          if (b <= 51) {
-            VendorPacketEncryptor vendorPacketEncryptor = this;
             KeccakSha3Digest keccakSha3Digest = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-            byte[] bytes2 = bytes;
             byte[] bytes3 = new byte[]{
                108,
                103,
@@ -310,16 +307,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                -55,
                -45
             };
-            PaddedAesCipher paddedAesCipher2 = paddedAesCipher;
-            byte[] bytes4 = bytes3;
-            byte[] bytes5 = VendorAesHelper.encryptWithCipher(bytes2, bytes4, paddedAesCipher2);
-            vendorPacketEncryptor.derivedKeySlot01 = keccakSha3Digest.digest(bytes5);
+            this.derivedKeySlot01 = keccakSha3Digest.digest(VendorAesHelper.encryptWithCipher(bytes, bytes3, paddedAesCipher));
             l = l + -7986808522213809061L ^ 6205067535158006013L;
          } else if (b >= 77) {
             if (77 >= b) {
-               VendorPacketEncryptor vendorPacketEncryptor2 = this;
                KeccakSha3Digest keccakSha3Digest2 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes6 = bytes;
                byte[] bytes7 = new byte[]{
                   -67,
                   11,
@@ -354,16 +346,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   82,
                   -106
                };
-               PaddedAesCipher paddedAesCipher3 = paddedAesCipher;
-               byte[] bytes8 = bytes7;
-               byte[] bytes9 = VendorAesHelper.encryptWithCipher(bytes6, bytes8, paddedAesCipher3);
-               vendorPacketEncryptor2.derivedKeySlot02 = keccakSha3Digest2.digest(bytes9);
+               this.derivedKeySlot02 = keccakSha3Digest2.digest(VendorAesHelper.encryptWithCipher(bytes, bytes7, paddedAesCipher));
                l = (l ^ -2745959664548180294L) + -5545412008050478732L;
             } else if (b >= 90) {
                if (b <= 90) {
-                  VendorPacketEncryptor vendorPacketEncryptor3 = this;
                   KeccakSha3Digest keccakSha3Digest3 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes10 = bytes;
                   byte[] bytes11 = new byte[]{
                      -27,
                      72,
@@ -398,19 +385,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      34,
                      1
                   };
-                  PaddedAesCipher paddedAesCipher4 = paddedAesCipher;
-                  byte[] bytes12 = bytes11;
-                  byte[] bytes13 = VendorAesHelper.encryptWithCipher(bytes10, bytes12, paddedAesCipher4);
-                  vendorPacketEncryptor3.derivedKeySlot03 = keccakSha3Digest3.digest(bytes13);
+                  this.derivedKeySlot03 = keccakSha3Digest3.digest(VendorAesHelper.encryptWithCipher(bytes, bytes11, paddedAesCipher));
                   l = (l ^ 7021473993838055482L) - -2402005725846062511L;
                   continue;
                }
 
                if (b >= 97) {
                   if (97 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor4 = this;
                      KeccakSha3Digest keccakSha3Digest4 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes14 = bytes;
                      byte[] bytes15 = new byte[]{
                         -118,
                         -24,
@@ -445,16 +427,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         66,
                         34
                      };
-                     PaddedAesCipher paddedAesCipher5 = paddedAesCipher;
-                     byte[] bytes16 = bytes15;
-                     byte[] bytes17 = VendorAesHelper.encryptWithCipher(bytes14, bytes16, paddedAesCipher5);
-                     vendorPacketEncryptor4.derivedKeySlot04 = keccakSha3Digest4.digest(bytes17);
+                     this.derivedKeySlot04 = keccakSha3Digest4.digest(VendorAesHelper.encryptWithCipher(bytes, bytes15, paddedAesCipher));
                      l = (l ^ 6552921527643743323L) - -2286723408696488676L;
                   } else if (100 <= b) {
                      if (100 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor5 = this;
                         KeccakSha3Digest keccakSha3Digest5 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes18 = bytes;
                         byte[] bytes19 = new byte[]{
                            -109,
                            97,
@@ -489,19 +466,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            46,
                            13
                         };
-                        PaddedAesCipher paddedAesCipher6 = paddedAesCipher;
-                        byte[] bytes20 = bytes19;
-                        byte[] bytes21 = VendorAesHelper.encryptWithCipher(bytes18, bytes20, paddedAesCipher6);
-                        vendorPacketEncryptor5.derivedKeySlot05 = keccakSha3Digest5.digest(bytes21);
+                        this.derivedKeySlot05 = keccakSha3Digest5.digest(VendorAesHelper.encryptWithCipher(bytes, bytes19, paddedAesCipher));
                         l = (l ^ -8757115258214508351L) + -6250499930995572562L;
                         continue;
                      }
 
                      if (b >= 102) {
                         if (102 >= b) {
-                           VendorPacketEncryptor vendorPacketEncryptor6 = this;
                            KeccakSha3Digest keccakSha3Digest6 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes22 = bytes;
                            byte[] bytes23 = new byte[]{
                               -16,
                               22,
@@ -536,17 +508,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               88,
                               44
                            };
-                           PaddedAesCipher paddedAesCipher7 = paddedAesCipher;
-                           byte[] bytes24 = bytes23;
-                           byte[] bytes25 = VendorAesHelper.encryptWithCipher(bytes22, bytes24, paddedAesCipher7);
-                           vendorPacketEncryptor6.derivedKeySlot06 = keccakSha3Digest6.digest(bytes25);
+                           this.derivedKeySlot06 = keccakSha3Digest6.digest(VendorAesHelper.encryptWithCipher(bytes, bytes23, paddedAesCipher));
                            l = (l ^ -5331652082827399880L) + 6888348448540070442L;
                            continue;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor7 = this;
                         KeccakSha3Digest keccakSha3Digest7 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes26 = bytes;
                         byte[] bytes27 = new byte[]{
                            -126,
                            -34,
@@ -581,15 +548,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -72,
                            -86
                         };
-                        PaddedAesCipher paddedAesCipher8 = paddedAesCipher;
-                        byte[] bytes28 = bytes27;
-                        byte[] bytes29 = VendorAesHelper.encryptWithCipher(bytes26, bytes28, paddedAesCipher8);
-                        vendorPacketEncryptor7.derivedKeySlot07 = keccakSha3Digest7.digest(bytes29);
+                        this.derivedKeySlot07 = keccakSha3Digest7.digest(VendorAesHelper.encryptWithCipher(bytes, bytes27, paddedAesCipher));
                         l = (l ^ -4097241790805408719L) - -7872380289747652382L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor8 = this;
                         KeccakSha3Digest keccakSha3Digest8 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes30 = bytes;
                         byte[] bytes31 = new byte[]{
                            55,
                            6,
@@ -624,16 +586,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -103,
                            33
                         };
-                        PaddedAesCipher paddedAesCipher9 = paddedAesCipher;
-                        byte[] bytes32 = bytes31;
-                        byte[] bytes33 = VendorAesHelper.encryptWithCipher(bytes30, bytes32, paddedAesCipher9);
-                        vendorPacketEncryptor8.derivedKeySlot08 = keccakSha3Digest8.digest(bytes33);
+                        this.derivedKeySlot08 = keccakSha3Digest8.digest(VendorAesHelper.encryptWithCipher(bytes, bytes31, paddedAesCipher));
                         l = l + -2641046760825027739L ^ 5761472304399380974L;
                      }
                   } else if (98 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor9 = this;
                      KeccakSha3Digest keccakSha3Digest9 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes34 = bytes;
                      byte[] bytes35 = new byte[]{
                         -118,
                         -12,
@@ -668,15 +625,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -95,
                         92
                      };
-                     PaddedAesCipher paddedAesCipher10 = paddedAesCipher;
-                     byte[] bytes36 = bytes35;
-                     byte[] bytes37 = VendorAesHelper.encryptWithCipher(bytes34, bytes36, paddedAesCipher10);
-                     vendorPacketEncryptor9.derivedKeySlot09 = keccakSha3Digest9.digest(bytes37);
+                     this.derivedKeySlot09 = keccakSha3Digest9.digest(VendorAesHelper.encryptWithCipher(bytes, bytes35, paddedAesCipher));
                      l = l - 5340209011747355886L ^ -4649082788342893999L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor10 = this;
                      KeccakSha3Digest keccakSha3Digest10 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes38 = bytes;
                      byte[] bytes39 = new byte[]{
                         78,
                         22,
@@ -711,19 +663,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -41,
                         63
                      };
-                     PaddedAesCipher paddedAesCipher11 = paddedAesCipher;
-                     byte[] bytes40 = bytes39;
-                     byte[] bytes41 = VendorAesHelper.encryptWithCipher(bytes38, bytes40, paddedAesCipher11);
-                     vendorPacketEncryptor10.derivedKeySlot10 = keccakSha3Digest10.digest(bytes41);
+                     this.derivedKeySlot10 = keccakSha3Digest10.digest(VendorAesHelper.encryptWithCipher(bytes, bytes39, paddedAesCipher));
                      l = l - -9125040941654808501L ^ -2104240045964944441L;
                   }
                } else if (93 <= b) {
                   if (93 < b) {
                      if (95 <= b) {
                         if (b <= 95) {
-                           VendorPacketEncryptor vendorPacketEncryptor11 = this;
                            KeccakSha3Digest keccakSha3Digest11 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes42 = bytes;
                            byte[] bytes43 = new byte[]{
                               -119,
                               -122,
@@ -758,19 +705,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -63,
                               84
                            };
-                           PaddedAesCipher paddedAesCipher12 = paddedAesCipher;
-                           byte[] bytes44 = bytes43;
-                           byte[] bytes45 = VendorAesHelper.encryptWithCipher(bytes42, bytes44, paddedAesCipher12);
-                           vendorPacketEncryptor11.derivedKeySlot11 = keccakSha3Digest11.digest(bytes45);
+                           this.derivedKeySlot11 = keccakSha3Digest11.digest(VendorAesHelper.encryptWithCipher(bytes, bytes43, paddedAesCipher));
                            l = l + -7790022074543919974L ^ -135841003857522739L;
                         } else {
                            paddedAesCipher = new PaddedAesCipher();
                            l = l - 6931611821234190822L ^ -7902656901571837540L;
                         }
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor12 = this;
                         KeccakSha3Digest keccakSha3Digest12 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes46 = bytes;
                         byte[] bytes47 = new byte[]{
                            -117,
                            22,
@@ -805,18 +747,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -40,
                            58
                         };
-                        PaddedAesCipher paddedAesCipher13 = paddedAesCipher;
-                        byte[] bytes48 = bytes47;
-                        byte[] bytes49 = VendorAesHelper.encryptWithCipher(bytes46, bytes48, paddedAesCipher13);
-                        vendorPacketEncryptor12.derivedKeySlot12 = keccakSha3Digest12.digest(bytes49);
+                        this.derivedKeySlot12 = keccakSha3Digest12.digest(VendorAesHelper.encryptWithCipher(bytes, bytes47, paddedAesCipher));
                         l = l + -8090492243191298022L ^ -5077272699678435729L;
                      }
                      continue;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor13 = this;
                   KeccakSha3Digest keccakSha3Digest13 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes50 = bytes;
                   byte[] bytes51 = new byte[]{
                      -70,
                      41,
@@ -851,19 +788,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      124,
                      -118
                   };
-                  PaddedAesCipher paddedAesCipher14 = paddedAesCipher;
-                  byte[] bytes52 = bytes51;
-                  byte[] bytes53 = VendorAesHelper.encryptWithCipher(bytes50, bytes52, paddedAesCipher14);
-                  vendorPacketEncryptor13.derivedKeySlot13 = keccakSha3Digest13.digest(bytes53);
+                  this.derivedKeySlot13 = keccakSha3Digest13.digest(VendorAesHelper.encryptWithCipher(bytes, bytes51, paddedAesCipher));
                   l = l + 7909612650328397873L ^ -6825374715486408027L;
                } else {
                   if (91 >= b) {
                      return;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor14 = this;
                   KeccakSha3Digest keccakSha3Digest14 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes54 = bytes;
                   byte[] bytes55 = new byte[]{
                      7,
                      -30,
@@ -898,17 +830,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -88,
                      22
                   };
-                  PaddedAesCipher paddedAesCipher15 = paddedAesCipher;
-                  byte[] bytes56 = bytes55;
-                  byte[] bytes57 = VendorAesHelper.encryptWithCipher(bytes54, bytes56, paddedAesCipher15);
-                  vendorPacketEncryptor14.derivedKeySlot14 = keccakSha3Digest14.digest(bytes57);
+                  this.derivedKeySlot14 = keccakSha3Digest14.digest(VendorAesHelper.encryptWithCipher(bytes, bytes55, paddedAesCipher));
                   l = l - -7568996521595307607L ^ -8131421792234908474L;
                }
             } else if (83 <= b) {
                if (83 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor15 = this;
                   KeccakSha3Digest keccakSha3Digest15 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes58 = bytes;
                   byte[] bytes59 = new byte[]{
                      72,
                      119,
@@ -943,16 +870,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      30,
                      -30
                   };
-                  PaddedAesCipher paddedAesCipher16 = paddedAesCipher;
-                  byte[] bytes60 = bytes59;
-                  byte[] bytes61 = VendorAesHelper.encryptWithCipher(bytes58, bytes60, paddedAesCipher16);
-                  vendorPacketEncryptor15.derivedKeySlot15 = keccakSha3Digest15.digest(bytes61);
+                  this.derivedKeySlot15 = keccakSha3Digest15.digest(VendorAesHelper.encryptWithCipher(bytes, bytes59, paddedAesCipher));
                   l = l + 7157818158814423592L ^ -4681834530166906765L;
                } else if (86 <= b) {
                   if (86 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor16 = this;
                      KeccakSha3Digest keccakSha3Digest16 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes62 = bytes;
                      byte[] bytes63 = new byte[]{
                         33,
                         38,
@@ -987,19 +909,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         101,
                         106
                      };
-                     PaddedAesCipher paddedAesCipher17 = paddedAesCipher;
-                     byte[] bytes64 = bytes63;
-                     byte[] bytes65 = VendorAesHelper.encryptWithCipher(bytes62, bytes64, paddedAesCipher17);
-                     vendorPacketEncryptor16.derivedKeySlot16 = keccakSha3Digest16.digest(bytes65);
+                     this.derivedKeySlot16 = keccakSha3Digest16.digest(VendorAesHelper.encryptWithCipher(bytes, bytes63, paddedAesCipher));
                      l = l + 2257211593470826793L ^ 888268871900733697L;
                      continue;
                   }
 
                   if (b >= 88) {
                      if (b > 88) {
-                        VendorPacketEncryptor vendorPacketEncryptor17 = this;
                         KeccakSha3Digest keccakSha3Digest17 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes66 = bytes;
                         byte[] bytes67 = new byte[]{
                            -57,
                            68,
@@ -1034,17 +951,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -25,
                            54
                         };
-                        PaddedAesCipher paddedAesCipher18 = paddedAesCipher;
-                        byte[] bytes68 = bytes67;
-                        byte[] bytes69 = VendorAesHelper.encryptWithCipher(bytes66, bytes68, paddedAesCipher18);
-                        vendorPacketEncryptor17.derivedKeySlot17 = keccakSha3Digest17.digest(bytes69);
+                        this.derivedKeySlot17 = keccakSha3Digest17.digest(VendorAesHelper.encryptWithCipher(bytes, bytes67, paddedAesCipher));
                         l = l - 3716191740456654689L ^ 1691869119346243290L;
                         continue;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor18 = this;
                      KeccakSha3Digest keccakSha3Digest18 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes70 = bytes;
                      byte[] bytes71 = new byte[]{
                         -123,
                         -26,
@@ -1079,15 +991,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         107,
                         -104
                      };
-                     PaddedAesCipher paddedAesCipher19 = paddedAesCipher;
-                     byte[] bytes72 = bytes71;
-                     byte[] bytes73 = VendorAesHelper.encryptWithCipher(bytes70, bytes72, paddedAesCipher19);
-                     vendorPacketEncryptor18.derivedKeySlot18 = keccakSha3Digest18.digest(bytes73);
+                     this.derivedKeySlot18 = keccakSha3Digest18.digest(VendorAesHelper.encryptWithCipher(bytes, bytes71, paddedAesCipher));
                      l = l + 5081855605169498990L ^ 977478759016771143L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor19 = this;
                      KeccakSha3Digest keccakSha3Digest19 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes74 = bytes;
                      byte[] bytes75 = new byte[]{
                         -100,
                         91,
@@ -1122,16 +1029,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         36,
                         -84
                      };
-                     PaddedAesCipher paddedAesCipher20 = paddedAesCipher;
-                     byte[] bytes76 = bytes75;
-                     byte[] bytes77 = VendorAesHelper.encryptWithCipher(bytes74, bytes76, paddedAesCipher20);
-                     vendorPacketEncryptor19.derivedKeySlot19 = keccakSha3Digest19.digest(bytes77);
+                     this.derivedKeySlot19 = keccakSha3Digest19.digest(VendorAesHelper.encryptWithCipher(bytes, bytes75, paddedAesCipher));
                      l = l - -210273659386089655L ^ 6119088391165275754L;
                   }
                } else if (84 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor20 = this;
                   KeccakSha3Digest keccakSha3Digest20 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes78 = bytes;
                   byte[] bytes79 = new byte[]{
                      54,
                      -71,
@@ -1166,15 +1068,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -67,
                      -57
                   };
-                  PaddedAesCipher paddedAesCipher21 = paddedAesCipher;
-                  byte[] bytes80 = bytes79;
-                  byte[] bytes81 = VendorAesHelper.encryptWithCipher(bytes78, bytes80, paddedAesCipher21);
-                  vendorPacketEncryptor20.derivedKeySlot20 = keccakSha3Digest20.digest(bytes81);
+                  this.derivedKeySlot20 = keccakSha3Digest20.digest(VendorAesHelper.encryptWithCipher(bytes, bytes79, paddedAesCipher));
                   l = l - 4317124634977415996L ^ 2228576698002752175L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor21 = this;
                   KeccakSha3Digest keccakSha3Digest21 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes82 = bytes;
                   byte[] bytes83 = new byte[]{
                      -42,
                      -61,
@@ -1209,32 +1106,22 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -44,
                      -65
                   };
-                  PaddedAesCipher paddedAesCipher22 = paddedAesCipher;
-                  byte[] bytes84 = bytes83;
-                  byte[] bytes85 = VendorAesHelper.encryptWithCipher(bytes82, bytes84, paddedAesCipher22);
-                  vendorPacketEncryptor21.derivedKeySlot21 = keccakSha3Digest21.digest(bytes85);
+                  this.derivedKeySlot21 = keccakSha3Digest21.digest(VendorAesHelper.encryptWithCipher(bytes, bytes83, paddedAesCipher));
                   l = (l ^ -4399336084058235318L) - -6910170973314364614L;
                }
             } else if (80 <= b) {
                if (b <= 80) {
-                  VendorPacketEncryptor vendorPacketEncryptor22 = this;
                   KeccakSha3Digest keccakSha3Digest22 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes86 = bytes;
-                  byte[] bytes87 = new byte[]{
+                  byte[] bytes89 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                      -62, 29, -98, -2, -88, 104, -96, 34, 68, 88, -16, 18, 25, 71, 82, 39, -24, 59, -51, 4, -32, -1, 59, 47, 94, 74, -99, 19, -20, 87, -29, 83
-                  };
-                  PaddedAesCipher paddedAesCipher23 = paddedAesCipher;
-                  byte[] bytes88 = bytes87;
-                  byte[] bytes89 = VendorAesHelper.encryptWithCipher(bytes86, bytes88, paddedAesCipher23);
-                  vendorPacketEncryptor22.derivedKeySlot22 = keccakSha3Digest22.digest(bytes89);
+                  }, paddedAesCipher);
+                  this.derivedKeySlot22 = keccakSha3Digest22.digest(bytes89);
                   l = (l ^ -698137689187377866L) - -3428299283975793880L;
                   continue;
                }
 
                if (81 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor23 = this;
                   KeccakSha3Digest keccakSha3Digest23 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes90 = bytes;
                   byte[] bytes91 = new byte[]{
                      8,
                      5,
@@ -1269,15 +1156,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      38,
                      8
                   };
-                  PaddedAesCipher paddedAesCipher24 = paddedAesCipher;
-                  byte[] bytes92 = bytes91;
-                  byte[] bytes93 = VendorAesHelper.encryptWithCipher(bytes90, bytes92, paddedAesCipher24);
-                  vendorPacketEncryptor23.derivedKeySlot23 = keccakSha3Digest23.digest(bytes93);
+                  this.derivedKeySlot23 = keccakSha3Digest23.digest(VendorAesHelper.encryptWithCipher(bytes, bytes91, paddedAesCipher));
                   l = (l ^ 3246647114490356321L) - -1309221295133033906L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor24 = this;
                   KeccakSha3Digest keccakSha3Digest24 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes94 = bytes;
                   byte[] bytes95 = new byte[]{
                      53,
                      71,
@@ -1312,16 +1194,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -66,
                      80
                   };
-                  PaddedAesCipher paddedAesCipher25 = paddedAesCipher;
-                  byte[] bytes96 = bytes95;
-                  byte[] bytes97 = VendorAesHelper.encryptWithCipher(bytes94, bytes96, paddedAesCipher25);
-                  vendorPacketEncryptor24.derivedKeySlot24 = keccakSha3Digest24.digest(bytes97);
+                  this.derivedKeySlot24 = keccakSha3Digest24.digest(VendorAesHelper.encryptWithCipher(bytes, bytes95, paddedAesCipher));
                   l = l - 8440343460162924481L ^ -8918842899715120271L;
                }
             } else if (78 >= b) {
-               VendorPacketEncryptor vendorPacketEncryptor25 = this;
                KeccakSha3Digest keccakSha3Digest25 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes98 = bytes;
                byte[] bytes99 = new byte[]{
                   17,
                   -68,
@@ -1356,15 +1233,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   118,
                   101
                };
-               PaddedAesCipher paddedAesCipher26 = paddedAesCipher;
-               byte[] bytes100 = bytes99;
-               byte[] bytes101 = VendorAesHelper.encryptWithCipher(bytes98, bytes100, paddedAesCipher26);
-               vendorPacketEncryptor25.derivedKeySlot25 = keccakSha3Digest25.digest(bytes101);
+               this.derivedKeySlot25 = keccakSha3Digest25.digest(VendorAesHelper.encryptWithCipher(bytes, bytes99, paddedAesCipher));
                l = l + -3665092386328647754L ^ 5220188690591410727L;
             } else {
-               VendorPacketEncryptor vendorPacketEncryptor26 = this;
                KeccakSha3Digest keccakSha3Digest26 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes102 = bytes;
                byte[] bytes103 = new byte[]{
                   124,
                   -34,
@@ -1399,17 +1271,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   79,
                   -67
                };
-               PaddedAesCipher paddedAesCipher27 = paddedAesCipher;
-               byte[] bytes104 = bytes103;
-               byte[] bytes105 = VendorAesHelper.encryptWithCipher(bytes102, bytes104, paddedAesCipher27);
-               vendorPacketEncryptor26.derivedKeySlot26 = keccakSha3Digest26.digest(bytes105);
+               this.derivedKeySlot26 = keccakSha3Digest26.digest(VendorAesHelper.encryptWithCipher(bytes, bytes103, paddedAesCipher));
                l = l - -3445009463937812681L ^ 7527753957078879455L;
             }
          } else if (64 <= b) {
             if (64 >= b) {
-               VendorPacketEncryptor vendorPacketEncryptor27 = this;
                KeccakSha3Digest keccakSha3Digest27 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes106 = bytes;
                byte[] bytes107 = new byte[]{
                   -73,
                   -95,
@@ -1444,19 +1311,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   95,
                   -6
                };
-               PaddedAesCipher paddedAesCipher28 = paddedAesCipher;
-               byte[] bytes108 = bytes107;
-               byte[] bytes109 = VendorAesHelper.encryptWithCipher(bytes106, bytes108, paddedAesCipher28);
-               vendorPacketEncryptor27.derivedKeySlot27 = keccakSha3Digest27.digest(bytes109);
+               this.derivedKeySlot27 = keccakSha3Digest27.digest(VendorAesHelper.encryptWithCipher(bytes, bytes107, paddedAesCipher));
                l = (l ^ 6924438730008931243L) - -4200805481876150290L;
                continue;
             }
 
             if (b >= 70) {
                if (70 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor28 = this;
                   KeccakSha3Digest keccakSha3Digest28 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes110 = bytes;
                   byte[] bytes111 = new byte[]{
                      -74,
                      -89,
@@ -1491,16 +1353,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      115,
                      2
                   };
-                  PaddedAesCipher paddedAesCipher29 = paddedAesCipher;
-                  byte[] bytes112 = bytes111;
-                  byte[] bytes113 = VendorAesHelper.encryptWithCipher(bytes110, bytes112, paddedAesCipher29);
-                  vendorPacketEncryptor28.derivedKeySlot28 = keccakSha3Digest28.digest(bytes113);
+                  this.derivedKeySlot28 = keccakSha3Digest28.digest(VendorAesHelper.encryptWithCipher(bytes, bytes111, paddedAesCipher));
                   l = l - 1060393046542621305L ^ 7732686008379165921L;
                } else if (73 <= b) {
                   if (73 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor29 = this;
                      KeccakSha3Digest keccakSha3Digest29 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes114 = bytes;
                      byte[] bytes115 = new byte[]{
                         -128,
                         -111,
@@ -1535,18 +1392,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -86,
                         10
                      };
-                     PaddedAesCipher paddedAesCipher30 = paddedAesCipher;
-                     byte[] bytes116 = bytes115;
-                     byte[] bytes117 = VendorAesHelper.encryptWithCipher(bytes114, bytes116, paddedAesCipher30);
-                     vendorPacketEncryptor29.derivedKeySlot29 = keccakSha3Digest29.digest(bytes117);
+                     this.derivedKeySlot29 = keccakSha3Digest29.digest(VendorAesHelper.encryptWithCipher(bytes, bytes115, paddedAesCipher));
                      l = l + -9195536327832983045L ^ -8257394917794439869L;
                      continue;
                   }
 
                   if (b < 75) {
-                     VendorPacketEncryptor vendorPacketEncryptor30 = this;
                      KeccakSha3Digest keccakSha3Digest30 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes118 = bytes;
                      byte[] bytes119 = new byte[]{
                         -121,
                         77,
@@ -1581,18 +1433,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         79,
                         40
                      };
-                     PaddedAesCipher paddedAesCipher31 = paddedAesCipher;
-                     byte[] bytes120 = bytes119;
-                     byte[] bytes121 = VendorAesHelper.encryptWithCipher(bytes118, bytes120, paddedAesCipher31);
-                     vendorPacketEncryptor30.derivedKeySlot30 = keccakSha3Digest30.digest(bytes121);
+                     this.derivedKeySlot30 = keccakSha3Digest30.digest(VendorAesHelper.encryptWithCipher(bytes, bytes119, paddedAesCipher));
                      l = l + 3775739497442842929L ^ 1184761494559588085L;
                      continue;
                   }
 
                   if (b <= 75) {
-                     VendorPacketEncryptor vendorPacketEncryptor31 = this;
                      KeccakSha3Digest keccakSha3Digest31 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes122 = bytes;
                      byte[] bytes123 = new byte[]{
                         66,
                         58,
@@ -1627,15 +1474,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         92,
                         100
                      };
-                     PaddedAesCipher paddedAesCipher32 = paddedAesCipher;
-                     byte[] bytes124 = bytes123;
-                     byte[] bytes125 = VendorAesHelper.encryptWithCipher(bytes122, bytes124, paddedAesCipher32);
-                     vendorPacketEncryptor31.derivedKeySlot31 = keccakSha3Digest31.digest(bytes125);
+                     this.derivedKeySlot31 = keccakSha3Digest31.digest(VendorAesHelper.encryptWithCipher(bytes, bytes123, paddedAesCipher));
                      l = (l ^ -1626176541652360345L) - -6263344247689391438L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor32 = this;
                      KeccakSha3Digest keccakSha3Digest32 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes126 = bytes;
                      byte[] bytes127 = new byte[]{
                         -28,
                         96,
@@ -1670,17 +1512,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         71,
                         17
                      };
-                     PaddedAesCipher paddedAesCipher33 = paddedAesCipher;
-                     byte[] bytes128 = bytes127;
-                     byte[] bytes129 = VendorAesHelper.encryptWithCipher(bytes126, bytes128, paddedAesCipher33);
-                     vendorPacketEncryptor32.derivedKeySlot32 = keccakSha3Digest32.digest(bytes129);
+                     this.derivedKeySlot32 = keccakSha3Digest32.digest(VendorAesHelper.encryptWithCipher(bytes, bytes127, paddedAesCipher));
                      l = l - -4393533774039123569L ^ 2673816337155091017L;
                   }
                } else {
                   if (b <= 71) {
-                     VendorPacketEncryptor vendorPacketEncryptor33 = this;
                      KeccakSha3Digest keccakSha3Digest33 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes130 = bytes;
                      byte[] bytes131 = new byte[]{
                         6,
                         -61,
@@ -1715,17 +1552,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         71,
                         -120
                      };
-                     PaddedAesCipher paddedAesCipher34 = paddedAesCipher;
-                     byte[] bytes132 = bytes131;
-                     byte[] bytes133 = VendorAesHelper.encryptWithCipher(bytes130, bytes132, paddedAesCipher34);
-                     vendorPacketEncryptor33.derivedKeySlot33 = keccakSha3Digest33.digest(bytes133);
+                     this.derivedKeySlot33 = keccakSha3Digest33.digest(VendorAesHelper.encryptWithCipher(bytes, bytes131, paddedAesCipher));
                      l = (l ^ -6306290773539064341L) + 2038572427749348972L;
                      continue;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor34 = this;
                   KeccakSha3Digest keccakSha3Digest34 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes134 = bytes;
                   byte[] bytes135 = new byte[]{
                      21,
                      -21,
@@ -1760,17 +1592,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -81,
                      -36
                   };
-                  PaddedAesCipher paddedAesCipher35 = paddedAesCipher;
-                  byte[] bytes136 = bytes135;
-                  byte[] bytes137 = VendorAesHelper.encryptWithCipher(bytes134, bytes136, paddedAesCipher35);
-                  vendorPacketEncryptor34.derivedKeySlot34 = keccakSha3Digest34.digest(bytes137);
+                  this.derivedKeySlot34 = keccakSha3Digest34.digest(VendorAesHelper.encryptWithCipher(bytes, bytes135, paddedAesCipher));
                   l = (l ^ 3356977145292980045L) - 2940736923964831836L;
                }
             } else if (67 <= b) {
                if (67 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor35 = this;
                   KeccakSha3Digest keccakSha3Digest35 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes138 = bytes;
                   byte[] bytes139 = new byte[]{
                      -26,
                      51,
@@ -1805,18 +1632,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -123,
                      -34
                   };
-                  PaddedAesCipher paddedAesCipher36 = paddedAesCipher;
-                  byte[] bytes140 = bytes139;
-                  byte[] bytes141 = VendorAesHelper.encryptWithCipher(bytes138, bytes140, paddedAesCipher36);
-                  vendorPacketEncryptor35.derivedKeySlot35 = keccakSha3Digest35.digest(bytes141);
+                  this.derivedKeySlot35 = keccakSha3Digest35.digest(VendorAesHelper.encryptWithCipher(bytes, bytes139, paddedAesCipher));
                   l = l + 4887860722794432978L ^ -8983450809039931305L;
                   continue;
                }
 
                if (b <= 68) {
-                  VendorPacketEncryptor vendorPacketEncryptor36 = this;
                   KeccakSha3Digest keccakSha3Digest36 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes142 = bytes;
                   byte[] bytes143 = new byte[]{
                      111,
                      -9,
@@ -1851,29 +1673,19 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      82,
                      84
                   };
-                  PaddedAesCipher paddedAesCipher37 = paddedAesCipher;
-                  byte[] bytes144 = bytes143;
-                  byte[] bytes145 = VendorAesHelper.encryptWithCipher(bytes142, bytes144, paddedAesCipher37);
-                  vendorPacketEncryptor36.derivedKeySlot36 = keccakSha3Digest36.digest(bytes145);
+                  this.derivedKeySlot36 = keccakSha3Digest36.digest(VendorAesHelper.encryptWithCipher(bytes, bytes143, paddedAesCipher));
                   l = l + 1061921537525703561L ^ 490391148695800033L;
                   continue;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor37 = this;
                KeccakSha3Digest keccakSha3Digest37 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes146 = bytes;
-               byte[] bytes147 = new byte[]{
+               byte[] bytes149 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                   61, 16, -19, -36, -102, 10, 7, 22, -21, 67, -5, 47, 126, 77, 53, -33, -95, 121, 92, -97, 59, -70, 1, -17, 2, 22, 113, -82, -88, 40, 42, 49
-               };
-               PaddedAesCipher paddedAesCipher38 = paddedAesCipher;
-               byte[] bytes148 = bytes147;
-               byte[] bytes149 = VendorAesHelper.encryptWithCipher(bytes146, bytes148, paddedAesCipher38);
-               vendorPacketEncryptor37.derivedKeySlot37 = keccakSha3Digest37.digest(bytes149);
+               }, paddedAesCipher);
+               this.derivedKeySlot37 = keccakSha3Digest37.digest(bytes149);
                l = (l ^ 5425186611239573250L) + -2758272730267365956L;
             } else if (65 >= b) {
-               VendorPacketEncryptor vendorPacketEncryptor38 = this;
                KeccakSha3Digest keccakSha3Digest38 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes150 = bytes;
                byte[] bytes151 = new byte[]{
                   49,
                   -61,
@@ -1908,15 +1720,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -52,
                   24
                };
-               PaddedAesCipher paddedAesCipher39 = paddedAesCipher;
-               byte[] bytes152 = bytes151;
-               byte[] bytes153 = VendorAesHelper.encryptWithCipher(bytes150, bytes152, paddedAesCipher39);
-               vendorPacketEncryptor38.derivedKeySlot38 = keccakSha3Digest38.digest(bytes153);
+               this.derivedKeySlot38 = keccakSha3Digest38.digest(VendorAesHelper.encryptWithCipher(bytes, bytes151, paddedAesCipher));
                l = l + 5013370769007385414L ^ -8396895996954435266L;
             } else {
-               VendorPacketEncryptor vendorPacketEncryptor39 = this;
                KeccakSha3Digest keccakSha3Digest39 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes154 = bytes;
                byte[] bytes155 = new byte[]{
                   -94,
                   -118,
@@ -1951,31 +1758,21 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   85,
                   -119
                };
-               PaddedAesCipher paddedAesCipher40 = paddedAesCipher;
-               byte[] bytes156 = bytes155;
-               byte[] bytes157 = VendorAesHelper.encryptWithCipher(bytes154, bytes156, paddedAesCipher40);
-               vendorPacketEncryptor39.derivedKeySlot39 = keccakSha3Digest39.digest(bytes157);
+               this.derivedKeySlot39 = keccakSha3Digest39.digest(VendorAesHelper.encryptWithCipher(bytes, bytes155, paddedAesCipher));
                l = (l ^ -7098304580835446774L) + -8699830456710923648L;
             }
          } else if (b >= 57) {
             if (b <= 57) {
-               VendorPacketEncryptor vendorPacketEncryptor40 = this;
                KeccakSha3Digest keccakSha3Digest40 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes158 = bytes;
-               byte[] bytes159 = new byte[]{
+               byte[] bytes161 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                   -17, 38, 44, 79, 76, 92, -28, -10, 50, 99, 27, -2, 83, -48, 93, -7, 41, -15, -126, 106, 3, 15, 38, -115, 103, 14, 28, 84, 23, 40, 75, 31
-               };
-               PaddedAesCipher paddedAesCipher41 = paddedAesCipher;
-               byte[] bytes160 = bytes159;
-               byte[] bytes161 = VendorAesHelper.encryptWithCipher(bytes158, bytes160, paddedAesCipher41);
-               vendorPacketEncryptor40.derivedKeySlot40 = keccakSha3Digest40.digest(bytes161);
+               }, paddedAesCipher);
+               this.derivedKeySlot40 = keccakSha3Digest40.digest(bytes161);
                l = l + -5944199328493159734L ^ -7308594687829920255L;
             } else {
                if (60 > b) {
                   if (58 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor41 = this;
                      KeccakSha3Digest keccakSha3Digest41 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes162 = bytes;
                      byte[] bytes163 = new byte[]{
                         80,
                         63,
@@ -2010,15 +1807,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -66,
                         71
                      };
-                     PaddedAesCipher paddedAesCipher42 = paddedAesCipher;
-                     byte[] bytes164 = bytes163;
-                     byte[] bytes165 = VendorAesHelper.encryptWithCipher(bytes162, bytes164, paddedAesCipher42);
-                     vendorPacketEncryptor41.derivedKeySlot41 = keccakSha3Digest41.digest(bytes165);
+                     this.derivedKeySlot41 = keccakSha3Digest41.digest(VendorAesHelper.encryptWithCipher(bytes, bytes163, paddedAesCipher));
                      l = l - -112662048748643870L ^ 8436080717178055718L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor42 = this;
                      KeccakSha3Digest keccakSha3Digest42 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes166 = bytes;
                      byte[] bytes167 = new byte[]{
                         56,
                         -37,
@@ -2053,19 +1845,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -35,
                         -19
                      };
-                     PaddedAesCipher paddedAesCipher43 = paddedAesCipher;
-                     byte[] bytes168 = bytes167;
-                     byte[] bytes169 = VendorAesHelper.encryptWithCipher(bytes166, bytes168, paddedAesCipher43);
-                     vendorPacketEncryptor42.derivedKeySlot42 = keccakSha3Digest42.digest(bytes169);
+                     this.derivedKeySlot42 = keccakSha3Digest42.digest(VendorAesHelper.encryptWithCipher(bytes, bytes167, paddedAesCipher));
                      l = (l ^ 7883851301915956010L) - 507822881064527412L;
                   }
                   continue;
                }
 
                if (b <= 60) {
-                  VendorPacketEncryptor vendorPacketEncryptor43 = this;
                   KeccakSha3Digest keccakSha3Digest43 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes170 = bytes;
                   byte[] bytes171 = new byte[]{
                      -50,
                      -33,
@@ -2100,16 +1887,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      96,
                      119
                   };
-                  PaddedAesCipher paddedAesCipher44 = paddedAesCipher;
-                  byte[] bytes172 = bytes171;
-                  byte[] bytes173 = VendorAesHelper.encryptWithCipher(bytes170, bytes172, paddedAesCipher44);
-                  vendorPacketEncryptor43.primaryKeyGuard = keccakSha3Digest43.digest(bytes173);
+                  this.primaryKeyGuard = keccakSha3Digest43.digest(VendorAesHelper.encryptWithCipher(bytes, bytes171, paddedAesCipher));
                   l = l - -8071088480426153415L ^ -688896644474275827L;
                } else if (b >= 62) {
                   if (62 < b) {
-                     VendorPacketEncryptor vendorPacketEncryptor44 = this;
                      KeccakSha3Digest keccakSha3Digest44 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes174 = bytes;
                      byte[] bytes175 = new byte[]{
                         -72,
                         -44,
@@ -2144,17 +1926,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -7,
                         -33
                      };
-                     PaddedAesCipher paddedAesCipher45 = paddedAesCipher;
-                     byte[] bytes176 = bytes175;
-                     byte[] bytes177 = VendorAesHelper.encryptWithCipher(bytes174, bytes176, paddedAesCipher45);
-                     vendorPacketEncryptor44.derivedKeySlot43 = keccakSha3Digest44.digest(bytes177);
+                     this.derivedKeySlot43 = keccakSha3Digest44.digest(VendorAesHelper.encryptWithCipher(bytes, bytes175, paddedAesCipher));
                      l = (l ^ -7468426212648463499L) - 2927053185214664568L;
                      continue;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor45 = this;
                   KeccakSha3Digest keccakSha3Digest45 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes178 = bytes;
                   byte[] bytes179 = new byte[]{
                      59,
                      -119,
@@ -2189,15 +1966,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -127,
                      -81
                   };
-                  PaddedAesCipher paddedAesCipher46 = paddedAesCipher;
-                  byte[] bytes180 = bytes179;
-                  byte[] bytes181 = VendorAesHelper.encryptWithCipher(bytes178, bytes180, paddedAesCipher46);
-                  vendorPacketEncryptor45.derivedKeySlot44 = keccakSha3Digest45.digest(bytes181);
+                  this.derivedKeySlot44 = keccakSha3Digest45.digest(VendorAesHelper.encryptWithCipher(bytes, bytes179, paddedAesCipher));
                   l = (l ^ -4832112370838259913L) - -9203549929692667552L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor46 = this;
                   KeccakSha3Digest keccakSha3Digest46 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes182 = bytes;
                   byte[] bytes183 = new byte[]{
                      -118,
                      86,
@@ -2232,10 +2004,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -108,
                      43
                   };
-                  PaddedAesCipher paddedAesCipher47 = paddedAesCipher;
-                  byte[] bytes184 = bytes183;
-                  byte[] bytes185 = VendorAesHelper.encryptWithCipher(bytes182, bytes184, paddedAesCipher47);
-                  vendorPacketEncryptor46.derivedKeySlot45 = keccakSha3Digest46.digest(bytes185);
+                  this.derivedKeySlot45 = keccakSha3Digest46.digest(VendorAesHelper.encryptWithCipher(bytes, bytes183, paddedAesCipher));
                   l = l - -8361208517298855636L ^ -7421162591540896652L;
                }
             }
@@ -2245,9 +2014,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   this.sessionKey = bytes;
                   l = (l ^ -3623392602112547842L) + -3379154158116606284L;
                } else if (b <= 55) {
-                  VendorPacketEncryptor vendorPacketEncryptor47 = this;
                   KeccakSha3Digest keccakSha3Digest47 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes186 = bytes;
                   byte[] bytes187 = new byte[]{
                      -110,
                      83,
@@ -2282,15 +2049,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -12,
                      17
                   };
-                  PaddedAesCipher paddedAesCipher48 = paddedAesCipher;
-                  byte[] bytes188 = bytes187;
-                  byte[] bytes189 = VendorAesHelper.encryptWithCipher(bytes186, bytes188, paddedAesCipher48);
-                  vendorPacketEncryptor47.derivedKeySlot46 = keccakSha3Digest47.digest(bytes189);
+                  this.derivedKeySlot46 = keccakSha3Digest47.digest(VendorAesHelper.encryptWithCipher(bytes, bytes187, paddedAesCipher));
                   l = l - 3838204844390659610L ^ -5931204305012253360L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor48 = this;
                   KeccakSha3Digest keccakSha3Digest48 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes190 = bytes;
                   byte[] bytes191 = new byte[]{
                      112,
                      93,
@@ -2325,19 +2087,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -102,
                      29
                   };
-                  PaddedAesCipher paddedAesCipher49 = paddedAesCipher;
-                  byte[] bytes192 = bytes191;
-                  byte[] bytes193 = VendorAesHelper.encryptWithCipher(bytes190, bytes192, paddedAesCipher49);
-                  vendorPacketEncryptor48.derivedKeySlot47 = keccakSha3Digest48.digest(bytes193);
+                  this.derivedKeySlot47 = keccakSha3Digest48.digest(VendorAesHelper.encryptWithCipher(bytes, bytes191, paddedAesCipher));
                   l = (l ^ 907483494392843748L) + -3819352193754437341L;
                }
                continue;
             }
 
             if (52 < b) {
-               VendorPacketEncryptor vendorPacketEncryptor49 = this;
                KeccakSha3Digest keccakSha3Digest49 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes194 = bytes;
                byte[] bytes195 = new byte[]{
                   -99,
                   -38,
@@ -2372,17 +2129,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -24,
                   120
                };
-               PaddedAesCipher paddedAesCipher50 = paddedAesCipher;
-               byte[] bytes196 = bytes195;
-               byte[] bytes197 = VendorAesHelper.encryptWithCipher(bytes194, bytes196, paddedAesCipher50);
-               vendorPacketEncryptor49.derivedKeySlot48 = keccakSha3Digest49.digest(bytes197);
+               this.derivedKeySlot48 = keccakSha3Digest49.digest(VendorAesHelper.encryptWithCipher(bytes, bytes195, paddedAesCipher));
                l = (l ^ -8132450973123948853L) - -9149119855993534657L;
                continue;
             }
 
-            VendorPacketEncryptor vendorPacketEncryptor50 = this;
             KeccakSha3Digest keccakSha3Digest50 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-            byte[] bytes198 = bytes;
             byte[] bytes199 = new byte[]{
                26,
                66,
@@ -2417,10 +2169,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                -43,
                -51
             };
-            PaddedAesCipher paddedAesCipher51 = paddedAesCipher;
-            byte[] bytes200 = bytes199;
-            byte[] bytes201 = VendorAesHelper.encryptWithCipher(bytes198, bytes200, paddedAesCipher51);
-            vendorPacketEncryptor50.derivedKeySlot49 = keccakSha3Digest50.digest(bytes201);
+            this.derivedKeySlot49 = keccakSha3Digest50.digest(VendorAesHelper.encryptWithCipher(bytes, bytes199, paddedAesCipher));
             l = l - -6469223552283804313L ^ 7080053335846011366L;
          }
 
@@ -2428,9 +2177,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
             while (25 > b) {
                if (12 <= b) {
                   if (12 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor51 = this;
                      KeccakSha3Digest keccakSha3Digest51 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes202 = bytes;
                      byte[] bytes203 = new byte[]{
                         69,
                         126,
@@ -2465,19 +2212,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         30,
                         -50
                      };
-                     PaddedAesCipher paddedAesCipher52 = paddedAesCipher;
-                     byte[] bytes204 = bytes203;
-                     byte[] bytes205 = VendorAesHelper.encryptWithCipher(bytes202, bytes204, paddedAesCipher52);
-                     vendorPacketEncryptor51.derivedKeySlot50 = keccakSha3Digest51.digest(bytes205);
+                     this.derivedKeySlot50 = keccakSha3Digest51.digest(VendorAesHelper.encryptWithCipher(bytes, bytes203, paddedAesCipher));
                      l = (l ^ 1951044457746543321L) + -3756913094423185584L;
                      continue outerLoop;
                   }
 
                   if (b >= 18) {
                      if (b <= 18) {
-                        VendorPacketEncryptor vendorPacketEncryptor52 = this;
                         KeccakSha3Digest keccakSha3Digest52 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes206 = bytes;
                         byte[] bytes207 = new byte[]{
                            -28,
                            -34,
@@ -2512,17 +2254,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            8,
                            -46
                         };
-                        PaddedAesCipher paddedAesCipher53 = paddedAesCipher;
-                        byte[] bytes208 = bytes207;
-                        byte[] bytes209 = VendorAesHelper.encryptWithCipher(bytes206, bytes208, paddedAesCipher53);
-                        vendorPacketEncryptor52.derivedKeySlot51 = keccakSha3Digest52.digest(bytes209);
+                        this.derivedKeySlot51 = keccakSha3Digest52.digest(VendorAesHelper.encryptWithCipher(bytes, bytes207, paddedAesCipher));
                         l = l - -4317592112032917601L ^ 4972708144041176185L;
                      } else {
                         if (b >= 21) {
                            if (b <= 21) {
-                              VendorPacketEncryptor vendorPacketEncryptor53 = this;
                               KeccakSha3Digest keccakSha3Digest53 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                              byte[] bytes210 = bytes;
                               byte[] bytes211 = new byte[]{
                                  -83,
                                  -57,
@@ -2557,16 +2294,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                  53,
                                  29
                               };
-                              PaddedAesCipher paddedAesCipher54 = paddedAesCipher;
-                              byte[] bytes212 = bytes211;
-                              byte[] bytes213 = VendorAesHelper.encryptWithCipher(bytes210, bytes212, paddedAesCipher54);
-                              vendorPacketEncryptor53.derivedKeySlot52 = keccakSha3Digest53.digest(bytes213);
+                              this.derivedKeySlot52 = keccakSha3Digest53.digest(VendorAesHelper.encryptWithCipher(bytes, bytes211, paddedAesCipher));
                               l = (l ^ -9119445374422243181L) + -7944628711453899325L;
                            } else if (b >= 23) {
                               if (23 >= b) {
-                                 VendorPacketEncryptor vendorPacketEncryptor54 = this;
                                  KeccakSha3Digest keccakSha3Digest54 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                                 byte[] bytes214 = bytes;
                                  byte[] bytes215 = new byte[]{
                                     24,
                                     72,
@@ -2601,15 +2333,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                     -80,
                                     -66
                                  };
-                                 PaddedAesCipher paddedAesCipher55 = paddedAesCipher;
-                                 byte[] bytes216 = bytes215;
-                                 byte[] bytes217 = VendorAesHelper.encryptWithCipher(bytes214, bytes216, paddedAesCipher55);
-                                 vendorPacketEncryptor54.derivedKeySlot53 = keccakSha3Digest54.digest(bytes217);
+                                 this.derivedKeySlot53 = keccakSha3Digest54.digest(VendorAesHelper.encryptWithCipher(bytes, bytes215, paddedAesCipher));
                                  l = l - 7893603310403242132L ^ -6814244265157710210L;
                               } else {
-                                 VendorPacketEncryptor vendorPacketEncryptor55 = this;
                                  KeccakSha3Digest keccakSha3Digest55 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                                 byte[] bytes218 = bytes;
                                  byte[] bytes219 = new byte[]{
                                     -77,
                                     57,
@@ -2644,16 +2371,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                     -24,
                                     78
                                  };
-                                 PaddedAesCipher paddedAesCipher56 = paddedAesCipher;
-                                 byte[] bytes220 = bytes219;
-                                 byte[] bytes221 = VendorAesHelper.encryptWithCipher(bytes218, bytes220, paddedAesCipher56);
-                                 vendorPacketEncryptor55.derivedKeySlot54 = keccakSha3Digest55.digest(bytes221);
+                                 this.derivedKeySlot54 = keccakSha3Digest55.digest(VendorAesHelper.encryptWithCipher(bytes, bytes219, paddedAesCipher));
                                  l = l + -1514920035828031726L ^ -8172626782574005717L;
                               }
                            } else {
-                              VendorPacketEncryptor vendorPacketEncryptor56 = this;
                               KeccakSha3Digest keccakSha3Digest56 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                              byte[] bytes222 = bytes;
                               byte[] bytes223 = new byte[]{
                                  -50,
                                  -36,
@@ -2688,19 +2410,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                  -103,
                                  -13
                               };
-                              PaddedAesCipher paddedAesCipher57 = paddedAesCipher;
-                              byte[] bytes224 = bytes223;
-                              byte[] bytes225 = VendorAesHelper.encryptWithCipher(bytes222, bytes224, paddedAesCipher57);
-                              vendorPacketEncryptor56.derivedKeySlot55 = keccakSha3Digest56.digest(bytes225);
+                              this.derivedKeySlot55 = keccakSha3Digest56.digest(VendorAesHelper.encryptWithCipher(bytes, bytes223, paddedAesCipher));
                               l = (l ^ 2506967418801644437L) - -1168220114964355845L;
                            }
                            continue outerLoop;
                         }
 
                         if (19 < b) {
-                           VendorPacketEncryptor vendorPacketEncryptor57 = this;
                            KeccakSha3Digest keccakSha3Digest57 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes226 = bytes;
                            byte[] bytes227 = new byte[]{
                               87,
                               -79,
@@ -2735,17 +2452,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -11,
                               -1
                            };
-                           PaddedAesCipher paddedAesCipher58 = paddedAesCipher;
-                           byte[] bytes228 = bytes227;
-                           byte[] bytes229 = VendorAesHelper.encryptWithCipher(bytes226, bytes228, paddedAesCipher58);
-                           vendorPacketEncryptor57.derivedKeySlot56 = keccakSha3Digest57.digest(bytes229);
+                           this.derivedKeySlot56 = keccakSha3Digest57.digest(VendorAesHelper.encryptWithCipher(bytes, bytes227, paddedAesCipher));
                            l = (l ^ 6373536072842542146L) - 1850684165142419243L;
                            continue outerLoop;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor58 = this;
                         KeccakSha3Digest keccakSha3Digest58 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes230 = bytes;
                         byte[] bytes231 = new byte[]{
                            -108,
                            -87,
@@ -2780,17 +2492,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -21,
                            5
                         };
-                        PaddedAesCipher paddedAesCipher59 = paddedAesCipher;
-                        byte[] bytes232 = bytes231;
-                        byte[] bytes233 = VendorAesHelper.encryptWithCipher(bytes230, bytes232, paddedAesCipher59);
-                        vendorPacketEncryptor58.derivedKeySlot57 = keccakSha3Digest58.digest(bytes233);
+                        this.derivedKeySlot57 = keccakSha3Digest58.digest(VendorAesHelper.encryptWithCipher(bytes, bytes231, paddedAesCipher));
                         l = l - 5748196617152749033L ^ -8659193227913504156L;
                      }
                   } else if (b >= 15) {
                      if (b <= 15) {
-                        VendorPacketEncryptor vendorPacketEncryptor59 = this;
                         KeccakSha3Digest keccakSha3Digest59 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes234 = bytes;
                         byte[] bytes235 = new byte[]{
                            26,
                            99,
@@ -2825,18 +2532,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -21,
                            -23
                         };
-                        PaddedAesCipher paddedAesCipher60 = paddedAesCipher;
-                        byte[] bytes236 = bytes235;
-                        byte[] bytes237 = VendorAesHelper.encryptWithCipher(bytes234, bytes236, paddedAesCipher60);
-                        vendorPacketEncryptor59.derivedKeySlot58 = keccakSha3Digest59.digest(bytes237);
+                        this.derivedKeySlot58 = keccakSha3Digest59.digest(VendorAesHelper.encryptWithCipher(bytes, bytes235, paddedAesCipher));
                         l = (l ^ 7950629060670796438L) - -7421530979700637415L;
                         continue outerLoop;
                      }
 
                      if (16 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor60 = this;
                         KeccakSha3Digest keccakSha3Digest60 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes238 = bytes;
                         byte[] bytes239 = new byte[]{
                            -88,
                            -32,
@@ -2871,17 +2573,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            29,
                            85
                         };
-                        PaddedAesCipher paddedAesCipher61 = paddedAesCipher;
-                        byte[] bytes240 = bytes239;
-                        byte[] bytes241 = VendorAesHelper.encryptWithCipher(bytes238, bytes240, paddedAesCipher61);
-                        vendorPacketEncryptor60.derivedKeySlot59 = keccakSha3Digest60.digest(bytes241);
+                        this.derivedKeySlot59 = keccakSha3Digest60.digest(VendorAesHelper.encryptWithCipher(bytes, bytes239, paddedAesCipher));
                         l = (l ^ 4884134586808229972L) + 2017559828709211469L;
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor61 = this;
                      KeccakSha3Digest keccakSha3Digest61 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes242 = bytes;
                      byte[] bytes243 = new byte[]{
                         -25,
                         28,
@@ -2916,16 +2613,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -6,
                         11
                      };
-                     PaddedAesCipher paddedAesCipher62 = paddedAesCipher;
-                     byte[] bytes244 = bytes243;
-                     byte[] bytes245 = VendorAesHelper.encryptWithCipher(bytes242, bytes244, paddedAesCipher62);
-                     vendorPacketEncryptor61.derivedKeySlot60 = keccakSha3Digest61.digest(bytes245);
+                     this.derivedKeySlot60 = keccakSha3Digest61.digest(VendorAesHelper.encryptWithCipher(bytes, bytes243, paddedAesCipher));
                      l = (l ^ -8211057996138906365L) - -3009044707301766668L;
                   } else {
                      if (13 < b) {
-                        VendorPacketEncryptor vendorPacketEncryptor62 = this;
                         KeccakSha3Digest keccakSha3Digest62 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes246 = bytes;
                         byte[] bytes247 = new byte[]{
                            -43,
                            -16,
@@ -2960,17 +2652,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -107,
                            53
                         };
-                        PaddedAesCipher paddedAesCipher63 = paddedAesCipher;
-                        byte[] bytes248 = bytes247;
-                        byte[] bytes249 = VendorAesHelper.encryptWithCipher(bytes246, bytes248, paddedAesCipher63);
-                        vendorPacketEncryptor62.derivedKeySlot61 = keccakSha3Digest62.digest(bytes249);
+                        this.derivedKeySlot61 = keccakSha3Digest62.digest(VendorAesHelper.encryptWithCipher(bytes, bytes247, paddedAesCipher));
                         l = l + -2917302708687950147L ^ 852058406871163207L;
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor63 = this;
                      KeccakSha3Digest keccakSha3Digest63 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes250 = bytes;
                      byte[] bytes251 = new byte[]{
                         -102,
                         -111,
@@ -3005,17 +2692,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -11,
                         -75
                      };
-                     PaddedAesCipher paddedAesCipher64 = paddedAesCipher;
-                     byte[] bytes252 = bytes251;
-                     byte[] bytes253 = VendorAesHelper.encryptWithCipher(bytes250, bytes252, paddedAesCipher64);
-                     vendorPacketEncryptor63.derivedKeySlot62 = keccakSha3Digest63.digest(bytes253);
+                     this.derivedKeySlot62 = keccakSha3Digest63.digest(VendorAesHelper.encryptWithCipher(bytes, bytes251, paddedAesCipher));
                      l = (l ^ 3532436445745350838L) + 4197495530241590245L;
                   }
                } else if (5 <= b) {
                   if (5 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor64 = this;
                      KeccakSha3Digest keccakSha3Digest64 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes254 = bytes;
                      byte[] bytes255 = new byte[]{
                         71,
                         13,
@@ -3050,16 +2732,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -48,
                         -95
                      };
-                     PaddedAesCipher paddedAesCipher65 = paddedAesCipher;
-                     byte[] bytes256 = bytes255;
-                     byte[] bytes257 = VendorAesHelper.encryptWithCipher(bytes254, bytes256, paddedAesCipher65);
-                     vendorPacketEncryptor64.derivedKeySlot63 = keccakSha3Digest64.digest(bytes257);
+                     this.derivedKeySlot63 = keccakSha3Digest64.digest(VendorAesHelper.encryptWithCipher(bytes, bytes255, paddedAesCipher));
                      l = l + -1940595541883344492L ^ 8294023102936052606L;
                   } else if (b >= 8) {
                      if (b <= 8) {
-                        VendorPacketEncryptor vendorPacketEncryptor65 = this;
                         KeccakSha3Digest keccakSha3Digest65 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes258 = bytes;
                         byte[] bytes259 = new byte[]{
                            -105,
                            -52,
@@ -3094,19 +2771,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -26,
                            -40
                         };
-                        PaddedAesCipher paddedAesCipher66 = paddedAesCipher;
-                        byte[] bytes260 = bytes259;
-                        byte[] bytes261 = VendorAesHelper.encryptWithCipher(bytes258, bytes260, paddedAesCipher66);
-                        vendorPacketEncryptor65.derivedKeySlot64 = keccakSha3Digest65.digest(bytes261);
+                        this.derivedKeySlot64 = keccakSha3Digest65.digest(VendorAesHelper.encryptWithCipher(bytes, bytes259, paddedAesCipher));
                         l = (l ^ -6941664501822710767L) + 6997120058346087385L;
                         continue outerLoop;
                      }
 
                      if (10 <= b) {
                         if (10 >= b) {
-                           VendorPacketEncryptor vendorPacketEncryptor66 = this;
                            KeccakSha3Digest keccakSha3Digest66 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes262 = bytes;
                            byte[] bytes263 = new byte[]{
                               122,
                               -31,
@@ -3141,15 +2813,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -102,
                               16
                            };
-                           PaddedAesCipher paddedAesCipher67 = paddedAesCipher;
-                           byte[] bytes264 = bytes263;
-                           byte[] bytes265 = VendorAesHelper.encryptWithCipher(bytes262, bytes264, paddedAesCipher67);
-                           vendorPacketEncryptor66.derivedKeySlot65 = keccakSha3Digest66.digest(bytes265);
+                           this.derivedKeySlot65 = keccakSha3Digest66.digest(VendorAesHelper.encryptWithCipher(bytes, bytes263, paddedAesCipher));
                            l = (l ^ -5920375296776720045L) - -3176279679663970329L;
                         } else {
-                           VendorPacketEncryptor vendorPacketEncryptor67 = this;
                            KeccakSha3Digest keccakSha3Digest67 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes266 = bytes;
                            byte[] bytes267 = new byte[]{
                               83,
                               -112,
@@ -3184,18 +2851,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -99,
                               -64
                            };
-                           PaddedAesCipher paddedAesCipher68 = paddedAesCipher;
-                           byte[] bytes268 = bytes267;
-                           byte[] bytes269 = VendorAesHelper.encryptWithCipher(bytes266, bytes268, paddedAesCipher68);
-                           vendorPacketEncryptor67.derivedKeySlot66 = keccakSha3Digest67.digest(bytes269);
+                           this.derivedKeySlot66 = keccakSha3Digest67.digest(VendorAesHelper.encryptWithCipher(bytes, bytes267, paddedAesCipher));
                            l = l - 6814997379123175669L ^ -3133367112107790757L;
                         }
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor68 = this;
                      KeccakSha3Digest keccakSha3Digest68 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes270 = bytes;
                      byte[] bytes271 = new byte[]{
                         41,
                         110,
@@ -3230,16 +2892,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -23,
                         117
                      };
-                     PaddedAesCipher paddedAesCipher69 = paddedAesCipher;
-                     byte[] bytes272 = bytes271;
-                     byte[] bytes273 = VendorAesHelper.encryptWithCipher(bytes270, bytes272, paddedAesCipher69);
-                     vendorPacketEncryptor68.derivedKeySlot67 = keccakSha3Digest68.digest(bytes273);
+                     this.derivedKeySlot67 = keccakSha3Digest68.digest(VendorAesHelper.encryptWithCipher(bytes, bytes271, paddedAesCipher));
                      l = (l ^ 1890429889908778900L) - -5520579963202255003L;
                   } else {
                      if (b > 6) {
-                        VendorPacketEncryptor vendorPacketEncryptor69 = this;
                         KeccakSha3Digest keccakSha3Digest69 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes274 = bytes;
                         byte[] bytes275 = new byte[]{
                            117,
                            -42,
@@ -3274,17 +2931,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            70,
                            65
                         };
-                        PaddedAesCipher paddedAesCipher70 = paddedAesCipher;
-                        byte[] bytes276 = bytes275;
-                        byte[] bytes277 = VendorAesHelper.encryptWithCipher(bytes274, bytes276, paddedAesCipher70);
-                        vendorPacketEncryptor69.derivedKeySlot68 = keccakSha3Digest69.digest(bytes277);
+                        this.derivedKeySlot68 = keccakSha3Digest69.digest(VendorAesHelper.encryptWithCipher(bytes, bytes275, paddedAesCipher));
                         l = l - -6246664982790746595L ^ -249943415210472862L;
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor70 = this;
                      KeccakSha3Digest keccakSha3Digest70 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes278 = bytes;
                      byte[] bytes279 = new byte[]{
                         -29,
                         80,
@@ -3319,18 +2971,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         4,
                         79
                      };
-                     PaddedAesCipher paddedAesCipher71 = paddedAesCipher;
-                     byte[] bytes280 = bytes279;
-                     byte[] bytes281 = VendorAesHelper.encryptWithCipher(bytes278, bytes280, paddedAesCipher71);
-                     vendorPacketEncryptor70.derivedKeySlot69 = keccakSha3Digest70.digest(bytes281);
+                     this.derivedKeySlot69 = keccakSha3Digest70.digest(VendorAesHelper.encryptWithCipher(bytes, bytes279, paddedAesCipher));
                      l = (l ^ -1249118881011317686L) - -8965454798791409762L;
                   }
                } else {
                   if (2 > b) {
                      if (b <= 0) {
-                        VendorPacketEncryptor vendorPacketEncryptor71 = this;
                         KeccakSha3Digest keccakSha3Digest71 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes282 = bytes;
                         byte[] bytes283 = new byte[]{
                            45,
                            -19,
@@ -3365,15 +3012,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            55,
                            83
                         };
-                        PaddedAesCipher paddedAesCipher72 = paddedAesCipher;
-                        byte[] bytes284 = bytes283;
-                        byte[] bytes285 = VendorAesHelper.encryptWithCipher(bytes282, bytes284, paddedAesCipher72);
-                        vendorPacketEncryptor71.derivedKeySlot70 = keccakSha3Digest71.digest(bytes285);
+                        this.derivedKeySlot70 = keccakSha3Digest71.digest(VendorAesHelper.encryptWithCipher(bytes, bytes283, paddedAesCipher));
                         l = l + -5243077581724059943L ^ -4663083365255465582L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor72 = this;
                         KeccakSha3Digest keccakSha3Digest72 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes286 = bytes;
                         byte[] bytes287 = new byte[]{
                            89,
                            70,
@@ -3408,19 +3050,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            86,
                            52
                         };
-                        PaddedAesCipher paddedAesCipher73 = paddedAesCipher;
-                        byte[] bytes288 = bytes287;
-                        byte[] bytes289 = VendorAesHelper.encryptWithCipher(bytes286, bytes288, paddedAesCipher73);
-                        vendorPacketEncryptor72.derivedKeySlot71 = keccakSha3Digest72.digest(bytes289);
+                        this.derivedKeySlot71 = keccakSha3Digest72.digest(VendorAesHelper.encryptWithCipher(bytes, bytes287, paddedAesCipher));
                         l = l + -2840651977592517864L ^ 3958746340116853136L;
                      }
                      continue outerLoop;
                   }
 
                   if (b <= 2) {
-                     VendorPacketEncryptor vendorPacketEncryptor73 = this;
                      KeccakSha3Digest keccakSha3Digest73 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes290 = bytes;
                      byte[] bytes291 = new byte[]{
                         -23,
                         43,
@@ -3455,16 +3092,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         31,
                         90
                      };
-                     PaddedAesCipher paddedAesCipher74 = paddedAesCipher;
-                     byte[] bytes292 = bytes291;
-                     byte[] bytes293 = VendorAesHelper.encryptWithCipher(bytes290, bytes292, paddedAesCipher74);
-                     vendorPacketEncryptor73.derivedKeySlot72 = keccakSha3Digest73.digest(bytes293);
+                     this.derivedKeySlot72 = keccakSha3Digest73.digest(VendorAesHelper.encryptWithCipher(bytes, bytes291, paddedAesCipher));
                      l = (l ^ -6820909398282933833L) + -4912514877868023540L;
                   } else {
                      if (b > 3) {
-                        VendorPacketEncryptor vendorPacketEncryptor74 = this;
                         KeccakSha3Digest keccakSha3Digest74 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes294 = bytes;
                         byte[] bytes295 = new byte[]{
                            -62,
                            -82,
@@ -3499,17 +3131,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            102,
                            -54
                         };
-                        PaddedAesCipher paddedAesCipher75 = paddedAesCipher;
-                        byte[] bytes296 = bytes295;
-                        byte[] bytes297 = VendorAesHelper.encryptWithCipher(bytes294, bytes296, paddedAesCipher75);
-                        vendorPacketEncryptor74.derivedKeySlot73 = keccakSha3Digest74.digest(bytes297);
+                        this.derivedKeySlot73 = keccakSha3Digest74.digest(VendorAesHelper.encryptWithCipher(bytes, bytes295, paddedAesCipher));
                         l = l - -8646521968280955995L ^ -8636382423424966916L;
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor75 = this;
                      KeccakSha3Digest keccakSha3Digest75 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes298 = bytes;
                      byte[] bytes299 = new byte[]{
                         2,
                         117,
@@ -3544,19 +3171,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         44,
                         31
                      };
-                     PaddedAesCipher paddedAesCipher76 = paddedAesCipher;
-                     byte[] bytes300 = bytes299;
-                     byte[] bytes301 = VendorAesHelper.encryptWithCipher(bytes298, bytes300, paddedAesCipher76);
-                     vendorPacketEncryptor75.derivedKeySlot74 = keccakSha3Digest75.digest(bytes301);
+                     this.derivedKeySlot74 = keccakSha3Digest75.digest(VendorAesHelper.encryptWithCipher(bytes, bytes299, paddedAesCipher));
                      l = (l ^ -6356564311719209001L) + 6531872784490389774L;
                   }
                }
             }
 
             if (b <= 25) {
-               VendorPacketEncryptor vendorPacketEncryptor76 = this;
                KeccakSha3Digest keccakSha3Digest76 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes302 = bytes;
                byte[] bytes303 = new byte[]{
                   79,
                   -33,
@@ -3591,19 +3213,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   119,
                   117
                };
-               PaddedAesCipher paddedAesCipher77 = paddedAesCipher;
-               byte[] bytes304 = bytes303;
-               byte[] bytes305 = VendorAesHelper.encryptWithCipher(bytes302, bytes304, paddedAesCipher77);
-               vendorPacketEncryptor76.derivedKeySlot75 = keccakSha3Digest76.digest(bytes305);
+               this.derivedKeySlot75 = keccakSha3Digest76.digest(VendorAesHelper.encryptWithCipher(bytes, bytes303, paddedAesCipher));
                l = (l ^ 1075960263316654728L) + -3470966794587660813L;
                break;
             }
 
             if (b >= 38) {
                if (b <= 38) {
-                  VendorPacketEncryptor vendorPacketEncryptor77 = this;
                   KeccakSha3Digest keccakSha3Digest77 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes306 = bytes;
                   byte[] bytes307 = new byte[]{
                      -37,
                      -92,
@@ -3638,16 +3255,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -105,
                      -73
                   };
-                  PaddedAesCipher paddedAesCipher78 = paddedAesCipher;
-                  byte[] bytes308 = bytes307;
-                  byte[] bytes309 = VendorAesHelper.encryptWithCipher(bytes306, bytes308, paddedAesCipher78);
-                  vendorPacketEncryptor77.derivedKeySlot76 = keccakSha3Digest77.digest(bytes309);
+                  this.derivedKeySlot76 = keccakSha3Digest77.digest(VendorAesHelper.encryptWithCipher(bytes, bytes307, paddedAesCipher));
                   l = (l ^ -3471895905497059717L) - 4235485068898085203L;
                } else if (b >= 44) {
                   if (b <= 44) {
-                     VendorPacketEncryptor vendorPacketEncryptor78 = this;
                      KeccakSha3Digest keccakSha3Digest78 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes310 = bytes;
                      byte[] bytes311 = new byte[]{
                         74,
                         6,
@@ -3682,17 +3294,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         11,
                         -90
                      };
-                     PaddedAesCipher paddedAesCipher79 = paddedAesCipher;
-                     byte[] bytes312 = bytes311;
-                     byte[] bytes313 = VendorAesHelper.encryptWithCipher(bytes310, bytes312, paddedAesCipher79);
-                     vendorPacketEncryptor78.derivedKeySlot77 = keccakSha3Digest78.digest(bytes313);
+                     this.derivedKeySlot77 = keccakSha3Digest78.digest(VendorAesHelper.encryptWithCipher(bytes, bytes311, paddedAesCipher));
                      l = (l ^ -4020891559423241849L) - 8626844526474865085L;
                   } else {
                      if (b < 47) {
                         if (45 >= b) {
-                           VendorPacketEncryptor vendorPacketEncryptor79 = this;
                            KeccakSha3Digest keccakSha3Digest79 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes314 = bytes;
                            byte[] bytes315 = new byte[]{
                               46,
                               16,
@@ -3727,15 +3334,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -63,
                               125
                            };
-                           PaddedAesCipher paddedAesCipher80 = paddedAesCipher;
-                           byte[] bytes316 = bytes315;
-                           byte[] bytes317 = VendorAesHelper.encryptWithCipher(bytes314, bytes316, paddedAesCipher80);
-                           vendorPacketEncryptor79.derivedKeySlot78 = keccakSha3Digest79.digest(bytes317);
+                           this.derivedKeySlot78 = keccakSha3Digest79.digest(VendorAesHelper.encryptWithCipher(bytes, bytes315, paddedAesCipher));
                            l = (l ^ -1493873961441632129L) + -7453384512499839550L;
                         } else {
-                           VendorPacketEncryptor vendorPacketEncryptor80 = this;
                            KeccakSha3Digest keccakSha3Digest80 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes318 = bytes;
                            byte[] bytes319 = new byte[]{
                               -59,
                               87,
@@ -3770,19 +3372,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -36,
                               -72
                            };
-                           PaddedAesCipher paddedAesCipher81 = paddedAesCipher;
-                           byte[] bytes320 = bytes319;
-                           byte[] bytes321 = VendorAesHelper.encryptWithCipher(bytes318, bytes320, paddedAesCipher81);
-                           vendorPacketEncryptor80.derivedKeySlot79 = keccakSha3Digest80.digest(bytes321);
+                           this.derivedKeySlot79 = keccakSha3Digest80.digest(VendorAesHelper.encryptWithCipher(bytes, bytes319, paddedAesCipher));
                            l = l + 2062984207978547698L ^ -7855452243398317477L;
                         }
                         break;
                      }
 
                      if (b <= 47) {
-                        VendorPacketEncryptor vendorPacketEncryptor81 = this;
                         KeccakSha3Digest keccakSha3Digest81 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes322 = bytes;
                         byte[] bytes323 = new byte[]{
                            -21,
                            -64,
@@ -3817,16 +3414,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -3,
                            86
                         };
-                        PaddedAesCipher paddedAesCipher82 = paddedAesCipher;
-                        byte[] bytes324 = bytes323;
-                        byte[] bytes325 = VendorAesHelper.encryptWithCipher(bytes322, bytes324, paddedAesCipher82);
-                        vendorPacketEncryptor81.derivedKeySlot80 = keccakSha3Digest81.digest(bytes325);
+                        this.derivedKeySlot80 = keccakSha3Digest81.digest(VendorAesHelper.encryptWithCipher(bytes, bytes323, paddedAesCipher));
                         l = l - 5099162654581708909L ^ -4722140217278904009L;
                      } else if (49 <= b) {
                         if (b <= 49) {
-                           VendorPacketEncryptor vendorPacketEncryptor82 = this;
                            KeccakSha3Digest keccakSha3Digest82 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes326 = bytes;
                            byte[] bytes327 = new byte[]{
                               83,
                               -9,
@@ -3861,15 +3453,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               108,
                               -127
                            };
-                           PaddedAesCipher paddedAesCipher83 = paddedAesCipher;
-                           byte[] bytes328 = bytes327;
-                           byte[] bytes329 = VendorAesHelper.encryptWithCipher(bytes326, bytes328, paddedAesCipher83);
-                           vendorPacketEncryptor82.derivedKeySlot81 = keccakSha3Digest82.digest(bytes329);
+                           this.derivedKeySlot81 = keccakSha3Digest82.digest(VendorAesHelper.encryptWithCipher(bytes, bytes327, paddedAesCipher));
                            l = (l ^ 2221777003225519600L) - 1814240561470846313L;
                         } else {
-                           VendorPacketEncryptor vendorPacketEncryptor83 = this;
                            KeccakSha3Digest keccakSha3Digest83 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes330 = bytes;
                            byte[] bytes331 = new byte[]{
                               21,
                               102,
@@ -3904,16 +3491,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -104,
                               -19
                            };
-                           PaddedAesCipher paddedAesCipher84 = paddedAesCipher;
-                           byte[] bytes332 = bytes331;
-                           byte[] bytes333 = VendorAesHelper.encryptWithCipher(bytes330, bytes332, paddedAesCipher84);
-                           vendorPacketEncryptor83.derivedKeySlot82 = keccakSha3Digest83.digest(bytes333);
+                           this.derivedKeySlot82 = keccakSha3Digest83.digest(VendorAesHelper.encryptWithCipher(bytes, bytes331, paddedAesCipher));
                            l = (l ^ 5944505870081354362L) - -4398244024829531332L;
                         }
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor84 = this;
                         KeccakSha3Digest keccakSha3Digest84 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes334 = bytes;
                         byte[] bytes335 = new byte[]{
                            36,
                            72,
@@ -3948,19 +3530,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -103,
                            -59
                         };
-                        PaddedAesCipher paddedAesCipher85 = paddedAesCipher;
-                        byte[] bytes336 = bytes335;
-                        byte[] bytes337 = VendorAesHelper.encryptWithCipher(bytes334, bytes336, paddedAesCipher85);
-                        vendorPacketEncryptor84.derivedKeySlot83 = keccakSha3Digest84.digest(bytes337);
+                        this.derivedKeySlot83 = keccakSha3Digest84.digest(VendorAesHelper.encryptWithCipher(bytes, bytes335, paddedAesCipher));
                         l = l - -3942827468246260966L ^ 22341976187843627L;
                      }
                   }
                } else {
                   if (b >= 41) {
                      if (b <= 41) {
-                        VendorPacketEncryptor vendorPacketEncryptor85 = this;
                         KeccakSha3Digest keccakSha3Digest85 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes338 = bytes;
                         byte[] bytes339 = new byte[]{
                            9,
                            42,
@@ -3995,15 +3572,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -62,
                            31
                         };
-                        PaddedAesCipher paddedAesCipher86 = paddedAesCipher;
-                        byte[] bytes340 = bytes339;
-                        byte[] bytes341 = VendorAesHelper.encryptWithCipher(bytes338, bytes340, paddedAesCipher86);
-                        vendorPacketEncryptor85.derivedKeySlot84 = keccakSha3Digest85.digest(bytes341);
+                        this.derivedKeySlot84 = keccakSha3Digest85.digest(VendorAesHelper.encryptWithCipher(bytes, bytes339, paddedAesCipher));
                         l = l + 5501351323233076906L ^ 7681763475173152981L;
                      } else if (42 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor86 = this;
                         KeccakSha3Digest keccakSha3Digest86 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes342 = bytes;
                         byte[] bytes343 = new byte[]{
                            107,
                            -27,
@@ -4038,24 +3610,17 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            71,
                            -87
                         };
-                        PaddedAesCipher paddedAesCipher87 = paddedAesCipher;
-                        byte[] bytes344 = bytes343;
-                        byte[] bytes345 = VendorAesHelper.encryptWithCipher(bytes342, bytes344, paddedAesCipher87);
-                        vendorPacketEncryptor86.derivedKeySlot85 = keccakSha3Digest86.digest(bytes345);
+                        this.derivedKeySlot85 = keccakSha3Digest86.digest(VendorAesHelper.encryptWithCipher(bytes, bytes343, paddedAesCipher));
                         l = (l ^ 2090101526073893432L) + -1667354773554285813L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor87 = this;
-                        byte[] bytes346 = bytes;
-                        vendorPacketEncryptor87.deriveDecoyKeySlots(bytes346);
+                        this.deriveDecoyKeySlots(bytes);
                         l = (l ^ -8921372080232091874L) - 4482907712810183074L;
                      }
                      break;
                   }
 
                   if (b > 39) {
-                     VendorPacketEncryptor vendorPacketEncryptor88 = this;
                      KeccakSha3Digest keccakSha3Digest87 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes347 = bytes;
                      byte[] bytes348 = new byte[]{
                         -2,
                         -5,
@@ -4090,17 +3655,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -80,
                         -48
                      };
-                     PaddedAesCipher paddedAesCipher88 = paddedAesCipher;
-                     byte[] bytes349 = bytes348;
-                     byte[] bytes350 = VendorAesHelper.encryptWithCipher(bytes347, bytes349, paddedAesCipher88);
-                     vendorPacketEncryptor88.derivedKeySlot86 = keccakSha3Digest87.digest(bytes350);
+                     this.derivedKeySlot86 = keccakSha3Digest87.digest(VendorAesHelper.encryptWithCipher(bytes, bytes348, paddedAesCipher));
                      l = l - 503631567071546967L ^ 1778306171603804288L;
                      break;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor89 = this;
                   KeccakSha3Digest keccakSha3Digest88 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes351 = bytes;
                   byte[] bytes352 = new byte[]{
                      -3,
                      10,
@@ -4135,17 +3695,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      72,
                      66
                   };
-                  PaddedAesCipher paddedAesCipher89 = paddedAesCipher;
-                  byte[] bytes353 = bytes352;
-                  byte[] bytes354 = VendorAesHelper.encryptWithCipher(bytes351, bytes353, paddedAesCipher89);
-                  vendorPacketEncryptor89.derivedKeySlot87 = keccakSha3Digest88.digest(bytes354);
+                  this.derivedKeySlot87 = keccakSha3Digest88.digest(VendorAesHelper.encryptWithCipher(bytes, bytes352, paddedAesCipher));
                   l = l - 7405755584614123704L ^ -7977094379940475240L;
                }
             } else if (31 <= b) {
                if (b <= 31) {
-                  VendorPacketEncryptor vendorPacketEncryptor90 = this;
                   KeccakSha3Digest keccakSha3Digest89 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes355 = bytes;
                   byte[] bytes356 = new byte[]{
                      -17,
                      40,
@@ -4180,19 +3735,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -9,
                      -122
                   };
-                  PaddedAesCipher paddedAesCipher90 = paddedAesCipher;
-                  byte[] bytes357 = bytes356;
-                  byte[] bytes358 = VendorAesHelper.encryptWithCipher(bytes355, bytes357, paddedAesCipher90);
-                  vendorPacketEncryptor90.derivedKeySlot88 = keccakSha3Digest89.digest(bytes358);
+                  this.derivedKeySlot88 = keccakSha3Digest89.digest(VendorAesHelper.encryptWithCipher(bytes, bytes356, paddedAesCipher));
                   l = (l ^ 2357408258712775100L) - -367889305100529207L;
                   break;
                }
 
                if (b >= 34) {
                   if (34 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor91 = this;
                      KeccakSha3Digest keccakSha3Digest90 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes359 = bytes;
                      byte[] bytes360 = new byte[]{
                         -38,
                         65,
@@ -4227,19 +3777,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -93,
                         -64
                      };
-                     PaddedAesCipher paddedAesCipher91 = paddedAesCipher;
-                     byte[] bytes361 = bytes360;
-                     byte[] bytes362 = VendorAesHelper.encryptWithCipher(bytes359, bytes361, paddedAesCipher91);
-                     vendorPacketEncryptor91.derivedKeySlot89 = keccakSha3Digest90.digest(bytes362);
+                     this.derivedKeySlot89 = keccakSha3Digest90.digest(VendorAesHelper.encryptWithCipher(bytes, bytes360, paddedAesCipher));
                      l = l - -2628632913187772338L ^ 2957131416875853187L;
                      break;
                   }
 
                   if (36 <= b) {
                      if (36 < b) {
-                        VendorPacketEncryptor vendorPacketEncryptor92 = this;
                         KeccakSha3Digest keccakSha3Digest91 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes363 = bytes;
                         byte[] bytes364 = new byte[]{
                            118,
                            -29,
@@ -4274,17 +3819,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            120,
                            73
                         };
-                        PaddedAesCipher paddedAesCipher92 = paddedAesCipher;
-                        byte[] bytes365 = bytes364;
-                        byte[] bytes366 = VendorAesHelper.encryptWithCipher(bytes363, bytes365, paddedAesCipher92);
-                        vendorPacketEncryptor92.derivedKeySlot90 = keccakSha3Digest91.digest(bytes366);
+                        this.derivedKeySlot90 = keccakSha3Digest91.digest(VendorAesHelper.encryptWithCipher(bytes, bytes364, paddedAesCipher));
                         l = l + -5607724356539559479L ^ 2501326698294016159L;
                         break;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor93 = this;
                      KeccakSha3Digest keccakSha3Digest92 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes367 = bytes;
                      byte[] bytes368 = new byte[]{
                         108,
                         40,
@@ -4319,15 +3859,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -45,
                         -15
                      };
-                     PaddedAesCipher paddedAesCipher93 = paddedAesCipher;
-                     byte[] bytes369 = bytes368;
-                     byte[] bytes370 = VendorAesHelper.encryptWithCipher(bytes367, bytes369, paddedAesCipher93);
-                     vendorPacketEncryptor93.derivedKeySlot91 = keccakSha3Digest92.digest(bytes370);
+                     this.derivedKeySlot91 = keccakSha3Digest92.digest(VendorAesHelper.encryptWithCipher(bytes, bytes368, paddedAesCipher));
                      l = l - 932434793351100337L ^ 5435160282075190194L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor94 = this;
                      KeccakSha3Digest keccakSha3Digest93 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes371 = bytes;
                      byte[] bytes372 = new byte[]{
                         -28,
                         58,
@@ -4362,17 +3897,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         123,
                         -66
                      };
-                     PaddedAesCipher paddedAesCipher94 = paddedAesCipher;
-                     byte[] bytes373 = bytes372;
-                     byte[] bytes374 = VendorAesHelper.encryptWithCipher(bytes371, bytes373, paddedAesCipher94);
-                     vendorPacketEncryptor94.derivedKeySlot92 = keccakSha3Digest93.digest(bytes374);
+                     this.derivedKeySlot92 = keccakSha3Digest93.digest(VendorAesHelper.encryptWithCipher(bytes, bytes372, paddedAesCipher));
                      l = (l ^ 5075171330763921355L) - 2131546806928729584L;
                   }
                } else {
                   if (32 < b) {
-                     VendorPacketEncryptor vendorPacketEncryptor95 = this;
                      KeccakSha3Digest keccakSha3Digest94 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes375 = bytes;
                      byte[] bytes376 = new byte[]{
                         -34,
                         84,
@@ -4407,17 +3937,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         119,
                         -40
                      };
-                     PaddedAesCipher paddedAesCipher95 = paddedAesCipher;
-                     byte[] bytes377 = bytes376;
-                     byte[] bytes378 = VendorAesHelper.encryptWithCipher(bytes375, bytes377, paddedAesCipher95);
-                     vendorPacketEncryptor95.derivedKeySlot93 = keccakSha3Digest94.digest(bytes378);
+                     this.derivedKeySlot93 = keccakSha3Digest94.digest(VendorAesHelper.encryptWithCipher(bytes, bytes376, paddedAesCipher));
                      l = (l ^ -6258537747760750093L) + -4391601008274690996L;
                      break;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor96 = this;
                   KeccakSha3Digest keccakSha3Digest95 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes379 = bytes;
                   byte[] bytes380 = new byte[]{
                      -108,
                      -53,
@@ -4452,17 +3977,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -81,
                      84
                   };
-                  PaddedAesCipher paddedAesCipher96 = paddedAesCipher;
-                  byte[] bytes381 = bytes380;
-                  byte[] bytes382 = VendorAesHelper.encryptWithCipher(bytes379, bytes381, paddedAesCipher96);
-                  vendorPacketEncryptor96.derivedKeySlot94 = keccakSha3Digest95.digest(bytes382);
+                  this.derivedKeySlot94 = keccakSha3Digest95.digest(VendorAesHelper.encryptWithCipher(bytes, bytes380, paddedAesCipher));
                   l = l + -3701816708582627089L ^ 5775469923706729840L;
                }
             } else if (b >= 28) {
                if (28 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor97 = this;
                   KeccakSha3Digest keccakSha3Digest96 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes383 = bytes;
                   byte[] bytes384 = new byte[]{
                      -35,
                      -92,
@@ -4497,18 +4017,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -31,
                      -46
                   };
-                  PaddedAesCipher paddedAesCipher97 = paddedAesCipher;
-                  byte[] bytes385 = bytes384;
-                  byte[] bytes386 = VendorAesHelper.encryptWithCipher(bytes383, bytes385, paddedAesCipher97);
-                  vendorPacketEncryptor97.derivedKeySlot95 = keccakSha3Digest96.digest(bytes386);
+                  this.derivedKeySlot95 = keccakSha3Digest96.digest(VendorAesHelper.encryptWithCipher(bytes, bytes384, paddedAesCipher));
                   l = (l ^ -2812036671682303206L) - -5241415405772945257L;
                   break;
                }
 
                if (b > 29) {
-                  VendorPacketEncryptor vendorPacketEncryptor98 = this;
                   KeccakSha3Digest keccakSha3Digest97 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes387 = bytes;
                   byte[] bytes388 = new byte[]{
                      64,
                      39,
@@ -4543,17 +4058,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -88,
                      -58
                   };
-                  PaddedAesCipher paddedAesCipher98 = paddedAesCipher;
-                  byte[] bytes389 = bytes388;
-                  byte[] bytes390 = VendorAesHelper.encryptWithCipher(bytes387, bytes389, paddedAesCipher98);
-                  vendorPacketEncryptor98.derivedKeySlot96 = keccakSha3Digest97.digest(bytes390);
+                  this.derivedKeySlot96 = keccakSha3Digest97.digest(VendorAesHelper.encryptWithCipher(bytes, bytes388, paddedAesCipher));
                   l = l + 7635202849020543717L ^ -1737655259531118864L;
                   break;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor99 = this;
                KeccakSha3Digest keccakSha3Digest98 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes391 = bytes;
                byte[] bytes392 = new byte[]{
                   -24,
                   -36,
@@ -4588,16 +4098,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -112,
                   116
                };
-               PaddedAesCipher paddedAesCipher99 = paddedAesCipher;
-               byte[] bytes393 = bytes392;
-               byte[] bytes394 = VendorAesHelper.encryptWithCipher(bytes391, bytes393, paddedAesCipher99);
-               vendorPacketEncryptor99.derivedKeySlot97 = keccakSha3Digest98.digest(bytes394);
+               this.derivedKeySlot97 = keccakSha3Digest98.digest(VendorAesHelper.encryptWithCipher(bytes, bytes392, paddedAesCipher));
                l = l - -4710735914577377162L ^ -1788386502126205162L;
             } else {
                if (26 < b) {
-                  VendorPacketEncryptor vendorPacketEncryptor100 = this;
                   KeccakSha3Digest keccakSha3Digest99 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes395 = bytes;
                   byte[] bytes396 = new byte[]{
                      123,
                      -49,
@@ -4632,17 +4137,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -119,
                      47
                   };
-                  PaddedAesCipher paddedAesCipher100 = paddedAesCipher;
-                  byte[] bytes397 = bytes396;
-                  byte[] bytes398 = VendorAesHelper.encryptWithCipher(bytes395, bytes397, paddedAesCipher100);
-                  vendorPacketEncryptor100.derivedKeySlot98 = keccakSha3Digest99.digest(bytes398);
+                  this.derivedKeySlot98 = keccakSha3Digest99.digest(VendorAesHelper.encryptWithCipher(bytes, bytes396, paddedAesCipher));
                   l = (l ^ 4103995325447373153L) + 144903054812436202L;
                   break;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor101 = this;
                KeccakSha3Digest keccakSha3Digest100 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes399 = bytes;
                byte[] bytes400 = new byte[]{
                   24,
                   23,
@@ -4677,10 +4177,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -110,
                   -91
                };
-               PaddedAesCipher paddedAesCipher101 = paddedAesCipher;
-               byte[] bytes401 = bytes400;
-               byte[] bytes402 = VendorAesHelper.encryptWithCipher(bytes399, bytes401, paddedAesCipher101);
-               vendorPacketEncryptor101.derivedKeySlot99 = keccakSha3Digest100.digest(bytes402);
+               this.derivedKeySlot99 = keccakSha3Digest100.digest(VendorAesHelper.encryptWithCipher(bytes, bytes400, paddedAesCipher));
                l = l - 737005547978029876L ^ 6283177305369372564L;
             }
          }
@@ -4693,19 +4190,15 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
          return null;
       } else {
          try {
-            boolean flag = false;
-            bytes = this.prepareInputBuffer(bytes, n, n2, flag);
+            bytes = this.prepareInputBuffer(bytes, n, n2, false);
          } catch (ShortBufferException | IllegalBlockSizeException e) {
             throw new RuntimeException(e);
          }
 
          n2 = bytes.length;
          byte[] bytes2 = new byte[n2];
-         int blockSize = this.getBlockSize();
-         int n3 = blockSize;
-         this.checkBlockAlignment(n2, n3);
-         byte b = 0;
-         this.encryptCbc(bytes, n, n2, bytes2, b);
+         this.checkBlockAlignment(n2, this.getBlockSize());
+         this.encryptCbc(bytes, n, n2, bytes2, (byte)0);
          byte[] bytes3 = bytes2;
          if (opaqueStateTag == null) {
             if (bytes2.length % this.getBlockSize() != 0) {
@@ -4723,7 +4216,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       byte b = 0;
       int n3 = 0;
       int n4 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n5 = 0;
       int n6 = 0;
       byte b2 = 2;
@@ -4818,7 +4310,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    private int[] expandToSubkeys(int[][] intsArr, boolean flag) {
       int n = 0;
       int n2 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int[] ints = null;
       byte b = 6;
 
@@ -4887,7 +4378,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       int n4 = 0;
       int n5 = 0;
       int n6 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       byte b = 0;
       int n7 = 15;
       long l = 3908304567332836496L;
@@ -4997,11 +4487,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   l2 = l2 + 0L ^ 0L;
                }
             } else if (2 >= n7) {
-               VendorPacketEncryptor vendorPacketEncryptor = this;
-               byte[] bytes3 = bytes2;
-               int n9 = Math.addExact(b, n2);
-               byte[] bytes4 = bytes3;
-               vendorPacketEncryptor.padWithLen(bytes4, n9, n3);
+               this.padWithLen(bytes2, Math.addExact(b, n2), n3);
                l = (l ^ 178124881294973330L) + 6177049393134686365L;
                l2 = l2 - -8587607048390537955L ^ -5548691794266986046L;
             } else {
@@ -5019,10 +4505,8 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
 
    private void makeSessionKey(byte[] bytes) throws InvalidKeyException {
       int n = 0;
-      int length = bytes.length;
-      int rounds = this.getRounds(length);
+      int rounds = this.getRounds(bytes.length);
       int n2 = (rounds + 1) * 4;
-      byte b = 4;
       int[][] intsArr = new int[rounds + 1][4];
       int[][] intsArr2 = new int[rounds + 1][4];
       int n3 = bytes.length / 4;
@@ -5194,7 +4678,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
          n5 = 0;
 
          while (true) {
-            if (n5 < b) {
+            if (n5 < ((byte)4)) {
                int n13 = intsArr2[n12][n5];
                intsArr2[n12][n5] = this.keyTable1[n13 >>> 24 & 0xFF]
                   ^ this.keyTable2[n13 >>> 16 & 0xFF]
@@ -5219,10 +4703,8 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
          }
       }
 
-      boolean flag = false;
-      int[] ints2 = this.expandToSubkeys(intsArr, flag);
-      boolean flag2 = true;
-      int[] ints3 = this.expandToSubkeys(intsArr2, flag2);
+      int[] ints2 = this.expandToSubkeys(intsArr, false);
+      int[] ints3 = this.expandToSubkeys(intsArr2, true);
       int n14 = rounds;
       if (str == null) {
          n14 = rounds >= 12 ? 1 : 0;
@@ -5242,7 +4724,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    private int encryptCbc(byte[] bytes, int n, int n2, byte[] bytes2, int n3) {
       int n4 = 0;
       int n5 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n6 = 8;
       long l = -4617071769209617143L;
       long l2 = 0L;
@@ -5321,19 +4802,16 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    }
 
    public void resetCbcState() {
-      String opaqueStateTag = VendorPacketBuffer.getOpaqueStateTag();
       this.cbcRegister = new byte[this.getBlockSize()];
       this.cbcWorkBuffer = new byte[this.getBlockSize()];
    }
 
    public void encode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
-      ByteBuf buf = (ByteBuf)msg;
-      this.encodeBuffer(ctx, buf, out);
+      this.encodeBuffer(ctx, (ByteBuf)msg, out);
    }
 
    private void encryptBlockImpl(byte[] bytes, int n, byte[] bytes2, int n2) {
       int n3 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n4 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n5 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n6 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
@@ -5387,32 +4865,24 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       PaddedAesCipher paddedAesCipher = null;
       byte b = 69;
       long l = 2221516029834405354L;
-      VendorPacketBuffer.getOpaqueStateTag();
       l = -8405804358813482088L ^ (long)"宩蠡㼲쪂̼꒥歶䑧狍῞봴ˉﺒढ\ue60d蜿ﭣ顾Ⳟ\ue471".hashCode();
 
       outerLoop:
       while (true) {
          if (b >= 24) {
             if (b <= 24) {
-               VendorPacketEncryptor vendorPacketEncryptor = this;
                KeccakSha3Digest keccakSha3Digest = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes2 = bytes;
-               byte[] bytes3 = new byte[]{
+               byte[] bytes5 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                   -50, 83, -110, 126, -89, -88, 29, 88, 106, 87, 110, -16, 92, 28, 22, 33, 82, 29, 21, 16, 49, 55, 114, 65, 66, 15, 74, -38, 22, 126, 127, 19
-               };
-               PaddedAesCipher paddedAesCipher2 = paddedAesCipher;
-               byte[] bytes4 = bytes3;
-               byte[] bytes5 = VendorAesHelper.encryptWithCipher(bytes2, bytes4, paddedAesCipher2);
-               vendorPacketEncryptor.decoyKeySlot01 = keccakSha3Digest.digest(bytes5);
+               }, paddedAesCipher);
+               this.decoyKeySlot01 = keccakSha3Digest.digest(bytes5);
                l = (l ^ 1288302492611023791L) + 6297112630296787554L;
                continue;
             }
 
             if (37 <= b) {
                if (b <= 37) {
-                  VendorPacketEncryptor vendorPacketEncryptor2 = this;
                   KeccakSha3Digest keccakSha3Digest2 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes6 = bytes;
                   byte[] bytes7 = new byte[]{
                      -58,
                      12,
@@ -5447,19 +4917,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      97,
                      -89
                   };
-                  PaddedAesCipher paddedAesCipher3 = paddedAesCipher;
-                  byte[] bytes8 = bytes7;
-                  byte[] bytes9 = VendorAesHelper.encryptWithCipher(bytes6, bytes8, paddedAesCipher3);
-                  vendorPacketEncryptor2.decoyKeySlot02 = keccakSha3Digest2.digest(bytes9);
+                  this.decoyKeySlot02 = keccakSha3Digest2.digest(VendorAesHelper.encryptWithCipher(bytes, bytes7, paddedAesCipher));
                   l = (l ^ -6430279877194984608L) + -7680081075079826255L;
                   continue;
                }
 
                if (b >= 43) {
                   if (b <= 43) {
-                     VendorPacketEncryptor vendorPacketEncryptor3 = this;
                      KeccakSha3Digest keccakSha3Digest3 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes10 = bytes;
                      byte[] bytes11 = new byte[]{
                         78,
                         2,
@@ -5494,19 +4959,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         4,
                         66
                      };
-                     PaddedAesCipher paddedAesCipher4 = paddedAesCipher;
-                     byte[] bytes12 = bytes11;
-                     byte[] bytes13 = VendorAesHelper.encryptWithCipher(bytes10, bytes12, paddedAesCipher4);
-                     vendorPacketEncryptor3.decoyKeySlot03 = keccakSha3Digest3.digest(bytes13);
+                     this.decoyKeySlot03 = keccakSha3Digest3.digest(VendorAesHelper.encryptWithCipher(bytes, bytes11, paddedAesCipher));
                      l = l - 4537632753308902903L ^ -1180772146527006603L;
                      continue;
                   }
 
                   if (b >= 46) {
                      if (b <= 46) {
-                        VendorPacketEncryptor vendorPacketEncryptor4 = this;
                         KeccakSha3Digest keccakSha3Digest4 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes14 = bytes;
                         byte[] bytes15 = new byte[]{
                            -76,
                            -110,
@@ -5541,19 +5001,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            116,
                            -12
                         };
-                        PaddedAesCipher paddedAesCipher5 = paddedAesCipher;
-                        byte[] bytes16 = bytes15;
-                        byte[] bytes17 = VendorAesHelper.encryptWithCipher(bytes14, bytes16, paddedAesCipher5);
-                        vendorPacketEncryptor4.decoyKeySlot04 = keccakSha3Digest4.digest(bytes17);
+                        this.decoyKeySlot04 = keccakSha3Digest4.digest(VendorAesHelper.encryptWithCipher(bytes, bytes15, paddedAesCipher));
                         l = (l ^ 2130483321685880865L) - -2807129410376764734L;
                         continue;
                      }
 
                      if (b >= 48) {
                         if (b > 48) {
-                           VendorPacketEncryptor vendorPacketEncryptor5 = this;
                            KeccakSha3Digest keccakSha3Digest5 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes18 = bytes;
                            byte[] bytes19 = new byte[]{
                               -32,
                               56,
@@ -5588,17 +5043,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -43,
                               -115
                            };
-                           PaddedAesCipher paddedAesCipher6 = paddedAesCipher;
-                           byte[] bytes20 = bytes19;
-                           byte[] bytes21 = VendorAesHelper.encryptWithCipher(bytes18, bytes20, paddedAesCipher6);
-                           vendorPacketEncryptor5.decoyKeySlot05 = keccakSha3Digest5.digest(bytes21);
+                           this.decoyKeySlot05 = keccakSha3Digest5.digest(VendorAesHelper.encryptWithCipher(bytes, bytes19, paddedAesCipher));
                            l = (l ^ -8723216989421754940L) - 6151002830959181280L;
                            continue;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor6 = this;
                         KeccakSha3Digest keccakSha3Digest6 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes22 = bytes;
                         byte[] bytes23 = new byte[]{
                            15,
                            32,
@@ -5633,15 +5083,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            52,
                            -105
                         };
-                        PaddedAesCipher paddedAesCipher7 = paddedAesCipher;
-                        byte[] bytes24 = bytes23;
-                        byte[] bytes25 = VendorAesHelper.encryptWithCipher(bytes22, bytes24, paddedAesCipher7);
-                        vendorPacketEncryptor6.decoyKeySlot06 = keccakSha3Digest6.digest(bytes25);
+                        this.decoyKeySlot06 = keccakSha3Digest6.digest(VendorAesHelper.encryptWithCipher(bytes, bytes23, paddedAesCipher));
                         l = l + 4763925666780074589L ^ -6688616900920689680L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor7 = this;
                         KeccakSha3Digest keccakSha3Digest7 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes26 = bytes;
                         byte[] bytes27 = new byte[]{
                            16,
                            67,
@@ -5676,16 +5121,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -40,
                            2
                         };
-                        PaddedAesCipher paddedAesCipher8 = paddedAesCipher;
-                        byte[] bytes28 = bytes27;
-                        byte[] bytes29 = VendorAesHelper.encryptWithCipher(bytes26, bytes28, paddedAesCipher8);
-                        vendorPacketEncryptor7.decoyKeySlot07 = keccakSha3Digest7.digest(bytes29);
+                        this.decoyKeySlot07 = keccakSha3Digest7.digest(VendorAesHelper.encryptWithCipher(bytes, bytes27, paddedAesCipher));
                         l = (l ^ -563976087252059883L) - 5017583752196374032L;
                      }
                   } else if (b <= 44) {
-                     VendorPacketEncryptor vendorPacketEncryptor8 = this;
                      KeccakSha3Digest keccakSha3Digest8 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes30 = bytes;
                      byte[] bytes31 = new byte[]{
                         -90,
                         -99,
@@ -5720,15 +5160,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -90,
                         13
                      };
-                     PaddedAesCipher paddedAesCipher9 = paddedAesCipher;
-                     byte[] bytes32 = bytes31;
-                     byte[] bytes33 = VendorAesHelper.encryptWithCipher(bytes30, bytes32, paddedAesCipher9);
-                     vendorPacketEncryptor8.decoyKeySlot08 = keccakSha3Digest8.digest(bytes33);
+                     this.decoyKeySlot08 = keccakSha3Digest8.digest(VendorAesHelper.encryptWithCipher(bytes, bytes31, paddedAesCipher));
                      l = (l ^ 5698820847982274660L) + -1142691793489727674L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor9 = this;
                      KeccakSha3Digest keccakSha3Digest9 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes34 = bytes;
                      byte[] bytes35 = new byte[]{
                         -14,
                         -24,
@@ -5763,17 +5198,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -5,
                         -75
                      };
-                     PaddedAesCipher paddedAesCipher10 = paddedAesCipher;
-                     byte[] bytes36 = bytes35;
-                     byte[] bytes37 = VendorAesHelper.encryptWithCipher(bytes34, bytes36, paddedAesCipher10);
-                     vendorPacketEncryptor9.decoyKeySlot09 = keccakSha3Digest9.digest(bytes37);
+                     this.decoyKeySlot09 = keccakSha3Digest9.digest(VendorAesHelper.encryptWithCipher(bytes, bytes35, paddedAesCipher));
                      l = (l ^ 2768664965851027954L) - -5103854269969776370L;
                   }
                } else if (40 <= b) {
                   if (40 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor10 = this;
                      KeccakSha3Digest keccakSha3Digest10 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes38 = bytes;
                      byte[] bytes39 = new byte[]{
                         -16,
                         68,
@@ -5808,16 +5238,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         34,
                         -109
                      };
-                     PaddedAesCipher paddedAesCipher11 = paddedAesCipher;
-                     byte[] bytes40 = bytes39;
-                     byte[] bytes41 = VendorAesHelper.encryptWithCipher(bytes38, bytes40, paddedAesCipher11);
-                     vendorPacketEncryptor10.decoyKeySlot10 = keccakSha3Digest10.digest(bytes41);
+                     this.decoyKeySlot10 = keccakSha3Digest10.digest(VendorAesHelper.encryptWithCipher(bytes, bytes39, paddedAesCipher));
                      l = (l ^ -3893439879994986940L) + -4858995473568056355L;
                   } else {
                      if (41 < b) {
-                        VendorPacketEncryptor vendorPacketEncryptor11 = this;
                         KeccakSha3Digest keccakSha3Digest11 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes42 = bytes;
                         byte[] bytes43 = new byte[]{
                            18,
                            47,
@@ -5852,17 +5277,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            75,
                            -67
                         };
-                        PaddedAesCipher paddedAesCipher12 = paddedAesCipher;
-                        byte[] bytes44 = bytes43;
-                        byte[] bytes45 = VendorAesHelper.encryptWithCipher(bytes42, bytes44, paddedAesCipher12);
-                        vendorPacketEncryptor11.decoyKeySlot11 = keccakSha3Digest11.digest(bytes45);
+                        this.decoyKeySlot11 = keccakSha3Digest11.digest(VendorAesHelper.encryptWithCipher(bytes, bytes43, paddedAesCipher));
                         l = (l ^ 6542844735656830398L) + 86883457135719630L;
                         continue;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor12 = this;
                      KeccakSha3Digest keccakSha3Digest12 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes46 = bytes;
                      byte[] bytes47 = new byte[]{
                         19,
                         -52,
@@ -5897,17 +5317,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -50,
                         105
                      };
-                     PaddedAesCipher paddedAesCipher13 = paddedAesCipher;
-                     byte[] bytes48 = bytes47;
-                     byte[] bytes49 = VendorAesHelper.encryptWithCipher(bytes46, bytes48, paddedAesCipher13);
-                     vendorPacketEncryptor12.decoyKeySlot12 = keccakSha3Digest12.digest(bytes49);
+                     this.decoyKeySlot12 = keccakSha3Digest12.digest(VendorAesHelper.encryptWithCipher(bytes, bytes47, paddedAesCipher));
                      l = (l ^ 4893343907409322227L) + 571422977524420658L;
                   }
                } else {
                   if (b <= 38) {
-                     VendorPacketEncryptor vendorPacketEncryptor13 = this;
                      KeccakSha3Digest keccakSha3Digest13 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes50 = bytes;
                      byte[] bytes51 = new byte[]{
                         96,
                         -54,
@@ -5942,17 +5357,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         36,
                         93
                      };
-                     PaddedAesCipher paddedAesCipher14 = paddedAesCipher;
-                     byte[] bytes52 = bytes51;
-                     byte[] bytes53 = VendorAesHelper.encryptWithCipher(bytes50, bytes52, paddedAesCipher14);
-                     vendorPacketEncryptor13.decoyKeySlot13 = keccakSha3Digest13.digest(bytes53);
+                     this.decoyKeySlot13 = keccakSha3Digest13.digest(VendorAesHelper.encryptWithCipher(bytes, bytes51, paddedAesCipher));
                      l = l - -6165185413905892208L ^ 5207764867792060163L;
                      continue;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor14 = this;
                   KeccakSha3Digest keccakSha3Digest14 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes54 = bytes;
                   byte[] bytes55 = new byte[]{
                      106,
                      72,
@@ -5987,17 +5397,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      77,
                      2
                   };
-                  PaddedAesCipher paddedAesCipher15 = paddedAesCipher;
-                  byte[] bytes56 = bytes55;
-                  byte[] bytes57 = VendorAesHelper.encryptWithCipher(bytes54, bytes56, paddedAesCipher15);
-                  vendorPacketEncryptor14.decoyKeySlot14 = keccakSha3Digest14.digest(bytes57);
+                  this.decoyKeySlot14 = keccakSha3Digest14.digest(VendorAesHelper.encryptWithCipher(bytes, bytes55, paddedAesCipher));
                   l = (l ^ -1562427872457366642L) - -4457343154285869678L;
                }
             } else if (b >= 30) {
                if (30 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor15 = this;
                   KeccakSha3Digest keccakSha3Digest15 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes58 = bytes;
                   byte[] bytes59 = new byte[]{
                      17,
                      -26,
@@ -6032,19 +5437,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -116,
                      -78
                   };
-                  PaddedAesCipher paddedAesCipher16 = paddedAesCipher;
-                  byte[] bytes60 = bytes59;
-                  byte[] bytes61 = VendorAesHelper.encryptWithCipher(bytes58, bytes60, paddedAesCipher16);
-                  vendorPacketEncryptor15.decoyKeySlot15 = keccakSha3Digest15.digest(bytes61);
+                  this.decoyKeySlot15 = keccakSha3Digest15.digest(VendorAesHelper.encryptWithCipher(bytes, bytes59, paddedAesCipher));
                   l = (l ^ 4321422541465179578L) - -8898228943933747194L;
                   continue;
                }
 
                if (b >= 33) {
                   if (33 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor16 = this;
                      KeccakSha3Digest keccakSha3Digest16 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes62 = bytes;
                      byte[] bytes63 = new byte[]{
                         64,
                         105,
@@ -6079,16 +5479,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -26,
                         90
                      };
-                     PaddedAesCipher paddedAesCipher17 = paddedAesCipher;
-                     byte[] bytes64 = bytes63;
-                     byte[] bytes65 = VendorAesHelper.encryptWithCipher(bytes62, bytes64, paddedAesCipher17);
-                     vendorPacketEncryptor16.decoyKeySlot16 = keccakSha3Digest16.digest(bytes65);
+                     this.decoyKeySlot16 = keccakSha3Digest16.digest(VendorAesHelper.encryptWithCipher(bytes, bytes63, paddedAesCipher));
                      l = (l ^ 1532613602239891457L) + -491099321910349490L;
                   } else if (b >= 35) {
                      if (35 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor17 = this;
                         KeccakSha3Digest keccakSha3Digest17 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes66 = bytes;
                         byte[] bytes67 = new byte[]{
                            118,
                            -107,
@@ -6123,19 +5518,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -65,
                            95
                         };
-                        PaddedAesCipher paddedAesCipher18 = paddedAesCipher;
-                        byte[] bytes68 = bytes67;
-                        byte[] bytes69 = VendorAesHelper.encryptWithCipher(bytes66, bytes68, paddedAesCipher18);
-                        vendorPacketEncryptor17.decoyKeySlot17 = keccakSha3Digest17.digest(bytes69);
+                        this.decoyKeySlot17 = keccakSha3Digest17.digest(VendorAesHelper.encryptWithCipher(bytes, bytes67, paddedAesCipher));
                         l = (l ^ -2142145431271001226L) - -7018993100115102089L;
                      } else {
                         paddedAesCipher = new PaddedAesCipher();
                         l = l - -2979600417042522597L ^ -8606559286800795001L;
                      }
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor18 = this;
                      KeccakSha3Digest keccakSha3Digest18 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes70 = bytes;
                      byte[] bytes71 = new byte[]{
                         -45,
                         -112,
@@ -6170,19 +5560,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -13,
                         -10
                      };
-                     PaddedAesCipher paddedAesCipher19 = paddedAesCipher;
-                     byte[] bytes72 = bytes71;
-                     byte[] bytes73 = VendorAesHelper.encryptWithCipher(bytes70, bytes72, paddedAesCipher19);
-                     vendorPacketEncryptor18.decoyKeySlot18 = keccakSha3Digest18.digest(bytes73);
+                     this.decoyKeySlot18 = keccakSha3Digest18.digest(VendorAesHelper.encryptWithCipher(bytes, bytes71, paddedAesCipher));
                      l = (l ^ 2969215216773415971L) - -1484236436284679110L;
                   }
                   continue;
                }
 
                if (31 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor19 = this;
                   KeccakSha3Digest keccakSha3Digest19 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes74 = bytes;
                   byte[] bytes75 = new byte[]{
                      7,
                      11,
@@ -6217,17 +5602,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -122,
                      -35
                   };
-                  PaddedAesCipher paddedAesCipher20 = paddedAesCipher;
-                  byte[] bytes76 = bytes75;
-                  byte[] bytes77 = VendorAesHelper.encryptWithCipher(bytes74, bytes76, paddedAesCipher20);
-                  vendorPacketEncryptor19.decoyKeySlot19 = keccakSha3Digest19.digest(bytes77);
+                  this.decoyKeySlot19 = keccakSha3Digest19.digest(VendorAesHelper.encryptWithCipher(bytes, bytes75, paddedAesCipher));
                   l = (l ^ 3208285072743951518L) - -2904873378462271291L;
                   continue;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor20 = this;
                KeccakSha3Digest keccakSha3Digest20 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes78 = bytes;
                byte[] bytes79 = new byte[]{
                   36,
                   -11,
@@ -6262,17 +5642,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   11,
                   -84
                };
-               PaddedAesCipher paddedAesCipher21 = paddedAesCipher;
-               byte[] bytes80 = bytes79;
-               byte[] bytes81 = VendorAesHelper.encryptWithCipher(bytes78, bytes80, paddedAesCipher21);
-               vendorPacketEncryptor20.decoyKeySlot20 = keccakSha3Digest20.digest(bytes81);
+               this.decoyKeySlot20 = keccakSha3Digest20.digest(VendorAesHelper.encryptWithCipher(bytes, bytes79, paddedAesCipher));
                l = (l ^ -7184305074196790917L) + 3933887231948737757L;
             } else {
                if (b >= 27) {
                   if (b <= 27) {
-                     VendorPacketEncryptor vendorPacketEncryptor21 = this;
                      KeccakSha3Digest keccakSha3Digest21 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes82 = bytes;
                      byte[] bytes83 = new byte[]{
                         -90,
                         -99,
@@ -6307,15 +5682,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -102,
                         45
                      };
-                     PaddedAesCipher paddedAesCipher22 = paddedAesCipher;
-                     byte[] bytes84 = bytes83;
-                     byte[] bytes85 = VendorAesHelper.encryptWithCipher(bytes82, bytes84, paddedAesCipher22);
-                     vendorPacketEncryptor21.decoyKeySlot21 = keccakSha3Digest21.digest(bytes85);
+                     this.decoyKeySlot21 = keccakSha3Digest21.digest(VendorAesHelper.encryptWithCipher(bytes, bytes83, paddedAesCipher));
                      l = (l ^ -2518639547032834593L) - -4978229156784419782L;
                   } else if (b <= 28) {
-                     VendorPacketEncryptor vendorPacketEncryptor22 = this;
                      KeccakSha3Digest keccakSha3Digest22 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes86 = bytes;
                      byte[] bytes87 = new byte[]{
                         -66,
                         -26,
@@ -6350,15 +5720,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -32,
                         -77
                      };
-                     PaddedAesCipher paddedAesCipher23 = paddedAesCipher;
-                     byte[] bytes88 = bytes87;
-                     byte[] bytes89 = VendorAesHelper.encryptWithCipher(bytes86, bytes88, paddedAesCipher23);
-                     vendorPacketEncryptor22.decoyKeySlot22 = keccakSha3Digest22.digest(bytes89);
+                     this.decoyKeySlot22 = keccakSha3Digest22.digest(VendorAesHelper.encryptWithCipher(bytes, bytes87, paddedAesCipher));
                      l = (l ^ 4503478771475307592L) + -3552747469180481203L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor23 = this;
                      KeccakSha3Digest keccakSha3Digest23 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes90 = bytes;
                      byte[] bytes91 = new byte[]{
                         61,
                         -57,
@@ -6393,19 +5758,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -122,
                         -123
                      };
-                     PaddedAesCipher paddedAesCipher24 = paddedAesCipher;
-                     byte[] bytes92 = bytes91;
-                     byte[] bytes93 = VendorAesHelper.encryptWithCipher(bytes90, bytes92, paddedAesCipher24);
-                     vendorPacketEncryptor23.decoyKeySlot23 = keccakSha3Digest23.digest(bytes93);
+                     this.decoyKeySlot23 = keccakSha3Digest23.digest(VendorAesHelper.encryptWithCipher(bytes, bytes91, paddedAesCipher));
                      l = (l ^ 423935537410908813L) + -1820928690391449613L;
                   }
                   continue;
                }
 
                if (25 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor24 = this;
                   KeccakSha3Digest keccakSha3Digest24 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes94 = bytes;
                   byte[] bytes95 = new byte[]{
                      24,
                      60,
@@ -6440,15 +5800,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -39,
                      -119
                   };
-                  PaddedAesCipher paddedAesCipher25 = paddedAesCipher;
-                  byte[] bytes96 = bytes95;
-                  byte[] bytes97 = VendorAesHelper.encryptWithCipher(bytes94, bytes96, paddedAesCipher25);
-                  vendorPacketEncryptor24.decoyKeySlot24 = keccakSha3Digest24.digest(bytes97);
+                  this.decoyKeySlot24 = keccakSha3Digest24.digest(VendorAesHelper.encryptWithCipher(bytes, bytes95, paddedAesCipher));
                   l = (l ^ 3317910673237226627L) - -6296311944071116532L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor25 = this;
                   KeccakSha3Digest keccakSha3Digest25 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes98 = bytes;
                   byte[] bytes99 = new byte[]{
                      -20,
                      36,
@@ -6483,18 +5838,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      29,
                      -39
                   };
-                  PaddedAesCipher paddedAesCipher26 = paddedAesCipher;
-                  byte[] bytes100 = bytes99;
-                  byte[] bytes101 = VendorAesHelper.encryptWithCipher(bytes98, bytes100, paddedAesCipher26);
-                  vendorPacketEncryptor25.decoyKeySlot25 = keccakSha3Digest25.digest(bytes101);
+                  this.decoyKeySlot25 = keccakSha3Digest25.digest(VendorAesHelper.encryptWithCipher(bytes, bytes99, paddedAesCipher));
                   l = (l ^ 6463470187910931199L) - 4171039124431145570L;
                }
             }
          } else if (b >= 11) {
             if (b <= 11) {
-               VendorPacketEncryptor vendorPacketEncryptor26 = this;
                KeccakSha3Digest keccakSha3Digest26 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes102 = bytes;
                byte[] bytes103 = new byte[]{
                   13,
                   45,
@@ -6529,19 +5879,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   16,
                   24
                };
-               PaddedAesCipher paddedAesCipher27 = paddedAesCipher;
-               byte[] bytes104 = bytes103;
-               byte[] bytes105 = VendorAesHelper.encryptWithCipher(bytes102, bytes104, paddedAesCipher27);
-               vendorPacketEncryptor26.decoyKeySlot26 = keccakSha3Digest26.digest(bytes105);
+               this.decoyKeySlot26 = keccakSha3Digest26.digest(VendorAesHelper.encryptWithCipher(bytes, bytes103, paddedAesCipher));
                l = l - -2451435564529089408L ^ 8946472274710221823L;
                continue;
             }
 
             if (b >= 17) {
                if (17 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor27 = this;
                   KeccakSha3Digest keccakSha3Digest27 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes106 = bytes;
                   byte[] bytes107 = new byte[]{
                      9,
                      37,
@@ -6576,17 +5921,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      37,
                      -58
                   };
-                  PaddedAesCipher paddedAesCipher28 = paddedAesCipher;
-                  byte[] bytes108 = bytes107;
-                  byte[] bytes109 = VendorAesHelper.encryptWithCipher(bytes106, bytes108, paddedAesCipher28);
-                  vendorPacketEncryptor27.decoyKeySlot27 = keccakSha3Digest27.digest(bytes109);
+                  this.decoyKeySlot27 = keccakSha3Digest27.digest(VendorAesHelper.encryptWithCipher(bytes, bytes107, paddedAesCipher));
                   l = l - 110397462100909427L ^ 4009078156459662384L;
                } else {
                   if (b < 20) {
                      if (18 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor28 = this;
                         KeccakSha3Digest keccakSha3Digest28 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes110 = bytes;
                         byte[] bytes111 = new byte[]{
                            36,
                            89,
@@ -6621,15 +5961,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            89,
                            -103
                         };
-                        PaddedAesCipher paddedAesCipher29 = paddedAesCipher;
-                        byte[] bytes112 = bytes111;
-                        byte[] bytes113 = VendorAesHelper.encryptWithCipher(bytes110, bytes112, paddedAesCipher29);
-                        vendorPacketEncryptor28.decoyKeySlot28 = keccakSha3Digest28.digest(bytes113);
+                        this.decoyKeySlot28 = keccakSha3Digest28.digest(VendorAesHelper.encryptWithCipher(bytes, bytes111, paddedAesCipher));
                         l = (l ^ -2807372640681015626L) + 8072080599518044901L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor29 = this;
                         KeccakSha3Digest keccakSha3Digest29 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes114 = bytes;
                         byte[] bytes115 = new byte[]{
                            -24,
                            -87,
@@ -6664,19 +5999,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -12,
                            -104
                         };
-                        PaddedAesCipher paddedAesCipher30 = paddedAesCipher;
-                        byte[] bytes116 = bytes115;
-                        byte[] bytes117 = VendorAesHelper.encryptWithCipher(bytes114, bytes116, paddedAesCipher30);
-                        vendorPacketEncryptor29.decoyKeySlot29 = keccakSha3Digest29.digest(bytes117);
+                        this.decoyKeySlot29 = keccakSha3Digest29.digest(VendorAesHelper.encryptWithCipher(bytes, bytes115, paddedAesCipher));
                         l = (l ^ -3919484893123748470L) + -7398787113077132913L;
                      }
                      continue;
                   }
 
                   if (20 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor30 = this;
                      KeccakSha3Digest keccakSha3Digest30 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes118 = bytes;
                      byte[] bytes119 = new byte[]{
                         45,
                         45,
@@ -6711,16 +6041,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         61,
                         -12
                      };
-                     PaddedAesCipher paddedAesCipher31 = paddedAesCipher;
-                     byte[] bytes120 = bytes119;
-                     byte[] bytes121 = VendorAesHelper.encryptWithCipher(bytes118, bytes120, paddedAesCipher31);
-                     vendorPacketEncryptor30.decoyKeySlot30 = keccakSha3Digest30.digest(bytes121);
+                     this.decoyKeySlot30 = keccakSha3Digest30.digest(VendorAesHelper.encryptWithCipher(bytes, bytes119, paddedAesCipher));
                      l = l + -1900329101732572598L ^ 1801506683526768404L;
                   } else if (22 <= b) {
                      if (22 < b) {
-                        VendorPacketEncryptor vendorPacketEncryptor31 = this;
                         KeccakSha3Digest keccakSha3Digest31 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes122 = bytes;
                         byte[] bytes123 = new byte[]{
                            46,
                            -109,
@@ -6755,17 +6080,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -39,
                            -15
                         };
-                        PaddedAesCipher paddedAesCipher32 = paddedAesCipher;
-                        byte[] bytes124 = bytes123;
-                        byte[] bytes125 = VendorAesHelper.encryptWithCipher(bytes122, bytes124, paddedAesCipher32);
-                        vendorPacketEncryptor31.decoyKeySlot31 = keccakSha3Digest31.digest(bytes125);
+                        this.decoyKeySlot31 = keccakSha3Digest31.digest(VendorAesHelper.encryptWithCipher(bytes, bytes123, paddedAesCipher));
                         l = (l ^ 8130220563127137374L) - -3596503012643134716L;
                         continue;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor32 = this;
                      KeccakSha3Digest keccakSha3Digest32 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes126 = bytes;
                      byte[] bytes127 = new byte[]{
                         120,
                         120,
@@ -6800,15 +6120,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -1,
                         44
                      };
-                     PaddedAesCipher paddedAesCipher33 = paddedAesCipher;
-                     byte[] bytes128 = bytes127;
-                     byte[] bytes129 = VendorAesHelper.encryptWithCipher(bytes126, bytes128, paddedAesCipher33);
-                     vendorPacketEncryptor32.decoyKeySlot32 = keccakSha3Digest32.digest(bytes129);
+                     this.decoyKeySlot32 = keccakSha3Digest32.digest(VendorAesHelper.encryptWithCipher(bytes, bytes127, paddedAesCipher));
                      l = l - 409188718145313024L ^ 8519898873573627031L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor33 = this;
                      KeccakSha3Digest keccakSha3Digest33 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes130 = bytes;
                      byte[] bytes131 = new byte[]{
                         41,
                         -86,
@@ -6843,19 +6158,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         28,
                         -90
                      };
-                     PaddedAesCipher paddedAesCipher34 = paddedAesCipher;
-                     byte[] bytes132 = bytes131;
-                     byte[] bytes133 = VendorAesHelper.encryptWithCipher(bytes130, bytes132, paddedAesCipher34);
-                     vendorPacketEncryptor33.decoyKeySlot33 = keccakSha3Digest33.digest(bytes133);
+                     this.decoyKeySlot33 = keccakSha3Digest33.digest(VendorAesHelper.encryptWithCipher(bytes, bytes131, paddedAesCipher));
                      l = (l ^ -6721010099707373536L) + -6566097175632757300L;
                   }
                }
             } else {
                if (b < 14) {
                   if (b <= 12) {
-                     VendorPacketEncryptor vendorPacketEncryptor34 = this;
                      KeccakSha3Digest keccakSha3Digest34 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes134 = bytes;
                      byte[] bytes135 = new byte[]{
                         66,
                         -26,
@@ -6890,15 +6200,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         126,
                         -21
                      };
-                     PaddedAesCipher paddedAesCipher35 = paddedAesCipher;
-                     byte[] bytes136 = bytes135;
-                     byte[] bytes137 = VendorAesHelper.encryptWithCipher(bytes134, bytes136, paddedAesCipher35);
-                     vendorPacketEncryptor34.decoyKeySlot34 = keccakSha3Digest34.digest(bytes137);
+                     this.decoyKeySlot34 = keccakSha3Digest34.digest(VendorAesHelper.encryptWithCipher(bytes, bytes135, paddedAesCipher));
                      l = l + 7655260353175038808L ^ -5590257945173628554L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor35 = this;
                      KeccakSha3Digest keccakSha3Digest35 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes138 = bytes;
                      byte[] bytes139 = new byte[]{
                         -45,
                         -30,
@@ -6933,19 +6238,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -102,
                         -118
                      };
-                     PaddedAesCipher paddedAesCipher36 = paddedAesCipher;
-                     byte[] bytes140 = bytes139;
-                     byte[] bytes141 = VendorAesHelper.encryptWithCipher(bytes138, bytes140, paddedAesCipher36);
-                     vendorPacketEncryptor35.decoyKeySlot35 = keccakSha3Digest35.digest(bytes141);
+                     this.decoyKeySlot35 = keccakSha3Digest35.digest(VendorAesHelper.encryptWithCipher(bytes, bytes139, paddedAesCipher));
                      l = l + 4343670730110557714L ^ 9127858748431561545L;
                   }
                   continue;
                }
 
                if (14 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor36 = this;
                   KeccakSha3Digest keccakSha3Digest36 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes142 = bytes;
                   byte[] bytes143 = new byte[]{
                      116,
                      20,
@@ -6980,18 +6280,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -46,
                      41
                   };
-                  PaddedAesCipher paddedAesCipher37 = paddedAesCipher;
-                  byte[] bytes144 = bytes143;
-                  byte[] bytes145 = VendorAesHelper.encryptWithCipher(bytes142, bytes144, paddedAesCipher37);
-                  vendorPacketEncryptor36.decoyKeySlot36 = keccakSha3Digest36.digest(bytes145);
+                  this.decoyKeySlot36 = keccakSha3Digest36.digest(VendorAesHelper.encryptWithCipher(bytes, bytes143, paddedAesCipher));
                   l = l + 9144531553326299988L ^ -7430467674368807514L;
                   continue;
                }
 
                if (15 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor37 = this;
                   KeccakSha3Digest keccakSha3Digest37 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes146 = bytes;
                   byte[] bytes147 = new byte[]{
                      83,
                      120,
@@ -7026,17 +6321,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -122,
                      48
                   };
-                  PaddedAesCipher paddedAesCipher38 = paddedAesCipher;
-                  byte[] bytes148 = bytes147;
-                  byte[] bytes149 = VendorAesHelper.encryptWithCipher(bytes146, bytes148, paddedAesCipher38);
-                  vendorPacketEncryptor37.decoyKeySlot37 = keccakSha3Digest37.digest(bytes149);
+                  this.decoyKeySlot37 = keccakSha3Digest37.digest(VendorAesHelper.encryptWithCipher(bytes, bytes147, paddedAesCipher));
                   l = (l ^ 2659682750569845579L) + -3842660886632532553L;
                   continue;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor38 = this;
                KeccakSha3Digest keccakSha3Digest38 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes150 = bytes;
                byte[] bytes151 = new byte[]{
                   95,
                   -113,
@@ -7071,17 +6361,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   91,
                   66
                };
-               PaddedAesCipher paddedAesCipher39 = paddedAesCipher;
-               byte[] bytes152 = bytes151;
-               byte[] bytes153 = VendorAesHelper.encryptWithCipher(bytes150, bytes152, paddedAesCipher39);
-               vendorPacketEncryptor38.decoyKeySlot38 = keccakSha3Digest38.digest(bytes153);
+               this.decoyKeySlot38 = keccakSha3Digest38.digest(VendorAesHelper.encryptWithCipher(bytes, bytes151, paddedAesCipher));
                l = (l ^ -1697914019208804055L) - 6172801172049142906L;
             }
          } else if (5 <= b) {
             if (b <= 5) {
-               VendorPacketEncryptor vendorPacketEncryptor39 = this;
                KeccakSha3Digest keccakSha3Digest39 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes154 = bytes;
                byte[] bytes155 = new byte[]{
                   85,
                   -31,
@@ -7116,16 +6401,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   26,
                   80
                };
-               PaddedAesCipher paddedAesCipher40 = paddedAesCipher;
-               byte[] bytes156 = bytes155;
-               byte[] bytes157 = VendorAesHelper.encryptWithCipher(bytes154, bytes156, paddedAesCipher40);
-               vendorPacketEncryptor39.decoyKeySlot39 = keccakSha3Digest39.digest(bytes157);
+               this.decoyKeySlot39 = keccakSha3Digest39.digest(VendorAesHelper.encryptWithCipher(bytes, bytes155, paddedAesCipher));
                l = (l ^ -5029148139513305373L) + 7605288965253048361L;
             } else if (b >= 8) {
                if (b <= 8) {
-                  VendorPacketEncryptor vendorPacketEncryptor40 = this;
                   KeccakSha3Digest keccakSha3Digest40 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes158 = bytes;
                   byte[] bytes159 = new byte[]{
                      97,
                      -9,
@@ -7160,15 +6440,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      23,
                      -21
                   };
-                  PaddedAesCipher paddedAesCipher41 = paddedAesCipher;
-                  byte[] bytes160 = bytes159;
-                  byte[] bytes161 = VendorAesHelper.encryptWithCipher(bytes158, bytes160, paddedAesCipher41);
-                  vendorPacketEncryptor40.decoyKeySlot40 = keccakSha3Digest40.digest(bytes161);
+                  this.decoyKeySlot40 = keccakSha3Digest40.digest(VendorAesHelper.encryptWithCipher(bytes, bytes159, paddedAesCipher));
                   l = l - 9071383073451186497L ^ -8623227599859123561L;
                } else if (9 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor41 = this;
                   KeccakSha3Digest keccakSha3Digest41 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes162 = bytes;
                   byte[] bytes163 = new byte[]{
                      96,
                      3,
@@ -7203,15 +6478,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      29,
                      -82
                   };
-                  PaddedAesCipher paddedAesCipher42 = paddedAesCipher;
-                  byte[] bytes164 = bytes163;
-                  byte[] bytes165 = VendorAesHelper.encryptWithCipher(bytes162, bytes164, paddedAesCipher42);
-                  vendorPacketEncryptor41.decoyKeySlot41 = keccakSha3Digest41.digest(bytes165);
+                  this.decoyKeySlot41 = keccakSha3Digest41.digest(VendorAesHelper.encryptWithCipher(bytes, bytes163, paddedAesCipher));
                   l = l + -6565082610685085473L ^ 4297766437509820618L;
                } else {
-                  VendorPacketEncryptor vendorPacketEncryptor42 = this;
                   KeccakSha3Digest keccakSha3Digest42 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes166 = bytes;
                   byte[] bytes167 = new byte[]{
                      -118,
                      -37,
@@ -7246,17 +6516,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -7,
                      51
                   };
-                  PaddedAesCipher paddedAesCipher43 = paddedAesCipher;
-                  byte[] bytes168 = bytes167;
-                  byte[] bytes169 = VendorAesHelper.encryptWithCipher(bytes166, bytes168, paddedAesCipher43);
-                  vendorPacketEncryptor42.decoyKeySlot42 = keccakSha3Digest42.digest(bytes169);
+                  this.decoyKeySlot42 = keccakSha3Digest42.digest(VendorAesHelper.encryptWithCipher(bytes, bytes167, paddedAesCipher));
                   l = l + -749406212679545322L ^ 7594883115338236730L;
                }
             } else {
                if (b <= 6) {
-                  VendorPacketEncryptor vendorPacketEncryptor43 = this;
                   KeccakSha3Digest keccakSha3Digest43 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes170 = bytes;
                   byte[] bytes171 = new byte[]{
                      -11,
                      43,
@@ -7291,31 +6556,21 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      105,
                      86
                   };
-                  PaddedAesCipher paddedAesCipher44 = paddedAesCipher;
-                  byte[] bytes172 = bytes171;
-                  byte[] bytes173 = VendorAesHelper.encryptWithCipher(bytes170, bytes172, paddedAesCipher44);
-                  vendorPacketEncryptor43.decoyKeySlot43 = keccakSha3Digest43.digest(bytes173);
+                  this.decoyKeySlot43 = keccakSha3Digest43.digest(VendorAesHelper.encryptWithCipher(bytes, bytes171, paddedAesCipher));
                   l = l - 407302774948780279L ^ -3566843610659280382L;
                   continue;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor44 = this;
                KeccakSha3Digest keccakSha3Digest44 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes174 = bytes;
-               byte[] bytes175 = new byte[]{
+               byte[] bytes177 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                   9, -111, 26, 18, -59, 55, -97, -95, 20, 51, 13, 97, 107, -50, -51, 6, -99, 34, -79, 24, -108, 16, 77, 63, -95, -95, 63, 125, 72, -10, 23, -13
-               };
-               PaddedAesCipher paddedAesCipher45 = paddedAesCipher;
-               byte[] bytes176 = bytes175;
-               byte[] bytes177 = VendorAesHelper.encryptWithCipher(bytes174, bytes176, paddedAesCipher45);
-               vendorPacketEncryptor44.decoyKeySlot44 = keccakSha3Digest44.digest(bytes177);
+               }, paddedAesCipher);
+               this.decoyKeySlot44 = keccakSha3Digest44.digest(bytes177);
                l = l + 8140761138090997642L ^ -6321334082742547837L;
             }
          } else if (2 <= b) {
             if (b <= 2) {
-               VendorPacketEncryptor vendorPacketEncryptor45 = this;
                KeccakSha3Digest keccakSha3Digest45 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes178 = bytes;
                byte[] bytes179 = new byte[]{
                   6,
                   -30,
@@ -7350,18 +6605,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -75,
                   -56
                };
-               PaddedAesCipher paddedAesCipher46 = paddedAesCipher;
-               byte[] bytes180 = bytes179;
-               byte[] bytes181 = VendorAesHelper.encryptWithCipher(bytes178, bytes180, paddedAesCipher46);
-               vendorPacketEncryptor45.decoyKeySlot45 = keccakSha3Digest45.digest(bytes181);
+               this.decoyKeySlot45 = keccakSha3Digest45.digest(VendorAesHelper.encryptWithCipher(bytes, bytes179, paddedAesCipher));
                l = l - -2083719393262731769L ^ 2453596786904166097L;
                continue;
             }
 
             if (3 < b) {
-               VendorPacketEncryptor vendorPacketEncryptor46 = this;
                KeccakSha3Digest keccakSha3Digest46 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes182 = bytes;
                byte[] bytes183 = new byte[]{
                   7,
                   -99,
@@ -7396,29 +6646,19 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   20,
                   -15
                };
-               PaddedAesCipher paddedAesCipher47 = paddedAesCipher;
-               byte[] bytes184 = bytes183;
-               byte[] bytes185 = VendorAesHelper.encryptWithCipher(bytes182, bytes184, paddedAesCipher47);
-               vendorPacketEncryptor46.decoyKeySlot46 = keccakSha3Digest46.digest(bytes185);
+               this.decoyKeySlot46 = keccakSha3Digest46.digest(VendorAesHelper.encryptWithCipher(bytes, bytes183, paddedAesCipher));
                l = l - 9192494022148688184L ^ -5838367061849216529L;
                continue;
             }
 
-            VendorPacketEncryptor vendorPacketEncryptor47 = this;
             KeccakSha3Digest keccakSha3Digest47 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-            byte[] bytes186 = bytes;
-            byte[] bytes187 = new byte[]{
+            byte[] bytes189 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                -87, -112, 68, 120, -35, 123, 111, 79, 124, 89, -43, -91, -6, -95, 69, -107, 20, -59, -90, -53, 35, -93, 62, 34, -36, 77, 19, -64, 28, 6, 36, 8
-            };
-            PaddedAesCipher paddedAesCipher48 = paddedAesCipher;
-            byte[] bytes188 = bytes187;
-            byte[] bytes189 = VendorAesHelper.encryptWithCipher(bytes186, bytes188, paddedAesCipher48);
-            vendorPacketEncryptor47.decoyKeySlot47 = keccakSha3Digest47.digest(bytes189);
+            }, paddedAesCipher);
+            this.decoyKeySlot47 = keccakSha3Digest47.digest(bytes189);
             l = l - 6167082612985468797L ^ 8198093657590204292L;
          } else if (b <= 0) {
-            VendorPacketEncryptor vendorPacketEncryptor48 = this;
             KeccakSha3Digest keccakSha3Digest48 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-            byte[] bytes190 = bytes;
             byte[] bytes191 = new byte[]{
                63,
                -14,
@@ -7453,15 +6693,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                -96,
                -58
             };
-            PaddedAesCipher paddedAesCipher49 = paddedAesCipher;
-            byte[] bytes192 = bytes191;
-            byte[] bytes193 = VendorAesHelper.encryptWithCipher(bytes190, bytes192, paddedAesCipher49);
-            vendorPacketEncryptor48.decoyKeySlot48 = keccakSha3Digest48.digest(bytes193);
+            this.decoyKeySlot48 = keccakSha3Digest48.digest(VendorAesHelper.encryptWithCipher(bytes, bytes191, paddedAesCipher));
             l = l + 4044679493248547379L ^ 6140635849655358188L;
          } else {
-            VendorPacketEncryptor vendorPacketEncryptor49 = this;
             KeccakSha3Digest keccakSha3Digest49 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-            byte[] bytes194 = bytes;
             byte[] bytes195 = new byte[]{
                -32,
                85,
@@ -7496,19 +6731,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                -42,
                15
             };
-            PaddedAesCipher paddedAesCipher50 = paddedAesCipher;
-            byte[] bytes196 = bytes195;
-            byte[] bytes197 = VendorAesHelper.encryptWithCipher(bytes194, bytes196, paddedAesCipher50);
-            vendorPacketEncryptor49.decoyKeySlot49 = keccakSha3Digest49.digest(bytes197);
+            this.decoyKeySlot49 = keccakSha3Digest49.digest(VendorAesHelper.encryptWithCipher(bytes, bytes195, paddedAesCipher));
             l = (l ^ 459654855958842292L) - -1093373110523113706L;
          }
 
          while (b > 50) {
             if (76 <= b) {
                if (76 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor50 = this;
                   KeccakSha3Digest keccakSha3Digest50 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes198 = bytes;
                   byte[] bytes199 = new byte[]{
                      125,
                      122,
@@ -7543,16 +6773,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -88,
                      -25
                   };
-                  PaddedAesCipher paddedAesCipher51 = paddedAesCipher;
-                  byte[] bytes200 = bytes199;
-                  byte[] bytes201 = VendorAesHelper.encryptWithCipher(bytes198, bytes200, paddedAesCipher51);
-                  vendorPacketEncryptor50.decoyKeySlot50 = keccakSha3Digest50.digest(bytes201);
+                  this.decoyKeySlot50 = keccakSha3Digest50.digest(VendorAesHelper.encryptWithCipher(bytes, bytes199, paddedAesCipher));
                   l = l - -945426091198833544L ^ 8244936440846298720L;
                } else if (89 <= b) {
                   if (b <= 89) {
-                     VendorPacketEncryptor vendorPacketEncryptor51 = this;
                      KeccakSha3Digest keccakSha3Digest51 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes202 = bytes;
                      byte[] bytes203 = new byte[]{
                         85,
                         117,
@@ -7587,19 +6812,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -57,
                         73
                      };
-                     PaddedAesCipher paddedAesCipher52 = paddedAesCipher;
-                     byte[] bytes204 = bytes203;
-                     byte[] bytes205 = VendorAesHelper.encryptWithCipher(bytes202, bytes204, paddedAesCipher52);
-                     vendorPacketEncryptor51.decoyKeySlot51 = keccakSha3Digest51.digest(bytes205);
+                     this.decoyKeySlot51 = keccakSha3Digest51.digest(VendorAesHelper.encryptWithCipher(bytes, bytes203, paddedAesCipher));
                      l = l + 5522352417610726531L ^ -4479692571602416610L;
                      continue outerLoop;
                   }
 
                   if (95 <= b) {
                      if (95 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor52 = this;
                         KeccakSha3Digest keccakSha3Digest52 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes206 = bytes;
                         byte[] bytes207 = new byte[]{
                            -110,
                            14,
@@ -7634,19 +6854,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -112,
                            -39
                         };
-                        PaddedAesCipher paddedAesCipher53 = paddedAesCipher;
-                        byte[] bytes208 = bytes207;
-                        byte[] bytes209 = VendorAesHelper.encryptWithCipher(bytes206, bytes208, paddedAesCipher53);
-                        vendorPacketEncryptor52.decoyKeySlot52 = keccakSha3Digest52.digest(bytes209);
+                        this.decoyKeySlot52 = keccakSha3Digest52.digest(VendorAesHelper.encryptWithCipher(bytes, bytes207, paddedAesCipher));
                         l = (l ^ 9149767583971577217L) - 2001400528394407019L;
                         continue outerLoop;
                      }
 
                      if (b >= 98) {
                         if (b <= 98) {
-                           VendorPacketEncryptor vendorPacketEncryptor53 = this;
                            KeccakSha3Digest keccakSha3Digest53 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes210 = bytes;
                            byte[] bytes211 = new byte[]{
                               47,
                               117,
@@ -7681,16 +6896,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -41,
                               -59
                            };
-                           PaddedAesCipher paddedAesCipher54 = paddedAesCipher;
-                           byte[] bytes212 = bytes211;
-                           byte[] bytes213 = VendorAesHelper.encryptWithCipher(bytes210, bytes212, paddedAesCipher54);
-                           vendorPacketEncryptor53.decoyKeySlot53 = keccakSha3Digest53.digest(bytes213);
+                           this.decoyKeySlot53 = keccakSha3Digest53.digest(VendorAesHelper.encryptWithCipher(bytes, bytes211, paddedAesCipher));
                            l = l - 3228902231319292301L ^ 5588923515247538820L;
                         } else {
                            if (b < 100) {
-                              VendorPacketEncryptor vendorPacketEncryptor54 = this;
                               KeccakSha3Digest keccakSha3Digest54 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                              byte[] bytes214 = bytes;
                               byte[] bytes215 = new byte[]{
                                  88,
                                  93,
@@ -7725,18 +6935,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                  44,
                                  -111
                               };
-                              PaddedAesCipher paddedAesCipher55 = paddedAesCipher;
-                              byte[] bytes216 = bytes215;
-                              byte[] bytes217 = VendorAesHelper.encryptWithCipher(bytes214, bytes216, paddedAesCipher55);
-                              vendorPacketEncryptor54.decoyKeySlot54 = keccakSha3Digest54.digest(bytes217);
+                              this.decoyKeySlot54 = keccakSha3Digest54.digest(VendorAesHelper.encryptWithCipher(bytes, bytes215, paddedAesCipher));
                               l = l - 4398399842183414859L ^ -1651689633316355049L;
                               continue outerLoop;
                            }
 
                            if (100 < b) {
-                              VendorPacketEncryptor vendorPacketEncryptor55 = this;
                               KeccakSha3Digest keccakSha3Digest55 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                              byte[] bytes218 = bytes;
                               byte[] bytes219 = new byte[]{
                                  -115,
                                  41,
@@ -7771,17 +6976,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                                  70,
                                  67
                               };
-                              PaddedAesCipher paddedAesCipher56 = paddedAesCipher;
-                              byte[] bytes220 = bytes219;
-                              byte[] bytes221 = VendorAesHelper.encryptWithCipher(bytes218, bytes220, paddedAesCipher56);
-                              vendorPacketEncryptor55.decoyKeySlot55 = keccakSha3Digest55.digest(bytes221);
+                              this.decoyKeySlot55 = keccakSha3Digest55.digest(VendorAesHelper.encryptWithCipher(bytes, bytes219, paddedAesCipher));
                               l = (l ^ -7291377338939210893L) + -6965390008472469923L;
                               continue outerLoop;
                            }
 
-                           VendorPacketEncryptor vendorPacketEncryptor56 = this;
                            KeccakSha3Digest keccakSha3Digest56 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes222 = bytes;
                            byte[] bytes223 = new byte[]{
                               114,
                               36,
@@ -7816,17 +7016,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -114,
                               56
                            };
-                           PaddedAesCipher paddedAesCipher57 = paddedAesCipher;
-                           byte[] bytes224 = bytes223;
-                           byte[] bytes225 = VendorAesHelper.encryptWithCipher(bytes222, bytes224, paddedAesCipher57);
-                           vendorPacketEncryptor56.decoyKeySlot56 = keccakSha3Digest56.digest(bytes225);
+                           this.decoyKeySlot56 = keccakSha3Digest56.digest(VendorAesHelper.encryptWithCipher(bytes, bytes223, paddedAesCipher));
                            l = l - 8510397492967398503L ^ -6218105504266184151L;
                         }
                      } else {
                         if (b <= 96) {
-                           VendorPacketEncryptor vendorPacketEncryptor57 = this;
                            KeccakSha3Digest keccakSha3Digest57 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes226 = bytes;
                            byte[] bytes227 = new byte[]{
                               77,
                               -73,
@@ -7861,17 +7056,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               113,
                               -35
                            };
-                           PaddedAesCipher paddedAesCipher58 = paddedAesCipher;
-                           byte[] bytes228 = bytes227;
-                           byte[] bytes229 = VendorAesHelper.encryptWithCipher(bytes226, bytes228, paddedAesCipher58);
-                           vendorPacketEncryptor57.decoyKeySlot57 = keccakSha3Digest57.digest(bytes229);
+                           this.decoyKeySlot57 = keccakSha3Digest57.digest(VendorAesHelper.encryptWithCipher(bytes, bytes227, paddedAesCipher));
                            l = l + 3660839041687911916L ^ 5479202462647288960L;
                            continue outerLoop;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor58 = this;
                         KeccakSha3Digest keccakSha3Digest58 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes230 = bytes;
                         byte[] bytes231 = new byte[]{
                            -9,
                            75,
@@ -7906,17 +7096,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            94,
                            -29
                         };
-                        PaddedAesCipher paddedAesCipher59 = paddedAesCipher;
-                        byte[] bytes232 = bytes231;
-                        byte[] bytes233 = VendorAesHelper.encryptWithCipher(bytes230, bytes232, paddedAesCipher59);
-                        vendorPacketEncryptor58.decoyKeySlot58 = keccakSha3Digest58.digest(bytes233);
+                        this.decoyKeySlot58 = keccakSha3Digest58.digest(VendorAesHelper.encryptWithCipher(bytes, bytes231, paddedAesCipher));
                         l = (l ^ -406765921670926750L) + -8286687918534149552L;
                      }
                   } else if (92 <= b) {
                      if (92 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor59 = this;
                         KeccakSha3Digest keccakSha3Digest59 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes234 = bytes;
                         byte[] bytes235 = new byte[]{
                            54,
                            45,
@@ -7951,16 +7136,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -27,
                            75
                         };
-                        PaddedAesCipher paddedAesCipher60 = paddedAesCipher;
-                        byte[] bytes236 = bytes235;
-                        byte[] bytes237 = VendorAesHelper.encryptWithCipher(bytes234, bytes236, paddedAesCipher60);
-                        vendorPacketEncryptor59.decoyKeySlot59 = keccakSha3Digest59.digest(bytes237);
+                        this.decoyKeySlot59 = keccakSha3Digest59.digest(VendorAesHelper.encryptWithCipher(bytes, bytes235, paddedAesCipher));
                         l = (l ^ -3191840993018617525L) + -2384277721318016654L;
                      } else {
                         if (93 >= b) {
-                           VendorPacketEncryptor vendorPacketEncryptor60 = this;
                            KeccakSha3Digest keccakSha3Digest60 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes238 = bytes;
                            byte[] bytes239 = new byte[]{
                               76,
                               -36,
@@ -7995,17 +7175,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -98,
                               100
                            };
-                           PaddedAesCipher paddedAesCipher61 = paddedAesCipher;
-                           byte[] bytes240 = bytes239;
-                           byte[] bytes241 = VendorAesHelper.encryptWithCipher(bytes238, bytes240, paddedAesCipher61);
-                           vendorPacketEncryptor60.decoyKeySlot60 = keccakSha3Digest60.digest(bytes241);
+                           this.decoyKeySlot60 = keccakSha3Digest60.digest(VendorAesHelper.encryptWithCipher(bytes, bytes239, paddedAesCipher));
                            l = (l ^ 3669972108836751282L) + -3455299026138217661L;
                            continue outerLoop;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor61 = this;
                         KeccakSha3Digest keccakSha3Digest61 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes242 = bytes;
                         byte[] bytes243 = new byte[]{
                            121,
                            -4,
@@ -8040,17 +7215,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            91,
                            -88
                         };
-                        PaddedAesCipher paddedAesCipher62 = paddedAesCipher;
-                        byte[] bytes244 = bytes243;
-                        byte[] bytes245 = VendorAesHelper.encryptWithCipher(bytes242, bytes244, paddedAesCipher62);
-                        vendorPacketEncryptor61.decoyKeySlot61 = keccakSha3Digest61.digest(bytes245);
+                        this.decoyKeySlot61 = keccakSha3Digest61.digest(VendorAesHelper.encryptWithCipher(bytes, bytes243, paddedAesCipher));
                         l = (l ^ -8757216269173514471L) - -7792835671530488954L;
                      }
                   } else {
                      if (90 < b) {
-                        VendorPacketEncryptor vendorPacketEncryptor62 = this;
                         KeccakSha3Digest keccakSha3Digest62 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes246 = bytes;
                         byte[] bytes247 = new byte[]{
                            -122,
                            43,
@@ -8085,17 +7255,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            103,
                            -87
                         };
-                        PaddedAesCipher paddedAesCipher63 = paddedAesCipher;
-                        byte[] bytes248 = bytes247;
-                        byte[] bytes249 = VendorAesHelper.encryptWithCipher(bytes246, bytes248, paddedAesCipher63);
-                        vendorPacketEncryptor62.decoyKeySlot62 = keccakSha3Digest62.digest(bytes249);
+                        this.decoyKeySlot62 = keccakSha3Digest62.digest(VendorAesHelper.encryptWithCipher(bytes, bytes247, paddedAesCipher));
                         l = l - -62072571079727799L ^ 8734325011221519760L;
                         continue outerLoop;
                      }
 
-                     VendorPacketEncryptor vendorPacketEncryptor63 = this;
                      KeccakSha3Digest keccakSha3Digest63 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes250 = bytes;
                      byte[] bytes251 = new byte[]{
                         -97,
                         54,
@@ -8130,17 +7295,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         114,
                         54
                      };
-                     PaddedAesCipher paddedAesCipher64 = paddedAesCipher;
-                     byte[] bytes252 = bytes251;
-                     byte[] bytes253 = VendorAesHelper.encryptWithCipher(bytes250, bytes252, paddedAesCipher64);
-                     vendorPacketEncryptor63.decoyKeySlot63 = keccakSha3Digest63.digest(bytes253);
+                     this.decoyKeySlot63 = keccakSha3Digest63.digest(VendorAesHelper.encryptWithCipher(bytes, bytes251, paddedAesCipher));
                      l = l - -9187116350119271074L ^ -5120459850512249757L;
                   }
                } else if (82 <= b) {
                   if (b <= 82) {
-                     VendorPacketEncryptor vendorPacketEncryptor64 = this;
                      KeccakSha3Digest keccakSha3Digest64 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes254 = bytes;
                      byte[] bytes255 = new byte[]{
                         52,
                         78,
@@ -8175,16 +7335,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -49,
                         -89
                      };
-                     PaddedAesCipher paddedAesCipher65 = paddedAesCipher;
-                     byte[] bytes256 = bytes255;
-                     byte[] bytes257 = VendorAesHelper.encryptWithCipher(bytes254, bytes256, paddedAesCipher65);
-                     vendorPacketEncryptor64.decoyKeySlot64 = keccakSha3Digest64.digest(bytes257);
+                     this.decoyKeySlot64 = keccakSha3Digest64.digest(VendorAesHelper.encryptWithCipher(bytes, bytes255, paddedAesCipher));
                      l = (l ^ -8719073705153031677L) - -3808601601124380481L;
                   } else if (b >= 85) {
                      if (85 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor65 = this;
                         KeccakSha3Digest keccakSha3Digest65 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes258 = bytes;
                         byte[] bytes259 = new byte[]{
                            -70,
                            4,
@@ -8219,16 +7374,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -41,
                            94
                         };
-                        PaddedAesCipher paddedAesCipher66 = paddedAesCipher;
-                        byte[] bytes260 = bytes259;
-                        byte[] bytes261 = VendorAesHelper.encryptWithCipher(bytes258, bytes260, paddedAesCipher66);
-                        vendorPacketEncryptor65.decoyKeySlot65 = keccakSha3Digest65.digest(bytes261);
+                        this.decoyKeySlot65 = keccakSha3Digest65.digest(VendorAesHelper.encryptWithCipher(bytes, bytes259, paddedAesCipher));
                         l = l + -1601303969163886138L ^ 1149516813588887269L;
                      } else {
                         if (b < 87) {
-                           VendorPacketEncryptor vendorPacketEncryptor66 = this;
                            KeccakSha3Digest keccakSha3Digest66 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes262 = bytes;
                            byte[] bytes263 = new byte[]{
                               -95,
                               -58,
@@ -8263,18 +7413,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -36,
                               74
                            };
-                           PaddedAesCipher paddedAesCipher67 = paddedAesCipher;
-                           byte[] bytes264 = bytes263;
-                           byte[] bytes265 = VendorAesHelper.encryptWithCipher(bytes262, bytes264, paddedAesCipher67);
-                           vendorPacketEncryptor66.decoyKeySlot66 = keccakSha3Digest66.digest(bytes265);
+                           this.decoyKeySlot66 = keccakSha3Digest66.digest(VendorAesHelper.encryptWithCipher(bytes, bytes263, paddedAesCipher));
                            l = (l ^ -7902427178399481516L) + 8910317915512412501L;
                            continue outerLoop;
                         }
 
                         if (87 >= b) {
-                           VendorPacketEncryptor vendorPacketEncryptor67 = this;
                            KeccakSha3Digest keccakSha3Digest67 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes266 = bytes;
                            byte[] bytes267 = new byte[]{
                               127,
                               23,
@@ -8309,15 +7454,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               -28,
                               78
                            };
-                           PaddedAesCipher paddedAesCipher68 = paddedAesCipher;
-                           byte[] bytes268 = bytes267;
-                           byte[] bytes269 = VendorAesHelper.encryptWithCipher(bytes266, bytes268, paddedAesCipher68);
-                           vendorPacketEncryptor67.decoyKeySlot67 = keccakSha3Digest67.digest(bytes269);
+                           this.decoyKeySlot67 = keccakSha3Digest67.digest(VendorAesHelper.encryptWithCipher(bytes, bytes267, paddedAesCipher));
                            l = l - -6326411582749954091L ^ -2180109640713172485L;
                         } else {
-                           VendorPacketEncryptor vendorPacketEncryptor68 = this;
                            KeccakSha3Digest keccakSha3Digest68 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                           byte[] bytes270 = bytes;
                            byte[] bytes271 = new byte[]{
                               48,
                               -61,
@@ -8352,17 +7492,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                               93,
                               -112
                            };
-                           PaddedAesCipher paddedAesCipher69 = paddedAesCipher;
-                           byte[] bytes272 = bytes271;
-                           byte[] bytes273 = VendorAesHelper.encryptWithCipher(bytes270, bytes272, paddedAesCipher69);
-                           vendorPacketEncryptor68.decoyKeySlot68 = keccakSha3Digest68.digest(bytes273);
+                           this.decoyKeySlot68 = keccakSha3Digest68.digest(VendorAesHelper.encryptWithCipher(bytes, bytes271, paddedAesCipher));
                            l = (l ^ 5911535300311200030L) - 8192541706426941377L;
                         }
                      }
                   } else if (b <= 83) {
-                     VendorPacketEncryptor vendorPacketEncryptor69 = this;
                      KeccakSha3Digest keccakSha3Digest69 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes274 = bytes;
                      byte[] bytes275 = new byte[]{
                         31,
                         -99,
@@ -8397,15 +7532,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         27,
                         -107
                      };
-                     PaddedAesCipher paddedAesCipher70 = paddedAesCipher;
-                     byte[] bytes276 = bytes275;
-                     byte[] bytes277 = VendorAesHelper.encryptWithCipher(bytes274, bytes276, paddedAesCipher70);
-                     vendorPacketEncryptor69.decoyKeySlot69 = keccakSha3Digest69.digest(bytes277);
+                     this.decoyKeySlot69 = keccakSha3Digest69.digest(VendorAesHelper.encryptWithCipher(bytes, bytes275, paddedAesCipher));
                      l = l - 5078003086483344914L ^ -7436897581444929157L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor70 = this;
                      KeccakSha3Digest keccakSha3Digest70 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes278 = bytes;
                      byte[] bytes279 = new byte[]{
                         110,
                         113,
@@ -8440,17 +7570,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -67,
                         -94
                      };
-                     PaddedAesCipher paddedAesCipher71 = paddedAesCipher;
-                     byte[] bytes280 = bytes279;
-                     byte[] bytes281 = VendorAesHelper.encryptWithCipher(bytes278, bytes280, paddedAesCipher71);
-                     vendorPacketEncryptor70.decoyKeySlot70 = keccakSha3Digest70.digest(bytes281);
+                     this.decoyKeySlot70 = keccakSha3Digest70.digest(VendorAesHelper.encryptWithCipher(bytes, bytes279, paddedAesCipher));
                      l = l + -5018030444266095452L ^ -8087709000094592984L;
                   }
                } else if (79 <= b) {
                   if (b <= 79) {
-                     VendorPacketEncryptor vendorPacketEncryptor71 = this;
                      KeccakSha3Digest keccakSha3Digest71 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes282 = bytes;
                      byte[] bytes283 = new byte[]{
                         -23,
                         43,
@@ -8485,27 +7610,17 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -117,
                         108
                      };
-                     PaddedAesCipher paddedAesCipher72 = paddedAesCipher;
-                     byte[] bytes284 = bytes283;
-                     byte[] bytes285 = VendorAesHelper.encryptWithCipher(bytes282, bytes284, paddedAesCipher72);
-                     vendorPacketEncryptor71.decoyKeySlot71 = keccakSha3Digest71.digest(bytes285);
+                     this.decoyKeySlot71 = keccakSha3Digest71.digest(VendorAesHelper.encryptWithCipher(bytes, bytes283, paddedAesCipher));
                      l = l - 8908232427807137118L ^ -1645127317099859042L;
                   } else if (80 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor72 = this;
                      KeccakSha3Digest keccakSha3Digest72 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes286 = bytes;
-                     byte[] bytes287 = new byte[]{
+                     byte[] bytes289 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
                         -45, 36, -50, 26, 75, -94, 72, 58, 73, 35, 7, 93, 93, 23, 78, 19, 5, -1, 7, 120, 0, -68, 43, -122, 67, -5, -92, -23, -27, 42, 91, -66
-                     };
-                     PaddedAesCipher paddedAesCipher73 = paddedAesCipher;
-                     byte[] bytes288 = bytes287;
-                     byte[] bytes289 = VendorAesHelper.encryptWithCipher(bytes286, bytes288, paddedAesCipher73);
-                     vendorPacketEncryptor72.decoyKeySlot72 = keccakSha3Digest72.digest(bytes289);
+                     }, paddedAesCipher);
+                     this.decoyKeySlot72 = keccakSha3Digest72.digest(bytes289);
                      l = l + -8072596477259606841L ^ -2858394918304566668L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor73 = this;
                      KeccakSha3Digest keccakSha3Digest73 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes290 = bytes;
                      byte[] bytes291 = new byte[]{
                         -57,
                         -64,
@@ -8540,17 +7655,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -54,
                         -59
                      };
-                     PaddedAesCipher paddedAesCipher74 = paddedAesCipher;
-                     byte[] bytes292 = bytes291;
-                     byte[] bytes293 = VendorAesHelper.encryptWithCipher(bytes290, bytes292, paddedAesCipher74);
-                     vendorPacketEncryptor73.decoyKeySlot73 = keccakSha3Digest73.digest(bytes293);
+                     this.decoyKeySlot73 = keccakSha3Digest73.digest(VendorAesHelper.encryptWithCipher(bytes, bytes291, paddedAesCipher));
                      l = (l ^ -1311882125331937968L) + 5721429155732842731L;
                   }
                } else {
                   if (77 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor74 = this;
                      KeccakSha3Digest keccakSha3Digest74 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes294 = bytes;
                      byte[] bytes295 = new byte[]{
                         -44,
                         -68,
@@ -8585,17 +7695,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         27,
                         -71
                      };
-                     PaddedAesCipher paddedAesCipher75 = paddedAesCipher;
-                     byte[] bytes296 = bytes295;
-                     byte[] bytes297 = VendorAesHelper.encryptWithCipher(bytes294, bytes296, paddedAesCipher75);
-                     vendorPacketEncryptor74.decoyKeySlot74 = keccakSha3Digest74.digest(bytes297);
+                     this.decoyKeySlot74 = keccakSha3Digest74.digest(VendorAesHelper.encryptWithCipher(bytes, bytes295, paddedAesCipher));
                      l = l - -5182268550096608943L ^ 5031337263082781885L;
                      continue outerLoop;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor75 = this;
                   KeccakSha3Digest keccakSha3Digest75 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes298 = bytes;
                   byte[] bytes299 = new byte[]{
                      -62,
                      -65,
@@ -8630,17 +7735,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -107,
                      97
                   };
-                  PaddedAesCipher paddedAesCipher76 = paddedAesCipher;
-                  byte[] bytes300 = bytes299;
-                  byte[] bytes301 = VendorAesHelper.encryptWithCipher(bytes298, bytes300, paddedAesCipher76);
-                  vendorPacketEncryptor75.decoyKeySlot75 = keccakSha3Digest75.digest(bytes301);
+                  this.decoyKeySlot75 = keccakSha3Digest75.digest(VendorAesHelper.encryptWithCipher(bytes, bytes299, paddedAesCipher));
                   l = (l ^ -7602888792581493177L) + 8769377381140958101L;
                }
             } else if (63 <= b) {
                if (b <= 63) {
-                  VendorPacketEncryptor vendorPacketEncryptor76 = this;
                   KeccakSha3Digest keccakSha3Digest76 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes302 = bytes;
                   byte[] bytes303 = new byte[]{
                      -9,
                      92,
@@ -8675,19 +7775,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -75,
                      -15
                   };
-                  PaddedAesCipher paddedAesCipher77 = paddedAesCipher;
-                  byte[] bytes304 = bytes303;
-                  byte[] bytes305 = VendorAesHelper.encryptWithCipher(bytes302, bytes304, paddedAesCipher77);
-                  vendorPacketEncryptor76.secondaryKeyGuard = keccakSha3Digest76.digest(bytes305);
+                  this.secondaryKeyGuard = keccakSha3Digest76.digest(VendorAesHelper.encryptWithCipher(bytes, bytes303, paddedAesCipher));
                   l = (l ^ 708368228492720706L) - -7130148880662502219L;
                   continue outerLoop;
                }
 
                if (69 <= b) {
                   if (69 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor77 = this;
                      KeccakSha3Digest keccakSha3Digest77 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes306 = bytes;
                      byte[] bytes307 = new byte[]{
                         26,
                         -34,
@@ -8722,19 +7817,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         25,
                         0
                      };
-                     PaddedAesCipher paddedAesCipher78 = paddedAesCipher;
-                     byte[] bytes308 = bytes307;
-                     byte[] bytes309 = VendorAesHelper.encryptWithCipher(bytes306, bytes308, paddedAesCipher78);
-                     vendorPacketEncryptor77.decoyKeySlot76 = keccakSha3Digest77.digest(bytes309);
+                     this.decoyKeySlot76 = keccakSha3Digest77.digest(VendorAesHelper.encryptWithCipher(bytes, bytes307, paddedAesCipher));
                      l = (l ^ 119799203142989611L) + -2908285320019668118L;
                      continue outerLoop;
                   }
 
                   if (b >= 72) {
                      if (72 >= b) {
-                        VendorPacketEncryptor vendorPacketEncryptor78 = this;
                         KeccakSha3Digest keccakSha3Digest78 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes310 = bytes;
                         byte[] bytes311 = new byte[]{
                            -45,
                            -86,
@@ -8769,19 +7859,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            -41,
                            -46
                         };
-                        PaddedAesCipher paddedAesCipher79 = paddedAesCipher;
-                        byte[] bytes312 = bytes311;
-                        byte[] bytes313 = VendorAesHelper.encryptWithCipher(bytes310, bytes312, paddedAesCipher79);
-                        vendorPacketEncryptor78.decoyKeySlot77 = keccakSha3Digest78.digest(bytes313);
+                        this.decoyKeySlot77 = keccakSha3Digest78.digest(VendorAesHelper.encryptWithCipher(bytes, bytes311, paddedAesCipher));
                         l = (l ^ -6067718800089852090L) - -4641193463148803793L;
                      } else if (b >= 74) {
                         if (b > 74) {
                            return;
                         }
 
-                        VendorPacketEncryptor vendorPacketEncryptor79 = this;
                         KeccakSha3Digest keccakSha3Digest79 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes314 = bytes;
                         byte[] bytes315 = new byte[]{
                            59,
                            -80,
@@ -8816,15 +7901,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            124,
                            118
                         };
-                        PaddedAesCipher paddedAesCipher80 = paddedAesCipher;
-                        byte[] bytes316 = bytes315;
-                        byte[] bytes317 = VendorAesHelper.encryptWithCipher(bytes314, bytes316, paddedAesCipher80);
-                        vendorPacketEncryptor79.decoyKeySlot78 = keccakSha3Digest79.digest(bytes317);
+                        this.decoyKeySlot78 = keccakSha3Digest79.digest(VendorAesHelper.encryptWithCipher(bytes, bytes315, paddedAesCipher));
                         l = (l ^ 2332901192750524431L) - -220155268810218733L;
                      } else {
-                        VendorPacketEncryptor vendorPacketEncryptor80 = this;
                         KeccakSha3Digest keccakSha3Digest80 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                        byte[] bytes318 = bytes;
                         byte[] bytes319 = new byte[]{
                            15,
                            114,
@@ -8859,16 +7939,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                            57,
                            115
                         };
-                        PaddedAesCipher paddedAesCipher81 = paddedAesCipher;
-                        byte[] bytes320 = bytes319;
-                        byte[] bytes321 = VendorAesHelper.encryptWithCipher(bytes318, bytes320, paddedAesCipher81);
-                        vendorPacketEncryptor80.decoyKeySlot79 = keccakSha3Digest80.digest(bytes321);
+                        this.decoyKeySlot79 = keccakSha3Digest80.digest(VendorAesHelper.encryptWithCipher(bytes, bytes319, paddedAesCipher));
                         l = (l ^ -8435420231099402261L) + -1771708687508903087L;
                      }
                   } else if (b <= 70) {
-                     VendorPacketEncryptor vendorPacketEncryptor81 = this;
                      KeccakSha3Digest keccakSha3Digest81 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes322 = bytes;
                      byte[] bytes323 = new byte[]{
                         -124,
                         -34,
@@ -8903,15 +7978,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -44,
                         35
                      };
-                     PaddedAesCipher paddedAesCipher82 = paddedAesCipher;
-                     byte[] bytes324 = bytes323;
-                     byte[] bytes325 = VendorAesHelper.encryptWithCipher(bytes322, bytes324, paddedAesCipher82);
-                     vendorPacketEncryptor81.decoyKeySlot80 = keccakSha3Digest81.digest(bytes325);
+                     this.decoyKeySlot80 = keccakSha3Digest81.digest(VendorAesHelper.encryptWithCipher(bytes, bytes323, paddedAesCipher));
                      l = l + 4536519968733724716L ^ 5735668161456345241L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor82 = this;
                      KeccakSha3Digest keccakSha3Digest82 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes326 = bytes;
                      byte[] bytes327 = new byte[]{
                         -71,
                         -52,
@@ -8946,17 +8016,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -28,
                         -19
                      };
-                     PaddedAesCipher paddedAesCipher83 = paddedAesCipher;
-                     byte[] bytes328 = bytes327;
-                     byte[] bytes329 = VendorAesHelper.encryptWithCipher(bytes326, bytes328, paddedAesCipher83);
-                     vendorPacketEncryptor82.decoyKeySlot81 = keccakSha3Digest82.digest(bytes329);
+                     this.decoyKeySlot81 = keccakSha3Digest82.digest(VendorAesHelper.encryptWithCipher(bytes, bytes327, paddedAesCipher));
                      l = l + 1041052224621710155L ^ -8610360991516565922L;
                   }
                } else if (b >= 66) {
                   if (b <= 66) {
-                     VendorPacketEncryptor vendorPacketEncryptor83 = this;
                      KeccakSha3Digest keccakSha3Digest83 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes330 = bytes;
                      byte[] bytes331 = new byte[]{
                         -37,
                         33,
@@ -8991,18 +8056,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -104,
                         56
                      };
-                     PaddedAesCipher paddedAesCipher84 = paddedAesCipher;
-                     byte[] bytes332 = bytes331;
-                     byte[] bytes333 = VendorAesHelper.encryptWithCipher(bytes330, bytes332, paddedAesCipher84);
-                     vendorPacketEncryptor83.decoyKeySlot82 = keccakSha3Digest83.digest(bytes333);
+                     this.decoyKeySlot82 = keccakSha3Digest83.digest(VendorAesHelper.encryptWithCipher(bytes, bytes331, paddedAesCipher));
                      l = (l ^ -2993354438063449637L) - -7884029912094793854L;
                      continue outerLoop;
                   }
 
                   if (67 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor84 = this;
                      KeccakSha3Digest keccakSha3Digest84 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes334 = bytes;
                      byte[] bytes335 = new byte[]{
                         -41,
                         74,
@@ -9037,15 +8097,10 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         61,
                         -17
                      };
-                     PaddedAesCipher paddedAesCipher85 = paddedAesCipher;
-                     byte[] bytes336 = bytes335;
-                     byte[] bytes337 = VendorAesHelper.encryptWithCipher(bytes334, bytes336, paddedAesCipher85);
-                     vendorPacketEncryptor84.decoyKeySlot83 = keccakSha3Digest84.digest(bytes337);
+                     this.decoyKeySlot83 = keccakSha3Digest84.digest(VendorAesHelper.encryptWithCipher(bytes, bytes335, paddedAesCipher));
                      l = l - -1363824544029079458L ^ 1975885279501938477L;
                   } else {
-                     VendorPacketEncryptor vendorPacketEncryptor85 = this;
                      KeccakSha3Digest keccakSha3Digest85 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes338 = bytes;
                      byte[] bytes339 = new byte[]{
                         -100,
                         10,
@@ -9080,17 +8135,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -66,
                         -59
                      };
-                     PaddedAesCipher paddedAesCipher86 = paddedAesCipher;
-                     byte[] bytes340 = bytes339;
-                     byte[] bytes341 = VendorAesHelper.encryptWithCipher(bytes338, bytes340, paddedAesCipher86);
-                     vendorPacketEncryptor85.decoyKeySlot84 = keccakSha3Digest85.digest(bytes341);
+                     this.decoyKeySlot84 = keccakSha3Digest85.digest(VendorAesHelper.encryptWithCipher(bytes, bytes339, paddedAesCipher));
                      l = l + -4966568069560667548L ^ 6586001805426017734L;
                   }
                } else {
                   if (64 < b) {
-                     VendorPacketEncryptor vendorPacketEncryptor86 = this;
                      KeccakSha3Digest keccakSha3Digest86 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes342 = bytes;
                      byte[] bytes343 = new byte[]{
                         -73,
                         -127,
@@ -9125,17 +8175,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         -122,
                         121
                      };
-                     PaddedAesCipher paddedAesCipher87 = paddedAesCipher;
-                     byte[] bytes344 = bytes343;
-                     byte[] bytes345 = VendorAesHelper.encryptWithCipher(bytes342, bytes344, paddedAesCipher87);
-                     vendorPacketEncryptor86.decoyKeySlot85 = keccakSha3Digest86.digest(bytes345);
+                     this.decoyKeySlot85 = keccakSha3Digest86.digest(VendorAesHelper.encryptWithCipher(bytes, bytes343, paddedAesCipher));
                      l = l - -5171691546686218947L ^ -3429443662246146125L;
                      continue outerLoop;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor87 = this;
                   KeccakSha3Digest keccakSha3Digest87 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes346 = bytes;
                   byte[] bytes347 = new byte[]{
                      -62,
                      66,
@@ -9170,17 +8215,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -59,
                      1
                   };
-                  PaddedAesCipher paddedAesCipher88 = paddedAesCipher;
-                  byte[] bytes348 = bytes347;
-                  byte[] bytes349 = VendorAesHelper.encryptWithCipher(bytes346, bytes348, paddedAesCipher88);
-                  vendorPacketEncryptor87.decoyKeySlot86 = keccakSha3Digest87.digest(bytes349);
+                  this.decoyKeySlot86 = keccakSha3Digest87.digest(VendorAesHelper.encryptWithCipher(bytes, bytes347, paddedAesCipher));
                   l = l - -2328901015880447506L ^ -1139463180724449826L;
                }
             } else if (56 <= b) {
                if (b <= 56) {
-                  VendorPacketEncryptor vendorPacketEncryptor88 = this;
                   KeccakSha3Digest keccakSha3Digest88 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes350 = bytes;
                   byte[] bytes351 = new byte[]{
                      -85,
                      114,
@@ -9215,19 +8255,14 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -28,
                      -48
                   };
-                  PaddedAesCipher paddedAesCipher89 = paddedAesCipher;
-                  byte[] bytes352 = bytes351;
-                  byte[] bytes353 = VendorAesHelper.encryptWithCipher(bytes350, bytes352, paddedAesCipher89);
-                  vendorPacketEncryptor88.decoyKeySlot87 = keccakSha3Digest88.digest(bytes353);
+                  this.decoyKeySlot87 = keccakSha3Digest88.digest(VendorAesHelper.encryptWithCipher(bytes, bytes351, paddedAesCipher));
                   l = l - 3258899298644772513L ^ -3338643253405750118L;
                   continue outerLoop;
                }
 
                if (59 <= b) {
                   if (b <= 59) {
-                     VendorPacketEncryptor vendorPacketEncryptor89 = this;
                      KeccakSha3Digest keccakSha3Digest89 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes354 = bytes;
                      byte[] bytes355 = new byte[]{
                         40,
                         112,
@@ -9262,18 +8297,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         37,
                         -66
                      };
-                     PaddedAesCipher paddedAesCipher90 = paddedAesCipher;
-                     byte[] bytes356 = bytes355;
-                     byte[] bytes357 = VendorAesHelper.encryptWithCipher(bytes354, bytes356, paddedAesCipher90);
-                     vendorPacketEncryptor89.decoyKeySlot88 = keccakSha3Digest89.digest(bytes357);
+                     this.decoyKeySlot88 = keccakSha3Digest89.digest(VendorAesHelper.encryptWithCipher(bytes, bytes355, paddedAesCipher));
                      l = l + -5020508856717909491L ^ 9071544885768350165L;
                      continue outerLoop;
                   }
 
                   if (b < 61) {
-                     VendorPacketEncryptor vendorPacketEncryptor90 = this;
                      KeccakSha3Digest keccakSha3Digest90 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes358 = bytes;
                      byte[] bytes359 = new byte[]{
                         -71,
                         95,
@@ -9308,18 +8338,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         54,
                         16
                      };
-                     PaddedAesCipher paddedAesCipher91 = paddedAesCipher;
-                     byte[] bytes360 = bytes359;
-                     byte[] bytes361 = VendorAesHelper.encryptWithCipher(bytes358, bytes360, paddedAesCipher91);
-                     vendorPacketEncryptor90.decoyKeySlot89 = keccakSha3Digest90.digest(bytes361);
+                     this.decoyKeySlot89 = keccakSha3Digest90.digest(VendorAesHelper.encryptWithCipher(bytes, bytes359, paddedAesCipher));
                      l = l - -6069710714462439114L ^ -5972643526883352220L;
                      continue outerLoop;
                   }
 
                   if (b <= 61) {
-                     VendorPacketEncryptor vendorPacketEncryptor91 = this;
                      KeccakSha3Digest keccakSha3Digest91 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes362 = bytes;
                      byte[] bytes363 = new byte[]{
                         -104,
                         -116,
@@ -9354,17 +8379,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         35,
                         118
                      };
-                     PaddedAesCipher paddedAesCipher92 = paddedAesCipher;
-                     byte[] bytes364 = bytes363;
-                     byte[] bytes365 = VendorAesHelper.encryptWithCipher(bytes362, bytes364, paddedAesCipher92);
-                     vendorPacketEncryptor91.decoyKeySlot90 = keccakSha3Digest91.digest(bytes365);
+                     this.decoyKeySlot90 = keccakSha3Digest91.digest(VendorAesHelper.encryptWithCipher(bytes, bytes363, paddedAesCipher));
                      l = l + 2601962773303538576L ^ -2855100614095505648L;
                      continue outerLoop;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor92 = this;
                   KeccakSha3Digest keccakSha3Digest92 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes366 = bytes;
                   byte[] bytes367 = new byte[]{
                      -106,
                      9,
@@ -9399,16 +8419,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -107,
                      45
                   };
-                  PaddedAesCipher paddedAesCipher93 = paddedAesCipher;
-                  byte[] bytes368 = bytes367;
-                  byte[] bytes369 = VendorAesHelper.encryptWithCipher(bytes366, bytes368, paddedAesCipher93);
-                  vendorPacketEncryptor92.decoyKeySlot91 = keccakSha3Digest92.digest(bytes369);
+                  this.decoyKeySlot91 = keccakSha3Digest92.digest(VendorAesHelper.encryptWithCipher(bytes, bytes367, paddedAesCipher));
                   l = (l ^ -7213083845140743953L) - 2581713361620663196L;
                } else {
                   if (57 >= b) {
-                     VendorPacketEncryptor vendorPacketEncryptor93 = this;
                      KeccakSha3Digest keccakSha3Digest93 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                     byte[] bytes370 = bytes;
                      byte[] bytes371 = new byte[]{
                         -23,
                         -20,
@@ -9443,17 +8458,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                         110,
                         -127
                      };
-                     PaddedAesCipher paddedAesCipher94 = paddedAesCipher;
-                     byte[] bytes372 = bytes371;
-                     byte[] bytes373 = VendorAesHelper.encryptWithCipher(bytes370, bytes372, paddedAesCipher94);
-                     vendorPacketEncryptor93.decoyKeySlot92 = keccakSha3Digest93.digest(bytes373);
+                     this.decoyKeySlot92 = keccakSha3Digest93.digest(VendorAesHelper.encryptWithCipher(bytes, bytes371, paddedAesCipher));
                      l = l - 8896598969667048187L ^ -6718941141329961483L;
                      continue outerLoop;
                   }
 
-                  VendorPacketEncryptor vendorPacketEncryptor94 = this;
                   KeccakSha3Digest keccakSha3Digest94 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes374 = bytes;
                   byte[] bytes375 = new byte[]{
                      9,
                      -99,
@@ -9488,17 +8498,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -13,
                      109
                   };
-                  PaddedAesCipher paddedAesCipher95 = paddedAesCipher;
-                  byte[] bytes376 = bytes375;
-                  byte[] bytes377 = VendorAesHelper.encryptWithCipher(bytes374, bytes376, paddedAesCipher95);
-                  vendorPacketEncryptor94.decoyKeySlot93 = keccakSha3Digest94.digest(bytes377);
+                  this.decoyKeySlot93 = keccakSha3Digest94.digest(VendorAesHelper.encryptWithCipher(bytes, bytes375, paddedAesCipher));
                   l = (l ^ -90458757856481544L) - -5846685304651271537L;
                }
             } else if (b >= 53) {
                if (53 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor95 = this;
                   KeccakSha3Digest keccakSha3Digest95 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes378 = bytes;
                   byte[] bytes379 = new byte[]{
                      98,
                      -67,
@@ -9533,18 +8538,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      77,
                      109
                   };
-                  PaddedAesCipher paddedAesCipher96 = paddedAesCipher;
-                  byte[] bytes380 = bytes379;
-                  byte[] bytes381 = VendorAesHelper.encryptWithCipher(bytes378, bytes380, paddedAesCipher96);
-                  vendorPacketEncryptor95.decoyKeySlot94 = keccakSha3Digest95.digest(bytes381);
+                  this.decoyKeySlot94 = keccakSha3Digest95.digest(VendorAesHelper.encryptWithCipher(bytes, bytes379, paddedAesCipher));
                   l = l - -6976434436422987488L ^ -7106799899322776472L;
                   continue outerLoop;
                }
 
                if (b <= 54) {
-                  VendorPacketEncryptor vendorPacketEncryptor96 = this;
                   KeccakSha3Digest keccakSha3Digest96 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes382 = bytes;
                   byte[] bytes383 = new byte[]{
                      -110,
                      113,
@@ -9579,17 +8579,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      35,
                      64
                   };
-                  PaddedAesCipher paddedAesCipher97 = paddedAesCipher;
-                  byte[] bytes384 = bytes383;
-                  byte[] bytes385 = VendorAesHelper.encryptWithCipher(bytes382, bytes384, paddedAesCipher97);
-                  vendorPacketEncryptor96.decoyKeySlot95 = keccakSha3Digest96.digest(bytes385);
+                  this.decoyKeySlot95 = keccakSha3Digest96.digest(VendorAesHelper.encryptWithCipher(bytes, bytes383, paddedAesCipher));
                   l = l - -329782099568941145L ^ 2064510023316541265L;
                   continue outerLoop;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor97 = this;
                KeccakSha3Digest keccakSha3Digest97 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes386 = bytes;
                byte[] bytes387 = new byte[]{
                   -30,
                   -39,
@@ -9624,16 +8619,11 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -43,
                   -35
                };
-               PaddedAesCipher paddedAesCipher98 = paddedAesCipher;
-               byte[] bytes388 = bytes387;
-               byte[] bytes389 = VendorAesHelper.encryptWithCipher(bytes386, bytes388, paddedAesCipher98);
-               vendorPacketEncryptor97.decoyKeySlot96 = keccakSha3Digest97.digest(bytes389);
+               this.decoyKeySlot96 = keccakSha3Digest97.digest(VendorAesHelper.encryptWithCipher(bytes, bytes387, paddedAesCipher));
                l = (l ^ -442672351012318947L) + -5229107053585263611L;
             } else {
                if (b > 51) {
-                  VendorPacketEncryptor vendorPacketEncryptor98 = this;
                   KeccakSha3Digest keccakSha3Digest98 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-                  byte[] bytes390 = bytes;
                   byte[] bytes391 = new byte[]{
                      -104,
                      43,
@@ -9668,17 +8658,12 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      -24,
                      -25
                   };
-                  PaddedAesCipher paddedAesCipher99 = paddedAesCipher;
-                  byte[] bytes392 = bytes391;
-                  byte[] bytes393 = VendorAesHelper.encryptWithCipher(bytes390, bytes392, paddedAesCipher99);
-                  vendorPacketEncryptor98.decoyKeySlot97 = keccakSha3Digest98.digest(bytes393);
+                  this.decoyKeySlot97 = keccakSha3Digest98.digest(VendorAesHelper.encryptWithCipher(bytes, bytes391, paddedAesCipher));
                   l = (l ^ 7667232452411622553L) + 3904905873987927043L;
                   continue outerLoop;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor99 = this;
                KeccakSha3Digest keccakSha3Digest99 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-               byte[] bytes394 = bytes;
                byte[] bytes395 = new byte[]{
                   34,
                   127,
@@ -9713,24 +8698,16 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                   -15,
                   2
                };
-               PaddedAesCipher paddedAesCipher100 = paddedAesCipher;
-               byte[] bytes396 = bytes395;
-               byte[] bytes397 = VendorAesHelper.encryptWithCipher(bytes394, bytes396, paddedAesCipher100);
-               vendorPacketEncryptor99.decoyKeySlot98 = keccakSha3Digest99.digest(bytes397);
+               this.decoyKeySlot98 = keccakSha3Digest99.digest(VendorAesHelper.encryptWithCipher(bytes, bytes395, paddedAesCipher));
                l = (l ^ -6267029551755163643L) + 7481478331514590426L;
             }
          }
 
-         VendorPacketEncryptor vendorPacketEncryptor100 = this;
          KeccakSha3Digest keccakSha3Digest100 = new KeccakSha3Digest(Sha3Algorithm.SHA3_256);
-         byte[] bytes398 = bytes;
-         byte[] bytes399 = new byte[]{
+         byte[] bytes401 = VendorAesHelper.encryptWithCipher(bytes, new byte[]{
             46, 30, -81, 114, -65, -57, 110, 65, -4, 92, 105, 97, 18, -58, 125, 110, 1, 63, -31, -84, 109, -24, -68, 18, 115, -68, 96, -1, -112, 23, 47, -102
-         };
-         PaddedAesCipher paddedAesCipher101 = paddedAesCipher;
-         byte[] bytes400 = bytes399;
-         byte[] bytes401 = VendorAesHelper.encryptWithCipher(bytes398, bytes400, paddedAesCipher101);
-         vendorPacketEncryptor100.decoyKeySlot99 = keccakSha3Digest100.digest(bytes401);
+         }, paddedAesCipher);
+         this.decoyKeySlot99 = keccakSha3Digest100.digest(bytes401);
          l = (l ^ -5039876201842451885L) + -9129066416698354503L;
       }
    }
@@ -9739,7 +8716,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       int n2 = 0;
       int n3 = 0;
       int n4 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n5 = 0;
       byte b = 3;
 
@@ -9783,7 +8759,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       byte b = 0;
       int n3 = 0;
       byte b2 = 2;
-      String opaqueStateTag = VendorPacketBuffer.getOpaqueStateTag();
 
       while (true) {
          while (true) {
@@ -9826,7 +8801,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    private void decryptBlockImpl(byte[] bytes, int n, byte[] bytes2, int n2) {
       int n3 = 4;
       int n4 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
-      VendorPacketBuffer.getOpaqueStateTag();
       int n5 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n6 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n7 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n] & 255) ^ this.roundKeys[n3++];
@@ -9912,7 +8886,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    private ByteBuf encryptBuffer(ByteBuf buf) {
       ByteBuf buf2 = null;
       byte[] bytes = null;
-      VendorPacketBuffer.getOpaqueStateTag();
       byte[] bytes2 = null;
       byte b = 5;
       long l = -709133871989894080L;
@@ -9924,10 +8897,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
             l = l - 1639893961190029540L ^ 2345957453961336763L;
          } else if (b >= 9) {
             if (9 >= b) {
-               VendorPacketEncryptor vendorPacketEncryptor = this;
-               byte[] sessionKey2 = this.sessionKey;
-               boolean flag = false;
-               vendorPacketEncryptor.initCipher(flag, sessionKey2);
+               this.initCipher(false, this.sessionKey);
                l = l + -4666247049778223485L ^ -4114117634688248922L;
             } else if (b >= 11) {
                if (b > 11) {
@@ -9985,20 +8955,13 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
             buf2 = Unpooled.copiedBuffer(bytes);
             l = (l ^ -1043148515387680852L) - -5508832852666363928L;
          } else {
-            VendorPacketEncryptor vendorPacketEncryptor2 = this;
-            byte[] bytes3 = bytes;
-            int length = bytes.length;
-            int n = length;
-            byte b2 = 0;
-            byte[] bytes4 = bytes3;
-            bytes2 = vendorPacketEncryptor2.encryptBytes(bytes4, b2, n);
+            bytes2 = this.encryptBytes(bytes, (byte)0, bytes.length);
             l = l - -4563026084181840952L ^ 7183580633520798832L;
          }
       }
    }
 
    public void checkBlockAlignment(int n, int n2) {
-      String opaqueStateTag = VendorPacketBuffer.getOpaqueStateTag();
       if (n % n2 != 0) {
          throw new ProviderException("Internal error in input buffering");
       }
@@ -10006,7 +8969,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
 
    public byte[] decryptBytes(byte[] bytes, int n, int n2) {
       byte[] bytes2 = null;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n3 = 0;
       byte b = 0;
       long l = 6592012946553243227L;
@@ -10029,31 +8991,17 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
 
             while (true) {
                while (b < 1) {
-                  VendorPacketEncryptor vendorPacketEncryptor = this;
-                  int blockSize = this.getBlockSize();
-                  int n4 = blockSize;
-                  vendorPacketEncryptor.checkBlockAlignment(n2, n4);
+                  this.checkBlockAlignment(n2, this.getBlockSize());
                   l = l - 2084707472068793156L ^ 7906626699993439817L;
                }
 
                if (1 >= b) {
-                  VendorPacketEncryptor vendorPacketEncryptor2 = this;
-                  byte[] bytes3 = bytes2;
-                  int length = bytes.length;
-                  byte b2 = 0;
-                  byte[] bytes4 = bytes3;
-                  n3 = vendorPacketEncryptor2.unpadPkcs5(bytes4, b2, length);
+                  n3 = this.unpadPkcs5(bytes2, (byte)0, bytes.length);
                   l = l + -5074330563884915622L ^ -5017916064050849079L;
                   break;
                }
 
-               VendorPacketEncryptor vendorPacketEncryptor3 = this;
-               byte[] bytes5 = bytes;
-               byte[] bytes6 = bytes2;
-               byte b3 = 0;
-               byte[] bytes7 = bytes6;
-               byte[] bytes8 = bytes5;
-               vendorPacketEncryptor3.decryptCbc(bytes8, n, n2, bytes7, b3);
+               this.decryptCbc(bytes, n, n2, bytes2, (byte)0);
                l = (l ^ -7416258388968080812L) + 5661562293899121800L;
             }
          }
@@ -10293,7 +9241,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
       this.timingGuard = pipelineTimingGuard;
       this.cbcWorkBuffer = new byte[this.getBlockSize()];
       this.cbcRegister = new byte[this.getBlockSize()];
-      short s = 283;
       int n9 = 0;
       this.gfAntilogTable[0] = 1;
       int n10 = 1;
@@ -10308,7 +9255,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                }
 
                if (n != 0) {
-                  n9 ^= s;
+                  n9 ^= (short)283;
                }
 
                this.gfAntilogTable[n10] = n9;
@@ -10637,12 +9584,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
                      n9 = n15 + n16;
 
                      while (n9 < 8) {
-                        byte[] bytes3 = bytesArr6[n18];
-                        byte b3 = bytesArr6[n18][n9];
-                        byte b4 = bytesArr6[n10][n9];
-                        byte b5 = bytesArr6[n18][n10];
-                        byte b6 = b4;
-                        bytes3[n9] = (byte)(b3 ^ this.gfMul(b6, b5));
+                        bytesArr6[n18][n9] = (byte)(bytesArr6[n18][n9] ^ this.gfMul(bytesArr6[n10][n9], bytesArr6[n18][n10]));
                         n9++;
                         if (str != null) {
                            break exitBlock6;
@@ -10760,8 +9702,7 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
 
       while (true) {
          if (n19 < 30) {
-            byte b8 = 2;
-            n20 = this.gfMul(b8, n20);
+            n20 = this.gfMul((byte)2, n20);
             this.roundConstants[n19] = (byte)n20;
             n19++;
             if (str != null) {
@@ -10794,7 +9735,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    private int decryptCbc(byte[] bytes, int n, int n2, byte[] bytes2, int n3) {
       int n4 = 0;
       int n5 = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       int n6 = 1;
       long l = 1435321059130011527L;
       long l2 = 0L;
@@ -10873,7 +9813,6 @@ public class VendorPacketEncryptor extends MessageToMessageEncoder {
    }
 
    private int gfMul(int n, int n2) {
-      VendorPacketBuffer.getOpaqueStateTag();
       int n3 = 1;
       long l = 1529640426863803003L;
       long l2 = 0L;

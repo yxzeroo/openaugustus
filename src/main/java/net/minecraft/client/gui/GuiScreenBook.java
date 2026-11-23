@@ -126,8 +126,7 @@ public class GuiScreenBook extends GuiScreen {
                      this.cachedComponents = null;
                   }
                } else {
-                  ChatComponentText chatComponentText = new ChatComponentText(EnumChatFormatting.DARK_RED + "* Invalid book tag *");
-                  this.cachedComponents = Lists.newArrayList(chatComponentText);
+                  this.cachedComponents = Lists.newArrayList(new ChatComponentText(EnumChatFormatting.DARK_RED + "* Invalid book tag *"));
                }
 
                this.cachedPage = this.currPage;
@@ -174,8 +173,7 @@ public class GuiScreenBook extends GuiScreen {
       this.bookObj = stack;
       this.bookIsUnsigned = flag;
       if (stack.hasTagCompound()) {
-         NBTTagCompound tagCompound = stack.getTagCompound();
-         this.bookPages = tagCompound.getTagList("pages", 8);
+         this.bookPages = stack.getTagCompound().getTagList("pages", 8);
          if (this.bookPages != null) {
             this.bookPages = (NBTTagList)this.bookPages.copy();
             this.bookTotalPages = this.bookPages.tagCount();
@@ -294,8 +292,7 @@ public class GuiScreenBook extends GuiScreen {
    private void sendBookToServer(boolean flag) throws IOException {
       if (this.bookIsUnsigned && this.bookIsModified && this.bookPages != null) {
          while (this.bookPages.tagCount() > 1) {
-            String stringTagAt = this.bookPages.getStringTagAt(this.bookPages.tagCount() - 1);
-            if (stringTagAt.length() != 0) {
+            if (this.bookPages.getStringTagAt(this.bookPages.tagCount() - 1).length() != 0) {
                break;
             }
 
@@ -303,8 +300,7 @@ public class GuiScreenBook extends GuiScreen {
          }
 
          if (this.bookObj.hasTagCompound()) {
-            NBTTagCompound tagCompound = this.bookObj.getTagCompound();
-            tagCompound.setTag("pages", this.bookPages);
+            this.bookObj.getTagCompound().setTag("pages", this.bookPages);
          } else {
             this.bookObj.setTagInfo("pages", this.bookPages);
          }
@@ -317,8 +313,7 @@ public class GuiScreenBook extends GuiScreen {
 
             for (int i = 0; i < this.bookPages.tagCount(); i++) {
                String stringTagAt2 = this.bookPages.getStringTagAt(i);
-               ChatComponentText chatComponentText = new ChatComponentText(stringTagAt2);
-               stringTagAt2 = IChatComponent.Serializer.componentToJson(chatComponentText);
+               stringTagAt2 = IChatComponent.Serializer.componentToJson(new ChatComponentText(stringTagAt2));
                this.bookPages.set(i, new NBTTagString(stringTagAt2));
             }
 
@@ -332,10 +327,8 @@ public class GuiScreenBook extends GuiScreen {
    }
 
    private void pageInsertIntoCurrent(String str) {
-      String str2 = this.pageGetCurrent();
-      String str3 = str2 + str;
-      int n = this.fontRendererObj.splitStringWidth(str3 + "" + EnumChatFormatting.BLACK + "_", 118);
-      if (n <= 128 && str3.length() < 256) {
+      String str3 = this.pageGetCurrent() + str;
+      if (this.fontRendererObj.splitStringWidth(str3 + "" + EnumChatFormatting.BLACK + "_", 118) <= 128 && str3.length() < 256) {
          this.pageSetCurrent(str3);
       }
    }
@@ -441,8 +434,7 @@ public class GuiScreenBook extends GuiScreen {
    @Override
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       if (mouseButton == 0) {
-         IChatComponent clickedComponentAt = this.getClickedComponentAt(mouseX, mouseY);
-         if (this.handleComponentClick(clickedComponentAt)) {
+         if (this.handleComponentClick(this.getClickedComponentAt(mouseX, mouseY))) {
             return;
          }
       }

@@ -1,7 +1,6 @@
 package net.augustus.ui.sidebar;
 
 import net.augustus.ui.menu.ContextMenuItem;
-import net.augustus.ui.widgets.ScrollBar;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -26,7 +25,6 @@ public class BooleanSidebarItem implements ContextMenuItem {
 
    @Override
    public void onClick(String str) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       this.valueSetter.accept(!(Boolean)this.valueGetter.get());
    }
 

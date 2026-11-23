@@ -191,8 +191,7 @@ public class BiomeGenMesa extends BiomeGenBase {
                         n6, i, n5, Blocks.stained_hardened_clay.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.ORANGE)
                      );
                   } else {
-                     IBlockState band = this.getBand(n, i, n2);
-                     chunkPrimer.setBlockState(n6, i, n5, band);
+                     chunkPrimer.setBlockState(n6, i, n5, this.getBand(n, i, n2));
                   }
                }
             }

@@ -12,8 +12,7 @@ public abstract class Obuffer {
       int n2 = 0;
 
       while (n2 < 32) {
-         short s = this.clip(floats[n2++]);
-         this.append(n, s);
+         this.append(n, this.clip(floats[n2++]));
       }
    }
 

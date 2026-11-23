@@ -111,8 +111,7 @@ public abstract class GenLayer {
       genLayerZoom2 = new GenLayerZoom(2003L, genLayerZoom2);
       GenLayerAddIsland genLayerAddIsland4 = new GenLayerAddIsland(4L, genLayerZoom2);
       GenLayerAddMushroomIsland island = new GenLayerAddMushroomIsland(5L, genLayerAddIsland4);
-      GenLayerDeepOcean genLayerDeepOcean = new GenLayerDeepOcean(4L, island);
-      GenLayer genLayer = GenLayerZoom.magnify(1000L, genLayerDeepOcean, 0);
+      GenLayer genLayer = GenLayerZoom.magnify(1000L, new GenLayerDeepOcean(4L, island), 0);
       ChunkProviderSettings chunkProviderSettings = null;
       int n = 4;
       int n2 = n;
@@ -128,8 +127,7 @@ public abstract class GenLayer {
 
       GenLayer genLayer2 = GenLayerZoom.magnify(1000L, genLayer, 0);
       GenLayerRiverInit genLayerRiverInit = new GenLayerRiverInit(100L, genLayer2);
-      GenLayerBiome genLayerBiome = new GenLayerBiome(200L, genLayer, worldType, str);
-      GenLayer genLayer3 = GenLayerZoom.magnify(1000L, genLayerBiome, 2);
+      GenLayer genLayer3 = GenLayerZoom.magnify(1000L, new GenLayerBiome(200L, genLayer, worldType, str), 2);
       GenLayerBiomeEdge genLayerBiomeEdge = new GenLayerBiomeEdge(1000L, genLayer3);
       GenLayer genLayer4 = GenLayerZoom.magnify(1000L, genLayerRiverInit, 2);
       GenLayer genLayer5 = new GenLayerHills(1000L, genLayerBiomeEdge, genLayer4);

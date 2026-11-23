@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.BiFunction;
 import net.augustus.modules.fun.SkinDerp;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
@@ -15,14 +15,13 @@ public class RandomSkinDerpMode extends SkinDerpMode implements TickListener {
    private final Random random = new Random();
    private final Map partStates = new HashMap();
 
-   public RandomSkinDerpMode(SkinDerp skinDerp, DoubleValue doubleValue) {
+   public RandomSkinDerpMode(SkinDerp skinDerp, SettingGroup doubleValue) {
       super(skinDerp, doubleValue, "Random");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -43,9 +42,7 @@ public class RandomSkinDerpMode extends SkinDerpMode implements TickListener {
    @Override
    public void onTick3() {
       if (mc.thePlayer != null && mc.theWorld != null) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double delayMs = this.getDelayMs();
-         if (timeHelper2.reached(delayMs)) {
+         if (this.timeHelper.reached(this.getDelayMs())) {
             this.timeHelper.reset();
 
             for (EnumPlayerModelParts enumPlayerModelParts : this.getModelParts()) {
@@ -61,7 +58,7 @@ public class RandomSkinDerpMode extends SkinDerpMode implements TickListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new RandomSkinDerpMode((SkinDerp)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new RandomSkinDerpMode((SkinDerp)obj, (SettingGroup)obj2);
    }
 
 }

@@ -17,8 +17,7 @@ public class GeoEasingManager {
 
    private static Double stepLookup(double[] doubles, Double d) {
       double d2 = d;
-      boolean flag = false;
-      return doubles[binarySearch(d2, doubles, flag)];
+      return doubles[binarySearch(d2, doubles, false)];
    }
 
    public static double min(double d, double d2, double d3, double d4) {
@@ -170,8 +169,7 @@ public class GeoEasingManager {
    }
 
    public static Function<Double, Double> step(Double d) {
-      int n = d != null ? d.intValue() : 2;
-      double[] doubles = linspace(n);
+      double[] doubles = linspace(d != null ? d.intValue() : 2);
       return d2 -> stepLookup(doubles, (Double)d2);
    }
 

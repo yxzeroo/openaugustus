@@ -30,10 +30,7 @@ public class PipelineTimingGuard {
                   return;
                }
 
-               PipelineTimingGuard pipelineTimingGuard = this;
-               byte b2 = 3;
-               byte b3 = 3;
-               doublesArr = pipelineTimingGuard.generateRandomMatrix(b3, b2);
+               doublesArr = this.generateRandomMatrix((byte)3, (byte)3);
             }
          } else {
             l = System.nanoTime();
@@ -43,14 +40,10 @@ public class PipelineTimingGuard {
             while (4 < b) {
                if (b < 7) {
                   if (b <= 5) {
-                     PipelineTimingGuard pipelineTimingGuard2 = this;
-                     String str = "STEP1_ENTRY";
-                     pipelineTimingGuard2.markStepEntry(str);
+                     this.markStepEntry("STEP1_ENTRY");
                   } else {
-                     PipelineTimingGuard pipelineTimingGuard3 = this;
                      long l3 = l2 - l;
-                     String str2 = "step1";
-                     pipelineTimingGuard3.recordStepDuration(str2, l3);
+                     this.recordStepDuration("step1", l3);
                   }
                   continue outerLoop;
                }
@@ -61,12 +54,9 @@ public class PipelineTimingGuard {
                }
 
                if (b <= 8) {
-                  long step1Count2 = this.step1Count;
-                  d = this.computeLogLogistic(step1Count2);
+                  d = this.computeLogLogistic(this.step1Count);
                } else {
-                  PipelineTimingGuard pipelineTimingGuard4 = this;
-                  double[][] doublesArr2 = doublesArr;
-                  pipelineTimingGuard4.computeMatrixDeterminant(doublesArr2);
+                  this.computeMatrixDeterminant(doublesArr);
                }
             }
 
@@ -114,18 +104,15 @@ public class PipelineTimingGuard {
 
          if (1 <= b) {
             if (1 >= b) {
-               PipelineTimingGuard pipelineTimingGuard = this;
                long step3Count2 = this.step3Count;
-               long step2Count2 = this.step2Count;
-               d = pipelineTimingGuard.computeTanhLogRatio(step2Count2, step3Count2);
+               d = this.computeTanhLogRatio(this.step2Count, step3Count2);
                l = l - -3836496183820738113L ^ -711290324011446114L;
             } else {
                if (2 < b) {
                   throw new RuntimeException();
                }
 
-               PipelineTimingGuard pipelineTimingGuard2 = this;
-               pipelineTimingGuard2.populateNoiseVector();
+               this.populateNoiseVector();
                l = l + 6057576994596274425L ^ 6784183512163156948L;
             }
          } else {
@@ -362,8 +349,7 @@ public class PipelineTimingGuard {
                }
 
                if (b <= 7) {
-                  PipelineTimingGuard pipelineTimingGuard = this;
-                  l = pipelineTimingGuard.computePackedStepHash();
+                  l = this.computePackedStepHash();
                   l3 = (l3 ^ 5892987322308382034L) - 2782407013351691213L;
                   break;
                }
@@ -417,10 +403,8 @@ public class PipelineTimingGuard {
             l = (l ^ -8235007487696603356L) + 6575439972669188316L;
          } else {
             double d2 = this.random.nextDouble();
-            PipelineTimingGuard pipelineTimingGuard = this;
             long step2Count2 = this.step2Count;
-            long step1Count2 = this.step1Count;
-            d = d2 * pipelineTimingGuard.computeQuadraticWave(step1Count2, step2Count2);
+            d = d2 * this.computeQuadraticWave(this.step1Count, step2Count2);
             l = (l ^ 2529132424220959272L) + 7869285713675637016L;
          }
 

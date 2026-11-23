@@ -28,9 +28,7 @@ public class PlayerConfigurationParser {
       try {
          byte[] bytes = HttpPipeline.get(str2, Minecraft.getMinecraft().getProxy());
          String str3 = new String(bytes, "ASCII");
-         JsonParser jsonParser = new JsonParser();
-         JsonObject json = (JsonObject)jsonParser.parse(str3);
-         return PlayerItemParser.parseItemModel(json);
+         return PlayerItemParser.parseItemModel((JsonObject)new JsonParser().parse(str3));
       } catch (Exception e) {
          Config.warn("Error loading item model " + str + ": " + e.getClass().getName() + ": " + e.getMessage());
          return null;
@@ -47,8 +45,7 @@ public class PlayerConfigurationParser {
          if (array != null) {
             for (int i = 0; i < array.size(); i++) {
                JsonObject json2 = (JsonObject)array.get(i);
-               boolean flag = Json.getBoolean(json2, "active", true);
-               if (flag) {
+               if (Json.getBoolean(json2, "active", true)) {
                   String string = Json.getString(json2, "type");
                   if (string == null) {
                      Config.warn("Item type is null, player: " + this.player);
@@ -72,8 +69,7 @@ public class PlayerConfigurationParser {
                            }
 
                            playerItemModel.setTextureImage(image);
-                           ResourceLocation location = new ResourceLocation("optifine.net", string3);
-                           playerItemModel.setTextureLocation(location);
+                           playerItemModel.setTextureLocation(new ResourceLocation("optifine.net", string3));
                         }
 
                         playerConfiguration.addPlayerItemModel(playerItemModel);

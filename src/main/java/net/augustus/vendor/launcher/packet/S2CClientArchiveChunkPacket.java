@@ -32,26 +32,22 @@ public class S2CClientArchiveChunkPacket implements LauncherPacket {
    public void read(NettyPacketBuf nettyPacketBuf) throws Exception {
       byte b = 2;
       S2CClientArchiveChunkPacket packet = this;
-      int n = nettyPacketBuf.readInt();
-      packet.totalSize = n;
+      packet.totalSize = nettyPacketBuf.readInt();
 
       while (true) {
          while (b > 2) {
             if (3 < b) {
                packet = this;
-               String str = nettyPacketBuf.readNullTerminatedString();
-               packet.clientName = str;
+               packet.clientName = nettyPacketBuf.readNullTerminatedString();
                return;
             }
 
             packet = this;
-            byte[] bytes = nettyPacketBuf.readByteArray();
-            packet.chunkData = bytes;
+            packet.chunkData = nettyPacketBuf.readByteArray();
          }
 
          packet = this;
-         byte[] bytes2 = nettyPacketBuf.readByteArray();
-         packet.encryptedArchiveKey = bytes2;
+         packet.encryptedArchiveKey = nettyPacketBuf.readByteArray();
       }
    }
 

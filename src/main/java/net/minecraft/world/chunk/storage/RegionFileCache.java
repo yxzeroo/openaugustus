@@ -11,8 +11,7 @@ public class RegionFileCache {
    private static final Map regionsByFilename = Maps.newHashMap();
 
    public static DataInputStream getChunkInputStream(File file, int n, int n2) {
-      RegionFile regionFile = createOrLoadRegionFile(file, n, n2);
-      return regionFile.getChunkDataInputStream(n & 31, n2 & 31);
+      return createOrLoadRegionFile(file, n, n2).getChunkDataInputStream(n & 31, n2 & 31);
    }
 
    public static synchronized void clearRegionFileReferences() {
@@ -51,7 +50,6 @@ public class RegionFileCache {
    }
 
    public static DataOutputStream getChunkOutputStream(File file, int n, int n2) {
-      RegionFile regionFile = createOrLoadRegionFile(file, n, n2);
-      return regionFile.getChunkDataOutputStream(n & 31, n2 & 31);
+      return createOrLoadRegionFile(file, n, n2).getChunkDataOutputStream(n & 31, n2 & 31);
    }
 }

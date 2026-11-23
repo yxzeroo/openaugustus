@@ -50,13 +50,11 @@ public class AlertCommand extends Command implements TickListener {
    }
 
    public void sendUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§cadd/remove/clear/list§7]";
-      this.sendChat(str);
+      this.sendChat("§7" + this.getCommand() + " [§cadd/remove/clear/list§7]");
    }
 
    public void sendRemoveUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§cremove§7] [§2Name§7]";
-      this.sendChat(str);
+      this.sendChat("§7" + this.getCommand() + " [§cremove§7] [§2Name§7]");
    }
 
    private void loadAlertsFromSettings() {
@@ -150,8 +148,7 @@ public class AlertCommand extends Command implements TickListener {
 
    @Override
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Alerts players nearby)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Alerts players nearby)");
    }
 
    @Override
@@ -161,10 +158,7 @@ public class AlertCommand extends Command implements TickListener {
       } else {
          if (strings[1].equalsIgnoreCase("add")) {
             if (strings.length == 3) {
-               String str2 = strings[2];
-               double d = -1.0;
-               String str3 = str2;
-               this.addAlert(str3, d);
+               this.addAlert(strings[2], -1.0);
                ChatUtil.sendChat3("Added " + strings[2] + " successfully");
             } else if (strings.length == 4) {
                double d2 = -1.0;
@@ -174,8 +168,7 @@ public class AlertCommand extends Command implements TickListener {
                } catch (Exception e) {
                }
 
-               String str4 = strings[2];
-               this.addAlert(str4, d2);
+               this.addAlert(strings[2], d2);
                ChatUtil.sendChat3("Added " + strings[2] + " successfully");
             } else {
                this.sendAddUsageMessage();
@@ -186,15 +179,13 @@ public class AlertCommand extends Command implements TickListener {
                return;
             }
 
-            Double d3 = (Double)this.alertMap.get(strings[2]);
-            if (d3 == null) {
+            if (((Double)this.alertMap.get(strings[2])) == null) {
                ChatUtil.sendChat3("Unable to find: " + strings[2]);
                return;
             }
 
             ChatUtil.sendChat3("Removed " + strings[2] + " successfully");
-            String str5 = strings[2];
-            this.removeAlert(str5);
+            this.removeAlert(strings[2]);
          } else if (strings[1].equalsIgnoreCase("clear")) {
             if (strings.length != 2) {
                this.sendUsageMessage();
@@ -227,8 +218,7 @@ public class AlertCommand extends Command implements TickListener {
    }
 
    public void sendAddUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§cadd§7] [§2Name§7] ([§2Distance§7])";
-      this.sendChat(str);
+      this.sendChat("§7" + this.getCommand() + " [§cadd§7] [§2Name§7] ([§2Distance§7])");
    }
 
    private void addAlert(String str, double d) {

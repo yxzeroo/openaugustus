@@ -328,9 +328,7 @@ public abstract class GuiContainer extends GuiScreen {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       GlStateManager.enableRescaleNormal();
       this.theSlot = null;
-      short s = 240;
-      short s2 = 240;
-      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)s / 1.0F, (float)s2 / 1.0F);
+      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)((short)240) / 1.0F, (float)((short)240) / 1.0F);
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
       for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
@@ -359,7 +357,6 @@ public abstract class GuiContainer extends GuiScreen {
       InventoryPlayer inventory = this.mc.thePlayer.inventory;
       ItemStack stack = this.draggedStack == null ? inventory.getItemStack() : this.draggedStack;
       if (stack != null) {
-         byte b = 8;
          int n = this.draggedStack == null ? 8 : 16;
          String str = null;
          if (this.draggedStack != null && this.isRightMouseClick) {
@@ -373,7 +370,7 @@ public abstract class GuiContainer extends GuiScreen {
             }
          }
 
-         this.drawItemStack(stack, mouseX - guiLeft2 - b, mouseY - guiTop2 - n, str);
+         this.drawItemStack(stack, mouseX - guiLeft2 - ((byte)8), mouseY - guiTop2 - n, str);
       }
 
       if (this.returningStack != null) {
@@ -392,8 +389,7 @@ public abstract class GuiContainer extends GuiScreen {
 
       GlStateManager.popMatrix();
       if (inventory.getItemStack() == null && this.theSlot != null && this.theSlot.getHasStack()) {
-         ItemStack stack2 = this.theSlot.getStack();
-         this.renderToolTip(stack2, mouseX, mouseY);
+         this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
       }
 
       GlStateManager.enableLighting();

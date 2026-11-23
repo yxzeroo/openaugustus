@@ -32,8 +32,7 @@ public class ModelAdapterEnderCrystal extends ModelAdapter {
 
    @Override
    public IEntityRenderer makeEntityRender(ModelBase modelBase, float f) {
-      RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
-      Render render = (Render)renderManager.getEntityRenderMap().get(EntityEnderCrystal.class);
+      Render render = (Render)Minecraft.getMinecraft().getRenderManager().getEntityRenderMap().get(EntityEnderCrystal.class);
       if (!(render instanceof RenderEnderCrystal)) {
          Config.warn("Not an instance of RenderEnderCrystal: " + render);
          return null;

@@ -10,8 +10,7 @@ public abstract class MolangExpression implements MolangValue {
 
    public static boolean isConstant(MolangExpression molangExpression, long l) {
       if (molangExpression instanceof MolangValueExpression) {
-         MolangValueExpression molangValueExpression = (MolangValueExpression)molangExpression;
-         return molangValueExpression.value instanceof ConstantExpression;
+         return ((MolangValueExpression)molangExpression).value instanceof ConstantExpression;
       } else {
          return false;
       }
@@ -22,8 +21,7 @@ public abstract class MolangExpression implements MolangValue {
    }
 
    public static boolean isOne(MolangExpression molangExpression) {
-      double d = 1.0;
-      return isExpressionConstant(molangExpression, d);
+      return isExpressionConstant(molangExpression, 1.0);
    }
 
    public static boolean isExpressionConstant(MolangExpression molangExpression, double d) {
@@ -40,8 +38,7 @@ public abstract class MolangExpression implements MolangValue {
    }
 
    public static boolean isZero(MolangExpression molangExpression) {
-      double d = 0.0;
-      return isExpressionConstant(molangExpression, d);
+      return isExpressionConstant(molangExpression, 0.0);
    }
 
 

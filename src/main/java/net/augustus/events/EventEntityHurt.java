@@ -14,8 +14,7 @@ public class EventEntityHurt extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      EntityHurtListener listener = (EntityHurtListener)obj;
-      this.call2(listener);
+      this.call2((EntityHurtListener)obj);
    }
 
    public EntityLivingBase getEntity() {

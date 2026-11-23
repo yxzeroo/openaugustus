@@ -184,8 +184,7 @@ public final class ItemStack {
    }
 
    public void hitEntity(EntityLivingBase entity, EntityPlayer player) {
-      boolean flag = this.item.hitEntity(this, entity, player);
-      if (flag) {
+      if (this.item.hitEntity(this, entity, player)) {
          player.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this.item)]);
       }
    }
@@ -513,8 +512,7 @@ public final class ItemStack {
             NBTTagList tagList = this.stackTagCompound.getTagList("CanDestroy", 8);
 
             for (int i = 0; i < tagList.tagCount(); i++) {
-               Block blockFromName = Block.getBlockFromName(tagList.getStringTagAt(i));
-               if (blockFromName == block) {
+               if (Block.getBlockFromName(tagList.getStringTagAt(i)) == block) {
                   this.canDestroyCacheResult = true;
                   return true;
                }
@@ -564,8 +562,7 @@ public final class ItemStack {
             NBTTagList tagList = this.stackTagCompound.getTagList("CanPlaceOn", 8);
 
             for (int i = 0; i < tagList.tagCount(); i++) {
-               Block blockFromName = Block.getBlockFromName(tagList.getStringTagAt(i));
-               if (blockFromName == block) {
+               if (Block.getBlockFromName(tagList.getStringTagAt(i)) == block) {
                   this.canPlaceOnCacheResult = true;
                   return true;
                }
@@ -766,8 +763,7 @@ public final class ItemStack {
    }
 
    public void onBlockDestroyed(World world, Block block, BlockPos pos, EntityPlayer player) {
-      boolean flag = this.item.onBlockDestroyed(this, world, block, pos, player);
-      if (flag) {
+      if (this.item.onBlockDestroyed(this, world, block, pos, player)) {
          player.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this.item)]);
       }
    }

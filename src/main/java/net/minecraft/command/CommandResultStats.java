@@ -24,9 +24,7 @@ public class CommandResultStats {
             String str = type.getTypeName() + "Name";
             String str2 = type.getTypeName() + "Objective";
             if (compoundTag.hasKey(str, 8) && compoundTag.hasKey(str2, 8)) {
-               String string = compoundTag.getString(str);
-               String string2 = compoundTag.getString(str2);
-               setScoreBoardStat(this, type, string, string2);
+               setScoreBoardStat(this, type, compoundTag.getString(str), compoundTag.getString(str2));
             }
          }
       }
@@ -69,8 +67,7 @@ public class CommandResultStats {
             Scoreboard scoreboard = commandSender.getEntityWorld().getScoreboard();
             ScoreObjective objective = scoreboard.getObjective(str3);
             if (objective != null && scoreboard.entityHasObjective(str2, objective)) {
-               Score valueFromObjective = scoreboard.getValueFromObjective(str2, objective);
-               valueFromObjective.setScorePoints(n);
+               scoreboard.getValueFromObjective(str2, objective).setScorePoints(n);
             }
          }
       }

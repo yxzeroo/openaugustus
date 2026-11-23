@@ -54,10 +54,7 @@ public class BiomeGenHills extends BiomeGenBase {
       int n = 3 + rand.nextInt(6);
 
       for (int i = 0; i < n; i++) {
-         int n2 = rand.nextInt(16);
-         int n3 = rand.nextInt(28) + 4;
-         int n4 = rand.nextInt(16);
-         BlockPos pos2 = pos.add(n2, n3, n4);
+         BlockPos pos2 = pos.add(rand.nextInt(16), rand.nextInt(28) + 4, rand.nextInt(16));
          if (world.getBlockState(pos2).getBlock() == Blocks.stone) {
             world.setBlockState(pos2, Blocks.emerald_ore.getDefaultState(), 2);
          }

@@ -63,15 +63,12 @@ public class TextureAnimation {
          }
       }
 
-      String str3 = (String)properties.get("duration");
-      int n7 = Math.max(Config.parseInt(str3, 1), 1);
+      int n7 = Math.max(Config.parseInt((String)properties.get("duration"), 1), 1);
       this.frames = new TextureAnimationFrame[n6];
 
       for (int j = 0; j < this.frames.length; j++) {
-         String str4 = (String)properties.get("tile." + j);
-         int n8 = Config.parseInt(str4, j);
-         String str5 = (String)properties.get("duration." + j);
-         int n9 = Math.max(Config.parseInt(str5, n7), 1);
+         int n8 = Config.parseInt((String)properties.get("tile." + j), j);
+         int n9 = Math.max(Config.parseInt((String)properties.get("duration." + j), n7), 1);
          TextureAnimationFrame textureAnimationFrame = new TextureAnimationFrame(n8, n9);
          this.frames[j] = textureAnimationFrame;
       }
@@ -92,10 +89,7 @@ public class TextureAnimation {
             ((Buffer)this.interpolateData).clear();
 
             for (int i = 0; i < n; i++) {
-               int n4 = this.imageData.get(n2 + i) & 255;
-               int n5 = this.imageData.get(n3 + i) & 255;
-               int n6 = this.mix(n4, n5, d);
-               byte b = (byte)n6;
+               byte b = (byte)this.mix(this.imageData.get(n2 + i) & 255, this.imageData.get(n3 + i) & 255, d);
                this.interpolateData.put(b);
             }
 
@@ -181,9 +175,7 @@ public class TextureAnimation {
                      GlStateManager.bindTexture(this.dstTextId);
                      GL11.glTexSubImage2D(3553, 0, this.dstX, this.dstY, this.frameWidth, this.frameHeight, 6408, 5121, this.imageData);
                   } else if (this.interpolateSkip <= 1 || currentFrame.counter % this.interpolateSkip == 0) {
-                     TextureAnimationFrame frame = this.getFrame(this.currentFrameIndex + 1);
-                     double d = 1.0 * (double)currentFrame.counter / (double)currentFrame.duration;
-                     this.updateTextureInterpolate(currentFrame, frame, d);
+                     this.updateTextureInterpolate(currentFrame, this.getFrame(this.currentFrameIndex + 1), 1.0 * (double)currentFrame.counter / (double)currentFrame.duration);
                   }
                }
             }

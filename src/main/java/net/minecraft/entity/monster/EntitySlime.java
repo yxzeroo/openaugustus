@@ -221,8 +221,7 @@ public class EntitySlime extends EntityLiving implements IMob {
          n++;
       }
 
-      int n2 = 1 << n;
-      this.setSlimeSize(n2);
+      this.setSlimeSize(1 << n);
       return super.onInitialSpawn(difficultyInstance, entityLivingData);
    }
 
@@ -271,8 +270,7 @@ public class EntitySlime extends EntityLiving implements IMob {
          return false;
       } else {
          if (this.entityWorld.getDifficulty() != EnumDifficulty.PEACEFUL) {
-            BiomeGenBase biomeGenForCoords = this.entityWorld.getBiomeGenForCoords(pos);
-            if (biomeGenForCoords == BiomeGenBase.swampland
+            if (this.entityWorld.getBiomeGenForCoords(pos) == BiomeGenBase.swampland
                && this.posY > 50.0
                && this.posY < 70.0
                && this.rand.nextFloat() < 0.5F

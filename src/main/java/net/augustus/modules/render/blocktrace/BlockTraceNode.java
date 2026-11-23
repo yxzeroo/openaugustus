@@ -61,30 +61,12 @@ public class BlockTraceNode implements Comparable, MC {
       this.blockTraceNode = blockTraceNode2;
       this.neighbors.clear();
       this.fCost = f + f2;
-      byte b = 0;
-      byte b2 = 0;
-      byte b3 = 1;
-      this.addNeighborOffset(b3, b2, b);
-      byte b4 = 0;
-      byte b5 = 0;
-      byte b6 = -1;
-      this.addNeighborOffset(b6, b5, b4);
-      byte b7 = 1;
-      byte b8 = 0;
-      byte b9 = 0;
-      this.addNeighborOffset(b9, b8, b7);
-      byte b10 = -1;
-      byte b11 = 0;
-      byte b12 = 0;
-      this.addNeighborOffset(b12, b11, b10);
-      byte b13 = 0;
-      byte b14 = 1;
-      byte b15 = 0;
-      this.addNeighborOffset(b15, b14, b13);
-      byte b16 = 0;
-      byte b17 = -1;
-      byte b18 = 0;
-      this.addNeighborOffset(b18, b17, b16);
+      this.addNeighborOffset((byte)1, (byte)0, (byte)0);
+      this.addNeighborOffset((byte)-1, (byte)0, (byte)0);
+      this.addNeighborOffset((byte)0, (byte)0, (byte)1);
+      this.addNeighborOffset((byte)0, (byte)0, (byte)-1);
+      this.addNeighborOffset((byte)0, (byte)1, (byte)0);
+      this.addNeighborOffset((byte)0, (byte)-1, (byte)0);
    }
 
    private void addNeighborOffset(int n, int n2, int n3) {

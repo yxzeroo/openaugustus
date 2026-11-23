@@ -22,9 +22,8 @@ private final BlurPass blurPass;
    }
 
    public static BlurMode fromName(String str) {
-      BlurMode[] values = values();
 
-      for (BlurMode blurMode : values) {
+      for (BlurMode blurMode : values()) {
          if (blurMode.getDisplayName().equalsIgnoreCase(str)) {
             return blurMode;
          }

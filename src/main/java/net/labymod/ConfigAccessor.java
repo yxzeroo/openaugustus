@@ -13,8 +13,7 @@ public class ConfigAccessor {
          }
 
          if (strings.length == 3) {
-            Object[] array = (Object[])ModelData.class.getDeclaredField(strings[0]).get(modelData);
-            Object obj = array[Integer.valueOf(strings[1])];
+            Object obj = ((Object[])ModelData.class.getDeclaredField(strings[0]).get(modelData))[Integer.valueOf(strings[1])];
             return SettingOverlay.class.getDeclaredField(strings[2]).get(obj);
          }
       } catch (Exception e) {
@@ -35,8 +34,7 @@ public class ConfigAccessor {
          }
 
          if (strings.length == 3) {
-            Object[] array = (Object[])ModelData.class.getDeclaredField(strings[0]).get(modelData);
-            Object obj2 = array[Integer.valueOf(strings[1])];
+            Object obj2 = ((Object[])ModelData.class.getDeclaredField(strings[0]).get(modelData))[Integer.valueOf(strings[1])];
             SettingOverlay.class.getDeclaredField(strings[2]).set(obj2, obj);
          }
       } catch (Exception e) {

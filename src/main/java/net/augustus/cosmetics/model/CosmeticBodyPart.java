@@ -29,9 +29,8 @@ private int id;
    }
 
    public static CosmeticBodyPart byId(int n) {
-      CosmeticBodyPart[] cosmeticBodyParts = VALUES;
 
-      for (CosmeticBodyPart cosmeticBodyPart : cosmeticBodyParts) {
+      for (CosmeticBodyPart cosmeticBodyPart : VALUES) {
          if (cosmeticBodyPart.getId() == n) {
             return cosmeticBodyPart;
          }

@@ -9,7 +9,7 @@ import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.events.EventMoveInput;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 
 public class AntiAFK extends Module implements MoveInputListener {
@@ -19,7 +19,7 @@ public class AntiAFK extends Module implements MoveInputListener {
    private final RandomizedRangeSettings moveDuration;
    private final BooleanValue inInv;
    private final BooleanValue onlyIfAfk;
-   private final StringValue delayToStartAntiAfkAfterBeingAFK;
+   private final DoubleValue delayToStartAntiAfkAfterBeingAFK;
    private final TimeHelper jumpTimer;
    private final TimeHelper moveTimer;
    private final TimeHelper activityTimer;
@@ -34,22 +34,19 @@ public class AntiAFK extends Module implements MoveInputListener {
       BooleanValue move2 = this.move;
       this.move.getClass();
       BooleanValue booleanValue = move2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.moveDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition)).markAllVisualOnly();
+      this.moveDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> booleanValue.getValue())).markAllVisualOnly();
       RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "MoveDuration", 200.0, 400.0, 0.0, 1000.0, 0)).withoutNotInARow();
       move2 = this.move;
       this.move.getClass();
       BooleanValue booleanValue2 = move2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.moveDuration = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition2)).markAllVisualOnly();
+      this.moveDuration = (RandomizedRangeSettings)((RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> booleanValue2.getValue())).markAllVisualOnly();
       this.inInv = (BooleanValue)(new BooleanValue(this, "InInv", false)).markVisualOnly();
       this.onlyIfAfk = (BooleanValue)(new BooleanValue(this, "OnlyIfAfk", false)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "DelayToStartAntiAfkAfterBeingAFK", 10000.0, 0.0, 20000.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "DelayToStartAntiAfkAfterBeingAFK", 10000.0, 0.0, 20000.0, 0);
       move2 = this.onlyIfAfk;
       this.onlyIfAfk.getClass();
       BooleanValue booleanValue3 = move2;
-      SettingVisibilityCondition condition3 = () -> booleanValue3.getValue();
-      this.delayToStartAntiAfkAfterBeingAFK = (StringValue)stringValue.visibleWhen(condition3).markVisualOnly();
+      this.delayToStartAntiAfkAfterBeingAFK = (DoubleValue)stringValue.visibleWhen(() -> booleanValue3.getValue()).markVisualOnly();
       this.jumpTimer = new TimeHelper();
       this.moveTimer = new TimeHelper();
       this.activityTimer = new TimeHelper();
@@ -71,8 +68,7 @@ public class AntiAFK extends Module implements MoveInputListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -84,16 +80,13 @@ public class AntiAFK extends Module implements MoveInputListener {
             }
 
             TimeHelper jumpTimer2 = this.jumpTimer;
-            long lastIntValue = (long)this.afkDelay.getLastIntValue();
-            if (jumpTimer2.reached2(lastIntValue)) {
-               boolean flag = true;
-               event.setJump(flag);
+            if (jumpTimer2.reached2((long)this.afkDelay.getLastIntValue())) {
+               event.setJump(true);
                this.jumpTimer.reset();
             }
 
             jumpTimer2 = this.moveTimer;
-            long l = (long)(this.moveDelay.getLastIntValue() + this.moveDuration.getLastIntValue());
-            if (jumpTimer2.reached2(l)) {
+            if (jumpTimer2.reached2((long)(this.moveDelay.getLastIntValue() + this.moveDuration.getLastIntValue()))) {
                this.moveDirectionIndex++;
                this.moveDelay.nextValue();
                this.moveDuration.nextValue();
@@ -102,19 +95,16 @@ public class AntiAFK extends Module implements MoveInputListener {
             }
 
             jumpTimer2 = this.moveTimer;
-            long lastIntValue2 = (long)this.moveDelay.getLastIntValue();
-            if (jumpTimer2.reached2(lastIntValue2)) {
+            if (jumpTimer2.reached2((long)this.moveDelay.getLastIntValue())) {
                this.isMoving = true;
             }
 
             if (this.isMoving) {
                int n = this.moveDirectionIndex % 4;
                if (n < 2) {
-                  float f = n == 0 ? 1.0F : -1.0F;
-                  event.setMoveForward(f);
+                  event.setMoveForward(n == 0 ? 1.0F : -1.0F);
                } else {
-                  float f2 = n == 2 ? 1.0F : -1.0F;
-                  event.setMoveStrafe(f2);
+                  event.setMoveStrafe(n == 2 ? 1.0F : -1.0F);
                }
             }
          }
@@ -131,9 +121,7 @@ public class AntiAFK extends Module implements MoveInputListener {
          this.activityTimer.reset();
       }
 
-      TimeHelper activityTimer2 = this.activityTimer;
-      double value = this.delayToStartAntiAfkAfterBeingAFK.getValue();
-      return !activityTimer2.reached(value);
+      return !this.activityTimer.reached(this.delayToStartAntiAfkAfterBeingAFK.getValue());
    }
 
    private boolean isLicenseTimestampValid() {

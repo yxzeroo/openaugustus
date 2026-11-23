@@ -40,8 +40,7 @@ public final class RotationFeatureScaler {
       for (JsonElement elem : array) {
          JsonObject asJsonObject = elem.getAsJsonObject();
          String asString = asJsonObject.get("name").getAsString();
-         String asString2 = asJsonObject.get("method").getAsString();
-         FeatureScalingMethod featureScalingMethod = parseMethod(asString2);
+         FeatureScalingMethod featureScalingMethod = parseMethod(asJsonObject.get("method").getAsString());
          float asFloat = asJsonObject.get("lo").getAsFloat();
          float asFloat2 = asJsonObject.get("hi").getAsFloat();
          list.add(new FeatureNormalizationSpec(asString, featureScalingMethod, asFloat, asFloat2));
@@ -84,10 +83,7 @@ public final class RotationFeatureScaler {
          throw new IllegalArgumentException("feature length mismatch: got " + floats.length + ", expected " + this.featureSpecs.size());
       } else {
          for (int i = 0; i < floats.length; i++) {
-            Object obj = this.featureSpecs.get(i);
-            FeatureNormalizationSpec featureNormalizationSpec = (FeatureNormalizationSpec)obj;
-            float f = floats[i];
-            floats[i] = normalizeValue(featureNormalizationSpec, f);
+            floats[i] = normalizeValue((FeatureNormalizationSpec)this.featureSpecs.get(i), floats[i]);
          }
       }
    }

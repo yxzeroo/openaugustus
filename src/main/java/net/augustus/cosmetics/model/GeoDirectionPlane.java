@@ -11,12 +11,10 @@ public enum GeoDirectionPlane implements Iterable, Predicate {
 
 
    public boolean apply2(GeoDirection geoDirection) {
-      int[] flowState = GeoVector3f.getFlowState();
       return geoDirection != null && geoDirection.getAxis().getPlane() == this;
    }
 
    public GeoDirection[] facings() {
-      int[] flowState = GeoVector3f.getFlowState();
       switch (GeoDirectionSwitchMap.PLANE_SWITCH_MAP[this.ordinal()]) {
          case 1:
             return new GeoDirection[]{GeoDirection.NORTH, GeoDirection.EAST, GeoDirection.SOUTH, GeoDirection.WEST};
@@ -33,8 +31,7 @@ public enum GeoDirectionPlane implements Iterable, Predicate {
    }
 
    public boolean apply(Object obj) {
-      GeoDirection geoDirection = (GeoDirection)obj;
-      return this.apply2(geoDirection);
+      return this.apply2((GeoDirection)obj);
    }
 
    @Override

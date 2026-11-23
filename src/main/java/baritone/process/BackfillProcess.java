@@ -96,8 +96,7 @@ public final class BackfillProcess extends BaritoneProcessHelper {
    private boolean partOfCurrentMovement(BlockPos pos) {
       PathExecutor current2 = this.baritone.getPathingBehavior2().getCurrent2();
       if (current2 != null && !current2.finished() && !current2.isFailed()) {
-         Movement movement = (Movement)current2.getPath().movements().get(current2.getPosition());
-         return Arrays.asList(movement.getPositionsToBreak()).contains(pos);
+         return Arrays.asList(((Movement)current2.getPath().movements().get(current2.getPosition())).getPositionsToBreak()).contains(pos);
       } else {
          return false;
       }

@@ -23,8 +23,7 @@ public class ShaderUniform1f extends ShaderUniformBase {
 
    public void setValue(float f) {
       int program2 = this.getProgram();
-      float f2 = this.programValues[program2];
-      if (f != f2) {
+      if (f != this.programValues[program2]) {
          this.programValues[program2] = f;
          int location = this.getLocation();
          if (location >= 0) {

@@ -23,8 +23,7 @@ public class RayCastUtil implements MC {
       MovingObjectPosition hit = null;
       Entity renderViewEntity = mc.getRenderViewEntity();
       if (renderViewEntity != null && mc.theWorld != null) {
-         Object obj = null;
-         mc.pointedEntity = (Entity)obj;
+         mc.pointedEntity = (Entity)null;
          double blockReachDistance = (double)mc.playerController.getBlockReachDistance();
          hit = renderViewEntity.rayTraceCustom(blockReachDistance, f, f2, f3, vec.xCoord, vec.yCoord, vec.zCoord);
          double d = blockReachDistance;
@@ -112,8 +111,7 @@ public class RayCastUtil implements MC {
       MovingObjectPosition hit = null;
       Entity renderViewEntity = mc.getRenderViewEntity();
       if (renderViewEntity != null && mc.theWorld != null) {
-         Object obj = null;
-         mc.pointedEntity = (Entity)obj;
+         mc.pointedEntity = (Entity)null;
          double blockReachDistance = (double)mc.playerController.getBlockReachDistance();
          blockReachDistance = Math.max(blockReachDistance, d);
          hit = renderViewEntity.rayTraceCustom(blockReachDistance, (float)n + 1.0F, rotation.yaw, rotation.pitch);
@@ -164,13 +162,8 @@ public class RayCastUtil implements MC {
             if (entity2 instanceof EntityLivingBase) {
                EntityLivingBase entity3 = (EntityLivingBase)entity2;
                int n2 = mc.thePlayer.ticksExisted + n;
-               boolean flag2 = true;
-               int n3 = n2;
                int ticksExisted = mc.thePlayer.ticksExisted;
-               EntityLivingBase entity4 = entity3;
-               ArrayList list2 = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity4, ticksExisted, n3, flag2);
-               int n4 = 999999;
-               Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, n4);
+               Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity3, ticksExisted, n2, true), 999999);
                entityBoundingBox = new AxisAlignedBB(
                   clampedPosition.xCoord - (double)f3,
                   clampedPosition.yCoord,
@@ -192,8 +185,7 @@ public class RayCastUtil implements MC {
             } else if (hit2 != null) {
                double d4 = vec.distanceTo(hit2.hitVec);
                if (d4 < d3 || d3 == 0.0) {
-                  boolean flag3 = false;
-                  if (entity2 != renderViewEntity.ridingEntity || flag3) {
+                  if (entity2 != renderViewEntity.ridingEntity || false) {
                      entity = entity2;
                      vec3 = hit2.hitVec;
                      d3 = d4;

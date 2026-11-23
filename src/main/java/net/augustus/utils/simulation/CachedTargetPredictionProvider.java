@@ -22,8 +22,7 @@ public class CachedTargetPredictionProvider implements MovementPredictionProvide
       SimulatedTargetEntity simulatedTarget2 = this.simulatedTarget;
       SimulatedPlayerEntity simulatedPlayer2 = this.simulatedPlayer;
       return (ArrayList)targetPredictionCache.computeIfAbsent(str, obj -> {
-         boolean flag = false;
-         return TrajectoryPredictionUtil.predictTargetPositions(simulatedPlayer2, simulatedTarget2, n, n4, flag);
+         return TrajectoryPredictionUtil.predictTargetPositions(simulatedPlayer2, simulatedTarget2, n, n4, false);
       });
    }
 }

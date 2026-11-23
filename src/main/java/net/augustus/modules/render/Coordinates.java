@@ -13,15 +13,15 @@ import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 
 public class Coordinates extends Module implements RenderListener {
-   private final StringValue posX;
-   private final StringValue posY;
-   private final StringValue scale;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
+   private final DoubleValue scale;
    private final ColorSetting labelColor;
    private final ColorSetting valueColor;
    private final BooleanValue backGround;
@@ -30,9 +30,9 @@ public class Coordinates extends Module implements RenderListener {
 
    public Coordinates() {
        super("Coordinates", "Koordinaten", new Color(209, 69, 81), Categorys.RENDER);
-      this.posX = new StringValue(this, "PosX", 0.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 0.0, 0.0, 100.0, 2);
-      this.scale = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 1);
+      this.posX = new DoubleValue(this, "PosX", 0.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 0.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 1);
       this.labelColor = new ColorSetting(this, "Color1", new Color(85, 85, 85));
       this.valueColor = new ColorSetting(this, "Color2", new Color(-1));
       this.backGround = new BooleanValue(this, "BackGround", true);
@@ -40,16 +40,12 @@ public class Coordinates extends Module implements RenderListener {
       BooleanValue backGround3 = this.backGround;
       this.backGround.getClass();
       BooleanValue booleanValue = backGround3;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(condition);
-      BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, "BackGround");
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings2 = blurShadowSettings.withCustomShadowColor(black);
+      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue.getValue());
+      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this, "BackGround").withCustomShadowColor(Color.black);
       backGround3 = this.backGround;
       this.backGround.getClass();
       BooleanValue booleanValue2 = backGround3;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.backGround2 = (BlurShadowSettings)blurShadowSettings2.withVisibility(condition2);
+      this.backGround2 = (BlurShadowSettings)blurShadowSettings2.withVisibility(() -> booleanValue2.getValue());
    }
 
    @Override
@@ -62,8 +58,7 @@ public class Coordinates extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -87,10 +82,8 @@ public class Coordinates extends Module implements RenderListener {
          n3 = ClientManagers.moduleManager.protector.isToggled()
             ? MathHelper.floor_double(mc.thePlayer.posZ) + ClientManagers.moduleManager.protector.getRandomZOffset()
             : MathHelper.floor_double(mc.thePlayer.posZ);
-         byte b = 0;
-         n4 = this.labelColor.getColorInt(b);
-         byte b2 = 0;
-         n5 = this.valueColor.getColorInt(b2);
+         n4 = this.labelColor.getColorInt((byte)0);
+         n5 = this.valueColor.getColorInt((byte)0);
          GlStateManager.pushMatrix();
          GlStateManager.scale(1.0 / (double)sr.getScaleFactor(), 1.0 / (double)sr.getScaleFactor(), 1.0);
          GlStateManager.scale(this.scale.getValue(), this.scale.getValue(), 1.0);
@@ -102,8 +95,7 @@ public class Coordinates extends Module implements RenderListener {
          f2 = (float)mc.fontRendererObj.getStringWidth(str);
          n6 = (int)((double)((float)n9 - f2) * (this.posX.getValue() / 100.0));
          n7 = (int)((double)(n10 - mc.fontRendererObj.FONT_HEIGHT) * (this.posY.getValue() / 100.0));
-         byte b3 = 0;
-         n8 = this.backgroundColor.getColorInt(b3);
+         n8 = this.backgroundColor.getColorInt((byte)0);
          flag = this.backGround.getValue() && this.backGround2.isBlurActive();
          if (this.backGround.getValue()) {
             if (this.backGround2.isShadowActive()) {
@@ -142,13 +134,7 @@ public class Coordinates extends Module implements RenderListener {
          mc.fontRendererObj.drawStringWithShadow("  Z: ", (float)(n + 11) + stringWidth + 17.0F + stringWidth2, (float)n2, n6);
          mc.fontRendererObj.drawStringWithShadow("" + n8, (float)(n + 11) + stringWidth + 17.0F + stringWidth2 + 17.0F, (float)n2, n7);
       } else {
-         double d = (double)(n - 1);
-         double d2 = (double)(n2 - 1);
-         double d3 = (double)((float)n + f + 1.0F);
-         double d4 = (double)(n2 + mc.fontRendererObj.FONT_HEIGHT);
-         BlurShadowSettings backGround22 = this.backGround2;
-         int n9 = ColorUtil.resolvePassColor(shaderRenderPass, n3);
-         RenderUtil.drawRect(d, d2, d3, d4, backGround22.resolveShadowColor(n9));
+         RenderUtil.drawRect((double)(n - 1), (double)(n2 - 1), (double)((float)n + f + 1.0F), (double)(n2 + mc.fontRendererObj.FONT_HEIGHT), this.backGround2.resolveShadowColor(ColorUtil.resolvePassColor(shaderRenderPass, n3)));
       }
    }
 

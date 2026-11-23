@@ -27,8 +27,7 @@ public class EventKey extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      KeyListener listener = (KeyListener)obj;
-      this.call2(listener);
+      this.call2((KeyListener)obj);
    }
 
    public void call2(KeyListener listener) {

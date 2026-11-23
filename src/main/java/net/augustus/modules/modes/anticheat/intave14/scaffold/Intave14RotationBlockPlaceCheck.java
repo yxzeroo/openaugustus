@@ -33,8 +33,7 @@ public class Intave14RotationBlockPlaceCheck extends ModuleMode {
 
    private boolean containsBlockPos(BlockPos pos, int n, long l) {
       for (Object obj : this.recentPlacedBlocks) {
-         BlockPos pos2 = (BlockPos)obj;
-         if (Math.sqrt(pos2.distanceSq((double)pos.getX(), (double)pos.getY(), (double)pos.getZ())) == 0.0) {
+         if (Math.sqrt(((BlockPos)obj).distanceSq((double)pos.getX(), (double)pos.getY(), (double)pos.getZ())) == 0.0) {
             return true;
          }
       }

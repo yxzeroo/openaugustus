@@ -18,13 +18,11 @@ public class ChunkPrimer {
    }
 
    public IBlockState getBlockState(int n, int n2, int n3) {
-      int n4 = n << 12 | n3 << 8 | n2;
-      return this.getBlockState(n4);
+      return this.getBlockState(n << 12 | n3 << 8 | n2);
    }
 
    public void setBlockState(int n, int n2, int n3, IBlockState state) {
-      int n4 = n << 12 | n3 << 8 | n2;
-      this.setBlockState(n4, state);
+      this.setBlockState(n << 12 | n3 << 8 | n2, state);
    }
 
    public void setBlockState(int n, IBlockState state) {

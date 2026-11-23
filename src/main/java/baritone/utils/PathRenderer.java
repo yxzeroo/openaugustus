@@ -141,9 +141,7 @@ public final class PathRenderer implements IRenderer {
          double d13 = (double)(goalXZ.getZ() + 1) - 0.002 - viewerPosZ;
          double d14 = 0.0;
          double d15 = 0.0;
-         double d16 = 0.0 - viewerPosY;
-         double d17 = 256.0 - viewerPosY;
-         drawDankLitGoalBox(color2, d10, d11, d12, d13, d16, d17, d14, d15, flag);
+         drawDankLitGoalBox(color2, d10, d11, d12, d13, 0.0 - viewerPosY, 256.0 - viewerPosY, d14, d15, flag);
       } else if (goal instanceof GoalComposite) {
          boolean flag2 = Arrays.stream(((GoalComposite)goal).getGoals()).allMatch(IGoalRenderPos.class::isInstance);
          if (flag2) {
@@ -166,10 +164,7 @@ public final class PathRenderer implements IRenderer {
          double d20 = entity.posX + (Double)settings.yLevelBoxSize.value - viewerPosX;
          double d21 = entity.posZ + (Double)settings.yLevelBoxSize.value - viewerPosZ;
          double d22 = (double)((GoalYLevel)goal).level - viewerPosY;
-         double d23 = d22 + 2.0;
-         double d24 = 1.0 + d + (double)goalYLevel.level - viewerPosY;
-         double d25 = 1.0 - d + (double)goalYLevel.level - viewerPosY;
-         drawDankLitGoalBox(color2, d18, d20, d19, d21, d22, d23, d24, d25, flag);
+         drawDankLitGoalBox(color2, d18, d20, d19, d21, d22, d22 + 2.0, 1.0 + d + (double)goalYLevel.level - viewerPosY, 1.0 - d + (double)goalYLevel.level - viewerPosY, flag);
       }
    }
 
@@ -185,9 +180,7 @@ public final class PathRenderer implements IRenderer {
 
          float partialTicks = renderEvent.getPartialTicks();
          Goal goal = pathingBehavior.getGoal();
-         int dimensionId = ctx.world().provider.getDimensionId();
-         int dimensionId2 = BaritoneAPI.getProvider().getPrimaryBaritone().getPlayerContext().world().provider.getDimensionId();
-         if (dimensionId == dimensionId2) {
+         if (ctx.world().provider.getDimensionId() == BaritoneAPI.getProvider().getPrimaryBaritone().getPlayerContext().world().provider.getDimensionId()) {
             if (goal != null && (Boolean)settings.renderGoal.value) {
                drawGoal(ctx.player(), goal, partialTicks, (Color)settings.colorGoalBox.value);
             }

@@ -34,9 +34,7 @@ public class SettingComposite {
    private static void applyDisplayNamePrefix(String str, TuplePair tuplePair) {
       String first = (String)tuplePair.getFirst();
       if (first != null) {
-         Setting second = (Setting)tuplePair.getSecond();
-         String str2 = str + first;
-         second.withDisplayName(str2);
+         ((Setting)tuplePair.getSecond()).withDisplayName(str + first);
       }
    }
 
@@ -51,8 +49,7 @@ public class SettingComposite {
 
    public SettingComposite markAllVisualOnly() {
       this.childSettings.forEach(obj -> {
-         Setting second = (Setting)((TuplePair)obj).getSecond();
-         second.markVisualOnly();
+         ((Setting)((TuplePair)obj).getSecond()).markVisualOnly();
       });
       return this;
    }

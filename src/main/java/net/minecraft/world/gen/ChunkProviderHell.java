@@ -270,8 +270,7 @@ public class ChunkProviderHell implements IChunkProvider {
          }
       }
 
-      BiomeGenBase biomeGenForCoords = this.worldObj.getBiomeGenForCoords(pos);
-      return biomeGenForCoords.getSpawnableList(enumCreatureType);
+      return this.worldObj.getBiomeGenForCoords(pos).getSpawnableList(enumCreatureType);
    }
 
    @Override
@@ -379,10 +378,7 @@ public class ChunkProviderHell implements IChunkProvider {
                            state = Blocks.netherrack.getDefaultState();
                         }
 
-                        int n6 = idx + i * 4;
-                        int n7 = m + k * 8;
-                        int n8 = index + j * 4;
-                        chunkPrimer.setBlockState(n6, n7, n8, state);
+                        chunkPrimer.setBlockState(idx + i * 4, m + k * 8, index + j * 4, state);
                         d16 += d17;
                      }
 

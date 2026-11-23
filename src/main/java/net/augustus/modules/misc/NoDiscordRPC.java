@@ -35,13 +35,11 @@ public class NoDiscordRPC extends Module {
          if (mc.theWorld.isRemote) {
             DiscordRpcManager discordRpcManager = Augustus.getInstance().getDiscordRpcManager();
             String str = "Ingame";
-            String str2 = "Playing lonely in singleplayer";
-            discordRpcManager.updatePresence(str2, str);
+            discordRpcManager.updatePresence("Playing lonely in singleplayer", str);
          } else {
             DiscordRpcManager discordRpcManager2 = Augustus.getInstance().getDiscordRpcManager();
             String str3 = "Cheating";
-            String str4 = "Maybe cheating on ReifenHD.net";
-            discordRpcManager2.updatePresence(str4, str3);
+            discordRpcManager2.updatePresence("Maybe cheating on ReifenHD.net", str3);
          }
       }
    }

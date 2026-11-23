@@ -28,15 +28,13 @@ public abstract class AbstractHurtTimeClickCheck extends ModuleMode {
             this.timeHelper.reset();
          }
 
-         long l = 3000L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(3000L)) {
             this.currentTarget = null;
          }
 
          if (this.currentTarget != null) {
             if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit instanceof EntityLivingBase && this.currentTarget.hurtTime != this.lastTargetHurtTime) {
-               ArrayList list = (ArrayList)this.hurtTimeAttackSamples.get(this.currentTarget.hurtTime);
-               list.add(this.attacksThisTick);
+               ((ArrayList)this.hurtTimeAttackSamples.get(this.currentTarget.hurtTime)).add(this.attacksThisTick);
             }
 
             this.lastTargetHurtTime = this.currentTarget.hurtTime;
@@ -55,8 +53,7 @@ public abstract class AbstractHurtTimeClickCheck extends ModuleMode {
             }
          }
 
-         HashMap hurtTimeAttackSamples2 = this.hurtTimeAttackSamples;
-         this.analyzeHurtTimeSamples(hurtTimeAttackSamples2);
+         this.analyzeHurtTimeSamples(this.hurtTimeAttackSamples);
       } else if (packet instanceof C02PacketUseEntity && ((C02PacketUseEntity)packet).getAction() == C02PacketUseEntity.Action.ATTACK) {
          this.attacksThisTick++;
       }

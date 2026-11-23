@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.augustus.modules.misc.DummyAura;
 import net.augustus.modules.misc.RotationRecorder;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -44,15 +44,13 @@ public class RotationParamBruteforcer implements AIMoveSpeedListener {
    private float currentAiMoveSpeed;
 
    private JsonArray loadRecordedTicks(String str) throws IOException {
-      File file = new File(str);
-      byte[] bytes = RotationRecorder.decompressData(Files.readAllBytes(file.toPath()));
+      byte[] bytes = RotationRecorder.decompressData(Files.readAllBytes(new File(str).toPath()));
       return JsonParser.parseString(new String(bytes, StandardCharsets.UTF_8)).getAsJsonArray();
    }
 
    @Override
    public void onAIMoveSpeed(EventAIMoveSpeed event) {
-      float currentAiMoveSpeed2 = this.currentAiMoveSpeed;
-      event.setMoveSpeed(currentAiMoveSpeed2);
+      event.setMoveSpeed(this.currentAiMoveSpeed);
    }
 
    public static HashMap getTargetPredictionCache(RotationParamBruteforcer rotationParamBruteforcer) {
@@ -69,8 +67,7 @@ public class RotationParamBruteforcer implements AIMoveSpeedListener {
       this.targetPredictionCache = new HashMap();
       this.playerPredictionCache = new HashMap();
       EventManager.getEventBus().subscribe(0, this);
-      String str = "C:\\Users\\tobia\\AppData\\Roaming\\ElectricLauncher\\data\\data\\augustus\\augustus\\rotation\\standingtargetlegit";
-      JsonArray array = this.loadRecordedTicks(str);
+      JsonArray array = this.loadRecordedTicks("C:\\Users\\tobia\\AppData\\Roaming\\ElectricLauncher\\data\\data\\augustus\\augustus\\rotation\\standingtargetlegit");
       Gson gson = new Gson();
 
       for (int i = 0; i < array.size(); i++) {
@@ -107,7 +104,7 @@ public class RotationParamBruteforcer implements AIMoveSpeedListener {
       SimulatedPlayerEntity simulatedPlayerEntity = new SimulatedPlayerEntity(minecraft, minecraft.theWorld, minecraft.getNetHandler(), minecraft.thePlayer.getStatFileWriter());
       SimulatedTargetEntity simulatedTargetEntity = new SimulatedTargetEntity(minecraft.theWorld);
       DummyAura dummyAura = new DummyAura();
-      DoubleValue doubleValue = new DoubleValue(dummyAura, "Randomize");
+      SettingGroup doubleValue = new SettingGroup(dummyAura, "Randomize");
       UNoise3SettingContext uNoise3SettingContext = new UNoise3SettingContext(dummyAura, doubleValue);
       UNoise3RotationEngine uNoise3RotationEngine = new UNoise3RotationEngine(uNoise3SettingContext, () -> true);
 
@@ -153,11 +150,8 @@ public class RotationParamBruteforcer implements AIMoveSpeedListener {
             uNoise3RotationEngine.uNoise3PredictionScheduler.uNoise3MovementFilter.inaccuracyWindow.add(d);
          }
 
-         Object obj = null;
-         Object obj2 = null;
          double d2 = 0.0;
-         double d3 = 0.0;
-         Rotation rotation = uNoise3RotationEngine.computeRotation(simulatedTargetEntity, simulatedPlayerEntity, f, pitch, d3, d2, (Vec3)obj2, (Vec3)obj);
+         Rotation rotation = uNoise3RotationEngine.computeRotation(simulatedTargetEntity, simulatedPlayerEntity, f, pitch, 0.0, d2, (Vec3)null, (Vec3)null);
          float f2 = f;
          float f3 = pitch;
          f = rotation.yaw;
@@ -168,8 +162,7 @@ public class RotationParamBruteforcer implements AIMoveSpeedListener {
          double d7 = (double)(recordedTickFrame3.pitch - recordedTickFrame2.pitch);
          double d8 = d4 - d6;
          double d9 = d5 - d7;
-         double d10 = Math.sqrt(d8 * d8 + d9 * d9);
-         doubleSampleWindow.add(d10);
+         doubleSampleWindow.add(Math.sqrt(d8 * d8 + d9 * d9));
       }
 
       ArrayList list = new ArrayList();

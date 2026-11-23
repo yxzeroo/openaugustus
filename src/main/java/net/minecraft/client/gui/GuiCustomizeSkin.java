@@ -14,9 +14,7 @@ public class GuiCustomizeSkin extends GuiScreen {
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.enabled) {
          if (button.id == 210) {
-            Minecraft mc2 = this.mc;
-            GuiScreenCapeOF guiScreenCapeOF = new GuiScreenCapeOF(this);
-            mc2.displayGuiScreen((GuiScreen)guiScreenCapeOF);
+            this.mc.displayGuiScreen((GuiScreen)new GuiScreenCapeOF(this));
          } else if (button.id == 200) {
             this.mc.gameSettings.saveOptions();
             GuiScreen parentScreen2 = this.parentScreen;

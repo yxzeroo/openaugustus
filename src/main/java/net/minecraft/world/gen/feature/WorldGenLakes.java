@@ -41,8 +41,7 @@ public class WorldGenLakes extends WorldGenerator {
                      double d7 = ((double)j - d4) / (d / 2.0);
                      double d8 = ((double)m - d5) / (d2 / 2.0);
                      double d9 = ((double)k - d6) / (d3 / 2.0);
-                     double d10 = d7 * d7 + d8 * d8 + d9 * d9;
-                     if (d10 < 1.0) {
+                     if ((d7 * d7 + d8 * d8 + d9 * d9) < 1.0) {
                         flags[(j * 16 + k) * 8 + m] = true;
                      }
                   }
@@ -93,8 +92,7 @@ public class WorldGenLakes extends WorldGenerator {
                      BlockPos pos2 = pos.add(i6, i8 - 1, i7);
                      if (world.getBlockState(pos2).getBlock() == Blocks.dirt
                         && world.getLightFor(EnumSkyBlock.SKY, pos.getX() + i6, pos.getY() + i8, pos.getZ() + i7) > 0) {
-                        BiomeGenBase biomeGenForCoords = world.getBiomeGenForCoords(pos2);
-                        if (biomeGenForCoords.topBlock.getBlock() == Blocks.mycelium) {
+                        if (world.getBiomeGenForCoords(pos2).topBlock.getBlock() == Blocks.mycelium) {
                            world.setBlockState(pos2, Blocks.mycelium.getDefaultState(), 2);
                         } else {
                            world.setBlockState(pos2, Blocks.grass.getDefaultState(), 2);

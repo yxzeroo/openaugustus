@@ -132,8 +132,7 @@ public class ClassInheritanceMultiMap extends AbstractSet {
          if (list == null) {
             return Collections.emptyIterator();
          } else {
-            Iterator it = list.iterator();
-            return Iterators.filter(it, this.targetClass);
+            return Iterators.filter(list.iterator(), this.targetClass);
          }
       }
    }

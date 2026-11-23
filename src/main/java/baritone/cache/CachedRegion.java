@@ -217,8 +217,7 @@ public final class CachedRegion implements ICachedRegion {
 
             for (int i = 0; i < 32; i++) {
                for (int j = 0; j < 32; j++) {
-                  int n2 = in.read();
-                  switch (n2) {
+                  switch (in.read()) {
                      case 1:
                         byte[] bytes = new byte[16384];
                         in.readFully(bytes);

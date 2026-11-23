@@ -8,8 +8,7 @@ public class EntropyXorShiftRandom {
    private static final long SEED_MIX_MULTIPLIER = 0L;
 
    public int nextInt(int n) {
-      byte b = 2;
-      return (int)this.nextValue(b, n);
+      return (int)this.nextValue((byte)2, n);
    }
 
    public long nextValue(int n, int n2) {
@@ -17,13 +16,11 @@ public class EntropyXorShiftRandom {
       long state12 = this.state1;
       state12 ^= state12 << 23;
       long l = state02 + state12;
-      long l2 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-      this.state0 = l2;
+      this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
       this.state1 = state02;
       l ^= l >>> 33;
       l *= 2685821657736338717L;
       l ^= l >>> 33;
-      Sha256Digest.getFlowState();
       l *= 6364136223846793005L;
       l ^= l >>> 33;
       switch (n) {
@@ -56,16 +53,11 @@ public class EntropyXorShiftRandom {
    }
 
    public boolean nextBoolean() {
-      int[] flowState = Sha256Digest.getFlowState();
-      byte b = 0;
-      byte b2 = 0;
-      return (this.nextValue(b2, b) & 1L) != 0L;
+      return (this.nextValue((byte)0, (byte)0) & 1L) != 0L;
    }
 
    public double nextDouble() {
-      byte b = 0;
-      byte b2 = 3;
-      return (double)this.nextValue(b2, b);
+      return (double)this.nextValue((byte)3, (byte)0);
    }
 
    public void nextBytes(byte[] bytes) {
@@ -82,7 +74,6 @@ public class EntropyXorShiftRandom {
       long l6 = l2 ^ l4 ^ id << 17;
       l5 ^= l5 >>> 33;
       l5 *= 2685821657736338717L;
-      Sha256Digest.getFlowState();
       l5 ^= l5 >>> 33;
       l5 *= 6364136223846793005L;
       l5 ^= l5 >>> 33;
@@ -121,9 +112,8 @@ public class EntropyXorShiftRandom {
          l6 ^= (long)(array[k].hashCode() << k * 7);
       }
 
-      StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
-      for (StackTraceElement stackTraceElement : stackTrace) {
+      for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
          l5 ^= (long)stackTraceElement.hashCode();
          l6 ^= (long)(stackTraceElement.getLineNumber() * 31);
       }
@@ -141,27 +131,21 @@ public class EntropyXorShiftRandom {
          long state02 = this.state0;
          long state12 = this.state1;
          state12 ^= state12 << 23;
-         long l8 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-         this.state0 = l8;
+         this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
          this.state1 = state02;
       }
    }
 
    public long nextLong() {
-      byte b = 0;
-      byte b2 = 0;
-      return this.nextValue(b2, b);
+      return this.nextValue((byte)0, (byte)0);
    }
 
    public int nextInt() {
-      byte b = 0;
-      byte b2 = 1;
-      return (int)this.nextValue(b2, b);
+      return (int)this.nextValue((byte)1, (byte)0);
    }
 
    public void fillRandomBytes(byte[] bytes) {
       int n = 0;
-      Sha256Digest.getFlowState();
       int length = bytes.length;
 
       while (n < length) {
@@ -169,8 +153,7 @@ public class EntropyXorShiftRandom {
          long state12 = this.state1;
          state12 ^= state12 << 23;
          long l = state02 + state12;
-         long l2 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
-         this.state0 = l2;
+         this.state0 = state12 ^ state02 ^ state12 >>> 18 ^ state02 >>> 5;
          this.state1 = state02;
          l ^= l >>> 33;
          l *= 2685821657736338717L;

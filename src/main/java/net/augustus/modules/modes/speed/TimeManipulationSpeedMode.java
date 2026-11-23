@@ -46,10 +46,8 @@ public class TimeManipulationSpeedMode extends SpeedMode {
 
    @Override
    public void onTimer(EventTimer event) {
-      float f = Math.max(0.1F, (float)ClientManagers.moduleManager.speed.timeManipulationTimer.getValue());
-      event.setTimerSpeed(f);
-      int value = (int)ClientManagers.moduleManager.speed.timeManipulationTPTicks.getValue();
-      event.setExtraTicks(value);
+      event.setTimerSpeed(Math.max(0.1F, (float)ClientManagers.moduleManager.speed.timeManipulationTimer.getValue()));
+      event.setExtraTicks((int)ClientManagers.moduleManager.speed.timeManipulationTPTicks.getValue());
    }
 
 }

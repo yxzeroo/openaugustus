@@ -141,9 +141,7 @@ public class NoiseGeneratorImproved extends NoiseGenerator {
                      );
                   }
 
-                  double d27 = this.lerp(d26, d17, d18);
-                  double d28 = this.lerp(d26, d19, d20);
-                  double d29 = this.lerp(d24, d27, d28);
+                  double d29 = this.lerp(d24, this.lerp(d26, d17, d18), this.lerp(d26, d19, d20));
                   int n28 = n14++;
                   doubles[n28] += d29 * d16;
                }

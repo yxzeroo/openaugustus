@@ -2,7 +2,6 @@ package net.augustus.commands.impl;
 
 import net.augustus.Augustus;
 import net.augustus.commands.Command;
-import net.augustus.settings.Setting;
 import net.minecraft.util.ChatComponentText;
 
 public class HelpCommand extends Command {
@@ -19,7 +18,6 @@ public class HelpCommand extends Command {
          command2.helpMessage();
       }
 
-      Setting.getControlFlowMarker();
    }
 
    public void helpMessage() {

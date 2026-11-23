@@ -9,8 +9,7 @@ public class LeftClickQuestObjective extends QuestObjective implements LeftClick
 
    @Override
    public void onLeftClick(EventLeftClick event) {
-      double d = 1.0;
-      this.addProgress(d);
+      this.addProgress(1.0);
    }
 
    @Override

@@ -57,8 +57,7 @@ public class BlockUtil implements MC {
 
    public static boolean hasCollisionBox(int n, int n2, int n3) {
       IBlockState blockState2 = mc.theWorld.getBlockState2(n, n2, n3);
-      Block block = blockState2.getBlock();
-      return block.getCollisionBoundingBox(mc.theWorld, blockState2, n, n2, n3) != null;
+      return blockState2.getBlock().getCollisionBoundingBox(mc.theWorld, blockState2, n, n2, n3) != null;
    }
 
    static {
@@ -163,8 +162,7 @@ public class BlockUtil implements MC {
 
    public static boolean hasCollisionBox(BlockPos pos) {
       IBlockState blockState = mc.theWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
-      return block.getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
+      return blockState.getBlock().getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
    }
 
    public static boolean isSolidBlock(double d, double d2, double d3) {
@@ -173,8 +171,7 @@ public class BlockUtil implements MC {
    }
 
    public static boolean isValidScaffoldBlock(ItemStack stack) {
-      boolean flag = false;
-      return isValidScaffoldBlock(stack, flag);
+      return isValidScaffoldBlock(stack, false);
    }
 
    public static boolean isWalkableBlock(BlockPos pos) {
@@ -242,8 +239,7 @@ public class BlockUtil implements MC {
    }
 
    public static boolean isAirBlock(BlockPos pos, long l) {
-      Block block = Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
-      return block instanceof BlockAir;
+      return Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock() instanceof BlockAir;
    }
 
    public static boolean isInteractableBlock(Block block) {

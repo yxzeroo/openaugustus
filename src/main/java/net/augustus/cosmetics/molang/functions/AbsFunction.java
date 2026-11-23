@@ -6,8 +6,7 @@ public class AbsFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.abs(this.getArg(b));
+      return Math.abs(this.getArg((byte)0));
    }
 
    public AbsFunction(MolangValue[] molangValues, String str) throws Exception {

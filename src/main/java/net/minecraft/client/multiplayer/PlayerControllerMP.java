@@ -138,8 +138,7 @@ public class PlayerControllerMP {
    }
 
    public void attackEntity(EntityPlayer player, Entity entity) {
-      StateTypes pre = StateTypes.PRE;
-      AttackEntityListener.onAttackEntity(entity, pre);
+      AttackEntityListener.onAttackEntity(entity, StateTypes.PRE);
       this.syncCurrentPlayItem();
       this.netClientHandler.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
       if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).hurtTime == 0 && System.currentTimeMillis() - entity.lastDamageAttackTime > 225L) {
@@ -150,8 +149,7 @@ public class PlayerControllerMP {
          entity.lastAttackTime = System.currentTimeMillis();
       }
 
-      StateTypes post = StateTypes.POST;
-      AttackEntityListener.onAttackEntity(entity, post);
+      AttackEntityListener.onAttackEntity(entity, StateTypes.POST);
       if (this.currentGameType != WorldSettings.GameType.SPECTATOR) {
          player.attackTargetEntityWithCurrentItem(entity);
          if (player instanceof EntityPlayerSP) {
@@ -354,13 +352,8 @@ public class PlayerControllerMP {
       }
 
       if (ClientManagers.moduleManager.fastBreak.customBlockHitDelay.getValue()) {
-         FastBreak fastBreak = ClientManagers.moduleManager.fastBreak;
-         Block block = this.mc.theWorld.getBlockState(pos).getBlock();
-         Block block2 = block;
-         if (fastBreak.shouldFastBreakBlock(block2)) {
-            boolean flag2 = true;
-            int n = (int)(5.0 - ClientManagers.moduleManager.fastBreak.blockHitDelay.getValue(flag2));
-            if (blockHitDelay2 <= n) {
+         if (ClientManagers.moduleManager.fastBreak.shouldFastBreakBlock(this.mc.theWorld.getBlockState(pos).getBlock())) {
+            if (blockHitDelay2 <= ((int)(5.0 - ClientManagers.moduleManager.fastBreak.blockHitDelay.getValue(true)))) {
                flag = false;
             }
          }
@@ -441,8 +434,7 @@ public class PlayerControllerMP {
             }
 
             if (flag && block2.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos) >= 1.0F) {
-               EventBlockBreak event = BlockBreakListener.onBlockBreak();
-               if (!event.isCancelled()) {
+               if (!BlockBreakListener.onBlockBreak().isCancelled()) {
                   this.onPlayerDestroyBlock(pos, facing);
                }
             } else {
@@ -520,9 +512,7 @@ public class PlayerControllerMP {
                if (ClientManagers.moduleManager.fastBreak.isInstantBreak(block)) {
                   this.curBlockDamageMP = 2.0F;
                } else {
-                  float curBlockDamageMP2 = this.curBlockDamageMP;
-                  float f = block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos);
-                  this.curBlockDamageMP = curBlockDamageMP2 + f * (float)ClientManagers.moduleManager.fastBreak.getBreakSpeedMultiplier(block);
+                  this.curBlockDamageMP = this.curBlockDamageMP + block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos) * (float)ClientManagers.moduleManager.fastBreak.getBreakSpeedMultiplier(block);
                }
             } else {
                this.curBlockDamageMP = this.curBlockDamageMP + block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos);
@@ -545,8 +535,7 @@ public class PlayerControllerMP {
 
             this.stepSoundTickCounter++;
             if (this.curBlockDamageMP >= 1.0F) {
-               EventBlockBreak event = BlockBreakListener.onBlockBreak();
-               if (!event.isCancelled()) {
+               if (!BlockBreakListener.onBlockBreak().isCancelled()) {
                   this.isHittingBlock = false;
                   this.netClientHandler
                      .addToSendQueue(new C07PacketPlayerDigging(net.minecraft.network.play.client.C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, facing));
@@ -630,9 +619,7 @@ public class PlayerControllerMP {
                if (ClientManagers.moduleManager.fastBreak.isInstantBreak(block)) {
                   this.curBlockDamageMP = 2.0F;
                } else {
-                  float curBlockDamageMP2 = this.curBlockDamageMP;
-                  float f = block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos);
-                  this.curBlockDamageMP = curBlockDamageMP2 + f * (float)ClientManagers.moduleManager.fastBreak.getBreakSpeedMultiplier(block);
+                  this.curBlockDamageMP = this.curBlockDamageMP + block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos) * (float)ClientManagers.moduleManager.fastBreak.getBreakSpeedMultiplier(block);
                }
             } else {
                this.curBlockDamageMP = this.curBlockDamageMP + block.getPlayerRelativeBlockHardness(this.mc.thePlayer, this.mc.thePlayer.entityWorld, pos);
@@ -655,8 +642,7 @@ public class PlayerControllerMP {
 
             this.stepSoundTickCounter++;
             if (this.curBlockDamageMP >= 1.0F) {
-               EventBlockBreak event = BlockBreakListener.onBlockBreak();
-               if (!event.isCancelled()) {
+               if (!BlockBreakListener.onBlockBreak().isCancelled()) {
                   this.isHittingBlock = false;
                   this.netClientHandler
                      .addToSendQueue(new C07PacketPlayerDigging(net.minecraft.network.play.client.C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, facing));

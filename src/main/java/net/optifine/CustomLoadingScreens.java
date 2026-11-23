@@ -38,12 +38,10 @@ public class CustomLoadingScreens {
       if (nums.length <= 0) {
          return new ImmutablePair(null, 0);
       } else {
-         String str5 = "optifine/gui/loading/loading.properties";
-         Properties properties = ResUtils.readProperties(str5, "CustomLoadingScreens");
+         Properties properties = ResUtils.readProperties("optifine/gui/loading/loading.properties", "CustomLoadingScreens");
          int n2 = nums[0];
          int n3 = nums[nums.length - 1];
-         int n4 = n3 - n2 + 1;
-         CustomLoadingScreen[] customLoadingScreens = new CustomLoadingScreen[n4];
+         CustomLoadingScreen[] customLoadingScreens = new CustomLoadingScreen[n3 - n2 + 1];
 
          for (int j = 0; j < nums.length; j++) {
             Integer num = nums[j];
@@ -59,8 +57,7 @@ public class CustomLoadingScreens {
       if (screens == null) {
          return null;
       } else {
-         int lastDimensionId = PacketThreadUtil.lastDimensionId;
-         int n = lastDimensionId - screensMinDimensionId;
+         int n = PacketThreadUtil.lastDimensionId - screensMinDimensionId;
          CustomLoadingScreen customLoadingScreen = null;
          if (n >= 0 && n < screens.length) {
             customLoadingScreen = screens[n];

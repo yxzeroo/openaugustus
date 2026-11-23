@@ -15,7 +15,6 @@ public class CeilFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.ceil(this.getArg(b));
+      return Math.ceil(this.getArg((byte)0));
    }
 }

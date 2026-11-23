@@ -297,8 +297,7 @@ public class GuiStats extends GuiScreen implements IProgressMeter {
       public void renderMouseHoverToolTip(StatCrafting statCrafting, int n, int n2) {
          if (statCrafting != null) {
             Item item = statCrafting.getItem();
-            ItemStack stack = new ItemStack(item);
-            String unlocalizedName = stack.getUnlocalizedName();
+            String unlocalizedName = new ItemStack(item).getUnlocalizedName();
             String str = ("" + I18n.format(unlocalizedName + ".name", new Object[0])).trim();
             if (str.length() > 0) {
                int n3 = n + 12;
@@ -385,8 +384,7 @@ public class GuiStats extends GuiScreen implements IProgressMeter {
                   return;
                }
 
-               StatCrafting slotStat = this.getSlotStat(n3);
-               this.renderMouseHoverToolTip(slotStat, n, n2);
+               this.renderMouseHoverToolTip(this.getSlotStat(n3), n, n2);
             } else {
                String str = "";
                if (n >= n4 + 115 - 18 && n <= n4 + 115) {

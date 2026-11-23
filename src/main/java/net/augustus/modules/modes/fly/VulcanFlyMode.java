@@ -49,13 +49,11 @@ public class VulcanFlyMode extends FlyMode {
          }
 
          if (mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ).down()).getBlock().isFullBlock()) {
-            long l = 500L;
-            if (!this.timeHelper.reached2(l)) {
+            if (!this.timeHelper.reached2(500L)) {
                this.activeTimerSpeed = (float)this.fly.timerSpeedEnd.getValue();
             }
 
-            boolean flag = true;
-            event.setSneak(flag);
+            event.setSneak(true);
          } else {
             this.timeHelper.reset();
             this.setbackCount = 4;

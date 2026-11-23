@@ -1,6 +1,5 @@
 package net.augustus.vendor.crypto.base64;
 
-import net.augustus.vendor.crypto.VendorAesHelper;
 import net.augustus.vendor.crypto.VendorBase64Decoder;
 import net.augustus.vendor.crypto.VendorBase64Encoder;
 import java.util.Objects;
@@ -11,7 +10,6 @@ public class ShadedBase64 {
       int n2 = 0;
       int n3 = 0;
       int[] ints = null;
-      VendorAesHelper.getInvertedGuardFlag();
       byte[] bytes2 = null;
       byte b = 0;
       byte b2 = 5;

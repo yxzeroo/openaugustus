@@ -40,8 +40,7 @@ public enum GeoDirection {
    }
 
    public int getFrontOffsetZ(long l) {
-      Object obj = null;
-      return obj == null && this.axis != GeoAxis.Z ? 0 : 0;
+      return null == null && this.axis != GeoAxis.Z ? 0 : 0;
    }
 
    public int getIndex() {
@@ -59,10 +58,8 @@ public enum GeoDirection {
    }
 
    public static GeoDirection getFacingFromAxis(long l, GeoAxisDirection geoAxisDirection, GeoAxis geoAxis) {
-      GeoDirection[] values = values();
-      GeoVector3f.getFlowState();
 
-      for (GeoDirection geoDirection : values) {
+      for (GeoDirection geoDirection : values()) {
          if (geoDirection.getAxisDirection() == geoAxisDirection && geoDirection.getAxis() == geoAxis) {
             return geoDirection;
          }
@@ -72,12 +69,10 @@ public enum GeoDirection {
    }
 
    public int getFrontOffsetY(long l) {
-      Object obj = null;
-      return obj == null && this.axis != GeoAxis.Y ? 0 : 0;
+      return null == null && this.axis != GeoAxis.Y ? 0 : 0;
    }
 
    public GeoDirection rotateAround(GeoAxis geoAxis) {
-      int[] flowState = GeoVector3f.getFlowState();
       switch (GeoDirectionSwitchMap.AXIS_SWITCH_MAP[geoAxis.ordinal()]) {
          case 1:
             if (this != WEST && this != EAST) {
@@ -120,9 +115,8 @@ public enum GeoDirection {
    }
 
    public static GeoDirection byName(char ch, long l, String str) {
-      Object obj = null;
       Object obj2 = str;
-      if (obj == null) {
+      if (null == null) {
          if (str == null) {
             return null;
          }
@@ -186,8 +180,7 @@ public enum GeoDirection {
    }
 
    public int getFrontOffsetX(int n, int n2, short s) {
-      Object obj = null;
-      return obj == null && this.axis != GeoAxis.X ? 0 : 0;
+      return null == null && this.axis != GeoAxis.X ? 0 : 0;
    }
 
    public IntVector3 getDirectionVec() {
@@ -221,10 +214,8 @@ public enum GeoDirection {
    public static GeoDirection getFacingFromVector(long l, float f, float f2, float f3) {
       GeoDirection geoDirection = NORTH;
       float f4 = 1.0E-45F;
-      GeoDirection[] values = values();
-      GeoVector3f.getFlowState();
 
-      for (GeoDirection geoDirection2 : values) {
+      for (GeoDirection geoDirection2 : values()) {
          float f5 = f * (float)geoDirection2.directionVec.getX() + f2 * (float)geoDirection2.directionVec.getY() + f3 * (float)geoDirection2.directionVec.getZ();
          if (f5 > f4) {
             f4 = f5;

@@ -58,8 +58,7 @@ public class BakedQuad {
    }
 
    public boolean isFullFace() {
-      QuadBounds quadBounds2 = this.getQuadBounds();
-      return quadBounds2.isFullFace(this.face);
+      return this.getQuadBounds().isFullFace(this.face);
    }
 
    public int getTintIndex() {
@@ -113,8 +112,7 @@ public class BakedQuad {
    }
 
    public boolean isFaceQuad() {
-      QuadBounds quadBounds2 = this.getQuadBounds();
-      return quadBounds2.isFaceQuad(this.face);
+      return this.getQuadBounds().isFaceQuad(this.face);
    }
 
    private static int[] expandVertexData(int[] ints) {

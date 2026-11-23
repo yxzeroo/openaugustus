@@ -136,9 +136,7 @@ public class EventPacketDelay extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      PacketDelayListener listener = (PacketDelayListener)obj;
-      PacketDelayListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((PacketDelayListener)obj);
    }
 
    public EnumPacketDirection getPacketDirection() {

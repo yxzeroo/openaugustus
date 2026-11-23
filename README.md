@@ -11,6 +11,10 @@ All runtime bytecode, JNIC native methods (`client_jnic.dll` and `launcher_jnic.
 >
 > Please bookmark this mirror — if this GitHub repository is ever taken down, the full source and future updates will remain available at https://deobf.su/yxzero/openaugustus.
 
+## Discord
+
+Join the Discord for future updates, discussion, and more deobfuscated clients: https://discord.adjust.wtf
+
 ---
 
 ## Project Layout
@@ -125,3 +129,9 @@ Augustus b4.23.3 uses a multi-layer protection stack combining an encrypted in-m
   2. Renamed and relocated all `2,064` obfuscated classes, `18,915` fields, and `16,727` method override groups to clean semantic/upstream packages and names via `javac` AST refactoring.
   3. Replaced decompiler locals/labels/casts/bridges and re-nested all `914` `$` inner classes back into their enclosing files.
   4. Verified exact behavior against the baseline classes via ASM bytecode equivalence checking and differential runtime tests.
+
+---
+
+## Credits
+
+This entire client deobfuscation task was done by **Gemini 4 Neon Extra High**.

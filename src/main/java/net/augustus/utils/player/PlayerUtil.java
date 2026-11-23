@@ -21,7 +21,7 @@ import net.augustus.viaversion.ViaAugustus;
 import de.florianmichael.dietrichevents2.StateTypes;
 import java.util.ArrayList;
 import java.util.List;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.augustus.utils.interfaces.MC;
 import net.minecraft.block.Block;
@@ -77,9 +77,7 @@ public class PlayerUtil implements MC {
       if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
          BlockPos blockPos = mc.objectMouseOver.getBlockPos();
          Vec3 hitVec = mc.objectMouseOver.hitVec;
-         EnumFacing sideHit = mc.objectMouseOver.sideHit;
-         BlockPos pos = blockPos;
-         if (canPlaceBlockAt(stack, pos, sideHit, hitVec)) {
+         if (canPlaceBlockAt(stack, blockPos, mc.objectMouseOver.sideHit, hitVec)) {
             return true;
          }
       }
@@ -199,9 +197,7 @@ public class PlayerUtil implements MC {
                   }
 
                   box12 = box12.offset(0.0, 0.0, d16);
-                  double d17 = d12 * d12 + d13 * d13;
-                  double d18 = d15 * d15 + d16 * d16;
-                  if (d17 > d18) {
+                  if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                      d4 = d12;
                      d6 = d13;
                      d5 = -d11;
@@ -296,8 +292,7 @@ public class PlayerUtil implements MC {
    public static double[] predictPlayerWithInputArrays(int n, EntityPlayerSP player, float[] floats, float[] floats2) {
       double posZ = player.posZ;
       double posY = player.posY;
-      double posX = player.posX;
-      return predictPlayerWithInputArrays(n, player, posX, posY, posZ, floats, floats2);
+      return predictPlayerWithInputArrays(n, player, player.posX, posY, posZ, floats, floats2);
    }
 
    public static boolean willEntityLandOnGround(EntityLivingBase entity, int n) {
@@ -407,9 +402,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d16);
-            double d17 = d12 * d12 + d13 * d13;
-            double d18 = d15 * d15 + d16 * d16;
-            if (d17 > d18) {
+            if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                d4 = d12;
                d6 = d13;
                d5 = -d11;
@@ -531,8 +524,7 @@ public class PlayerUtil implements MC {
                }
 
                if (!flag && stack != null && stack.getItem() instanceof ItemBlock) {
-                  ItemBlock item = (ItemBlock)stack.getItem();
-                  if (!item.canPlaceBlockOnSide(mc.theWorld, pos, facing, mc.thePlayer, stack)) {
+                  if (!((ItemBlock)stack.getItem()).canPlaceBlockOnSide(mc.theWorld, pos, facing, mc.thePlayer, stack)) {
                      return false;
                   }
                }
@@ -558,15 +550,11 @@ public class PlayerUtil implements MC {
          mc.thePlayer.movementInput.sneak,
          MoveInputStage.PRE
       );
-      double d = posZ;
-      double d2 = posY;
-      double d3 = posX;
-      return predictPlayerPosition(n, player, d3, d2, d, f, event, flag);
+      return predictPlayerPosition(n, player, posX, posY, posZ, f, event, flag);
    }
 
    public static Vec3 predictNextTickWithAttack(boolean flag, Entity entity, float f) {
-      double d = -1337.0;
-      return predictNextTickWithAttack(flag, entity, d, f);
+      return predictNextTickWithAttack(flag, entity, -1337.0, f);
    }
 
    public static double[] predictPlayerPosition(int n, EntityPlayerSP player, double d, double d2, double d3, float f, EventMoveInput event, boolean flag) {
@@ -687,8 +675,7 @@ public class PlayerUtil implements MC {
          double d7 = motionX;
          double d8 = motionZ;
          boolean flag2 = player.isSneaking() && !flag;
-         boolean flag3 = onGround && flag2;
-         if (flag3) {
+         if (onGround && flag2) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -803,9 +790,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -905,9 +890,7 @@ public class PlayerUtil implements MC {
    }
 
    public static double[] predictPlayerPosition(int n, EntityPlayerSP player) {
-      boolean flag = false;
-      float rotationYaw = player.rotationYaw;
-      return predictPlayerPosition(n, player, rotationYaw, flag);
+      return predictPlayerPosition(n, player, player.rotationYaw, false);
    }
 
    public static void triggerJumpStat() {
@@ -1032,8 +1015,7 @@ public class PlayerUtil implements MC {
          double d7 = motionX;
          double d8 = motionZ;
          boolean isSneaking = player.isSneaking();
-         boolean flag = player.onGround && isSneaking;
-         if (flag) {
+         if (player.onGround && isSneaking) {
             double d9;
             for (d9 = 0.05; d4 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d4, -1.0, 0.0)).isEmpty(); d7 = d4) {
                if (d4 < d9 && d4 >= -d9) {
@@ -1148,9 +1130,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d18);
-            double d19 = d14 * d14 + d15 * d15;
-            double d20 = d17 * d17 + d18 * d18;
-            if (d19 > d20) {
+            if ((d14 * d14 + d15 * d15) > (d17 * d17 + d18 * d18)) {
                d4 = d14;
                d6 = d15;
                d5 = -d13;
@@ -1348,9 +1328,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d16);
-            double d17 = d12 * d12 + d13 * d13;
-            double d18 = d15 * d15 + d16 * d16;
-            if (d17 > d18) {
+            if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                d4 = d12;
                d6 = d13;
                d5 = -d11;
@@ -1467,17 +1445,14 @@ public class PlayerUtil implements MC {
                knockbackModifier++;
             }
 
-            boolean flag4 = entity.attackEntityFrom(DamageSource.causePlayerDamage(mc.thePlayer), attributeValue);
-            if (flag4) {
+            if (entity.attackEntityFrom(DamageSource.causePlayerDamage(mc.thePlayer), attributeValue)) {
                if (knockbackModifier > 0) {
-                  boolean flag5 = true;
-                  EventAttackSlowdown event = AttackSlowdownListener.onAttackSlowdown(AttackSlowdownStage.FIRST, flag5);
+                  EventAttackSlowdown event = AttackSlowdownListener.onAttackSlowdown(AttackSlowdownStage.FIRST, true);
                   motionX *= event.getSlowDownFactor();
                   motionZ *= event.getSlowDownFactor();
                   flag3 = event.isSprint();
                } else if (d == -1337.0) {
-                  boolean flag6 = true;
-                  EventAttackSlowdown event2 = AttackSlowdownListener.onAttackSlowdown(AttackSlowdownStage.SECOND, flag6);
+                  EventAttackSlowdown event2 = AttackSlowdownListener.onAttackSlowdown(AttackSlowdownStage.SECOND, true);
                   if (event2.isApplySecondStage()) {
                      motionX *= event2.getSlowDownFactor();
                      motionZ *= event2.getSlowDownFactor();
@@ -1581,8 +1556,7 @@ public class PlayerUtil implements MC {
       double d5 = motionX;
       double d6 = motionZ;
       boolean isSneaking = thePlayer.isSneaking();
-      boolean flag7 = onGround && isSneaking;
-      if (flag7) {
+      if (onGround && isSneaking) {
          double d7;
          for (d7 = 0.05; d2 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(thePlayer, box.offset(d2, -1.0, 0.0)).isEmpty(); d5 = d2) {
             if (d2 < d7 && d2 >= -d7) {
@@ -1696,9 +1670,7 @@ public class PlayerUtil implements MC {
          }
 
          box11 = box11.offset(0.0, 0.0, d16);
-         double d17 = d12 * d12 + d13 * d13;
-         double d18 = d15 * d15 + d16 * d16;
-         if (d17 > d18) {
+         if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
             d2 = d12;
             d4 = d13;
             d3 = -d11;
@@ -1923,8 +1895,7 @@ public class PlayerUtil implements MC {
             double d = MathHelper.clamp_double(vec3.xCoord, box2.minX, box2.maxX);
             double d2 = MathHelper.clamp_double(vec3.zCoord, box2.minZ, box2.maxZ);
             double d3 = d - posX;
-            double d4 = d2 - posZ;
-            rotationYaw = (float)(MathHelper.atan2(d4, d3) * 180.0 / 3.141592653589793 - 90.0);
+            rotationYaw = (float)(MathHelper.atan2(d2 - posZ, d3) * 180.0 / 3.141592653589793 - 90.0);
          }
 
          prevPosX = posX;
@@ -2025,8 +1996,7 @@ public class PlayerUtil implements MC {
          double d8 = motionX;
          double d9 = motionZ;
          boolean isSneaking = player.isSneaking();
-         boolean flag = player.onGround && isSneaking;
-         if (flag) {
+         if (player.onGround && isSneaking) {
             double d10;
             for (d10 = 0.05; d5 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d5, -1.0, 0.0)).isEmpty(); d8 = d5) {
                if (d5 < d10 && d5 >= -d10) {
@@ -2141,9 +2111,7 @@ public class PlayerUtil implements MC {
             }
 
             box13 = box13.offset(0.0, 0.0, d19);
-            double d20 = d15 * d15 + d16 * d16;
-            double d21 = d18 * d18 + d19 * d19;
-            if (d20 > d21) {
+            if ((d15 * d15 + d16 * d16) > (d18 * d18 + d19 * d19)) {
                d5 = d15;
                d7 = d16;
                d6 = -d14;
@@ -2353,9 +2321,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d16);
-            double d17 = d12 * d12 + d13 * d13;
-            double d18 = d15 * d15 + d16 * d16;
-            if (d17 > d18) {
+            if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                d4 = d12;
                d6 = d13;
                d5 = -d11;
@@ -2456,17 +2422,11 @@ public class PlayerUtil implements MC {
          mc.thePlayer.movementInput.sneak,
          MoveInputStage.PRE
       );
-      boolean flag = false;
-      EventMoveInput event2 = event;
-      double d = posZ;
-      double d2 = posY;
-      double d3 = posX;
-      return predictPlayerPosition(n, player, d3, d2, d, f, event2, flag);
+      return predictPlayerPosition(n, player, posX, posY, posZ, f, event, false);
    }
 
    public static ArrayList predictPlayerTrajectory(int n, EntityPlayerSP player, double d, double d2, double d3, EventMoveInput event) {
-      double motionY = player.motionY;
-      return predictPlayerTrajectory(n, player, d, d2, d3, motionY, event);
+      return predictPlayerTrajectory(n, player, d, d2, d3, player.motionY, event);
    }
 
    public static double[] capturePlayerState() {
@@ -2487,8 +2447,7 @@ public class PlayerUtil implements MC {
    }
 
    public static Vec3 predictNextTickWithAttack(boolean flag, Entity entity, double d, float f) {
-      boolean isSprinting = mc.thePlayer.isSprinting();
-      return predictNextTickWithAttack(flag, entity, d, f, isSprinting);
+      return predictNextTickWithAttack(flag, entity, d, f, mc.thePlayer.isSprinting());
    }
 
    public static double[] predictEntityFromServerMotion(long l, EntityLivingBase entity, int n) {
@@ -2602,9 +2561,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d16);
-            double d17 = d12 * d12 + d13 * d13;
-            double d18 = d15 * d15 + d16 * d16;
-            if (d17 > d18) {
+            if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                d4 = d12;
                d6 = d13;
                d5 = -d11;
@@ -2808,8 +2765,7 @@ public class PlayerUtil implements MC {
          double d8 = motionX;
          double d9 = motionZ;
          boolean isSneaking = player.isSneaking();
-         boolean flag = onGround && isSneaking;
-         if (flag) {
+         if (onGround && isSneaking) {
             double d10;
             for (d10 = 0.05; d5 != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d5, -1.0, 0.0)).isEmpty(); d8 = d5) {
                if (d5 < d10 && d5 >= -d10) {
@@ -2924,9 +2880,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d19);
-            double d20 = d15 * d15 + d16 * d16;
-            double d21 = d18 * d18 + d19 * d19;
-            if (d20 > d21) {
+            if ((d15 * d15 + d16 * d16) > (d18 * d18 + d19 * d19)) {
                d5 = d15;
                d7 = d16;
                d6 = -d14;
@@ -3026,7 +2980,7 @@ public class PlayerUtil implements MC {
       return list;
    }
 
-   public static float getPlayerHealthByMode(BooleansSetting booleansSetting, EntityPlayer player) {
+   public static float getPlayerHealthByMode(StringValue booleansSetting, EntityPlayer player) {
       if (mc.theWorld == null) {
          return 0.0F;
       } else if (booleansSetting.getSelectedValue().equals("Entity")) {
@@ -3060,8 +3014,7 @@ public class PlayerUtil implements MC {
    }
 
    public static double[] predictPlayerPosition(int n, EntityPlayerSP player, double d, double d2, double d3, float f, EventMoveInput event) {
-      boolean flag = false;
-      return predictPlayerPosition(n, player, d, d2, d3, f, event, flag);
+      return predictPlayerPosition(n, player, d, d2, d3, f, event, false);
    }
 
    public static double[] getInterpolatedEntityPosition(EntityLivingBase entity) {
@@ -3275,9 +3228,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d16);
-            double d17 = d12 * d12 + d13 * d13;
-            double d18 = d15 * d15 + d16 * d16;
-            if (d17 > d18) {
+            if ((d12 * d12 + d13 * d13) > (d15 * d15 + d16 * d16)) {
                d4 = d12;
                d6 = d13;
                d5 = -d11;
@@ -3491,8 +3442,7 @@ public class PlayerUtil implements MC {
          double d4 = xCoord2;
          double d5 = zCoord2;
          boolean flag2 = sneaking && !flag;
-         boolean flag3 = onGround && flag2;
-         if (flag3) {
+         if (onGround && flag2) {
             double d6;
             for (d6 = 0.05; d != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d, -1.0, 0.0)).isEmpty(); d4 = d) {
                if (d < d6 && d >= -d6) {
@@ -3607,9 +3557,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d15);
-            double d16 = d11 * d11 + d12 * d12;
-            double d17 = d14 * d14 + d15 * d15;
-            if (d16 > d17) {
+            if ((d11 * d11 + d12 * d12) > (d14 * d14 + d15 * d15)) {
                d = d11;
                d3 = d12;
                d2 = -d10;
@@ -3710,8 +3658,7 @@ public class PlayerUtil implements MC {
    }
 
    public static double[] predictPlayerPosition2(int n, EntityPlayerSP player, boolean flag) {
-      float rotationYaw = player.rotationYaw;
-      return predictPlayerPosition(n, player, rotationYaw, flag);
+      return predictPlayerPosition(n, player, player.rotationYaw, flag);
    }
 
    public static double[] simulatePlayerSnapshotsFinal(EntityPlayerSP player, ArrayList list, int n, boolean flag) {
@@ -3831,8 +3778,7 @@ public class PlayerUtil implements MC {
          double d4 = xCoord2;
          double d5 = zCoord2;
          boolean flag2 = sneaking && !flag;
-         boolean flag3 = onGround && flag2;
-         if (flag3) {
+         if (onGround && flag2) {
             double d6;
             for (d6 = 0.05; d != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(player, box.offset(d, -1.0, 0.0)).isEmpty(); d4 = d) {
                if (d < d6 && d >= -d6) {
@@ -3947,9 +3893,7 @@ public class PlayerUtil implements MC {
             }
 
             box12 = box12.offset(0.0, 0.0, d15);
-            double d16 = d11 * d11 + d12 * d12;
-            double d17 = d14 * d14 + d15 * d15;
-            if (d16 > d17) {
+            if ((d11 * d11 + d12 * d12) > (d14 * d14 + d15 * d15)) {
                d = d11;
                d3 = d12;
                d2 = -d10;

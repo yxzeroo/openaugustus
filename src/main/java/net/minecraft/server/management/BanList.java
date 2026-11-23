@@ -6,8 +6,7 @@ import java.net.SocketAddress;
 
 public class BanList extends UserList {
    public boolean isBanned(SocketAddress socketAddress) {
-      String str = this.addressToString(socketAddress);
-      return this.hasEntry(str);
+      return this.hasEntry(this.addressToString(socketAddress));
    }
 
    @Override
@@ -33,7 +32,6 @@ public class BanList extends UserList {
    }
 
    public IPBanEntry getBanEntry(SocketAddress socketAddress) {
-      String str = this.addressToString(socketAddress);
-      return (IPBanEntry)this.getEntry(str);
+      return (IPBanEntry)this.getEntry(this.addressToString(socketAddress));
    }
 }

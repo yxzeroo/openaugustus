@@ -27,8 +27,8 @@ import net.augustus.utils.pathfinding.PathBlockPos;
 import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -46,18 +46,18 @@ import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
 public class Pathfinder extends Module implements RenderListener, TickListener, KeyListener {
-   private DoubleValue autoTarget;
+   private SettingGroup autoTarget;
    private final BooleanValue autoTarget2;
    private final TargetSelectionSettings targetSelectionSettings;
    private final BooleanValue chooseTargetByPathLength;
-   private final StringValue maxConsideredTargets;
+   private final DoubleValue maxConsideredTargets;
    private final BooleanValue murderMystery;
-   private final StringValue maxSearchtimePerTick;
-   private final StringValue maxSteps;
-   private final StringValue ticksBetweenSearches;
-   private final StringValue maxFallHeight;
+   private final DoubleValue maxSearchtimePerTick;
+   private final DoubleValue maxSteps;
+   private final DoubleValue ticksBetweenSearches;
+   private final DoubleValue maxFallHeight;
    private final BooleanValue discourageFalldamage;
-   private final StringValue discourageFalldamageFactor;
+   private final DoubleValue discourageFalldamageFactor;
    private final KeybindSetting pickTarget;
    private final KeybindSetting resetPickedTarget;
    private final ColorSetting pathColor;
@@ -75,21 +75,19 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
 
    public Pathfinder() {
        super("Pathfinder", "Pfadfinder", Color.RED, Categorys.RENDER);
-      this.autoTarget = new DoubleValue(this, "Auto Target");
+      this.autoTarget = new SettingGroup(this, "Auto Target");
       this.autoTarget2 = new BooleanValue(this, "Auto Target", true, this.autoTarget);
       TargetSelectionSettings targetSelectionSettings2 = new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter(), this.autoTarget);
       BooleanValue autoTarget22 = this.autoTarget2;
       this.autoTarget2.getClass();
       BooleanValue booleanValue = autoTarget22;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.targetSelectionSettings = targetSelectionSettings2.withVisibility(condition);
+      this.targetSelectionSettings = targetSelectionSettings2.withVisibility(() -> booleanValue.getValue());
       BooleanValue booleanValue2 = new BooleanValue(this, "Choose Target By Path Length", true, this.autoTarget);
       autoTarget22 = this.autoTarget2;
       this.autoTarget2.getClass();
       BooleanValue booleanValue3 = autoTarget22;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.chooseTargetByPathLength = (BooleanValue)booleanValue2.withVisibility(condition2);
-      StringValue stringValue = new StringValue(this, "Max considered Targets", 2.0, 2.0, 5.0, 0, this.autoTarget);
+      this.chooseTargetByPathLength = (BooleanValue)booleanValue2.withVisibility(() -> booleanValue3.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "Max considered Targets", 2.0, 2.0, 5.0, 0, this.autoTarget);
       SettingVisibilityCondition condition3 = () -> {
          return this.autoTarget2.getValue() && this.chooseTargetByPathLength.getValue();
       };
@@ -99,17 +97,16 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
          return this.autoTarget2.getValue() && (ClientManagers.moduleManager == null || ClientManagers.moduleManager.murdererFinder == null || ClientManagers.moduleManager.murdererFinder.isToggled());
       };
       this.murderMystery = (BooleanValue)booleanValue4.withVisibility(condition4);
-      this.maxSearchtimePerTick = new StringValue(this, "Max Searchtime per Tick", 5.0, 2.0, 40.0, 0);
-      this.maxSteps = new StringValue(this, "Max Steps", 4.0, 1.0, 20.0, 0);
-      this.ticksBetweenSearches = new StringValue(this, "Ticks between searches", 4.0, 0.0, 20.0, 0);
-      this.maxFallHeight = new StringValue(this, "Max Fall Height", 255.0, 1.0, 255.0, 0);
+      this.maxSearchtimePerTick = new DoubleValue(this, "Max Searchtime per Tick", 5.0, 2.0, 40.0, 0);
+      this.maxSteps = new DoubleValue(this, "Max Steps", 4.0, 1.0, 20.0, 0);
+      this.ticksBetweenSearches = new DoubleValue(this, "Ticks between searches", 4.0, 0.0, 20.0, 0);
+      this.maxFallHeight = new DoubleValue(this, "Max Fall Height", 255.0, 1.0, 255.0, 0);
       this.discourageFalldamage = new BooleanValue(this, "Discourage Falldamage", false);
-      StringValue stringValue2 = new StringValue(this, "Discourage Falldamage Factor", 90.0, 1.0, 100.0, 0);
+      DoubleValue stringValue2 = new DoubleValue(this, "Discourage Falldamage Factor", 90.0, 1.0, 100.0, 0);
       autoTarget22 = this.discourageFalldamage;
       this.discourageFalldamage.getClass();
       BooleanValue booleanValue5 = autoTarget22;
-      SettingVisibilityCondition condition5 = () -> booleanValue5.getValue();
-      this.discourageFalldamageFactor = stringValue2.visibleWhen(condition5);
+      this.discourageFalldamageFactor = stringValue2.visibleWhen(() -> booleanValue5.getValue());
       this.autoTargetEntity = null;
       this.currentPath = null;
       this.previousPath = null;
@@ -123,8 +120,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
       this.resetPickedTarget = new KeybindSetting(this, "Reset picked target");
       this.pathColor = new ColorSetting(this, "Path Color", Color.WHITE);
       this.targetColor = new ColorSetting(this, "Target Color", new Color(255, 255, 255, 100));
-      short s = 10001;
-      this.pickTarget.setKeyCode(s);
+      this.pickTarget.setKeyCode((short)10001);
    }
 
    @Override
@@ -143,12 +139,9 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 14;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)14);
    }
 
    @Override
@@ -201,8 +194,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
 
       for (int i = 0; i < this.activePathJobs.size(); i++) {
          TimedAStarPathFinder pathFinder = ((EntityPathJob)this.activePathJobs.get(i)).pathFinder;
-         long value = (long)this.maxSearchtimePerTick.getValue();
-         java.util.ArrayList list3 = pathFinder.computePathWithTimeout(value);
+         java.util.ArrayList list3 = pathFinder.computePathWithTimeout((long)this.maxSearchtimePerTick.getValue());
          if (list3 != null && !list3.isEmpty()) {
             list.add(list3);
             list2.add(((EntityPathJob)this.activePathJobs.get(i)).targetEntity);
@@ -318,9 +310,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
          }
       }
 
-      boolean flag2 = true;
-      int value = (int)this.maxConsideredTargets.getValue(flag2);
-      java.util.ArrayList list3 = this.selectNearestTargets(list, value);
+      java.util.ArrayList list3 = this.selectNearestTargets(list, (int)this.maxConsideredTargets.getValue(true));
       boolean isToggled = Augustus.getInstance().getModuleManager().jesus.isToggled();
       Vec3 vec = this.searchOriginPos = mc.thePlayer.getInterpolatedPos(1.0F);
       PathBlockPos pathBlockPos = new PathBlockPos((int)Math.floor(vec.xCoord), (int)Math.floor(vec.yCoord), (int)Math.floor(vec.zCoord));
@@ -330,9 +320,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
          PathBlockPos pathBlockPos2 = new PathBlockPos(
             (int)Math.floor(ScoredTargetEntity.getEntity(scoredTargetEntity).posX), (int)Math.floor(ScoredTargetEntity.getEntity(scoredTargetEntity).posY), (int)Math.floor(ScoredTargetEntity.getEntity(scoredTargetEntity).posZ)
          );
-         boolean flag3 = ScoredTargetEntity.getEntity(scoredTargetEntity) instanceof EntityItem;
-         PathBlockPos pathBlockPos3 = pathBlockPos2;
-         TimedAStarPathFinder timedAStarPathFinder = this.createPathFinder(pathBlockPos, pathBlockPos3, isToggled, flag3);
+         TimedAStarPathFinder timedAStarPathFinder = this.createPathFinder(pathBlockPos, pathBlockPos2, isToggled, ScoredTargetEntity.getEntity(scoredTargetEntity) instanceof EntityItem);
          this.activePathJobs.add(new EntityPathJob(this, timedAStarPathFinder, ScoredTargetEntity.getEntity(scoredTargetEntity)));
       }
    }
@@ -341,10 +329,8 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
       TimedAStarPathFinder timedAStarPathFinder = new TimedAStarPathFinder(pathBlockPos, pathBlockPos2, flag, true, false);
       timedAStarPathFinder.smoothPath = true;
       timedAStarPathFinder.avoidFallDamage = this.discourageFalldamage.getValue();
-      boolean flag3 = true;
-      timedAStarPathFinder.fallDamagePenalty = 1.001 - this.discourageFalldamageFactor.getValue(flag3) / 100.0;
-      boolean flag4 = true;
-      timedAStarPathFinder.maxFallDistance = this.maxFallHeight.getValue(flag4);
+      timedAStarPathFinder.fallDamagePenalty = 1.001 - this.discourageFalldamageFactor.getValue(true) / 100.0;
+      timedAStarPathFinder.maxFallDistance = this.maxFallHeight.getValue(true);
       if (flag2) {
          timedAStarPathFinder.goalTolerance = 1.6;
       }
@@ -394,8 +380,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
       GlStateManager.depthMask(false);
       GL11.glLineWidth(2.0F);
       GL11.glTranslated(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
-      byte b = 0;
-      this.pathColor.getColorInt(b);
+      this.pathColor.getColorInt((byte)0);
       GlStateManager.color(
          (float)this.pathColor.getRed() / 255.0F,
          (float)this.pathColor.getGreen() / 255.0F,
@@ -452,11 +437,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
             Vec3 vec3 = (Vec3)currentPath2.get(k + 1);
             double xCoord = vec2.xCoord;
             double zCoord = vec2.zCoord;
-            double d4 = vec3.xCoord - vec2.xCoord;
-            double d5 = vec3.yCoord - vec2.yCoord;
-            double d6 = vec3.zCoord - vec2.zCoord;
-            double yCoord = vec2.yCoord;
-            Vec3 vec4 = this.closestPointOnSegment(d4, d5, d6, xCoord, yCoord, zCoord, d, d2, d3);
+            Vec3 vec4 = this.closestPointOnSegment(vec3.xCoord - vec2.xCoord, vec3.yCoord - vec2.yCoord, vec3.zCoord - vec2.zCoord, xCoord, vec2.yCoord, zCoord, d, d2, d3);
             double d7 = vec4.squareDistanceTo(d, d2, d3);
             if (d7 < positiveinfinity) {
                positiveinfinity = d7;
@@ -478,8 +459,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
          GL11.glEnd();
       }
 
-      byte b2 = 0;
-      this.targetColor.getColorInt(b2);
+      this.targetColor.getColorInt((byte)0);
       GlStateManager.color(
          (float)this.targetColor.getRed() / 255.0F,
          (float)this.targetColor.getGreen() / 255.0F,
@@ -506,8 +486,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
    }
 
    private Vec3 closestPointOnSegment(double d, double d2, double d3, double d4, double d5, double d6, double d7, double d8, double d9) {
-      double d10 = d * d7 + d2 * d8 + d3 * d9;
-      double d11 = MathHelper.clamp_double((d10 - (d * d4 + d2 * d5 + d3 * d6)) / (d * d + d2 * d2 + d3 * d3), 0.0, 1.0);
+      double d11 = MathHelper.clamp_double(((d * d7 + d2 * d8 + d3 * d9) - (d * d4 + d2 * d5 + d3 * d6)) / (d * d + d2 * d2 + d3 * d3), 0.0, 1.0);
       double d12 = d4 + d11 * d;
       double d13 = d5 + d11 * d2;
       double d14 = d6 + d11 * d3;
@@ -522,8 +501,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
          list2.add(new ScoredTargetEntity(this, entity, entity.getDistanceSqToEntity(thePlayer)));
       }
 
-      boolean flag = true;
-      return this.topKSelector.selectTopK(list2, n, flag);
+      return this.topKSelector.selectTopK(list2, n, true);
    }
 
    private Entity findNearestTargetEntity() {
@@ -550,9 +528,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
       } else if (!flag) {
          return this.targetSelectionSettings.getTargetFilter().matches(entity);
       } else if (MurderWeaponSlotUtil.findBowSlot() != -1 && !ClientManagers.moduleManager.murdererFinder.detectedMurderers.isEmpty()) {
-         MurdererFinder murdererFinder = ClientManagers.moduleManager.murdererFinder;
-         String name2 = entity.getName();
-         return murdererFinder.isMurderer(name2);
+         return ClientManagers.moduleManager.murdererFinder.isMurderer(entity.getName());
       } else if (!(entity instanceof EntityItem)) {
          return false;
       } else {
@@ -579,9 +555,7 @@ public class Pathfinder extends Module implements RenderListener, TickListener, 
             Vec3i directionVec = hit.sideHit.getDirectionVec();
             BlockPos blockPos = hit.getBlockPos();
             this.pickedTargetBlock = new PathBlockPos(blockPos.getX() + directionVec.getX(), blockPos.getY() + directionVec.getY(), blockPos.getZ() + directionVec.getZ());
-            AxisAlignedBB selectedBoundingBox = mc.theWorld.getBlockState(blockPos).getBlock().getSelectedBoundingBox(mc.theWorld, blockPos);
-            EnumFacing sideHit = hit.sideHit;
-            this.pickedBlockFaceBox = BlockOverlay.getFaceBoundingBox(selectedBoundingBox, sideHit);
+            this.pickedBlockFaceBox = BlockOverlay.getFaceBoundingBox(mc.theWorld.getBlockState(blockPos).getBlock().getSelectedBoundingBox(mc.theWorld, blockPos), hit.sideHit);
             this.pickedTargetEntity = null;
             this.currentPath = null;
             this.autoTargetEntity = null;

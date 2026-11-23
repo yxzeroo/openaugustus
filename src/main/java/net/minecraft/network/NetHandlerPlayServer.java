@@ -237,8 +237,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
          this.netManager.sendPacket(packet);
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Sending packet");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Packet being sent");
-         crashReportCategory.addCrashSectionCallable("Packet class", new NetHandlerPlayServer.ValueCallable(this, packet));
+         crashReport.makeCategory("Packet being sent").addCrashSectionCallable("Packet class", new NetHandlerPlayServer.ValueCallable(this, packet));
          throw new ReportedException(crashReport);
       }
    }
@@ -272,8 +271,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
    @Override
    public void processUseEntity(C02PacketUseEntity packet) {
       PacketThreadUtil.checkThreadAndEnqueue(packet, this, this.playerEntity.getServerForPlayer());
-      WorldServer world = this.serverController.worldServerForDimension(this.playerEntity.dimension);
-      Entity entityFromWorld = packet.getEntityFromWorld(world);
+      Entity entityFromWorld = packet.getEntityFromWorld(this.serverController.worldServerForDimension(this.playerEntity.dimension));
       this.playerEntity.markPlayerActive();
       if (entityFromWorld != null) {
          boolean flag = this.playerEntity.canEntityBeSeen(entityFromWorld);
@@ -742,8 +740,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
             double d = this.playerEntity.posX - ((double)position.getX() + 0.5);
             double d2 = this.playerEntity.posY - ((double)position.getY() + 0.5) + 1.5;
             double d3 = this.playerEntity.posZ - ((double)position.getZ() + 0.5);
-            double d4 = d * d + d2 * d2 + d3 * d3;
-            if (d4 > 36.0) {
+            if ((d * d + d2 * d2 + d3 * d3) > 36.0) {
                return;
             } else if (position.getY() >= this.serverController.getBuildLimit()) {
                return;

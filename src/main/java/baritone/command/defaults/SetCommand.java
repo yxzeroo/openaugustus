@@ -45,8 +45,7 @@ public class SetCommand extends Command {
       } else {
          boolean flag = Arrays.asList("m", "mod", "modified").contains(str2);
          boolean flag2 = Arrays.asList("all", "l", "list").contains(str2);
-         boolean flag3 = flag || flag2;
-         if (flag3) {
+         if (flag || flag2) {
             String str4 = argConsumer.hasAny() && argConsumer.peekAsOrNull(Integer.class) == null ? argConsumer.getString() : "";
             argConsumer.requireMax(1);
             List list = (flag ? SettingsUtil.modifiedSettings(Baritone.settings()) : Baritone.settings().allSettings)

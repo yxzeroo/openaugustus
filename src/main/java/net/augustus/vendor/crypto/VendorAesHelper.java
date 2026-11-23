@@ -53,8 +53,7 @@ public class VendorAesHelper {
    }
 
    public static int getInvertedGuardFlag() {
-      int guardFlag2 = getGuardFlag();
-      return guardFlag2 == 0 ? 19 : 0;
+      return getGuardFlag() == 0 ? 19 : 0;
    }
 
    static {

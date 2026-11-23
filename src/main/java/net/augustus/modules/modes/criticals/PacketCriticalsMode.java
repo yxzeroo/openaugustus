@@ -4,19 +4,18 @@ import net.augustus.events.EventAttackEntity;
 import net.augustus.events.listeners.AttackEntityListener;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Criticals;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class PacketCriticalsMode extends CriticalsMode implements AttackEntityListener {
 
-   public PacketCriticalsMode(Criticals criticals, DoubleValue doubleValue) {
+   public PacketCriticalsMode(Criticals criticals, SettingGroup doubleValue) {
       super(criticals, doubleValue, "Packet");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 1;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override
@@ -28,7 +27,7 @@ public class PacketCriticalsMode extends CriticalsMode implements AttackEntityLi
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new PacketCriticalsMode((Criticals)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new PacketCriticalsMode((Criticals)obj, (SettingGroup)obj2);
    }
 
    @Override

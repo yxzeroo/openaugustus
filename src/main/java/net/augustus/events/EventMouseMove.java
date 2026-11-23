@@ -71,9 +71,7 @@ public class EventMouseMove extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      MouseMoveListener listener = (MouseMoveListener)obj;
-      MouseMoveListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((MouseMoveListener)obj);
    }
 
    public int getDeltaX() {

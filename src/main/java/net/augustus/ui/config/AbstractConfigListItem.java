@@ -47,8 +47,7 @@ public abstract class AbstractConfigListItem {
                this.tooltipY = -1337;
             }
 
-            long l = 500L;
-            if (this.hoverTimer.reached2(l)) {
+            if (this.hoverTimer.reached2(500L)) {
                if (this.tooltipX == -1337 && this.tooltipY == -1337) {
                   this.tooltipX = this.lastMouseX;
                   this.tooltipY = this.lastMouseY;
@@ -57,8 +56,7 @@ public abstract class AbstractConfigListItem {
                String str = "Updated: " + this.updatedDate + " " + this.updatedTime + " by " + this.author;
                int tooltipY2 = this.tooltipY;
                int tooltipX2 = this.tooltipX;
-               String str2 = str;
-               MainClickGuiWindow.drawTooltip(this.fontRenderer, str2, tooltipX2, tooltipY2);
+               MainClickGuiWindow.drawTooltip(this.fontRenderer, str, tooltipX2, tooltipY2);
             }
          }
 
@@ -74,16 +72,9 @@ public abstract class AbstractConfigListItem {
 
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       if (mouseButton == 0 && this.getFontRenderer() != null) {
-         float f = (float)(this.getX() - 5);
-         float y2 = (float)this.getY();
-         CustomFontUtil fontRenderer2 = this.getFontRenderer();
-         String configName2 = this.getConfigName();
-         String str = configName2;
-         if (RenderUtil.isHovered(f, y2, (float)((int)(fontRenderer2.getStringWidth(str) + 10.0F)), (float)(this.getHeight() + 2), mouseX, mouseY)) {
-            long l = 500L;
-            if (!this.doubleClickTimer.reached2(l)) {
-               long l2 = 1000L;
-               if (this.loadCooldownTimer.reached2(l2)) {
+         if (RenderUtil.isHovered((float)(this.getX() - 5), (float)this.getY(), (float)((int)(this.getFontRenderer().getStringWidth(this.getConfigName()) + 10.0F)), (float)(this.getHeight() + 2), mouseX, mouseY)) {
+            if (!this.doubleClickTimer.reached2(500L)) {
+               if (this.loadCooldownTimer.reached2(1000L)) {
                   this.loadCooldownTimer.reset();
                   this.loadConfig();
                }
@@ -165,20 +156,17 @@ public abstract class AbstractConfigListItem {
       this.height = n4;
       this.fontRenderer = customFontUtil;
       if (this.cachedNameWidth == -1) {
-         String configName2 = this.configName;
-         this.cachedNameWidth = (int)customFontUtil.getStringWidth(configName2);
+         this.cachedNameWidth = (int)customFontUtil.getStringWidth(this.configName);
       }
 
       int n7;
       if (flag) {
-         byte b = 0;
-         n7 = RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b), 0.2, n5, n6, n - 5, n2, this.cachedNameWidth + 10, n4 + 2);
+         n7 = RenderUtil.getHoveredColor(ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0), 0.2, n5, n6, n - 5, n2, this.cachedNameWidth + 10, n4 + 2);
       } else {
          if (this.isSharedWithFriends()) {
             n7 = sharedConfigColor.getRGB();
          } else {
-            byte b2 = 0;
-            n7 = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b2);
+            n7 = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          }
 
          n7 = RenderUtil.getHoveredColor(n7, 0.2, n5, n6, n - 5, n2, this.cachedNameWidth + 10, n4 + 2);
@@ -187,9 +175,7 @@ public abstract class AbstractConfigListItem {
       int n8 = n7;
       double d = (double)n;
       double d2 = (double)n2;
-      double d3 = d;
-      String configName3 = this.configName;
-      customFontUtil.drawString(configName3, d3, d2, n8);
+      customFontUtil.drawString(this.configName, d, d2, n8);
       this.rendered = true;
    }
 

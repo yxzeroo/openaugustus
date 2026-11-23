@@ -36,8 +36,7 @@ public class CustomSky {
             String str3 = str2 + j + ".properties";
 
             try {
-               ResourceLocation location = new ResourceLocation(str3);
-               InputStream resourceStream = Config.getResourceStream(location);
+               InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str3));
                if (resourceStream == null) {
                   break;
                }
@@ -67,8 +66,7 @@ public class CustomSky {
          }
 
          if (list.size() > 0) {
-            CustomSkyLayer[] customSkyLayers = (CustomSkyLayer[])list.toArray(new CustomSkyLayer[list.size()]);
-            customSkyLayersArr[i] = customSkyLayers;
+            customSkyLayersArr[i] = (CustomSkyLayer[])list.toArray(new CustomSkyLayer[list.size()]);
             n = i;
          }
       }
@@ -76,8 +74,7 @@ public class CustomSky {
       if (n < 0) {
          return (CustomSkyLayer[][])null;
       } else {
-         int n2 = n + 1;
-         CustomSkyLayer[][] customSkyLayersArr2 = new CustomSkyLayer[n2][0];
+         CustomSkyLayer[][] customSkyLayersArr2 = new CustomSkyLayer[n + 1][0];
 
          for (int k = 0; k < customSkyLayersArr2.length; k++) {
             customSkyLayersArr2[k] = customSkyLayersArr[k];
@@ -97,8 +94,7 @@ public class CustomSky {
          if (dimensionId >= 0 && dimensionId < worldSkyLayers.length) {
             CustomSkyLayer[] customSkyLayers = worldSkyLayers[dimensionId];
             if (customSkyLayers != null) {
-               long worldTime = world.getWorldTime();
-               int n = (int)(worldTime % 24000L);
+               int n = (int)(world.getWorldTime() % 24000L);
                float celestialAngle = world.getCelestialAngle(f);
                float rainStrength = world.getRainStrength(f);
                float thunderStrength = world.getThunderStrength(f);
@@ -113,8 +109,7 @@ public class CustomSky {
                   }
                }
 
-               float f2 = 1.0F - rainStrength;
-               Blender.clearBlend(f2);
+               Blender.clearBlend(1.0F - rainStrength);
             }
          }
       }

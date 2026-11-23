@@ -6,21 +6,15 @@ import net.augustus.modules.Module;
 import net.augustus.viaversion.ViaAugustus;
 import net.augustus.settings.SettingChangeListener;
 import net.augustus.settings.SettingVisibilityCondition;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class ProtocolVersion extends Module {
-   public final StringValue protocolVersionVal;
+   public final DoubleValue protocolVersionVal;
 
    public ProtocolVersion() {
        super("ProtocolVersion", "ProtokollVersion", true, Color.RED, Categorys.MISC);
-      StringValue stringValue = new StringValue(this, "ProtocolVersionVal", 47.0, 0.0, 0.0, 0);
-      SettingVisibilityCondition condition = () -> false;
-      StringValue stringValue2 = stringValue.visibleWhen(condition);
-      SettingChangeListener listener = () -> this.applySelectedProtocolVersion();
-      SettingChangeListener listener2 = listener;
-      this.protocolVersionVal = (StringValue)stringValue2.withChangeListener(listener2);
-      boolean flag = true;
-      this.setToggled(flag);
+      this.protocolVersionVal = (DoubleValue)new DoubleValue(this, "ProtocolVersionVal", 47.0, 0.0, 0.0, 0).visibleWhen(() -> false).withChangeListener(() -> this.applySelectedProtocolVersion());
+      this.setToggled(true);
    }
 
    @Override

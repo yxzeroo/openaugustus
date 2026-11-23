@@ -124,15 +124,12 @@ public class ChunkVisibility {
 
          for (int j = 0; j < EnumFacing.VALUES.length; j++) {
             EnumFacing facing = EnumFacing.VALUES[j];
-            EnumFacing facing2 = flag ? facing.getOpposite() : facing;
-            int n = 1 << facing2.ordinal();
-            if ((i & n) != 0) {
+            if ((i & (1 << (flag ? facing.getOpposite() : facing).ordinal())) != 0) {
                list.add(facing);
             }
          }
 
-         EnumFacing[] facings = (EnumFacing[])list.toArray(new EnumFacing[list.size()]);
-         facingsArr[i] = facings;
+         facingsArr[i] = (EnumFacing[])list.toArray(new EnumFacing[list.size()]);
       }
 
       return facingsArr;

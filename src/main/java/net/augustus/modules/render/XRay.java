@@ -16,7 +16,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.modules.render.helper.XRayRenderMode;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockOre;
@@ -30,7 +30,7 @@ public class XRay extends Module implements NightVisionListener, TickListener {
    public static boolean enabled = false;
    private static BooleanValue antiXray;
    private static BooleanValue simple;
-   private static StringValue minimumFreeSpace;
+   private static DoubleValue minimumFreeSpace;
    private static boolean lastAntiXrayEnabled;
    private static boolean lastSimpleAntiXrayEnabled;
    private static int lastMinFreeSpace;
@@ -54,12 +54,8 @@ public class XRay extends Module implements NightVisionListener, TickListener {
       BooleanValue booleanValue = new BooleanValue(this, "Simple", true);
       BooleanValue booleanValue2 = antiXray;
       antiXray.getClass();
-      BooleanValue booleanValue3 = booleanValue2;
-      SettingVisibilityCondition condition = () -> booleanValue3.getValue();
-      simple = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "Minimum free space", 1.0, 1.0, 10.0, 0);
-      SettingVisibilityCondition condition2 = () -> isMinFreeSpaceVisible();
-      minimumFreeSpace = stringValue.visibleWhen(condition2);
+      simple = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
+      minimumFreeSpace = new DoubleValue(this, "Minimum free space", 1.0, 1.0, 10.0, 0).visibleWhen(() -> isMinFreeSpaceVisible());
    }
 
    @Override
@@ -77,10 +73,8 @@ public class XRay extends Module implements NightVisionListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 22;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)22);
+      this.toggleEventSubscription((byte)40);
    }
 
    public static XRayRenderMode getBlockRenderMode(Block block, IBlockState state, BlockPos pos) {
@@ -94,28 +88,22 @@ public class XRay extends Module implements NightVisionListener, TickListener {
             return XRayRenderMode.NOTHING;
          } else {
             int value = (int)minimumFreeSpace.getValue();
-            EnumFacing up = EnumFacing.UP;
-            if (hasTranslucentExposure(pos, up, value)) {
+            if (hasTranslucentExposure(pos, EnumFacing.UP, value)) {
                return XRayRenderMode.FORCE_VISIBLE;
             } else {
-               EnumFacing down = EnumFacing.DOWN;
-               if (hasTranslucentExposure(pos, down, value)) {
+               if (hasTranslucentExposure(pos, EnumFacing.DOWN, value)) {
                   return XRayRenderMode.FORCE_VISIBLE;
                } else {
-                  EnumFacing east = EnumFacing.EAST;
-                  if (hasTranslucentExposure(pos, east, value)) {
+                  if (hasTranslucentExposure(pos, EnumFacing.EAST, value)) {
                      return XRayRenderMode.FORCE_VISIBLE;
                   } else {
-                     EnumFacing west = EnumFacing.WEST;
-                     if (hasTranslucentExposure(pos, west, value)) {
+                     if (hasTranslucentExposure(pos, EnumFacing.WEST, value)) {
                         return XRayRenderMode.FORCE_VISIBLE;
                      } else {
-                        EnumFacing north = EnumFacing.NORTH;
-                        if (hasTranslucentExposure(pos, north, value)) {
+                        if (hasTranslucentExposure(pos, EnumFacing.NORTH, value)) {
                            return XRayRenderMode.FORCE_VISIBLE;
                         } else {
-                           EnumFacing south = EnumFacing.SOUTH;
-                           return hasTranslucentExposure(pos, south, value) ? XRayRenderMode.FORCE_VISIBLE : XRayRenderMode.HIDE;
+                           return hasTranslucentExposure(pos, EnumFacing.SOUTH, value) ? XRayRenderMode.FORCE_VISIBLE : XRayRenderMode.HIDE;
                         }
                      }
                   }
@@ -142,8 +130,7 @@ public class XRay extends Module implements NightVisionListener, TickListener {
             return false;
          }
 
-         Block block = mc.theWorld.getBlockStateFromChunk(chunkFromBlockCoords, n3, pos.getY() + facing.getFrontOffsetY() * i, n4).getBlock();
-         if (!block.isTranslucent()) {
+         if (!mc.theWorld.getBlockStateFromChunk(chunkFromBlockCoords, n3, pos.getY() + facing.getFrontOffsetY() * i, n4).getBlock().isTranslucent()) {
             return false;
          }
       }
@@ -153,14 +140,12 @@ public class XRay extends Module implements NightVisionListener, TickListener {
 
    @Override
    public void onNightVision(EventNightVision event) {
-      boolean flag = true;
-      event.setEnabled(flag);
+      event.setEnabled(true);
    }
 
    @Override
    public void onNightVision2(EventNightVision event) {
-      boolean flag = true;
-      event.setEnabled(flag);
+      event.setEnabled(true);
    }
 
    @Override

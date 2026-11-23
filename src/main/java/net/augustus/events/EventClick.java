@@ -75,9 +75,7 @@ public class EventClick extends CancellableEvent {
             if (minecraft.inGameHasFocus && minecraft.objectMouseOver != null && minecraft.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                int n = blockBreakDelayTicks;
                if (tickCounter.hasReached2(n)) {
-                  byte b = 5;
-                  byte b2 = 1;
-                  blockBreakDelayTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+                  blockBreakDelayTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)5);
                   tickCounter.reset();
                   pendingBlockBreakDelay = false;
                   return true;
@@ -105,8 +103,7 @@ public class EventClick extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      ClickListener listener = (ClickListener)obj;
-      this.call2(listener);
+      this.call2((ClickListener)obj);
    }
 
    public boolean isRightMouseDown() {

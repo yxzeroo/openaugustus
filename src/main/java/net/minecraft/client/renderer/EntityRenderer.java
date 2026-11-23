@@ -262,8 +262,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
    private void updateFovModifierHand() {
       float f = 1.0F;
       if (this.mc.getRenderViewEntity() instanceof AbstractClientPlayer) {
-         AbstractClientPlayer renderViewEntity = (AbstractClientPlayer)this.mc.getRenderViewEntity();
-         f = renderViewEntity.getFovModifier();
+         f = ((AbstractClientPlayer)this.mc.getRenderViewEntity()).getFovModifier();
       }
 
       this.fovModifierHandPrev = this.fovModifierHand;
@@ -519,8 +518,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          GlStateManager.disableAlpha();
          this.mc.mcProfiler.endStartSection("outline");
          if (!this.mc.gameSettings.hideGUI) {
-            EventBlockOverlay event2 = BlockOverlayListener.onBlockOverlay();
-            if (!event2.isCancelled()) {
+            if (!BlockOverlayListener.onBlockOverlay().isCancelled()) {
                renderGlobal.drawSelectionBox(player2, this.mc.objectMouseOver, 0, f);
             }
          }
@@ -866,8 +864,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          if (renderViewEntity instanceof EntityLivingBase && ((EntityLivingBase)renderViewEntity).isPotionActive(Potion.waterBreathing)) {
             GlStateManager.setFogDensity(0.01F);
          } else {
-            float f4 = 0.1F - (float)EnchantmentHelper.getRespiration(renderViewEntity) * 0.03F;
-            GlStateManager.setFogDensity(Config.limit3(f4, 0.0F, f3));
+            GlStateManager.setFogDensity(Config.limit3(0.1F - (float)EnchantmentHelper.getRespiration(renderViewEntity) * 0.03F, 0.0F, f3));
          }
       } else if (blockAtEntityViewpoint.getMaterial() == Material.lava) {
          GlStateManager.setFog(2048);
@@ -1038,11 +1035,10 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                   f11 = 0.0F;
                }
 
-               short s = 255;
                int n = (int)(f9 * 255.0F);
                int n2 = (int)(f10 * 255.0F);
                int n3 = (int)(f11 * 255.0F);
-               this.lightmapColors[i] = s << 24 | n << 16 | n2 << 8 | n3;
+               this.lightmapColors[i] = ((short)255) << 24 | n << 16 | n2 << 8 | n3;
             }
 
             this.lightmapTexture.updateDynamicTexture();
@@ -1056,11 +1052,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       Entity renderViewEntity = this.mc.getRenderViewEntity();
       if (renderViewEntity != null && this.mc.theWorld != null) {
          this.mc.mcProfiler.startSection("pick");
-         Object obj = null;
-         this.mc.pointedEntity = (Entity)obj;
-         Range range = ClientManagers.moduleManager.range;
-         double blockReachDistance = (double)this.mc.playerController.getBlockReachDistance();
-         double buildRange = range.getBuildRange(blockReachDistance);
+         this.mc.pointedEntity = (Entity)null;
+         double buildRange = ClientManagers.moduleManager.range.getBuildRange((double)this.mc.playerController.getBlockReachDistance());
          if (ClientManagers.moduleManager.teleport.isToggled()) {
             buildRange = 200.0;
          }
@@ -1086,9 +1079,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             flag2 = true;
          }
 
-         Minecraft mc2 = this.mc;
-         MovingObjectPosition hit = renderViewEntity.rayTrace(buildRange, f);
-         mc2.objectMouseOver = hit;
+         this.mc.objectMouseOver = renderViewEntity.rayTrace(buildRange, f);
          double d7 = buildRange;
          Vec3 positionEyes = renderViewEntity.getPositionEyes(f);
          boolean flag3 = false;
@@ -1152,8 +1143,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             } else if (hit2 != null) {
                double d9 = positionEyes.distanceTo(hit2.hitVec);
                if (d9 < d8 || d8 == 0.0) {
-                  boolean flag4 = false;
-                  if (entity != renderViewEntity.ridingEntity || flag4) {
+                  if (entity != renderViewEntity.ridingEntity || false) {
                      this.pointedEntity = entity;
                      vec2 = hit2.hitVec;
                      d8 = d9;
@@ -1174,15 +1164,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             && positionEyes.distanceTo(vec2)
                > (ClientManagers.moduleManager.range.isCombatRangeActive() && this.mc.thePlayer.getDistanceToEntity(this.pointedEntity) < 6.0F ? ClientManagers.moduleManager.range.getCurrentRange() : 3.0)) {
             this.pointedEntity = null;
-            Minecraft mc3 = this.mc;
-            MovingObjectPosition hit3 = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
-            mc3.objectMouseOver = hit3;
+            this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
          }
 
          if (this.pointedEntity != null && (d8 < d7 || this.mc.objectMouseOver == null)) {
-            Minecraft mc4 = this.mc;
-            MovingObjectPosition hit4 = new MovingObjectPosition(this.pointedEntity, vec2);
-            mc4.objectMouseOver = hit4;
+            this.mc.objectMouseOver = new MovingObjectPosition(this.pointedEntity, vec2);
             if (this.pointedEntity instanceof EntityLivingBase || this.pointedEntity instanceof EntityItemFrame) {
                Entity pointedEntity2 = this.pointedEntity;
                this.mc.pointedEntity = pointedEntity2;
@@ -1200,9 +1186,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       }
 
       if (f == 1.0F) {
-         Minecraft mc5 = this.mc;
-         MovingObjectPosition hit5 = new MovingObjectPosition(this.mc.objectMouseOver);
-         mc5.lastObjectMouseOver = hit5;
+         this.mc.lastObjectMouseOver = new MovingObjectPosition(this.mc.objectMouseOver);
       }
    }
 
@@ -1523,8 +1507,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       } else if (this.mc.isIntegratedServerRunning()) {
          IntegratedServer integratedServer = this.mc.getIntegratedServer();
          if (integratedServer != null) {
-            boolean isGamePaused = this.mc.isGamePaused();
-            if (!isGamePaused && !(this.mc.currentScreen instanceof GuiDownloadTerrain)) {
+            if (!this.mc.isGamePaused() && !(this.mc.currentScreen instanceof GuiDownloadTerrain)) {
                if (this.serverWaitTime > 0) {
                   Lagometer.timerServer.start();
                   Config.sleep((long)this.serverWaitTime);
@@ -1666,10 +1649,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          if (!this.mc.gameSettings.debugCamEnable) {
             BlockPos pos = new BlockPos(renderViewEntity);
             IBlockState blockState = this.mc.theWorld.getBlockState(pos);
-            Block block = blockState.getBlock();
-            if (block == Blocks.bed) {
-               int horizontalIndex = ((EnumFacing)blockState.getValue(BlockBed.FACING)).getHorizontalIndex();
-               GlStateManager.rotate((float)(horizontalIndex * 90), 0.0F, 1.0F, 0.0F);
+            if (blockState.getBlock() == Blocks.bed) {
+               GlStateManager.rotate((float)(((EnumFacing)blockState.getValue(BlockBed.FACING)).getHorizontalIndex() * 90), 0.0F, 1.0F, 0.0F);
             }
 
             GlStateManager.rotate(renderViewEntity.prevRotationYaw + (renderViewEntity.rotationYaw - renderViewEntity.prevRotationYaw) * f + 180.0F, 0.0F, -1.0F, 0.0F);
@@ -1790,8 +1771,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                   fovModifier.fovAnimation.start(Math.max(1, (int)fovModifier.animationTime.getValue()), AnimationUtil.parseEasingType(fovModifier.animationModes.getSelectedValue()), f3 > fovModifier.previousFov ? 1 : 0, false);
                }
 
-               float f4 = fovModifier.previousFov - f3;
-               f2 = (float)((double)f3 + (double)f4 * fovModifier.fovAnimation.getEasedProgress());
+               f2 = (float)((double)f3 + (double)(fovModifier.previousFov - f3) * fovModifier.fovAnimation.getEasedProgress());
                if (isSprinting != fovModifier.wasSprinting || flag2 != fovModifier.wasSpeedActive) {
                   fovModifier.previousFov = fovModifier.targetFov;
                   fovModifier.targetFov = f3;
@@ -1852,8 +1832,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             f2 /= (1.0F - 500.0F / (f5 + 500.0F)) * 2.0F + 1.0F;
          }
 
-         Block blockAtEntityViewpoint = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, renderViewEntity, f);
-         if (blockAtEntityViewpoint.getMaterial() == Material.water) {
+         if (ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, renderViewEntity, f).getMaterial() == Material.water) {
             f2 = f2 * 60.0F / 70.0F;
          }
 
@@ -2257,8 +2236,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                BlurShadowManager.enableGuiLayer();
                this.mc.currentScreen.drawScreen(n, n2, f);
                if (Augustus.getInstance().getModuleManager().notifications.isToggled()) {
-                  boolean flag2 = true;
-                  Augustus.getInstance().getModuleManager().notifications.renderNotifications(flag2);
+                  Augustus.getInstance().getModuleManager().notifications.renderNotifications(true);
                }
 
                BlurShadowManager.disableGuiLayer();
@@ -2306,8 +2284,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       WorldClient theWorld = this.mc.theWorld;
       if (theWorld != null) {
          if (Config.getNewRelease() != null) {
-            String str = "HD_U".replace("HD_U", "HD Ultra").replace("L", "Light");
-            String str2 = str + " " + Config.getNewRelease();
+            String str2 = "HD_U".replace("HD_U", "HD Ultra").replace("L", "Light") + " " + Config.getNewRelease();
             ChatComponentText chatComponentText = new ChatComponentText(I18n.format("of.message.newVersion", new Object[]{"§n" + str2 + "§r"}));
             chatComponentText.setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://optifine.net/downloads")));
             this.mc.ingameGUI.getChatGUI().printChatMessage(chatComponentText);
@@ -2338,9 +2315,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       }
 
       if (this.mc.currentScreen != null && this.mc.currentScreen.getClass() == GuiChat.class) {
-         Minecraft mc2 = this.mc;
-         GuiChatOF guiChatOF = new GuiChatOF((GuiChat)this.mc.currentScreen);
-         mc2.displayGuiScreen((GuiScreen)guiChatOF);
+         this.mc.displayGuiScreen((GuiScreen)new GuiChatOF((GuiChat)this.mc.currentScreen));
       }
    }
 

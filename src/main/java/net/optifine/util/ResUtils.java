@@ -80,8 +80,7 @@ public class ResUtils {
          Enumeration en = zipFile.entries();
 
          while (en.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry)en.nextElement();
-            String name = zipEntry.getName();
+            String name = ((ZipEntry)en.nextElement()).getName();
             if (name.startsWith(str)) {
                name = name.substring(str.length());
                if (StrUtils.startsWith(name, strings) && StrUtils.endsWith(name, strings2)) {
@@ -105,8 +104,7 @@ public class ResUtils {
          Config.warn("Unknown resource pack type: " + resourcePack);
          return new String[0];
       } else {
-         AbstractResourcePack resourcePack2 = (AbstractResourcePack)resourcePack;
-         File resourcePackFile = resourcePack2.resourcePackFile;
+         File resourcePackFile = ((AbstractResourcePack)resourcePack).resourcePackFile;
          if (resourcePackFile == null) {
             return new String[0];
          } else if (resourcePackFile.isDirectory()) {
@@ -125,9 +123,7 @@ public class ResUtils {
       IResourcePack[] resourcePacks = Config.getResourcePacks();
 
       for (int i = 0; i < resourcePacks.length; i++) {
-         IResourcePack resourcePack = resourcePacks[i];
-         String[] strings3 = collectFiles2(resourcePack, strings, strings2, (String[])null);
-         set.addAll(Arrays.asList(strings3));
+         set.addAll(Arrays.asList(collectFiles2(resourcePacks[i], strings, strings2, (String[])null)));
       }
 
       return (String[])set.toArray(new String[set.size()]);
@@ -141,8 +137,7 @@ public class ResUtils {
 
          for (int i = 0; i < strings.length; i++) {
             String str = strings[i];
-            ResourceLocation location = new ResourceLocation(str);
-            if (resourcePack.resourceExists(location)) {
+            if (resourcePack.resourceExists(new ResourceLocation(str))) {
                list.add(str);
             }
          }
@@ -173,12 +168,10 @@ public class ResUtils {
                   }
                }
             } else if (file2.isDirectory()) {
-               String str4 = str + file2.getName() + "/";
-               String[] strings3 = collectFilesFolder(file2, str4, strings, strings2);
+               String[] strings3 = collectFilesFolder(file2, str + file2.getName() + "/", strings, strings2);
 
                for (int j = 0; j < strings3.length; j++) {
-                  String str5 = strings3[j];
-                  list.add(str5);
+                  list.add(strings3[j]);
                }
             }
          }

@@ -151,8 +151,7 @@ public class Protocolb1_7_0_3Tob1_8_0_1
          public void register() {
             this.map(Types.INT);
             this.handler(wrapper -> {
-               PlayerNameTracker playerNameTracker = (PlayerNameTracker)wrapper.user().get(PlayerNameTracker.class);
-               String name = (String)playerNameTracker.names.get((Integer)wrapper.get(Types.INT, 0));
+               String name = (String)((PlayerNameTracker)wrapper.user().get(PlayerNameTracker.class)).names.get((Integer)wrapper.get(Types.INT, 0));
                if (name != null) {
                   PacketWrapper playerListEntry = PacketWrapper.create(ClientboundPacketsb1_8.PLAYER_INFO, wrapper.user());
                   playerListEntry.write(Types1_6_4.STRING, name);
@@ -214,9 +213,7 @@ public class Protocolb1_7_0_3Tob1_8_0_1
          }
 
          PacketWrapper pingResponse = PacketWrapper.create(ClientboundPacketsb1_8.DISCONNECT, wrapper.user());
-         Type string = Types1_6_4.STRING;
-         String b173Motd = ViaLegacy.getConfig().getB1_7_3Motd();
-         pingResponse.write(string, b173Motd + "§0§1");
+         pingResponse.write(Types1_6_4.STRING, ViaLegacy.getConfig().getB1_7_3Motd() + "§0§1");
          pingResponse.send(Protocolb1_7_0_3Tob1_8_0_1.class);
       });
       this.registerServerbound(ServerboundPacketsb1_8.LOGIN, new PacketHandlers() {

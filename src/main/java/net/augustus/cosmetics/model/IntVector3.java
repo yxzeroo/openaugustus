@@ -23,9 +23,7 @@ public class IntVector3 implements Comparable {
    public double distanceSq(IntVector3 intVector3) {
       double x2 = (double)intVector3.getX();
       double z2 = (double)intVector3.getZ();
-      double y2 = (double)intVector3.getY();
-      double d = x2;
-      return this.distanceSq(d, y2, z2);
+      return this.distanceSq(x2, (double)intVector3.getY(), z2);
    }
 
    public IntVector3(double d, double d2, double d3) {
@@ -33,7 +31,6 @@ public class IntVector3 implements Comparable {
    }
 
    public int compareTo2(IntVector3 intVector3) {
-      int[] flowState = GeoVector3f.getFlowState();
       return this.getY() == intVector3.getY() ? (this.getZ() == intVector3.getZ() ? this.getX() - intVector3.getX() : this.getZ() - intVector3.getZ()) : this.getY() - intVector3.getY();
    }
 
@@ -68,13 +65,11 @@ public class IntVector3 implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      IntVector3 intVector3 = (IntVector3)other;
-      return this.compareTo2(intVector3);
+      return this.compareTo2((IntVector3)other);
    }
 
    @Override
    public boolean equals(Object obj) {
-      int[] flowState = GeoVector3f.getFlowState();
       if (this == obj) {
          return true;
       } else if (!(obj instanceof IntVector3)) {

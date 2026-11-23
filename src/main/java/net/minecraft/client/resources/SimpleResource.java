@@ -55,8 +55,7 @@ public class SimpleResource implements IResource {
 
    @Override
    public int hashCode() {
-      int n = this.resourcePackName != null ? this.resourcePackName.hashCode() : 0;
-      return 31 * n + (this.srResourceLocation != null ? this.srResourceLocation.hashCode() : 0);
+      return 31 * (this.resourcePackName != null ? this.resourcePackName.hashCode() : 0) + (this.srResourceLocation != null ? this.srResourceLocation.hashCode() : 0);
    }
 
    public SimpleResource(String str, ResourceLocation location, InputStream in, InputStream in2, IMetadataSerializer metadataSerializer) {

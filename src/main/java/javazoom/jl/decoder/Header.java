@@ -611,8 +611,7 @@ public final class Header {
 
    public float ms_per_frame() {
       if (!this.h_vbr) {
-         float[][] floatsArr = new float[][]{{8.707483F, 8.0F, 12.0F}, {26.12245F, 24.0F, 36.0F}, {26.12245F, 24.0F, 36.0F}};
-         return floatsArr[this.h_layer - 1][this.h_sample_frequency];
+         return (new float[][]{{8.707483F, 8.0F, 12.0F}, {26.12245F, 24.0F, 36.0F}, {26.12245F, 24.0F, 36.0F}})[this.h_layer - 1][this.h_sample_frequency];
       } else {
          double d = this.h_vbr_time_per_frame[this.getHLayer()] / (double)this.frequency();
          if (this.h_version == 0 || this.h_version == 2) {

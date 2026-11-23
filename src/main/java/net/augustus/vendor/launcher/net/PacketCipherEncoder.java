@@ -243,7 +243,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    private byte[] decoyKeySlot195;
    private byte[] decoyKeySlot196;
    private byte[] decoyKeySlot197;
-   private static int[] controlFlowMarker;
 
    @Override
    public void encode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
@@ -251,19 +250,16 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    }
 
    public void initCipher(boolean flag, byte[] bytes) {
-      int[] controlFlowMarker2 = getControlFlowMarker();
 
       try {
          this.makeKey(bytes);
-         int[] ints = this.sessionK[flag ? 1 : 0];
-         this.roundKeys = ints;
+         this.roundKeys = this.sessionK[flag ? 1 : 0];
       } catch (InvalidKeyException e) {
       }
    }
 
    private int[] expandToSubKey(int[][] intsArr, boolean flag) {
       Object obj = null;
-      getControlFlowMarker();
       int n = 0;
       boolean flag2 = false;
       n = intsArr.length;
@@ -285,424 +281,215 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
 
    public PacketCipherEncoder(PipelineStageGuard pipelineStageGuard) {
        super();
-      byte[] bytes = new byte[1];
-      this.keyGuardSlotA = bytes;
-      byte[] bytes2 = new byte[1];
-      this.decoyKeySlot151 = bytes2;
-      byte[] bytes3 = new byte[1];
-      this.decoyKeySlot111 = bytes3;
-      byte[] bytes4 = new byte[1];
-      this.decoyKeySlot088 = bytes4;
-      byte[] bytes5 = new byte[1];
-      this.decoyKeySlot028 = bytes5;
-      byte[] bytes6 = new byte[1];
-      this.decoyKeySlot087 = bytes6;
-      byte[] bytes7 = new byte[1];
-      this.decoyKeySlot167 = bytes7;
-      byte[] bytes8 = new byte[1];
-      this.decoyKeySlot071 = bytes8;
-      byte[] bytes9 = new byte[1];
-      this.decoyKeySlot033 = bytes9;
-      byte[] bytes10 = new byte[1];
-      this.decoyKeySlot148 = bytes10;
-      byte[] bytes11 = new byte[1];
-      this.decoyKeySlot045 = bytes11;
-      byte[] bytes12 = new byte[1];
-      this.decoyKeySlot150 = bytes12;
-      byte[] bytes13 = new byte[1];
-      this.decoyKeySlot060 = bytes13;
-      byte[] bytes14 = new byte[1];
-      this.decoyKeySlot038 = bytes14;
-      byte[] bytes15 = new byte[1];
-      this.decoyKeySlot190 = bytes15;
-      byte[] bytes16 = new byte[1];
-      this.decoyKeySlot196 = bytes16;
-      byte[] bytes17 = new byte[1];
-      this.decoyKeySlot166 = bytes17;
-      byte[] bytes18 = new byte[1];
-      this.decoyKeySlot057 = bytes18;
-      byte[] bytes19 = new byte[1];
-      this.decoyKeySlot085 = bytes19;
-      byte[] bytes20 = new byte[1];
-      this.decoyKeySlot075 = bytes20;
-      byte[] bytes21 = new byte[1];
-      this.decoyKeySlot049 = bytes21;
-      byte[] bytes22 = new byte[1];
-      this.decoyKeySlot135 = bytes22;
-      byte[] bytes23 = new byte[1];
-      this.decoyKeySlot183 = bytes23;
-      byte[] bytes24 = new byte[1];
-      this.decoyKeySlot036 = bytes24;
-      byte[] bytes25 = new byte[1];
-      this.decoyKeySlot101 = bytes25;
-      byte[] bytes26 = new byte[1];
-      this.decoyKeySlot187 = bytes26;
-      byte[] bytes27 = new byte[1];
-      this.decoyKeySlot058 = bytes27;
-      byte[] bytes28 = new byte[1];
-      this.decoyKeySlot021 = bytes28;
-      byte[] bytes29 = new byte[1];
-      this.decoyKeySlot039 = bytes29;
-      byte[] bytes30 = new byte[1];
-      this.decoyKeySlot017 = bytes30;
-      byte[] bytes31 = new byte[1];
-      this.decoyKeySlot064 = bytes31;
-      byte[] bytes32 = new byte[1];
-      this.decoyKeySlot120 = bytes32;
-      byte[] bytes33 = new byte[1];
-      this.decoyKeySlot186 = bytes33;
-      byte[] bytes34 = new byte[1];
-      this.decoyKeySlot188 = bytes34;
-      byte[] bytes35 = new byte[1];
-      this.decoyKeySlot141 = bytes35;
-      byte[] bytes36 = new byte[1];
-      this.decoyKeySlot182 = bytes36;
-      byte[] bytes37 = new byte[1];
-      this.decoyKeySlot104 = bytes37;
-      byte[] bytes38 = new byte[1];
-      this.decoyKeySlot177 = bytes38;
-      byte[] bytes39 = new byte[1];
-      this.decoyKeySlot119 = bytes39;
-      byte[] bytes40 = new byte[1];
-      this.decoyKeySlot032 = bytes40;
-      byte[] bytes41 = new byte[1];
-      this.decoyKeySlot179 = bytes41;
-      byte[] bytes42 = new byte[1];
-      this.decoyKeySlot051 = bytes42;
-      byte[] bytes43 = new byte[1];
-      this.decoyKeySlot043 = bytes43;
-      byte[] bytes44 = new byte[1];
-      this.decoyKeySlot063 = bytes44;
-      byte[] bytes45 = new byte[1];
-      this.decoyKeySlot155 = bytes45;
-      byte[] bytes46 = new byte[1];
-      this.decoyKeySlot098 = bytes46;
-      byte[] bytes47 = new byte[1];
-      this.decoyKeySlot139 = bytes47;
-      byte[] bytes48 = new byte[1];
-      this.decoyKeySlot160 = bytes48;
-      byte[] bytes49 = new byte[1];
-      this.decoyKeySlot197 = bytes49;
-      byte[] bytes50 = new byte[1];
-      this.decoyKeySlot124 = bytes50;
-      byte[] bytes51 = new byte[1];
-      this.decoyKeySlot092 = bytes51;
-      byte[] bytes52 = new byte[1];
-      this.decoyKeySlot044 = bytes52;
-      byte[] bytes53 = new byte[1];
-      this.decoyKeySlot069 = bytes53;
-      byte[] bytes54 = new byte[1];
-      this.decoyKeySlot022 = bytes54;
-      byte[] bytes55 = new byte[1];
-      this.decoyKeySlot161 = bytes55;
-      byte[] bytes56 = new byte[1];
-      this.decoyKeySlot068 = bytes56;
-      byte[] bytes57 = new byte[1];
-      this.decoyKeySlot130 = bytes57;
-      byte[] bytes58 = new byte[1];
-      this.decoyKeySlot181 = bytes58;
-      byte[] bytes59 = new byte[1];
-      this.decoyKeySlot053 = bytes59;
-      byte[] bytes60 = new byte[1];
-      this.decoyKeySlot170 = bytes60;
-      byte[] bytes61 = new byte[1];
-      this.decoyKeySlot010 = bytes61;
-      byte[] bytes62 = new byte[1];
-      this.decoyKeySlot173 = bytes62;
-      byte[] bytes63 = new byte[1];
-      this.decoyKeySlot065 = bytes63;
-      byte[] bytes64 = new byte[1];
-      this.decoyKeySlot070 = bytes64;
-      byte[] bytes65 = new byte[1];
-      this.decoyKeySlot164 = bytes65;
-      byte[] bytes66 = new byte[1];
-      this.decoyKeySlot083 = bytes66;
-      byte[] bytes67 = new byte[1];
-      this.decoyKeySlot050 = bytes67;
-      byte[] bytes68 = new byte[1];
-      this.decoyKeySlot100 = bytes68;
-      byte[] bytes69 = new byte[1];
-      this.decoyKeySlot142 = bytes69;
-      byte[] bytes70 = new byte[1];
-      this.decoyKeySlot020 = bytes70;
-      byte[] bytes71 = new byte[1];
-      this.decoyKeySlot073 = bytes71;
-      byte[] bytes72 = new byte[1];
-      this.decoyKeySlot090 = bytes72;
-      byte[] bytes73 = new byte[1];
-      this.decoyKeySlot054 = bytes73;
-      byte[] bytes74 = new byte[1];
-      this.decoyKeySlot162 = bytes74;
-      byte[] bytes75 = new byte[1];
-      this.decoyKeySlot121 = bytes75;
-      byte[] bytes76 = new byte[1];
-      this.decoyKeySlot128 = bytes76;
-      byte[] bytes77 = new byte[1];
-      this.decoyKeySlot056 = bytes77;
-      byte[] bytes78 = new byte[1];
-      this.decoyKeySlot023 = bytes78;
-      byte[] bytes79 = new byte[1];
-      this.decoyKeySlot154 = bytes79;
-      byte[] bytes80 = new byte[1];
-      this.decoyKeySlot062 = bytes80;
-      byte[] bytes81 = new byte[1];
-      this.decoyKeySlot168 = bytes81;
-      byte[] bytes82 = new byte[1];
-      this.decoyKeySlot118 = bytes82;
-      byte[] bytes83 = new byte[1];
-      this.decoyKeySlot102 = bytes83;
-      byte[] bytes84 = new byte[1];
-      this.decoyKeySlot194 = bytes84;
-      byte[] bytes85 = new byte[1];
-      this.decoyKeySlot115 = bytes85;
-      byte[] bytes86 = new byte[1];
-      this.decoyKeySlot105 = bytes86;
-      byte[] bytes87 = new byte[1];
-      this.decoyKeySlot094 = bytes87;
-      byte[] bytes88 = new byte[1];
-      this.decoyKeySlot000 = bytes88;
-      byte[] bytes89 = new byte[1];
-      this.decoyKeySlot047 = bytes89;
-      byte[] bytes90 = new byte[1];
-      this.decoyKeySlot095 = bytes90;
-      byte[] bytes91 = new byte[1];
-      this.decoyKeySlot126 = bytes91;
-      byte[] bytes92 = new byte[1];
-      this.decoyKeySlot012 = bytes92;
-      byte[] bytes93 = new byte[1];
-      this.decoyKeySlot007 = bytes93;
-      byte[] bytes94 = new byte[1];
-      this.decoyKeySlot091 = bytes94;
-      byte[] bytes95 = new byte[1];
-      this.decoyKeySlot002 = bytes95;
-      byte[] bytes96 = new byte[1];
-      this.decoyKeySlot109 = bytes96;
-      byte[] bytes97 = new byte[1];
-      this.decoyKeySlot113 = bytes97;
-      byte[] bytes98 = new byte[1];
-      this.decoyKeySlot059 = bytes98;
-      byte[] bytes99 = new byte[1];
-      this.decoyKeySlot195 = bytes99;
-      byte[] bytes100 = new byte[1];
-      this.decoyKeySlot084 = bytes100;
-      byte[] bytes101 = new byte[1];
-      this.decoyKeySlot122 = bytes101;
-      byte[] bytes102 = new byte[1];
-      this.decoyKeySlot008 = bytes102;
-      byte[] bytes103 = new byte[1];
-      this.decoyKeySlot189 = bytes103;
-      byte[] bytes104 = new byte[1];
-      this.decoyKeySlot030 = bytes104;
-      byte[] bytes105 = new byte[1];
-      this.decoyKeySlot146 = bytes105;
-      getControlFlowMarker();
-      byte[] bytes106 = new byte[1];
-      this.decoyKeySlot152 = bytes106;
-      byte[] bytes107 = new byte[1];
-      this.decoyKeySlot016 = bytes107;
-      byte[] bytes108 = new byte[1];
-      this.decoyKeySlot081 = bytes108;
-      byte[] bytes109 = new byte[1];
-      this.decoyKeySlot144 = bytes109;
-      byte[] bytes110 = new byte[1];
-      this.decoyKeySlot024 = bytes110;
-      byte[] bytes111 = new byte[1];
-      this.decoyKeySlot077 = bytes111;
-      byte[] bytes112 = new byte[1];
-      this.decoyKeySlot140 = bytes112;
-      byte[] bytes113 = new byte[1];
-      this.decoyKeySlot014 = bytes113;
-      byte[] bytes114 = new byte[1];
-      this.decoyKeySlot129 = bytes114;
-      byte[] bytes115 = new byte[1];
-      this.decoyKeySlot134 = bytes115;
-      byte[] bytes116 = new byte[1];
-      this.decoyKeySlot048 = bytes116;
-      byte[] bytes117 = new byte[1];
-      this.decoyKeySlot147 = bytes117;
-      byte[] bytes118 = new byte[1];
-      this.decoyKeySlot018 = bytes118;
-      byte[] bytes119 = new byte[1];
-      this.decoyKeySlot133 = bytes119;
-      byte[] bytes120 = new byte[1];
-      this.decoyKeySlot046 = bytes120;
-      byte[] bytes121 = new byte[1];
-      this.decoyKeySlot193 = bytes121;
-      byte[] bytes122 = new byte[1];
-      this.decoyKeySlot052 = bytes122;
-      byte[] bytes123 = new byte[1];
-      this.decoyKeySlot178 = bytes123;
-      byte[] bytes124 = new byte[1];
-      this.decoyKeySlot110 = bytes124;
-      byte[] bytes125 = new byte[1];
-      this.decoyKeySlot176 = bytes125;
-      byte[] bytes126 = new byte[1];
-      this.decoyKeySlot013 = bytes126;
-      byte[] bytes127 = new byte[1];
-      this.decoyKeySlot159 = bytes127;
-      byte[] bytes128 = new byte[1];
-      this.decoyKeySlot005 = bytes128;
-      byte[] bytes129 = new byte[1];
-      this.decoyKeySlot174 = bytes129;
-      byte[] bytes130 = new byte[1];
-      this.decoyKeySlot089 = bytes130;
-      byte[] bytes131 = new byte[1];
-      this.decoyKeySlot143 = bytes131;
-      byte[] bytes132 = new byte[1];
-      this.decoyKeySlot099 = bytes132;
-      byte[] bytes133 = new byte[1];
-      this.decoyKeySlot042 = bytes133;
-      byte[] bytes134 = new byte[1];
-      this.decoyKeySlot137 = bytes134;
-      byte[] bytes135 = new byte[1];
-      this.decoyKeySlot127 = bytes135;
-      byte[] bytes136 = new byte[1];
-      this.decoyKeySlot136 = bytes136;
-      byte[] bytes137 = new byte[1];
-      this.decoyKeySlot086 = bytes137;
-      byte[] bytes138 = new byte[1];
-      this.decoyKeySlot117 = bytes138;
-      byte[] bytes139 = new byte[1];
-      this.decoyKeySlot009 = bytes139;
-      byte[] bytes140 = new byte[1];
-      this.decoyKeySlot079 = bytes140;
-      byte[] bytes141 = new byte[1];
-      this.decoyKeySlot055 = bytes141;
-      byte[] bytes142 = new byte[1];
-      this.decoyKeySlot037 = bytes142;
-      byte[] bytes143 = new byte[1];
-      this.decoyKeySlot078 = bytes143;
-      byte[] bytes144 = new byte[1];
-      this.decoyKeySlot175 = bytes144;
-      byte[] bytes145 = new byte[1];
-      this.decoyKeySlot093 = bytes145;
-      byte[] bytes146 = new byte[1];
-      this.decoyKeySlot025 = bytes146;
-      byte[] bytes147 = new byte[1];
-      this.decoyKeySlot112 = bytes147;
-      byte[] bytes148 = new byte[1];
-      this.decoyKeySlot011 = bytes148;
-      byte[] bytes149 = new byte[1];
-      this.decoyKeySlot074 = bytes149;
-      byte[] bytes150 = new byte[1];
-      this.decoyKeySlot163 = bytes150;
-      byte[] bytes151 = new byte[1];
-      this.decoyKeySlot169 = bytes151;
-      byte[] bytes152 = new byte[1];
-      this.decoyKeySlot103 = bytes152;
-      byte[] bytes153 = new byte[1];
-      this.decoyKeySlot031 = bytes153;
-      byte[] bytes154 = new byte[1];
-      this.decoyKeySlot072 = bytes154;
-      byte[] bytes155 = new byte[1];
-      this.decoyKeySlot132 = bytes155;
-      byte[] bytes156 = new byte[1];
-      this.decoyKeySlot001 = bytes156;
-      byte[] bytes157 = new byte[1];
-      this.decoyKeySlot015 = bytes157;
-      byte[] bytes158 = new byte[1];
-      this.decoyKeySlot158 = bytes158;
-      byte[] bytes159 = new byte[1];
-      this.decoyKeySlot076 = bytes159;
-      byte[] bytes160 = new byte[1];
-      this.decoyKeySlot003 = bytes160;
-      byte[] bytes161 = new byte[1];
-      this.decoyKeySlot026 = bytes161;
-      byte[] bytes162 = new byte[1];
-      this.decoyKeySlot171 = bytes162;
-      byte[] bytes163 = new byte[1];
-      this.decoyKeySlot006 = bytes163;
-      byte[] bytes164 = new byte[1];
-      this.decoyKeySlot035 = bytes164;
-      byte[] bytes165 = new byte[1];
-      this.decoyKeySlot185 = bytes165;
-      byte[] bytes166 = new byte[1];
-      this.decoyKeySlot080 = bytes166;
-      byte[] bytes167 = new byte[1];
-      this.decoyKeySlot097 = bytes167;
-      byte[] bytes168 = new byte[1];
-      this.decoyKeySlot180 = bytes168;
-      byte[] bytes169 = new byte[1];
-      this.decoyKeySlot116 = bytes169;
-      byte[] bytes170 = new byte[1];
-      this.decoyKeySlot149 = bytes170;
-      byte[] bytes171 = new byte[1];
-      this.decoyKeySlot114 = bytes171;
-      byte[] bytes172 = new byte[1];
-      this.decoyKeySlot040 = bytes172;
-      byte[] bytes173 = new byte[1];
-      this.decoyKeySlot019 = bytes173;
-      byte[] bytes174 = new byte[1];
-      this.decoyKeySlot034 = bytes174;
-      byte[] bytes175 = new byte[1];
-      this.decoyKeySlot041 = bytes175;
-      byte[] bytes176 = new byte[1];
-      this.decoyKeySlot191 = bytes176;
-      byte[] bytes177 = new byte[1];
-      this.decoyKeySlot184 = bytes177;
-      byte[] bytes178 = new byte[1];
-      this.decoyKeySlot066 = bytes178;
-      byte[] bytes179 = new byte[1];
-      this.decoyKeySlot156 = bytes179;
-      byte[] bytes180 = new byte[1];
-      this.decoyKeySlot125 = bytes180;
-      byte[] bytes181 = new byte[1];
-      this.decoyKeySlot027 = bytes181;
-      byte[] bytes182 = new byte[1];
-      this.decoyKeySlot107 = bytes182;
-      byte[] bytes183 = new byte[1];
-      this.decoyKeySlot138 = bytes183;
-      byte[] bytes184 = new byte[1];
-      this.decoyKeySlot165 = bytes184;
-      byte[] bytes185 = new byte[1];
-      this.decoyKeySlot029 = bytes185;
-      byte[] bytes186 = new byte[1];
-      this.decoyKeySlot061 = bytes186;
-      byte[] bytes187 = new byte[1];
-      this.decoyKeySlot192 = bytes187;
-      byte[] bytes188 = new byte[1];
-      this.decoyKeySlot004 = bytes188;
-      byte[] bytes189 = new byte[1];
-      this.decoyKeySlot067 = bytes189;
-      byte[] bytes190 = new byte[1];
-      this.decoyKeySlot145 = bytes190;
-      byte[] bytes191 = new byte[1];
-      this.decoyKeySlot108 = bytes191;
-      byte[] bytes192 = new byte[1];
-      this.decoyKeySlot157 = bytes192;
-      byte[] bytes193 = new byte[1];
-      this.decoyKeySlot096 = bytes193;
-      byte[] bytes194 = new byte[1];
-      this.keyGuardSlotB = bytes194;
-      byte[] bytes195 = new byte[1];
-      this.decoyKeySlot123 = bytes195;
-      byte[] bytes196 = new byte[1];
-      this.decoyKeySlot106 = bytes196;
-      byte[] bytes197 = new byte[1];
-      this.decoyKeySlot131 = bytes197;
-      byte[] bytes198 = new byte[1];
-      this.decoyKeySlot172 = bytes198;
-      byte[] bytes199 = new byte[1];
-      this.decoyKeySlot082 = bytes199;
-      byte[] bytes200 = new byte[1];
-      this.decoyKeySlot153 = bytes200;
-      byte[] bytes201 = new byte[1];
-      this.activeEncryptKey = bytes201;
+      this.keyGuardSlotA = new byte[1];
+      this.decoyKeySlot151 = new byte[1];
+      this.decoyKeySlot111 = new byte[1];
+      this.decoyKeySlot088 = new byte[1];
+      this.decoyKeySlot028 = new byte[1];
+      this.decoyKeySlot087 = new byte[1];
+      this.decoyKeySlot167 = new byte[1];
+      this.decoyKeySlot071 = new byte[1];
+      this.decoyKeySlot033 = new byte[1];
+      this.decoyKeySlot148 = new byte[1];
+      this.decoyKeySlot045 = new byte[1];
+      this.decoyKeySlot150 = new byte[1];
+      this.decoyKeySlot060 = new byte[1];
+      this.decoyKeySlot038 = new byte[1];
+      this.decoyKeySlot190 = new byte[1];
+      this.decoyKeySlot196 = new byte[1];
+      this.decoyKeySlot166 = new byte[1];
+      this.decoyKeySlot057 = new byte[1];
+      this.decoyKeySlot085 = new byte[1];
+      this.decoyKeySlot075 = new byte[1];
+      this.decoyKeySlot049 = new byte[1];
+      this.decoyKeySlot135 = new byte[1];
+      this.decoyKeySlot183 = new byte[1];
+      this.decoyKeySlot036 = new byte[1];
+      this.decoyKeySlot101 = new byte[1];
+      this.decoyKeySlot187 = new byte[1];
+      this.decoyKeySlot058 = new byte[1];
+      this.decoyKeySlot021 = new byte[1];
+      this.decoyKeySlot039 = new byte[1];
+      this.decoyKeySlot017 = new byte[1];
+      this.decoyKeySlot064 = new byte[1];
+      this.decoyKeySlot120 = new byte[1];
+      this.decoyKeySlot186 = new byte[1];
+      this.decoyKeySlot188 = new byte[1];
+      this.decoyKeySlot141 = new byte[1];
+      this.decoyKeySlot182 = new byte[1];
+      this.decoyKeySlot104 = new byte[1];
+      this.decoyKeySlot177 = new byte[1];
+      this.decoyKeySlot119 = new byte[1];
+      this.decoyKeySlot032 = new byte[1];
+      this.decoyKeySlot179 = new byte[1];
+      this.decoyKeySlot051 = new byte[1];
+      this.decoyKeySlot043 = new byte[1];
+      this.decoyKeySlot063 = new byte[1];
+      this.decoyKeySlot155 = new byte[1];
+      this.decoyKeySlot098 = new byte[1];
+      this.decoyKeySlot139 = new byte[1];
+      this.decoyKeySlot160 = new byte[1];
+      this.decoyKeySlot197 = new byte[1];
+      this.decoyKeySlot124 = new byte[1];
+      this.decoyKeySlot092 = new byte[1];
+      this.decoyKeySlot044 = new byte[1];
+      this.decoyKeySlot069 = new byte[1];
+      this.decoyKeySlot022 = new byte[1];
+      this.decoyKeySlot161 = new byte[1];
+      this.decoyKeySlot068 = new byte[1];
+      this.decoyKeySlot130 = new byte[1];
+      this.decoyKeySlot181 = new byte[1];
+      this.decoyKeySlot053 = new byte[1];
+      this.decoyKeySlot170 = new byte[1];
+      this.decoyKeySlot010 = new byte[1];
+      this.decoyKeySlot173 = new byte[1];
+      this.decoyKeySlot065 = new byte[1];
+      this.decoyKeySlot070 = new byte[1];
+      this.decoyKeySlot164 = new byte[1];
+      this.decoyKeySlot083 = new byte[1];
+      this.decoyKeySlot050 = new byte[1];
+      this.decoyKeySlot100 = new byte[1];
+      this.decoyKeySlot142 = new byte[1];
+      this.decoyKeySlot020 = new byte[1];
+      this.decoyKeySlot073 = new byte[1];
+      this.decoyKeySlot090 = new byte[1];
+      this.decoyKeySlot054 = new byte[1];
+      this.decoyKeySlot162 = new byte[1];
+      this.decoyKeySlot121 = new byte[1];
+      this.decoyKeySlot128 = new byte[1];
+      this.decoyKeySlot056 = new byte[1];
+      this.decoyKeySlot023 = new byte[1];
+      this.decoyKeySlot154 = new byte[1];
+      this.decoyKeySlot062 = new byte[1];
+      this.decoyKeySlot168 = new byte[1];
+      this.decoyKeySlot118 = new byte[1];
+      this.decoyKeySlot102 = new byte[1];
+      this.decoyKeySlot194 = new byte[1];
+      this.decoyKeySlot115 = new byte[1];
+      this.decoyKeySlot105 = new byte[1];
+      this.decoyKeySlot094 = new byte[1];
+      this.decoyKeySlot000 = new byte[1];
+      this.decoyKeySlot047 = new byte[1];
+      this.decoyKeySlot095 = new byte[1];
+      this.decoyKeySlot126 = new byte[1];
+      this.decoyKeySlot012 = new byte[1];
+      this.decoyKeySlot007 = new byte[1];
+      this.decoyKeySlot091 = new byte[1];
+      this.decoyKeySlot002 = new byte[1];
+      this.decoyKeySlot109 = new byte[1];
+      this.decoyKeySlot113 = new byte[1];
+      this.decoyKeySlot059 = new byte[1];
+      this.decoyKeySlot195 = new byte[1];
+      this.decoyKeySlot084 = new byte[1];
+      this.decoyKeySlot122 = new byte[1];
+      this.decoyKeySlot008 = new byte[1];
+      this.decoyKeySlot189 = new byte[1];
+      this.decoyKeySlot030 = new byte[1];
+      this.decoyKeySlot146 = new byte[1];
+      this.decoyKeySlot152 = new byte[1];
+      this.decoyKeySlot016 = new byte[1];
+      this.decoyKeySlot081 = new byte[1];
+      this.decoyKeySlot144 = new byte[1];
+      this.decoyKeySlot024 = new byte[1];
+      this.decoyKeySlot077 = new byte[1];
+      this.decoyKeySlot140 = new byte[1];
+      this.decoyKeySlot014 = new byte[1];
+      this.decoyKeySlot129 = new byte[1];
+      this.decoyKeySlot134 = new byte[1];
+      this.decoyKeySlot048 = new byte[1];
+      this.decoyKeySlot147 = new byte[1];
+      this.decoyKeySlot018 = new byte[1];
+      this.decoyKeySlot133 = new byte[1];
+      this.decoyKeySlot046 = new byte[1];
+      this.decoyKeySlot193 = new byte[1];
+      this.decoyKeySlot052 = new byte[1];
+      this.decoyKeySlot178 = new byte[1];
+      this.decoyKeySlot110 = new byte[1];
+      this.decoyKeySlot176 = new byte[1];
+      this.decoyKeySlot013 = new byte[1];
+      this.decoyKeySlot159 = new byte[1];
+      this.decoyKeySlot005 = new byte[1];
+      this.decoyKeySlot174 = new byte[1];
+      this.decoyKeySlot089 = new byte[1];
+      this.decoyKeySlot143 = new byte[1];
+      this.decoyKeySlot099 = new byte[1];
+      this.decoyKeySlot042 = new byte[1];
+      this.decoyKeySlot137 = new byte[1];
+      this.decoyKeySlot127 = new byte[1];
+      this.decoyKeySlot136 = new byte[1];
+      this.decoyKeySlot086 = new byte[1];
+      this.decoyKeySlot117 = new byte[1];
+      this.decoyKeySlot009 = new byte[1];
+      this.decoyKeySlot079 = new byte[1];
+      this.decoyKeySlot055 = new byte[1];
+      this.decoyKeySlot037 = new byte[1];
+      this.decoyKeySlot078 = new byte[1];
+      this.decoyKeySlot175 = new byte[1];
+      this.decoyKeySlot093 = new byte[1];
+      this.decoyKeySlot025 = new byte[1];
+      this.decoyKeySlot112 = new byte[1];
+      this.decoyKeySlot011 = new byte[1];
+      this.decoyKeySlot074 = new byte[1];
+      this.decoyKeySlot163 = new byte[1];
+      this.decoyKeySlot169 = new byte[1];
+      this.decoyKeySlot103 = new byte[1];
+      this.decoyKeySlot031 = new byte[1];
+      this.decoyKeySlot072 = new byte[1];
+      this.decoyKeySlot132 = new byte[1];
+      this.decoyKeySlot001 = new byte[1];
+      this.decoyKeySlot015 = new byte[1];
+      this.decoyKeySlot158 = new byte[1];
+      this.decoyKeySlot076 = new byte[1];
+      this.decoyKeySlot003 = new byte[1];
+      this.decoyKeySlot026 = new byte[1];
+      this.decoyKeySlot171 = new byte[1];
+      this.decoyKeySlot006 = new byte[1];
+      this.decoyKeySlot035 = new byte[1];
+      this.decoyKeySlot185 = new byte[1];
+      this.decoyKeySlot080 = new byte[1];
+      this.decoyKeySlot097 = new byte[1];
+      this.decoyKeySlot180 = new byte[1];
+      this.decoyKeySlot116 = new byte[1];
+      this.decoyKeySlot149 = new byte[1];
+      this.decoyKeySlot114 = new byte[1];
+      this.decoyKeySlot040 = new byte[1];
+      this.decoyKeySlot019 = new byte[1];
+      this.decoyKeySlot034 = new byte[1];
+      this.decoyKeySlot041 = new byte[1];
+      this.decoyKeySlot191 = new byte[1];
+      this.decoyKeySlot184 = new byte[1];
+      this.decoyKeySlot066 = new byte[1];
+      this.decoyKeySlot156 = new byte[1];
+      this.decoyKeySlot125 = new byte[1];
+      this.decoyKeySlot027 = new byte[1];
+      this.decoyKeySlot107 = new byte[1];
+      this.decoyKeySlot138 = new byte[1];
+      this.decoyKeySlot165 = new byte[1];
+      this.decoyKeySlot029 = new byte[1];
+      this.decoyKeySlot061 = new byte[1];
+      this.decoyKeySlot192 = new byte[1];
+      this.decoyKeySlot004 = new byte[1];
+      this.decoyKeySlot067 = new byte[1];
+      this.decoyKeySlot145 = new byte[1];
+      this.decoyKeySlot108 = new byte[1];
+      this.decoyKeySlot157 = new byte[1];
+      this.decoyKeySlot096 = new byte[1];
+      this.keyGuardSlotB = new byte[1];
+      this.decoyKeySlot123 = new byte[1];
+      this.decoyKeySlot106 = new byte[1];
+      this.decoyKeySlot131 = new byte[1];
+      this.decoyKeySlot172 = new byte[1];
+      this.decoyKeySlot082 = new byte[1];
+      this.decoyKeySlot153 = new byte[1];
+      this.activeEncryptKey = new byte[1];
       this.keyDeriverCipher = new AesCrypto();
-      boolean flag = false;
-      this.added = flag;
-      boolean flag2 = false;
-      this.has14Rounds = flag2;
-      int[][] intsArr = (int[][])null;
-      this.sessionK = intsArr;
-      Object obj = null;
-      this.roundKeys = (int[])obj;
-      byte b = 0;
-      this.roundLimit = b;
-      int[] ints = new int[256];
-      this.alog = ints;
-      int[] ints2 = new int[256];
-      this.log = ints2;
+      this.added = false;
+      this.has14Rounds = false;
+      this.sessionK = (int[][])null;
+      this.roundKeys = (int[])null;
+      this.roundLimit = (byte)0;
+      this.alog = new int[256];
+      this.log = new int[256];
       this.sBox = new byte[256];
       this.invSBox = new byte[256];
       this.T1 = new int[256];
@@ -719,18 +506,15 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       this.U4 = new int[256];
       this.rcon = new byte[30];
       this.stageGuard = pipelineStageGuard;
-      byte[] bytes202 = new byte[this.getBlockSize()];
-      this.cbcScratchBlock = bytes202;
-      byte[] bytes203 = new byte[this.getBlockSize()];
-      this.cbcFeedbackIv = bytes203;
-      short s = 283;
+      this.cbcScratchBlock = new byte[this.getBlockSize()];
+      this.cbcFeedbackIv = new byte[this.getBlockSize()];
       int n = 0;
       this.alog[0] = 1;
 
       for (int i = 1; i < 256; i++) {
          n = this.alog[i - 1] << 1 ^ this.alog[i - 1];
          if ((n & 256) != 0) {
-            n ^= s;
+            n ^= (short)283;
          }
 
          this.alog[i] = n;
@@ -865,10 +649,8 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          this.rcon[i14] = (byte)n4;
       }
 
-      Object obj2 = null;
-      this.log = (int[])obj2;
-      Object obj3 = null;
-      this.alog = (int[])obj3;
+      this.log = (int[])null;
+      this.alog = (int[])null;
    }
 
    private int getRounds(int n) {
@@ -876,7 +658,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    }
 
    public byte[] encrypt(byte[] bytes, int n, int n2) {
-      int[] controlFlowMarker2 = getControlFlowMarker();
       if (n2 <= 0) {
          return null;
       } else {
@@ -900,7 +681,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
 
    private void implEncryptBlock(byte[] bytes, int n, byte[] bytes2, int n2) {
       int n3 = 0;
-      getControlFlowMarker();
       int n4 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n5 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n6 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
@@ -940,7 +720,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
 
    private int encryptCbc(byte[] bytes, int n, int n2, byte[] bytes2, int n3) {
       int n4 = 0;
-      getControlFlowMarker();
       int n5 = 0;
       int n6 = 0;
       long l = -3973984876722295909L;
@@ -1023,19 +802,15 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    public void resetIv() {
       boolean flag = true;
       long l = -527380693120113810L;
-      int[] controlFlowMarker2 = getControlFlowMarker();
       l = 7416219365747155458L ^ (long)"鄱淐ᵳ⚨ਹ㵴蒲㶿鰏۞ਜꓔ턟粿\uf027䮄꧒瓾̷鼐".hashCode();
-      byte[] bytes = new byte[this.getBlockSize()];
-      this.cbcFeedbackIv = bytes;
+      this.cbcFeedbackIv = new byte[this.getBlockSize()];
       l = (l ^ 5374082427265060163L) + 17286346306474301L;
-      byte[] bytes2 = new byte[this.getBlockSize()];
-      this.cbcScratchBlock = bytes2;
+      this.cbcScratchBlock = new byte[this.getBlockSize()];
       l = (l ^ 2405274973022208420L) - -2156170588943391545L;
    }
 
    private int mul4(int n, byte[] bytes) {
       int n2 = 0;
-      getControlFlowMarker();
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
@@ -1090,7 +865,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    }
 
    private byte[] prepareInput(byte[] bytes, int n, int n2, boolean flag) throws IllegalBlockSizeException, ShortBufferException {
-      getControlFlowMarker();
       int n3 = 0;
       int n4 = 0;
       byte b = 0;
@@ -1229,7 +1003,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       int n3 = 4;
       int n4 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n5 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
-      getControlFlowMarker();
       int n6 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n++] & 255) ^ this.roundKeys[n3++];
       int n7 = (bytes[n++] << 24 | (bytes[n++] & 255) << 16 | (bytes[n++] & 255) << 8 | bytes[n] & 255) ^ this.roundKeys[n3++];
       if (this.added) {
@@ -1422,7 +1195,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    private ByteBuf encryptBuffer(ByteBuf buf) {
       Object obj = null;
       Object obj2 = null;
-      getControlFlowMarker();
       Object obj3 = null;
       byte b = 7;
       long l = 8164495558191749022L;
@@ -1467,7 +1239,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       int n6 = 8;
       long l = 6218939149525010727L;
       long l2 = 0L;
-      getControlFlowMarker();
       l = -3022475051756937391L ^ (long)"夼륚婦耆락ਥ氜\u20f9䝈节ឍ섊ⶆ\u208f\uf671\uf21a㟴瀍㽗ᴝ".hashCode();
       l2 = -3661896344131446440L ^ (long)"ڮ휺訐쎋儳룖뫚깱﨤ꡋ㩢न캉춄\ue68e⌠榝Ề샜幞".hashCode();
 
@@ -1546,7 +1317,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       boolean flag = false;
       int n3 = 0;
       int n4 = 0;
-      getControlFlowMarker();
       int n5 = 0;
       if (bytes != null && n2 != 0) {
          n4 = Math.addExact(n, n2);
@@ -1574,7 +1344,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    }
 
    public void checkBlockAlignment(int n, int n2) {
-      int[] controlFlowMarker2 = getControlFlowMarker();
       if (n % n2 != 0) {
          throw new ProviderException("Internal error in input buffering");
       }
@@ -1583,7 +1352,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    public void padWithLen(byte[] bytes, int n, int n2) throws ShortBufferException {
       byte b = 0;
       int n3 = 0;
-      int[] controlFlowMarker2 = getControlFlowMarker();
       if (bytes != null) {
          n3 = Math.addExact(n, n2);
          if (n3 <= bytes.length) {
@@ -1598,7 +1366,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    public byte[] decrypt(byte[] bytes, int n, int n2) {
       int n3 = 0;
       Object obj = null;
-      int[] controlFlowMarker2 = getControlFlowMarker();
       if (n2 > 0) {
          obj = new byte[n2];
          this.checkBlockAlignment(n2, this.getBlockSize());
@@ -1614,40 +1381,26 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       AesCrypto aesCrypto = new AesCrypto();
       this.activeEncryptKey = bytes;
       Sha3Hash sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes2 = new byte[]{
+      byte[] bytes3 = AesCipherUtil.decrypt(bytes, new byte[]{
          -53, 59, 23, 97, -109, 55, -99, -117, -109, -118, 40, 26, -4, -73, -67, -29, -61, -40, 66, 45, 28, 28, -89, 79, -32, -31, 101, -58, 54, -123, -65, 86
-      };
-      byte[] bytes3 = AesCipherUtil.decrypt(bytes, bytes2, aesCrypto);
-      byte[] bytes4 = sha3Hash.digest(bytes3);
-      this.decoyKeySlot122 = bytes4;
+      }, aesCrypto);
+      this.decoyKeySlot122 = sha3Hash.digest(bytes3);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes5 = new byte[]{
+      this.decoyKeySlot008 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -63, -27, -95, 109, 37, -95, -93, -63, 79, 51, -122, 82, 91, -120, 87, 26, -60, -128, -57, 94, 119, -102, -59, -124, -81, 61, 2, -119, 6, 12, 53, 67
-      };
-      byte[] bytes6 = AesCipherUtil.decrypt(bytes, bytes5, aesCrypto);
-      byte[] bytes7 = sha3Hash.digest(bytes6);
-      this.decoyKeySlot008 = bytes7;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes8 = new byte[]{
+      this.decoyKeySlot189 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -46, 89, 92, 10, -37, 111, -24, -96, 66, -14, -66, 90, 17, 69, 82, 11, -20, 85, -65, 111, 36, 35, 29, 44, -95, -19, -48, 8, -31, 14, 83, -38
-      };
-      byte[] bytes9 = AesCipherUtil.decrypt(bytes, bytes8, aesCrypto);
-      byte[] bytes10 = sha3Hash.digest(bytes9);
-      this.decoyKeySlot189 = bytes10;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes11 = new byte[]{
+      this.decoyKeySlot030 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -37, 0, 41, -33, -125, 9, -25, 11, 100, -38, 41, -86, -91, 94, -100, 9, 14, -95, 78, 89, 92, -58, -14, -52, -104, 47, 2, -17, 44, -98, -106, -91
-      };
-      byte[] bytes12 = AesCipherUtil.decrypt(bytes, bytes11, aesCrypto);
-      byte[] bytes13 = sha3Hash.digest(bytes12);
-      this.decoyKeySlot030 = bytes13;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes14 = new byte[]{
+      this.decoyKeySlot146 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          116, -30, -11, -24, -31, 46, -92, 71, 12, -43, -126, 69, -128, -56, 10, 90, -104, 42, -112, -59, 108, -15, 39, 72, -45, 2, 31, -58, -98, 95, 15, 32
-      };
-      byte[] bytes15 = AesCipherUtil.decrypt(bytes, bytes14, aesCrypto);
-      byte[] bytes16 = sha3Hash.digest(bytes15);
-      this.decoyKeySlot146 = bytes16;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes17 = new byte[]{
          -127,
@@ -1683,9 +1436,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          36,
          -77
       };
-      byte[] bytes18 = AesCipherUtil.decrypt(bytes, bytes17, aesCrypto);
-      byte[] bytes19 = sha3Hash.digest(bytes18);
-      this.decoyKeySlot152 = bytes19;
+      this.decoyKeySlot152 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes17, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes20 = new byte[]{
          -113,
@@ -1721,37 +1472,23 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -119,
          84
       };
-      byte[] bytes21 = AesCipherUtil.decrypt(bytes, bytes20, aesCrypto);
-      byte[] bytes22 = sha3Hash.digest(bytes21);
-      this.decoyKeySlot016 = bytes22;
+      this.decoyKeySlot016 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes20, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes23 = new byte[]{
+      this.decoyKeySlot081 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -72, 50, -18, -27, 41, -101, 8, -72, -103, -63, -73, 27, 64, 4, -49, 77, -61, 51, -81, 77, 47, -13, -93, 7, 5, 49, -123, -62, 69, 110, -89, -15
-      };
-      byte[] bytes24 = AesCipherUtil.decrypt(bytes, bytes23, aesCrypto);
-      byte[] bytes25 = sha3Hash.digest(bytes24);
-      this.decoyKeySlot081 = bytes25;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes26 = new byte[]{
+      this.decoyKeySlot144 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -70, 32, 88, -57, 21, -30, 27, -58, 94, 110, -2, -36, 84, -47, 49, -108, 127, 87, 5, -16, 123, 93, 121, -58, -88, 24, 27, -5, 108, 19, 10, -79
-      };
-      byte[] bytes27 = AesCipherUtil.decrypt(bytes, bytes26, aesCrypto);
-      byte[] bytes28 = sha3Hash.digest(bytes27);
-      this.decoyKeySlot144 = bytes28;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes29 = new byte[]{
+      this.decoyKeySlot024 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -119, 41, -84, 4, -104, 36, -44, -59, -88, -91, 54, 26, 109, -28, -125, -113, 61, 70, -40, -40, -25, 25, -121, 2, -16, -114, -61, 68, 93, -31, 7, -3
-      };
-      byte[] bytes30 = AesCipherUtil.decrypt(bytes, bytes29, aesCrypto);
-      byte[] bytes31 = sha3Hash.digest(bytes30);
-      this.decoyKeySlot024 = bytes31;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes32 = new byte[]{
+      this.decoyKeySlot077 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          90, 65, -102, -37, 116, 55, -72, 71, -63, 45, -67, -87, 124, 118, 58, -6, 121, 84, 121, -52, -120, 48, -5, 25, -43, 65, -103, 7, 51, 105, -67, 110
-      };
-      byte[] bytes33 = AesCipherUtil.decrypt(bytes, bytes32, aesCrypto);
-      byte[] bytes34 = sha3Hash.digest(bytes33);
-      this.decoyKeySlot077 = bytes34;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes35 = new byte[]{
          111,
@@ -1787,51 +1524,31 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          79,
          -127
       };
-      byte[] bytes36 = AesCipherUtil.decrypt(bytes, bytes35, aesCrypto);
-      byte[] bytes37 = sha3Hash.digest(bytes36);
-      this.decoyKeySlot140 = bytes37;
+      this.decoyKeySlot140 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes35, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes38 = new byte[]{
+      this.decoyKeySlot014 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          66, -59, -67, -95, -50, 29, 78, 93, 103, 78, -24, -53, -44, 99, 11, -77, 56, -77, 110, 92, -33, 83, 71, 76, 94, -72, 5, -18, 104, 58, -39, -74
-      };
-      byte[] bytes39 = AesCipherUtil.decrypt(bytes, bytes38, aesCrypto);
-      byte[] bytes40 = sha3Hash.digest(bytes39);
-      this.decoyKeySlot014 = bytes40;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes41 = new byte[]{
+      this.decoyKeySlot129 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          103, 76, 30, -9, -62, 25, 55, -104, -125, 12, 94, 32, -19, -115, 22, -96, 110, 114, -119, 104, -42, -48, 112, 109, 7, -48, 78, -24, 32, 105, -73, 31
-      };
-      byte[] bytes42 = AesCipherUtil.decrypt(bytes, bytes41, aesCrypto);
-      byte[] bytes43 = sha3Hash.digest(bytes42);
-      this.decoyKeySlot129 = bytes43;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes44 = new byte[]{
+      this.decoyKeySlot134 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          65, 9, 15, -118, 53, 44, -78, -72, -13, 99, 119, -65, 109, -84, -32, -29, -98, 78, -58, -105, 51, 122, 56, 56, -47, 3, 64, 3, 105, -91, 116, 77
-      };
-      byte[] bytes45 = AesCipherUtil.decrypt(bytes, bytes44, aesCrypto);
-      byte[] bytes46 = sha3Hash.digest(bytes45);
-      this.decoyKeySlot134 = bytes46;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes47 = new byte[]{
+      this.decoyKeySlot048 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          76, -37, 98, -12, 103, -49, -63, -65, 76, 18, 19, -68, 78, 52, -128, -85, -92, -61, -98, -113, -79, 121, 7, 121, -81, -57, 68, 39, -124, 76, -3, -65
-      };
-      byte[] bytes48 = AesCipherUtil.decrypt(bytes, bytes47, aesCrypto);
-      byte[] bytes49 = sha3Hash.digest(bytes48);
-      this.decoyKeySlot048 = bytes49;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes50 = new byte[]{
+      this.decoyKeySlot147 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          78, 0, 24, 0, 62, 117, 107, 55, 76, -24, 126, 50, -27, -76, -118, 76, 119, -86, 110, -103, -88, 121, 113, -106, 103, 74, -93, -20, -87, -63, -87, -9
-      };
-      byte[] bytes51 = AesCipherUtil.decrypt(bytes, bytes50, aesCrypto);
-      byte[] bytes52 = sha3Hash.digest(bytes51);
-      this.decoyKeySlot147 = bytes52;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes53 = new byte[]{
+      this.decoyKeySlot018 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          17, -37, -93, -80, 62, 88, 104, -112, 119, -104, 127, 59, 83, -102, -45, 29, -78, -8, -128, -94, 85, -51, -124, 0, -117, 4, 86, 54, 96, -82, -1, -91
-      };
-      byte[] bytes54 = AesCipherUtil.decrypt(bytes, bytes53, aesCrypto);
-      byte[] bytes55 = sha3Hash.digest(bytes54);
-      this.decoyKeySlot018 = bytes55;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes56 = new byte[]{
          81,
@@ -1867,16 +1584,11 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          104,
          -22
       };
-      byte[] bytes57 = AesCipherUtil.decrypt(bytes, bytes56, aesCrypto);
-      byte[] bytes58 = sha3Hash.digest(bytes57);
-      this.decoyKeySlot133 = bytes58;
+      this.decoyKeySlot133 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes56, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes59 = new byte[]{
+      this.decoyKeySlot046 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -51, -63, -37, 26, 43, 94, -56, 87, 90, -104, -22, -23, -120, -60, 33, -73, 34, -56, 37, 96, -126, -90, 43, -1, 33, 36, -47, -102, 81, 56, -83, 86
-      };
-      byte[] bytes60 = AesCipherUtil.decrypt(bytes, bytes59, aesCrypto);
-      byte[] bytes61 = sha3Hash.digest(bytes60);
-      this.decoyKeySlot046 = bytes61;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes62 = new byte[]{
          -44,
@@ -1912,44 +1624,27 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -118,
          126
       };
-      byte[] bytes63 = AesCipherUtil.decrypt(bytes, bytes62, aesCrypto);
-      byte[] bytes64 = sha3Hash.digest(bytes63);
-      this.decoyKeySlot193 = bytes64;
+      this.decoyKeySlot193 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes62, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes65 = new byte[]{
+      this.decoyKeySlot052 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          51, -36, 20, 38, -105, 68, -110, -104, -40, 79, 78, -4, -58, -91, -70, 104, 108, 22, 60, 126, 61, -73, 69, -67, -120, -108, 2, 34, 13, 95, 68, 55
-      };
-      byte[] bytes66 = AesCipherUtil.decrypt(bytes, bytes65, aesCrypto);
-      byte[] bytes67 = sha3Hash.digest(bytes66);
-      this.decoyKeySlot052 = bytes67;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes68 = new byte[]{
+      this.decoyKeySlot178 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          11, -114, -20, -106, -85, -113, 92, 28, -49, -4, 66, 48, 116, -84, 120, 81, 121, -95, -124, -9, 57, 18, -31, 2, 60, -30, 3, -95, 71, 106, -126, 63
-      };
-      byte[] bytes69 = AesCipherUtil.decrypt(bytes, bytes68, aesCrypto);
-      byte[] bytes70 = sha3Hash.digest(bytes69);
-      this.decoyKeySlot178 = bytes70;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes71 = new byte[]{
+      this.decoyKeySlot110 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          60, 81, 82, -80, 115, -3, 66, 63, 116, 58, 4, -11, -56, 105, 8, -111, 31, -118, -87, 93, -112, 1, -87, 127, -54, 22, 95, 124, 112, -114, -19, -16
-      };
-      byte[] bytes72 = AesCipherUtil.decrypt(bytes, bytes71, aesCrypto);
-      byte[] bytes73 = sha3Hash.digest(bytes72);
-      this.decoyKeySlot110 = bytes73;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes74 = new byte[]{
+      this.decoyKeySlot176 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          9, -61, -36, 112, -128, 98, -35, -83, -71, -72, -15, 60, -101, 85, -104, 86, -4, 68, -4, -53, 82, 13, 24, 75, 32, 75, 90, -99, 42, 85, -99, -15
-      };
-      byte[] bytes75 = AesCipherUtil.decrypt(bytes, bytes74, aesCrypto);
-      byte[] bytes76 = sha3Hash.digest(bytes75);
-      this.decoyKeySlot176 = bytes76;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes77 = new byte[]{
+      this.decoyKeySlot013 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          20, 81, 66, 54, 109, -124, -7, 20, 98, 0, -52, 103, -51, -94, 121, -72, 89, 19, -125, 62, 84, 118, -21, -61, -115, -52, -96, -98, 106, 99, 25, -45
-      };
-      byte[] bytes78 = AesCipherUtil.decrypt(bytes, bytes77, aesCrypto);
-      byte[] bytes79 = sha3Hash.digest(bytes78);
-      this.decoyKeySlot013 = bytes79;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes80 = new byte[]{
          71,
@@ -1985,44 +1680,28 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -9,
          -4
       };
-      byte[] bytes81 = AesCipherUtil.decrypt(bytes, bytes80, aesCrypto);
-      byte[] bytes82 = sha3Hash.digest(bytes81);
-      this.decoyKeySlot159 = bytes82;
+      this.decoyKeySlot159 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes80, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes83 = new byte[]{
+      byte[] bytes84 = AesCipherUtil.decrypt(bytes, new byte[]{
          23, -77, 111, -31, 92, -104, 51, -11, 65, 83, 118, -72, 17, 38, 60, -5, -28, -124, -1, -85, -85, 92, 115, -61, -99, 36, -7, 104, -89, 101, -106, -128
-      };
-      byte[] bytes84 = AesCipherUtil.decrypt(bytes, bytes83, aesCrypto);
-      byte[] bytes85 = sha3Hash.digest(bytes84);
-      this.decoyKeySlot005 = bytes85;
+      }, aesCrypto);
+      this.decoyKeySlot005 = sha3Hash.digest(bytes84);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes86 = new byte[]{
+      this.decoyKeySlot174 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -66, 50, -23, 21, -86, -56, 114, 108, 63, -92, 8, 68, -114, 57, 59, 37, 103, 96, -98, 82, -22, -3, 22, 109, 1, -65, -11, 1, 90, -66, -34, 98
-      };
-      byte[] bytes87 = AesCipherUtil.decrypt(bytes, bytes86, aesCrypto);
-      byte[] bytes88 = sha3Hash.digest(bytes87);
-      this.decoyKeySlot174 = bytes88;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes89 = new byte[]{
+      this.decoyKeySlot089 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          96, -119, -3, 56, 67, -57, 110, -73, 125, -104, -84, 46, 13, 56, 89, 72, -34, 60, 109, 99, -119, -72, 27, 122, -34, -85, -114, 61, 80, 10, 82, -29
-      };
-      byte[] bytes90 = AesCipherUtil.decrypt(bytes, bytes89, aesCrypto);
-      byte[] bytes91 = sha3Hash.digest(bytes90);
-      this.decoyKeySlot089 = bytes91;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes92 = new byte[]{
+      this.decoyKeySlot143 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          114, -13, -67, 85, 35, -57, 83, -2, -94, 48, -55, 111, 97, 50, -1, 125, -15, -123, 14, -77, -9, 87, -72, -120, 97, 34, -18, 3, 11, -117, -122, 112
-      };
-      byte[] bytes93 = AesCipherUtil.decrypt(bytes, bytes92, aesCrypto);
-      byte[] bytes94 = sha3Hash.digest(bytes93);
-      this.decoyKeySlot143 = bytes94;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes95 = new byte[]{
+      this.decoyKeySlot099 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -95, 53, -52, 43, -31, 114, -119, 55, -48, -4, -27, 127, -17, -54, 117, 121, 1, 116, 76, -45, -88, 97, 78, -47, 27, 43, -26, 78, 114, -47, 30, -66
-      };
-      byte[] bytes96 = AesCipherUtil.decrypt(bytes, bytes95, aesCrypto);
-      byte[] bytes97 = sha3Hash.digest(bytes96);
-      this.decoyKeySlot099 = bytes97;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes98 = new byte[]{
          97,
@@ -2058,9 +1737,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          12,
          34
       };
-      byte[] bytes99 = AesCipherUtil.decrypt(bytes, bytes98, aesCrypto);
-      byte[] bytes100 = sha3Hash.digest(bytes99);
-      this.decoyKeySlot042 = bytes100;
+      this.decoyKeySlot042 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes98, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes101 = new byte[]{
          -33,
@@ -2096,9 +1773,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          125,
          -10
       };
-      byte[] bytes102 = AesCipherUtil.decrypt(bytes, bytes101, aesCrypto);
-      byte[] bytes103 = sha3Hash.digest(bytes102);
-      this.decoyKeySlot137 = bytes103;
+      this.decoyKeySlot137 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes101, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes104 = new byte[]{
          -85,
@@ -2134,9 +1809,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          94,
          97
       };
-      byte[] bytes105 = AesCipherUtil.decrypt(bytes, bytes104, aesCrypto);
-      byte[] bytes106 = sha3Hash.digest(bytes105);
-      this.decoyKeySlot127 = bytes106;
+      this.decoyKeySlot127 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes104, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes107 = new byte[]{
          -50,
@@ -2172,44 +1845,27 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          31,
          118
       };
-      byte[] bytes108 = AesCipherUtil.decrypt(bytes, bytes107, aesCrypto);
-      byte[] bytes109 = sha3Hash.digest(bytes108);
-      this.decoyKeySlot136 = bytes109;
+      this.decoyKeySlot136 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes107, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes110 = new byte[]{
+      this.decoyKeySlot086 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -38, 80, -39, 76, 49, 30, 110, 33, 89, -124, -31, 10, 127, 43, 106, 118, 93, 15, 16, 79, -7, -64, -85, -27, -95, -84, -93, 123, 15, -52, -77, 82
-      };
-      byte[] bytes111 = AesCipherUtil.decrypt(bytes, bytes110, aesCrypto);
-      byte[] bytes112 = sha3Hash.digest(bytes111);
-      this.decoyKeySlot086 = bytes112;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes113 = new byte[]{
+      this.decoyKeySlot117 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          10, 75, -51, -41, 111, 56, -100, -78, -97, -26, -61, -72, 113, -78, -42, 71, 93, 17, 45, -57, 68, -25, 117, 75, -87, 72, -41, 97, -19, -77, -55, 47
-      };
-      byte[] bytes114 = AesCipherUtil.decrypt(bytes, bytes113, aesCrypto);
-      byte[] bytes115 = sha3Hash.digest(bytes114);
-      this.decoyKeySlot117 = bytes115;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes116 = new byte[]{
+      this.decoyKeySlot009 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -66, 34, 0, 76, 10, -125, 19, -68, 39, -114, 0, -83, -4, -93, -126, -86, 88, 85, 48, -41, 119, 96, 34, -126, 6, 80, 5, -67, 40, 39, -53, -25
-      };
-      byte[] bytes117 = AesCipherUtil.decrypt(bytes, bytes116, aesCrypto);
-      byte[] bytes118 = sha3Hash.digest(bytes117);
-      this.decoyKeySlot009 = bytes118;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes119 = new byte[]{
+      this.decoyKeySlot079 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          52, 62, 99, -113, 32, 59, -99, 109, -55, -99, -4, 99, 28, -65, 102, -90, 26, 103, 47, 124, -95, -27, 16, 74, -1, -111, -12, 17, -74, 99, -115, 66
-      };
-      byte[] bytes120 = AesCipherUtil.decrypt(bytes, bytes119, aesCrypto);
-      byte[] bytes121 = sha3Hash.digest(bytes120);
-      this.decoyKeySlot079 = bytes121;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes122 = new byte[]{
+      this.decoyKeySlot055 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          106, -90, 80, 97, 63, 6, -117, 107, -44, -84, 29, -117, 35, 17, 22, -40, -36, -26, -92, -55, -16, -107, 25, 69, -125, 87, -80, 53, -29, 48, -125, 80
-      };
-      byte[] bytes123 = AesCipherUtil.decrypt(bytes, bytes122, aesCrypto);
-      byte[] bytes124 = sha3Hash.digest(bytes123);
-      this.decoyKeySlot055 = bytes124;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes125 = new byte[]{
          -79,
@@ -2245,37 +1901,24 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -122,
          104
       };
-      byte[] bytes126 = AesCipherUtil.decrypt(bytes, bytes125, aesCrypto);
-      byte[] bytes127 = sha3Hash.digest(bytes126);
-      this.decoyKeySlot037 = bytes127;
+      this.decoyKeySlot037 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes125, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes128 = new byte[]{
+      byte[] bytes129 = AesCipherUtil.decrypt(bytes, new byte[]{
          -93, 125, -54, -78, -25, 64, -41, -4, 107, -10, -9, -113, -60, -125, -96, 24, 52, 6, -47, -73, 48, -35, 84, 68, -80, -99, -80, 17, -53, 116, 120, -98
-      };
-      byte[] bytes129 = AesCipherUtil.decrypt(bytes, bytes128, aesCrypto);
-      byte[] bytes130 = sha3Hash.digest(bytes129);
-      this.decoyKeySlot078 = bytes130;
+      }, aesCrypto);
+      this.decoyKeySlot078 = sha3Hash.digest(bytes129);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes131 = new byte[]{
+      this.decoyKeySlot175 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          52, -20, 32, -103, -52, 11, 110, -60, 123, -37, -78, 24, 58, 97, 12, -11, -119, 124, -38, -31, 0, 88, 119, 31, -49, -99, -35, 34, 96, -24, -30, 85
-      };
-      byte[] bytes132 = AesCipherUtil.decrypt(bytes, bytes131, aesCrypto);
-      byte[] bytes133 = sha3Hash.digest(bytes132);
-      this.decoyKeySlot175 = bytes133;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes134 = new byte[]{
+      this.decoyKeySlot093 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -68, 74, -52, 51, -66, 92, 52, 26, 20, -18, 76, 120, 33, 41, -14, 92, 95, -111, -37, 86, -15, -59, 28, -9, -80, -12, -22, 114, -82, 57, -48, 42
-      };
-      byte[] bytes135 = AesCipherUtil.decrypt(bytes, bytes134, aesCrypto);
-      byte[] bytes136 = sha3Hash.digest(bytes135);
-      this.decoyKeySlot093 = bytes136;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes137 = new byte[]{
+      this.decoyKeySlot025 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          71, 19, 47, 47, -91, 113, 29, -74, -3, 14, 30, 124, 89, 105, -114, 82, -54, 100, -45, 60, -55, -17, -108, -16, 126, -30, -16, 27, 121, -12, -81, 5
-      };
-      byte[] bytes138 = AesCipherUtil.decrypt(bytes, bytes137, aesCrypto);
-      byte[] bytes139 = sha3Hash.digest(bytes138);
-      this.decoyKeySlot025 = bytes139;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes140 = new byte[]{
          -111,
@@ -2311,23 +1954,16 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -10,
          -30
       };
-      byte[] bytes141 = AesCipherUtil.decrypt(bytes, bytes140, aesCrypto);
-      byte[] bytes142 = sha3Hash.digest(bytes141);
-      this.decoyKeySlot112 = bytes142;
+      this.decoyKeySlot112 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes140, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes143 = new byte[]{
+      this.decoyKeySlot011 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          51, -67, -36, -82, -86, 96, 58, -93, 49, 18, 104, 39, -19, 63, -17, -42, -53, -75, 9, 81, 49, 90, -51, 34, 46, -24, -5, -79, -123, 34, -57, 98
-      };
-      byte[] bytes144 = AesCipherUtil.decrypt(bytes, bytes143, aesCrypto);
-      byte[] bytes145 = sha3Hash.digest(bytes144);
-      this.decoyKeySlot011 = bytes145;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes146 = new byte[]{
+      byte[] bytes147 = AesCipherUtil.decrypt(bytes, new byte[]{
          -123, -63, -121, -107, 9, 36, -92, -122, 113, 97, -73, 113, 127, 21, -114, 44, 93, -88, 122, 126, 13, -92, 96, 53, 46, 72, 108, 70, -40, 31, 107, 124
-      };
-      byte[] bytes147 = AesCipherUtil.decrypt(bytes, bytes146, aesCrypto);
-      byte[] bytes148 = sha3Hash.digest(bytes147);
-      this.decoyKeySlot074 = bytes148;
+      }, aesCrypto);
+      this.decoyKeySlot074 = sha3Hash.digest(bytes147);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes149 = new byte[]{
          77,
@@ -2363,9 +1999,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -69,
          -39
       };
-      byte[] bytes150 = AesCipherUtil.decrypt(bytes, bytes149, aesCrypto);
-      byte[] bytes151 = sha3Hash.digest(bytes150);
-      this.decoyKeySlot163 = bytes151;
+      this.decoyKeySlot163 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes149, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes152 = new byte[]{
          -101,
@@ -2401,9 +2035,7 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          112,
          -87
       };
-      byte[] bytes153 = AesCipherUtil.decrypt(bytes, bytes152, aesCrypto);
-      byte[] bytes154 = sha3Hash.digest(bytes153);
-      this.decoyKeySlot169 = bytes154;
+      this.decoyKeySlot169 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes152, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes155 = new byte[]{
          120,
@@ -2439,16 +2071,11 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -109,
          -106
       };
-      byte[] bytes156 = AesCipherUtil.decrypt(bytes, bytes155, aesCrypto);
-      byte[] bytes157 = sha3Hash.digest(bytes156);
-      this.decoyKeySlot103 = bytes157;
+      this.decoyKeySlot103 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes155, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes158 = new byte[]{
+      this.decoyKeySlot031 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          21, 38, -10, 92, -90, 10, 15, 53, 63, 8, 69, 43, 61, 74, 15, 122, -120, 86, 119, -24, -81, -123, -71, -26, 41, -41, 47, -101, 54, 94, 115, 74
-      };
-      byte[] bytes159 = AesCipherUtil.decrypt(bytes, bytes158, aesCrypto);
-      byte[] bytes160 = sha3Hash.digest(bytes159);
-      this.decoyKeySlot031 = bytes160;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes161 = new byte[]{
          -112,
@@ -2484,107 +2111,66 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -28,
          -44
       };
-      byte[] bytes162 = AesCipherUtil.decrypt(bytes, bytes161, aesCrypto);
-      byte[] bytes163 = sha3Hash.digest(bytes162);
-      this.decoyKeySlot072 = bytes163;
+      this.decoyKeySlot072 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes161, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes164 = new byte[]{
+      byte[] bytes165 = AesCipherUtil.decrypt(bytes, new byte[]{
          56, 67, -117, -84, -26, 46, -78, -28, 55, 89, 47, 25, -82, -80, -74, -117, 111, -22, -94, -37, -97, -13, 78, 109, 9, -119, 57, -83, 86, -103, 74, 125
-      };
-      byte[] bytes165 = AesCipherUtil.decrypt(bytes, bytes164, aesCrypto);
-      byte[] bytes166 = sha3Hash.digest(bytes165);
-      this.decoyKeySlot132 = bytes166;
+      }, aesCrypto);
+      this.decoyKeySlot132 = sha3Hash.digest(bytes165);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes167 = new byte[]{
+      this.decoyKeySlot001 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          106, 91, 40, -112, 6, 99, 95, -84, 23, -53, 101, -73, 69, 25, -26, 84, 53, 85, -20, -3, -97, 118, -123, 103, -55, -36, 82, -75, 98, -48, -65, -16
-      };
-      byte[] bytes168 = AesCipherUtil.decrypt(bytes, bytes167, aesCrypto);
-      byte[] bytes169 = sha3Hash.digest(bytes168);
-      this.decoyKeySlot001 = bytes169;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes170 = new byte[]{
+      this.decoyKeySlot015 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          120, 88, 7, 47, 32, 110, 15, 31, 87, -36, 79, -43, -37, -39, -27, -22, -52, 5, 39, 20, 114, -25, -28, 60, -95, -84, -77, 41, -123, -53, -95, -116
-      };
-      byte[] bytes171 = AesCipherUtil.decrypt(bytes, bytes170, aesCrypto);
-      byte[] bytes172 = sha3Hash.digest(bytes171);
-      this.decoyKeySlot015 = bytes172;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes173 = new byte[]{
+      this.decoyKeySlot158 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          4, 124, 116, 63, 3, -15, 11, 20, -20, -86, 123, -17, 11, 31, -88, 89, 103, 48, 29, 39, -74, 65, -56, -70, -98, 80, -95, 59, 74, 83, -112, 73
-      };
-      byte[] bytes174 = AesCipherUtil.decrypt(bytes, bytes173, aesCrypto);
-      byte[] bytes175 = sha3Hash.digest(bytes174);
-      this.decoyKeySlot158 = bytes175;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes176 = new byte[]{
+      this.decoyKeySlot076 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          8, -12, 104, -26, 121, 63, -14, -37, 90, 43, 76, -120, 31, 94, 27, -77, -84, 15, -94, -126, -92, 6, 99, 92, 99, 126, -14, 94, 15, 24, 72, -77
-      };
-      byte[] bytes177 = AesCipherUtil.decrypt(bytes, bytes176, aesCrypto);
-      byte[] bytes178 = sha3Hash.digest(bytes177);
-      this.decoyKeySlot076 = bytes178;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes179 = new byte[]{
+      byte[] bytes180 = AesCipherUtil.decrypt(bytes, new byte[]{
          56, 30, 29, -103, -114, -54, -74, -95, -82, -4, -108, 94, -114, 14, -98, -106, 26, 108, 101, 117, 47, 5, -33, -80, 48, 112, 3, 43, 77, -80, 126, -117
-      };
-      byte[] bytes180 = AesCipherUtil.decrypt(bytes, bytes179, aesCrypto);
-      byte[] bytes181 = sha3Hash.digest(bytes180);
-      this.decoyKeySlot003 = bytes181;
+      }, aesCrypto);
+      this.decoyKeySlot003 = sha3Hash.digest(bytes180);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes182 = new byte[]{
+      this.decoyKeySlot026 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -60, 39, 108, 88, -85, -25, 69, 6, -37, 27, 37, 47, -66, 90, 49, -68, 112, 114, -50, -2, 25, -29, 7, -106, 64, 61, -94, 68, 29, 58, 40, -85
-      };
-      byte[] bytes183 = AesCipherUtil.decrypt(bytes, bytes182, aesCrypto);
-      byte[] bytes184 = sha3Hash.digest(bytes183);
-      this.decoyKeySlot026 = bytes184;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes185 = new byte[]{
+      this.decoyKeySlot171 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -55, -4, -108, 44, 57, -18, 68, 81, -35, 11, -125, 50, 56, 4, 109, -23, -116, 27, -60, 80, -11, -9, 91, -51, 91, 90, -34, -92, 110, 12, -106, 122
-      };
-      byte[] bytes186 = AesCipherUtil.decrypt(bytes, bytes185, aesCrypto);
-      byte[] bytes187 = sha3Hash.digest(bytes186);
-      this.decoyKeySlot171 = bytes187;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes188 = new byte[]{
+      this.decoyKeySlot006 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          120, 30, -64, 13, 81, -106, 80, 31, 79, -101, 56, -66, -11, 120, 78, 3, 5, -46, 9, 24, 47, -99, -95, -58, 58, 99, 84, 36, -88, -68, 109, -26
-      };
-      byte[] bytes189 = AesCipherUtil.decrypt(bytes, bytes188, aesCrypto);
-      byte[] bytes190 = sha3Hash.digest(bytes189);
-      this.decoyKeySlot006 = bytes190;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes191 = new byte[]{
+      this.decoyKeySlot035 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          97, 26, -87, -22, 18, 35, 124, 96, 25, 5, 127, -5, 94, -48, -67, -113, -121, 97, -90, -41, -85, 3, 58, -4, -111, -23, 103, -64, -52, 98, -20, 97
-      };
-      byte[] bytes192 = AesCipherUtil.decrypt(bytes, bytes191, aesCrypto);
-      byte[] bytes193 = sha3Hash.digest(bytes192);
-      this.decoyKeySlot035 = bytes193;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes194 = new byte[]{
+      this.decoyKeySlot185 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          61, -121, 107, -46, -35, -14, -13, 6, -6, 48, 61, 53, 119, -20, 61, -88, -58, -92, 44, -34, 48, 32, -118, 66, 95, -76, 66, -65, -54, -78, -24, -96
-      };
-      byte[] bytes195 = AesCipherUtil.decrypt(bytes, bytes194, aesCrypto);
-      byte[] bytes196 = sha3Hash.digest(bytes195);
-      this.decoyKeySlot185 = bytes196;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes197 = new byte[]{
+      byte[] bytes198 = AesCipherUtil.decrypt(bytes, new byte[]{
          -97, -28, -10, -5, -109, -74, 32, 76, 82, -99, -21, 114, -95, -107, -111, 100, 5, 127, -47, 64, -105, -8, 49, 25, -44, 50, 125, 126, 58, -56, 88, 111
-      };
-      byte[] bytes198 = AesCipherUtil.decrypt(bytes, bytes197, aesCrypto);
-      byte[] bytes199 = sha3Hash.digest(bytes198);
-      this.decoyKeySlot080 = bytes199;
+      }, aesCrypto);
+      this.decoyKeySlot080 = sha3Hash.digest(bytes198);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes200 = new byte[]{
+      this.decoyKeySlot097 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          39, -64, 72, 18, 54, 37, 44, -124, 9, -54, -51, 96, -49, 48, -54, -104, -55, -109, -54, 117, -56, -21, -59, 84, 67, -112, -2, -121, -1, -66, -35, 8
-      };
-      byte[] bytes201 = AesCipherUtil.decrypt(bytes, bytes200, aesCrypto);
-      byte[] bytes202 = sha3Hash.digest(bytes201);
-      this.decoyKeySlot097 = bytes202;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes203 = new byte[]{
+      this.decoyKeySlot180 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          23, 67, 81, 95, 114, -93, -7, 77, 3, -15, -80, 123, -37, 61, 116, -40, 52, 63, -96, -107, -25, -15, 14, -72, -76, 111, -118, 81, 105, -75, -111, 103
-      };
-      byte[] bytes204 = AesCipherUtil.decrypt(bytes, bytes203, aesCrypto);
-      byte[] bytes205 = sha3Hash.digest(bytes204);
-      this.decoyKeySlot180 = bytes205;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes206 = new byte[]{
          16,
@@ -2620,30 +2206,19 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -99,
          -58
       };
-      byte[] bytes207 = AesCipherUtil.decrypt(bytes, bytes206, aesCrypto);
-      byte[] bytes208 = sha3Hash.digest(bytes207);
-      this.decoyKeySlot116 = bytes208;
+      this.decoyKeySlot116 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes206, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes209 = new byte[]{
+      this.decoyKeySlot149 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          47, 94, 47, 17, -120, 93, 15, 126, 45, -120, 8, -86, 7, 12, -82, -50, -43, 82, 1, 77, -117, 81, 121, 63, 23, -47, -9, 122, 9, 94, -1, 62
-      };
-      byte[] bytes210 = AesCipherUtil.decrypt(bytes, bytes209, aesCrypto);
-      byte[] bytes211 = sha3Hash.digest(bytes210);
-      this.decoyKeySlot149 = bytes211;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes212 = new byte[]{
+      this.decoyKeySlot114 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -44, -24, 5, -25, 13, -45, 13, 122, 40, -128, 83, -16, 0, -114, 28, -114, 84, -44, 99, -6, 35, 65, 21, 64, -33, 114, 113, -118, 83, 8, -126, 89
-      };
-      byte[] bytes213 = AesCipherUtil.decrypt(bytes, bytes212, aesCrypto);
-      byte[] bytes214 = sha3Hash.digest(bytes213);
-      this.decoyKeySlot114 = bytes214;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes215 = new byte[]{
+      this.decoyKeySlot040 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -62, 8, -22, -8, 118, 19, 126, 68, 2, 11, -74, -93, -1, -35, -67, 48, -125, 22, -11, 115, 56, 94, -30, 115, -35, 81, -54, -76, 112, -75, 96, 42
-      };
-      byte[] bytes216 = AesCipherUtil.decrypt(bytes, bytes215, aesCrypto);
-      byte[] bytes217 = sha3Hash.digest(bytes216);
-      this.decoyKeySlot040 = bytes217;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes218 = new byte[]{
          -30,
@@ -2679,58 +2254,36 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          35,
          -109
       };
-      byte[] bytes219 = AesCipherUtil.decrypt(bytes, bytes218, aesCrypto);
-      byte[] bytes220 = sha3Hash.digest(bytes219);
-      this.decoyKeySlot019 = bytes220;
+      this.decoyKeySlot019 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes218, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes221 = new byte[]{
+      this.decoyKeySlot034 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          3, -67, 41, -57, -73, -109, 123, 126, -88, -79, -116, 48, 37, -6, -124, 66, -50, 120, 34, 57, 76, -47, 36, -109, -46, 1, -53, -80, 64, -47, 14, 15
-      };
-      byte[] bytes222 = AesCipherUtil.decrypt(bytes, bytes221, aesCrypto);
-      byte[] bytes223 = sha3Hash.digest(bytes222);
-      this.decoyKeySlot034 = bytes223;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes224 = new byte[]{
+      this.decoyKeySlot041 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          10, -93, 69, 109, -52, -104, -64, 120, 19, -33, 23, 3, -40, 107, -34, -66, 72, 50, -13, -35, -30, 93, 2, 111, -16, -67, -127, 30, 17, -104, -106, 86
-      };
-      byte[] bytes225 = AesCipherUtil.decrypt(bytes, bytes224, aesCrypto);
-      byte[] bytes226 = sha3Hash.digest(bytes225);
-      this.decoyKeySlot041 = bytes226;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes227 = new byte[]{
+      this.decoyKeySlot191 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          121, 82, -105, -109, 36, 124, -73, -68, -29, -63, -89, 87, 110, -77, 7, -47, 4, 29, 96, -41, 52, -24, 29, 13, 33, -6, -10, 3, 99, 38, -125, 17
-      };
-      byte[] bytes228 = AesCipherUtil.decrypt(bytes, bytes227, aesCrypto);
-      byte[] bytes229 = sha3Hash.digest(bytes228);
-      this.decoyKeySlot191 = bytes229;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes230 = new byte[]{
+      this.decoyKeySlot184 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -46, -39, -27, -2, 94, 84, -32, -78, -90, 8, -2, 81, 124, -127, 122, 65, -22, -20, 87, -49, -84, 21, 36, -54, -69, 90, -127, 127, -115, 104, 77, -60
-      };
-      byte[] bytes231 = AesCipherUtil.decrypt(bytes, bytes230, aesCrypto);
-      byte[] bytes232 = sha3Hash.digest(bytes231);
-      this.decoyKeySlot184 = bytes232;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes233 = new byte[]{
+      this.decoyKeySlot066 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          118, -121, -11, -25, -20, 115, -67, 108, 5, 27, -85, 11, 46, 119, 51, 43, 95, 74, -112, -63, -36, 123, 1, 92, -107, 115, 65, 75, -109, -56, 44, 81
-      };
-      byte[] bytes234 = AesCipherUtil.decrypt(bytes, bytes233, aesCrypto);
-      byte[] bytes235 = sha3Hash.digest(bytes234);
-      this.decoyKeySlot066 = bytes235;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes236 = new byte[]{
+      this.decoyKeySlot156 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -89, 56, -33, -1, 73, -98, -72, -79, -57, 38, -125, -26, 53, 38, 113, 34, 63, -72, 8, -97, -15, 4, 38, 54, 19, 1, -28, -40, 83, 9, 47, -81
-      };
-      byte[] bytes237 = AesCipherUtil.decrypt(bytes, bytes236, aesCrypto);
-      byte[] bytes238 = sha3Hash.digest(bytes237);
-      this.decoyKeySlot156 = bytes238;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes239 = new byte[]{
+      byte[] bytes240 = AesCipherUtil.decrypt(bytes, new byte[]{
          -3, 111, 15, -117, 124, 22, -13, 45, 22, -121, -83, -37, 66, -69, -115, -33, -27, 9, -118, 96, -2, 117, 4, -43, 77, 93, -122, -105, 116, 108, -25, 58
-      };
-      byte[] bytes240 = AesCipherUtil.decrypt(bytes, bytes239, aesCrypto);
-      byte[] bytes241 = sha3Hash.digest(bytes240);
-      this.decoyKeySlot125 = bytes241;
+      }, aesCrypto);
+      this.decoyKeySlot125 = sha3Hash.digest(bytes240);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes242 = new byte[]{
          35,
@@ -2766,58 +2319,38 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -108,
          61
       };
-      byte[] bytes243 = AesCipherUtil.decrypt(bytes, bytes242, aesCrypto);
-      byte[] bytes244 = sha3Hash.digest(bytes243);
-      this.decoyKeySlot027 = bytes244;
+      this.decoyKeySlot027 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes242, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes245 = new byte[]{
+      byte[] bytes246 = AesCipherUtil.decrypt(bytes, new byte[]{
          124, 72, -74, 48, 106, 43, 94, -26, -85, -101, -87, -106, -81, -125, -81, 21, -24, 6, -55, -114, -71, -6, -38, 70, 61, -81, -41, -84, 39, -74, 19, 29
-      };
-      byte[] bytes246 = AesCipherUtil.decrypt(bytes, bytes245, aesCrypto);
-      byte[] bytes247 = sha3Hash.digest(bytes246);
-      this.decoyKeySlot107 = bytes247;
+      }, aesCrypto);
+      this.decoyKeySlot107 = sha3Hash.digest(bytes246);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes248 = new byte[]{
+      byte[] bytes249 = AesCipherUtil.decrypt(bytes, new byte[]{
          -39, -58, -21, 14, -111, -48, -56, 68, 66, -27, 122, -21, 70, -85, -74, -10, 22, -23, -36, 37, 100, 107, 71, 81, -65, -5, -82, -61, -85, 127, -92, -78
-      };
-      byte[] bytes249 = AesCipherUtil.decrypt(bytes, bytes248, aesCrypto);
-      byte[] bytes250 = sha3Hash.digest(bytes249);
-      this.decoyKeySlot138 = bytes250;
+      }, aesCrypto);
+      this.decoyKeySlot138 = sha3Hash.digest(bytes249);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes251 = new byte[]{
+      byte[] bytes252 = AesCipherUtil.decrypt(bytes, new byte[]{
          -113, 109, -9, 101, 101, -88, 53, -72, -65, -120, 3, 62, -40, 122, 86, 29, 100, 122, -104, -62, 106, -94, -67, -102, 82, -80, 22, -128, 75, 26, 93, 60
-      };
-      byte[] bytes252 = AesCipherUtil.decrypt(bytes, bytes251, aesCrypto);
-      byte[] bytes253 = sha3Hash.digest(bytes252);
-      this.decoyKeySlot165 = bytes253;
+      }, aesCrypto);
+      this.decoyKeySlot165 = sha3Hash.digest(bytes252);
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes254 = new byte[]{
+      this.decoyKeySlot029 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          63, 24, 8, 65, 107, -13, 65, -61, 29, -47, 10, -81, 10, -86, 92, 120, -25, 62, 120, 36, 46, -6, -88, -2, 95, 67, 55, 2, 30, 20, -23, -89
-      };
-      byte[] bytes255 = AesCipherUtil.decrypt(bytes, bytes254, aesCrypto);
-      byte[] bytes256 = sha3Hash.digest(bytes255);
-      this.decoyKeySlot029 = bytes256;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes257 = new byte[]{
+      this.decoyKeySlot061 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          39, -24, -117, 55, 118, -78, 38, -89, 71, 120, -3, 31, -124, 90, -115, -96, -4, 50, -2, -36, 64, -121, -80, 59, 78, -121, 27, 97, -17, -21, 41, 8
-      };
-      byte[] bytes258 = AesCipherUtil.decrypt(bytes, bytes257, aesCrypto);
-      byte[] bytes259 = sha3Hash.digest(bytes258);
-      this.decoyKeySlot061 = bytes259;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes260 = new byte[]{
+      this.decoyKeySlot192 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -24, 106, 16, -19, 56, -80, 15, -69, 29, -97, -76, 6, 117, -70, 49, -71, 84, -5, 33, 62, -24, -101, 40, -18, -31, 53, 69, -119, 71, 30, -89, -111
-      };
-      byte[] bytes261 = AesCipherUtil.decrypt(bytes, bytes260, aesCrypto);
-      byte[] bytes262 = sha3Hash.digest(bytes261);
-      this.decoyKeySlot192 = bytes262;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes263 = new byte[]{
+      this.decoyKeySlot004 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          38, 108, 38, -4, -63, -21, -95, -44, -115, 30, 55, 48, -44, 105, 101, -83, 105, -75, -36, 68, 110, 50, -86, -13, 56, 123, -117, 25, 36, -8, -39, 50
-      };
-      byte[] bytes264 = AesCipherUtil.decrypt(bytes, bytes263, aesCrypto);
-      byte[] bytes265 = sha3Hash.digest(bytes264);
-      this.decoyKeySlot004 = bytes265;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes266 = new byte[]{
          -10,
@@ -2853,30 +2386,19 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          124,
          12
       };
-      byte[] bytes267 = AesCipherUtil.decrypt(bytes, bytes266, aesCrypto);
-      byte[] bytes268 = sha3Hash.digest(bytes267);
-      this.decoyKeySlot067 = bytes268;
+      this.decoyKeySlot067 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes266, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes269 = new byte[]{
+      this.decoyKeySlot145 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          109, 22, -11, -48, -82, -25, 86, 31, -71, -46, 29, -93, -9, -5, -15, 87, 62, 81, -78, 95, 116, 39, -31, -50, 44, -113, 80, -22, -121, -68, 114, -7
-      };
-      byte[] bytes270 = AesCipherUtil.decrypt(bytes, bytes269, aesCrypto);
-      byte[] bytes271 = sha3Hash.digest(bytes270);
-      this.decoyKeySlot145 = bytes271;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes272 = new byte[]{
+      this.decoyKeySlot108 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          33, -78, -70, -74, 20, 118, 26, 36, 62, -62, 32, -126, 106, 46, -7, -76, 41, -35, -107, -57, -18, -84, 9, -96, 90, -117, -108, -92, 3, -62, 0, 85
-      };
-      byte[] bytes273 = AesCipherUtil.decrypt(bytes, bytes272, aesCrypto);
-      byte[] bytes274 = sha3Hash.digest(bytes273);
-      this.decoyKeySlot108 = bytes274;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes275 = new byte[]{
+      this.decoyKeySlot157 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          57, -46, 40, -2, 119, -124, 87, -9, -106, -26, 101, -54, 58, 119, 111, 55, 43, 71, -34, -66, 19, -89, -50, -48, -64, -92, 6, 82, 0, 81, 120, 48
-      };
-      byte[] bytes276 = AesCipherUtil.decrypt(bytes, bytes275, aesCrypto);
-      byte[] bytes277 = sha3Hash.digest(bytes276);
-      this.decoyKeySlot157 = bytes277;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes278 = new byte[]{
          -84,
@@ -2912,30 +2434,19 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          -60,
          -85
       };
-      byte[] bytes279 = AesCipherUtil.decrypt(bytes, bytes278, aesCrypto);
-      byte[] bytes280 = sha3Hash.digest(bytes279);
-      this.decoyKeySlot096 = bytes280;
+      this.decoyKeySlot096 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes278, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes281 = new byte[]{
+      this.keyGuardSlotB = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          3, -120, -50, 24, -49, -53, 8, -35, 18, 38, -85, -63, 23, -78, 107, 92, 20, 28, 118, -109, -34, -8, -90, -17, 23, -61, 28, -123, 20, 64, 101, 53
-      };
-      byte[] bytes282 = AesCipherUtil.decrypt(bytes, bytes281, aesCrypto);
-      byte[] bytes283 = sha3Hash.digest(bytes282);
-      this.keyGuardSlotB = bytes283;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes284 = new byte[]{
+      this.decoyKeySlot123 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          31, -60, -35, 120, -110, 119, -7, -123, -30, 100, -54, -1, -99, -46, -120, 87, 81, 1, -30, 29, -17, 106, -99, 40, -20, 84, 66, 2, -80, 67, 65, -16
-      };
-      byte[] bytes285 = AesCipherUtil.decrypt(bytes, bytes284, aesCrypto);
-      byte[] bytes286 = sha3Hash.digest(bytes285);
-      this.decoyKeySlot123 = bytes286;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes287 = new byte[]{
+      this.decoyKeySlot106 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          40, 104, -73, 89, 17, -43, -53, -55, -8, -68, 34, 39, -24, 102, -128, -2, 74, 3, 85, 7, -71, -87, -105, -121, -5, -126, -25, 98, -9, -11, 85, 89
-      };
-      byte[] bytes288 = AesCipherUtil.decrypt(bytes, bytes287, aesCrypto);
-      byte[] bytes289 = sha3Hash.digest(bytes288);
-      this.decoyKeySlot106 = bytes289;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
       byte[] bytes290 = new byte[]{
          120,
@@ -2971,30 +2482,19 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
          101,
          -103
       };
-      byte[] bytes291 = AesCipherUtil.decrypt(bytes, bytes290, aesCrypto);
-      byte[] bytes292 = sha3Hash.digest(bytes291);
-      this.decoyKeySlot131 = bytes292;
+      this.decoyKeySlot131 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, bytes290, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes293 = new byte[]{
+      this.decoyKeySlot172 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -92, -26, 11, -11, -95, 3, -82, -50, 4, 118, 57, 36, 1, -46, -50, 26, -97, 44, -48, 80, 96, 66, 64, -86, 3, 13, -120, 103, -123, 77, 2, -27
-      };
-      byte[] bytes294 = AesCipherUtil.decrypt(bytes, bytes293, aesCrypto);
-      byte[] bytes295 = sha3Hash.digest(bytes294);
-      this.decoyKeySlot172 = bytes295;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes296 = new byte[]{
+      this.decoyKeySlot082 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          -123, -118, -53, 79, 52, 71, -97, 39, 22, 2, -123, -90, 93, 87, -9, 84, 71, 2, -62, -60, 74, 28, 31, 5, 42, -47, 31, -92, -81, 102, 19, -105
-      };
-      byte[] bytes297 = AesCipherUtil.decrypt(bytes, bytes296, aesCrypto);
-      byte[] bytes298 = sha3Hash.digest(bytes297);
-      this.decoyKeySlot082 = bytes298;
+      }, aesCrypto));
       sha3Hash = new Sha3Hash(Sha3Type.SHA3_256);
-      byte[] bytes299 = new byte[]{
+      this.decoyKeySlot153 = sha3Hash.digest(AesCipherUtil.decrypt(bytes, new byte[]{
          84, -113, 39, 53, 41, 3, 59, 34, -96, -58, -4, -112, 45, -51, -113, -33, 31, 110, -82, 43, 84, -60, 40, -110, 0, 107, 125, -55, -7, -18, 70, -113
-      };
-      byte[] bytes300 = AesCipherUtil.decrypt(bytes, bytes299, aesCrypto);
-      byte[] bytes301 = sha3Hash.digest(bytes300);
-      this.decoyKeySlot153 = bytes301;
+      }, aesCrypto));
    }
 
    public void encodePacket(ChannelHandlerContext ctx, ByteBuf buf, List<Object> list) {
@@ -3012,7 +2512,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
    private int mul(int n, int n2) {
       int n3 = 0;
       long l = -1669078582359431110L;
-      getControlFlowMarker();
       long l2 = 0L;
       l = 6340846096454868037L ^ (long)"ಒڹ멺◰랎䂾ご呏텵陫ꪖ孶韒遭㱇⋄ⱔ\udf0c迪㑿↓䒱".hashCode();
       l2 = 2936492293890375610L ^ (long)"뱔峺綎Ӏ\ued50⭜Έ瀬蠶㐗䞨ရ፣\ue010ທೌ봭㨯葑ၘꀚ".hashCode();
@@ -3057,7 +2556,6 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
       int n = (rounds + 1) * 4;
       byte b = 4;
       int[][] intsArr = new int[rounds + 1][4];
-      getControlFlowMarker();
       int[][] intsArr2 = new int[rounds + 1][4];
       int n2 = bytes.length / 4;
       int[] ints = new int[n2];
@@ -3130,26 +2628,13 @@ public class PacketCipherEncoder extends MessageToMessageEncoder {
 
       int[] ints2 = this.expandToSubKey(intsArr, false);
       int[] ints3 = this.expandToSubKey(intsArr2, true);
-      boolean flag = rounds >= 12;
-      this.added = flag;
-      boolean flag2 = rounds == 14;
-      this.has14Rounds = flag2;
-      int n9 = rounds * 4;
-      this.roundLimit = n9;
-      int[][] intsArr3 = new int[][]{ints2, ints3};
-      this.sessionK = intsArr3;
+      this.added = rounds >= 12;
+      this.has14Rounds = rounds == 14;
+      this.roundLimit = rounds * 4;
+      this.sessionK = new int[][]{ints2, ints3};
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(null);
-   }
 
 }

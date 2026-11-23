@@ -224,8 +224,7 @@ public abstract class MobSpawnerBaseLogic {
          entity.writeToNBTOptional(tag);
 
          for (String str : (Iterable<String>)(MobSpawnerBaseLogic.WeightedRandomMinecart.accessNbtData(this.getRandomEntity()).getKeySet())) {
-            NBTBase tag2 = MobSpawnerBaseLogic.WeightedRandomMinecart.accessNbtData(this.getRandomEntity()).getTag(str);
-            tag.setTag(str, tag2.copy());
+            tag.setTag(str, MobSpawnerBaseLogic.WeightedRandomMinecart.accessNbtData(this.getRandomEntity()).getTag(str).copy());
          }
 
          entity.readFromNBT(tag);
@@ -243,8 +242,7 @@ public abstract class MobSpawnerBaseLogic {
                entity3.writeToNBTOptional(tag3);
 
                for (String str2 : (Iterable<String>)(compoundTag.getKeySet())) {
-                  NBTBase tag4 = compoundTag.getTag(str2);
-                  tag3.setTag(str2, tag4.copy());
+                  tag3.setTag(str2, compoundTag.getTag(str2).copy());
                }
 
                entity3.readFromNBT(tag3);

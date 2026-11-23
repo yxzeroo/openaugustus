@@ -49,34 +49,26 @@ public class Freelook extends Module implements OrientCameraListener, MouseMoveL
    }
 
    public void updateEventSubscriptions() {
-      byte b = 24;
-      this.toggleEventSubscription(b);
-      byte b2 = 19;
-      this.toggleEventSubscription(b2);
-      byte b3 = 63;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)24);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)63);
    }
 
    public void onOrientCamera(EventOrientCamera event) {
       if (mc.gameSettings.thirdPersonView == 0 && this.disableItInFistPerson.getValue()) {
          this.resetCameraAngles();
       } else {
-         float cameraYaw2 = this.cameraYaw;
-         event.setYaw(cameraYaw2);
-         float cameraPitch2 = this.cameraPitch;
-         event.setPitch(cameraPitch2);
-         boolean flag = true;
-         event.setOverrideRotation(flag);
+         event.setYaw(this.cameraYaw);
+         event.setPitch(this.cameraPitch);
+         event.setOverrideRotation(true);
       }
    }
 
    public void onMouseMove(EventMouseMove event) {
       if (mc.gameSettings.thirdPersonView != 0 || !this.disableItInFistPerson.getValue()) {
          if (!ClientManagers.moduleManager.aimAssist.isToggled() && this.isLicenseTimestampValid() && !ClientManagers.moduleManager.aimBot.isToggled()) {
-            byte b = 0;
-            event.setDeltaX(b);
-            byte b2 = 0;
-            event.setDeltaY(b2);
+            event.setDeltaX((byte)0);
+            event.setDeltaY((byte)0);
          }
 
          float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
@@ -96,10 +88,8 @@ public class Freelook extends Module implements OrientCameraListener, MouseMoveL
    public void onPlayerView(EventPlayerView event) {
       if (this.rotateNametags.getValue()) {
          float partialTicks = event.getPartialTicks();
-         float f = this.prevCameraYaw + (this.cameraYaw - this.prevCameraYaw) * partialTicks;
-         event.setPlayerViewY(f);
-         float f2 = this.prevCameraPitch + (this.cameraPitch - this.prevCameraPitch) * partialTicks;
-         event.setPlayerViewX(f2);
+         event.setPlayerViewY(this.prevCameraYaw + (this.cameraYaw - this.prevCameraYaw) * partialTicks);
+         event.setPlayerViewX(this.prevCameraPitch + (this.cameraPitch - this.prevCameraPitch) * partialTicks);
          this.prevCameraYaw = this.cameraYaw;
          this.prevCameraPitch = this.cameraPitch;
       }

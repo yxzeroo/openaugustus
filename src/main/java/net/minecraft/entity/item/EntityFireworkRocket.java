@@ -19,8 +19,7 @@ public class EntityFireworkRocket extends Entity {
       int n = 1;
       if (stack != null && stack.hasTagCompound()) {
          this.dataWatcher.updateObject(8, stack);
-         NBTTagCompound tagCompound = stack.getTagCompound();
-         NBTTagCompound compoundTag = tagCompound.getCompoundTag("Fireworks");
+         NBTTagCompound compoundTag = stack.getTagCompound().getCompoundTag("Fireworks");
          if (compoundTag != null) {
             n += compoundTag.getByte("Flight");
          }

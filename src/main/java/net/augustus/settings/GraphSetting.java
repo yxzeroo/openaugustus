@@ -46,8 +46,7 @@ public class GraphSetting extends Setting {
       if (flag) {
          GraphRenderResult graphRenderResult = this.editorComponent.drawGraph(n3, n4, n, n2, customFontUtil, this);
          this.renderedHeight = graphRenderResult.getHeight();
-         boolean isDragging = graphRenderResult.isDragging();
-         this.setFocused(isDragging);
+         this.setFocused(graphRenderResult.isDragging());
          this.contentWidth = graphRenderResult.getRightX();
       }
    }
@@ -89,8 +88,7 @@ public class GraphSetting extends Setting {
 
    @Override
    public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-      boolean flag = this.editorComponent.dragPoint(mouseX, mouseY, clickedMouseButton, this);
-      if (flag) {
+      if (this.editorComponent.dragPoint(mouseX, mouseY, clickedMouseButton, this)) {
          this.notifyValueChanged();
          this.notifyUserChanged();
       }
@@ -104,7 +102,7 @@ public class GraphSetting extends Setting {
       return this.minY;
    }
 
-   public GraphSetting(Module module, String str, List list, double d, double d2, double d3, double d4, DoubleValue doubleValue, GraphPointBuilder graphPointBuilder) {
+   public GraphSetting(Module module, String str, List list, double d, double d2, double d3, double d4, SettingGroup doubleValue, GraphPointBuilder graphPointBuilder) {
        super(module, doubleValue, str);
       this.editorComponent = new GraphEditorComponent();
       this.renderedHeight = 25;
@@ -141,7 +139,7 @@ public class GraphSetting extends Setting {
       this.minX = d;
    }
 
-   public GraphSetting(Module module, String str, List list, double d, double d2, double d3, double d4, DoubleValue doubleValue) {
+   public GraphSetting(Module module, String str, List list, double d, double d2, double d3, double d4, SettingGroup doubleValue) {
        this(module, str, list, d, d2, d3, d4, doubleValue, null);
    }
 
@@ -151,8 +149,7 @@ public class GraphSetting extends Setting {
 
    @Override
    public void renderTooltip() {
-      int componentWidth = this.editorComponent.getComponentWidth();
-      this.drawDescriptionTooltip(componentWidth);
+      this.drawDescriptionTooltip(this.editorComponent.getComponentWidth());
    }
 
    @Override
@@ -160,12 +157,7 @@ public class GraphSetting extends Setting {
       this.points.clear();
 
       for (double[] doubles : (Iterable<double[]>)(this.defaultCoordinates)) {
-         List points2 = this.points;
-         GraphPointBuilder pointBuilder2 = this.getPointBuilder();
-         double d = doubles[0];
-         double d2 = doubles[1];
-         double d3 = d;
-         points2.add(pointBuilder2.buildAt(d3, d2));
+         this.points.add(this.getPointBuilder().buildAt(doubles[0], doubles[1]));
       }
    }
 

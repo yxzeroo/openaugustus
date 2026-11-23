@@ -12,8 +12,7 @@ public interface RenderBlockListener {
    static void onRenderBlock(BlockPosM blockPosM, IBlockState state, EventRenderBlock event) {
       EventRenderBlock.setMutablePos(event, blockPosM);
       EventRenderBlock.setBlockState(event, state);
-      Object obj = null;
-      EventRenderBlock.setCachedBlockPos(event, (BlockPos)obj);
+      EventRenderBlock.setCachedBlockPos(event, (BlockPos)null);
       EventManager.getEventBus().post(30, event);
    }
 }

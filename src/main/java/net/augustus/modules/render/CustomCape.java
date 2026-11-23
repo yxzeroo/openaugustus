@@ -28,153 +28,106 @@ import net.augustus.Augustus;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
 import net.optifine.player.CapeUtils;
 
 public class CustomCape extends Module implements TickListener {
    private final String customCapesDir;
-   public final BooleansSetting type;
-   public final BooleansSetting labyModCapes;
+   public final StringValue type;
+   public final StringValue labyModCapes;
    public final ActionSetting openFolder;
-   public final BooleansSetting mojangCapes;
+   public final StringValue mojangCapes;
    public final BooleanValue capePhysics;
-   public final BooleansSetting style;
-   public final BooleansSetting movement;
-   public final BooleansSetting wind;
-   public final StringValue gravity;
-   public final StringValue heightMultiplier;
+   public final StringValue style;
+   public final StringValue movement;
+   public final StringValue wind;
+   public final DoubleValue gravity;
+   public final DoubleValue heightMultiplier;
    public final HashMap customCapeTextures;
    public final HashMap mojangCapeResources;
 
    public CustomCape() {
        super("CustomCape", "KundenspezifischeKap", new Color(235, 146, 52), Categorys.RENDER);
       this.customCapesDir = ClientPaths.CLIENT_DIR + File.separator + "customcapes";
-      this.type = new BooleansSetting(this, "Type", "LabyMod", new String[]{"Mojang", "LabyMod"});
-      BooleansSetting booleansSetting = new BooleansSetting(this, "LabyModCapes", "Augustus", new String[0]);
-      SettingVisibilityCondition condition = () -> this.isLabyModCapesVisible();
-      this.labyModCapes = (BooleansSetting)booleansSetting.withVisibility(condition);
-      ActionSetting actionSetting = new ActionSetting(this, "OpenFolder", () -> this.openCustomCapesFolder());
-      SettingVisibilityCondition condition2 = () -> this.isOpenFolderVisible();
-      this.openFolder = (ActionSetting)actionSetting.withVisibility(condition2);
-      BooleansSetting booleansSetting2 = new BooleansSetting(this, "MojangCapes", "Migrator", new String[0]);
+      this.type = new StringValue(this, "Type", "LabyMod", new String[]{"Mojang", "LabyMod"});
+      this.labyModCapes = (StringValue)new StringValue(this, "LabyModCapes", "Augustus", new String[0]).withVisibility(() -> this.isLabyModCapesVisible());
+      this.openFolder = (ActionSetting)new ActionSetting(this, "OpenFolder", () -> this.openCustomCapesFolder()).withVisibility(() -> this.isOpenFolderVisible());
+      StringValue booleansSetting2 = new StringValue(this, "MojangCapes", "Migrator", new String[0]);
       SettingVisibilityCondition condition3 = () -> {
          return this.type.getSelectedValue().equals("Mojang");
       };
-      this.mojangCapes = (BooleansSetting)booleansSetting2.withVisibility(condition3);
+      this.mojangCapes = (StringValue)booleansSetting2.withVisibility(condition3);
       this.capePhysics = new BooleanValue(this, "CapePhysics", true);
-      BooleansSetting booleansSetting3 = new BooleansSetting(this, "Style", "Smooth", new String[]{"Smooth", "Blocky"});
+      StringValue booleansSetting3 = new StringValue(this, "Style", "Smooth", new String[]{"Smooth", "Blocky"});
       BooleanValue capePhysics2 = this.capePhysics;
       this.capePhysics.getClass();
       BooleanValue booleanValue = capePhysics2;
-      SettingVisibilityCondition condition4 = () -> booleanValue.getValue();
-      this.style = (BooleansSetting)booleansSetting3.withVisibility(condition4);
-      BooleansSetting booleansSetting4 = new BooleansSetting(this, "Movement", "Simulation", new String[]{"Simulation", "Vanilla"});
+      this.style = (StringValue)booleansSetting3.withVisibility(() -> booleanValue.getValue());
+      StringValue booleansSetting4 = new StringValue(this, "Movement", "Simulation", new String[]{"Simulation", "Vanilla"});
       capePhysics2 = this.capePhysics;
       this.capePhysics.getClass();
       BooleanValue booleanValue2 = capePhysics2;
-      SettingVisibilityCondition condition5 = () -> booleanValue2.getValue();
-      this.movement = (BooleansSetting)booleansSetting4.withVisibility(condition5);
-      BooleansSetting booleansSetting5 = new BooleansSetting(this, "Wind", "None", new String[]{"None", "Waves"});
+      this.movement = (StringValue)booleansSetting4.withVisibility(() -> booleanValue2.getValue());
+      StringValue booleansSetting5 = new StringValue(this, "Wind", "None", new String[]{"None", "Waves"});
       capePhysics2 = this.capePhysics;
       this.capePhysics.getClass();
       BooleanValue booleanValue3 = capePhysics2;
-      SettingVisibilityCondition condition6 = () -> booleanValue3.getValue();
-      this.wind = (BooleansSetting)booleansSetting5.withVisibility(condition6);
-      StringValue stringValue = new StringValue(this, "Gravity", 25.0, 5.0, 32.0, 0);
+      this.wind = (StringValue)booleansSetting5.withVisibility(() -> booleanValue3.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "Gravity", 25.0, 5.0, 32.0, 0);
       SettingVisibilityCondition condition7 = () -> {
          return this.capePhysics.getValue() && this.movement.getSelectedValue().equals("Simulation");
       };
       this.gravity = stringValue.visibleWhen(condition7);
-      StringValue stringValue2 = new StringValue(this, "HeightMultiplier", 6.0, 4.0, 16.0, 0);
-      SettingVisibilityCondition condition8 = () -> this.isHeightMultiplierVisible();
-      this.heightMultiplier = stringValue2.visibleWhen(condition8);
+      this.heightMultiplier = new DoubleValue(this, "HeightMultiplier", 6.0, 4.0, 16.0, 0).visibleWhen(() -> this.isHeightMultiplierVisible());
       this.customCapeTextures = new HashMap();
       this.mojangCapeResources = new HashMap();
       ClientFileUtil.ensureDirectory(this.customCapesDir);
       String str = Augustus.getInstance().getName().toLowerCase() + "/customcapes";
-      boolean flag = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Sky.png", str, flag);
-      boolean flag2 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Augustus.png", str, flag2);
-      boolean flag3 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusAmethyst.png", str, flag3);
-      boolean flag4 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusCandy.png", str, flag4);
-      boolean flag5 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusClassic.png", str, flag5);
-      boolean flag6 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMagic.png", str, flag6);
-      boolean flag7 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMagma.png", str, flag7);
-      boolean flag8 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMango.png", str, flag8);
-      boolean flag9 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusRose.png", str, flag9);
-      boolean flag10 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusTitanium.png", str, flag10);
-      boolean flag11 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Ejected.png", str, flag11);
-      boolean flag12 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/BlurSky.png", str, flag12);
-      boolean flag13 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/BlurSky2.png", str, flag13);
-      boolean flag14 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/HorizonSunset by Xolitey.png", str, flag14);
-      boolean flag15 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/NightCity.png", str, flag15);
-      boolean flag16 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Pepe.png", str, flag16);
-      boolean flag17 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Pineapples.png", str, flag17);
-      boolean flag18 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Rose.png", str, flag18);
-      boolean flag19 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Esound.png", str, flag19);
-      boolean flag20 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Dog.png", str, flag20);
-      boolean flag21 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AugustusLightBlue.png", str, flag21);
-      boolean flag22 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/GigachadSound.png", str, flag22);
-      boolean flag23 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/NoobiiHome.png", str, flag23);
-      boolean flag24 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/GommeHD.png", str, flag24);
-      boolean flag25 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Seal.png", str, flag25);
-      boolean flag26 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Questionmark.png", str, flag26);
-      boolean flag27 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Creeper.png", str, flag27);
-      boolean flag28 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Karhu.png", str, flag28);
-      boolean flag29 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Moon.png", str, flag29);
-      boolean flag30 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Astolfo.png", str, flag30);
-      boolean flag31 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Astolfotrap.png", str, flag31);
-      boolean flag32 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AstolfoBeta.png", str, flag32);
-      boolean flag33 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/AstolfoBeta2.png", str, flag33);
-      boolean flag34 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/E.png", str, flag34);
-      boolean flag35 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Grim.png", str, flag35);
-      boolean flag36 = false;
-      ClientFileUtil.extractResource("assets/augustus/cape/Otter.png", str, flag36);
+      ClientFileUtil.extractResource("assets/augustus/cape/Sky.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Augustus.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusAmethyst.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusCandy.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusClassic.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMagic.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMagma.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusMango.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusRose.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusTitanium.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Ejected.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/BlurSky.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/BlurSky2.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/HorizonSunset by Xolitey.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/NightCity.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Pepe.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Pineapples.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Rose.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Esound.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Dog.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AugustusLightBlue.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/GigachadSound.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/NoobiiHome.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/GommeHD.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Seal.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Questionmark.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Creeper.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Karhu.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Moon.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Astolfo.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Astolfotrap.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AstolfoBeta.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/AstolfoBeta2.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/E.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Grim.png", str, false);
+      ClientFileUtil.extractResource("assets/augustus/cape/Otter.png", str, false);
       this.loadCustomCapes();
       this.loadMojangCapes();
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(this.customCapesDir);
-      Consumer consumer = obj -> this.onCapeFileChanged((Path)obj);
-      directoryWatcher = directoryWatcher.onCreate(consumer);
+      directoryWatcher = directoryWatcher.onCreate(obj -> this.onCapeFileChanged((Path)obj));
       Consumer consumer2 = obj2 -> {
-         File file = ((Path)obj2).toFile();
-         this.loadCapeFile(file);
+         this.loadCapeFile(((Path)obj2).toFile());
          this.updateCustomCapeOptions();
       };
       directoryWatcher = directoryWatcher.onModify(consumer2);
@@ -216,9 +169,7 @@ public class CustomCape extends Module implements TickListener {
    public void onTick3() {
       this.syncWaveyCapeConfig();
       if (mc.thePlayer != null && this.movement.getSelectedValue().equals("Simulation")) {
-         WaveyCapeSimulationManager manager = WaveyCapeSimulationManager.getWaveyCapeSimulationManager();
-         EntityPlayerSP thePlayer = mc.thePlayer;
-         manager.tickPlayer(thePlayer);
+         WaveyCapeSimulationManager.getWaveyCapeSimulationManager().tickPlayer(mc.thePlayer);
       }
    }
 
@@ -313,8 +264,7 @@ public class CustomCape extends Module implements TickListener {
    }
 
    public void loadCustomCapes() {
-      File file = new File(this.customCapesDir);
-      File[] files = file.listFiles();
+      File[] files = new File(this.customCapesDir).listFiles();
       if (files != null) {
          for (File file2 : files) {
             this.loadCapeFile(file2);
@@ -340,14 +290,11 @@ public class CustomCape extends Module implements TickListener {
    }
 
    private void updateCustomCapeOptions() {
-      boolean flag = this.customCapeTextures.keySet().stream().anyMatch(obj -> this.isSelectedCustomCape((String)obj));
-      if (!flag && !this.customCapeTextures.isEmpty()) {
-         BooleansSetting labyModCapes2 = this.labyModCapes;
-         String str = (String)this.customCapeTextures.keySet().iterator().next();
-         labyModCapes2.setSelectedValue(str);
+      if (!this.customCapeTextures.keySet().stream().anyMatch(obj -> this.isSelectedCustomCape((String)obj)) && !this.customCapeTextures.isEmpty()) {
+         this.labyModCapes.setSelectedValue((String)this.customCapeTextures.keySet().iterator().next());
       }
 
-      BooleansSetting labyModCapes3 = this.labyModCapes;
+      StringValue labyModCapes3 = this.labyModCapes;
       String[] strings = ((Map<String, ?>)this.customCapeTextures).keySet().stream().sorted(Comparator.comparing(String::toLowerCase)).toArray(String[]::new);
       labyModCapes3.setOptions(strings);
    }
@@ -357,8 +304,7 @@ public class CustomCape extends Module implements TickListener {
    }
 
    private void onCapeFileChanged(Path path) {
-      File file = path.toFile();
-      this.loadCapeFile(file);
+      this.loadCapeFile(path.toFile());
       this.updateCustomCapeOptions();
    }
 

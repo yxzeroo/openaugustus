@@ -29,8 +29,7 @@ public class MurderWeaponSlotUtil {
       for (int i = 36; i < MC.mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
          ItemStack stack = MC.mc.thePlayer.inventoryContainer.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemBow) {
+            if (stack.getItem() instanceof ItemBow) {
                return i - 36;
             }
          }

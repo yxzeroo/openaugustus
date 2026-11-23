@@ -12,8 +12,7 @@ public final class DoubleJsonPropertyCodec implements PrimitivePropertySerialize
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      Double d = (Double)obj;
-      this.writeDouble(str, d, json);
+      this.writeDouble(str, (Double)obj, json);
    }
 
    public void writeDouble(String str, Double d, JsonObject json) {

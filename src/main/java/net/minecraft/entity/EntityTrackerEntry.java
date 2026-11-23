@@ -134,8 +134,7 @@ public class EntityTrackerEntry {
       }
 
       if (this.trackedEntity instanceof EntityLivingBase) {
-         ServersideAttributeMap attributeMap = (ServersideAttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
-         Set attributeInstanceSet = attributeMap.getAttributeInstanceSet();
+         Set attributeInstanceSet = ((ServersideAttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap()).getAttributeInstanceSet();
          if (!attributeInstanceSet.isEmpty()) {
             this.sendToTrackingAndSelf(new S20PacketEntityProperties(this.trackedEntity.getEntityId(), attributeInstanceSet));
          }
@@ -168,8 +167,7 @@ public class EntityTrackerEntry {
       }
 
       if (this.trackedEntity instanceof EntityItemFrame && this.updateCounter % 10 == 0) {
-         EntityItemFrame trackedEntity2 = (EntityItemFrame)this.trackedEntity;
-         ItemStack displayedItem = trackedEntity2.getDisplayedItem();
+         ItemStack displayedItem = ((EntityItemFrame)this.trackedEntity).getDisplayedItem();
          if (displayedItem != null && displayedItem.getItem() instanceof ItemMap) {
             MapData mapData = Items.filled_map.getMapData(displayedItem, this.trackedEntity.entityWorld);
 
@@ -265,8 +263,7 @@ public class EntityTrackerEntry {
          } else {
             int n9 = MathHelper.floor_float(this.trackedEntity.rotationYaw * 256.0F / 360.0F);
             int n10 = MathHelper.floor_float(this.trackedEntity.rotationPitch * 256.0F / 360.0F);
-            boolean flag3 = Math.abs(n9 - this.encodedRotationYaw) >= 4 || Math.abs(n10 - this.encodedRotationPitch) >= 4;
-            if (flag3) {
+            if (Math.abs(n9 - this.encodedRotationYaw) >= 4 || Math.abs(n10 - this.encodedRotationPitch) >= 4) {
                this.sendPacketToTrackedPlayers(
                   new S14PacketEntity.S16PacketEntityLook(this.trackedEntity.getEntityId(), (byte)n9, (byte)n10, this.trackedEntity.onGround)
                );
@@ -337,8 +334,7 @@ public class EntityTrackerEntry {
                }
 
                if (this.trackedEntity instanceof EntityLivingBase) {
-                  ServersideAttributeMap attributeMap = (ServersideAttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
-                  Collection watchedAttributes = attributeMap.getWatchedAttributes();
+                  Collection watchedAttributes = ((ServersideAttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap()).getWatchedAttributes();
                   if (!watchedAttributes.isEmpty()) {
                      entityPlayerMP.playerNetServerHandler.sendPacket(new S20PacketEntityProperties(this.trackedEntity.getEntityId(), watchedAttributes));
                   }
@@ -382,9 +378,8 @@ public class EntityTrackerEntry {
                }
 
                if (this.trackedEntity instanceof EntityLivingBase) {
-                  EntityLivingBase trackedEntity3 = (EntityLivingBase)this.trackedEntity;
 
-                  for (PotionEffect potionEffect : (Iterable<PotionEffect>)(trackedEntity3.getActivePotionEffects())) {
+                  for (PotionEffect potionEffect : (Iterable<PotionEffect>)(((EntityLivingBase)this.trackedEntity).getActivePotionEffects())) {
                      entityPlayerMP.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(this.trackedEntity.getEntityId(), potionEffect));
                   }
                }

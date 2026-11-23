@@ -54,8 +54,7 @@ public class Jlp {
    }
 
    public InputStream getURLInputStream() throws Exception {
-      URL url = new URL(this.fFilename);
-      InputStream in = url.openStream();
+      InputStream in = new URL(this.fFilename).openStream();
       return new BufferedInputStream(in);
    }
 
@@ -95,8 +94,7 @@ public class Jlp {
          }
 
          AudioDevice audioDevice = this.getAudioDevice();
-         Player player = new Player((InputStream)obj, audioDevice);
-         player.play();
+         new Player((InputStream)obj, audioDevice).play();
       } catch (IOException e) {
          throw new JavaLayerException("Problem playing file " + this.fFilename, e);
       } catch (Exception e2) {

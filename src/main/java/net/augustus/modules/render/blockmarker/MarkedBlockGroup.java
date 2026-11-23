@@ -36,8 +36,7 @@ public class MarkedBlockGroup {
 
       for (JsonElement elem : array) {
          MarkedBlockCoord markedBlockCoord = new MarkedBlockCoord(this.blockMarker);
-         JsonArray asJsonArray = elem.getAsJsonArray();
-         MarkedBlockCoord.loadFromJsonArray(markedBlockCoord, asJsonArray);
+         MarkedBlockCoord.loadFromJsonArray(markedBlockCoord, elem.getAsJsonArray());
          this.coords.add(markedBlockCoord);
       }
    }

@@ -159,8 +159,7 @@ public class HttpPipelineConnection {
          String[] strings = Config.tokenize(header2, ",;");
 
          for (int i = 0; i < strings.length; i++) {
-            String str = strings[i];
-            String[] strings2 = this.split(str, '=');
+            String[] strings2 = this.split(strings[i], '=');
             if (strings2.length >= 2) {
                if (strings2[0].equals("timeout")) {
                   int n = Config.parseInt(strings2[1], -1);
@@ -191,8 +190,7 @@ public class HttpPipelineConnection {
             keepaliveTimeoutMs2 = 5000L;
          }
 
-         long l = System.currentTimeMillis();
-         if (l > this.timeLastActivityMs + keepaliveTimeoutMs2) {
+         if (System.currentTimeMillis() > this.timeLastActivityMs + keepaliveTimeoutMs2) {
             this.terminate(new InterruptedException("Timeout " + keepaliveTimeoutMs2));
          }
       }
@@ -268,14 +266,12 @@ public class HttpPipelineConnection {
                header = this.normalizeUrl(header, httpPipelineRequest.getHttpRequest());
                HttpRequest httpRequest = HttpPipeline.makeRequest(header, httpPipelineRequest.getHttpRequest().getProxy());
                httpRequest.setRedirects(httpPipelineRequest.getHttpRequest().getRedirects() + 1);
-               HttpPipelineRequest httpPipelineRequest2 = new HttpPipelineRequest(httpRequest, httpPipelineRequest.getHttpListener());
-               HttpPipeline.addRequest(httpPipelineRequest2);
+               HttpPipeline.addRequest(new HttpPipelineRequest(httpRequest, httpPipelineRequest.getHttpListener()));
             } catch (IOException e) {
                httpPipelineRequest.getHttpListener().failed(httpPipelineRequest.getHttpRequest(), e);
             }
          } else {
-            HttpListener httpListener = httpPipelineRequest.getHttpListener();
-            httpListener.finished(httpPipelineRequest.getHttpRequest(), httpResponse);
+            httpPipelineRequest.getHttpListener().finished(httpPipelineRequest.getHttpRequest(), httpResponse);
          }
 
          this.checkResponseHeader(httpResponse);
@@ -291,8 +287,7 @@ public class HttpPipelineConnection {
          }
 
          while (this.listRequests.size() > 0) {
-            HttpPipelineRequest httpPipelineRequest2 = (HttpPipelineRequest)this.listRequests.remove(0);
-            HttpPipeline.addRequest(httpPipelineRequest2);
+            HttpPipeline.addRequest((HttpPipelineRequest)this.listRequests.remove(0));
          }
       }
    }

@@ -87,8 +87,7 @@ public class ThreadDownloadImageData extends SimpleTexture {
 
    private void loadPipelined() {
       try {
-         HttpRequest httpRequest = HttpPipeline.makeRequest(this.imageUrl, Minecraft.getMinecraft().getProxy());
-         HttpResponse httpResponse = HttpPipeline.executeRequest(httpRequest);
+         HttpResponse httpResponse = HttpPipeline.executeRequest(HttpPipeline.makeRequest(this.imageUrl, Minecraft.getMinecraft().getProxy()));
          if (httpResponse.getStatus() / 100 == 2) {
             byte[] body = httpResponse.getBody();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body);
@@ -181,8 +180,7 @@ public class ThreadDownloadImageData extends SimpleTexture {
    private void loadingFinished() {
       this.imageFound = this.bufferedImage != null;
       if (this.imageBuffer instanceof CapeImageBuffer) {
-         CapeImageBuffer imageBuffer2 = (CapeImageBuffer)this.imageBuffer;
-         imageBuffer2.cleanup();
+         ((CapeImageBuffer)this.imageBuffer).cleanup();
       }
    }
 

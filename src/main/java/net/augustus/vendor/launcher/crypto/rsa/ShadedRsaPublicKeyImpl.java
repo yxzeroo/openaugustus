@@ -39,8 +39,7 @@ public final class ShadedRsaPublicKeyImpl extends X509Key implements ShadedRsaPu
       checkExponentRange(shadedBigInteger, shadedBigInteger2);
       this.modulus = shadedBigInteger;
       this.publicExponent = shadedBigInteger2;
-      AlgorithmParameterSpec paramSpec = ShadedRsaUtil.getParamSpec(algorithmId, l2);
-      this.keyParams = paramSpec;
+      this.keyParams = ShadedRsaUtil.getParamSpec(algorithmId, l2);
       this.algid = algorithmId;
 
       try {
@@ -90,16 +89,13 @@ public final class ShadedRsaPublicKeyImpl extends X509Key implements ShadedRsaPu
    public void parseKeyBits() throws InvalidKeyException {
 
       try {
-         Asn1DerInputStream asn1DerInputStream = new Asn1DerInputStream(this.getKey().toByteArray());
-         Asn1DerValue derValue = asn1DerInputStream.getDerValue();
+         Asn1DerValue derValue = new Asn1DerInputStream(this.getKey().toByteArray()).getDerValue();
          if (derValue.tag != 48) {
             throw new IOException("Not a SEQUENCE");
          } else {
             Asn1DerInputStream data = derValue.data;
-            ShadedBigInteger positiveBigInteger = data.getPositiveBigInteger();
-            this.modulus = positiveBigInteger;
-            ShadedBigInteger positiveBigInteger2 = data.getPositiveBigInteger();
-            this.publicExponent = positiveBigInteger2;
+            this.modulus = data.getPositiveBigInteger();
+            this.publicExponent = data.getPositiveBigInteger();
             if (derValue.data.available() != 0) {
                throw new IOException("Extra data available");
             }
@@ -120,8 +116,7 @@ public final class ShadedRsaPublicKeyImpl extends X509Key implements ShadedRsaPu
          checkExponentRange(this.modulus, publicExponent2);
 
          try {
-            AlgorithmParameterSpec paramSpec = ShadedRsaUtil.getParamSpec(this.algid, l2);
-            this.keyParams = paramSpec;
+            this.keyParams = ShadedRsaUtil.getParamSpec(this.algid, l2);
          } catch (ProviderException e) {
             throw new InvalidKeyException(e);
          }
@@ -141,10 +136,7 @@ public final class ShadedRsaPublicKeyImpl extends X509Key implements ShadedRsaPu
    }
 
    public static void checkRSAProviderKeyLengths(int n, ShadedBigInteger shadedBigInteger) throws InvalidKeyException {
-      int n2 = n + 7 & -8;
-      int maxvalue = Integer.MAX_VALUE;
-      short s = 512;
-      checkKeyLengths(n2, shadedBigInteger, s, maxvalue);
+      checkKeyLengths(n + 7 & -8, shadedBigInteger, (short)512, Integer.MAX_VALUE);
    }
 
    @Override
@@ -176,8 +168,7 @@ public final class ShadedRsaPublicKeyImpl extends X509Key implements ShadedRsaPu
       if (shadedBigInteger2.compareTo2(shadedBigInteger) >= 0) {
          throw new InvalidKeyException("exponent is larger than modulus");
       } else {
-         ShadedBigInteger shadedBigInteger3 = THREE;
-         if (shadedBigInteger2.compareTo2(shadedBigInteger3) < 0) {
+         if (shadedBigInteger2.compareTo2(THREE) < 0) {
             throw new InvalidKeyException("exponent is smaller than 3");
          }
       }

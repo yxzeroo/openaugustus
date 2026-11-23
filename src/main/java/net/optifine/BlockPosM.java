@@ -75,10 +75,7 @@ public class BlockPosM extends BlockPos {
          BlockPosM blockPosM = this.facings[i];
          if (blockPosM != null) {
             EnumFacing facing = EnumFacing.VALUES[i];
-            int n = this.x2 + facing.getFrontOffsetX();
-            int n2 = this.y2 + facing.getFrontOffsetY();
-            int n3 = this.z2 + facing.getFrontOffsetZ();
-            blockPosM.setXyz(n, n2, n3);
+            blockPosM.setXyz(this.x2 + facing.getFrontOffsetX(), this.y2 + facing.getFrontOffsetY(), this.z2 + facing.getFrontOffsetZ());
          }
       }
 

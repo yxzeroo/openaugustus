@@ -23,8 +23,7 @@ public class ShaderUniform1i extends ShaderUniformBase {
 
    public void setValue(int n) {
       int program2 = this.getProgram();
-      int n2 = this.programValues[program2];
-      if (n != n2) {
+      if (n != this.programValues[program2]) {
          this.programValues[program2] = n;
          int location = this.getLocation();
          if (location >= 0) {

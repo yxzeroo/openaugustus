@@ -173,8 +173,7 @@ public class BlockPistonMoving extends BlockContainer {
    public void setBlockBoundsBasedOnState(IBlockAccess world, int n, int n2, int n3) {
       TileEntityPiston tileEntity = this.getTileEntity(world, n, n2, n3);
       if (tileEntity != null) {
-         IBlockState pistonState = tileEntity.getPistonState();
-         Block block = pistonState.getBlock();
+         Block block = tileEntity.getPistonState().getBlock();
          if (block == this || block.getMaterial() == Material.air) {
             return;
          }

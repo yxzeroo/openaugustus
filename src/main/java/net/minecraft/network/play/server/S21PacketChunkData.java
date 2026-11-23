@@ -82,9 +82,8 @@ public class S21PacketChunkData implements Packet {
       int n2 = 0;
 
       for (ExtendedBlockStorage extendedBlockStorage2 : (Iterable<ExtendedBlockStorage>)(list)) {
-         char[] data = extendedBlockStorage2.getData();
 
-         for (char ch : data) {
+         for (char ch : extendedBlockStorage2.getData()) {
             extracted.data[n2++] = (byte)(ch & 255);
             extracted.data[n2++] = (byte)(ch >> '\b' & 0xFF);
          }
@@ -108,11 +107,7 @@ public class S21PacketChunkData implements Packet {
    }
 
    public static int calculateChunkSize(int n, boolean flag, boolean flag2) {
-      int n2 = n * 2 * 16 * 16 * 16;
-      int n3 = n * 16 * 16 * 16 / 2;
-      int n4 = flag ? n * 16 * 16 * 16 / 2 : 0;
-      int n5 = flag2 ? 256 : 0;
-      return n2 + n3 + n4 + n5;
+      return (n * 2 * 16 * 16 * 16) + (n * 16 * 16 * 16 / 2) + (flag ? n * 16 * 16 * 16 / 2 : 0) + (flag2 ? 256 : 0);
    }
 
    public void processPacket(INetHandlerPlayClient handler) {

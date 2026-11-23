@@ -28,8 +28,7 @@ public class HybridKalmanPredictor {
       double[] doubles = this.linearKalmanFilter.predict(d);
       double d2 = 0.05;
       double[] doubles2 = this.ctrvKalmanFilter.predict(d2);
-      double yawRate = this.ctrvKalmanFilter.getYawRate();
-      double d3 = Math.abs(yawRate);
+      double d3 = Math.abs(this.ctrvKalmanFilter.getYawRate());
       double d4 = 1.0 / (1.0 + Math.exp(-8.2 * (d3 - 2.4)));
       double d5 = (1.0 - d4) * doubles[0] + d4 * doubles2[0];
       double d6 = (1.0 - d4) * doubles[1] + d4 * doubles2[1];
@@ -40,24 +39,21 @@ public class HybridKalmanPredictor {
       double d2 = 0.0;
       double yCoord = vec2.yCoord;
       double d3 = 0.0;
-      double yCoord2 = vec.yCoord;
-      this.initState(yCoord2, d3, yCoord, d2, d);
+      this.initState(vec.yCoord, d3, yCoord, d2, d);
    }
 
    public void initHorizontal(Vec3 vec, Vec3 vec2, double d) {
       double zCoord = vec2.zCoord;
       double xCoord = vec2.xCoord;
       double zCoord2 = vec.zCoord;
-      double xCoord2 = vec.xCoord;
-      this.initState(xCoord2, zCoord2, xCoord, zCoord, d);
+      this.initState(vec.xCoord, zCoord2, xCoord, zCoord, d);
    }
 
    public void init2D(Vec2d vec2d, Vec2d vec2d2, double d) {
       double d2 = vec2d2.y;
       double d3 = vec2d2.x;
       double d4 = vec2d.y;
-      double d5 = vec2d.x;
-      this.initState(d5, d4, d3, d2, d);
+      this.initState(vec2d.x, d4, d3, d2, d);
    }
 
    public void initState(double d, double d2, double d3, double d4, double d5) {

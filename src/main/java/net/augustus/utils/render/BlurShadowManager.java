@@ -69,8 +69,7 @@ public final class BlurShadowManager {
             if (shadowState >= 1 && guiLayerState == 0) {
                if (flag) {
                   ClientManagers.moduleManager.shadow.bindShadowMaskFramebuffer();
-                  ShaderRenderPass shadow = ShaderRenderPass.SHADOW;
-                  renderPassTask.execute(shadow);
+                  renderPassTask.execute(ShaderRenderPass.SHADOW);
                   ClientManagers.moduleManager.shadow.unbindShadowMaskFramebuffer();
                } else {
                   shadowQueue.enqueue(renderPassTask);
@@ -80,10 +79,8 @@ public final class BlurShadowManager {
             if (blurState >= 1) {
                if (flag) {
                   boolean flag2 = guiLayerState >= 1;
-                  boolean flag3 = true;
-                  blurShaderRenderer.beginMaskCapture(flag3, flag2);
-                  ShaderRenderPass blur = ShaderRenderPass.BLUR;
-                  renderPassTask.execute(blur);
+                  blurShaderRenderer.beginMaskCapture(true, flag2);
+                  renderPassTask.execute(ShaderRenderPass.BLUR);
                   blurShaderRenderer.endMaskCapture();
                } else if (guiLayerState >= 1) {
                   guiBlurQueue.enqueue(renderPassTask);
@@ -94,8 +91,7 @@ public final class BlurShadowManager {
          }
 
          if (normalPassState >= 1) {
-            ShaderRenderPass none = ShaderRenderPass.NONE;
-            renderPassTask.execute(none);
+            renderPassTask.execute(ShaderRenderPass.NONE);
          }
 
          if (blurState == 2) {
@@ -228,48 +224,36 @@ public final class BlurShadowManager {
       if (!isShadersCompatible()) {
          warnIncompatibleSettings();
       } else {
-         Object obj = null;
-         savedGlState.capture((RenderPassTask)obj);
-         boolean flag2 = ClientManagers.moduleManager.blur.isToggled() && (ClientManagers.moduleManager.blur.inScreens.getValue() || !flag)
-            || ClientManagers.moduleManager.blur.inScreens.getValue() && flag;
-         if (flag2) {
+         savedGlState.capture((RenderPassTask)null);
+         if (ClientManagers.moduleManager.blur.isToggled() && (ClientManagers.moduleManager.blur.inScreens.getValue() || !flag)
+            || ClientManagers.moduleManager.blur.inScreens.getValue() && flag) {
             enterRenderPass();
             if (!hudBlurQueue.isEmpty()) {
-               boolean flag3 = false;
-               boolean flag4 = true;
-               blurShaderRenderer.beginMaskCapture(flag4, flag3);
+               blurShaderRenderer.beginMaskCapture(true, false);
                ShaderRenderPass blur = ShaderRenderPass.BLUR;
                hudBlurQueue.flush(blur);
                blurShaderRenderer.endMaskCapture();
-               Object obj2 = null;
-               savedGlState.restore((ShaderRenderPass)obj2);
+               savedGlState.restore((ShaderRenderPass)null);
             }
 
             if (!guiBlurQueue.isEmpty()) {
-               boolean flag5 = true;
-               boolean flag6 = true;
-               blurShaderRenderer.beginMaskCapture(flag6, flag5);
+               blurShaderRenderer.beginMaskCapture(true, true);
                ShaderRenderPass blur2 = ShaderRenderPass.BLUR;
                guiBlurQueue.flush(blur2);
                blurShaderRenderer.endMaskCapture();
-               Object obj3 = null;
-               savedGlState.restore((ShaderRenderPass)obj3);
+               savedGlState.restore((ShaderRenderPass)null);
             }
 
             exitRenderPass();
-            BlurShaderRenderer blurShaderRenderer2 = blurShaderRenderer;
-            int value = (int)Augustus.getInstance().getModuleManager().blur.sigma.getValue();
-            blurShaderRenderer2.renderBlurPass(flag, value);
+            blurShaderRenderer.renderBlurPass(flag, (int)Augustus.getInstance().getModuleManager().blur.sigma.getValue());
          }
 
          BlurShadowRenderQueue blurShadowRenderQueue = flag ? guiPostBlurQueue : hudPostBlurQueue;
          if (!blurShadowRenderQueue.isEmpty()) {
             enterRenderPass();
-            ShaderRenderPass postblur = ShaderRenderPass.POST_BLUR;
-            blurShadowRenderQueue.flush(postblur);
+            blurShadowRenderQueue.flush(ShaderRenderPass.POST_BLUR);
             exitRenderPass();
-            Object obj4 = null;
-            savedGlState.restore((ShaderRenderPass)obj4);
+            savedGlState.restore((ShaderRenderPass)null);
          }
 
          if (!flag) {
@@ -280,8 +264,7 @@ public final class BlurShadowManager {
                shadowQueue.flush(shadow);
                exitRenderPass();
                ClientManagers.moduleManager.shadow.unbindShadowMaskFramebuffer();
-               Object obj5 = null;
-               savedGlState.restore((ShaderRenderPass)obj5);
+               savedGlState.restore((ShaderRenderPass)null);
             }
 
             if (ClientManagers.moduleManager.shadow.isToggled()) {

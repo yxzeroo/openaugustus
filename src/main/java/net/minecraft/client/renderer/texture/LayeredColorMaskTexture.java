@@ -41,24 +41,19 @@ public class LayeredColorMaskTexture extends AbstractTexture {
          }
 
          image = new BufferedImage(image2.getWidth(), image2.getHeight(), type);
-         Graphics graphics = image.getGraphics();
-         graphics.drawImage(image2, 0, 0, (ImageObserver)null);
+         image.getGraphics().drawImage(image2, 0, 0, (ImageObserver)null);
 
          for (int i = 0; i < 17 && i < this.listTextures.size() && i < this.listDyeColors.size(); i++) {
             String str = (String)this.listTextures.get(i);
             MapColor mapColor = ((EnumDyeColor)this.listDyeColors.get(i)).getMapColor();
             if (str != null) {
-               InputStream inputStream = resourceManager.getResource(new ResourceLocation(str)).getInputStream();
-               BufferedImage image3 = TextureUtil.readBufferedImage(inputStream);
+               BufferedImage image3 = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(str)).getInputStream());
                if (image3.getWidth() == image.getWidth() && image3.getHeight() == image.getHeight() && image3.getType() == 6) {
                   for (int j = 0; j < image3.getHeight(); j++) {
                      for (int k = 0; k < image3.getWidth(); k++) {
                         int rgb = image3.getRGB(k, j);
                         if ((rgb & 0xFF000000) != 0) {
-                           int n = (rgb & 0xFF0000) << 8 & 0xFF000000;
-                           int rgb2 = image2.getRGB(k, j);
-                           int n2 = MathHelper.multiplyColor(rgb2, mapColor.colorValue) & 16777215;
-                           image3.setRGB(k, j, n | n2);
+                           image3.setRGB(k, j, ((rgb & 0xFF0000) << 8 & 0xFF000000) | (MathHelper.multiplyColor(image2.getRGB(k, j), mapColor.colorValue) & 16777215));
                         }
                      }
                   }

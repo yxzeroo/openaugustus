@@ -87,9 +87,8 @@ public abstract class MsaCodeStep<I extends AbstractStep.InitialInput> extends A
       @Override
       public int hashCode() {
          int PRIME = 59;
-         int result = 1;
          Object $code = this.getCode();
-         return result * 59 + ($code == null ? 43 : $code.hashCode());
+         return 1 * 59 + ($code == null ? 43 : $code.hashCode());
       }
    }
 }

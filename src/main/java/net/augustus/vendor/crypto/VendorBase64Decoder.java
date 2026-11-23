@@ -17,7 +17,6 @@ public class VendorBase64Decoder {
    private final boolean isMIME;
 
    private int decode0(byte[] bytes, int n, int n2, byte[] bytes2) {
-      int invertedGuardFlag = VendorAesHelper.getInvertedGuardFlag();
       int[] ints = this.isURL ? fromBase64URL : fromBase64;
       int n3 = 0;
       int n4 = 0;
@@ -75,21 +74,10 @@ public class VendorBase64Decoder {
    public byte[] decode(byte[] bytes) {
       Object obj = null;
       int n = 0;
-      int invertedGuardFlag = VendorAesHelper.getInvertedGuardFlag();
       VendorBase64Decoder vendorBase64Decoder = this;
-      byte[] bytes2 = bytes;
-      int length = bytes.length;
-      byte b = 0;
-      byte[] bytes3 = bytes2;
-      obj = new byte[vendorBase64Decoder.outLength(bytes3, b, length)];
+      obj = new byte[vendorBase64Decoder.outLength(bytes, (byte)0, bytes.length)];
       vendorBase64Decoder = this;
-      byte[] bytes4 = bytes;
-      int length2 = bytes.length;
-      byte[] bytes5 = (byte[])obj;
-      int n2 = length2;
-      byte b2 = 0;
-      byte[] bytes6 = bytes4;
-      n = vendorBase64Decoder.decode0(bytes6, b2, n2, bytes5);
+      n = vendorBase64Decoder.decode0(bytes, (byte)0, bytes.length, (byte[])obj);
       if (n != ((byte[])obj).length) {
          obj = Arrays.copyOf((byte[])obj, n);
       }
@@ -98,7 +86,6 @@ public class VendorBase64Decoder {
    }
 
    public ByteBuffer decode3(ByteBuffer buf) {
-      int guardFlag = VendorAesHelper.getGuardFlag();
       int n = buf.position();
 
       try {
@@ -126,9 +113,7 @@ public class VendorBase64Decoder {
    }
 
    public byte[] decode2(String str) {
-      byte[] bytes = str.getBytes(StandardCharsets.ISO_8859_1);
-      byte[] bytes2 = bytes;
-      return this.decode(bytes2);
+      return this.decode(str.getBytes(StandardCharsets.ISO_8859_1));
    }
 
    static {
@@ -159,7 +144,6 @@ public class VendorBase64Decoder {
    }
 
    private int outLength(byte[] bytes, int n, int n2) {
-      int invertedGuardFlag = VendorAesHelper.getInvertedGuardFlag();
       int[] ints = this.isURL ? fromBase64URL : fromBase64;
       int n3 = 0;
       int n4 = n2 - n;
@@ -207,28 +191,16 @@ public class VendorBase64Decoder {
       Objects.requireNonNull(in);
       int[] ints = this.isURL ? fromBase64URL : fromBase64;
       boolean isMIME2 = this.isMIME;
-      int[] ints2 = ints;
-      return new VendorBase64InputStream(in, ints2, isMIME2);
+      return new VendorBase64InputStream(in, ints, isMIME2);
    }
 
    public int decode(byte[] bytes, byte[] bytes2) {
       int n = 0;
-      int guardFlag = VendorAesHelper.getGuardFlag();
       VendorBase64Decoder vendorBase64Decoder = this;
-      byte[] bytes3 = bytes;
-      int length = bytes.length;
-      byte b = 0;
-      byte[] bytes4 = bytes3;
-      n = vendorBase64Decoder.outLength(bytes4, b, length);
+      n = vendorBase64Decoder.outLength(bytes, (byte)0, bytes.length);
       if (bytes2.length >= n) {
          vendorBase64Decoder = this;
-         byte[] bytes5 = bytes;
-         int length2 = bytes.length;
-         byte[] bytes6 = bytes2;
-         int n2 = length2;
-         byte b2 = 0;
-         byte[] bytes7 = bytes5;
-         return vendorBase64Decoder.decode0(bytes7, b2, n2, bytes6);
+         return vendorBase64Decoder.decode0(bytes, (byte)0, bytes.length, bytes2);
       } else {
          throw new IllegalArgumentException("Output byte array is too small for decoding all input bytes");
       }

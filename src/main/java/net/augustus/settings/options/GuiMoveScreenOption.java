@@ -2,8 +2,8 @@ package net.augustus.settings.options;
 
 import net.augustus.settings.SelectableOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public enum GuiMoveScreenOption implements SelectableOption {
    INVENTORY("Inventory", true),
@@ -13,17 +13,17 @@ public enum GuiMoveScreenOption implements SelectableOption {
 
 private final String name;
    private boolean selected;
-   private BooleansSetting modeSetting;
+   private StringValue modeSetting;
    private BooleanValue sneakSetting;
    private BooleanValue jumpSetting;
    private BooleanValue rotateSetting;
    private BooleanValue rotateOnlyAtClickSetting;
    private BooleanValue moveOnlyOnGroundSetting;
    private BooleanValue sneakMotionWhileMovingSetting;
-   private BooleansSetting sprintModeSetting;
+   private StringValue sprintModeSetting;
    private BooleanValue sprintJumpBoostSetting;
-   private StringValue forwardMotionMultiplierSetting;
-   private StringValue diagonalMotionMultiplierSetting;
+   private DoubleValue forwardMotionMultiplierSetting;
+   private DoubleValue diagonalMotionMultiplierSetting;
 private GuiMoveScreenOption(String str, boolean flag) {
       this.name = str;
       this.selected = flag;
@@ -44,7 +44,7 @@ private GuiMoveScreenOption(String str, boolean flag) {
       this.selected = flag;
    }
 
-   public static BooleansSetting setModeSetting(GuiMoveScreenOption guiMoveScreenOption, BooleansSetting booleansSetting) {
+   public static StringValue setModeSetting(GuiMoveScreenOption guiMoveScreenOption, StringValue booleansSetting) {
       return guiMoveScreenOption.modeSetting = booleansSetting;
    }
 
@@ -76,7 +76,7 @@ private GuiMoveScreenOption(String str, boolean flag) {
       return guiMoveScreenOption.sneakMotionWhileMovingSetting = booleanValue;
    }
 
-   public static BooleansSetting setSprintModeSetting(GuiMoveScreenOption guiMoveScreenOption, BooleansSetting booleansSetting) {
+   public static StringValue setSprintModeSetting(GuiMoveScreenOption guiMoveScreenOption, StringValue booleansSetting) {
       return guiMoveScreenOption.sprintModeSetting = booleansSetting;
    }
 
@@ -84,11 +84,11 @@ private GuiMoveScreenOption(String str, boolean flag) {
       return guiMoveScreenOption.sprintJumpBoostSetting = booleanValue;
    }
 
-   public static StringValue setForwardMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption, StringValue stringValue) {
+   public static DoubleValue setForwardMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption, DoubleValue stringValue) {
       return guiMoveScreenOption.forwardMotionMultiplierSetting = stringValue;
    }
 
-   public static StringValue setDiagonalMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption, StringValue stringValue) {
+   public static DoubleValue setDiagonalMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption, DoubleValue stringValue) {
       return guiMoveScreenOption.diagonalMotionMultiplierSetting = stringValue;
    }
 
@@ -100,7 +100,7 @@ private GuiMoveScreenOption(String str, boolean flag) {
       return guiMoveScreenOption.moveOnlyOnGroundSetting;
    }
 
-   public static BooleansSetting getModeSetting(GuiMoveScreenOption guiMoveScreenOption) {
+   public static StringValue getModeSetting(GuiMoveScreenOption guiMoveScreenOption) {
       return guiMoveScreenOption.modeSetting;
    }
 
@@ -116,7 +116,7 @@ private GuiMoveScreenOption(String str, boolean flag) {
       return guiMoveScreenOption.sneakMotionWhileMovingSetting;
    }
 
-   public static BooleansSetting getSprintModeSetting(GuiMoveScreenOption guiMoveScreenOption) {
+   public static StringValue getSprintModeSetting(GuiMoveScreenOption guiMoveScreenOption) {
       return guiMoveScreenOption.sprintModeSetting;
    }
 
@@ -124,11 +124,11 @@ private GuiMoveScreenOption(String str, boolean flag) {
       return guiMoveScreenOption.sprintJumpBoostSetting;
    }
 
-   public static StringValue getForwardMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption) {
+   public static DoubleValue getForwardMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption) {
       return guiMoveScreenOption.forwardMotionMultiplierSetting;
    }
 
-   public static StringValue getDiagonalMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption) {
+   public static DoubleValue getDiagonalMotionMultiplierSetting(GuiMoveScreenOption guiMoveScreenOption) {
       return guiMoveScreenOption.diagonalMotionMultiplierSetting;
    }
 }

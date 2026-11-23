@@ -39,8 +39,7 @@ public class EventSound extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      SoundListener listener = (SoundListener)obj;
-      this.call2(listener);
+      this.call2((SoundListener)obj);
    }
 
    public double getY() {

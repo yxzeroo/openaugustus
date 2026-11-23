@@ -41,9 +41,7 @@ public class SimulatedCraftingInventory {
       int orDefault = (Integer)(this.totalCountByItem.getOrDefault(item, 0));
       int itemStackLimit = item.getItemStackLimit();
       int orDefault2 = (Integer)(this.slotCountByItem.getOrDefault(item, 0));
-      int n2 = orDefault + n;
-      int n3 = (n2 + itemStackLimit - 1) / itemStackLimit;
-      int n4 = n3 - orDefault2;
+      int n4 = (((orDefault + n) + itemStackLimit - 1) / itemStackLimit) - orDefault2;
       return n4 <= 0 || this.emptySlotCount >= n4;
    }
 

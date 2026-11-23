@@ -13,23 +13,13 @@ public class FloatListProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonListPropertyCodec floatListCodec = configSerializerProvider.getFloatListCodec();
-      String name2 = this.getName();
-      List list = flag ? (List)this.getDefaultValue() : (List)this.getValue();
-      String str = name2;
-      List list2 = floatListCodec.readList(str, list, json);
-      List list3 = list2;
-      this.applyValue(list3);
+      this.applyValue(configSerializerProvider.getFloatListCodec().readList(this.getName(), flag ? (List)this.getDefaultValue() : (List)this.getValue(), json));
    }
 
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonListPropertyCodec floatListCodec = configSerializerProvider.getFloatListCodec();
-      String name2 = this.getName();
-      List value2 = (List)this.getValue();
-      String str = name2;
-      floatListCodec.writeList(str, value2, json);
+      configSerializerProvider.getFloatListCodec().writeList(this.getName(), (List)this.getValue(), json);
       return json;
    }
 

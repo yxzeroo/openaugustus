@@ -28,7 +28,6 @@ public class JsonParseException extends Exception {
 
    @Override
    public String getMessage() {
-      String controlFlowTag2 = getControlFlowTag();
       StringBuffer sb = new StringBuffer();
       switch (this.errorType) {
          case 0:
@@ -79,7 +78,6 @@ public class JsonParseException extends Exception {
 
    static {
       setControlFlowTag("s269ub");
-      long l = -5012384678775095294L;
-      ERROR_UNEXPECTED_EXCEPTION = (int)l;
+      ERROR_UNEXPECTED_EXCEPTION = (int)(-5012384678775095294L);
    }
 }

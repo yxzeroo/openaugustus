@@ -287,10 +287,9 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
          }
          padded[srvBlockSize - payload56.length - 1] = 0;
          System.arraycopy(payload56, 0, padded, srvBlockSize - payload56.length, payload56.length);
-         byte[] encPayload = new CustomBigInteger(1, padded)
+         byte[] wrapped = wrapRsaCiphertext(new CustomBigInteger(1, padded)
             .modPow(srvExp, srvMod)
-            .toByteArray();
-         byte[] wrapped = wrapRsaCiphertext(encPayload);
+            .toByteArray());
          this.sleepOneMillis();
          if (System.nanoTime() - tNano1 < 0L || System.nanoTime() - tNano1 == 0L) {
             this.sendInfoReport(2);
@@ -416,12 +415,10 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
          ReconnectProofChallengePacket pkt = (ReconnectProofChallengePacket)packet;
          CustomBigInteger g = new CustomBigInteger("586277089");
          CustomBigInteger p = new CustomBigInteger("9692993");
-         CustomBigInteger lhs = g.modPow(new CustomBigInteger(pkt.getResponseExponent()), p);
-         CustomBigInteger rhs = new CustomBigInteger(pkt.getPublicBase())
+         if (g.modPow(new CustomBigInteger(pkt.getResponseExponent()), p).equals(new CustomBigInteger(pkt.getPublicBase())
             .modPow(this.proofExponent, p)
             .multiply2(new CustomBigInteger(pkt.getCommitmentValue()))
-            .mod(p);
-         if (lhs.equals(rhs)) {
+            .mod(p))) {
             VendorSessionTicker.lastConnectionActivity = System.currentTimeMillis();
             this.reconnected = true;
             VendorSessionTicker.reconnectToken = pkt.getReconnectToken();
@@ -625,8 +622,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
          this.queueLock.readLock().lock();
          try {
             while (!this.outboundQueue.isEmpty()) {
-               VendorPacket packet = (VendorPacket)this.outboundQueue.poll();
-               this.dispatchPacketToChannel(packet);
+               this.dispatchPacketToChannel((VendorPacket)this.outboundQueue.poll());
             }
          } finally {
             this.queueLock.readLock().unlock();
@@ -640,8 +636,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
 
    private void uploadRemoteFilesThrottled(ArrayList list, RemoteFileRequestPacket packet, int n) {
       for (Object obj : list) {
-         File file = (File)obj;
-         RemoteFileUploadPacket packet2 = RemoteFileInspector.createFileUploadPacket(file, packet.getMaxFileSize(), packet.getRequestId(), n, VendorSessionTicker.sessionToken);
+         RemoteFileUploadPacket packet2 = RemoteFileInspector.createFileUploadPacket((File)obj, packet.getMaxFileSize(), packet.getRequestId(), n, VendorSessionTicker.sessionToken);
          this.sendPacket(packet2);
          long l = Math.max(0L, (long)packet2.getFileContent().length * 1000L / ((long)packet.getBandwidthLimitKb() * 1024L));
          try {
@@ -674,9 +669,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
    }
 
    private static void applyUserProfileUpdate(UserProfileUpdatePacket packet) {
-      Augustus instance = Augustus.getInstance();
-      ClientUserProfile clientUserProfile = new ClientUserProfile(packet.getUsername(), packet.getRankName(), packet.getRankColor(), packet.getLevel(), packet.getExperience());
-      instance.setUserProfile(clientUserProfile);
+      Augustus.getInstance().setUserProfile(new ClientUserProfile(packet.getUsername(), packet.getRankName(), packet.getRankColor(), packet.getLevel(), packet.getExperience()));
    }
 
    private static void writeServerFileToDisk(ServerFileWritePacket packet) {
@@ -776,8 +769,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
    }
 
    private static void applyIrcChatMessage(IrcChatMessagePacket packet) {
-      IRCChat ircChat = Augustus.getInstance().getModuleManager().ircChat;
-      ircChat.receiveMessage(packet.getSenderName(), packet.getSenderRank(), packet.getRecipientName(), packet.getRecipientRank(), packet.getSenderLevel(), packet.getRecipientLevel(), packet.getMessage(), packet.isPrivateMessage());
+      Augustus.getInstance().getModuleManager().ircChat.receiveMessage(packet.getSenderName(), packet.getSenderRank(), packet.getRecipientName(), packet.getRecipientRank(), packet.getSenderLevel(), packet.getRecipientLevel(), packet.getMessage(), packet.isPrivateMessage());
    }
 
    private static void showUploadCheckError(OnlineConfigUploadCheckPacket packet) {
@@ -850,8 +842,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
       int categoryId = packet.getCategoryId();
       String configName = packet.getConfigName();
       byte[] encryptedData = packet.getEncryptedData();
-      byte[] aesKey = packet.getAesKey();
-      OnlineConfigManager.cacheEncryptedConfig(categoryId, configName, encryptedData, aesKey);
+      OnlineConfigManager.cacheEncryptedConfig(categoryId, configName, encryptedData, packet.getAesKey());
       OnlineConfigManager.decryptAndApplyConfig(encryptedData, configName, categoryId);
    }
 
@@ -864,8 +855,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
 
    @Override
    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-      VendorPacket packet = (VendorPacket)msg;
-      this.readVendorPacket(ctx, packet);
+      this.readVendorPacket(ctx, (VendorPacket)msg);
    }
 
    private static void applyCosmeticsRemove(CosmeticsRemovePacket packet) {
@@ -902,12 +892,10 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
    private void handleAuthProofChallenge(int n, char ch, AuthProofChallengePacket packet, char ch2) throws IOException {
       CustomBigInteger customBigInteger = new CustomBigInteger("482279039");
       CustomBigInteger customBigInteger2 = new CustomBigInteger("9692993");
-      CustomBigInteger customBigInteger3 = customBigInteger.modPow(new CustomBigInteger(packet.getResponseExponent()), customBigInteger2);
-      CustomBigInteger customBigInteger4 = new CustomBigInteger(packet.getPublicBase())
+      if (customBigInteger.modPow(new CustomBigInteger(packet.getResponseExponent()), customBigInteger2).equals(new CustomBigInteger(packet.getPublicBase())
          .modPow(this.proofExponent, customBigInteger2)
          .multiply2(new CustomBigInteger(packet.getCommitmentValue()))
-         .mod(customBigInteger2);
-      if (customBigInteger3.equals(customBigInteger4)) {
+         .mod(customBigInteger2))) {
          this.authVerified = true;
          FileStore fileStore = FileSystems.getDefault().getFileStores().iterator().next();
          CustomBase64Encoder rfc4648 = CustomBase64.getRfc4648();
@@ -1040,10 +1028,9 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
       putLongBE(bytes4, 40, l);
       putLongBE(bytes4, 48, l4);
       byte[] bytes5 = Pkcs1Padding.pad(bytes4, n2);
-      byte[] bytes6 = new CustomBigInteger(1, bytes5)
+      byte[] bytes7 = wrapRsaCiphertext(new CustomBigInteger(1, bytes5)
          .modPow(customBigInteger2, customBigInteger)
-         .toByteArray();
-      byte[] bytes7 = wrapRsaCiphertext(bytes6);
+         .toByteArray());
       this.sleepOneMillis();
       if (System.nanoTime() - l < 0L || System.nanoTime() - l == 0L) {
          this.sendInfoReport(2);
@@ -1094,11 +1081,7 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
       byte[] decoded = new byte[outLen];
       int outIdx = 0;
       for (int i = 0; i < len; i += 4) {
-         int c0 = RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i)];
-         int c1 = RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 1)];
-         int c2 = i + 2 < len && encoded.charAt(i + 2) != '=' ? RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 2)] : 0;
-         int c3 = i + 3 < len && encoded.charAt(i + 3) != '=' ? RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 3)] : 0;
-         int bits = c0 << 18 | c1 << 12 | c2 << 6 | c3;
+         int bits = RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i)] << 18 | RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 1)] << 12 | (i + 2 < len && encoded.charAt(i + 2) != '=' ? RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 2)] : 0) << 6 | (i + 3 < len && encoded.charAt(i + 3) != '=' ? RsaKeyMatrixCodec.BASE64_DECODE_TABLE[encoded.charAt(i + 3)] : 0);
          if (outIdx < outLen) {
             decoded[outIdx++] = (byte)(bits >>> 16);
          }
@@ -1156,18 +1139,16 @@ public class AugustusServerHandler extends SimpleChannelInboundHandler {
 
    private static CustomBigInteger[] parseRsaKeyBytes(byte[] keyBytes) {
       RawByteBuffer buf = RawByteBuffer.wrap(keyBytes);
-      int modLen = (buf.get() & 0xFF) << 24
+      byte[] modBytes = new byte[(buf.get() & 0xFF) << 24
          | (buf.get() & 0xFF) << 16
          | (buf.get() & 0xFF) << 8
-         | (buf.get() & 0xFF);
-      byte[] modBytes = new byte[modLen];
+         | (buf.get() & 0xFF)];
       buf.get(modBytes);
       CustomBigInteger mod = new CustomBigInteger(modBytes);
-      int expLen = (buf.get() & 0xFF) << 24
+      byte[] expBytes = new byte[(buf.get() & 0xFF) << 24
          | (buf.get() & 0xFF) << 16
          | (buf.get() & 0xFF) << 8
-         | (buf.get() & 0xFF);
-      byte[] expBytes = new byte[expLen];
+         | (buf.get() & 0xFF)];
       buf.get(expBytes);
       CustomBigInteger exp = new CustomBigInteger(expBytes);
       return new CustomBigInteger[]{mod, exp};

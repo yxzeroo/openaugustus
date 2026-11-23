@@ -7,7 +7,7 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.MoveUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.legit.AutoEagle;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.util.AxisAlignedBB;
 
 public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListener {
@@ -16,7 +16,7 @@ public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListen
    private int ticksSinceEdge;
    private boolean wasSneaking;
 
-   public EagleAutoEagleMode(AutoEagle autoEagle, DoubleValue doubleValue) {
+   public EagleAutoEagleMode(AutoEagle autoEagle, SettingGroup doubleValue) {
        super(autoEagle, doubleValue, "Eagle");
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this.parentModule, "MinSneakTicks", 1.0, 2.0, 1.0, 5.0, 0, this.modeSetting)).withoutNotInARow();
       double d = 25.0;
@@ -24,23 +24,18 @@ public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListen
       double d3 = 2.0;
       double d4 = 1.0;
       double d5 = 3.0;
-      double d6 = 3.0;
-      randomizedRangeSettings = randomizedRangeSettings.withOutliers(d6, d5, d4, d3, d2, d);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.minSneakTicks = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
+      randomizedRangeSettings = randomizedRangeSettings.withOutliers(3.0, d5, d4, d3, d2, d);
+      this.minSneakTicks = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isSelected());
       randomizedRangeSettings = (new RandomizedRangeSettings(this.parentModule, "StartDistToBlockEagle", 0.05, 0.2, -0.2, 0.5, 2, this.modeSetting)).withoutNotInARow();
-      String str = "StartDistToBlock";
-      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.startDistToBlockEagle = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
+      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("StartDistToBlock");
+      this.startDistToBlockEagle = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isSelected());
       this.ticksSinceEdge = 0;
       this.wasSneaking = false;
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -60,8 +55,7 @@ public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListen
          ((AutoEagle)this.parentModule).eagling = false;
       } else {
          if (!((AutoEagle)this.parentModule).onlyWhileSneak.getValue()) {
-            boolean flag = true;
-            event.setSneak(flag);
+            event.setSneak(true);
          }
 
          ((AutoEagle)this.parentModule).eagling = ((AutoEagle)this.parentModule).fastPlace.getValue() && event.isSneak() && ((AutoEagle)this.parentModule).isPitchAboveMinimum();
@@ -98,12 +92,10 @@ public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListen
          }
 
          if (event.isSneak() && !flag) {
-            boolean flag2 = true;
-            event.setSneak(flag2);
+            event.setSneak(true);
             this.ticksSinceEdge = 0;
          } else if (this.ticksSinceEdge >= this.minSneakTicks.getLastIntValue() && mc.gameSettings.keyBindUseItem.isKeyDown()) {
-            boolean flag3 = false;
-            event.setSneak(flag3);
+            event.setSneak(false);
          }
 
          this.ticksSinceEdge++;
@@ -111,7 +103,7 @@ public class EagleAutoEagleMode extends AutoEagleMode implements MoveInputListen
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new EagleAutoEagleMode((AutoEagle)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new EagleAutoEagleMode((AutoEagle)obj, (SettingGroup)obj2);
    }
 
 }

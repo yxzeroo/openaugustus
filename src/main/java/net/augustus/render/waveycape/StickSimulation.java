@@ -20,8 +20,7 @@ public class StickSimulation {
 
       for (StickPoint stickPoint : (Iterable<StickPoint>)(this.points)) {
          if (!stickPoint.locked) {
-            CapeVector2f position = stickPoint.position;
-            capeVector2f2.copy(position);
+            capeVector2f2.copy(stickPoint.position);
             stickPoint.position.subtract(capeVector2f);
             stickPoint.prevPosition.copy(capeVector2f2);
          }
@@ -36,12 +35,7 @@ public class StickSimulation {
       }
 
       for (int i = this.points.size() - 2; i >= 1; i--) {
-         CapeVector2f position2 = ((StickPoint)this.points.get(i)).position;
-         CapeVector2f position3 = ((StickPoint)this.points.get(i - 1)).position;
-         CapeVector2f position4 = ((StickPoint)this.points.get(i + 1)).position;
-         CapeVector2f capeVector2f3 = position3;
-         CapeVector2f capeVector2f4 = position2;
-         double angle = this.getAngle(capeVector2f4, capeVector2f3, position4);
+         double angle = this.getAngle(((StickPoint)this.points.get(i)).position, ((StickPoint)this.points.get(i - 1)).position, ((StickPoint)this.points.get(i + 1)).position);
          angle *= 57.2958;
          if (angle > 360.0) {
             angle -= 360.0;
@@ -55,18 +49,14 @@ public class StickSimulation {
          if (d < (double)(180.0F - this.maxBend)) {
             CapeVector2f position5 = ((StickPoint)this.points.get(i)).position;
             double d2 = (double)(180.0F - this.maxBend + 1.0F);
-            CapeVector2f position6 = ((StickPoint)this.points.get(i - 1)).position;
-            CapeVector2f capeVector2f5 = position5;
-            CapeVector2f capeVector2f6 = this.constrainPointAngle(capeVector2f5, position6, angle, d2);
+            CapeVector2f capeVector2f6 = this.constrainPointAngle(position5, ((StickPoint)this.points.get(i - 1)).position, angle, d2);
             ((StickPoint)this.points.get(i + 1)).position = capeVector2f6;
          }
 
          if (d > (double)(180.0F + this.maxBend)) {
             CapeVector2f position7 = ((StickPoint)this.points.get(i)).position;
             double d3 = (double)(180.0F + this.maxBend - 1.0F);
-            CapeVector2f position8 = ((StickPoint)this.points.get(i - 1)).position;
-            CapeVector2f capeVector2f7 = position7;
-            CapeVector2f capeVector2f8 = this.constrainPointAngle(capeVector2f7, position8, angle, d3);
+            CapeVector2f capeVector2f8 = this.constrainPointAngle(position7, ((StickPoint)this.points.get(i - 1)).position, angle, d3);
             ((StickPoint)this.points.get(i + 1)).position = capeVector2f8;
          }
       }
@@ -75,44 +65,25 @@ public class StickSimulation {
          for (int k = this.sticks.size() - 1; k >= 0; k--) {
             StickConstraint stickConstraint = (StickConstraint)this.sticks.get(k);
             CapeVector2f capeVector2f9 = stickConstraint.pointA.position.copy();
-            CapeVector2f position9 = stickConstraint.pointB.position;
-            capeVector2f9 = capeVector2f9.add(position9);
-            float f2 = 2.0F;
-            CapeVector2f capeVector2f10 = capeVector2f9.div(f2);
+            capeVector2f9 = capeVector2f9.add(stickConstraint.pointB.position);
+            CapeVector2f capeVector2f10 = capeVector2f9.div(2.0F);
             capeVector2f9 = stickConstraint.pointA.position.copy();
-            CapeVector2f position10 = stickConstraint.pointB.position;
-            CapeVector2f capeVector2f11 = capeVector2f9.subtract(position10).normalize();
+            CapeVector2f capeVector2f11 = capeVector2f9.subtract(stickConstraint.pointB.position).normalize();
             if (!stickConstraint.pointA.locked) {
-               StickPoint pointA = stickConstraint.pointA;
-               CapeVector2f capeVector2f12 = capeVector2f10.copy();
-               CapeVector2f capeVector2f13 = capeVector2f11.copy();
-               float f3 = stickConstraint.length / 2.0F;
-               CapeVector2f capeVector2f14 = capeVector2f13.mul(f3);
-               pointA.position = capeVector2f12.add(capeVector2f14);
+               stickConstraint.pointA.position = capeVector2f10.copy().add(capeVector2f11.copy().mul(stickConstraint.length / 2.0F));
             }
 
             if (!stickConstraint.pointB.locked) {
-               StickPoint pointB = stickConstraint.pointB;
-               CapeVector2f capeVector2f15 = capeVector2f10.copy();
-               CapeVector2f capeVector2f16 = capeVector2f11.copy();
-               float f4 = stickConstraint.length / 2.0F;
-               CapeVector2f capeVector2f17 = capeVector2f16.mul(f4);
-               pointB.position = capeVector2f15.subtract(capeVector2f17);
+               stickConstraint.pointB.position = capeVector2f10.copy().subtract(capeVector2f11.copy().mul(stickConstraint.length / 2.0F));
             }
          }
       }
 
       for (int m = 0; m < this.sticks.size(); m++) {
          StickConstraint stickConstraint2 = (StickConstraint)this.sticks.get(m);
-         CapeVector2f capeVector2f18 = stickConstraint2.pointA.position.copy();
-         CapeVector2f position11 = stickConstraint2.pointB.position;
-         CapeVector2f capeVector2f19 = capeVector2f18.subtract(position11).normalize();
+         CapeVector2f capeVector2f19 = stickConstraint2.pointA.position.copy().subtract(stickConstraint2.pointB.position).normalize();
          if (!stickConstraint2.pointB.locked) {
-            StickPoint pointB2 = stickConstraint2.pointB;
-            CapeVector2f capeVector2f20 = stickConstraint2.pointA.position.copy();
-            float length = stickConstraint2.length;
-            CapeVector2f capeVector2f21 = capeVector2f19.mul(length);
-            pointB2.position = capeVector2f20.subtract(capeVector2f21);
+            stickConstraint2.pointB.position = stickConstraint2.pointA.position.copy().subtract(capeVector2f19.mul(stickConstraint2.length));
          }
       }
    }

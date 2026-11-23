@@ -309,8 +309,7 @@ public class InventoryPlayer implements IInventory {
    }
 
    public boolean hasItem(Item item) {
-      int n = this.getInventorySlotContainItem(item);
-      return n >= 0;
+      return this.getInventorySlotContainItem(item) >= 0;
    }
 
    public void damageArmor(float f) {

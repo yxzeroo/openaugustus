@@ -8,21 +8,17 @@ public class CustomNameCommand extends Command {
 
    public void commandAction(String[] strings, String str) {
       if (strings.length == 2) {
-         String str2 = strings[1];
-         String str3 = str2;
+         String str3 = strings[1];
          ClientManagers.moduleManager.customName.customName.setValue(str3);
-         String str4 = "Set your custom name to: §c§l" + ClientManagers.moduleManager.customName.customName.getValue();
-         this.sendChat(str4);
+         this.sendChat("Set your custom name to: §c§l" + ClientManagers.moduleManager.customName.customName.getValue());
          ClientManagers.moduleManager.customName.refreshCustomName();
       } else {
-         String str5 = "§7" + this.getCommand() + " [§2Name§7]";
-         this.sendChat(str5);
+         this.sendChat("§7" + this.getCommand() + " [§2Name§7]");
       }
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Sets your custom name)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Sets your custom name)");
    }
 
    public CustomNameCommand() {

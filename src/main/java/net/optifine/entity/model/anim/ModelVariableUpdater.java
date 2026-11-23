@@ -18,8 +18,7 @@ public class ModelVariableUpdater {
          return false;
       } else {
          try {
-            ExpressionParser expressionParser = new ExpressionParser(modelResolver);
-            this.expression = expressionParser.parseFloat(this.expressionText);
+            this.expression = new ExpressionParser(modelResolver).parseFloat(this.expressionText);
             return true;
          } catch (ParseException e) {
             Config.warn("Error parsing expression: " + this.expressionText);

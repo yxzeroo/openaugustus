@@ -6,7 +6,6 @@ public class SymmetricStreamCipher {
    private static final int BLOCK_SIZE = 0;
 
    public static byte[] decrypt(byte[] bytes, byte[] bytes2) {
-      int flowState = Pkcs1Padding.getFlowState();
       if (bytes.length < 32) {
          throw new IllegalArgumentException("Invalid encrypted data");
       } else {
@@ -47,7 +46,6 @@ public class SymmetricStreamCipher {
 
    private static void generateKeystream(byte[] bytes, byte[] bytes2, byte[] bytes3) {
       byte[] bytes4 = Arrays.copyOf(bytes2, bytes2.length);
-      Pkcs1Padding.getInvertedFlowMarker();
 
       for (int i = 0; i < bytes3.length; i += 16) {
          for (int j = 0; j < 16; j++) {
@@ -62,13 +60,11 @@ public class SymmetricStreamCipher {
             }
          }
 
-         int n2 = Math.min(16, bytes3.length - i);
-         System.arraycopy(bytes4, 0, bytes3, i, n2);
+         System.arraycopy(bytes4, 0, bytes3, i, Math.min(16, bytes3.length - i));
       }
    }
 
    public static byte[] encrypt(byte[] bytes, byte[] bytes2) {
-      int flowState = Pkcs1Padding.getFlowState();
       if (bytes2.length < 16) {
          throw new IllegalArgumentException("Key must be at least 16 bytes");
       } else {
@@ -100,7 +96,6 @@ public class SymmetricStreamCipher {
    }
 
    public static byte[] generateRandomKey(int n) {
-      int flowState = Pkcs1Padding.getFlowState();
       if (n < 16) {
          n = 16;
       }

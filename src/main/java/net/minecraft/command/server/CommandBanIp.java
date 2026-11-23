@@ -58,8 +58,7 @@ public class CommandBanIp extends CommandBase {
    public void processCommand(ICommandSender commandSender, String[] strings) throws CommandException {
       if (strings.length >= 1 && strings[0].length() > 1) {
          IChatComponent component = strings.length >= 2 ? getChatComponentFromNthArg(commandSender, strings, 1) : null;
-         Matcher matcher = IP_PATTERN.matcher(strings[0]);
-         if (matcher.matches()) {
+         if (IP_PATTERN.matcher(strings[0]).matches()) {
             this.banIp(commandSender, strings[0], component == null ? null : component.getUnformattedText());
          } else {
             EntityPlayerMP playerByUsername = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(strings[0]);

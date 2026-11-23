@@ -18,8 +18,8 @@ import net.augustus.render.RenderUtil;
 import net.augustus.utils.player.PlayerUtil;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -33,18 +33,18 @@ import net.minecraft.util.Vec3;
 public class TimeManipulation extends Module implements RenderListener, LoadWorldListener, TimerListener {
    private final TimeHelper idleChargeTimer;
    public final TimeHelper timerRangeCooldown;
-   public final StringValue minTicksAvailable;
-   public final StringValue maxChargingTicks;
+   public final DoubleValue minTicksAvailable;
+   public final DoubleValue maxChargingTicks;
    public final BooleanValue correct;
    public final BooleanValue autoCharge;
    public final BooleanValue sneakCharge;
    public final BooleanValue updateEntityPositions;
    public final BooleanValue resetAtWorldChange;
    public final BooleanValue timerRangeBool;
-   public final DoubleValue timerRange;
-   public final StringValue delay;
-   public final StringValue timerTicksForward;
-   public final StringValue tolerance;
+   public final SettingGroup timerRange;
+   public final DoubleValue delay;
+   public final DoubleValue timerTicksForward;
+   public final DoubleValue tolerance;
    public final BooleanValue onlyOnGround;
    public final BooleanValue dynamic;
    public final BooleanValue onlyKillAura;
@@ -55,25 +55,21 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
        super("TimeManipulation", "ZeitManipulation", new Color(50, 168, 82), Categorys.MISC);
       this.idleChargeTimer = new TimeHelper();
       this.timerRangeCooldown = new TimeHelper();
-      this.minTicksAvailable = new StringValue(this, "MinTicksAvailable", 0.0, -10.0, 10.0, 0);
-      this.maxChargingTicks = new StringValue(this, "MaxChargingTicks", 8.0, 1.0, 100.0, 0);
+      this.minTicksAvailable = new DoubleValue(this, "MinTicksAvailable", 0.0, -10.0, 10.0, 0);
+      this.maxChargingTicks = new DoubleValue(this, "MaxChargingTicks", 8.0, 1.0, 100.0, 0);
       this.correct = new BooleanValue(this, "Correct", true);
       this.autoCharge = new BooleanValue(this, "AutoCharge", false);
       this.sneakCharge = new BooleanValue(this, "SneakCharge", true);
       this.updateEntityPositions = new BooleanValue(this, "UpdateEntityPositions", false);
       this.resetAtWorldChange = new BooleanValue(this, "ResetAtWorldChange", true);
-      BooleanValue booleanValue = new BooleanValue(this, "TimerRangeBool", false);
-      String str = "TimerRange";
-      this.timerRangeBool = (BooleanValue)booleanValue.withDisplayName(str);
-      DoubleValue doubleValue = new DoubleValue(this, "TimerRange");
+      this.timerRangeBool = (BooleanValue)new BooleanValue(this, "TimerRangeBool", false).withDisplayName("TimerRange");
+      SettingGroup doubleValue = new SettingGroup(this, "TimerRange");
       BooleanValue timerRangeBool2 = this.timerRangeBool;
       this.timerRangeBool.getClass();
-      BooleanValue booleanValue2 = timerRangeBool2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.timerRange = doubleValue.visibleWhen(condition);
-      this.delay = new StringValue(this, "Delay", 0.0, 0.0, 20000.0, 0, this.timerRange);
-      this.timerTicksForward = new StringValue(this, "TimerTicksForward", 3.0, 1.0, 10.0, 0, this.timerRange);
-      this.tolerance = new StringValue(this, "Tolerance", 0.0, -1.0, 1.0, 2, this.timerRange);
+      this.timerRange = doubleValue.visibleWhen(() -> timerRangeBool2.getValue());
+      this.delay = new DoubleValue(this, "Delay", 0.0, 0.0, 20000.0, 0, this.timerRange);
+      this.timerTicksForward = new DoubleValue(this, "TimerTicksForward", 3.0, 1.0, 10.0, 0, this.timerRange);
+      this.tolerance = new DoubleValue(this, "Tolerance", 0.0, -1.0, 1.0, 2, this.timerRange);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false, this.timerRange);
       this.dynamic = new BooleanValue(this, "Dynamic", true, this.timerRange);
       this.onlyKillAura = new BooleanValue(this, "OnlyKillAura", true, this.timerRange);
@@ -93,12 +89,9 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 17;
-      this.toggleEventSubscription(b2);
-      byte b3 = 41;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)41);
    }
 
    @Override
@@ -113,9 +106,7 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
             && (!this.forbiddenSneak.getValue() || !mc.thePlayer.isSneaking())
             && (!this.clickCheck.getValue() || mc.gameSettings.keyBindAttack.isKeyDown())
             && (!this.onlyOnGround.getValue() || mc.thePlayer.onGround)) {
-            TimeHelper timerRangeCooldown2 = this.timerRangeCooldown;
-            long value = (long)this.delay.getValue();
-            if (timerRangeCooldown2.reached2(value)
+            if (this.timerRangeCooldown.reached2((long)this.delay.getValue())
                && (
                   ClientManagers.moduleManager.killAura.isToggled() && ClientManagers.moduleManager.killAura.target != null
                      || ClientManagers.moduleManager.aimBot.isToggled() && ClientManagers.moduleManager.aimBot.target != null
@@ -183,9 +174,7 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
                            if (vec.distanceTo(vec2) < d7 && vec4.distanceTo(vec5) > 3.0 - this.tolerance.getValue() && positionEyes.distanceTo(vec3) > 3.0) {
                               event.setExtraTicks(i);
                               if (ClientManagers.moduleManager.debug.isToggled() && ClientManagers.moduleManager.debug.timerRangeDebug.getValue()) {
-                                 Debug debug = ClientManagers.moduleManager.debug;
-                                 String str = "Timered:  " + vec4.distanceTo(vec5) + "  " + vec.distanceTo(vec2);
-                                 debug.outputDebugMessage(str);
+                                 ClientManagers.moduleManager.debug.outputDebugMessage("Timered:  " + vec4.distanceTo(vec5) + "  " + vec.distanceTo(vec2));
                               }
 
                               this.timerRangeCooldown.reset();
@@ -209,9 +198,7 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
       boolean flag;
       exitBlock: {
          if (mc.thePlayer != null && this.isChargeConditionMet()) {
-            double d = (double)n;
-            boolean flag2 = true;
-            if (d < this.maxChargingTicks.getValue(flag2)) {
+            if (((double)n) < this.maxChargingTicks.getValue(true)) {
                flag = true;
                break exitBlock;
             }
@@ -261,8 +248,7 @@ public class TimeManipulation extends Module implements RenderListener, LoadWorl
                }
             }
 
-            long l = 100L;
-            if (this.idleChargeTimer.reached2(l)) {
+            if (this.idleChargeTimer.reached2(100L)) {
                flag = true;
             }
          } else {

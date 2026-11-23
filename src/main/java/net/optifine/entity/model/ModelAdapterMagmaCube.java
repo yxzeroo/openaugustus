@@ -39,8 +39,7 @@ public class ModelAdapterMagmaCube extends ModelAdapter {
                return null;
             } else {
                ModelRenderer[] segments = modelMagmaCube.segments;
-               String str3 = str.substring(str2.length());
-               int n = Config.parseInt(str3, -1);
+               int n = Config.parseInt(str.substring(str2.length()), -1);
                n--;
                return n >= 0 && n < segments.length ? segments[n] : null;
             }

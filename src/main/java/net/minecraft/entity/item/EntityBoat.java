@@ -73,8 +73,7 @@ public class EntityBoat extends Entity {
             double d4 = d - this.posX;
             double d5 = d2 - this.posY;
             double d6 = d3 - this.posZ;
-            double d7 = d4 * d4 + d5 * d5 + d6 * d6;
-            if (d7 <= 1.0) {
+            if ((d4 * d4 + d5 * d5 + d6 * d6) <= 1.0) {
                return;
             }
 
@@ -317,10 +316,7 @@ public class EntityBoat extends Entity {
             this.setPosition(d13, d14, d15);
             this.setRotation(this.rotationYaw, this.rotationPitch);
          } else {
-            double d17 = this.posX + this.motionX;
-            double d18 = this.posY + this.motionY;
-            double d19 = this.posZ + this.motionZ;
-            this.setPosition(d17, d18, d19);
+            this.setPosition(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
             if (this.onGround) {
                this.motionX *= 0.5;
                this.motionY *= 0.5;

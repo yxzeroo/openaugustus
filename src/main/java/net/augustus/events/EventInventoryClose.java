@@ -31,9 +31,7 @@ public class EventInventoryClose extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      InventoryCloseListener listener = (InventoryCloseListener)obj;
-      InventoryCloseListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((InventoryCloseListener)obj);
    }
 
    public boolean canCloseAfterDelay(double d) {

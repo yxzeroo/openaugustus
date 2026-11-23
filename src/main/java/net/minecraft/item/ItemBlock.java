@@ -46,9 +46,7 @@ public class ItemBlock extends Item {
    }
 
    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float f, float f2, float f3) {
-      IBlockState blockState = world.getBlockState(pos);
-      Block block2 = blockState.getBlock();
-      if (!block2.isReplaceable(world, pos)) {
+      if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
          pos = pos.offset(facing);
       }
 
@@ -128,8 +126,7 @@ public class ItemBlock extends Item {
                NBTTagCompound tag = new NBTTagCompound();
                NBTTagCompound tag2 = (NBTTagCompound)tag.copy();
                tileEntity.writeToNBT(tag);
-               NBTTagCompound tag3 = (NBTTagCompound)stack.getTagCompound().getTag("BlockEntityTag");
-               tag.merge(tag3);
+               tag.merge((NBTTagCompound)stack.getTagCompound().getTag("BlockEntityTag"));
                tag.setInteger("x", pos.getX());
                tag.setInteger("y", pos.getY());
                tag.setInteger("z", pos.getZ());

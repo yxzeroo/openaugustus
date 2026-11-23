@@ -37,8 +37,7 @@ public class DynamicLight {
 
    public void updateLitChunks(RenderGlobal renderGlobal) {
       for (BlockPos pos : (Iterable<BlockPos>)(this.setLitChunkPos)) {
-         RenderChunk renderChunk = renderGlobal.getRenderChunk(pos);
-         this.updateChunkLight(renderChunk, (Set)null, (Set)null);
+         this.updateChunkLight(renderGlobal.getRenderChunk(pos), (Set)null, (Set)null);
       }
    }
 
@@ -99,9 +98,7 @@ public class DynamicLight {
          WorldClient theWorld = renderGlobal.getTheWorld();
          if (theWorld != null) {
             this.blockPosMutable.set(MathHelper.floor_double(d), MathHelper.floor_double(d2), MathHelper.floor_double(d3));
-            IBlockState blockState = theWorld.getBlockState(this.blockPosMutable);
-            Block block = blockState.getBlock();
-            this.underwater = block == Blocks.water;
+            this.underwater = theWorld.getBlockState(this.blockPosMutable).getBlock() == Blocks.water;
          }
 
          HashSet set = new HashSet();
@@ -113,18 +110,14 @@ public class DynamicLight {
             RenderChunk renderChunk = renderGlobal.getRenderChunk(pos);
             BlockPos chunkPos = this.getChunkPos(renderChunk, pos, facing);
             RenderChunk renderChunk2 = renderGlobal.getRenderChunk(chunkPos);
-            BlockPos chunkPos2 = this.getChunkPos(renderChunk, pos, facing3);
-            RenderChunk renderChunk3 = renderGlobal.getRenderChunk(chunkPos2);
-            BlockPos chunkPos3 = this.getChunkPos(renderChunk2, chunkPos, facing3);
-            RenderChunk renderChunk4 = renderGlobal.getRenderChunk(chunkPos3);
+            RenderChunk renderChunk3 = renderGlobal.getRenderChunk(this.getChunkPos(renderChunk, pos, facing3));
+            RenderChunk renderChunk4 = renderGlobal.getRenderChunk(this.getChunkPos(renderChunk2, chunkPos, facing3));
             BlockPos chunkPos4 = this.getChunkPos(renderChunk, pos, facing2);
             RenderChunk renderChunk5 = renderGlobal.getRenderChunk(chunkPos4);
             BlockPos chunkPos5 = this.getChunkPos(renderChunk5, chunkPos4, facing);
             RenderChunk renderChunk6 = renderGlobal.getRenderChunk(chunkPos5);
-            BlockPos chunkPos6 = this.getChunkPos(renderChunk5, chunkPos4, facing3);
-            RenderChunk renderChunk7 = renderGlobal.getRenderChunk(chunkPos6);
-            BlockPos chunkPos7 = this.getChunkPos(renderChunk6, chunkPos5, facing3);
-            RenderChunk renderChunk8 = renderGlobal.getRenderChunk(chunkPos7);
+            RenderChunk renderChunk7 = renderGlobal.getRenderChunk(this.getChunkPos(renderChunk5, chunkPos4, facing3));
+            RenderChunk renderChunk8 = renderGlobal.getRenderChunk(this.getChunkPos(renderChunk6, chunkPos5, facing3));
             this.updateChunkLight(renderChunk, this.setLitChunkPos, set);
             this.updateChunkLight(renderChunk2, this.setLitChunkPos, set);
             this.updateChunkLight(renderChunk3, this.setLitChunkPos, set);

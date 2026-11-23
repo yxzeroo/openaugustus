@@ -21,8 +21,7 @@ public class BlockPressurePlateWeighted extends BlockBasePressurePlate {
    }
 
    static {
-      String str = "power";
-      POWER = PropertyInteger.create(str, 0, 15);
+      POWER = PropertyInteger.create("power", 0, 15);
    }
 
    @Override
@@ -49,8 +48,7 @@ public class BlockPressurePlateWeighted extends BlockBasePressurePlate {
    public int computeRedstoneStrength(World world, BlockPos pos) {
       int n = Math.min(world.getEntitiesWithinAABB(Entity.class, this.getSensitiveAABB(pos)).size(), this.maxWeight);
       if (n > 0) {
-         float f = (float)Math.min(this.maxWeight, n) / (float)this.maxWeight;
-         return MathHelper.ceiling_float_int(f * 15.0F);
+         return MathHelper.ceiling_float_int(((float)Math.min(this.maxWeight, n) / (float)this.maxWeight) * 15.0F);
       } else {
          return 0;
       }

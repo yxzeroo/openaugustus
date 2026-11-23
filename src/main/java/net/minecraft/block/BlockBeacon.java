@@ -113,8 +113,7 @@ public class BlockBeacon extends BlockContainer {
                break;
             }
 
-            IBlockState blockState = this.worldIn.getBlockState(pos);
-            if (blockState.getBlock() == Blocks.beacon) {
+            if (this.worldIn.getBlockState(pos).getBlock() == Blocks.beacon) {
                WorldServer worldIn2 = (WorldServer)this.worldIn;
                World worldIn3 = this.worldIn;
                worldIn2.addScheduledTask(() -> {

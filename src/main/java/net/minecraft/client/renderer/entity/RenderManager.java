@@ -246,10 +246,8 @@ public class RenderManager {
       this.textRenderer = fontRenderer;
       if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPlayerSleeping()) {
          IBlockState blockState = world.getBlockState(new BlockPos(entity));
-         Block block = blockState.getBlock();
-         if (block == Blocks.bed) {
-            int horizontalIndex = ((EnumFacing)blockState.getValue(BlockBed.FACING)).getHorizontalIndex();
-            this.playerViewY = (float)(horizontalIndex * 90 + 180);
+         if (blockState.getBlock() == Blocks.bed) {
+            this.playerViewY = (float)(((EnumFacing)blockState.getValue(BlockBed.FACING)).getHorizontalIndex() * 90 + 180);
             this.playerViewX = 0.0F;
          }
       } else {
@@ -344,10 +342,7 @@ public class RenderManager {
       Render render = null;
       Augustus.getInstance().getClass();
       if (entity instanceof EntityPlayer) {
-         EntityPlayer player = (EntityPlayer)entity;
-         byte b = 2;
-         PlayerEffectEntry playerEffect = PlayerEffectRegistry.getPlayerEffect(player, b);
-         if (playerEffect != null) {
+         if (PlayerEffectRegistry.getPlayerEffect((EntityPlayer)entity, (byte)2) != null) {
             return true;
          }
       }
@@ -388,8 +383,7 @@ public class RenderManager {
                && !flag) {
                if (flag2) {
                   ColorSetting boxColor = Augustus.getInstance().getModuleManager().arrowHitboxes.boxColor;
-                  byte b2 = 0;
-                  boxColor.getColorInt(b2);
+                  boxColor.getColorInt((byte)0);
                   n = boxColor.getRed();
                   n2 = boxColor.getGreen();
                   n3 = boxColor.getBlue();
@@ -414,8 +408,7 @@ public class RenderManager {
          return true;
       } catch (Throwable e4) {
          CrashReport crashReport = CrashReport.makeCrashReport(e4, "Rendering entity in world");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Entity being rendered");
-         entity.addEntityCrashInfo(crashReportCategory);
+         entity.addEntityCrashInfo(crashReport.makeCategory("Entity being rendered"));
          CrashReportCategory crashReportCategory2 = crashReport.makeCategory("Renderer details");
          crashReportCategory2.addCrashSection("Assigned renderer", render);
          crashReportCategory2.addCrashSection("Location", CrashReportCategory.getCoordinateInfo(d, d2, d3));

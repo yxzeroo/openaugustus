@@ -24,8 +24,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -41,7 +41,7 @@ public class UNoise3PointSelector {
    private RotationSilenceController globalSilenceController;
    private UNoise3SettingContext uNoise3SettingContext;
    private ArrayList horizontalAimModes;
-   private StringValue uNoise3constantbbsizeoorv;
+   private DoubleValue uNoise3constantbbsizeoorv;
    private RotationSilenceController horizontalPredSilenceController;
    private TickDelayedPointCache futurePitchBoundsCache;
    private RotationSilenceController verticalSilenceController;
@@ -51,7 +51,7 @@ public class UNoise3PointSelector {
    private RotationSilenceController verticalPredSilenceController;
    private RandomizedRangeSettings noobDelaySetting;
    private BooleanValue uNoise3constantvbbsizeoor;
-   private StringValue uNoise3horizontalfastthreshold;
+   private DoubleValue uNoise3horizontalfastthreshold;
    private BooleanValue uNoise3constantverticalbb;
    private double latestClampedNoobPitch;
    private RandomizedRangeSettings futureDelaySetting;
@@ -62,17 +62,17 @@ public class UNoise3PointSelector {
    public double unsilencedYaw;
    private UNoise3PredictionScheduler uNoise3PredictionScheduler;
    private ArrayList verticalAimModes;
-   private StringValue uNoise3constantverticalboundingboxsize;
+   private DoubleValue uNoise3constantverticalboundingboxsize;
    public double lastOutputYaw;
    private RotationSilenceController horizontalSilenceController;
-   private StringValue uNoise3verticalfastthreshold;
+   private DoubleValue uNoise3verticalfastthreshold;
    public double unsilencedPitch;
    public EntityPlayerSP player;
    private ArrayList horizontalPredictedAimModes;
    private RandomizedRangeSettings futureIntervalDelaySetting;
    private TickDelayedPointCache futurePitchCache;
-   private StringValue uNoise3constantvbbsizeoorv;
-   private StringValue uNoise3constanthorizontalboundingboxsize;
+   private DoubleValue uNoise3constantvbbsizeoorv;
+   private DoubleValue uNoise3constanthorizontalboundingboxsize;
    private VarianceNoiseSetting uNoise3VerticalOffset;
    private ArrayList verticalPredictedAimModes;
    private BooleanValue uNoise3constanthorizontalbb;
@@ -95,12 +95,8 @@ public class UNoise3PointSelector {
       ArrayList list3 = new ArrayList();
 
       for (int i = 0; i < n; i++) {
-         Vec3 vec = (Vec3)list2.get(i);
-         boolean flag = true;
-         Vec3 vec2 = vec;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
-         Vec3 vec3 = ((Vec3)list.get(i)).addVector(0.0, d, 0.0);
-         double[] pitchRange = HitboxAngleUtil.getPitchRange(vec3, entityBoundingBoxAt);
+         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, (Vec3)list2.get(i), true);
+         double[] pitchRange = HitboxAngleUtil.getPitchRange(((Vec3)list.get(i)).addVector(0.0, d, 0.0), entityBoundingBoxAt);
          doublesArr[i] = pitchRange;
          list3.add(pitchRange[0]);
          list3.add(pitchRange[1]);
@@ -200,8 +196,7 @@ public class UNoise3PointSelector {
    }
 
    private double sampleFutureIntervalDelay() {
-      boolean flag = true;
-      return this.futureIntervalDelaySetting.nextValue(flag);
+      return this.futureIntervalDelaySetting.nextValue(true);
    }
 
    private ArrayList[] sampleHittableSurfaceGrid(Vec3 vec, EntityLivingBase entity, AxisAlignedBB box, double d) {
@@ -221,15 +216,13 @@ public class UNoise3PointSelector {
 
          for (int i = 0; i <= 50; i++) {
             double d5 = (double)i * 0.02;
-            float f2 = MathHelper.wrapAngleTo180_float((float)HitboxAngleUtil.lerpRange(yawRange, d5));
-            float f3 = RotationUtil.quantizeAngleDelta(rotationYaw, (float)EntityBoundsUtil.getShortestSignedAngleDelta((double)f, (double)f2));
+            float f3 = RotationUtil.quantizeAngleDelta(rotationYaw, (float)EntityBoundsUtil.getShortestSignedAngleDelta((double)f, (double)MathHelper.wrapAngleTo180_float((float)HitboxAngleUtil.lerpRange(yawRange, d5))));
             ArrayList list3 = new ArrayList();
             ArrayList list4 = new ArrayList();
 
             for (int j = 0; j <= 50; j++) {
                double d6 = (double)j * 0.02;
-               float f4 = (float)HitboxAngleUtil.lerpRange(pitchRange, d6);
-               float f5 = RotationUtil.quantizeAngleDelta(rotationPitch, f4 - rotationPitch);
+               float f5 = RotationUtil.quantizeAngleDelta(rotationPitch, ((float)HitboxAngleUtil.lerpRange(pitchRange, d6)) - rotationPitch);
                MovingObjectPosition hit = RayTraceUtil.rayTraceCustom(1.0F, f3, f5, 15.0, 15.0, 0.0, false, vec.xCoord, d3, vec.zCoord, box, entity);
                if (hit.entityHit == entity) {
                   list3.add(new Vec2d(d5, d6));
@@ -256,22 +249,14 @@ public class UNoise3PointSelector {
       double posX = player2.posX;
       double posY = player2.posY;
       double posZ = player2.posZ;
-      EventMoveInput event = new EventMoveInput(
+      ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player2, posX, posY, posZ, new EventMoveInput(
          player2.movementInput.moveStrafe, player2.movementInput.moveForward, player2.movementInput.jump, player2.movementInput.sneak, MoveInputStage.PRE
-      );
-      double d3 = posZ;
-      double d4 = posY;
-      double d5 = posX;
-      ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player2, d5, d4, d3, event);
-      int ticksExisted = player2.ticksExisted;
-      int n = player2.ticksExisted + list.size();
-      int n2 = ticksExisted;
-      ArrayList list2 = TrajectoryPredictionUtil.predictTargetPositions(player2, entity, n2, n);
+      ));
+      ArrayList list2 = TrajectoryPredictionUtil.predictTargetPositions(player2, entity, player2.ticksExisted, player2.ticksExisted + list.size());
       list.add(player2.getInterpolatedPos(1.0F));
       list2.add(entity.getInterpolatedPos(1.0F));
       posZ = (double)player2.getEyeHeight();
-      double d6 = posZ;
-      double[] doubles = this.computeOptimalFuturePitchRange(list, list2, entity, d6, d);
+      double[] doubles = this.computeOptimalFuturePitchRange(list, list2, entity, posZ, d);
       double d7 = doubles[0];
       double d8 = doubles[1];
       double[] doubles2 = new double[]{Math.min(d7, d8), Math.max(d7, d8)};
@@ -279,8 +264,7 @@ public class UNoise3PointSelector {
       this.futurePitchBoundsCache.update(doubles2);
       TickDelayedPointCache futurePitchCache2 = this.futurePitchCache;
       Double d10 = d9;
-      Double d11 = d10;
-      futurePitchCache2.update(d11);
+      futurePitchCache2.update(d10);
       this.latestClampedNoobPitch = d9;
       if (d2 < 3.1 && player2.onGround) {
          int size = list.size();
@@ -294,11 +278,7 @@ public class UNoise3PointSelector {
             player2.movementInput.sneak,
             MoveInputStage.PRE
          );
-         double d12 = 0.25;
-         double d13 = posZ2;
-         double d14 = posY;
-         double d15 = posX;
-         list = PlayerUtil.predictPlayerTrajectory(size, player2, d15, d14, d13, d12, event2);
+         list = PlayerUtil.predictPlayerTrajectory(size, player2, posX, posY, posZ2, 0.25, event2);
          list.add(player2.getInterpolatedPos(1.0F));
          ArrayList list3 = (ArrayList)list.clone();
          List list4 = Minecraft.getMinecraft().theWorld.getCollidingBoundingBoxesCapped(entity, entity.getEntityBoundingBox().addCoord(0.0, -0.11125, 0.0));
@@ -315,14 +295,10 @@ public class UNoise3PointSelector {
          }
 
          if (flag && entity.motionSnapshotHistory.size() > 0) {
-            byte b = 0;
-            EntityMotionSnapshot fromEnd = (EntityMotionSnapshot)entity.motionSnapshotHistory.getFromEnd(b);
+            EntityMotionSnapshot fromEnd = (EntityMotionSnapshot)entity.motionSnapshotHistory.getFromEnd((byte)0);
             double d17 = 0.0;
             double d18 = 0.25;
-            double d19 = 0.0;
-            byte b2 = 5;
-            EntityMotionSnapshot entityMotionSnapshot = fromEnd;
-            ArrayList list5 = EntityMovementPredictor.predictTrajectoryFromSnapshot(entity, entityMotionSnapshot, b2, d19, d18, d17);
+            ArrayList list5 = EntityMovementPredictor.predictTrajectoryFromSnapshot(entity, fromEnd, (byte)5, 0.0, d18, d17);
             list2.addAll(list5);
             list2.add(entity.getInterpolatedPos(1.0F));
             list.addAll(list);
@@ -334,17 +310,11 @@ public class UNoise3PointSelector {
          }
 
          posY = (double)player2.getEyeHeight();
-         double d20 = posY;
-         doubles = this.computeOptimalFuturePitchRange(list, list2, entity, d20, d);
+         doubles = this.computeOptimalFuturePitchRange(list, list2, entity, posY, d);
          d7 = doubles[0];
          d8 = doubles[1];
          doubles2 = new double[]{Math.min(d7, d8), Math.max(d7, d8)};
-         Vec3 positionEyes = player2.getPositionEyes(1.0F);
-         Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
-         boolean flag2 = true;
-         Vec3 vec = interpolatedPos;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec, flag2);
-         double[] pitchRange = HitboxAngleUtil.getPitchRange(positionEyes, entityBoundingBoxAt);
+         double[] pitchRange = HitboxAngleUtil.getPitchRange(player2.getPositionEyes(1.0F), EntityBoundsUtil.getEntityBoundingBoxAt(entity, entity.getInterpolatedPos(1.0F), true));
          doubles2[0] = MathHelper.clamp_double(doubles2[0], pitchRange[0], pitchRange[1]);
          doubles2[1] = MathHelper.clamp_double(doubles2[1], pitchRange[0], pitchRange[1]);
          this.latestClampedNoobPitch = MathHelper.clamp_double(d, doubles2[0], doubles2[1]);
@@ -352,8 +322,7 @@ public class UNoise3PointSelector {
 
       futurePitchCache2 = this.noobPitchCache;
       Double latestClampedNoobPitch2 = this.latestClampedNoobPitch;
-      Double d21 = latestClampedNoobPitch2;
-      futurePitchCache2.update(d21);
+      futurePitchCache2.update(latestClampedNoobPitch2);
    }
 
    private static TuplePair findLargestHittableRectangle(ArrayList list) {
@@ -377,8 +346,7 @@ public class UNoise3PointSelector {
             for (int i = 0; i < n; i++) {
                for (int j = 0; j < size; j++) {
                   List list3 = (List)list.get(j);
-                  boolean flag = list3 != null && list3.size() > i && list3.get(i) != null;
-                  ints[j] = flag ? ints[j] + 1 : 0;
+                  ints[j] = (list3 != null && list3.size() > i && list3.get(i) != null) ? ints[j] + 1 : 0;
                }
 
                ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
@@ -442,27 +410,19 @@ public class UNoise3PointSelector {
 
       for (int i = 0; i < list.size(); i++) {
          UNoise3AimMode uNoise3AimMode = (UNoise3AimMode)list.get(i);
-         boolean flag2 = true;
-         d += uNoise3AimMode.getStrengthNoise().intervalRange.getMinValue(flag2);
-         boolean flag3 = true;
-         d2 += uNoise3AimMode.getStrengthNoise().intervalRange.getMaxValue(flag3);
+         d += uNoise3AimMode.getStrengthNoise().intervalRange.getMinValue(true);
+         d2 += uNoise3AimMode.getStrengthNoise().intervalRange.getMaxValue(true);
       }
 
       for (int j = 0; j < list.size(); j++) {
          UNoise3AimMode uNoise3AimMode2 = (UNoise3AimMode)list.get(j);
          RangeSetting intervalRange = uNoise3AimMode2.getStrengthNoise().intervalRange;
-         boolean flag4 = true;
-         double d3 = d - intervalRange.getMinValue(flag4);
-         boolean flag5 = true;
-         double d4 = d2 - intervalRange.getMaxValue(flag5);
-         boolean flag6 = true;
-         double minValue = intervalRange.getMinValue(flag6);
-         boolean flag7 = true;
-         double d5 = minValue / (d4 + intervalRange.getMinValue(flag7));
-         boolean flag8 = true;
-         minValue = intervalRange.getMaxValue(flag8);
-         boolean flag9 = true;
-         double d6 = minValue / (d3 + intervalRange.getMaxValue(flag9));
+         double d3 = d - intervalRange.getMinValue(true);
+         double d4 = d2 - intervalRange.getMaxValue(true);
+         double minValue = intervalRange.getMinValue(true);
+         double d5 = minValue / (d4 + intervalRange.getMinValue(true));
+         minValue = intervalRange.getMaxValue(true);
+         double d6 = minValue / (d3 + intervalRange.getMaxValue(true));
          if (!Double.isFinite(d5)) {
             d5 = 0.0;
          }
@@ -482,8 +442,7 @@ public class UNoise3PointSelector {
       double[] yawRange = HitboxAngleUtil.getYawRange(positionEyes, box);
       double[] pitchRange = HitboxAngleUtil.getPitchRange(positionEyes, box);
       double normalizedYawPosition = HitboxAngleUtil.getNormalizedYawPosition(yawRange[0], yawRange[1], (double)f);
-      double d = (double)f2;
-      double d2 = HitboxAngleUtil.inverseLerpRange(pitchRange, d);
+      double d2 = HitboxAngleUtil.inverseLerpRange(pitchRange, (double)f2);
       double maxvalue = Double.MAX_VALUE;
       double d3 = normalizedYawPosition;
       double d4 = d2;
@@ -502,11 +461,9 @@ public class UNoise3PointSelector {
             double d9 = d7 - d2;
             double d10 = d8 * d8 + d9 * d9;
             if (d10 < maxvalue) {
-               float f4 = (float)HitboxAngleUtil.lerpRange(pitchRange, d7);
-               RotationUtil.applyMouseSensitivityFix(rotation, f3, f4, rotationYaw, rotationPitch);
+               RotationUtil.applyMouseSensitivityFix(rotation, f3, (float)HitboxAngleUtil.lerpRange(pitchRange, d7), rotationYaw, rotationPitch);
                float pitch = rotation.pitch;
-               float yaw = rotation.yaw;
-               if (this.canRaytraceHitTarget(entity, yaw, pitch)) {
+               if (this.canRaytraceHitTarget(entity, rotation.yaw, pitch)) {
                   maxvalue = d10;
                   d3 = d6;
                   d4 = d7;
@@ -531,10 +488,9 @@ public class UNoise3PointSelector {
       this.uNoise3SettingContext = uNoise3SettingContext2;
       this.uNoise3PredictionScheduler = scheduler;
       this.uNoise3RandomForceTicker = new UNoise3RandomForceTicker();
-      DoubleValue parentGroup = uNoise3SettingContext2.getParentGroup();
-      DoubleValue doubleValue = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3Horizontal", uNoise3SettingContext2.getParentGroup());
-      String str = "Horizontal";
-      DoubleValue doubleValue2 = (DoubleValue)doubleValue.withDisplayName(str);
+      SettingGroup parentGroup = uNoise3SettingContext2.getParentGroup();
+      SettingGroup doubleValue = new SettingGroup(uNoise3SettingContext2.getModule(), "UNoise3Horizontal", uNoise3SettingContext2.getParentGroup());
+      SettingGroup doubleValue2 = (SettingGroup)doubleValue.withDisplayName("Horizontal");
       UNoise3SettingContext uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(doubleValue2);
       this.horizontalAimModes.add(new UNoise3BestVecAimMode(uNoise3SettingContext3, false));
       this.horizontalAimModes.add(new UNoise3MidAimMode(uNoise3SettingContext3, false));
@@ -546,44 +502,25 @@ public class UNoise3PointSelector {
       this.horizontalAimModes.add(new UNoise3CircleAimMode(uNoise3SettingContext3, false));
       this.horizontalAimModes.add(new UNoise3RandomPointAimMode(uNoise3SettingContext3, this.uNoise3RandomForceTicker, false));
       VarianceNoiseSetting varianceNoiseSetting = new VarianceNoiseSetting(uNoise3SettingContext2.getModule(), "UNoise3HorizontalOffset", doubleValue2, false);
-      byte b = 1;
       double d = 20.0;
       double d2 = 0.0;
-      double d3 = 0.0;
-      this.uNoise3HorizontalOffset = varianceNoiseSetting.withStrength(d3, d2, d, b);
+      this.uNoise3HorizontalOffset = varianceNoiseSetting.withStrength(0.0, d2, d, (byte)1);
       String str2 = "Horizontal offset";
       this.uNoise3HorizontalOffset.named(str2);
-      VarianceNoiseSetting varianceNoiseSetting2 = this.uNoise3HorizontalOffset;
-      NoiseLayerSetting noiseLayerSetting = this.uNoise3HorizontalOffset.newLayerBuilder().build();
-      varianceNoiseSetting2.addLayer(noiseLayerSetting);
-      DoubleValue doubleValue3 = new DoubleValue(uNoise3SettingContext3.getModule(), "UNoise3horizontalconstantboundingbox", doubleValue2);
-      String str3 = "Constant bounding box size";
-      DoubleValue doubleValue4 = (DoubleValue)doubleValue3.withDisplayName(str3);
-      BooleanValue booleanValue = new BooleanValue(uNoise3SettingContext3.getModule(), "UNoise3constanthorizontalbb", false, doubleValue4);
-      String str4 = "Bounding box size";
-      this.uNoise3constanthorizontalbb = (BooleanValue)booleanValue.withDisplayName(str4);
-      StringValue stringValue = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3constanthorizontalboundingboxsize", 20.0, 1.0, 50.0, 1, doubleValue4);
-      String str5 = "Size";
-      StringValue stringValue2 = stringValue.named(str5);
+      this.uNoise3HorizontalOffset.addLayer(this.uNoise3HorizontalOffset.newLayerBuilder().build());
+      SettingGroup doubleValue4 = (SettingGroup)new SettingGroup(uNoise3SettingContext3.getModule(), "UNoise3horizontalconstantboundingbox", doubleValue2).withDisplayName("Constant bounding box size");
+      this.uNoise3constanthorizontalbb = (BooleanValue)new BooleanValue(uNoise3SettingContext3.getModule(), "UNoise3constanthorizontalbb", false, doubleValue4).withDisplayName("Bounding box size");
+      DoubleValue stringValue2 = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3constanthorizontalboundingboxsize", 20.0, 1.0, 50.0, 1, doubleValue4).named("Size");
       BooleanValue booleanValue2 = this.uNoise3constanthorizontalbb;
       this.uNoise3constanthorizontalbb.getClass();
-      BooleanValue booleanValue3 = booleanValue2;
-      SettingVisibilityCondition condition = () -> booleanValue3.getValue();
-      this.uNoise3constanthorizontalboundingboxsize = stringValue2.visibleWhen(condition);
-      BooleanValue booleanValue4 = new BooleanValue(uNoise3SettingContext2.getModule(), "UNoise3constantbbsizeoor", true, doubleValue4);
-      String str6 = "Constant bounding box size if target is out of reach";
-      this.uNoise3constantbbsizeoor = (BooleanValue)booleanValue4.withDisplayName(str6);
-      StringValue stringValue3 = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3constantbbsizeoorv", 20.0, 1.0, 50.0, 1, doubleValue4);
-      String str7 = "Bounding box size if target is out of reach";
-      StringValue stringValue4 = stringValue3.named(str7);
+      this.uNoise3constanthorizontalboundingboxsize = stringValue2.visibleWhen(() -> booleanValue2.getValue());
+      this.uNoise3constantbbsizeoor = (BooleanValue)new BooleanValue(uNoise3SettingContext2.getModule(), "UNoise3constantbbsizeoor", true, doubleValue4).withDisplayName("Constant bounding box size if target is out of reach");
+      DoubleValue stringValue4 = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3constantbbsizeoorv", 20.0, 1.0, 50.0, 1, doubleValue4).named("Bounding box size if target is out of reach");
       BooleanValue booleanValue5 = this.uNoise3constantbbsizeoor;
       this.uNoise3constantbbsizeoor.getClass();
-      BooleanValue booleanValue6 = booleanValue5;
-      SettingVisibilityCondition condition2 = () -> booleanValue6.getValue();
-      this.uNoise3constantbbsizeoorv = stringValue4.visibleWhen(condition2);
+      this.uNoise3constantbbsizeoorv = stringValue4.visibleWhen(() -> booleanValue5.getValue());
       this.horizontalSilenceController = new RotationSilenceController(uNoise3SettingContext3, false);
-      DoubleValue doubleValue5 = new DoubleValue(uNoise3SettingContext2.getModule(), "Horizontal relative to prediction", doubleValue2);
-      uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(doubleValue5);
+      uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(new SettingGroup(uNoise3SettingContext2.getModule(), "Horizontal relative to prediction", doubleValue2));
       this.horizontalPredictedAimModes.add(new UNoise3BestVecAimMode(uNoise3SettingContext3, false));
       this.horizontalPredictedAimModes.add(new UNoise3MidAimMode(uNoise3SettingContext3, false));
       this.horizontalPredictedAimModes.add(new UNoise3NearestVecAimMode(uNoise3SettingContext3, false));
@@ -593,9 +530,8 @@ public class UNoise3PointSelector {
       this.horizontalPredictedAimModes.add(new UNoise3CircleAimMode(uNoise3SettingContext3, false));
       this.horizontalPredictedAimModes.add(new UNoise3RandomPointAimMode(uNoise3SettingContext3, this.uNoise3RandomForceTicker, false));
       this.horizontalPredSilenceController = new RotationSilenceController(uNoise3SettingContext3, false);
-      doubleValue = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3Vertical", uNoise3SettingContext2.getParentGroup());
-      String str8 = "Vertical";
-      DoubleValue doubleValue6 = (DoubleValue)doubleValue.withDisplayName(str8);
+      doubleValue = new SettingGroup(uNoise3SettingContext2.getModule(), "UNoise3Vertical", uNoise3SettingContext2.getParentGroup());
+      SettingGroup doubleValue6 = (SettingGroup)doubleValue.withDisplayName("Vertical");
       uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(doubleValue6);
       this.verticalAimModes.add(new UNoise3BestVecAimMode(uNoise3SettingContext3, true));
       this.verticalAimModes.add(new UNoise3MidAimMode(uNoise3SettingContext3, true));
@@ -616,44 +552,26 @@ public class UNoise3PointSelector {
       this.futureIntervalDelaySetting = mode.getUNoise3FutureIntervalDelay();
       this.noobDelaySetting = uNoise3NoobAimMode.getDelay();
       VarianceNoiseSetting varianceNoiseSetting3 = new VarianceNoiseSetting(uNoise3SettingContext2.getModule(), "UNoise3VerticalOffset", doubleValue6, false);
-      byte b2 = 1;
       double d4 = 20.0;
       double d5 = 0.0;
-      double d6 = 0.0;
-      this.uNoise3VerticalOffset = varianceNoiseSetting3.withStrength(d6, d5, d4, b2);
+      this.uNoise3VerticalOffset = varianceNoiseSetting3.withStrength(0.0, d5, d4, (byte)1);
       String str9 = "Vertical offset";
       this.uNoise3VerticalOffset.named(str9);
-      VarianceNoiseSetting uNoise3VerticalOffset2 = this.uNoise3VerticalOffset;
-      NoiseLayerSetting noiseLayerSetting2 = this.uNoise3VerticalOffset.newLayerBuilder().build();
-      uNoise3VerticalOffset2.addLayer(noiseLayerSetting2);
+      this.uNoise3VerticalOffset.addLayer(this.uNoise3VerticalOffset.newLayerBuilder().build());
       this.verticalSilenceController = new RotationSilenceController(uNoise3SettingContext3, false);
-      doubleValue = new DoubleValue(uNoise3SettingContext3.getModule(), "UNoise3verticalconstantboundingbox", doubleValue6);
-      String str10 = "Constant bounding box size";
-      DoubleValue doubleValue7 = (DoubleValue)doubleValue.withDisplayName(str10);
-      BooleanValue booleanValue7 = new BooleanValue(uNoise3SettingContext3.getModule(), "UNoise3constantverticalbb", false, doubleValue7);
-      String str11 = "Bounding box size";
-      this.uNoise3constantverticalbb = (BooleanValue)booleanValue7.withDisplayName(str11);
-      StringValue stringValue5 = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3constantverticalboundingboxsize", 20.0, 1.0, 50.0, 1, doubleValue7);
-      String str12 = "Size";
-      StringValue stringValue6 = stringValue5.named(str12);
+      doubleValue = new SettingGroup(uNoise3SettingContext3.getModule(), "UNoise3verticalconstantboundingbox", doubleValue6);
+      SettingGroup doubleValue7 = (SettingGroup)doubleValue.withDisplayName("Constant bounding box size");
+      this.uNoise3constantverticalbb = (BooleanValue)new BooleanValue(uNoise3SettingContext3.getModule(), "UNoise3constantverticalbb", false, doubleValue7).withDisplayName("Bounding box size");
+      DoubleValue stringValue6 = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3constantverticalboundingboxsize", 20.0, 1.0, 50.0, 1, doubleValue7).named("Size");
       BooleanValue booleanValue8 = this.uNoise3constantverticalbb;
       this.uNoise3constantverticalbb.getClass();
-      BooleanValue booleanValue9 = booleanValue8;
-      SettingVisibilityCondition condition3 = () -> booleanValue9.getValue();
-      this.uNoise3constantverticalboundingboxsize = stringValue6.visibleWhen(condition3);
-      BooleanValue booleanValue10 = new BooleanValue(uNoise3SettingContext2.getModule(), "UNoise3constantvbbsizeoor", true, doubleValue7);
-      String str13 = "Constant bounding box size if target is out of reach";
-      this.uNoise3constantvbbsizeoor = (BooleanValue)booleanValue10.withDisplayName(str13);
-      StringValue stringValue7 = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3constantvbbsizeoorv", 20.0, 1.0, 50.0, 1, doubleValue7);
-      String str14 = "Bounding box size if target is out of reach";
-      StringValue stringValue8 = stringValue7.named(str14);
+      this.uNoise3constantverticalboundingboxsize = stringValue6.visibleWhen(() -> booleanValue8.getValue());
+      this.uNoise3constantvbbsizeoor = (BooleanValue)new BooleanValue(uNoise3SettingContext2.getModule(), "UNoise3constantvbbsizeoor", true, doubleValue7).withDisplayName("Constant bounding box size if target is out of reach");
+      DoubleValue stringValue8 = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3constantvbbsizeoorv", 20.0, 1.0, 50.0, 1, doubleValue7).named("Bounding box size if target is out of reach");
       BooleanValue booleanValue11 = this.uNoise3constantvbbsizeoor;
       this.uNoise3constantvbbsizeoor.getClass();
-      BooleanValue booleanValue12 = booleanValue11;
-      SettingVisibilityCondition condition4 = () -> booleanValue12.getValue();
-      this.uNoise3constantvbbsizeoorv = stringValue8.visibleWhen(condition4);
-      DoubleValue doubleValue8 = new DoubleValue(uNoise3SettingContext2.getModule(), "Vertical relative to prediction", doubleValue6);
-      uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(doubleValue8);
+      this.uNoise3constantvbbsizeoorv = stringValue8.visibleWhen(() -> booleanValue11.getValue());
+      uNoise3SettingContext3 = uNoise3SettingContext2.withParentGroup(new SettingGroup(uNoise3SettingContext2.getModule(), "Vertical relative to prediction", doubleValue6));
       this.verticalPredictedAimModes.add(new UNoise3BestVecAimMode(uNoise3SettingContext3, true));
       this.verticalPredictedAimModes.add(new UNoise3MidAimMode(uNoise3SettingContext3, true));
       this.verticalPredictedAimModes.add(new UNoise3NearestVecAimMode(uNoise3SettingContext3, true));
@@ -663,30 +581,19 @@ public class UNoise3PointSelector {
       this.verticalPredictedAimModes.add(new UNoise3RandomPointAimMode(uNoise3SettingContext3, this.uNoise3RandomForceTicker, true));
       this.verticalPredictedAimModes.add(new UNoise3RangeBasedAimMode(uNoise3SettingContext3));
       this.verticalPredSilenceController = new RotationSilenceController(uNoise3SettingContext3, false);
-      StringValue stringValue9 = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3horizontalfastthreshold", 2.0, 0.0, 360.0, 1, uNoise3SettingContext2.getParentGroup());
-      String str15 = "Horizontal fast threshold";
-      this.uNoise3horizontalfastthreshold = stringValue9.named(str15);
-      StringValue stringValue10 = new StringValue(uNoise3SettingContext2.getModule(), "UNoise3verticalfastthreshold", 3.0, 0.0, 180.0, 1, uNoise3SettingContext2.getParentGroup());
-      String str16 = "Vertical fast threshold";
-      this.uNoise3verticalfastthreshold = stringValue10.named(str16);
-      doubleValue = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3RandomforceTicker", parentGroup);
-      String str17 = "Randompoint Global Ticker";
-      DoubleValue doubleValue9 = (DoubleValue)doubleValue.withDisplayName(str17);
-      UNoise3RandomForceTicker uNoise3RandomForceTicker2 = this.uNoise3RandomForceTicker;
-      UNoise3SettingContext uNoise3SettingContext4 = uNoise3SettingContext2.withParentGroup(doubleValue9);
-      SettingVisibilityCondition condition5 = () -> true;
-      UNoise3SettingContext uNoise3SettingContext5 = uNoise3SettingContext4;
-      uNoise3RandomForceTicker2.initSettings(uNoise3SettingContext5, doubleValue9, condition5);
+      this.uNoise3horizontalfastthreshold = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3horizontalfastthreshold", 2.0, 0.0, 360.0, 1, uNoise3SettingContext2.getParentGroup()).named("Horizontal fast threshold");
+      this.uNoise3verticalfastthreshold = new DoubleValue(uNoise3SettingContext2.getModule(), "UNoise3verticalfastthreshold", 3.0, 0.0, 180.0, 1, uNoise3SettingContext2.getParentGroup()).named("Vertical fast threshold");
+      doubleValue = new SettingGroup(uNoise3SettingContext2.getModule(), "UNoise3RandomforceTicker", parentGroup);
+      SettingGroup doubleValue9 = (SettingGroup)doubleValue.withDisplayName("Randompoint Global Ticker");
+      this.uNoise3RandomForceTicker.initSettings(uNoise3SettingContext2.withParentGroup(doubleValue9), doubleValue9, () -> true);
       this.globalSilenceController = new RotationSilenceController(uNoise3SettingContext2, true);
 
       for (UNoise3AimMode uNoise3AimMode : (Iterable<UNoise3AimMode>)(this.verticalAimModes)) {
-         boolean flag = true;
-         uNoise3AimMode.setVertical(flag);
+         uNoise3AimMode.setVertical(true);
       }
 
       for (UNoise3AimMode uNoise3AimMode2 : (Iterable<UNoise3AimMode>)(this.verticalPredictedAimModes)) {
-         boolean flag2 = true;
-         uNoise3AimMode2.setVertical(flag2);
+         uNoise3AimMode2.setVertical(true);
       }
 
       this.allAimModes.addAll(this.horizontalAimModes);
@@ -725,8 +632,7 @@ public class UNoise3PointSelector {
       UNoise3AimContext uNoise3AimContext;
       boolean flag4;
       exitBlock: {
-         double lastOutputPitch2 = this.lastOutputPitch;
-         this.updateFuturePitchCaches(player2, entity, lastOutputPitch2, d5);
+         this.updateFuturePitchCaches(player2, entity, this.lastOutputPitch, d5);
          double cachedValue = (Double)this.futurePitchCache.getCachedValue();
          double[] cachedValue2 = (double[])this.futurePitchBoundsCache.getCachedValue();
          double cachedValue3 = (Double)this.noobPitchCache.getCachedValue();
@@ -735,25 +641,18 @@ public class UNoise3PointSelector {
          flag = flag5 || flag6;
          double d9 = 0.0;
          d8 = this.globalSilenceController.computeSilenceFactor(d9);
-         boolean flag7 = false;
-         flag2 = this.globalSilenceController.shouldKeepTicking(flag7);
-         boolean flag8 = false;
-         flag3 = this.globalSilenceController.shouldSilenceOffTarget(flag8);
+         flag2 = this.globalSilenceController.shouldKeepTicking(false);
+         flag3 = this.globalSilenceController.shouldSilenceOffTarget(false);
          this.uNoise3RandomForceTicker.tick();
          uNoise3AimContext = new UNoise3AimContext();
          uNoise3AimContext.player = player2;
          uNoise3AimContext.target = entity;
          uNoise3AimContext.playerEyePos = vec5 = player2.getPositionEyes(1.0F);
          uNoise3AimContext.targetPos = vec6 = entity.getInterpolatedPos(1.0F);
-         Vec3 playerEyePos = uNoise3AimContext.playerEyePos;
-         boolean flag9 = true;
-         AxisAlignedBB box2 = box = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, flag9);
-         uNoise3AimContext.closestTargetPoint = vec7 = RotationUtil.clampPointToBox(playerEyePos, box2);
+         uNoise3AimContext.closestTargetPoint = vec7 = RotationUtil.clampPointToBox(uNoise3AimContext.playerEyePos, box = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, true));
          uNoise3AimContext.targetBoundingBox = box;
          uNoise3AimContext.expandedAngleBounds = HitboxAngleUtil.getYawRange(vec5, box);
-         boolean flag10 = false;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, flag10);
-         uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getYawRange(vec5, entityBoundingBoxAt);
+         uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getYawRange(vec5, EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, false));
          uNoise3AimContext.delayedFuturePitchBounds = cachedValue2;
          uNoise3AimContext.delayedFuturePitch = cachedValue;
          uNoise3AimContext.delayedNoobPitch = cachedValue3;
@@ -763,10 +662,8 @@ public class UNoise3PointSelector {
          uNoise3AimContext.vertical = false;
          uNoise3AimContext.firstTickOnTarget = this.firstTickOnTarget;
          this.firstTickOnTarget = false;
-         ArrayList horizontalAimModes2 = this.horizontalAimModes;
-         if (!this.hasAnySurfaceRestriction(horizontalAimModes2)) {
-            ArrayList verticalAimModes2 = this.verticalAimModes;
-            if (!this.hasAnySurfaceRestriction(verticalAimModes2)) {
+         if (!this.hasAnySurfaceRestriction(this.horizontalAimModes)) {
+            if (!this.hasAnySurfaceRestriction(this.verticalAimModes)) {
                flag4 = false;
                break exitBlock;
             }
@@ -778,10 +675,8 @@ public class UNoise3PointSelector {
       boolean flag11;
       exitBlock2: {
          flag11 = flag4;
-         ArrayList list = this.horizontalPredictedAimModes;
-         if (!this.hasAnySurfaceRestriction(list)) {
-            ArrayList list2 = this.verticalPredictedAimModes;
-            if (!this.hasAnySurfaceRestriction(list2)) {
+         if (!this.hasAnySurfaceRestriction(this.horizontalPredictedAimModes)) {
+            if (!this.hasAnySurfaceRestriction(this.verticalPredictedAimModes)) {
                flag4 = false;
                break exitBlock2;
             }
@@ -795,24 +690,16 @@ public class UNoise3PointSelector {
       ArrayList[] lists = null;
       ArrayList[] lists2 = null;
       if (flag11) {
-         double d10 = 3.0;
-         lists = this.sampleHittableSurfaceGrid(vec5, entity, box, d10);
+         lists = this.sampleHittableSurfaceGrid(vec5, entity, box, 3.0);
       }
 
       if (flag12) {
-         boolean flag13 = true;
-         AxisAlignedBB entityBoundingBoxAt2 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, flag13);
-         double d11 = 3.0;
-         AxisAlignedBB box3 = entityBoundingBoxAt2;
-         lists2 = this.sampleHittableSurfaceGrid(vec8, entity, box3, d11);
+         lists2 = this.sampleHittableSurfaceGrid(vec8, entity, EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, true), 3.0);
       }
 
       double[][] doublesArr;
       if (flag11) {
-         ArrayList list3 = lists[0];
-         boolean flag14 = false;
-         ArrayList list4 = list3;
-         doublesArr = this.extractBoundsFromSurfaceGrid(vec5, list4, box, flag14);
+         doublesArr = this.extractBoundsFromSurfaceGrid(vec5, lists[0], box, false);
       } else {
          doublesArr = this.emptyBoundsPair;
       }
@@ -820,10 +707,7 @@ public class UNoise3PointSelector {
       double[][] doublesArr2 = doublesArr;
       double[][] doublesArr3;
       if (flag11) {
-         ArrayList list5 = lists[1];
-         boolean flag15 = true;
-         ArrayList list6 = list5;
-         doublesArr3 = this.extractBoundsFromSurfaceGrid(vec5, list6, box, flag15);
+         doublesArr3 = this.extractBoundsFromSurfaceGrid(vec5, lists[1], box, true);
       } else {
          doublesArr3 = this.emptyBoundsPair;
       }
@@ -831,10 +715,7 @@ public class UNoise3PointSelector {
       double[][] doublesArr4 = doublesArr3;
       double[][] doublesArr5;
       if (flag12) {
-         ArrayList list7 = lists2[0];
-         boolean flag16 = false;
-         ArrayList list8 = list7;
-         doublesArr5 = this.extractBoundsFromSurfaceGrid(vec5, list8, box, flag16);
+         doublesArr5 = this.extractBoundsFromSurfaceGrid(vec5, lists2[0], box, false);
       } else {
          doublesArr5 = this.emptyBoundsPair;
       }
@@ -842,10 +723,7 @@ public class UNoise3PointSelector {
       double[][] doublesArr6 = doublesArr5;
       double[][] doublesArr7;
       if (flag12) {
-         ArrayList list9 = lists2[1];
-         boolean flag17 = true;
-         ArrayList list10 = list9;
-         doublesArr7 = this.extractBoundsFromSurfaceGrid(vec5, list10, box, flag17);
+         doublesArr7 = this.extractBoundsFromSurfaceGrid(vec5, lists2[1], box, true);
       } else {
          doublesArr7 = this.emptyBoundsPair;
       }
@@ -863,19 +741,15 @@ public class UNoise3PointSelector {
       uNoise3AimContext.unoccludedAngleBounds = doublesArr4[0];
       double naN = Double.NaN;
       if (d5 > 3.1 && this.uNoise3constantbbsizeoor.getValue()) {
-         boolean flag18 = true;
-         naN = this.uNoise3constantbbsizeoorv.getValue(flag18) / 2.0;
+         naN = this.uNoise3constantbbsizeoorv.getValue(true) / 2.0;
       } else if (this.uNoise3constanthorizontalbb.getValue()) {
-         boolean flag19 = true;
-         naN = this.uNoise3constanthorizontalboundingboxsize.getValue(flag19) / 2.0;
+         naN = this.uNoise3constanthorizontalboundingboxsize.getValue(true) / 2.0;
       }
 
       if (Double.isFinite(naN)) {
          double d12 = 0.5;
          double d13 = HitboxAngleUtil.lerpRange(uNoise3AimContext.expandedAngleBounds, d12);
-         double d14 = MathHelper.wrapAngleTo180_double(d13 - naN);
-         double d15 = MathHelper.wrapAngleTo180_double(d13 + naN);
-         uNoise3AimContext.expandedAngleBounds = uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.normalizeYawInterval(d14, d15);
+         uNoise3AimContext.expandedAngleBounds = uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.normalizeYawInterval(MathHelper.wrapAngleTo180_double(d13 - naN), MathHelper.wrapAngleTo180_double(d13 + naN));
       }
 
       double d16;
@@ -886,12 +760,10 @@ public class UNoise3PointSelector {
                break exitBlock3;
             }
 
-            boolean flag20 = false;
             double lastGoalAngle = uNoise3AimContext.lastGoalAngle;
-            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle, flag20)) {
-               boolean flag21 = false;
+            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle, false)) {
                double silencedGoalAngle = uNoise3AimContext.silencedGoalAngle;
-               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle, flag21)) {
+               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle, false)) {
                   break exitBlock3;
                }
             }
@@ -901,31 +773,22 @@ public class UNoise3PointSelector {
       }
 
       ArrayList horizontalAimModes3 = this.horizontalAimModes;
-      boolean flag22 = this.horizontalSilenceController.shouldKeepTicking(flag2);
-      boolean flag23 = false;
-      ArrayList list11 = horizontalAimModes3;
-      ArrayList list12 = this.evaluateAimModeGroup(uNoise3AimContext, list11, d16, flag23, flag22);
+      ArrayList list12 = this.evaluateAimModeGroup(uNoise3AimContext, horizontalAimModes3, d16, false, this.horizontalSilenceController.shouldKeepTicking(flag2));
       uNoise3AimContext.playerEyePos = vec.addVector(0.0, (double)player2.getEyeHeight(), 0.0);
       uNoise3AimContext.targetPos = vec2;
       Vec3 playerEyePos2 = uNoise3AimContext.playerEyePos;
-      boolean flag24 = true;
-      AxisAlignedBB box4 = uNoise3AimContext.targetBoundingBox = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag24);
-      uNoise3AimContext.closestTargetPoint = RotationUtil.clampPointToBox(playerEyePos2, box4);
+      uNoise3AimContext.closestTargetPoint = RotationUtil.clampPointToBox(playerEyePos2, uNoise3AimContext.targetBoundingBox = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, true));
       AxisAlignedBB targetBoundingBox = uNoise3AimContext.targetBoundingBox;
       uNoise3AimContext.expandedAngleBounds = HitboxAngleUtil.getYawRange(uNoise3AimContext.playerEyePos, targetBoundingBox);
       playerEyePos2 = uNoise3AimContext.playerEyePos;
-      boolean flag25 = false;
-      AxisAlignedBB entityBoundingBoxAt3 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag25);
-      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getYawRange(playerEyePos2, entityBoundingBoxAt3);
+      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getYawRange(playerEyePos2, EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, false));
       uNoise3AimContext.silencedGoalAngle = this.unsilencedPredYaw;
       uNoise3AimContext.hittableAngleBounds = doublesArr6[0];
       uNoise3AimContext.unoccludedAngleBounds = doublesArr8[0];
       if (Double.isFinite(naN)) {
          double d17 = 0.5;
          double d18 = HitboxAngleUtil.lerpRange(uNoise3AimContext.expandedAngleBounds, d17);
-         double d19 = MathHelper.wrapAngleTo180_double(d18 - naN);
-         double d20 = MathHelper.wrapAngleTo180_double(d18 + naN);
-         uNoise3AimContext.expandedAngleBounds = uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.normalizeYawInterval(d19, d20);
+         uNoise3AimContext.expandedAngleBounds = uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.normalizeYawInterval(MathHelper.wrapAngleTo180_double(d18 - naN), MathHelper.wrapAngleTo180_double(d18 + naN));
       }
 
       double d21;
@@ -936,12 +799,10 @@ public class UNoise3PointSelector {
                break exitBlock4;
             }
 
-            boolean flag26 = false;
             double lastGoalAngle2 = uNoise3AimContext.lastGoalAngle;
-            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle2, flag26)) {
-               boolean flag27 = false;
+            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle2, false)) {
                double silencedGoalAngle2 = uNoise3AimContext.silencedGoalAngle;
-               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle2, flag27)) {
+               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle2, false)) {
                   break exitBlock4;
                }
             }
@@ -951,20 +812,14 @@ public class UNoise3PointSelector {
       }
 
       horizontalAimModes3 = this.horizontalPredictedAimModes;
-      boolean flag28 = this.horizontalPredSilenceController.shouldKeepTicking(flag2);
-      boolean flag29 = false;
-      ArrayList list13 = horizontalAimModes3;
-      ArrayList list14 = this.evaluateAimModeGroup(uNoise3AimContext, list13, d21, flag29, flag28);
+      ArrayList list14 = this.evaluateAimModeGroup(uNoise3AimContext, horizontalAimModes3, d21, false, this.horizontalPredSilenceController.shouldKeepTicking(flag2));
       uNoise3AimContext.playerEyePos = vec5;
       uNoise3AimContext.targetPos = vec6;
       uNoise3AimContext.closestTargetPoint = vec7;
       playerEyePos2 = uNoise3AimContext.playerEyePos;
-      AxisAlignedBB box5 = uNoise3AimContext.targetBoundingBox = box;
-      uNoise3AimContext.expandedAngleBounds = HitboxAngleUtil.getPitchRange(playerEyePos2, box5);
+      uNoise3AimContext.expandedAngleBounds = HitboxAngleUtil.getPitchRange(playerEyePos2, uNoise3AimContext.targetBoundingBox = box);
       playerEyePos2 = uNoise3AimContext.playerEyePos;
-      boolean flag30 = false;
-      AxisAlignedBB entityBoundingBoxAt4 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, flag30);
-      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getPitchRange(playerEyePos2, entityBoundingBoxAt4);
+      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getPitchRange(playerEyePos2, EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec6, false));
       uNoise3AimContext.currentAngle = d2;
       uNoise3AimContext.lastGoalAngle = this.lastOutputPitch;
       uNoise3AimContext.silencedGoalAngle = this.unsilencedPitch;
@@ -973,11 +828,9 @@ public class UNoise3PointSelector {
       uNoise3AimContext.unoccludedAngleBounds = doublesArr4[1];
       double naN2 = Double.NaN;
       if (d5 > 3.1 && this.uNoise3constantvbbsizeoor.getValue()) {
-         boolean flag31 = true;
-         naN2 = this.uNoise3constantvbbsizeoorv.getValue(flag31) / 2.0;
+         naN2 = this.uNoise3constantvbbsizeoorv.getValue(true) / 2.0;
       } else if (this.uNoise3constantverticalbb.getValue()) {
-         boolean flag32 = true;
-         naN2 = this.uNoise3constantverticalboundingboxsize.getValue(flag32) / 2.0;
+         naN2 = this.uNoise3constantverticalboundingboxsize.getValue(true) / 2.0;
       }
 
       if (Double.isFinite(naN2)) {
@@ -994,12 +847,10 @@ public class UNoise3PointSelector {
                break exitBlock5;
             }
 
-            boolean flag33 = true;
             double lastGoalAngle3 = uNoise3AimContext.lastGoalAngle;
-            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle3, flag33)) {
-               boolean flag34 = true;
+            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle3, true)) {
                double silencedGoalAngle3 = uNoise3AimContext.silencedGoalAngle;
-               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle3, flag34)) {
+               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle3, true)) {
                   break exitBlock5;
                }
             }
@@ -1009,21 +860,14 @@ public class UNoise3PointSelector {
       }
 
       horizontalAimModes3 = this.verticalAimModes;
-      boolean flag35 = this.verticalSilenceController.shouldKeepTicking(flag2);
-      boolean flag36 = true;
-      ArrayList list15 = horizontalAimModes3;
-      ArrayList list16 = this.evaluateAimModeGroup(uNoise3AimContext, list15, d24, flag36, flag35);
+      ArrayList list16 = this.evaluateAimModeGroup(uNoise3AimContext, horizontalAimModes3, d24, true, this.verticalSilenceController.shouldKeepTicking(flag2));
       uNoise3AimContext.playerEyePos = vec3.addVector(0.0, (double)player2.getEyeHeight(), 0.0);
       uNoise3AimContext.targetPos = vec4;
       playerEyePos2 = uNoise3AimContext.playerEyePos;
-      boolean flag37 = true;
-      AxisAlignedBB box6 = uNoise3AimContext.targetBoundingBox = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, flag37);
-      uNoise3AimContext.closestTargetPoint = RotationUtil.clampPointToBox(playerEyePos2, box6);
+      uNoise3AimContext.closestTargetPoint = RotationUtil.clampPointToBox(playerEyePos2, uNoise3AimContext.targetBoundingBox = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, true));
       AxisAlignedBB targetBoundingBox2 = uNoise3AimContext.targetBoundingBox;
       uNoise3AimContext.expandedAngleBounds = HitboxAngleUtil.getPitchRange(uNoise3AimContext.playerEyePos, targetBoundingBox2);
-      boolean flag38 = false;
-      AxisAlignedBB entityBoundingBoxAt5 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, flag38);
-      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getPitchRange(vec5, entityBoundingBoxAt5);
+      uNoise3AimContext.exactAngleBounds = HitboxAngleUtil.getPitchRange(vec5, EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, false));
       uNoise3AimContext.silencedGoalAngle = this.unsilencedPredPitch;
       uNoise3AimContext.hittableAngleBounds = doublesArr6[1];
       uNoise3AimContext.unoccludedAngleBounds = doublesArr8[1];
@@ -1041,12 +885,10 @@ public class UNoise3PointSelector {
                break exitBlock6;
             }
 
-            boolean flag39 = true;
             double lastGoalAngle4 = uNoise3AimContext.lastGoalAngle;
-            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle4, flag39)) {
-               boolean flag40 = true;
+            if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, lastGoalAngle4, true)) {
                double silencedGoalAngle4 = uNoise3AimContext.silencedGoalAngle;
-               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle4, flag40)) {
+               if (isAngleWithinBounds(uNoise3AimContext.expandedAngleBounds, silencedGoalAngle4, true)) {
                   break exitBlock6;
                }
             }
@@ -1056,14 +898,9 @@ public class UNoise3PointSelector {
       }
 
       horizontalAimModes3 = this.verticalPredictedAimModes;
-      boolean flag41 = this.verticalPredSilenceController.shouldKeepTicking(flag2);
-      boolean flag42 = true;
-      ArrayList list17 = horizontalAimModes3;
-      ArrayList list18 = this.evaluateAimModeGroup(uNoise3AimContext, list17, d27, flag42, flag41);
-      boolean flag43 = true;
-      double d28 = MathHelper.wrapAngleTo180_double(computeWeightedAngleAverage(list12, list14, flag43));
-      boolean flag44 = false;
-      double d29 = computeWeightedAngleAverage(list16, list18, flag44);
+      ArrayList list18 = this.evaluateAimModeGroup(uNoise3AimContext, horizontalAimModes3, d27, true, this.verticalPredSilenceController.shouldKeepTicking(flag2));
+      double d28 = MathHelper.wrapAngleTo180_double(computeWeightedAngleAverage(list12, list14, true));
+      double d29 = computeWeightedAngleAverage(list16, list18, false);
       if (list12.isEmpty() && list14.isEmpty()) {
          d28 = MathHelper.wrapAngleTo180_double(d3);
       }
@@ -1073,10 +910,7 @@ public class UNoise3PointSelector {
       }
 
       if (ClientManagers.moduleManager.killAura.smartAim.getValue()) {
-         float f = (float)d28;
-         float f2 = (float)d29;
-         float f3 = f;
-         double[] doubles = this.avoidBlockObstruction(player2, entity, f3, f2);
+         double[] doubles = this.avoidBlockObstruction(player2, entity, (float)d28, (float)d29);
          d28 = doubles[0];
          d29 = doubles[1];
       }
@@ -1120,8 +954,7 @@ public class UNoise3PointSelector {
    }
 
    private double sampleNoobDelay() {
-      boolean flag = true;
-      return this.noobDelaySetting.nextValue(flag);
+      return this.noobDelaySetting.nextValue(true);
    }
 
    private double[][] extractBoundsFromSurfaceGrid(Vec3 vec, ArrayList list, AxisAlignedBB box, boolean flag) {
@@ -1134,15 +967,10 @@ public class UNoise3PointSelector {
          Vec2d first = (Vec2d)tuplePair.getFirst();
          Vec2d second = (Vec2d)tuplePair.getSecond();
          double[][] doublesArr = new double[2][];
-         double d = first.x;
-         double d2 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(yawRange, d));
-         double d3 = second.x;
-         doublesArr[0] = HitboxAngleUtil.normalizeYawInterval(d2, MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(yawRange, d3)));
+         doublesArr[0] = HitboxAngleUtil.normalizeYawInterval(MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(yawRange, first.x)), MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(yawRange, second.x)));
          double[] doubles = new double[2];
-         double d4 = first.y;
-         doubles[0] = HitboxAngleUtil.lerpRange(pitchRange, d4);
-         double d5 = second.y;
-         doubles[1] = HitboxAngleUtil.lerpRange(pitchRange, d5);
+         doubles[0] = HitboxAngleUtil.lerpRange(pitchRange, first.y);
+         doubles[1] = HitboxAngleUtil.lerpRange(pitchRange, second.y);
          doublesArr[1] = HitboxAngleUtil.findMinMaxWithIndices(doubles);
          return doublesArr;
       }
@@ -1161,13 +989,11 @@ public class UNoise3PointSelector {
    }
 
    public static double computeWeightedAngleAverage(ArrayList list, boolean flag) {
-      ArrayList list2 = new ArrayList();
-      return computeWeightedAngleAverage(list, list2, flag);
+      return computeWeightedAngleAverage(list, new ArrayList(), flag);
    }
 
    private double sampleFutureDelay() {
-      boolean flag = true;
-      return this.futureDelaySetting.nextValue(flag);
+      return this.futureDelaySetting.nextValue(true);
    }
 
    private ArrayList evaluateAimModeGroup(UNoise3AimContext uNoise3AimContext, ArrayList list, double d, boolean flag, boolean flag2) {

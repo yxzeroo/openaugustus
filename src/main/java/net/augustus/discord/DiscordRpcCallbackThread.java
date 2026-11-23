@@ -16,8 +16,7 @@ public class DiscordRpcCallbackThread extends Thread {
 
    @Override
    public void finalize() {
-      boolean flag = false;
-      DiscordRpcManager.setConnected(this.discordRpcManager, flag);
+      DiscordRpcManager.setConnected(this.discordRpcManager, false);
       DiscordRPC.discordShutdown();
    }
 
@@ -26,9 +25,7 @@ public class DiscordRpcCallbackThread extends Thread {
 
       while (true) {
          if (!DiscordRpcManager.isConnected(this.discordRpcManager)) {
-            TimeHelper connectTimer = DiscordRpcManager.getConnectTimer(this.discordRpcManager);
-            long l = 10000L;
-            if (connectTimer.reached2(l)) {
+            if (DiscordRpcManager.getConnectTimer(this.discordRpcManager).reached2(10000L)) {
                return;
             }
          }

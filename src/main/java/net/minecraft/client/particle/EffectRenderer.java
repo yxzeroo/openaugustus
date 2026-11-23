@@ -97,8 +97,7 @@ public class EffectRenderer {
          int n = size;
 
          for (Iterator j = list.iterator(); j.hasNext() && n > 0; n--) {
-            EntityFX entityFX2 = (EntityFX)j.next();
-            entityFX2.setDead();
+            ((EntityFX)j.next()).setDead();
             j.remove();
          }
       }
@@ -107,8 +106,7 @@ public class EffectRenderer {
    }
 
    public void addBlockDestroyEffects(BlockPos pos, IBlockState state) {
-      boolean flag = state.getBlock().getMaterial() != Material.air;
-      if (flag) {
+      if (state.getBlock().getMaterial() != Material.air) {
          state = state.getBlock().getActualState(state, this.worldObj, pos.getX(), pos.getY(), pos.getZ());
          byte b = 4;
 
@@ -197,8 +195,7 @@ public class EffectRenderer {
       GlStateManager.enableBlend();
       GlStateManager.blendFunc(770, 771);
       GlStateManager.alphaFunc(516, 0.003921569F);
-      Block blockAtEntityViewpoint = ActiveRenderInfo.getBlockAtEntityViewpoint(this.worldObj, entity, f);
-      boolean flag = blockAtEntityViewpoint.getMaterial() == Material.water;
+      boolean flag = ActiveRenderInfo.getBlockAtEntityViewpoint(this.worldObj, entity, f).getMaterial() == Material.water;
 
       for (int i = 0; i < 3; i++) {
          int n = i;
@@ -287,12 +284,10 @@ public class EffectRenderer {
       for (int i = 0; i < 2; i++) {
          List list = this.fxLayers[3][i];
          if (!list.isEmpty()) {
-            Tessellator instance = Tessellator.getInstance();
-            WorldRenderer worldRenderer = instance.getWorldRenderer();
+            WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 
             for (int j = 0; j < list.size(); j++) {
-               EntityFX entityFX = (EntityFX)list.get(j);
-               entityFX.renderParticle(worldRenderer, entity, f, f3, f7, f4, f5, f6);
+               ((EntityFX)list.get(j)).renderParticle(worldRenderer, entity, f, f3, f7, f4, f5, f6);
             }
          }
       }

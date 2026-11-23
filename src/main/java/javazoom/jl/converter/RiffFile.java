@@ -21,9 +21,7 @@ public class RiffFile {
    public int Write4(int n, int n2) {
       short s = (short)(n >>> 16 & 65535);
       short s2 = (short)(n & 65535);
-      short s3 = (short)(s >>> 8 & 0xFF | s << 8 & 0xFF00);
-      short s4 = (short)(s2 >>> 8 & 0xFF | s2 << 8 & 0xFF00);
-      int n3 = s4 << 16 & -65536 | s3 & '\uffff';
+      int n3 = ((short)(s2 >>> 8 & 0xFF | s2 << 8 & 0xFF00)) << 16 & -65536 | ((short)(s >>> 8 & 0xFF | s << 8 & 0xFF00)) & '\uffff';
       if (this.fmode != 1) {
          return 4;
       } else {
@@ -48,8 +46,7 @@ public class RiffFile {
       byte b = (byte)(riffChunkHeader.ckSize >>> 24 & 0xFF);
       byte b2 = (byte)(riffChunkHeader.ckSize >>> 16 & 0xFF);
       byte b3 = (byte)(riffChunkHeader.ckSize >>> 8 & 0xFF);
-      byte b4 = (byte)(riffChunkHeader.ckSize & 0xFF);
-      bytes[4] = b4;
+      bytes[4] = (byte)(riffChunkHeader.ckSize & 0xFF);
       bytes[5] = b3;
       bytes[6] = b2;
       bytes[7] = b;
@@ -103,8 +100,7 @@ public class RiffFile {
                      byte b = (byte)(this.riff_header.ckSize >>> 24 & 0xFF);
                      byte b2 = (byte)(this.riff_header.ckSize >>> 16 & 0xFF);
                      byte b3 = (byte)(this.riff_header.ckSize >>> 8 & 0xFF);
-                     byte b4 = (byte)(this.riff_header.ckSize & 0xFF);
-                     bytes[4] = b4;
+                     bytes[4] = (byte)(this.riff_header.ckSize & 0xFF);
                      bytes[5] = b3;
                      bytes[6] = b2;
                      bytes[7] = b;

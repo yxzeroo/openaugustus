@@ -93,8 +93,7 @@ public class TargetSelectionCheck extends ModuleMode implements MC {
    }
 
    public static boolean isControlFlowInactive() {
-      boolean isControlFlowFlag = isControlFlowFlag();
-      return !isControlFlowFlag;
+      return !isControlFlowFlag();
    }
 
    static {

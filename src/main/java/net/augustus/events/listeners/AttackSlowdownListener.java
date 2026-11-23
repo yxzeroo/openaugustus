@@ -21,7 +21,6 @@ public interface AttackSlowdownListener {
    }
 
    static EventAttackSlowdown onAttackSlowdown3(AttackSlowdownStage attackSlowdownStage) {
-      boolean flag = false;
-      return onAttackSlowdown(attackSlowdownStage, flag);
+      return onAttackSlowdown(attackSlowdownStage, false);
    }
 }

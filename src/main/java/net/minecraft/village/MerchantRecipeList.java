@@ -15,8 +15,7 @@ public class MerchantRecipeList extends ArrayList {
       NBTTagList tagList = new NBTTagList();
 
       for (int i = 0; i < this.size(); i++) {
-         MerchantRecipe merchantRecipe = (MerchantRecipe)this.get(i);
-         tagList.appendTag(merchantRecipe.writeToTags());
+         tagList.appendTag(((MerchantRecipe)this.get(i)).writeToTags());
       }
 
       tag.setTag("Recipes", tagList);

@@ -20,13 +20,11 @@ public class EagleBUnsneakTimingCheck extends ModuleMode {
          ++this.tickCounter;
       }
       if (packet instanceof C08PacketPlayerBlockPlacement) {
-         C08PacketPlayerBlockPlacement packet2 = (C08PacketPlayerBlockPlacement)packet;
-         if (packet2.getPlacedBlockDirection() <= 6) {
+         if (((C08PacketPlayerBlockPlacement)packet).getPlacedBlockDirection() <= 6) {
             this.lastPlaceTick = this.tickCounter;
          }
       } else if (packet instanceof C0BPacketEntityAction) {
-         C0BPacketEntityAction packet3 = (C0BPacketEntityAction)packet;
-         if (packet3.getAction() == C0BPacketEntityAction.Action.STOP_SNEAKING) {
+         if (((C0BPacketEntityAction)packet).getAction() == C0BPacketEntityAction.Action.STOP_SNEAKING) {
             if (this.tickCounter - this.lastPlaceTick == this.lastUnsneakDiff) {
                if (++this.repeatedDiffBuffer >= 20) {
                   this.sendAlert(b + this.lastUnsneakDiff);

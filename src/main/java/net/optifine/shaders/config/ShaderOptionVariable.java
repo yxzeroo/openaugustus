@@ -84,8 +84,7 @@ public class ShaderOptionVariable extends ShaderOption {
       if (!matcher.matches()) {
          return false;
       } else {
-         String str2 = matcher.group(1);
-         return str2.matches(this.getName());
+         return matcher.group(1).matches(this.getName());
       }
    }
 

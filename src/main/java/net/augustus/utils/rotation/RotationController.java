@@ -59,8 +59,7 @@ public class RotationController implements MC {
       float f2 = (float)ClientManagers.moduleManager.rotationHandler.pitchSpeed.nextValue();
       mc.thePlayer.rotationYaw = this.currentRotation.yaw;
       mc.thePlayer.rotationPitch = this.currentRotation.pitch;
-      boolean flag = !ClientManagers.moduleManager.rotationHandler.smoothBackRotate.getSelectedValue().equals("None") && this.hasNoActiveOwner();
-      if (flag) {
+      if (!ClientManagers.moduleManager.rotationHandler.smoothBackRotate.getSelectedValue().equals("None") && this.hasNoActiveOwner()) {
          float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
          float realPitch = Augustus.getInstance().getYawPitchHelper().realPitch;
          if (mc.currentScreen != null && mc.previousScreen == null) {
@@ -91,17 +90,10 @@ public class RotationController implements MC {
                      double pitch = (double)this.previousRotation.pitch;
                      double d6 = (double)MathHelper.wrapAngleTo180_float(realYaw + SimplexNoise.noise((float)mc.thePlayer.ticksExisted / 20.0F, -1.0F) * 2.0F);
                      double d7 = (double)(realPitch + SimplexNoise.noise((float)mc.thePlayer.ticksExisted / 20.0F, -1.0F) * 2.0F);
-                     boolean flag2 = true;
-                     double d8 = ClientManagers.moduleManager.rotationHandler.rotationSpeed.getValue(flag2) / 100.0 * 8.0 + 2.0;
+                     double d8 = ClientManagers.moduleManager.rotationHandler.rotationSpeed.getValue(true) / 100.0 * 8.0 + 2.0;
                      double d9 = 0.0;
                      double d10 = 1.0;
-                     double d11 = 1.0;
-                     double d12 = d8;
-                     double d13 = d7;
-                     double d14 = d6;
-                     double d15 = pitch;
-                     double d16 = d5;
-                     Rotation rotation = rotationUtil2.stepKinematicAngles(d16, d15, d14, d13, d12, d11, d10, d9);
+                     Rotation rotation = rotationUtil2.stepKinematicAngles(d5, pitch, d6, d7, d8, 1.0, d10, d9);
                      rotation.yaw = RotationUtil.updateAngle(this.previousRotation.yaw, rotation.yaw, 180.0F);
                      rotation.pitch = RotationUtil.updateAngle(this.previousRotation.pitch, rotation.pitch, 180.0F);
                      rotation = RotationUtil.applyGcdFix(rotation.yaw, rotation.pitch, this.previousRotation.yaw, this.previousRotation.pitch);
@@ -136,11 +128,8 @@ public class RotationController implements MC {
       this.currentRotation.yaw = mc.thePlayer.rotationYaw;
       this.currentRotation.pitch = mc.thePlayer.rotationPitch;
       float rotationPitch = mc.thePlayer.rotationPitch;
-      float rotationYaw = mc.thePlayer.rotationYaw;
-      this.syncCameraAngles(rotationYaw, rotationPitch);
-      BoundedHistoryList rotationHistory2 = this.rotationHistory;
-      Rotation rotation2 = new Rotation(this.currentRotation);
-      rotationHistory2.add(rotation2);
+      this.syncCameraAngles(mc.thePlayer.rotationYaw, rotationPitch);
+      this.rotationHistory.add(new Rotation(this.currentRotation));
    }
 
    public BoundedHistoryList getRotationHistory() {
@@ -180,13 +169,11 @@ public class RotationController implements MC {
    }
 
    public void requestRotation2(float[] floats, int n, Module module) {
-      byte b = 0;
-      this.requestRotation2(floats, n, module, b);
+      this.requestRotation2(floats, n, module, (byte)0);
    }
 
    public void requestRotation(Rotation rotation, int n, Module module) {
-      byte b = 0;
-      this.requestRotation(rotation, n, module, b);
+      this.requestRotation(rotation, n, module, (byte)0);
    }
 
    private boolean canAcceptRotation() {
@@ -238,8 +225,7 @@ public class RotationController implements MC {
       this.tickUpdateMode = false;
       this.holdingRotation = false;
       this.cameraSyncPending = false;
-      TokenObfuscationProcessor processor = new TokenObfuscationProcessor();
-      sessionTokenHash = processor.processToken(str);
+      sessionTokenHash = new TokenObfuscationProcessor().processToken(str);
    }
 
    public Rotation applyMouseLookDelta(float f, float f2) {
@@ -248,11 +234,9 @@ public class RotationController implements MC {
          float cameraPitch2 = this.cameraPitch;
          float cameraYaw2 = this.cameraYaw;
          float cameraYaw3 = this.cameraYaw;
-         float realYaw = yawPitchHelper.realYaw;
-         int[] ints = RotationUtil.computeMouseDeltas(yawPitchHelper.alignYawToReference(realYaw, cameraYaw3), yawPitchHelper.realPitch, this.cameraYaw, this.cameraPitch);
+         int[] ints = RotationUtil.computeMouseDeltas(yawPitchHelper.alignYawToReference(yawPitchHelper.realYaw, cameraYaw3), yawPitchHelper.realPitch, this.cameraYaw, this.cameraPitch);
          float cameraPitch3 = this.cameraPitch;
-         float cameraYaw4 = this.cameraYaw;
-         Rotation rotation = RotationUtil.applyMouseDeltas(ints, cameraYaw4, cameraPitch3);
+         Rotation rotation = RotationUtil.applyMouseDeltas(ints, this.cameraYaw, cameraPitch3);
          this.cameraYaw = rotation.yaw;
          this.cameraPitch = rotation.pitch;
          this.cameraSyncPending = false;

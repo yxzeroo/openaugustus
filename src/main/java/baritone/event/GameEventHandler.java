@@ -59,8 +59,7 @@ public final class GameEventHandler implements IEventBus, Helper {
    @Override
    public void onBlockChange(BlockChangeEvent blockChangeEvent) {
       if ((Boolean)Baritone.settings().repackOnAnyBlockChange.value) {
-         boolean flag = blockChangeEvent.getBlocks().stream().map(obj -> ((Pair)obj).getSecond()).map(obj2 -> ((IBlockState)obj2).getBlock()).anyMatch(CachedChunk.BLOCKS_TO_KEEP_TRACK_OF::contains);
-         if (flag) {
+         if (blockChangeEvent.getBlocks().stream().map(obj -> ((Pair)obj).getSecond()).map(obj2 -> ((IBlockState)obj2).getBlock()).anyMatch(CachedChunk.BLOCKS_TO_KEEP_TRACK_OF::contains)) {
             this.baritone.getWorldProvider2().ifWorldLoaded(obj3 -> {
                World world = this.baritone.getPlayerContext().world();
                ChunkPos chunkPos = blockChangeEvent.getChunkPos();

@@ -20,13 +20,10 @@ public class AimP1PitchCheck extends ModuleMode {
    public void onClientPacket(Packet packet) {
       if (packet instanceof C03PacketPlayer.C06PacketPlayerPosLook || packet instanceof C03PacketPlayer.C05PacketPlayerLook) {
          if ((double)NumberFormatUtil.angleDistance(this.lastPitch, ClientManagers.rotationController.getPreviousRotation().pitch) > 0.5) {
-            double d = 0.04;
-            if (this.isMotionAboveThreshold(d)) {
-               EntityLivingBase targetEntity = this.antiCheatPlayerData.getTargetEntity();
-               if (targetEntity != null) {
+            if (this.isMotionAboveThreshold(0.04)) {
+               if (this.antiCheatPlayerData.getTargetEntity() != null) {
                   double d2 = 0.04;
-                  AntiCheatPlayerData antiCheatPlayerData2 = this.antiCheatPlayerData;
-                  if (this.isPlayerMovingFasterThan(antiCheatPlayerData2, d2)) {
+                  if (this.isPlayerMovingFasterThan(this.antiCheatPlayerData, d2)) {
                      float f = NumberFormatUtil.angleDistance(this.antiCheatPlayerData.getPitchToTarget(), ClientManagers.rotationController.getPreviousRotation().pitch);
                      this.pitchDiffHistory.add(f);
 
@@ -34,13 +31,11 @@ public class AimP1PitchCheck extends ModuleMode {
                         this.pitchDiffHistory.remove(0);
                      }
 
-                     ArrayList pitchDiffHistory2 = this.pitchDiffHistory;
-                     double d3 = this.averageDoubles(pitchDiffHistory2);
+                     double d3 = this.averageDoubles(this.pitchDiffHistory);
                      if (f < 1.0F) {
                         this.violationBuffer++;
                         if (this.violationBuffer > 8.0F) {
-                           String str = "Too precise Pitch (single)! PitchDiff: " + f;
-                           this.sendAlert(str);
+                           this.sendAlert("Too precise Pitch (single)! PitchDiff: " + f);
                            this.violationBuffer = 0.0F;
                         }
                      } else {
@@ -49,8 +44,7 @@ public class AimP1PitchCheck extends ModuleMode {
 
                      if (this.pitchDiffHistory.size() >= 15 && d3 < 1.5) {
                         this.violationBuffer++;
-                        String str2 = "Too precise Pitch (avg)! PitchDiff: " + d3;
-                        this.sendAlert(str2);
+                        this.sendAlert("Too precise Pitch (avg)! PitchDiff: " + d3);
                         this.pitchDiffHistory.clear();
                         this.violationBuffer = 0.0F;
                      }

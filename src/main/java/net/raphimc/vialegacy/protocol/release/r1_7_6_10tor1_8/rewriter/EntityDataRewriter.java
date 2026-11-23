@@ -33,8 +33,7 @@ public class EntityDataRewriter {
                   Logger logger = ViaLegacy.getPlatform().getLogger();
                   String str = type.name();
                   String str2 = String.valueOf(entry);
-                  String str3 = str;
-                  logger.warning("Could not find valid entity data index entry for " + str3 + ": " + str2);
+                  logger.warning("Could not find valid entity data index entry for " + str + ": " + str2);
                }
 
                list.remove(entry);
@@ -50,8 +49,7 @@ public class EntityDataRewriter {
                } else if (entityDataIndex != EntityDataIndex1_7_6.ENDERMAN_CARRIED_BLOCK) {
                   if (entityDataIndex == EntityDataIndex1_7_6.HUMAN_SKIN_FLAGS) {
                      byte flags = (Byte)value;
-                     boolean cape = (flags & 2) == 0;
-                     flags = (byte)(cape ? 127 : 126);
+                     flags = (byte)(((flags & 2) == 0) ? 127 : 126);
                      entry.setValue(flags);
                   } else {
                      switch (entityDataIndex.getNewType()) {
@@ -78,8 +76,7 @@ public class EntityDataRewriter {
                               Logger logger2 = ViaLegacy.getPlatform().getLogger();
                               String str4 = String.valueOf(entityDataIndex.getNewType());
                               String str5 = String.valueOf(entry);
-                              String str6 = str4;
-                              logger2.warning("1.7.10 EntityDataRewriter: Unhandled Type: " + str6 + " " + str5);
+                              logger2.warning("1.7.10 EntityDataRewriter: Unhandled Type: " + str4 + " " + str5);
                            }
 
                            list.remove(entry);
@@ -115,8 +112,7 @@ public class EntityDataRewriter {
                Level warning = Level.WARNING;
                String str7 = type.name();
                String str8 = String.valueOf(entry);
-               String str9 = str7;
-               logger3.log(warning, "Error rewriting entity data entry for " + str9 + ": " + str8, e);
+               logger3.log(warning, "Error rewriting entity data entry for " + str7 + ": " + str8, e);
             }
 
             list.remove(entry);

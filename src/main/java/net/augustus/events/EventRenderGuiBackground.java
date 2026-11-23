@@ -14,8 +14,7 @@ public class EventRenderGuiBackground extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      RenderGuiBackgroundListener listener = (RenderGuiBackgroundListener)obj;
-      this.call2(listener);
+      this.call2((RenderGuiBackgroundListener)obj);
    }
 
    public void call2(RenderGuiBackgroundListener listener) {

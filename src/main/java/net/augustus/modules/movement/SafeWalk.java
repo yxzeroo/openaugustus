@@ -12,35 +12,29 @@ import net.augustus.events.EventMoveInput;
 import net.augustus.utils.player.PlayerUtil;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.util.AxisAlignedBB;
 
 public class SafeWalk extends Module implements SafeWalkListener, MoveInputListener {
-   private final BooleansSetting mode;
+   private final StringValue mode;
    private final BooleanValue inAir;
    private final BooleanValue edgeCheck;
    private final BooleanValue activateOnlyIfLookingDown;
-   private final StringValue pitchToActivate;
+   private final DoubleValue pitchToActivate;
 
    public SafeWalk() {
        super("SafeWalk", "SichererWeg", new Color(115, 135, 26), Categorys.MOVEMENT);
-      this.mode = new BooleansSetting(this, "Mode", "Basic", new String[]{"Basic", "Sneak"});
-      BooleanValue booleanValue = new BooleanValue(this, "InAir", true);
-      String str = "In air";
-      this.inAir = (BooleanValue)booleanValue.withDisplayName(str);
+      this.mode = new StringValue(this, "Mode", "Basic", new String[]{"Basic", "Sneak"});
+      this.inAir = (BooleanValue)new BooleanValue(this, "InAir", true).withDisplayName("In air");
       BooleanValue booleanValue2 = new BooleanValue(this, "EdgeCheck", true);
       BooleanValue inAir2 = this.inAir;
       this.inAir.getClass();
-      BooleanValue booleanValue3 = inAir2;
-      SettingVisibilityCondition condition = () -> booleanValue3.getValue();
-      BooleanValue booleanValue4 = (BooleanValue)booleanValue2.withVisibility(condition);
-      String str2 = "Edge Check";
-      this.edgeCheck = (BooleanValue)booleanValue4.withDisplayName(str2);
+      this.edgeCheck = (BooleanValue)((BooleanValue)booleanValue2.withVisibility(() -> inAir2.getValue())).withDisplayName("Edge Check");
       this.activateOnlyIfLookingDown = new BooleanValue(this, "Activate only if looking down", false);
-      this.pitchToActivate = new StringValue(this, "Pitch to activate", 70.0, 0.0, 90.0, 0);
+      this.pitchToActivate = new DoubleValue(this, "Pitch to activate", 70.0, 0.0, 90.0, 0);
    }
 
    @Override
@@ -53,33 +47,27 @@ public class SafeWalk extends Module implements SafeWalkListener, MoveInputListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 33;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)33);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
    public void onSafeWalk(EventSafeWalk event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.passesPitchCondition()) {
          Block block = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ).getBlock();
          Block block2 = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 2.0, mc.thePlayer.posZ).getBlock();
          if (mc.thePlayer.onGround && this.isLicenseTimestampValid()) {
             if (this.mode.getSelectedValue().equals("Basic")) {
-               boolean flag = true;
-               event.setSafeWalk(flag);
+               event.setSafeWalk(true);
             }
          } else if (this.inAir.getValue() && (block instanceof BlockAir && block2 instanceof BlockAir || !this.edgeCheck.getValue())) {
-            boolean flag2 = true;
-            event.setSafeWalk(flag2);
+            event.setSafeWalk(true);
          }
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.mode.getSelectedValue().equals("Sneak") && !this.passesPitchCondition()) {
          Block block = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ).getBlock();
          Block block2 = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 2.0, mc.thePlayer.posZ).getBlock();
@@ -104,20 +92,17 @@ public class SafeWalk extends Module implements SafeWalkListener, MoveInputListe
          }
 
          if (flag && mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, box.offset(0.0, -0.51, 0.0).expand(-0.22, 0.0, -0.22)).isEmpty()) {
-            boolean flag2 = true;
-            event.setSneak(flag2);
+            event.setSneak(true);
          }
       }
    }
 
    private boolean passesPitchCondition() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.activateOnlyIfLookingDown.getValue() || (double)mc.thePlayer.rotationPitch <= this.pitchToActivate.getValue();
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

@@ -31,37 +31,31 @@ public class IronGolemSkeletonRenderer extends AbstractSkeletonRenderer {
 
    @Override
    public ModelRenderer getLeftArm(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getLeftArm2(modelIronGolem);
+      return this.getLeftArm2((ModelIronGolem)modelBase);
    }
 
    @Override
    public ModelRenderer getRightArm(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getRightArm2(modelIronGolem);
+      return this.getRightArm2((ModelIronGolem)modelBase);
    }
 
    @Override
    public ModelRenderer getLeftLeg(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getLeftLeg2(modelIronGolem);
+      return this.getLeftLeg2((ModelIronGolem)modelBase);
    }
 
    @Override
    public ModelRenderer getRightLeg(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getRightLeg2(modelIronGolem);
+      return this.getRightLeg2((ModelIronGolem)modelBase);
    }
 
    @Override
    public ModelRenderer getBody(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getBody2(modelIronGolem);
+      return this.getBody2((ModelIronGolem)modelBase);
    }
 
    @Override
    public ModelRenderer getHead(ModelBase modelBase) {
-      ModelIronGolem modelIronGolem = (ModelIronGolem)modelBase;
-      return this.getHead2(modelIronGolem);
+      return this.getHead2((ModelIronGolem)modelBase);
    }
 }

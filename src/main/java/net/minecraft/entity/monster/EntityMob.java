@@ -36,8 +36,7 @@ public abstract class EntityMob extends EntityCreature implements IMob {
    @Override
    public void onLivingUpdate() {
       this.updateArmSwingProgress();
-      float brightness = this.getBrightness(1.0F);
-      if (brightness > 0.5F) {
+      if (this.getBrightness(1.0F) > 0.5F) {
          this.age += 2;
       }
 

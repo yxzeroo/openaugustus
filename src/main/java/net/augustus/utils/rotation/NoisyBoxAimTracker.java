@@ -34,9 +34,7 @@ public class NoisyBoxAimTracker {
       double d9 = d6 - d;
       double d10 = d7 - d2;
       double d11 = d8 - d3;
-      double d12 = Math.toDegrees(Math.atan2(d11, d9)) - 90.0;
-      double d13 = -Math.toDegrees(Math.atan2(d10, Math.sqrt(d9 * d9 + d11 * d11)));
-      double[] doubles = computeClampedAngleDelta(d4, d5, d12, d13);
+      double[] doubles = computeClampedAngleDelta(d4, d5, Math.toDegrees(Math.atan2(d11, d9)) - 90.0, -Math.toDegrees(Math.atan2(d10, Math.sqrt(d9 * d9 + d11 * d11))));
       double d14 = Math.sqrt(doubles[0] * doubles[0] + doubles[1] * doubles[1]);
       if (d14 > 60.0) {
          double d15 = 60.0 / d14;

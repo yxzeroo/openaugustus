@@ -148,8 +148,7 @@ public abstract class World implements IBlockAccess {
       for (int i = n; i <= n2; i++) {
          for (int j = n3; j <= n4; j++) {
             for (int k = n5; k <= n6; k++) {
-               Block block = this.getBlockState(pos.set(i, j, k)).getBlock();
-               if (block.getMaterial().isLiquid()) {
+               if (this.getBlockState(pos.set(i, j, k)).getBlock().getMaterial().isLiquid()) {
                   return true;
                }
             }
@@ -208,8 +207,7 @@ public abstract class World implements IBlockAccess {
    }
 
    public boolean isBlockinHighHumidity(BlockPos pos) {
-      BiomeGenBase biomeGenForCoords = this.getBiomeGenForCoords(pos);
-      return biomeGenForCoords.isHighHumidity();
+      return this.getBiomeGenForCoords(pos).isHighHumidity();
    }
 
    public ISaveHandler getSaveHandler() {
@@ -294,8 +292,7 @@ public abstract class World implements IBlockAccess {
    }
 
    public float getCelestialAngleRadians(float f) {
-      float celestialAngle = this.getCelestialAngle(f);
-      return celestialAngle * 3.1415927F * 2.0F;
+      return this.getCelestialAngle(f) * 3.1415927F * 2.0F;
    }
 
    public boolean isMaterialInBB(double d, double d2, double d3, double d4, double d5, double d6, Material material) {
@@ -507,8 +504,7 @@ public abstract class World implements IBlockAccess {
                   IBlockState blockState = this.getBlockState(pos);
                   Block block = blockState.getBlock();
                   if (block.getMaterial() == material) {
-                     double d7 = (double)((float)(j + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL)));
-                     if ((double)n4 >= d7) {
+                     if ((double)n4 >= ((double)((float)(j + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL))))) {
                         flag = true;
                         vec = block.modifyAcceleration(this, pos, entity, vec);
                      }
@@ -533,8 +529,7 @@ public abstract class World implements IBlockAccess {
       int n = MathHelper.floor_double(d);
       int n2 = MathHelper.floor_double(d2);
       int n3 = MathHelper.floor_double(d3);
-      Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-      return chunkFromBlockCoords.getBlockState(n, n2, n3);
+      return this.getChunkFromBlockCoords(n, n3).getBlockState(n, n2, n3);
    }
 
    public CrashReportCategory addWorldInfoToCrashReport(CrashReport crashReport) {
@@ -868,8 +863,7 @@ public abstract class World implements IBlockAccess {
          for (int j = n3; j < n4; j++) {
             for (int k = n5; k < n6; k++) {
                IBlockState blockState = this.getBlockState(pos.set(i, j, k));
-               Block block = blockState.getBlock();
-               if (block.getMaterial() == material) {
+               if (blockState.getBlock().getMaterial() == material) {
                   int value = (Integer)blockState.getValue(BlockLiquid.LEVEL);
                   double d = (double)(j + 1);
                   if (value < 8) {
@@ -1063,9 +1057,7 @@ public abstract class World implements IBlockAccess {
    }
 
    public boolean canBlockFreeze(BlockPos pos, boolean flag) {
-      BiomeGenBase biomeGenForCoords = this.getBiomeGenForCoords(pos);
-      float floatTemperature = biomeGenForCoords.getFloatTemperature(pos);
-      if (floatTemperature > 0.15F) {
+      if (this.getBiomeGenForCoords(pos).getFloatTemperature(pos) > 0.15F) {
          return false;
       } else {
          if (pos.getY() >= 0 && pos.getY() < 256 && this.getLightFor(EnumSkyBlock.BLOCK, pos.getX(), pos.getY(), pos.getZ()) < 10) {
@@ -1076,8 +1068,7 @@ public abstract class World implements IBlockAccess {
                   return true;
                }
 
-               boolean flag2 = this.isWater(pos.west()) && this.isWater(pos.east()) && this.isWater(pos.north()) && this.isWater(pos.south());
-               if (!flag2) {
+               if (!(this.isWater(pos.west()) && this.isWater(pos.east()) && this.isWater(pos.north()) && this.isWater(pos.south()))) {
                   return true;
                }
             }
@@ -1097,8 +1088,7 @@ public abstract class World implements IBlockAccess {
 
    public void sendBlockBreakProgress(int n, BlockPos pos, int n2) {
       for (int i = 0; i < this.worldAccesses.size(); i++) {
-         IWorldAccess worldAccess = (IWorldAccess)this.worldAccesses.get(i);
-         worldAccess.sendBlockBreakProgress(n, pos, n2);
+         ((IWorldAccess)this.worldAccesses.get(i)).sendBlockBreakProgress(n, pos, n2);
       }
    }
 
@@ -1446,8 +1436,7 @@ public abstract class World implements IBlockAccess {
             this.updateEntity(entity);
          } catch (Throwable e) {
             CrashReport crashReport = CrashReport.makeCrashReport(e, "Ticking entity");
-            CrashReportCategory crashReportCategory = crashReport.makeCategory("Entity being ticked");
-            entity.addEntityCrashInfo(crashReportCategory);
+            entity.addEntityCrashInfo(crashReport.makeCategory("Entity being ticked"));
             throw new ReportedException(crashReport);
          }
       }
@@ -1505,8 +1494,7 @@ public abstract class World implements IBlockAccess {
       } else if (!this.isBlockLoaded(n, n2, n3)) {
          return enumSkyBlock.defaultLightValue;
       } else {
-         Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-         return chunkFromBlockCoords.getLightFor(enumSkyBlock, n, n2, n3);
+         return this.getChunkFromBlockCoords(n, n3).getLightFor(enumSkyBlock, n, n2, n3);
       }
    }
 
@@ -1523,8 +1511,7 @@ public abstract class World implements IBlockAccess {
          if (!this.isChunkLoaded(n >> 4, n2 >> 4, true)) {
             return 0;
          } else {
-            Chunk chunkFromChunkCoords = this.getChunkFromChunkCoords(n >> 4, n2 >> 4);
-            return chunkFromChunkCoords.getLowestHeight();
+            return this.getChunkFromChunkCoords(n >> 4, n2 >> 4).getLowestHeight();
          }
       } else {
          return this.getSeaLevel() + 1;
@@ -1642,8 +1629,7 @@ public abstract class World implements IBlockAccess {
    }
 
    public IBlockState getBlockState2(int n, int n2, int n3) {
-      Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-      return chunkFromBlockCoords.getBlockState(n, n2, n3);
+      return this.getChunkFromBlockCoords(n, n3).getBlockState(n, n2, n3);
    }
 
    public void updateEntity(Entity entity) {
@@ -1699,8 +1685,7 @@ public abstract class World implements IBlockAccess {
       if (!this.isValid(pos)) {
          return Blocks.air.getDefaultState();
       } else {
-         Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(pos);
-         return chunkFromBlockCoords.getBlockState(pos);
+         return this.getChunkFromBlockCoords(pos).getBlockState(pos);
       }
    }
 
@@ -1772,8 +1757,7 @@ public abstract class World implements IBlockAccess {
       for (int i = n; i <= n2; i++) {
          for (int j = n3; j <= n4; j++) {
             for (int k = n5; k <= n6; k++) {
-               Block block = this.getBlockState(pos.set(i, j, k)).getBlock();
-               if (block.getMaterial() != Material.air) {
+               if (this.getBlockState(pos.set(i, j, k)).getBlock().getMaterial() != Material.air) {
                   return true;
                }
             }
@@ -2042,8 +2026,7 @@ public abstract class World implements IBlockAccess {
       }
 
       if (n != -1) {
-         Entity entity4 = (Entity)this.loadedEntityList.get(n);
-         this.updateEntityAtIndex(entity4, n);
+         this.updateEntityAtIndex((Entity)this.loadedEntityList.get(n), n);
       }
 
       this.theProfiler.endStartSection("blockEntities");
@@ -2059,8 +2042,7 @@ public abstract class World implements IBlockAccess {
                   ((ITickable)tileEntity).update();
                } catch (Throwable e2) {
                   CrashReport crashReport2 = CrashReport.makeCrashReport(e2, "Ticking block entity");
-                  CrashReportCategory crashReportCategory2 = crashReport2.makeCategory("Block entity being ticked");
-                  tileEntity.addInfoToCrashReport(crashReportCategory2);
+                  tileEntity.addInfoToCrashReport(crashReport2.makeCategory("Block entity being ticked"));
                   throw new ReportedException(crashReport2);
                }
             }
@@ -2175,10 +2157,7 @@ public abstract class World implements IBlockAccess {
                if (lightFor2 == n13) {
                   this.setLightFor(enumSkyBlock, n10, n11, n12, 0);
                   if (n13 > 0) {
-                     int n14 = MathHelper.abs_int(n10 - n6);
-                     int n15 = MathHelper.abs_int(n11 - n7);
-                     int n16 = MathHelper.abs_int(n12 - n8);
-                     if (n14 + n15 + n16 < 17) {
+                     if (MathHelper.abs_int(n10 - n6) + MathHelper.abs_int(n11 - n7) + MathHelper.abs_int(n12 - n8) < 17) {
                         for (EnumFacing facing : EnumFacing.getValues()) {
                            int n17 = n10 + facing.getFrontOffsetX();
                            int n18 = n11 + facing.getFrontOffsetY();
@@ -2295,8 +2274,7 @@ public abstract class World implements IBlockAccess {
             return chunkFromBlockCoords.getBiome(pos.getX(), pos.getZ(), this.provider.getWorldChunkManager());
          } catch (Throwable e) {
             CrashReport crashReport = CrashReport.makeCrashReport(e, "Getting biome");
-            CrashReportCategory crashReportCategory = crashReport.makeCategory("Coordinates of biome request");
-            crashReportCategory.addCrashSectionCallable("Location", new World.ValueCallable(this, pos));
+            crashReport.makeCategory("Coordinates of biome request").addCrashSectionCallable("Location", new World.ValueCallable(this, pos));
             throw new ReportedException(crashReport);
          }
       } else {
@@ -2342,10 +2320,7 @@ public abstract class World implements IBlockAccess {
       if (!this.playerEntities.isEmpty()) {
          int n3 = this.rand.nextInt(this.playerEntities.size());
          EntityPlayer player2 = (EntityPlayer)this.playerEntities.get(n3);
-         int n4 = MathHelper.floor_double(player2.posX) + this.rand.nextInt(11) - 5;
-         int n5 = MathHelper.floor_double(player2.posY) + this.rand.nextInt(11) - 5;
-         int n6 = MathHelper.floor_double(player2.posZ) + this.rand.nextInt(11) - 5;
-         this.checkLight(n4, n5, n6);
+         this.checkLight(MathHelper.floor_double(player2.posX) + this.rand.nextInt(11) - 5, MathHelper.floor_double(player2.posY) + this.rand.nextInt(11) - 5, MathHelper.floor_double(player2.posZ) + this.rand.nextInt(11) - 5);
       }
 
       this.theProfiler.endSection();
@@ -2508,8 +2483,7 @@ public abstract class World implements IBlockAccess {
             n2 = 255;
          }
 
-         Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-         return chunkFromBlockCoords.getLightSubtracted(n, n2, n3, this.skylightSubtracted);
+         return this.getChunkFromBlockCoords(n, n3).getLightSubtracted(n, n2, n3, this.skylightSubtracted);
       }
    }
 
@@ -2553,8 +2527,7 @@ public abstract class World implements IBlockAccess {
 
             return lightFor;
          } else {
-            Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-            return chunkFromBlockCoords.getLightFor(enumSkyBlock, n, n2, n3);
+            return this.getChunkFromBlockCoords(n, n3).getLightFor(enumSkyBlock, n, n2, n3);
          }
       }
    }
@@ -2587,8 +2560,7 @@ public abstract class World implements IBlockAccess {
 
    public void setLightFor(EnumSkyBlock enumSkyBlock, int n, int n2, int n3, int n4) {
       if (this.isValid(n, n2, n3) && this.isBlockLoaded(n, n2, n3)) {
-         Chunk chunkFromBlockCoords = this.getChunkFromBlockCoords(n, n3);
-         chunkFromBlockCoords.setLightFor(enumSkyBlock, n, n2, n3, n4);
+         this.getChunkFromBlockCoords(n, n3).setLightFor(enumSkyBlock, n, n2, n3, n4);
          this.notifyLightSet(n, n2, n3);
       }
    }
@@ -2790,8 +2762,7 @@ public abstract class World implements IBlockAccess {
                   IBlockState blockState = this.getBlockState(pos);
                   Block block = blockState.getBlock();
                   if (block.getMaterial() == material) {
-                     double d = (double)((float)(j + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL)));
-                     if ((double)n4 >= d) {
+                     if ((double)n4 >= ((double)((float)(j + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL))))) {
                         flag = true;
                         vec = block.modifyAcceleration(this, pos, entity, vec);
                      }
@@ -2881,16 +2852,13 @@ public abstract class World implements IBlockAccess {
    }
 
    public boolean canSnowAt(BlockPos pos, boolean flag) {
-      BiomeGenBase biomeGenForCoords = this.getBiomeGenForCoords(pos);
-      float floatTemperature = biomeGenForCoords.getFloatTemperature(pos);
-      if (floatTemperature > 0.15F) {
+      if (this.getBiomeGenForCoords(pos).getFloatTemperature(pos) > 0.15F) {
          return false;
       } else if (!flag) {
          return true;
       } else {
          if (pos.getY() >= 0 && pos.getY() < 256 && this.getLightFor(EnumSkyBlock.BLOCK, pos.getX(), pos.getY(), pos.getZ()) < 10) {
-            Block block = this.getBlockState(pos).getBlock();
-            if (block.getMaterial() == Material.air && Blocks.snow_layer.canPlaceBlockAt(this, pos)) {
+            if (this.getBlockState(pos).getBlock().getMaterial() == Material.air && Blocks.snow_layer.canPlaceBlockAt(this, pos)) {
                return true;
             }
          }
@@ -2937,16 +2905,14 @@ public abstract class World implements IBlockAccess {
    }
 
    public Vec3 getSkyColor(Entity entity, float f) {
-      float celestialAngle = this.getCelestialAngle(f);
-      float f2 = MathHelper.cos(celestialAngle * 3.1415927F * 2.0F) * 2.0F + 0.5F;
+      float f2 = MathHelper.cos(this.getCelestialAngle(f) * 3.1415927F * 2.0F) * 2.0F + 0.5F;
       f2 = MathHelper.clamp_float(f2, 0.0F, 1.0F);
       int n = MathHelper.floor_double(entity.posX);
       int n2 = MathHelper.floor_double(entity.posY);
       int n3 = MathHelper.floor_double(entity.posZ);
       BlockPos pos = new BlockPos(n, n2, n3);
       BiomeGenBase biomeGenForCoords = this.getBiomeGenForCoords(pos);
-      float floatTemperature = biomeGenForCoords.getFloatTemperature(pos);
-      int skyColorByTemp = biomeGenForCoords.getSkyColorByTemp(floatTemperature);
+      int skyColorByTemp = biomeGenForCoords.getSkyColorByTemp(biomeGenForCoords.getFloatTemperature(pos));
       float f3 = (float)(skyColorByTemp >> 16 & 0xFF) / 255.0F;
       float f4 = (float)(skyColorByTemp >> 8 & 0xFF) / 255.0F;
       float f5 = (float)(skyColorByTemp & 0xFF) / 255.0F;
@@ -3003,8 +2969,7 @@ public abstract class World implements IBlockAccess {
       if (!this.isValid(pos)) {
          return flag;
       } else {
-         Chunk chunk = this.chunkProvider.provideChunk(pos);
-         if (chunk.isEmpty()) {
+         if (this.chunkProvider.provideChunk(pos).isEmpty()) {
             return flag;
          } else {
             Block block = this.getBlockState(pos).getBlock();
@@ -3118,8 +3083,7 @@ public abstract class World implements IBlockAccess {
    }
 
    public Vec3 getCloudColour(float f) {
-      float celestialAngle = this.getCelestialAngle(f);
-      float f2 = MathHelper.cos(celestialAngle * 3.1415927F * 2.0F) * 2.0F + 0.5F;
+      float f2 = MathHelper.cos(this.getCelestialAngle(f) * 3.1415927F * 2.0F) * 2.0F + 0.5F;
       f2 = MathHelper.clamp_float(f2, 0.0F, 1.0F);
       float f3 = (float)(this.cloudColour >> 16 & 255L) / 255.0F;
       float f4 = (float)(this.cloudColour >> 8 & 255L) / 255.0F;

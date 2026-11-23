@@ -28,8 +28,7 @@ public class ClickPatternRecorder implements TickListener, MC {
       this.recording = false;
       EventManager.getEventBus().unsubscribe(40, this);
       this.setPatternName(str);
-      boolean flag = false;
-      this.setRunning(flag);
+      this.setRunning(false);
       return true;
    }
 
@@ -70,8 +69,7 @@ public class ClickPatternRecorder implements TickListener, MC {
             this.anchorPitch = mc.thePlayer.rotationPitch;
          }
 
-         boolean isSneaking = mc.thePlayer.isSneaking();
-         this.setSneaking(isSneaking);
+         this.setSneaking(mc.thePlayer.isSneaking());
          if (this.isSneaking()) {
             this.getRecordedRotations().add(new float[]{mc.thePlayer.rotationYaw - this.anchorYaw, mc.thePlayer.rotationPitch - this.anchorPitch});
          }
@@ -89,10 +87,8 @@ public class ClickPatternRecorder implements TickListener, MC {
    public void cancel() {
       this.recording = false;
       EventManager.getEventBus().unsubscribe(40, this);
-      boolean flag = true;
-      this.setCancelled(flag);
-      boolean flag2 = false;
-      this.setRunning(flag2);
+      this.setCancelled(true);
+      this.setRunning(false);
    }
 
    public synchronized boolean cancelled() {
@@ -123,12 +119,9 @@ public class ClickPatternRecorder implements TickListener, MC {
       if (!this.recording && !this.isRunning()) {
          this.recording = true;
          EventManager.getEventBus().subscribe(40, this);
-         boolean flag = false;
-         this.setCancelled(flag);
-         boolean flag2 = true;
-         this.setRunning(flag2);
-         boolean flag3 = false;
-         this.setSneaking(flag3);
+         this.setCancelled(false);
+         this.setRunning(true);
+         this.setSneaking(false);
          this.recorderThread = new Thread(() -> this.recordLoop());
          this.recorderThread.start();
          return true;
@@ -182,9 +175,7 @@ public class ClickPatternRecorder implements TickListener, MC {
 
             json.add("Delays", array);
             json.add("Rotations", array2);
-            String str = PATTERN_DIR;
-            String str2 = this.getPatternName() + ".json";
-            ClientFileUtil.writeJsonObject(str, str2, json);
+            ClientFileUtil.writeJsonObject(PATTERN_DIR, this.getPatternName() + ".json", json);
             return;
          }
 
@@ -199,8 +190,7 @@ public class ClickPatternRecorder implements TickListener, MC {
             }
          } else {
             while (Mouse.next()) {
-               int n2 = Mouse.getEventButton() - 100;
-               if (n2 == keyCode) {
+               if ((Mouse.getEventButton() - 100) == keyCode) {
                   boolean eventButtonState = Mouse.getEventButtonState();
                   if (flag || eventButtonState) {
                      long l2 = System.currentTimeMillis();

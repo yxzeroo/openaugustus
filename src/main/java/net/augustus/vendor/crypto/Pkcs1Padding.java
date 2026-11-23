@@ -49,9 +49,7 @@ public class Pkcs1Padding {
          for (int i = 0; i < n2; i++) {
             do {
                obj3 = new byte[1];
-               CustomSecureRandom customSecureRandom = (CustomSecureRandom)obj2;
-               byte[] bytes2 = (byte[])obj3;
-               customSecureRandom.nextBytes(bytes2);
+               ((CustomSecureRandom)obj2).nextBytes((byte[])obj3);
                b = ((byte[])obj3)[0];
             } while (b == 0);
 

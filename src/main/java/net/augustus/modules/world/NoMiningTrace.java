@@ -21,9 +21,8 @@ public class NoMiningTrace extends Module {
       this.alwaysAfterBlockBreakStarted = (BooleanValue)(new BooleanValue(this, "AlwaysAfterBlockBreakStarted", true)).markVisualOnly();
       this.onlypickaxesWhenLeftclicking = (BooleanValue)(new BooleanValue(this, "OnlyPickaxes when leftclicking", false)).markVisualOnly();
       this.excludedWeapons = (WeaponFilterSettings)(new WeaponFilterSettings(this, "Excluded weapons")).markAllVisualOnly();
-      boolean flag = false;
       String str = "Rest";
-      this.excludedWeapons.setOptionEnabled(str, flag);
+      this.excludedWeapons.setOptionEnabled(str, false);
    }
 
    public void onEnable() {
@@ -39,9 +38,7 @@ public class NoMiningTrace extends Module {
       if (this.isToggled()
          && this.isLicenseValid()
          && (!this.onlypickaxesWhenLeftclicking.getValue() || mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemPickaxe)) {
-         WeaponFilterSettings excludedWeapons2 = this.excludedWeapons;
-         ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
-         if (!excludedWeapons2.isItemAllowed(currentEquippedItem) || mc.playerController.isHittingBlock && this.alwaysAfterBlockBreakStarted.getValue()) {
+         if (!this.excludedWeapons.isItemAllowed(mc.thePlayer.getCurrentEquippedItem()) || mc.playerController.isHittingBlock && this.alwaysAfterBlockBreakStarted.getValue()) {
             return true;
          }
       }

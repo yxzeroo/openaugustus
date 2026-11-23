@@ -44,8 +44,7 @@ public final class Bitstream implements BitstreamErrors {
       } else {
          int n4 = this.framebuffer[this.wordpointer] & 65535;
          this.wordpointer++;
-         int n5 = this.framebuffer[this.wordpointer] & -65536;
-         n2 = n4 << 16 & -65536 | n5 >>> 16 & 65535;
+         n2 = n4 << 16 & -65536 | (this.framebuffer[this.wordpointer] & -65536) >>> 16 & 65535;
          n2 >>>= 48 - n3;
          n2 &= this.bitmask[n];
          this.bitindex = n3 - 32;
@@ -237,8 +236,7 @@ public final class Bitstream implements BitstreamErrors {
    }
 
    public int syncHeader(byte b) throws BitstreamException {
-      int n = this.readBytes(this.syncbuf, 0, 3);
-      if (n != 3) {
+      if (this.readBytes(this.syncbuf, 0, 3) != 3) {
          throw this.newBitstreamException(260, null);
       } else {
          int n2 = this.syncbuf[0] << 16 & 0xFF0000 | this.syncbuf[1] << 8 & 0xFF00 | this.syncbuf[2] << 0 & 0xFF;

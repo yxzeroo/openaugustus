@@ -27,8 +27,7 @@ public class ChunkType extends Type<Chunk> {
       int xSize = byteBuf.readUnsignedByte() + 1;
       int ySize = byteBuf.readUnsignedByte() + 1;
       int zSize = byteBuf.readUnsignedByte() + 1;
-      int chunkSize = byteBuf.readInt();
-      byte[] compressedData = new byte[chunkSize];
+      byte[] compressedData = new byte[byteBuf.readInt()];
       byteBuf.readBytes(compressedData);
       byte[] uncompressedData = new byte[xSize * ySize * zSize * 5 / 2];
       Inflater inflater = new Inflater();

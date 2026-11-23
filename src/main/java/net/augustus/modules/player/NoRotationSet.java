@@ -5,15 +5,15 @@ import java.util.Set;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.Augustus;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
 public class NoRotationSet extends Module {
-   public final BooleansSetting mode;
+   public final StringValue mode;
 
    public NoRotationSet() {
        super("NoRotationSet", "KeineRotationssetzung", new Color(26, 108, 135), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "Default", new String[]{"Default", "Test"});
+      this.mode = new StringValue(this, "Mode", "Default", new String[]{"Default", "Test"});
    }
 
    public void onEnable() {

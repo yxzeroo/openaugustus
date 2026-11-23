@@ -293,8 +293,7 @@ public class JSONParser {
                   switch (this.token.type) {
                      case 0:
                         if (this.token.value instanceof String) {
-                           String value = (String)this.token.value;
-                           list2.addFirst(value);
+                           list2.addFirst((String)this.token.value);
                            this.status = 4;
                            list.addFirst(new Integer(this.status));
                         } else {
@@ -318,8 +317,7 @@ public class JSONParser {
                case 3:
                   switch (this.token.type) {
                      case 0:
-                        List first = (List)list2.getFirst();
-                        first.add(this.token.value);
+                        ((List)list2.getFirst()).add(this.token.value);
                         break exitBlock;
                      case 1:
                         List first2 = (List)list2.getFirst();
@@ -357,8 +355,7 @@ public class JSONParser {
                      case 0:
                         list.removeFirst();
                         String str = (String)list2.removeFirst();
-                        Map first4 = (Map)list2.getFirst();
-                        first4.put(str, this.token.value);
+                        ((Map)list2.getFirst()).put(str, this.token.value);
                         this.status = this.peekStatus(list);
                         break;
                      case 1:
@@ -420,8 +417,7 @@ public class JSONParser {
       if (list.size() == 0) {
          return -1;
       } else {
-         Integer first = (Integer)list.getFirst();
-         return first;
+         return (Integer)list.getFirst();
       }
    }
 

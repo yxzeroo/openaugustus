@@ -75,8 +75,7 @@ public class RandomEntityRule {
          }
 
          if (this.professions != null && randomEntity instanceof RandomEntity) {
-            RandomEntity randomEntity2 = (RandomEntity)randomEntity;
-            Entity entity = randomEntity2.getEntity();
+            Entity entity = ((RandomEntity)randomEntity).getEntity();
             if (entity instanceof EntityVillager) {
                EntityVillager entityVillager = (EntityVillager)entity;
                int profession = entityVillager.getProfession();
@@ -88,8 +87,7 @@ public class RandomEntityRule {
                boolean flag = false;
 
                for (int i = 0; i < this.professions.length; i++) {
-                  VillagerProfession villagerProfession = this.professions[i];
-                  if (villagerProfession.matches(profession, careerId)) {
+                  if (this.professions[i].matches(profession, careerId)) {
                      flag = true;
                      break;
                   }
@@ -102,27 +100,23 @@ public class RandomEntityRule {
          }
 
          if (this.collarColors != null && randomEntity instanceof RandomEntity) {
-            RandomEntity randomEntity3 = (RandomEntity)randomEntity;
-            Entity entity2 = randomEntity3.getEntity();
+            Entity entity2 = ((RandomEntity)randomEntity).getEntity();
             if (entity2 instanceof EntityWolf) {
                EntityWolf entityWolf = (EntityWolf)entity2;
                if (!entityWolf.isTamed()) {
                   return false;
                }
 
-               EnumDyeColor collarColor = entityWolf.getCollarColor();
-               if (!Config.equalsOne2(collarColor, this.collarColors)) {
+               if (!Config.equalsOne2(entityWolf.getCollarColor(), this.collarColors)) {
                   return false;
                }
             }
          }
 
          if (this.baby != null && randomEntity instanceof RandomEntity) {
-            RandomEntity randomEntity4 = (RandomEntity)randomEntity;
-            Entity entity3 = randomEntity4.getEntity();
+            Entity entity3 = ((RandomEntity)randomEntity).getEntity();
             if (entity3 instanceof EntityLiving) {
-               EntityLiving entityLiving = (EntityLiving)entity3;
-               if (entityLiving.isChild() != this.baby) {
+               if (((EntityLiving)entity3).isChild() != this.baby) {
                   return false;
                }
             }

@@ -17,7 +17,6 @@ public class VendorVarIntFrameDecoder extends ByteToMessageDecoder {
    public void decode(ChannelHandlerContext ctx, ByteBuf in, List out) throws Exception {
       this.timingGuard.enterStep1();
       in.markReaderIndex();
-      VendorPacketBuffer.getOpaqueStateTag();
       byte[] bytes = new byte[5];
 
       for (int i = 0; i < bytes.length; i++) {

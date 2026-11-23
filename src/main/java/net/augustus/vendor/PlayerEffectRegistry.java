@@ -52,8 +52,7 @@ public class PlayerEffectRegistry {
          gameProfile = player.getGameProfile();
       }
 
-      String name = gameProfile.getName();
-      TupleTriple playerEffectRecord = getPlayerEffectRecord(name);
+      TupleTriple playerEffectRecord = getPlayerEffectRecord(gameProfile.getName());
       Object obj = playerEffectRecord;
       if (opaqueStateTag2 == null) {
          if (playerEffectRecord == null) {
@@ -68,9 +67,7 @@ public class PlayerEffectRegistry {
          obj = player;
          if (opaqueStateTag2 == null) {
             int first = (Integer)playerEffectRecord.getFirst();
-            String second = (String)playerEffectRecord.getSecond();
-            int n2 = first;
-            if (!OnlineUserRegistry.matchesPlayerIdentity(player, n2, second)) {
+            if (!OnlineUserRegistry.matchesPlayerIdentity(player, first, (String)playerEffectRecord.getSecond())) {
                return null;
             }
 

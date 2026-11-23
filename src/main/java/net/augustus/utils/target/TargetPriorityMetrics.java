@@ -14,11 +14,9 @@ public class TargetPriorityMetrics implements MC {
       if (entity instanceof EntityLivingBase) {
          float pitch = rotation.pitch;
          float yaw = rotation.yaw;
-         float f = 1.0F;
-         if (RayTraceUtil.canSeeEntity(entity, f, yaw, pitch, d)) {
+         if (RayTraceUtil.canSeeEntity(entity, 1.0F, yaw, pitch, d)) {
             double distanceToEntity = (double)mc.thePlayer.getDistanceToEntity(entity);
-            double d2 = (double)(((EntityLivingBase)entity).hurtTime * 6);
-            return d2 + distanceToEntity;
+            return ((double)(((EntityLivingBase)entity).hurtTime * 6)) + distanceToEntity;
          }
       }
 
@@ -30,8 +28,7 @@ public class TargetPriorityMetrics implements MC {
          if (entity2 != null && entity.getEntityId() == entity2.getEntityId()) {
             return -1.0;
          } else {
-            float f = RotationUtil.getAngleDiffToPos(entity.posX, entity.posY, entity.posZ, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch)[0];
-            return (double)Math.abs(f);
+            return (double)Math.abs(RotationUtil.getAngleDiffToPos(entity.posX, entity.posY, entity.posZ, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch)[0]);
          }
       } else {
          return 1000000.0;
@@ -49,14 +46,11 @@ public class TargetPriorityMetrics implements MC {
    public static double shortAimSwitchScore(Entity entity, Rotation rotation, double d) {
       if (entity instanceof EntityLivingBase) {
          float pitch = rotation.pitch;
-         float yaw = rotation.yaw;
-         float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, yaw, pitch);
+         float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, rotation.yaw, pitch);
          float pitch2 = rotation.pitch;
          float yaw2 = rotation.yaw;
-         float f = 1.0F;
-         if (RayTraceUtil.canSeeEntity(entity, f, yaw2, pitch2, d)) {
-            double d2 = (double)(((EntityLivingBase)entity).hurtTime * 1000);
-            return d2 + Math.sqrt((double)(floats[0] * floats[0] + floats[1] * floats[1]));
+         if (RayTraceUtil.canSeeEntity(entity, 1.0F, yaw2, pitch2, d)) {
+            return ((double)(((EntityLivingBase)entity).hurtTime * 1000)) + Math.sqrt((double)(floats[0] * floats[0] + floats[1] * floats[1]));
          } else {
             return 11000.0 + Math.sqrt((double)(floats[0] * floats[0] + floats[1] * floats[1]));
          }
@@ -68,12 +62,10 @@ public class TargetPriorityMetrics implements MC {
    public static double shortAimScore(Entity entity, Rotation rotation, double d) {
       if (entity instanceof EntityLivingBase) {
          float pitch = rotation.pitch;
-         float yaw = rotation.yaw;
-         float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, yaw, pitch);
+         float[] floats = RotationUtil.getAngleDiffToEntityNearestPoint(entity, rotation.yaw, pitch);
          float pitch2 = rotation.pitch;
          float yaw2 = rotation.yaw;
-         float f = 1.0F;
-         return RayTraceUtil.canSeeEntity(entity, f, yaw2, pitch2, d)
+         return RayTraceUtil.canSeeEntity(entity, 1.0F, yaw2, pitch2, d)
             ? Math.sqrt((double)(floats[0] * floats[0] + floats[1] * floats[1]))
             : 11000.0 + Math.sqrt((double)(floats[0] * floats[0] + floats[1] * floats[1]));
       } else {
@@ -83,8 +75,7 @@ public class TargetPriorityMetrics implements MC {
 
    public static double fovScore(Entity entity) {
       if (entity instanceof EntityLivingBase) {
-         float f = RotationUtil.getAngleDiffToPos(entity.posX, entity.posY, entity.posZ, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch)[0];
-         return (double)Math.abs(f);
+         return (double)Math.abs(RotationUtil.getAngleDiffToPos(entity.posX, entity.posY, entity.posZ, Augustus.getInstance().getYawPitchHelper().realYaw, Augustus.getInstance().getYawPitchHelper().realPitch)[0]);
       } else {
          return 1000000.0;
       }

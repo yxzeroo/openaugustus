@@ -30,8 +30,7 @@ public class BlockSand extends BlockFalling {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockSand.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockSand.EnumType.class);
    }
 
    @Override

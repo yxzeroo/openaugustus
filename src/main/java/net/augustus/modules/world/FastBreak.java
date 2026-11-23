@@ -15,9 +15,9 @@ import net.augustus.settings.options.FastBreakDedicatedItemOption;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -28,73 +28,60 @@ import net.minecraft.util.ResourceLocation;
 
 public class FastBreak extends Module implements PacketListener {
    public final BooleanValue customBlockHitDelay;
-   public final StringValue blockHitDelay;
+   public final DoubleValue blockHitDelay;
    public final BooleanValue ignoreMiningFatigue;
    public final BooleanValue onlyWhenBlink;
    public final BooleanValue ignoreBeds;
    public final BooleanValue debugBreakSpeed;
-   private final BooleansSetting mode;
-   private final DoubleValue simpleSettings;
+   private final StringValue mode;
+   private final SettingGroup simpleSettings;
    private final BooleanValue customInAirMultiplier;
-   private final StringValue inAirMultiplier;
-   private final StringValue multiplier;
-   private final StringValue artificialMiningSpeedEffect;
+   private final DoubleValue inAirMultiplier;
+   private final DoubleValue multiplier;
+   private final DoubleValue artificialMiningSpeedEffect;
    private final BooleanValue instant;
    private BooleanValue dedicatedItemHandling;
-   private DoubleValue dedicatedItems;
+   private SettingGroup dedicatedItems;
    private final HashMap blockOptions;
    private final HashMap dedicatedItemOptions;
    private boolean startedBreakingBlock;
 
    public FastBreak() {
        super("FastBreak", "Schnellbruch", new Color(52, 152, 219), Categorys.WORLD);
-      BooleanValue booleanValue = new BooleanValue(this, "CustomBlockHitDelay", false);
-      String str = "CustomBlockBreakDelay";
-      this.customBlockHitDelay = (BooleanValue)booleanValue.withDisplayName(str);
-      StringValue stringValue = new StringValue(this, "BlockHitDelay", 0.0, 0.0, 5.0, 0);
+      this.customBlockHitDelay = (BooleanValue)new BooleanValue(this, "CustomBlockHitDelay", false).withDisplayName("CustomBlockBreakDelay");
+      DoubleValue stringValue = new DoubleValue(this, "BlockHitDelay", 0.0, 0.0, 5.0, 0);
       BooleanValue customBlockHitDelay2 = this.customBlockHitDelay;
       this.customBlockHitDelay.getClass();
       BooleanValue booleanValue2 = customBlockHitDelay2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      StringValue stringValue2 = stringValue.visibleWhen(condition);
-      String str2 = "BlockBreakDelay";
-      this.blockHitDelay = stringValue2.named(str2);
+      this.blockHitDelay = stringValue.visibleWhen(() -> booleanValue2.getValue()).named("BlockBreakDelay");
       this.ignoreMiningFatigue = new BooleanValue(this, "IgnoreMiningFatigue", false);
       this.onlyWhenBlink = new BooleanValue(this, "OnlyWhenBlink", false);
       this.ignoreBeds = new BooleanValue(this, "IgnoreBeds", false);
       this.debugBreakSpeed = new BooleanValue(this, "DebugBreakSpeed", false);
-      this.mode = new BooleansSetting(this, "Mode", "Simple", new String[]{"Simple", "Expert"});
-      DoubleValue doubleValue = new DoubleValue(this, "SimpleSettings", true);
-      SettingVisibilityCondition condition2 = () -> this.isSimpleMode();
-      this.simpleSettings = doubleValue.visibleWhen(condition2);
+      this.mode = new StringValue(this, "Mode", "Simple", new String[]{"Simple", "Expert"});
+      this.simpleSettings = new SettingGroup(this, "SimpleSettings", true).visibleWhen(() -> this.isSimpleMode());
       this.customInAirMultiplier = new BooleanValue(this, "CustomInAirMultiplier", false, this.simpleSettings);
-      StringValue stringValue3 = new StringValue(this, "InAirMultiplier", 0.2, 0.0, 1.0, 2, this.simpleSettings);
+      DoubleValue stringValue3 = new DoubleValue(this, "InAirMultiplier", 0.2, 0.0, 1.0, 2, this.simpleSettings);
       BooleanValue customInAirMultiplier2 = this.customInAirMultiplier;
       this.customInAirMultiplier.getClass();
-      BooleanValue booleanValue3 = customInAirMultiplier2;
-      SettingVisibilityCondition condition3 = () -> booleanValue3.getValue();
-      this.inAirMultiplier = stringValue3.visibleWhen(condition3);
-      this.multiplier = new StringValue(this, "Multiplier", 1.0, 1.0, 2.0, 2, this.simpleSettings);
-      this.artificialMiningSpeedEffect = new StringValue(this, "ArtificialMiningSpeedEffect", 0.0, 0.0, 3.0, 0, this.simpleSettings);
+      this.inAirMultiplier = stringValue3.visibleWhen(() -> customInAirMultiplier2.getValue());
+      this.multiplier = new DoubleValue(this, "Multiplier", 1.0, 1.0, 2.0, 2, this.simpleSettings);
+      this.artificialMiningSpeedEffect = new DoubleValue(this, "ArtificialMiningSpeedEffect", 0.0, 0.0, 3.0, 0, this.simpleSettings);
       this.instant = new BooleanValue(this, "Instant", false, this.simpleSettings);
       this.blockOptions = new HashMap();
       this.dedicatedItemOptions = new HashMap();
       this.startedBreakingBlock = false;
-      HashMap blockOptions2 = this.blockOptions;
-      this.populateBlockOptions(blockOptions2);
+      this.populateBlockOptions(this.blockOptions);
       FastBreakBlockOption[] fastBreakBlockOptions = (FastBreakBlockOption[])this.blockOptions.values().toArray(new FastBreakBlockOption[0]);
       Arrays.sort(fastBreakBlockOptions, Comparator.comparing(fastBreakBlockOption -> fastBreakBlockOption.getName()));
       new MultiOptionSetting(this, "BlocksToFastbreak", fastBreakBlockOptions);
-      Collection values = this.blockOptions.values();
-      values.forEach(obj -> {
-         BooleansSetting mode2 = this.mode;
+      this.blockOptions.values().forEach(obj -> {
+         StringValue mode2 = this.mode;
          SettingVisibilityCondition condition4 = () -> {
             return this.mode.getSelectedValue().equals("Expert");
          };
-         Object obj2 = null;
-         BooleansSetting booleansSetting = mode2;
          String str3 = "";
-         ((FastBreakBlockOption)obj).initSettings(str3, booleansSetting, (DoubleValue)obj2, condition4);
+         ((FastBreakBlockOption)obj).initSettings(str3, mode2, (SettingGroup)null, condition4);
       });
       Item[] items = new Item[]{
          Items.wooden_pickaxe,
@@ -115,16 +102,14 @@ public class FastBreak extends Module implements PacketListener {
          Items.shears
       };
       this.dedicatedItemHandling = new BooleanValue(this, "DedicatedItemHandling", false);
-      DoubleValue doubleValue2 = new DoubleValue(this, "DedicatedItems", true);
+      SettingGroup doubleValue2 = new SettingGroup(this, "DedicatedItems", true);
       customBlockHitDelay2 = this.dedicatedItemHandling;
       this.dedicatedItemHandling.getClass();
       BooleanValue booleanValue4 = customBlockHitDelay2;
-      SettingVisibilityCondition condition5 = () -> booleanValue4.getValue();
-      this.dedicatedItems = doubleValue2.visibleWhen(condition5);
+      this.dedicatedItems = doubleValue2.visibleWhen(() -> booleanValue4.getValue());
 
       for (Item item : items) {
-         ResourceLocation nameForObject = (ResourceLocation)Item.itemRegistry.getNameForObject(item);
-         String resourcePath = nameForObject.getResourcePath();
+         String resourcePath = ((ResourceLocation)Item.itemRegistry.getNameForObject(item)).getResourcePath();
          this.dedicatedItemOptions.put(item, new FastBreakDedicatedItemOption(this, this, resourcePath));
       }
 
@@ -138,8 +123,7 @@ public class FastBreak extends Module implements PacketListener {
 
       for (ResourceLocation location : (Iterable<ResourceLocation>)(Block.blockRegistry.getKeys())) {
          String resourcePath = location.getResourcePath();
-         Block blockFromName = Block.getBlockFromName(resourcePath);
-         map.put(blockFromName, new FastBreakBlockOption(this, this, resourcePath));
+         map.put(Block.getBlockFromName(resourcePath), new FastBreakBlockOption(this, this, resourcePath));
       }
    }
 
@@ -238,15 +222,13 @@ public class FastBreak extends Module implements PacketListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onPacket2(EventPacket event) {
       if (event.getPacket() instanceof C07PacketPlayerDigging) {
-         C07PacketPlayerDigging packet = (C07PacketPlayerDigging)event.getPacket();
-         if (packet.getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
+         if (((C07PacketPlayerDigging)event.getPacket()).getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
             this.startedBreakingBlock = true;
          }
       }
@@ -255,8 +237,7 @@ public class FastBreak extends Module implements PacketListener {
    public void logDebugBreakSpeed(Block block, BlockPos pos) {
       if (this.isToggled() && this.startedBreakingBlock && this.debugBreakSpeed.getValue()) {
          this.startedBreakingBlock = false;
-         String str = "BreakSpeed: " + Math.round(block.getPlayerRelativeBlockHardness(mc.thePlayer, mc.thePlayer.entityWorld, pos) * 1000.0F);
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("BreakSpeed: " + Math.round(block.getPlayerRelativeBlockHardness(mc.thePlayer, mc.thePlayer.entityWorld, pos) * 1000.0F));
       }
    }
 
@@ -264,7 +245,7 @@ public class FastBreak extends Module implements PacketListener {
       return this.mode.getSelectedValue().equals("Simple");
    }
 
-   public static DoubleValue accessDedicatedItemsSetting(FastBreak fastBreak) {
+   public static SettingGroup accessDedicatedItemsSetting(FastBreak fastBreak) {
       return fastBreak.dedicatedItems;
    }
 

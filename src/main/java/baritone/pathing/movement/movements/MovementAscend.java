@@ -80,8 +80,7 @@ public class MovementAscend extends Movement {
                      + (double)n2 * Math.abs((double)this.dest.getZ() + 0.5 - this.ctx.player().posZ);
                   double d2 = (double)n2 * Math.abs((double)this.dest.getX() + 0.5 - this.ctx.player().posX)
                      + (double)n * Math.abs((double)this.dest.getZ() + 0.5 - this.ctx.player().posZ);
-                  double d3 = (double)n * this.ctx.player().motionZ + (double)n2 * this.ctx.player().motionX;
-                  if (Math.abs(d3) > 0.1) {
+                  if (Math.abs((double)n * this.ctx.player().motionZ + (double)n2 * this.ctx.player().motionX) > 0.1) {
                      return movementState;
                   } else if (this.headBonkClear()) {
                      return movementState.setInput(Input.JUMP, true);

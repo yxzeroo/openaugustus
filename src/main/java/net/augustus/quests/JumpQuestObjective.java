@@ -35,10 +35,8 @@ public class JumpQuestObjective extends QuestObjective implements MoveListener, 
 
    public void onMove2(EventMove event) {
       if (mc.thePlayer.onGround && mc.currentScreen == null && this.canCountJump) {
-         long l = 300L;
-         if (this.timeHelper.reached2(l)) {
-            double d = 1.0;
-            this.addProgress(d);
+         if (this.timeHelper.reached2(300L)) {
+            this.addProgress(1.0);
             this.canCountJump = false;
          }
       }

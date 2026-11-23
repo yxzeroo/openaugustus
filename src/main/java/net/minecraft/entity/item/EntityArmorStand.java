@@ -68,8 +68,7 @@ public class EntityArmorStand extends EntityLivingBase {
          return false;
       } else {
          boolean flag = "arrow".equals(damageSource.getDamageType());
-         boolean flag2 = "player".equals(damageSource.getDamageType());
-         if (!flag2 && !flag) {
+         if (!"player".equals(damageSource.getDamageType()) && !flag) {
             return false;
          } else {
             if (damageSource.getSourceOfDamage() instanceof EntityArrow) {
@@ -494,8 +493,7 @@ public class EntityArmorStand extends EntityLivingBase {
       this.setMarker(tag.getBoolean("Marker"));
       this.wasMarker = !this.hasMarker();
       this.noClip = this.hasNoGravity();
-      NBTTagCompound compoundTag = tag.getCompoundTag("Pose");
-      this.writePoseToNBT(compoundTag);
+      this.writePoseToNBT(tag.getCompoundTag("Pose"));
    }
 
    public boolean isSmall() {

@@ -94,8 +94,7 @@ public class WorldGenSwamp extends WorldGenAbstractTree {
                }
 
                for (int i3 = pos.getY() - 3 + n; i3 <= pos.getY() + n; i3++) {
-                  int n6 = i3 - (pos.getY() + n);
-                  int n7 = 2 - n6 / 2;
+                  int n7 = 2 - (i3 - (pos.getY() + n)) / 2;
                   BlockPos.MutableBlockPos pos4 = new BlockPos.MutableBlockPos();
 
                   for (int i4 = pos.getX() - n7; i4 <= pos.getX() + n7; i4++) {

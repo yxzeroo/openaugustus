@@ -22,7 +22,6 @@ public abstract class ShadedNumericBase implements Serializable {
    }
 
    static {
-      long l = -8742448824652078965L;
-      serialVersionUID = l;
+      serialVersionUID = -8742448824652078965L;
    }
 }

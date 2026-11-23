@@ -41,8 +41,7 @@ public class DynamicSettingList extends Setting {
          this.cycleIndex = 0;
       }
 
-      int cycleIndex2 = this.cycleIndex;
-      return this.getEntry(cycleIndex2);
+      return this.getEntry(this.cycleIndex);
    }
 
    @Override
@@ -83,8 +82,7 @@ public class DynamicSettingList extends Setting {
          this.addEntry();
          return true;
       } else if (mouseButton == 0 && this.hoveredRemoveIndex >= 0 && this.canRemoveEntry()) {
-         int hoveredRemoveIndex2 = this.hoveredRemoveIndex;
-         this.removeEntry(hoveredRemoveIndex2);
+         this.removeEntry(this.hoveredRemoveIndex);
          return true;
       } else {
          int n = (int)(this.renderFont.getFontHeight() + 5.0F);
@@ -128,14 +126,12 @@ public class DynamicSettingList extends Setting {
             setting.getParentGroup().getChildren().removeIf(obj3 -> obj3 == setting);
          }
 
-         if (setting instanceof DoubleValue) {
-            DoubleValue doubleValue = (DoubleValue)setting;
-            this.unregisterGroupChildren(doubleValue);
+         if (setting instanceof SettingGroup) {
+            this.unregisterGroupChildren((SettingGroup)setting);
          }
 
          if (module != null && module.getProperties() != null) {
-            List properties2 = module.getProperties();
-            properties2.removeIf(obj4 -> obj4 == setting);
+            module.getProperties().removeIf(obj4 -> obj4 == setting);
          }
 
          return setting;
@@ -163,7 +159,7 @@ public class DynamicSettingList extends Setting {
       }
    }
 
-   private void unregisterGroupChildren(DoubleValue doubleValue) {
+   private void unregisterGroupChildren(SettingGroup doubleValue) {
 
       for (Setting setting : (Iterable<Setting>)(doubleValue.getChildren())) {
          ClientManagers.settingManager.getSettings().removeIf(obj -> obj == setting);
@@ -171,9 +167,8 @@ public class DynamicSettingList extends Setting {
             this.getParentModule().getProperties().removeIf(obj2 -> obj2 == setting);
          }
 
-         if (setting instanceof DoubleValue) {
-            DoubleValue doubleValue2 = (DoubleValue)setting;
-            this.unregisterGroupChildren(doubleValue2);
+         if (setting instanceof SettingGroup) {
+            this.unregisterGroupChildren((SettingGroup)setting);
          }
       }
    }
@@ -189,12 +184,11 @@ public class DynamicSettingList extends Setting {
             str = displayName2.substring(0, n2);
          }
 
-         String str2 = str + " " + n;
-         setting.updateDisplayName(str2);
+         setting.updateDisplayName(str + " " + n);
       }
 
-      if (setting instanceof DoubleValue) {
-         for (Setting setting2 : (Iterable<Setting>)(((DoubleValue)setting).getChildren())) {
+      if (setting instanceof SettingGroup) {
+         for (Setting setting2 : (Iterable<Setting>)(((SettingGroup)setting).getChildren())) {
             this.updateEntryIndexLabel(setting2, n);
          }
       }
@@ -215,18 +209,14 @@ public class DynamicSettingList extends Setting {
       String str = this.getDisplayName() + ":";
       boolean flag2 = this.labelWidth == -1;
       int n7;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
+      if (this.consumeLabelDirty(flag2)) {
          this.labelWidth = (int)customFontUtil.getStringWidth(str);
       }
 
       if (flag) {
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
+         customFontUtil.drawString(str, d, (double)n4, colorInt);
          this.addButtonHovered = false;
          if (this.canAddEntry()) {
             int n8 = n3 + this.labelWidth + 10;
@@ -245,11 +235,7 @@ public class DynamicSettingList extends Setting {
             Color color = isHovered ? ADD_HOVER_COLOR : ADD_COLOR;
             CustomFontUtil customFontUtil2 = BUTTON_FONT;
             d = (double)n8;
-            double d4 = (double)(n4 - 3);
-            int rgb = color.getRGB();
-            double d5 = d4;
-            double d6 = d;
-            customFontUtil2.drawString(str2, d6, d5, rgb);
+            customFontUtil2.drawString(str2, d, (double)(n4 - 3), color.getRGB());
          }
 
          this.renderedHeight = (int)(customFontUtil.getFontHeight() + 5.0F);
@@ -261,10 +247,7 @@ public class DynamicSettingList extends Setting {
             if (setting.isVisible()) {
                int n9 = n4 + this.renderedHeight;
                n7 = n3 + 20;
-               int n10 = n5 - 40;
-               int n11 = n10;
-               int n12 = n7;
-               setting.render(n, n2, n12, n9, n11, n6, customFontUtil, flag);
+               setting.render(n, n2, n7, n9, n5 - 40, n6, customFontUtil, flag);
                String str3 = "-";
                float stringWidth2 = BUTTON_FONT.getStringWidth(str3);
                byte b3 = 8;
@@ -284,16 +267,10 @@ public class DynamicSettingList extends Setting {
                   Color color2 = isHovered2 ? REMOVE_HOVER_COLOR : REMOVE_COLOR;
                   CustomFontUtil customFontUtil3 = BUTTON_FONT;
                   d = (double)n3;
-                  double d7 = (double)(n9 - 3);
-                  int rgb2 = color2.getRGB();
-                  int n13 = rgb2;
-                  double d8 = d7;
-                  double d9 = d;
-                  customFontUtil3.drawString(str3, d9, d8, n13);
+                  customFontUtil3.drawString(str3, d, (double)(n9 - 3), color2.getRGB());
                } else {
                   d = (double)n3;
-                  double d10 = (double)(n9 - 3);
-                  double d11 = d10;
+                  double d11 = (double)(n9 - 3);
                   double d12 = d;
                   BUTTON_FONT.drawString(str3, d12, d11, colorInt);
                }
@@ -316,8 +293,7 @@ public class DynamicSettingList extends Setting {
 
    public void removeEntry(int n) {
       if (this.canRemoveEntry() && n >= 0 && n < this.getEntryCount()) {
-         List value = (List)this.entriesProperty.getValue();
-         value.remove(n);
+         ((List)this.entriesProperty.getValue()).remove(n);
          this.refreshEntryLabels();
       }
    }
@@ -366,8 +342,7 @@ public class DynamicSettingList extends Setting {
          int nextEntryId2 = this.nextEntryId;
          Setting setting = this.entryFactory.createSetting(nextEntryId2);
          value.add(setting);
-         int n = value.size() - 1;
-         this.updateEntryIndexLabel(setting, n);
+         this.updateEntryIndexLabel(setting, value.size() - 1);
          this.nextEntryId++;
       }
    }
@@ -382,8 +357,7 @@ public class DynamicSettingList extends Setting {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
 }

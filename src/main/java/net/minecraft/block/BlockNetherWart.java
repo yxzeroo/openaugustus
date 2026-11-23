@@ -65,8 +65,7 @@ public class BlockNetherWart extends BlockBush {
    }
 
    static {
-      String str = "age";
-      AGE = PropertyInteger.create(str, 0, 3);
+      AGE = PropertyInteger.create("age", 0, 3);
    }
 
    @Override

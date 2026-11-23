@@ -86,10 +86,7 @@ public class ItemSkull extends Item {
       if (facing == EnumFacing.DOWN) {
          return false;
       } else {
-         IBlockState blockState = world.getBlockState(pos);
-         Block block = blockState.getBlock();
-         boolean isReplaceable = block.isReplaceable(world, pos);
-         if (!isReplaceable) {
+         if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
             if (!world.getBlockState(pos).getBlock().getMaterial().isSolid()) {
                return false;
             }

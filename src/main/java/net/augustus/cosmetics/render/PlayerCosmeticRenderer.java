@@ -66,8 +66,7 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
             int n = -1;
 
             for (int i = 0; i < layerRenderers.size(); i++) {
-               LayerRenderer layerRenderer = (LayerRenderer)layerRenderers.get(i);
-               if (layerRenderer instanceof LayerCape) {
+               if (((LayerRenderer)layerRenderers.get(i)) instanceof LayerCape) {
                   n = i;
                }
             }
@@ -163,20 +162,16 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
 
       for (CosmeticTextureModel cosmeticTextureModel : (Iterable<CosmeticTextureModel>)(list)) {
          if (flag != cosmeticTextureModel.isBoundToSubModel()) {
-            boolean flag2 = modelData.texture != null && modelData.texture.length > cosmeticTextureModel.getIndex();
-            SettingOverlay settingOverlay = flag2 ? modelData.texture[cosmeticTextureModel.getIndex()] : DEFAULT_OVERLAY;
+            SettingOverlay settingOverlay = (modelData.texture != null && modelData.texture.length > cosmeticTextureModel.getIndex()) ? modelData.texture[cosmeticTextureModel.getIndex()] : DEFAULT_OVERLAY;
             if (settingOverlay.visible) {
                String str2 = settingOverlay.url == null ? cosmeticTextureModel.getUrl() : settingOverlay.url;
                if (str2 != null && str2.length() >= 3) {
                   String str3 = str2 + str + cosmeticTextureModel.getIndex();
-                  CosmeticTextureManager cosmeticTextureManager2 = this.cosmeticTextureManager;
-                  BufferedImage maskImage = cosmeticTextureModel.getMaskImage();
-                  CosmeticBufferedTexture orLoadTexture = cosmeticTextureManager2.getOrLoadTexture(str3, str2, maskImage);
+                  CosmeticBufferedTexture orLoadTexture = this.cosmeticTextureManager.getOrLoadTexture(str3, str2, cosmeticTextureModel.getMaskImage());
                   if (orLoadTexture != null) {
                      MATRIX_BRIDGE.push();
                      MatrixTransformBridge matrixTransformBridge = MATRIX_BRIDGE;
-                     boolean flag3 = true;
-                     float f5 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticTextureModel, modelPlayer, flag3, matrixTransformBridge);
+                     float f5 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticTextureModel, modelPlayer, true, matrixTransformBridge);
                      MatrixTransformBridge matrixTransformBridge2 = MATRIX_BRIDGE;
                      this.applyPartTransform((AbstractCosmeticPart)cosmeticTextureModel, f5, settingOverlay, matrixTransformBridge2);
                      MatrixTransformBridge matrixTransformBridge3 = MATRIX_BRIDGE;
@@ -216,8 +211,7 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       MATRIX_BRIDGE.push();
       MatrixTransformBridge matrixTransformBridge = MATRIX_BRIDGE;
-      boolean flag2 = false;
-      float f7 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticModel, modelPlayer, flag2, matrixTransformBridge);
+      float f7 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticModel, modelPlayer, false, matrixTransformBridge);
       float f8 = 180.0F;
       MATRIX_BRIDGE.rotateZ(f8);
       if (modelPlayer != null) {
@@ -229,8 +223,7 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
          MatrixTransformBridge matrixTransformBridge3 = MATRIX_BRIDGE;
          float f9;
          float f10 = f9 = cosmeticModel.getResizeFactor();
-         float resizeFactor = cosmeticModel.getResizeFactor();
-         matrixTransformBridge3.scale(resizeFactor, f10, f9);
+         matrixTransformBridge3.scale(cosmeticModel.getResizeFactor(), f10, f9);
       }
 
       float[] adjustment = cosmeticModel.getAdjustment();
@@ -244,25 +237,18 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
          float f13 = adjustment[1];
          float f14 = adjustment[2] + f11;
          float f15 = f13;
-         float f16 = f12;
-         MATRIX_BRIDGE.scale(f16, f15, f14);
+         MATRIX_BRIDGE.scale(f12, f15, f14);
          f13 = adjustment[3];
          float f17 = adjustment[4];
          float f18 = adjustment[5] - f11;
-         float f19 = f17;
          float f20 = f13;
-         MATRIX_BRIDGE.translate(f20, f19, f18);
+         MATRIX_BRIDGE.translate(f20, f17, f18);
       }
 
       MatrixTransformBridge matrixTransformBridge4 = MATRIX_BRIDGE;
       this.applyEffects((AnimatedCosmeticPart)cosmeticModel, f3, f4, f5, f6, (SettingOverlay)modelData, matrixTransformBridge4);
       if (cosmeticModel.hasTextureModels()) {
-         ArrayList textureModels = cosmeticModel.getTextureModels();
-         String name = cosmeticModel.getName();
-         boolean flag3 = true;
-         String str = name;
-         ArrayList list = textureModels;
-         this.renderTextureOverlays(list, modelData, modelPlayer, f3, f4, f5, f6, str, flag3);
+         this.renderTextureOverlays(cosmeticModel.getTextureModels(), modelData, modelPlayer, f3, f4, f5, f6, cosmeticModel.getName(), true);
       }
 
       if (cosmeticModel.hasItemModels() && clientPlayer != null) {
@@ -292,24 +278,15 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
                idle = CosmeticAnimationTrigger.SNEAKING;
             }
 
-            CosmeticAnimatable animatable = cosmeticModel.getAnimatable();
-            animatable.setTriggerAnimation(idle);
+            cosmeticModel.getAnimatable().setTriggerAnimation(idle);
          }
 
-         GeoModelRenderer geoModelRenderer2 = this.geoModelRenderer;
-         Integer id = cosmeticModel.getId();
-         CosmeticAnimatable animatable2 = cosmeticModel.getAnimatable();
-         float partialTicks = CosmeticRenderState.partialTicks;
-         CosmeticAnimatable cosmeticAnimatable = animatable2;
-         Integer num = id;
-         geoModelRenderer2.updateAnimation(num, cosmeticAnimatable, partialTicks);
+         this.geoModelRenderer.updateAnimation(cosmeticModel.getId(), cosmeticModel.getAnimatable(), CosmeticRenderState.partialTicks);
       }
 
       GlStateManager.enableBlend();
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-      GeoModelRenderer geoModelRenderer3 = this.geoModelRenderer;
-      CosmeticSubModel[] subModels = cosmeticModel.getSubModels();
-      geoModelRenderer3.renderModel(cosmeticModel, this, subModels, modelData, modelPlayer, f3, f4, f5, f6);
+      this.geoModelRenderer.renderModel(cosmeticModel, this, cosmeticModel.getSubModels(), modelData, modelPlayer, f3, f4, f5, f6);
       GlStateManager.disableBlend();
       MATRIX_BRIDGE.pop();
       MATRIX_BRIDGE.pop();
@@ -325,25 +302,16 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
 
    private void transformToModelPart(ModelRenderer modelRenderer, boolean flag, MatrixTransformBridge matrixTransformBridge) {
       if (flag) {
-         float f = 180.0F;
-         matrixTransformBridge.rotateZ(f);
+         matrixTransformBridge.rotateZ(180.0F);
       }
 
       float f2 = modelRenderer.rotationPointX * 0.0625F;
-      float f3 = modelRenderer.rotationPointY * 0.0625F;
-      float f4 = modelRenderer.rotationPointZ * 0.0625F;
-      float f5 = f3;
-      float f6 = f2;
-      matrixTransformBridge.translate(f6, f5, f4);
+      matrixTransformBridge.translate(f2, modelRenderer.rotationPointY * 0.0625F, modelRenderer.rotationPointZ * 0.0625F);
       float f7 = modelRenderer.rotateAngleX * 57.295776F;
       f2 = modelRenderer.rotateAngleY * 57.295776F;
-      float f8 = modelRenderer.rotateAngleZ * 57.295776F;
-      float f9 = f2;
-      float f10 = f7;
-      matrixTransformBridge.rotate(f10, f9, f8);
+      matrixTransformBridge.rotate(f7, f2, modelRenderer.rotateAngleZ * 57.295776F);
       if (flag) {
-         float f11 = 180.0F;
-         matrixTransformBridge.rotateZ(f11);
+         matrixTransformBridge.rotateZ(180.0F);
       }
    }
 
@@ -357,39 +325,19 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
             switch (PlayerCosmeticRendererSwitchMap.EFFECT_TYPE_SWITCH_MAP[cosmeticEffectType.ordinal()]) {
                case 1:
                   float f6 = f5 * CosmeticMathHelper.cos(f / 10.0F) / 20.0F;
-                  float f7 = (float)axis.x * f6;
-                  float f8 = (float)axis.y * f6;
-                  float f9 = (float)axis.z * f6;
-                  float f10 = f8;
-                  float f11 = f7;
-                  matrixTransformBridge.translate(f11, f10, f9);
+                  matrixTransformBridge.translate((float)axis.x * f6, (float)axis.y * f6, (float)axis.z * f6);
                   break;
                case 2:
                   float f12 = f5 * f;
-                  float f13 = (float)axis.x * f12;
-                  float f14 = (float)axis.y * f12;
-                  float f15 = (float)axis.z * f12;
-                  float f16 = f14;
-                  float f17 = f13;
-                  matrixTransformBridge.rotate(f17, f16, f15);
+                  matrixTransformBridge.rotate((float)axis.x * f12, (float)axis.y * f12, (float)axis.z * f12);
                   break;
                case 3:
                   float f18 = f5 * (f2 / 3.0F);
-                  float f19 = (float)axis.x * f18;
-                  float f20 = (float)axis.y * f18;
-                  float f21 = (float)axis.z * f18;
-                  float f22 = f20;
-                  float f23 = f19;
-                  matrixTransformBridge.rotate(f23, f22, f21);
+                  matrixTransformBridge.rotate((float)axis.x * f18, (float)axis.y * f18, (float)axis.z * f18);
                   break;
                case 4:
                   float f24 = f5 * (f3 / 3.0F);
-                  float f25 = (float)axis.x * f24;
-                  float f26 = (float)axis.y * f24;
-                  float f27 = (float)axis.z * f24;
-                  float f28 = f26;
-                  float f29 = f25;
-                  matrixTransformBridge.rotate(f29, f28, f27);
+                  matrixTransformBridge.rotate((float)axis.x * f24, (float)axis.y * f24, (float)axis.z * f24);
                   break;
                case 5:
                   float f30 = 1.0F + f5 * CosmeticMathHelper.cos(f / 10.0F) / 20.0F;
@@ -408,36 +356,30 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
             default:
                break;
             case 2:
-               ModelRenderer bipedBody = modelPlayer.bipedBody;
-               this.transformToModelPart(bipedBody, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedBody, flag, matrixTransformBridge);
                f = -0.3F;
                break;
             case 3:
-               ModelRenderer bipedHead = modelPlayer.bipedHead;
-               this.transformToModelPart(bipedHead, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedHead, flag, matrixTransformBridge);
                f = 0.5F;
                break;
             case 4:
                f = 0.75F;
                break;
             case 5:
-               ModelRenderer bipedRightArm = modelPlayer.bipedRightArm;
-               this.transformToModelPart(bipedRightArm, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedRightArm, flag, matrixTransformBridge);
                f = -0.25F;
                break;
             case 6:
-               ModelRenderer bipedLeftArm = modelPlayer.bipedLeftArm;
-               this.transformToModelPart(bipedLeftArm, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedLeftArm, flag, matrixTransformBridge);
                f = -0.25F;
                break;
             case 7:
-               ModelRenderer bipedRightLeg = modelPlayer.bipedRightLeg;
-               this.transformToModelPart(bipedRightLeg, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedRightLeg, flag, matrixTransformBridge);
                f = -0.35F;
                break;
             case 8:
-               ModelRenderer bipedLeftLeg = modelPlayer.bipedLeftLeg;
-               this.transformToModelPart(bipedLeftLeg, flag, matrixTransformBridge);
+               this.transformToModelPart(modelPlayer.bipedLeftLeg, flag, matrixTransformBridge);
                f = -0.35F;
          }
       }
@@ -449,8 +391,7 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
 
       for (int i = 0; i < cosmeticModel.getItemModels().size(); i++) {
          CosmeticItemModel cosmeticItemModel = (CosmeticItemModel)cosmeticModel.getItemModels().get(i);
-         boolean flag = modelData.item != null && modelData.item.length > i;
-         SettingOverlay settingOverlay = flag ? modelData.item[i] : DEFAULT_OVERLAY;
+         SettingOverlay settingOverlay = (modelData.item != null && modelData.item.length > i) ? modelData.item[i] : DEFAULT_OVERLAY;
          if (settingOverlay.visible) {
             int n = settingOverlay.id == 0 ? cosmeticItemModel.getItemId() : settingOverlay.id;
             ItemStack stack = (ItemStack)ITEM_STACK_CACHE.get(n);
@@ -461,8 +402,7 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
             if (stack != null) {
                MATRIX_BRIDGE.push();
                MatrixTransformBridge matrixTransformBridge = MATRIX_BRIDGE;
-               boolean flag2 = true;
-               float f5 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticItemModel, modelPlayer, flag2, matrixTransformBridge);
+               float f5 = this.applyBodyPartTransform((AbstractCosmeticPart)cosmeticItemModel, modelPlayer, true, matrixTransformBridge);
                MatrixTransformBridge matrixTransformBridge2 = MATRIX_BRIDGE;
                this.applyPartTransform((AbstractCosmeticPart)cosmeticItemModel, f5, settingOverlay, matrixTransformBridge2);
                MatrixTransformBridge matrixTransformBridge3 = MATRIX_BRIDGE;
@@ -479,24 +419,13 @@ public class PlayerCosmeticRenderer extends AbstractCosmeticRenderer {
    }
 
    public void applyPartTransform(AbstractCosmeticPart cosmeticPart, float f, SettingOverlay settingOverlay, MatrixTransformBridge matrixTransformBridge) {
-      float f2 = cosmeticPart.getOffsetX() + settingOverlay.x;
-      float f3 = cosmeticPart.getOffsetY() + f + settingOverlay.y;
-      float f4 = cosmeticPart.getOffsetZ() + settingOverlay.z;
-      float f5 = f3;
-      float f6 = f2;
-      matrixTransformBridge.translate(f6, f5, f4);
-      float f7 = cosmeticPart.getYaw() + settingOverlay.yaw;
-      matrixTransformBridge.rotateY(f7);
-      float f8 = cosmeticPart.getPitch() + settingOverlay.pitch;
-      float f9 = f8;
-      matrixTransformBridge.rotateX(f9);
-      float f10 = cosmeticPart.getRoll() + settingOverlay.roll;
-      matrixTransformBridge.rotateZ(f10);
+      matrixTransformBridge.translate(cosmeticPart.getOffsetX() + settingOverlay.x, cosmeticPart.getOffsetY() + f + settingOverlay.y, cosmeticPart.getOffsetZ() + settingOverlay.z);
+      matrixTransformBridge.rotateY(cosmeticPart.getYaw() + settingOverlay.yaw);
+      matrixTransformBridge.rotateX(cosmeticPart.getPitch() + settingOverlay.pitch);
+      matrixTransformBridge.rotateZ(cosmeticPart.getRoll() + settingOverlay.roll);
       float f11 = cosmeticPart.getScale() * settingOverlay.scale;
       float f12;
-      float f13 = f12 = cosmeticPart.getScale() * settingOverlay.scale;
-      float f14 = f11;
-      matrixTransformBridge.scale(f14, f13, f12);
+      matrixTransformBridge.scale(f11, f12 = cosmeticPart.getScale() * settingOverlay.scale, f12);
    }
 
    private boolean setPlayerCapeTexture(UUID uuid, ResourceLocation location) {

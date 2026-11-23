@@ -10,7 +10,7 @@ import net.augustus.settings.RangeSetting;
 import net.augustus.settings.ColorSetting;
 import net.augustus.modules.legit.helper.MlgJumpOutcome;
 import net.augustus.render.RenderUtil;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
@@ -24,9 +24,9 @@ import org.lwjgl.opengl.GL11;
 public class MLGHelper extends Module implements RenderListener {
    private final RangeSetting minDistance;
    private final ColorSetting textColor;
-   private final StringValue posX;
-   private final StringValue posY;
-   private final StringValue scale;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
+   private final DoubleValue scale;
    private final ArrayList walkFallHeights;
    private final ArrayList jumpFallHeights;
    private final ArrayList bothFallHeights;
@@ -35,9 +35,9 @@ public class MLGHelper extends Module implements RenderListener {
        super("MLGHelper", "MLGHelfer", new Color(50, 168, 141), Categorys.LEGIT);
       this.minDistance = new RangeSetting(this, "MinDistance", 10.0, 100.0, 10.0, 100.0, 0);
       this.textColor = new ColorSetting(this, "Color", new Color(255, 255, 255, 255));
-      this.posX = new StringValue(this, "PosX", 50.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 0.0, 0.0, 100.0, 2);
-      this.scale = new StringValue(this, "Scale", 1.0, 0.5, 4.0, 1);
+      this.posX = new DoubleValue(this, "PosX", 50.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 0.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 1.0, 0.5, 4.0, 1);
       this.walkFallHeights = Lists.newArrayList(
          new Integer[]{
             16,
@@ -146,8 +146,7 @@ public class MLGHelper extends Module implements RenderListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    public void onRender(float f, ScaledResolution sr) {
@@ -161,9 +160,7 @@ public class MLGHelper extends Module implements RenderListener {
             sr.getScaledWidth_double() / this.scale.getValue() * this.posX.getValue() / 100.0
                - (double)((float)mc.fontRendererObj.getStringWidth(mlgJumpOutcome.getDisplayName()) / 2.0F)
          );
-         int n2 = (int)(sr.getScaledHeight_double() / this.scale.getValue() * this.posY.getValue() / 100.0);
-         byte b = 0;
-         fontRendererObj.drawString(displayName2, n, n2, this.textColor.getColorInt(b));
+         fontRendererObj.drawString(displayName2, n, (int)(sr.getScaledHeight_double() / this.scale.getValue() * this.posY.getValue() / 100.0), this.textColor.getColorInt((byte)0));
          GL11.glPopMatrix();
       }
 
@@ -192,8 +189,7 @@ public class MLGHelper extends Module implements RenderListener {
    private MlgJumpOutcome evaluateLookedAtBlock() {
       MovingObjectPosition hit = this.rayTraceLandingBlock();
       if (hit != null && this.isWithinHorizontalRange(hit) && this.isAirAboveTargetBlock(hit)) {
-         int n = this.getFallHeight(hit) - 1;
-         return this.classifyFallHeight(n);
+         return this.classifyFallHeight(this.getFallHeight(hit) - 1);
       } else {
          return MlgJumpOutcome.NOTHING;
       }
@@ -221,14 +217,12 @@ public class MLGHelper extends Module implements RenderListener {
 
    private boolean isAirAboveTargetBlock(MovingObjectPosition hit) {
       BlockPos pos = hit.getBlockPos().up();
-      IBlockState blockState = mc.theWorld.getBlockState(pos);
-      return blockState.getBlock() instanceof BlockAir;
+      return mc.theWorld.getBlockState(pos).getBlock() instanceof BlockAir;
    }
 
    private int getFallHeight(MovingObjectPosition hit) {
       int y = hit.getBlockPos().getY();
-      int y2 = mc.thePlayer.getPosition().getY();
-      return y2 - y;
+      return mc.thePlayer.getPosition().getY() - y;
    }
 
    private MlgJumpOutcome classifyFallHeight(int n) {

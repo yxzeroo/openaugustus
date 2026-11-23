@@ -14,8 +14,8 @@ import net.augustus.Augustus;
 import net.augustus.utils.render.BlurShaderRenderer;
 import net.augustus.settings.options.NotificationCategoryOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.MathHelper;
 import net.optifine.config.Config;
@@ -25,28 +25,26 @@ public class Notifications extends Module implements RenderListener {
    private static final String[] COLOR_MODES = new String[]{"Client color", "Notification type", "Fade", "Blank"};
    public final BooleanValue blur;
    public final BooleanValue avoidDuplications;
-   public final BooleansSetting position;
-   public final StringValue duplicateTime;
-   public final StringValue showDuration;
-   public final StringValue speed;
-   public final BooleansSetting groupColorMode;
-   public final BooleansSetting progressColorMode;
+   public final StringValue position;
+   public final DoubleValue duplicateTime;
+   public final DoubleValue showDuration;
+   public final DoubleValue speed;
+   public final StringValue groupColorMode;
+   public final StringValue progressColorMode;
    public final MultiOptionSetting notificationTypes;
 
    public Notifications() {
        super("Notifications", "Benachrichtigungen", Color.WHITE, Categorys.RENDER);
       this.blur = new BooleanValue(this, "Blur", true);
       this.avoidDuplications = new BooleanValue(this, "AvoidDuplications", true);
-      this.position = new BooleansSetting(this, "Position", "Bottom right", new String[]{"Top right", "Top left", "Bottom right", "Bottom left"});
-      this.duplicateTime = new StringValue(this, "DuplicateTime", 0.20000000298023224, 0.0, 1.0, 1);
-      this.showDuration = new StringValue(this, "ShowDuration", 2.5, 0.0, 10.0, 1);
-      this.speed = new StringValue(this, "Speed", 5.0, 1.0, 10.0, 0);
-      this.groupColorMode = new BooleansSetting(this, "GroupColorMode", "Blank", COLOR_MODES);
-      this.progressColorMode = new BooleansSetting(this, "ProgressColorMode", "Notification type", COLOR_MODES);
+      this.position = new StringValue(this, "Position", "Bottom right", new String[]{"Top right", "Top left", "Bottom right", "Bottom left"});
+      this.duplicateTime = new DoubleValue(this, "DuplicateTime", 0.20000000298023224, 0.0, 1.0, 1);
+      this.showDuration = new DoubleValue(this, "ShowDuration", 2.5, 0.0, 10.0, 1);
+      this.speed = new DoubleValue(this, "Speed", 5.0, 1.0, 10.0, 0);
+      this.groupColorMode = new StringValue(this, "GroupColorMode", "Blank", COLOR_MODES);
+      this.progressColorMode = new StringValue(this, "ProgressColorMode", "Notification type", COLOR_MODES);
       this.notificationTypes = new MultiOptionSetting(this, "NotificationTypes", NotificationCategoryOption.values());
-      boolean flag = false;
-      boolean flag2 = true;
-      this.setToggled(flag2, flag);
+      this.setToggled(true, false);
    }
 
    public void onEnable() {
@@ -56,14 +54,11 @@ public class Notifications extends Module implements RenderListener {
    }
 
    public void updateEventSubscriptions() {
-      int n = 2147483647;
-      byte b = 32;
-      this.toggleEventSubscription(b, n);
+      this.toggleEventSubscription((byte)32, 2147483647);
    }
 
    public void onRender(float f, ScaledResolution sr) {
-      boolean flag = false;
-      this.renderNotifications(flag);
+      this.renderNotifications(false);
       RenderUtil.resetGlColorState();
    }
 
@@ -71,13 +66,10 @@ public class Notifications extends Module implements RenderListener {
       if (!NotificationManager.isEmpty()) {
          NotificationManager.updateNotifications();
          if (this.blur.getValue() && !Config.isFastRender() && !Config.isAntialiasing() && !Config.isAnisotropicFiltering()) {
-            boolean flag2 = true;
-            BLUR_RENDERER.beginMaskCapture(flag2, flag);
+            BLUR_RENDERER.beginMaskCapture(true, flag);
             NotificationManager.renderNotifications();
             BLUR_RENDERER.endMaskCapture();
-            BlurShaderRenderer blurShaderRenderer = BLUR_RENDERER;
-            int value = (int)ClientManagers.moduleManager.blur.sigma.getValue();
-            blurShaderRenderer.renderBlurPass(flag, value);
+            BLUR_RENDERER.renderBlurPass(flag, (int)ClientManagers.moduleManager.blur.sigma.getValue());
          }
 
          NotificationManager.renderNotifications();
@@ -92,11 +84,7 @@ public class Notifications extends Module implements RenderListener {
             return hudNotification.getLevel().getColor().getRGB();
          case "Fade":
             long time = hudNotification.elapsedTimer.getTime();
-            Color red = Color.RED;
-            Color green = Color.GREEN;
-            double d = (double)(1.0F - MathHelper.clamp_float((float)time / (float)hudNotification.getTotalDuration(), 0.0F, 1.0F));
-            Color color2 = green;
-            return ColorUtil.blendColors(red, color2, d);
+            return ColorUtil.blendColors(Color.RED, Color.GREEN, (double)(1.0F - MathHelper.clamp_float((float)time / (float)hudNotification.getTotalDuration(), 0.0F, 1.0F)));
          default:
             return Color.GRAY.getRGB();
       }

@@ -181,18 +181,16 @@ public abstract class PathNavigate {
       float f = this.theEntity.width * this.theEntity.width * this.heightRequirement;
 
       for (int j = this.currentPath.getCurrentPathIndex(); j < currentPathLength; j++) {
-         Vec3 vectorFromIndex = this.currentPath.getVectorFromIndex(this.theEntity, j);
-         if (entityPosition.squareDistanceTo(vectorFromIndex) < (double)f) {
+         if (entityPosition.squareDistanceTo(this.currentPath.getVectorFromIndex(this.theEntity, j)) < (double)f) {
             this.currentPath.setCurrentPathIndex(j + 1);
          }
       }
 
       int n = MathHelper.ceiling_float_int(this.theEntity.width);
       int n2 = (int)this.theEntity.height + 1;
-      int n3 = n;
 
       for (int k = currentPathLength - 1; k >= this.currentPath.getCurrentPathIndex(); k--) {
-         if (this.isDirectPathBetweenPoints(entityPosition, this.currentPath.getVectorFromIndex(this.theEntity, k), n, n2, n3)) {
+         if (this.isDirectPathBetweenPoints(entityPosition, this.currentPath.getVectorFromIndex(this.theEntity, k), n, n2, n)) {
             this.currentPath.setCurrentPathIndex(k);
             break;
          }
@@ -206,8 +204,7 @@ public abstract class PathNavigate {
    }
 
    public boolean tryMoveToXYZ(double d, double d2, double d3, double d4) {
-      PathEntity pathToXYZ = this.getPathToXYZ((double)MathHelper.floor_double(d), (double)((int)d2), (double)MathHelper.floor_double(d3));
-      return this.setPath(pathToXYZ, d4);
+      return this.setPath(this.getPathToXYZ((double)MathHelper.floor_double(d), (double)((int)d2), (double)MathHelper.floor_double(d3)), d4);
    }
 
    public abstract boolean isDirectPathBetweenPoints(Vec3 vec, Vec3 vec2, int n, int n2, int n3);

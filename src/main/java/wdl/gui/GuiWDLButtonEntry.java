@@ -41,9 +41,7 @@ public class GuiWDLButtonEntry implements GuiListExtended.IGuiListEntry {
 
    public boolean mousePressed(int n, int n2, int n3, int n4, int n5, int n6) {
       if (this.button.mousePressed(GuiWDLButtonList.getMinecraftForButtonPress(this.parentList), n2, n3)) {
-         Minecraft minecraftForOpenScreen = GuiWDLButtonList.getMinecraftForOpenScreen(this.parentList);
-         GuiScreen toOpen2 = this.toOpen;
-         minecraftForOpenScreen.displayGuiScreen(toOpen2);
+         GuiWDLButtonList.getMinecraftForOpenScreen(this.parentList).displayGuiScreen(this.toOpen);
          this.button.playPressSound(GuiWDLButtonList.getMinecraftForButtonSound(this.parentList).getSoundHandler());
          return true;
       } else {

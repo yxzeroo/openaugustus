@@ -9,22 +9,20 @@ import net.augustus.utils.AntiSamplerGuard;
 import net.augustus.utils.MoveUtil;
 import net.augustus.utils.TickCounter;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class Polar1NoWebMode extends AbstractNoWebMode implements UpdateListener, WebSlowDownListener, MoveInputListener {
    private final TickCounter tickCounter = new TickCounter();
 
-   public Polar1NoWebMode(NoWeb noWeb, DoubleValue doubleValue) {
+   public Polar1NoWebMode(NoWeb noWeb, SettingGroup doubleValue) {
       super(noWeb, doubleValue, "Polar1");
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 49;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)49);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -37,8 +35,7 @@ public class Polar1NoWebMode extends AbstractNoWebMode implements UpdateListener
          this.tickCounter.reset();
       } else {
          if (mc.thePlayer.onGround) {
-            byte b = 2;
-            if (this.tickCounter.hasReached2(b) && mc.gameSettings.keyBindForward.isKeyDown()) {
+            if (this.tickCounter.hasReached2((byte)2) && mc.gameSettings.keyBindForward.isKeyDown()) {
                if (!AntiSamplerGuard.isGuardActive(1)) {
                   mc.thePlayer.motionY = 1.0E-5;
                }
@@ -50,24 +47,20 @@ public class Polar1NoWebMode extends AbstractNoWebMode implements UpdateListener
    }
 
    public void onWebSlowDown(EventWebSlowDown event) {
-      byte b = 2;
-      if (this.tickCounter.hasReached2(b) && !mc.thePlayer.onGround) {
+      if (this.tickCounter.hasReached2((byte)2) && !mc.thePlayer.onGround) {
          if (mc.thePlayer.airTicks > 1) {
             if (!AntiSamplerGuard.isGuardActive(1)) {
-               double d = 1.0;
-               event.setHorizontalFactor(d);
+               event.setHorizontalFactor(1.0);
             }
          } else {
-            double d2 = 0.45;
-            event.setHorizontalFactor(d2);
+            event.setHorizontalFactor(0.45);
          }
       }
    }
 
    public void onMoveInput3(EventMoveInput event) {
       if (mc.thePlayer.isInWeb()) {
-         byte b = 2;
-         if (this.tickCounter.hasReached2(b)) {
+         if (this.tickCounter.hasReached2((byte)2)) {
             return;
          }
       }

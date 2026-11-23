@@ -10,7 +10,7 @@ import net.augustus.render.RenderUtil;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,10 +32,10 @@ public class TntESP extends Module implements RenderListener, TickListener {
    private final ColorSetting radiusColor;
    private final BooleanValue deathCircle;
    private final ColorSetting deathCircleColor;
-   private final StringValue smoothness;
+   private final DoubleValue smoothness;
    private final BooleanValue displayDamage;
-   private final StringValue xCoord;
-   private final StringValue yCoord;
+   private final DoubleValue xCoord;
+   private final DoubleValue yCoord;
    private double estimatedTotalDamage;
    private final Frustum frustum;
    private final DamageSource explosionDamageSource;
@@ -49,22 +49,19 @@ public class TntESP extends Module implements RenderListener, TickListener {
       BooleanValue deathCircle2 = this.deathCircle;
       this.deathCircle.getClass();
       BooleanValue booleanValue = deathCircle2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.deathCircleColor = (ColorSetting)colorSetting.withVisibility(condition);
-      this.smoothness = new StringValue(this, "Smoothness", 32.0, 8.0, 60.0, 0);
+      this.deathCircleColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue.getValue());
+      this.smoothness = new DoubleValue(this, "Smoothness", 32.0, 8.0, 60.0, 0);
       this.displayDamage = new BooleanValue(this, "DisplayDamage", true);
-      StringValue stringValue = new StringValue(this, "X-Coord", 50.0, 0.0, 100.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "X-Coord", 50.0, 0.0, 100.0, 2);
       deathCircle2 = this.displayDamage;
       this.displayDamage.getClass();
       BooleanValue booleanValue2 = deathCircle2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.xCoord = stringValue.visibleWhen(condition2);
-      StringValue stringValue2 = new StringValue(this, "Y-Coord", 45.0, 0.0, 100.0, 2);
+      this.xCoord = stringValue.visibleWhen(() -> booleanValue2.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "Y-Coord", 45.0, 0.0, 100.0, 2);
       deathCircle2 = this.displayDamage;
       this.displayDamage.getClass();
       BooleanValue booleanValue3 = deathCircle2;
-      SettingVisibilityCondition condition3 = () -> booleanValue3.getValue();
-      this.yCoord = stringValue2.visibleWhen(condition3);
+      this.yCoord = stringValue2.visibleWhen(() -> booleanValue3.getValue());
       this.estimatedTotalDamage = 0.0;
       this.frustum = new Frustum();
       this.explosionDamageSource = new DamageSource("explosion");
@@ -80,10 +77,8 @@ public class TntESP extends Module implements RenderListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -120,12 +115,10 @@ public class TntESP extends Module implements RenderListener, TickListener {
    public void onRender(float f) {
       RenderUtil.begin3DRender();
       int value = (int)this.smoothness.getValue();
-      byte b = 0;
-      int colorInt = this.radiusColor.getColorInt(b);
+      int colorInt = this.radiusColor.getColorInt((byte)0);
       int n;
       if (this.deathCircle.getValue()) {
-         byte b2 = 0;
-         n = this.deathCircleColor.getColorInt(b2);
+         n = this.deathCircleColor.getColorInt((byte)0);
       } else {
          n = 0;
       }
@@ -142,8 +135,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
                + (entityTNTPrimed.posY + (double)f2 - (entityTNTPrimed.lastTickPosY + (double)f2)) * (double)mc.getTimer().renderPartialTicks
                - mc.getRenderManager().getRenderPosY()
          );
-         float f5 = (float)(entityTNTPrimed.lastTickPosZ + (entityTNTPrimed.posZ - entityTNTPrimed.lastTickPosZ) * (double)mc.getTimer().renderPartialTicks - mc.getRenderManager().getRenderPosZ());
-         GlStateManager.translate(f3, f4, f5);
+         GlStateManager.translate(f3, f4, (float)(entityTNTPrimed.lastTickPosZ + (entityTNTPrimed.posZ - entityTNTPrimed.lastTickPosZ) * (double)mc.getTimer().renderPartialTicks - mc.getRenderManager().getRenderPosZ()));
          Sphere sphere = new Sphere();
          sphere.setDrawStyle(100011);
          Sphere sphere2 = new Sphere();
@@ -171,14 +163,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
             double d = (double)i / (double)f;
             if (d <= 1.0) {
                double d2 = (1.0 - d) * 1.0;
-               float currentHealth = mc.thePlayer.getCurrentHealth();
-               DamageSource damageSource = this.explosionDamageSource.setDifficultyScaled().setExplosion();
-               float f2 = (float)((int)((d2 * d2 + d2) / 2.0 * 8.0 * (double)f + 1.0));
-               boolean flag = true;
-               float f3 = f2;
-               DamageSource damageSource2 = damageSource;
-               float f4 = currentHealth - this.calculateFinalDamage(damageSource2, f3, flag);
-               if (f4 > 0.0F) {
+               if ((mc.thePlayer.getCurrentHealth() - this.calculateFinalDamage(this.explosionDamageSource.setDifficultyScaled().setExplosion(), (float)((int)((d2 * d2 + d2) / 2.0 * 8.0 * (double)f + 1.0)), true)) > 0.0F) {
                   return (double)i;
                }
             }
@@ -197,16 +182,10 @@ public class TntESP extends Module implements RenderListener, TickListener {
             double d3 = mc.thePlayer.posX - entityTNTPrimed.posX;
             double d4 = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() - d;
             double d5 = mc.thePlayer.posZ - entityTNTPrimed.posZ;
-            double d6 = (double)MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-            if (d6 != 0.0) {
+            if (((double)MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5)) != 0.0) {
                double blockDensity = (double)mc.theWorld.getBlockDensity(entityTNTPrimed.posX, d, entityTNTPrimed.posZ, mc.thePlayer.getEntityBoundingBox());
                double d7 = (1.0 - d2) * blockDensity;
-               DamageSource damageSource = this.explosionDamageSource.setDifficultyScaled().setExplosion();
-               float f2 = (float)((int)((d7 * d7 + d7) / 2.0 * 8.0 * (double)f + 1.0));
-               boolean flag = true;
-               float f3 = f2;
-               DamageSource damageSource2 = damageSource;
-               return (double)this.calculateFinalDamage(damageSource2, f3, flag);
+               return (double)this.calculateFinalDamage(this.explosionDamageSource.setDifficultyScaled().setExplosion(), (float)((int)((d7 * d7 + d7) / 2.0 * 8.0 * (double)f + 1.0)), true);
             }
          }
       }
@@ -219,8 +198,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
          f = (1.0F + f) * 0.5F;
       }
 
-      EntityPlayerSP thePlayer = mc.thePlayer;
-      f = this.applyArmorDamageReduction(damageSource, f, thePlayer);
+      f = this.applyArmorDamageReduction(damageSource, f, mc.thePlayer);
       f = this.applyPotionAndEnchantmentReduction(damageSource, f, flag);
       return Math.max(f - mc.thePlayer.getAbsorptionAmount(), 0.0F);
    }
@@ -230,10 +208,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
          return f;
       } else {
          if (mc.thePlayer.isPotionActive(Potion.resistance) && damageSource != DamageSource.outOfWorld) {
-            int n = (mc.thePlayer.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5;
-            int n2 = 25 - n;
-            float f2 = f * (float)n2;
-            f = f2 / 25.0F;
+            f = (f * (float)(25 - ((mc.thePlayer.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5))) / 25.0F;
          }
 
          if (f <= 0.0F) {
@@ -261,9 +236,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
             }
 
             if (n3 > 0) {
-               int n4 = 25 - n3;
-               float f4 = f * (float)n4;
-               f = f4 / 25.0F;
+               f = (f * (float)(25 - n3)) / 25.0F;
             }
 
             return f;
@@ -273,9 +246,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
 
    private float applyArmorDamageReduction(DamageSource damageSource, float f, EntityPlayer player) {
       if (!damageSource.isUnblockable()) {
-         float f2 = 25.0F - this.getTotalArmorPoints();
-         float f3 = f * f2;
-         f = f3 / 25.0F;
+         f = (f * (25.0F - this.getTotalArmorPoints())) / 25.0F;
       }
 
       return f;
@@ -287,8 +258,7 @@ public class TntESP extends Module implements RenderListener, TickListener {
       for (int i = 0; i < mc.thePlayer.inventory.armorInventory.length; i++) {
          ItemStack stack = mc.thePlayer.inventory.armorInventory[i];
          if (stack != null && stack.getItem() instanceof ItemArmor) {
-            ItemArmor item = (ItemArmor)stack.getItem();
-            float damageReduceAmount = (float)item.damageReduceAmount;
+            float damageReduceAmount = (float)((ItemArmor)stack.getItem()).damageReduceAmount;
             f += damageReduceAmount;
          }
       }

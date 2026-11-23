@@ -39,8 +39,7 @@ public class CompoundKey {
       } else if (!(obj instanceof CompoundKey)) {
          return false;
       } else {
-         CompoundKey compoundKey = (CompoundKey)obj;
-         Object[] keys2 = compoundKey.getKeys();
+         Object[] keys2 = ((CompoundKey)obj).getKeys();
          if (keys2.length != this.keys.length) {
             return false;
          } else {

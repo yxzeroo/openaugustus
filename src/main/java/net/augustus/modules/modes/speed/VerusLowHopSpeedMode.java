@@ -34,8 +34,7 @@ public class VerusLowHopSpeedMode extends SpeedMode {
    public void onMotion(EventMotion event) {
       if (MoveUtil.isMoving()) {
          if (ClientManagers.moduleManager.step.isToggled()) {
-            long l = 500L;
-            if (!ClientManagers.moduleManager.step.postStepTimer.reached2(l) || mc.thePlayer.isCollidedHorizontally) {
+            if (!ClientManagers.moduleManager.step.postStepTimer.reached2(500L) || mc.thePlayer.isCollidedHorizontally) {
                return;
             }
          }
@@ -64,8 +63,7 @@ public class VerusLowHopSpeedMode extends SpeedMode {
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (MoveUtil.isMoving()) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
       }
    }
 }

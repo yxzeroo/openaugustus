@@ -91,9 +91,8 @@ public class Polar2FlyMode extends FlyMode {
 
       if (this.waterBucketSlot >= 0) {
          Fly fly2 = this.fly;
-         byte b = -90;
          float f = 90.0F;
-         ClientManagers.rotationController.requestPitch(f, b, fly2);
+         ClientManagers.rotationController.requestPitch(f, (byte)-90, fly2);
       }
    }
 
@@ -105,28 +104,19 @@ public class Polar2FlyMode extends FlyMode {
 
    public void onIncomingPacketDelay(EventPacketDelay event) {
       if (this.delayIncomingPackets) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
 
       Packet packet = event.getPacket();
       if (packet instanceof S23PacketBlockChange) {
          S23PacketBlockChange packet2 = (S23PacketBlockChange)packet;
-         BlockPos blockPosition = packet2.getBlockPosition();
-         IBlockState blockState = packet2.getBlockState();
-         BlockPos pos = blockPosition;
-         this.onBlockStateChange(pos, blockState);
+         this.onBlockStateChange(packet2.getBlockPosition(), packet2.getBlockState());
       }
 
       if (packet instanceof S22PacketMultiBlockChange) {
-         S22PacketMultiBlockChange packet3 = (S22PacketMultiBlockChange)packet;
-         S22PacketMultiBlockChange.BlockUpdateData[] changedBlocks = packet3.getChangedBlocks();
 
-         for (S22PacketMultiBlockChange.BlockUpdateData blockUpdateData : changedBlocks) {
-            BlockPos pos2 = blockUpdateData.getPos();
-            IBlockState blockState2 = blockUpdateData.getBlockState();
-            BlockPos pos3 = pos2;
-            this.onBlockStateChange(pos3, blockState2);
+         for (S22PacketMultiBlockChange.BlockUpdateData blockUpdateData : ((S22PacketMultiBlockChange)packet).getChangedBlocks()) {
+            this.onBlockStateChange(blockUpdateData.getPos(), blockUpdateData.getBlockState());
          }
       }
    }
@@ -134,51 +124,39 @@ public class Polar2FlyMode extends FlyMode {
    public void onMoveInput(EventMoveInput event) {
       exitBlock: {
          if (this.flyingActive) {
-            long l = 325L;
-            if (this.postLandTimer.reached2(l)) {
-               float f = 1.0F;
-               event.setMoveForward(f);
-               long l2 = 425L;
-               if (this.postLandTimer.reached2(l2)) {
-                  boolean flag = true;
-                  event.setJump(flag);
+            if (this.postLandTimer.reached2(325L)) {
+               event.setMoveForward(1.0F);
+               if (this.postLandTimer.reached2(425L)) {
+                  event.setJump(true);
                } else {
-                  boolean flag2 = false;
-                  event.setJump(flag2);
+                  event.setJump(false);
                }
                break exitBlock;
             }
          }
 
-         float f2 = 0.0F;
-         event.setMoveForward(f2);
-         boolean flag3 = false;
-         event.setJump(flag3);
+         event.setMoveForward(0.0F);
+         event.setJump(false);
       }
 
       if (this.shouldJumpAfterPickup) {
          this.shouldJumpAfterPickup = false;
-         boolean flag4 = true;
-         event.setJump(flag4);
+         event.setJump(true);
          this.jumpedAfterPickup = true;
       }
    }
 
    public void onClick(EventClick event) {
-      long l = 525L;
-      if (this.initDelayTimer.reached2(l) && this.initializedOnGround && this.waterBucketSlot >= 0) {
+      if (this.initDelayTimer.reached2(525L) && this.initializedOnGround && this.waterBucketSlot >= 0) {
          if (this.pendingFirstClick) {
             this.pendingFirstClick = false;
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             this.secondClickTimer.reset();
             this.pendingSecondClick = true;
          } else if (this.pendingSecondClick) {
-            long l2 = 575L;
-            if (this.secondClickTimer.reached2(l2)) {
+            if (this.secondClickTimer.reached2(575L)) {
                this.pendingSecondClick = false;
-               byte b2 = 1;
-               event.addRightClicks(b2);
+               event.addRightClicks((byte)1);
                this.waitingWaterPickup = true;
             }
          }
@@ -196,11 +174,9 @@ public class Polar2FlyMode extends FlyMode {
       }
 
       if (this.landedWaitingGlide) {
-         long l3 = 325L;
-         if (this.postLandTimer.reached2(l3)) {
+         if (this.postLandTimer.reached2(325L)) {
             this.delayIncomingPackets = true;
-            long l4 = 375L;
-            if (this.postLandTimer.reached2(l4)) {
+            if (this.postLandTimer.reached2(375L)) {
                this.flyingActive = true;
             }
          }
@@ -210,10 +186,8 @@ public class Polar2FlyMode extends FlyMode {
    public void onSilentSlot() {
       if (this.waterBucketSlot == -1 && this.initializedOnGround) {
          ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         byte b = 36;
-         containerSlotQuery = containerSlotQuery.fromSlot(b);
-         Item waterBucket = Items.water_bucket;
-         OptionalInt optionalInt = containerSlotQuery.filterItemExact(waterBucket).findFirstSlotIndex();
+         containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+         OptionalInt optionalInt = containerSlotQuery.filterItemExact(Items.water_bucket).findFirstSlotIndex();
          if (optionalInt.isPresent()) {
             this.waterBucketSlot = optionalInt.getAsInt() - 36;
             this.initDelayTimer.reset();
@@ -221,16 +195,13 @@ public class Polar2FlyMode extends FlyMode {
             String str = "§cYou need a water bucket in your hotbar. Fly disabled.";
             this.fly.sendChatMessage2(str);
             this.waterBucketSlot = -2;
-            boolean flag = false;
-            this.fly.setToggled(flag);
+            this.fly.setToggled(false);
          }
       }
 
       if (this.waterBucketSlot >= 0 && !this.flyingActive) {
-         boolean flag2 = true;
          int waterBucketSlot2 = this.waterBucketSlot;
-         byte b2 = -10;
-         SilentSlotManager.requestSlot(this.fly, b2, waterBucketSlot2, flag2);
+         SilentSlotManager.requestSlot(this.fly, (byte)-10, waterBucketSlot2, true);
       }
    }
 
@@ -239,10 +210,9 @@ public class Polar2FlyMode extends FlyMode {
          Block block = event.getBlock();
          if ((block instanceof BlockAir || block instanceof BlockLiquid || block instanceof BlockWeb) && (double)event.getBlockPos().getY() < this.startY) {
             BlockPos blockPos = event.getBlockPos();
-            AxisAlignedBB box = new AxisAlignedBB(
+            event.setBoundingBox(new AxisAlignedBB(
                (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-            );
-            event.setBoundingBox(box);
+            ));
          }
       }
    }

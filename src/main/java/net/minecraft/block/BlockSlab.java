@@ -34,8 +34,7 @@ public abstract class BlockSlab extends Block {
          IBlockState blockState2 = world.getBlockState2(n, n2, n3);
          IBlockState blockState22 = world.getBlockState2(n4, n5, n6);
          boolean flag = isSlab(blockState2.getBlock()) && blockState2.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP;
-         boolean flag2 = isSlab(blockState22.getBlock()) && blockState22.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP;
-         return flag2
+         return (isSlab(blockState22.getBlock()) && blockState22.getValue(HALF) == BlockSlab.EnumBlockHalf.TOP)
             ? facing == EnumFacing.DOWN || facing == EnumFacing.UP && super.shouldSideBeRendered(world, n, n2, n3, facing) || !isSlab(blockState2.getBlock()) || !flag
             : facing == EnumFacing.UP || facing == EnumFacing.DOWN && super.shouldSideBeRendered(world, n, n2, n3, facing) || !isSlab(blockState2.getBlock()) || flag;
       }
@@ -60,8 +59,7 @@ public abstract class BlockSlab extends Block {
    }
 
    static {
-      String str = "half";
-      HALF = PropertyEnum.create(str, BlockSlab.EnumBlockHalf.class);
+      HALF = PropertyEnum.create("half", BlockSlab.EnumBlockHalf.class);
    }
 
    public BlockSlab(Material material) {

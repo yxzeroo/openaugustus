@@ -15,7 +15,6 @@ public class LnFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.log(this.getArg(b));
+      return Math.log(this.getArg((byte)0));
    }
 }

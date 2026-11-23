@@ -156,8 +156,7 @@ public class BlockCauldron extends Block {
    }
 
    static {
-      String str = "level";
-      LEVEL = PropertyInteger.create(str, 0, 3);
+      LEVEL = PropertyInteger.create("level", 0, 3);
    }
 
    @Override

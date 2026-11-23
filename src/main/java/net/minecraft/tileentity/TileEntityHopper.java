@@ -47,8 +47,7 @@ public class TileEntityHopper extends TileEntityLockable implements ITickable, I
          }
 
          if (hopperInventory instanceof ISidedInventory) {
-            ISidedInventory sidedInventory = (ISidedInventory)hopperInventory;
-            int[] slotsForFace = sidedInventory.getSlotsForFace(down);
+            int[] slotsForFace = ((ISidedInventory)hopperInventory).getSlotsForFace(down);
 
             for (int i = 0; i < slotsForFace.length; i++) {
                if (pullItemFromSlot(hopper, hopperInventory, slotsForFace[i], down)) {
@@ -155,8 +154,7 @@ public class TileEntityHopper extends TileEntityLockable implements ITickable, I
 
    public static ItemStack putStackInInventoryAllSlots(IInventory inventory2, ItemStack stack, EnumFacing facing) {
       if (inventory2 instanceof ISidedInventory && facing != null) {
-         ISidedInventory sidedInventory = (ISidedInventory)inventory2;
-         int[] slotsForFace = sidedInventory.getSlotsForFace(facing);
+         int[] slotsForFace = ((ISidedInventory)inventory2).getSlotsForFace(facing);
 
          for (int i = 0; i < slotsForFace.length && stack != null && stack.stackSize > 0; i++) {
             stack = insertStack(inventory2, stack, slotsForFace[i], facing);
@@ -495,8 +493,7 @@ public class TileEntityHopper extends TileEntityLockable implements ITickable, I
       if (entityItem == null) {
          return false;
       } else {
-         ItemStack stack = entityItem.getEntityItem().copy();
-         ItemStack stack2 = putStackInInventoryAllSlots(inventory2, stack, (EnumFacing)null);
+         ItemStack stack2 = putStackInInventoryAllSlots(inventory2, entityItem.getEntityItem().copy(), (EnumFacing)null);
          if (stack2 != null && stack2.stackSize != 0) {
             entityItem.setEntityItemStack(stack2);
          } else {

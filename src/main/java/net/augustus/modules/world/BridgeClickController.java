@@ -8,7 +8,7 @@ import net.augustus.utils.player.PlayerUtil;
 import net.augustus.utils.rotation.RayCastUtil;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.augustus.utils.interfaces.MC;
 import net.minecraft.item.ItemStack;
@@ -31,18 +31,14 @@ public class BridgeClickController implements MC {
    private int preEdgePredictTicks;
    private final BooleanValue delayClick;
    private final RandomizedRangeSettings cpsSetting;
-   private final BooleansSetting dcpsMode;
+   private final StringValue dcpsMode;
    private final BooleanValue oneClick;
 
    public boolean shouldClickAtEdge() {
       boolean isFullBlock = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().isFullBlock();
       if (isFullBlock && !this.wasOnFullBlock) {
-         byte b = 1;
-         byte b2 = 0;
-         this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
-         byte b3 = 1;
-         byte b4 = 0;
-         this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+         this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)1);
+         this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)1);
       }
 
       if (!isFullBlock && this.wasOnFullBlock) {
@@ -81,18 +77,14 @@ public class BridgeClickController implements MC {
                   ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
                   BlockPos blockPos = hit2.getBlockPos();
                   Vec3 hitVec = hit2.hitVec;
-                  EnumFacing sideHit = hit2.sideHit;
-                  BlockPos pos = blockPos;
-                  flag2 = PlayerUtil.canPlaceBlockAt(currentEquippedItem, pos, sideHit, hitVec);
+                  flag2 = PlayerUtil.canPlaceBlockAt(currentEquippedItem, blockPos, hit2.sideHit, hitVec);
                }
             }
 
             ItemStack currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
             BlockPos blockPos2 = hit.getBlockPos();
             Vec3 hitVec2 = hit.hitVec;
-            EnumFacing sideHit2 = hit.sideHit;
-            BlockPos pos2 = blockPos2;
-            boolean flag3 = PlayerUtil.canPlaceBlockAt(currentEquippedItem2, pos2, sideHit2, hitVec2);
+            boolean flag3 = PlayerUtil.canPlaceBlockAt(currentEquippedItem2, blockPos2, hit.sideHit, hitVec2);
             boolean flag4 = false;
             if (flag2 && flag3 && !this.clickDelayed && this.delayClick.getValue()) {
                flag4 = true;
@@ -107,19 +99,14 @@ public class BridgeClickController implements MC {
                   this.pendingClicks = 0;
                }
 
-               int pendingClicks2 = this.pendingClicks;
-               ActionRateAccumulator cpsAccumulator2 = this.cpsAccumulator;
-               int lastIntValue = this.cpsSetting.getLastIntValue();
-               this.pendingClicks = pendingClicks2 + cpsAccumulator2.accumulate(lastIntValue);
+               this.pendingClicks = this.pendingClicks + this.cpsAccumulator.accumulate(this.cpsSetting.getLastIntValue());
                if (this.oneClick.getValue()) {
                   this.pendingClicks = 0;
                }
 
                int n;
                if (flag5) {
-                  byte b = 0;
-                  byte b2 = -1;
-                  n = DefaultRandomGenerator.instance.nextInt2(b2, b);
+                  n = DefaultRandomGenerator.instance.nextInt2((byte)-1, (byte)0);
                } else {
                   n = 0;
                }
@@ -144,16 +131,13 @@ public class BridgeClickController implements MC {
                   }
 
                   if (flag3) {
-                     boolean flag8 = scaffoldPlaceCondition.tryPlace();
-                     event.setAllowMultiRightClick(flag8);
+                     event.setAllowMultiRightClick(scaffoldPlaceCondition.tryPlace());
                      flag6 = true;
                   }
                }
 
                if (flag6 && !flag5) {
-                  ActionRateAccumulator dcpsAccumulator2 = this.dcpsAccumulator;
-                  int lastIntValue2 = this.dcpsSetting.getLastIntValue();
-                  int n3 = dcpsAccumulator2.accumulate(lastIntValue2);
+                  int n3 = this.dcpsAccumulator.accumulate(this.dcpsSetting.getLastIntValue());
 
                   for (int j = 0; j < 20 && n3 > 0; j++) {
                      scaffoldPlaceCondition.tryPlace();
@@ -165,9 +149,7 @@ public class BridgeClickController implements MC {
                   currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
                   blockPos2 = hit.getBlockPos();
                   Vec3 hitVec3 = hit.hitVec;
-                  EnumFacing sideHit3 = hit.sideHit;
-                  BlockPos pos3 = blockPos2;
-                  if (PlayerUtil.canPlaceBlockAt(currentEquippedItem2, pos3, sideHit3, hitVec3)) {
+                  if (PlayerUtil.canPlaceBlockAt(currentEquippedItem2, blockPos2, hit.sideHit, hitVec3)) {
                      scaffoldPlaceCondition.tryPlace();
                   }
                }
@@ -181,18 +163,14 @@ public class BridgeClickController implements MC {
       }
    }
 
-   public BridgeClickController(RandomizedRangeSettings randomizedRangeSettings, BooleansSetting booleansSetting, RandomizedRangeSettings randomizedRangeSettings2, BooleanValue booleanValue, BooleanValue booleanValue2, BooleanValue booleanValue3) {
+   public BridgeClickController(RandomizedRangeSettings randomizedRangeSettings, StringValue booleansSetting, RandomizedRangeSettings randomizedRangeSettings2, BooleanValue booleanValue, BooleanValue booleanValue2, BooleanValue booleanValue3) {
        super();
       this.maxClicksPerTick = 20;
       this.cpsAccumulator = new ActionRateAccumulator(20, 0.0);
       this.dcpsAccumulator = new ActionRateAccumulator(20, 0.0);
       this.remainingPostEdgeTicks = 0;
-      byte b = 2;
-      byte b2 = 0;
-      this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
-      byte b3 = 2;
-      byte b4 = 0;
-      this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+      this.preEdgePredictTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)2);
+      this.postEdgePauseTicks = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)2);
       this.clickDelayed = false;
       this.pendingClicks = 0;
       this.cpsSetting = randomizedRangeSettings;
@@ -206,14 +184,12 @@ public class BridgeClickController implements MC {
    }
 
    public void handleBlockClick(MovingObjectPosition hit, EventClick event, ScaffoldPlaceCondition scaffoldPlaceCondition) {
-      boolean flag = false;
-      this.handleBlockClick(hit, event, scaffoldPlaceCondition, flag);
+      this.handleBlockClick(hit, event, scaffoldPlaceCondition, false);
    }
 
    public void handleDefaultBlockClick(MovingObjectPosition hit, EventClick event, boolean flag) {
       ScaffoldPlaceCondition scaffoldPlaceCondition = () -> {
-         byte b = 1;
-         event.addRightClicks(b);
+         event.addRightClicks((byte)1);
          return true;
       };
       this.handleBlockClick(hit, event, scaffoldPlaceCondition, flag);

@@ -40,8 +40,7 @@ public class CommandPardonIp extends CommandBase {
    @Override
    public void processCommand(ICommandSender commandSender, String[] strings) throws CommandException {
       if (strings.length == 1 && strings[0].length() > 1) {
-         Matcher matcher = CommandBanIp.IP_PATTERN.matcher(strings[0]);
-         if (matcher.matches()) {
+         if (CommandBanIp.IP_PATTERN.matcher(strings[0]).matches()) {
             MinecraftServer.getServer().getConfigurationManager().getBannedIPs().removeEntry(strings[0]);
             notifyOperators(commandSender, this, "commands.unbanip.success", new Object[]{strings[0]});
          } else {

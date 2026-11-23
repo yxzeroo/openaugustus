@@ -7,7 +7,6 @@ import net.augustus.modules.Module;
 import net.augustus.events.listeners.ClickListener;
 import net.augustus.events.listeners.SilentSlotListener;
 import net.augustus.events.EventClick;
-import net.augustus.settings.Setting;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.utils.player.ContainerSlotQuery;
 import net.minecraft.init.Items;
@@ -39,19 +38,14 @@ public class BowBoost extends Module implements TickListener, SilentSlotListener
    }
 
    private int findBowSlot() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      ItemBow bow = Items.bow;
-      OptionalInt optionalInt = containerSlotQuery.filterItemExact((Item)bow).findFirstSlotIndex();
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      OptionalInt optionalInt = containerSlotQuery.filterItemExact((Item)Items.bow).findFirstSlotIndex();
       return optionalInt.isPresent() ? optionalInt.getAsInt() : -1;
    }
 
    public boolean hasArrows() {
-      ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      Item arrow = Items.arrow;
-      return containerSlotQuery.hasAnyOfItem(arrow);
+      return ContainerSlotQuery.of(mc.thePlayer.inventoryContainer).hasAnyOfItem(Items.arrow);
    }
 
 }

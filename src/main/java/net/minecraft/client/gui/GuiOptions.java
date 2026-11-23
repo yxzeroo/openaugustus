@@ -107,9 +107,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
 
          if (button.id == 110) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc3 = this.mc;
-            GuiCustomizeSkin guiCustomizeSkin = new GuiCustomizeSkin(this);
-            mc3.displayGuiScreen(guiCustomizeSkin);
+            this.mc.displayGuiScreen(new GuiCustomizeSkin(this));
          }
 
          if (button.id == 8675309) {
@@ -118,30 +116,22 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
 
          if (button.id == 101) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc4 = this.mc;
-            GuiVideoSettings guiVideoSettings = new GuiVideoSettings(this, this.game_settings_1);
-            mc4.displayGuiScreen(guiVideoSettings);
+            this.mc.displayGuiScreen(new GuiVideoSettings(this, this.game_settings_1));
          }
 
          if (button.id == 100) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc5 = this.mc;
-            GuiControls guiControls = new GuiControls(this, this.game_settings_1);
-            mc5.displayGuiScreen(guiControls);
+            this.mc.displayGuiScreen(new GuiControls(this, this.game_settings_1));
          }
 
          if (button.id == 102) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc6 = this.mc;
-            GuiLanguage guiLanguage = new GuiLanguage(this, this.game_settings_1, this.mc.getLanguageManager());
-            mc6.displayGuiScreen(guiLanguage);
+            this.mc.displayGuiScreen(new GuiLanguage(this, this.game_settings_1, this.mc.getLanguageManager()));
          }
 
          if (button.id == 103) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc7 = this.mc;
-            ScreenChatOptions screenChatOptions = new ScreenChatOptions(this, this.game_settings_1);
-            mc7.displayGuiScreen(screenChatOptions);
+            this.mc.displayGuiScreen(new ScreenChatOptions(this, this.game_settings_1));
          }
 
          if (button.id == 200) {
@@ -152,16 +142,12 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
 
          if (button.id == 105) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc8 = this.mc;
-            GuiScreenResourcePacks guiScreenResourcePacks = new GuiScreenResourcePacks(this);
-            mc8.displayGuiScreen(guiScreenResourcePacks);
+            this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
          }
 
          if (button.id == 106) {
             this.mc.gameSettings.saveOptions();
-            Minecraft mc9 = this.mc;
-            GuiScreenOptionsSounds guiScreenOptionsSounds = new GuiScreenOptionsSounds(this, this.game_settings_1);
-            mc9.displayGuiScreen(guiScreenOptionsSounds);
+            this.mc.displayGuiScreen(new GuiScreenOptionsSounds(this, this.game_settings_1));
          }
       }
    }

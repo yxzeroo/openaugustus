@@ -12,7 +12,6 @@ public class EventBlockOverlay extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      BlockOverlayListener listener = (BlockOverlayListener)obj;
-      this.call2(listener);
+      this.call2((BlockOverlayListener)obj);
    }
 }

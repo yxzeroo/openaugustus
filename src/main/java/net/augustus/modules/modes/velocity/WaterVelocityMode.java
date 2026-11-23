@@ -5,31 +5,28 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
 public class WaterVelocityMode extends VelocityMode implements PacketListener {
-   private final StringValue waterInterval;
+   private final DoubleValue waterInterval;
    private int waterHitCount;
 
-   public WaterVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public WaterVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Water");
-      StringValue stringValue = new StringValue(this.parentModule, "WaterInterval", 1.0, 1.0, 3.0, 0, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.waterInterval = stringValue.visibleWhen(condition);
+      this.waterInterval = new DoubleValue(this.parentModule, "WaterInterval", 1.0, 1.0, 3.0, 0, this.modeSetting).visibleWhen(() -> this.isSelected());
       this.waterHitCount = 0;
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new WaterVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new WaterVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override

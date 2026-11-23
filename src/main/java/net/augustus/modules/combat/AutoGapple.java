@@ -58,24 +58,17 @@ public class AutoGapple extends Module implements ClickListener, PacketListener,
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
-      byte b4 = 100;
-      byte b5 = 21;
-      this.toggleEventSubscription(b5, b4);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)21, (byte)100);
    }
 
    public void onMoveInput3(EventMoveInput event) {
       if (mc.thePlayer.inventory.currentItem == this.gappleSlot || this.gappleSlot <= -1) {
          if (this.gappleSlot >= 0 && mc.isNotInGui() && mc.getTicksWithoutScreen() > 3 && this.jumpAndPressS.getValue()) {
-            float f = -1.0F;
-            event.setMoveForward(f);
-            boolean flag = true;
-            event.setJump(flag);
+            event.setMoveForward(-1.0F);
+            event.setJump(true);
          }
       }
    }
@@ -83,8 +76,7 @@ public class AutoGapple extends Module implements ClickListener, PacketListener,
    public void onClick(EventClick event) {
       if (mc.thePlayer.inventory.currentItem == this.gappleSlot || this.gappleSlot <= -1) {
          if (this.gappleSlot >= 0 && mc.isNotInGui() && mc.getTicksWithoutScreen() > 3) {
-            boolean flag = true;
-            event.setRightMouseDown(flag);
+            event.setRightMouseDown(true);
          }
       }
    }
@@ -132,10 +124,8 @@ public class AutoGapple extends Module implements ClickListener, PacketListener,
       this.gappleSlot = -1;
       if (this.shouldEatGapple() && mc.thePlayer.ticksExisted > 10 && mc.isNotInGui() && mc.getTicksWithoutScreen() > 3) {
          ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         byte b = 36;
-         containerSlotQuery = containerSlotQuery.fromSlot(b);
-         Item byNameOrId = Item.getByNameOrId("golden_apple");
-         OptionalInt optionalInt = containerSlotQuery.filterItemExact(byNameOrId).findFirstSlotIndex();
+         containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+         OptionalInt optionalInt = containerSlotQuery.filterItemExact(Item.getByNameOrId("golden_apple")).findFirstSlotIndex();
          if (optionalInt.isPresent()) {
             this.gappleSlot = optionalInt.getAsInt() - 36;
          }
@@ -143,17 +133,12 @@ public class AutoGapple extends Module implements ClickListener, PacketListener,
          this.health.nextValue();
       }
 
-      long l = 250L;
-      if (!this.timeHelper.reached2(l)) {
+      if (!this.timeHelper.reached2(250L)) {
          this.gappleSlot = -1;
       }
 
       if (this.gappleSlot >= 0) {
-         int gappleSlot2 = this.gappleSlot;
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = gappleSlot2;
-         byte b2 = 3;
-         SilentSlotManager.requestSlot(this, b2, n, value);
+         SilentSlotManager.requestSlot(this, (byte)3, this.gappleSlot, this.silentSlotSwitching.getValue());
       }
    }
 

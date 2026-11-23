@@ -11,8 +11,7 @@ public final class IntegerJsonPropertyCodec implements PrimitivePropertySerializ
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      Integer num = (Integer)obj;
-      this.writeInteger(str, num, json);
+      this.writeInteger(str, (Integer)obj, json);
    }
 
    public void writeInteger(String str, Integer num, JsonObject json) {

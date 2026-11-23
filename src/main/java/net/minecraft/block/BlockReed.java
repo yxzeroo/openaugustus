@@ -66,8 +66,7 @@ public class BlockReed extends Block {
    }
 
    static {
-      String str = "age";
-      AGE = PropertyInteger.create(str, 0, 15);
+      AGE = PropertyInteger.create("age", 0, 15);
    }
 
    @Override

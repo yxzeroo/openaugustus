@@ -24,8 +24,7 @@ public class EventSwim extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      SwimListener listener = (SwimListener)obj;
-      this.call2(listener);
+      this.call2((SwimListener)obj);
    }
 
    public float getForward() {

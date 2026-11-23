@@ -28,8 +28,8 @@ import java.util.List;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.RotationModule;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -56,20 +56,20 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class Fucker extends RotationModule implements ClickListener, PacketDelayListener, TickListener, PacketListener, SilentSlotListener {
-   public final BooleansSetting block;
-   public final BooleansSetting action;
-   public final StringValue delay;
-   public final StringValue aimRange;
-   public final StringValue range;
+   public final StringValue block;
+   public final StringValue action;
+   public final DoubleValue delay;
+   public final DoubleValue aimRange;
+   public final DoubleValue range;
    public final BooleanValue breakOnlyFreeBeds;
    public final BooleanValue throughWall;
    public final BooleanValue surrounding;
    public final BooleanValue instant;
    public final BooleanValue friendMyBlock;
-   public final StringValue customID;
+   public final DoubleValue customID;
    private final BooleanValue silentSlotSwitching;
    public final BooleanValue bedBlink;
-   public final StringValue bedBlinkTime;
+   public final DoubleValue bedBlinkTime;
    private final TimeHelper actionDelayTimer;
    private final TimeHelper bedBlinkTimer;
    private final TimeHelper postBreakTimer;
@@ -80,35 +80,27 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
 
    public Fucker() {
        super("Fucker", "Ficker", new Color(161, 17, 51), Categorys.WORLD);
-      this.block = new BooleansSetting(this, "Block", "Bed", new String[]{"Bed", "Cake", "Custom"});
-      this.action = new BooleansSetting(this, "Action", "Break", new String[]{"Break", "Click", "Use"});
-      this.delay = new StringValue(this, "Delay", 500.0, 0.0, 1000.0, 0);
-      this.aimRange = new StringValue(this, "AimRange", 5.5, 0.0, 6.0, 1);
-      this.range = new StringValue(this, "Range", 4.5, 0.0, 6.0, 1);
+      this.block = new StringValue(this, "Block", "Bed", new String[]{"Bed", "Cake", "Custom"});
+      this.action = new StringValue(this, "Action", "Break", new String[]{"Break", "Click", "Use"});
+      this.delay = new DoubleValue(this, "Delay", 500.0, 0.0, 1000.0, 0);
+      this.aimRange = new DoubleValue(this, "AimRange", 5.5, 0.0, 6.0, 1);
+      this.range = new DoubleValue(this, "Range", 4.5, 0.0, 6.0, 1);
       this.breakOnlyFreeBeds = new BooleanValue(this, "Break only free beds", false);
       BooleanValue booleanValue = new BooleanValue(this, "ThroughWall", true);
       SettingVisibilityCondition condition = () -> {
          return !this.breakOnlyFreeBeds.getValue();
       };
       this.throughWall = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue2 = new BooleanValue(this, "Surrounding", false);
-      SettingVisibilityCondition condition2 = () -> this.isSurroundingSettingVisible();
-      this.surrounding = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this, "Instant", true);
-      SettingVisibilityCondition condition3 = () -> this.isInstantSettingVisible();
-      this.instant = (BooleanValue)booleanValue3.withVisibility(condition3);
+      this.surrounding = (BooleanValue)new BooleanValue(this, "Surrounding", false).withVisibility(() -> this.isSurroundingSettingVisible());
+      this.instant = (BooleanValue)new BooleanValue(this, "Instant", true).withVisibility(() -> this.isInstantSettingVisible());
       this.friendMyBlock = new BooleanValue(this, "FriendMyBlock", true);
-      StringValue stringValue = new StringValue(this, "CustomID", 26.0, 0.0, 400.0, 0);
-      SettingVisibilityCondition condition4 = () -> false;
-      this.customID = stringValue.visibleWhen(condition4);
+      this.customID = new DoubleValue(this, "CustomID", 26.0, 0.0, 400.0, 0).visibleWhen(() -> false);
       this.silentSlotSwitching = new BooleanValue(this, "SilentSlotSwitching", true);
       this.bedBlink = new BooleanValue(this, "BedBlink", false);
-      StringValue stringValue2 = new StringValue(this, "BedBlinkTime", 10000.0, 0.0, 20000.0, 0);
+      DoubleValue stringValue2 = new DoubleValue(this, "BedBlinkTime", 10000.0, 0.0, 20000.0, 0);
       BooleanValue bedBlink2 = this.bedBlink;
       this.bedBlink.getClass();
-      BooleanValue booleanValue4 = bedBlink2;
-      SettingVisibilityCondition condition5 = () -> booleanValue4.getValue();
-      this.bedBlinkTime = stringValue2.visibleWhen(condition5);
+      this.bedBlinkTime = stringValue2.visibleWhen(() -> bedBlink2.getValue());
       this.actionDelayTimer = new TimeHelper();
       this.bedBlinkTimer = new TimeHelper();
       this.postBreakTimer = new TimeHelper();
@@ -135,16 +127,11 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 25;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 34;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
@@ -159,8 +146,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
             }
 
             if (position != null) {
-               int targetBlockId = this.getTargetBlockId();
-               if (this.isTargetBlockPos(position, targetBlockId)) {
+               if (this.isTargetBlockPos(position, this.getTargetBlockId())) {
                   this.postBreakTimer.reset();
                }
             }
@@ -185,32 +171,25 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
                || !this.friendMyBlock.getValue()
          )
          && thePlayer.getPositionEyes(1.0F).distanceTo(new Vec3((double)targetBlockPos2.getX() + 0.5, (double)targetBlockPos2.getY() + 0.5, (double)targetBlockPos2.getZ() + 0.5)) < 4.5) {
-         TimeHelper bedBlinkTimer2 = this.bedBlinkTimer;
-         long value = (long)this.bedBlinkTime.getValue();
-         if (!bedBlinkTimer2.reached2(value)) {
-            long l = 500L;
-            if (this.postBreakTimer.reached2(l)) {
-               boolean flag = true;
-               event.setDelayed(flag);
+         if (!this.bedBlinkTimer.reached2((long)this.bedBlinkTime.getValue())) {
+            if (this.postBreakTimer.reached2(500L)) {
+               event.setDelayed(true);
                return;
             }
          }
       }
 
       this.bedBlinkTimer.reset();
-      boolean flag2 = false;
-      event.setDelayed(flag2);
+      event.setDelayed(false);
    }
 
    @Override
    public void onTick() {
       if (this.breakOnlyFreeBeds.getValue()) {
-         boolean flag = false;
-         this.throughWall.setValue(flag);
+         this.throughWall.setValue(false);
       }
 
-      String selectedValue = this.block.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.block.getSelectedValue());
       Object obj = null;
       if ((!ClientManagers.moduleManager.killAura.isToggled() || ClientManagers.moduleManager.killAura.target == null) && this.isLicenseValid() && !BlockUtil.isScaffoldActiveAndValid()) {
          obj = this.findNearestTargetBlock();
@@ -220,39 +199,29 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
       }
 
       if (this.targetBlockPos != null) {
-         BlockPos targetBlockPos2 = this.targetBlockPos;
-         AxisAlignedBB blockBoundingBox = this.getBlockBoundingBox(targetBlockPos2);
+         AxisAlignedBB blockBoundingBox = this.getBlockBoundingBox(this.targetBlockPos);
          Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
          double d = MathHelper.clamp_double(positionEyes.xCoord, blockBoundingBox.minX + 0.1, blockBoundingBox.maxX - 0.1);
          double d2 = MathHelper.clamp_double(positionEyes.yCoord, blockBoundingBox.minY + 0.1, blockBoundingBox.maxY - 0.1);
          double d3 = MathHelper.clamp_double(positionEyes.zCoord, blockBoundingBox.minZ + 0.1, blockBoundingBox.maxZ - 0.1);
          Rotation rotation = this.calculateRotationToPos(d, d2, d3);
          MovingObjectPosition hit = RayCastUtil.rayCast(1.0F, rotation);
-         Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         Rotation rotation2 = rotation.absDelta(previousRotation);
+         Rotation rotation2 = rotation.absDelta(ClientManagers.rotationController.getPreviousRotation());
          boolean value = this.breakOnlyFreeBeds.getValue();
          if (this.breakOnlyFreeBeds.getValue()) {
             Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-            boolean flag2 = false;
             float f = 180.0F;
-            float f2 = 180.0F;
-            Rotation rotationsToPos = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation2, f2, f, flag2);
+            Rotation rotationsToPos = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation2, 180.0F, f, false);
             MovingObjectPosition hit2 = RayCastUtil.rayCast(1.0F, rotationsToPos);
             if (hit2 != null && hit2.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-               BlockPos blockPos = hit2.getBlockPos();
-               int targetBlockId = this.getTargetBlockId();
-               BlockPos pos = blockPos;
-               if (this.isTargetBlockPos(pos, targetBlockId)) {
+               if (this.isTargetBlockPos(hit2.getBlockPos(), this.getTargetBlockId())) {
                   value = false;
                }
             }
          }
 
          if (!this.isThroughWallActive() && hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            BlockPos blockPos2 = hit.getBlockPos();
-            int targetBlockId2 = this.getTargetBlockId();
-            BlockPos pos2 = blockPos2;
-            if (!this.isTargetBlockPos(pos2, targetBlockId2)) {
+            if (!this.isTargetBlockPos(hit.getBlockPos(), this.getTargetBlockId())) {
                HitVecCandidate hitVecCandidate = new HitVecCandidate(
                   (double)this.targetBlockPos.getX() + 0.5 - mc.thePlayer.posX,
                   mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(),
@@ -261,8 +230,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
                List list = MathStatisticsUtil.sampleBoxSurfacePoints(blockBoundingBox, hitVecCandidate);
                Vec3 vec = this.selectBestVisibleHitVec(list);
                if (this.breakOnlyFreeBeds.getValue()) {
-                  Vec3 vec2 = this.selectDirectVisibleHitVec(list);
-                  value = vec2 == null;
+                  value = this.selectDirectVisibleHitVec(list) == null;
                }
 
                if (vec != null) {
@@ -274,8 +242,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
          if (value) {
             this.targetBlockPos = null;
          } else {
-            byte b = 3;
-            ClientManagers.rotationController.requestRotation(rotation, b, this);
+            ClientManagers.rotationController.requestRotation(rotation, (byte)3, this);
          }
       }
    }
@@ -284,37 +251,25 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    public void onClick(EventClick event) {
       this.rotating = this.targetBlockPos != null && ClientManagers.rotationController.isOwnedBy(this);
       if ((!ClientManagers.moduleManager.killAura.isToggled() || ClientManagers.moduleManager.killAura.target == null) && !BlockUtil.isScaffoldActiveAndValid() && this.targetBlockPos != null) {
-         boolean flag = true;
-         event.setIgnoreVanillaClicks(flag);
-         boolean flag2 = false;
-         event.setRightMouseDown(flag2);
-         boolean flag3 = false;
-         event.setLeftMouseDown(flag3);
+         event.setIgnoreVanillaClicks(true);
+         event.setRightMouseDown(false);
+         event.setLeftMouseDown(false);
          if (this.isThroughWallActive()) {
-            BlockPos targetBlockPos2 = this.targetBlockPos;
-            float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
-            float pitch = ClientManagers.rotationController.getPreviousRotation().pitch;
-            double value = this.range.getValue();
-            float f = pitch;
-            float f2 = yaw;
-            MovingObjectPosition hit = RayTraceUtil.rayTraceBlock(targetBlockPos2, f2, f, value);
+            MovingObjectPosition hit = RayTraceUtil.rayTraceBlock(this.targetBlockPos, ClientManagers.rotationController.getPreviousRotation().yaw, ClientManagers.rotationController.getPreviousRotation().pitch, this.range.getValue());
             if (hit == null) {
                return;
             }
 
             this.throughWallRayTrace = hit;
             if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-               String selectedValue = this.action.getSelectedValue();
-               switch (selectedValue) {
+               switch (this.action.getSelectedValue()) {
                   case "Break":
                      if (this.instant.getValue()) {
                         EnumFacing sideHit = mc.objectMouseOver.sideHit;
-                        BlockPos targetBlockPos3 = this.targetBlockPos;
-                        this.sendInstantBreakPackets(targetBlockPos3, sideHit);
+                        this.sendInstantBreakPackets(this.targetBlockPos, sideHit);
                      } else {
                         if (!mc.playerController.isHittingBlock) {
-                           byte b = 1;
-                           event.addLeftClicks(b);
+                           event.addLeftClicks((byte)1);
                            Runnable runnable = () -> {
                               if (ViaAugustus.targetProtocolVersion.olderThanOrEqualTo(ProtocolVersion.v1_8)) {
                                  mc.thePlayer.swingItem();
@@ -332,19 +287,15 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
                            boolean flag4 = mc.currentScreen == null && mc.inGameHasFocus;
                            int currentItem = mc.thePlayer.inventory.currentItem;
                            BlockPos targetBlockPos4 = this.targetBlockPos;
-                           boolean flag5 = flag4;
-                           mc.sendClickBlockToControllerWithSlot(flag5, hit, targetBlockPos4, currentItem);
+                           mc.sendClickBlockToControllerWithSlot(flag4, hit, targetBlockPos4, currentItem);
                         };
                         event.setBlockBreakAction(runnable2);
                         this.targetFacing = hit.sideHit;
                      }
                      break;
                   case "Use":
-                     TimeHelper actionDelayTimer2 = this.actionDelayTimer;
-                     long value2 = (long)this.delay.getValue();
-                     if (actionDelayTimer2.reached2(value2) && mc.theWorld.getBlockState(this.targetBlockPos).getBlock().getMaterial() != Material.air) {
-                        byte b2 = 1;
-                        event.addRightClicks(b2);
+                     if (this.actionDelayTimer.reached2((long)this.delay.getValue()) && mc.theWorld.getBlockState(this.targetBlockPos).getBlock().getMaterial() != Material.air) {
+                        event.addRightClicks((byte)1);
                         Runnable runnable3 = () -> {
                            ItemStack heldItem = mc.thePlayer.getHeldItem();
                            int n = heldItem != null ? heldItem.stackSize : 0;
@@ -365,11 +316,8 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
                      }
                      break;
                   default:
-                     TimeHelper actionDelayTimer3 = this.actionDelayTimer;
-                     long value3 = (long)this.delay.getValue();
-                     if (actionDelayTimer3.reached2(value3)) {
-                        byte b3 = 1;
-                        event.addLeftClicks(b3);
+                     if (this.actionDelayTimer.reached2((long)this.delay.getValue())) {
+                        event.addLeftClicks((byte)1);
                         Runnable runnable4 = () -> {
                            if (ViaAugustus.targetProtocolVersion.olderThanOrEqualTo(ProtocolVersion.v1_8)) {
                               mc.thePlayer.swingItem();
@@ -388,41 +336,30 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
          } else if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && !mc.objectMouseOver.getBlockPos().equals(this.targetBlockPos)) {
             if (this.instant.getValue()) {
                EnumFacing sideHit2 = mc.objectMouseOver.sideHit;
-               BlockPos blockPos = mc.objectMouseOver.getBlockPos();
-               this.sendInstantBreakPackets(blockPos, sideHit2);
+               this.sendInstantBreakPackets(mc.objectMouseOver.getBlockPos(), sideHit2);
             } else {
-               boolean flag6 = true;
-               event.setLeftMouseDown(flag6);
+               event.setLeftMouseDown(true);
             }
          } else if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            String selectedValue2 = this.action.getSelectedValue();
-            switch (selectedValue2) {
+            switch (this.action.getSelectedValue()) {
                case "Break":
                   if (this.instant.getValue()) {
                      EnumFacing sideHit3 = mc.objectMouseOver.sideHit;
-                     BlockPos blockPos2 = mc.objectMouseOver.getBlockPos();
-                     this.sendInstantBreakPackets(blockPos2, sideHit3);
+                     this.sendInstantBreakPackets(mc.objectMouseOver.getBlockPos(), sideHit3);
                   } else {
                      this.targetFacing = mc.objectMouseOver.sideHit;
-                     boolean flag7 = true;
-                     event.setLeftMouseDown(flag7);
+                     event.setLeftMouseDown(true);
                   }
                   break;
                case "Use":
-                  TimeHelper actionDelayTimer4 = this.actionDelayTimer;
-                  long value4 = (long)this.delay.getValue();
-                  if (actionDelayTimer4.reached2(value4)) {
-                     byte b4 = 1;
-                     event.addRightClicks(b4);
+                  if (this.actionDelayTimer.reached2((long)this.delay.getValue())) {
+                     event.addRightClicks((byte)1);
                      this.actionDelayTimer.reset();
                   }
                   break;
                default:
-                  TimeHelper actionDelayTimer5 = this.actionDelayTimer;
-                  long value5 = (long)this.delay.getValue();
-                  if (actionDelayTimer5.reached2(value5)) {
-                     byte b5 = 1;
-                     event.addLeftClicks(b5);
+                  if (this.actionDelayTimer.reached2((long)this.delay.getValue())) {
+                     event.addLeftClicks((byte)1);
                      this.actionDelayTimer.reset();
                   }
             }
@@ -431,8 +368,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    }
 
    private AxisAlignedBB getBlockBoundingBox(BlockPos pos) {
-      IBlockState blockState = mc.theWorld.getBlockState(pos);
-      Block block2 = blockState.getBlock();
+      Block block2 = mc.theWorld.getBlockState(pos).getBlock();
       AxisAlignedBB box = new AxisAlignedBB(
          (double)pos.getX() + block2.getBlockBoundsMinX(),
          (double)pos.getY() + block2.getBlockBoundsMinY(),
@@ -442,9 +378,8 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
          (double)pos.getZ() + block2.getBlockBoundsMaxZ()
       );
       if (block2 instanceof BlockBed) {
-         EnumFacing[] facings = new EnumFacing[]{EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST};
 
-         for (EnumFacing facing : facings) {
+         for (EnumFacing facing : new EnumFacing[]{EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST}) {
             Block block3 = mc.theWorld.getBlockState(pos.offset(facing, 1)).getBlock();
             if (block3 instanceof BlockBed) {
                BlockPos pos2 = pos.offset(facing, 1);
@@ -466,12 +401,10 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    }
 
    private Vec3 findBestAimPoint(BlockPos pos, AxisAlignedBB box) {
-      HitVecCandidate hitVecCandidate = new HitVecCandidate(
+      List list = MathStatisticsUtil.sampleBoxSurfacePoints(box, new HitVecCandidate(
          (double)pos.getX() + 0.5 - mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), (double)pos.getZ() + 0.5 - mc.thePlayer.posZ
-      );
-      List list = MathStatisticsUtil.sampleBoxSurfacePoints(box, hitVecCandidate);
-      List list2 = list;
-      return this.selectBestVisibleHitVec(list2);
+      ));
+      return this.selectBestVisibleHitVec(list);
    }
 
    private Vec3 selectBestVisibleHitVec(List list) {
@@ -481,14 +414,10 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
       for (HitVecCandidate hitVecCandidate : (Iterable<HitVecCandidate>)(list)) {
          double d2 = hitVecCandidate.z;
          double d3 = hitVecCandidate.y;
-         double d4 = hitVecCandidate.x;
-         Rotation rotation = this.calculateRotationToPos(d4, d3, d2);
+         Rotation rotation = this.calculateRotationToPos(hitVecCandidate.x, d3, d2);
          MovingObjectPosition hit = mc.thePlayer.rayTraceCustom((double)mc.playerController.getBlockReachDistance(), 1.0F, rotation.yaw, rotation.pitch);
          if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            BlockPos blockPos = hit.getBlockPos();
-            int targetBlockId = this.getTargetBlockId();
-            BlockPos pos = blockPos;
-            if (this.isTargetBlockPos(pos, targetBlockId)) {
+            if (this.isTargetBlockPos(hit.getBlockPos(), this.getTargetBlockId())) {
                double d5 = Math.sqrt(
                   Math.pow(hitVecCandidate.x - mc.thePlayer.posX, 2.0)
                      + Math.pow(hitVecCandidate.y - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight()), 2.0)
@@ -506,10 +435,9 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    }
 
    private Vec3 findDirectVisibleAimPoint(BlockPos pos, AxisAlignedBB box) {
-      HitVecCandidate hitVecCandidate = new HitVecCandidate(
+      List list = MathStatisticsUtil.sampleBoxSurfacePoints(box, new HitVecCandidate(
          (double)pos.getX() + 0.5 - mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), (double)pos.getZ() + 0.5 - mc.thePlayer.posZ
-      );
-      List list = MathStatisticsUtil.sampleBoxSurfacePoints(box, hitVecCandidate);
+      ));
       return this.selectDirectVisibleHitVec(list);
    }
 
@@ -522,16 +450,11 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
          double d3 = hitVecCandidate.y;
          double d4 = hitVecCandidate.z;
          Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         boolean flag = false;
          float f = 180.0F;
-         float f2 = 180.0F;
-         Rotation rotationsToPos = RotationUtil.getRotationsToPos(d2, d3, d4, previousRotation, f2, f, flag);
+         Rotation rotationsToPos = RotationUtil.getRotationsToPos(d2, d3, d4, previousRotation, 180.0F, f, false);
          MovingObjectPosition hit = mc.thePlayer.rayTraceCustom((double)mc.playerController.getBlockReachDistance(), 1.0F, rotationsToPos.yaw, rotationsToPos.pitch);
          if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            BlockPos blockPos = hit.getBlockPos();
-            int targetBlockId = this.getTargetBlockId();
-            BlockPos pos = blockPos;
-            if (this.isTargetBlockPos(pos, targetBlockId)) {
+            if (this.isTargetBlockPos(hit.getBlockPos(), this.getTargetBlockId())) {
                double d5 = Math.sqrt(
                   Math.pow(hitVecCandidate.x - mc.thePlayer.posX, 2.0)
                      + Math.pow(hitVecCandidate.y - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight()), 2.0)
@@ -618,9 +541,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
          Vec3 vec2 = (Vec3)list.get(0);
          if (this.surrounding.getValue() && !this.surroundingCleared && vec2 != null) {
             BlockPos pos2 = new BlockPos(vec2.xCoord, vec2.yCoord, vec2.zCoord);
-            AxisAlignedBB blockBoundingBox = this.getBlockBoundingBox(pos2);
-            Vec3 vec3 = this.findBestAimPoint(pos2, blockBoundingBox);
-            if (vec3 == null) {
+            if (this.findBestAimPoint(pos2, this.getBlockBoundingBox(pos2)) == null) {
                ArrayList list2 = new ArrayList();
 
                for (EnumFacing facing : EnumFacing.VALUES) {
@@ -661,26 +582,21 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
    }
 
    private boolean isTargetBlockAt(int n, int n2, int n3, int n4) {
-      Block block2 = mc.theWorld.getBlockState2(n, n2, n3).getBlock();
-      return block2.equals(Block.getBlockById(n4));
+      return mc.theWorld.getBlockState2(n, n2, n3).getBlock().equals(Block.getBlockById(n4));
    }
 
    private boolean isTargetBlockPos(BlockPos pos, int n) {
       if (pos != null) {
          int x = pos.getX();
          int z = pos.getZ();
-         int y = pos.getY();
-         int n2 = x;
-         return this.isTargetBlockAt(n2, y, z, n);
+         return this.isTargetBlockAt(x, pos.getY(), z, n);
       } else {
          return false;
       }
    }
 
    private void sendInstantBreakPackets(BlockPos pos, EnumFacing facing) {
-      TimeHelper actionDelayTimer2 = this.actionDelayTimer;
-      long value = (long)this.delay.getValue();
-      if (actionDelayTimer2.reached2(value)) {
+      if (this.actionDelayTimer.reached2((long)this.delay.getValue())) {
          mc.thePlayer.swingItem();
          mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, pos, facing));
          mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, facing));
@@ -693,9 +609,7 @@ public class Fucker extends RotationModule implements ClickListener, PacketDelay
       if (this.targetBlockPos != null && (!ClientManagers.moduleManager.killAura.isToggled() || ClientManagers.moduleManager.killAura.target == null) && !BlockUtil.isScaffoldActiveAndValid()) {
          int n = this.findBestToolSlot();
          if (n != -1) {
-            boolean value = this.silentSlotSwitching.getValue();
-            byte b = 0;
-            SilentSlotManager.requestSlot(this, b, n, value);
+            SilentSlotManager.requestSlot(this, (byte)0, n, this.silentSlotSwitching.getValue());
          }
       }
    }

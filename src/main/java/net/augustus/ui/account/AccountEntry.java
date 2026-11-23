@@ -103,46 +103,34 @@ public class AccountEntry implements MC {
       JsonObject json = new JsonObject();
       JsonPropertyCodec stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
       String username2 = this.username;
-      String str = "Name";
-      stringCodec.write(str, username2, json);
+      stringCodec.write("Name", username2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
       String str2 = this.loginType.name();
-      String str3 = "Type";
-      stringCodec.write(str3, str2, json);
+      stringCodec.write("Type", str2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
       Long lastLoginTime2 = this.lastLoginTime;
-      String str4 = "LastLoginTime";
-      stringCodec.write(str4, lastLoginTime2, json);
+      stringCodec.write("LastLoginTime", lastLoginTime2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
       Long playTimeMillis2 = this.playTimeMillis;
-      String str5 = "PlayTime";
-      stringCodec.write(str5, playTimeMillis2, json);
+      stringCodec.write("PlayTime", playTimeMillis2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean marked2 = this.marked;
-      String str6 = "Marked";
-      stringCodec.write(str6, marked2, json);
+      stringCodec.write("Marked", marked2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean working2 = this.working;
-      String str7 = "Working";
-      stringCodec.write(str7, working2, json);
+      stringCodec.write("Working", working2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean loggedIn2 = this.loggedIn;
-      String str8 = "LoggedIn";
-      stringCodec.write(str8, loggedIn2, json);
+      stringCodec.write("LoggedIn", loggedIn2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonObjectCodec();
       JsonObject accountData2 = this.accountData;
-      String str9 = "AccountData";
-      stringCodec.write(str9, accountData2, json);
+      stringCodec.write("AccountData", accountData2, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonArrayCodec();
-      HashMap bannedServers2 = this.bannedServers;
-      JsonArray array = this.serializeServerMap(bannedServers2);
-      String str10 = "Banned";
-      stringCodec.write(str10, array, json);
+      JsonArray array = this.serializeServerMap(this.bannedServers);
+      stringCodec.write("Banned", array, json);
       stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonArrayCodec();
-      HashMap unbannedServers2 = this.unbannedServers;
-      JsonArray array2 = this.serializeServerMap(unbannedServers2);
-      String str11 = "Unbanned";
-      stringCodec.write(str11, array2, json);
+      JsonArray array2 = this.serializeServerMap(this.unbannedServers);
+      stringCodec.write("Unbanned", array2, json);
       return json;
    }
 
@@ -210,12 +198,7 @@ public class AccountEntry implements MC {
       for (TuplePair tuplePair : (Iterable<TuplePair>)(this.bannedServerIcons.values())) {
          if (tuplePair.getSecond() != null) {
             GlStateManager.color(1.0F, 1.0F, 1.0F);
-            int n9 = n + n7 + n8;
-            int n10 = n2 + 2;
-            ResourceLocation first = (ResourceLocation)tuplePair.getFirst();
-            int n11 = n10;
-            int n12 = n9;
-            this.drawServerIcon(n12, n11, first);
+            this.drawServerIcon(n + n7 + n8, n2 + 2, (ResourceLocation)tuplePair.getFirst());
             n8 += 12;
          }
       }
@@ -223,12 +206,7 @@ public class AccountEntry implements MC {
       GL11.glScaled((double)f5, (double)f5, 0.0);
       ResourceLocation location = (ResourceLocation)MinotarAvatarCache.avatarCache.get(this.username);
       if (location != null) {
-         int n13 = (int)(f3 - f + (float)n3 - (float)n4);
-         int n14 = (int)(f4 - f2);
-         double d = 1.0;
-         int n15 = n14;
-         int n16 = n13;
-         UiIconResources.drawIcon(location, n16, n15, n4, n4, d);
+         UiIconResources.drawIcon(location, (int)(f3 - f + (float)n3 - (float)n4), (int)(f4 - f2), n4, n4, 1.0);
       }
 
       GL11.glPopMatrix();
@@ -261,52 +239,32 @@ public class AccountEntry implements MC {
    public void fromJson(JsonObject json) {
       JsonPropertyCodec stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
       String username2 = this.username;
-      String str = "Name";
-      this.username = (String)stringCodec.read(str, username2, json);
+      this.username = (String)stringCodec.read("Name", username2, json);
       JsonPropertyCodec stringCodec2 = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
-      String str2 = this.loginType.name();
-      String str3 = str2;
-      String str4 = "Type";
-      this.loginType = AccountLoginType.valueOf((String)stringCodec2.read(str4, str3, json));
+      String str3 = this.loginType.name();
+      this.loginType = AccountLoginType.valueOf((String)stringCodec2.read("Type", str3, json));
       JsonPropertyCodec longCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
       Long lastLoginTime2 = this.lastLoginTime;
-      Long val = lastLoginTime2;
-      String str5 = "LastLoginTime";
-      this.lastLoginTime = (Long)longCodec.read(str5, val, json);
+      this.lastLoginTime = (Long)longCodec.read("LastLoginTime", lastLoginTime2, json);
       longCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
       Long playTimeMillis2 = this.playTimeMillis;
-      Long val2 = playTimeMillis2;
-      String str6 = "PlayTime";
-      this.playTimeMillis = (Long)longCodec.read(str6, val2, json);
+      this.playTimeMillis = (Long)longCodec.read("PlayTime", playTimeMillis2, json);
       JsonPropertyCodec booleanCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean marked2 = this.marked;
-      Boolean bool = marked2;
-      String str7 = "Marked";
-      this.marked = (Boolean)booleanCodec.read(str7, bool, json);
+      this.marked = (Boolean)booleanCodec.read("Marked", marked2, json);
       JsonPropertyCodec booleanCodec2 = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean working2 = this.working;
-      Boolean bool2 = working2;
-      String str8 = "Working";
-      this.working = (Boolean)booleanCodec2.read(str8, bool2, json);
+      this.working = (Boolean)booleanCodec2.read("Working", working2, json);
       JsonPropertyCodec booleanCodec3 = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanCodec();
       Boolean loggedIn2 = this.loggedIn;
-      Boolean bool3 = loggedIn2;
-      String str9 = "LoggedIn";
-      this.loggedIn = (Boolean)booleanCodec3.read(str9, bool3, json);
+      this.loggedIn = (Boolean)booleanCodec3.read("LoggedIn", loggedIn2, json);
       JsonPropertyCodec jsonObjectCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonObjectCodec();
       JsonObject accountData2 = this.accountData;
-      String str10 = "AccountData";
-      this.accountData = (JsonObject)jsonObjectCodec.read(str10, accountData2, json);
+      this.accountData = (JsonObject)jsonObjectCodec.read("AccountData", accountData2, json);
       longCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonArrayCodec();
-      Object obj = null;
-      String str11 = "Banned";
-      JsonArray array = (JsonArray)longCodec.read(str11, obj, json);
-      this.bannedServers = this.deserializeServerMap(array);
+      this.bannedServers = this.deserializeServerMap((JsonArray)longCodec.read("Banned", (Object)null, json));
       longCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getJsonArrayCodec();
-      Object obj2 = null;
-      String str12 = "Unbanned";
-      JsonArray array2 = (JsonArray)longCodec.read(str12, obj2, json);
-      this.unbannedServers = this.deserializeServerMap(array2);
+      this.unbannedServers = this.deserializeServerMap((JsonArray)longCodec.read("Unbanned", (Object)null, json));
       if (this.loggedIn) {
          this.authenticateAsync();
       }
@@ -337,12 +295,10 @@ public class AccountEntry implements MC {
          JsonObject json = new JsonObject();
          JsonPropertyCodec stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
          Object key = entry.getKey();
-         String str = "Key";
-         stringCodec.write(str, key, json);
+         stringCodec.write("Key", key, json);
          stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
          Object value = entry.getValue();
-         String str2 = "Value";
-         stringCodec.write(str2, value, json);
+         stringCodec.write("Value", value, json);
          array.add(json);
       }
 
@@ -364,8 +320,7 @@ public class AccountEntry implements MC {
    public void markUnbannedOnServer(String str) {
       this.bannedServers.remove(str);
       this.bannedServerIcons.remove(str);
-      Long val = (Long)this.unbannedServers.get(str);
-      if (val == null) {
+      if (((Long)this.unbannedServers.get(str)) == null) {
          this.unbannedServers.put(str, System.currentTimeMillis());
          ResourceLocation location = new ResourceLocation("servers/" + str + "/icon");
          this.unbannedServerIcons.put(str, new TuplePair(location, (DynamicTexture)mc.getTextureManager().getTexture(location)));
@@ -390,8 +345,7 @@ public class AccountEntry implements MC {
    public void markBannedOnServer(String str, Long val) {
       this.unbannedServers.remove(str);
       this.unbannedServerIcons.remove(str);
-      Long val2 = (Long)this.bannedServers.get(str);
-      if (val2 == null) {
+      if (((Long)this.bannedServers.get(str)) == null) {
          this.bannedServers.put(str, val);
          ResourceLocation location = new ResourceLocation("servers/" + str + "/icon");
          this.bannedServerIcons.put(str, new TuplePair(location, (DynamicTexture)mc.getTextureManager().getTexture(location)));
@@ -416,8 +370,7 @@ public class AccountEntry implements MC {
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
       if (mouseButton == 0 && RenderUtil.isHovered((float)this.renderX, (float)this.renderY, (float)this.renderWidth, (float)this.renderHeight, mouseX, mouseY)) {
          if (!KeyboardInputUtil.isKeyDown(157) && !KeyboardInputUtil.isKeyDown(29)) {
-            long l = 250L;
-            if (!this.timeHelper.reached2(l) && (AccountManagerScreen.instance.getActiveLoginTask() == null || AccountManagerScreen.instance.getActiveLoginTask().isDone())) {
+            if (!this.timeHelper.reached2(250L) && (AccountManagerScreen.instance.getActiveLoginTask() == null || AccountManagerScreen.instance.getActiveLoginTask().isDone())) {
                this.authenticateAsync();
             }
 
@@ -459,40 +412,26 @@ public class AccountEntry implements MC {
    private void authenticateAsync() {
       switch (AccountLoginTypeSwitchMap.ORDINAL_MAP[this.loginType.ordinal()]) {
          case 1:
-            AccountManagerScreen instance = AccountManagerScreen.instance;
-            CompletableFuture completableFuture = CompletableFuture.runAsync(() -> this.loginWithCredentials());
-            instance.setActiveLoginTask(completableFuture);
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> this.loginWithCredentials()));
             break;
          case 2:
-            AccountManagerScreen instance2 = AccountManagerScreen.instance;
-            CompletableFuture completableFuture2 = CompletableFuture.runAsync(() -> this.loginWithDeviceCode());
-            instance2.setActiveLoginTask(completableFuture2);
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> this.loginWithDeviceCode()));
             break;
          case 3:
-            AccountManagerScreen instance3 = AccountManagerScreen.instance;
-            CompletableFuture completableFuture3 = CompletableFuture.runAsync(() -> this.loginWithExternalBrowser());
-            instance3.setActiveLoginTask(completableFuture3);
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> this.loginWithExternalBrowser()));
             break;
          case 4:
-            AccountManagerScreen instance4 = AccountManagerScreen.instance;
-            CompletableFuture completableFuture4 = CompletableFuture.runAsync(() -> {
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> {
                AccountAuthenticator.loginWithSavedAccessToken(this);
-            });
-            instance4.setActiveLoginTask(completableFuture4);
+            }));
             break;
          case 5:
-            AccountManagerScreen instance5 = AccountManagerScreen.instance;
-            CompletableFuture completableFuture5 = CompletableFuture.runAsync(() -> this.loginAsCracked());
-            CompletableFuture completableFuture6 = completableFuture5;
-            instance5.setActiveLoginTask(completableFuture6);
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> this.loginAsCracked()));
             break;
          case 6:
-            AccountManagerScreen instance6 = AccountManagerScreen.instance;
-            CompletableFuture completableFuture7 = CompletableFuture.runAsync(() -> {
+            AccountManagerScreen.instance.setActiveLoginTask(CompletableFuture.runAsync(() -> {
                AccountAuthenticator.loginSavedTheAlteningAccount(this);
-            });
-            CompletableFuture completableFuture8 = completableFuture7;
-            instance6.setActiveLoginTask(completableFuture8);
+            }));
       }
    }
 
@@ -515,13 +454,10 @@ public class AccountEntry implements MC {
                   JsonObject json = (JsonObject)elem;
                   JsonPropertyCodec stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getStringCodec();
                   String str = "";
-                  String str2 = "Key";
-                  String str3 = (String)stringCodec.read(str2, str, json);
+                  String str3 = (String)stringCodec.read("Key", str, json);
                   stringCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getLongCodec();
                   Long minvalue = Long.MIN_VALUE;
-                  Long val = minvalue;
-                  String str4 = "Value";
-                  Long val2 = (Long)stringCodec.read(str4, val, json);
+                  Long val2 = (Long)stringCodec.read("Value", minvalue, json);
                   if (!str3.isEmpty() && val2 != Long.MIN_VALUE) {
                      map.put(str3, val2);
                   }

@@ -33,8 +33,8 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -48,24 +48,24 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 public class LagRange extends Module implements GameLoopListener, PacketListener, MoveInputListener, RenderListener, TickListener, LoadWorldListener {
-   public final StringValue predictTicks;
-   public final StringValue ticks;
+   public final DoubleValue predictTicks;
+   public final DoubleValue ticks;
    private final BooleanValue correct;
    private final BooleanValue onlyOnGround;
    private final BooleanValue notInLiquid;
    private final BooleanValue stop;
    private final BooleanValue sTap;
-   private final StringValue delayAfterAttack;
-   private final StringValue delayBetweenLags;
-   private final StringValue stopEarly;
-   private final DoubleValue targets;
+   private final DoubleValue delayAfterAttack;
+   private final DoubleValue delayBetweenLags;
+   private final DoubleValue stopEarly;
+   private final SettingGroup targets;
    private final BooleanValue onlyWhileKillAura;
    private final TargetSelectionSettings targetSelection;
-   private final StringValue preAimRange;
-   private final DoubleValue debug;
+   private final DoubleValue preAimRange;
+   private final SettingGroup debug;
    private final BooleanValue debug2;
    private final BooleanValue onlyInThirdPerson;
-   private final StringValue timeDebugGetsDisplayed;
+   private final DoubleValue timeDebugGetsDisplayed;
    private long debugDisplayStartMs;
    private AxisAlignedBB debugStartBounds;
    private AxisAlignedBB debugEndBounds;
@@ -85,8 +85,8 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
 
    public LagRange() {
        super("LagRange", "LagDistanz", new Color(23, 233, 123), Categorys.LATENCY);
-      this.predictTicks = new StringValue(this, "PredictTicks", 5.0, 1.0, 7.0, 0);
-      this.ticks = new StringValue(this, "Ticks", 3.0, 1.0, 7.0, 0);
+      this.predictTicks = new DoubleValue(this, "PredictTicks", 5.0, 1.0, 7.0, 0);
+      this.ticks = new DoubleValue(this, "Ticks", 3.0, 1.0, 7.0, 0);
       this.correct = new BooleanValue(this, "Correct", false);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false);
       this.notInLiquid = new BooleanValue(this, "NotInLiquid", false);
@@ -95,35 +95,30 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
       BooleanValue stop2 = this.stop;
       this.stop.getClass();
       BooleanValue booleanValue2 = stop2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.sTap = (BooleanValue)booleanValue.withVisibility(condition);
-      this.delayAfterAttack = new StringValue(this, "Delay after attack", 0.0, 0.0, 10000.0, 0);
-      this.delayBetweenLags = new StringValue(this, "Delay between lags", 0.0, 0.0, 10000.0, 0);
-      this.stopEarly = new StringValue(this, "Stop early", 0.0, 0.0, 3.0, 0);
-      this.targets = new DoubleValue(this, "Targets");
+      this.sTap = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
+      this.delayAfterAttack = new DoubleValue(this, "Delay after attack", 0.0, 0.0, 10000.0, 0);
+      this.delayBetweenLags = new DoubleValue(this, "Delay between lags", 0.0, 0.0, 10000.0, 0);
+      this.stopEarly = new DoubleValue(this, "Stop early", 0.0, 0.0, 3.0, 0);
+      this.targets = new SettingGroup(this, "Targets");
       this.onlyWhileKillAura = new BooleanValue(this, "OnlyWhileKillAura", true, this.targets);
       TargetSelectionSettings targetSelectionSettings = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter(), this.targets)).withSorting();
       SettingVisibilityCondition condition2 = () -> {
          return !this.onlyWhileKillAura.getValue();
       };
       this.targetSelection = targetSelectionSettings.withVisibility(condition2);
-      StringValue stringValue = new StringValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1, this.targets);
-      SettingVisibilityCondition condition3 = () -> this.isPreAimRangeVisible();
-      this.preAimRange = stringValue.visibleWhen(condition3);
-      this.debug = new DoubleValue(this, "Debug");
+      this.preAimRange = new DoubleValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1, this.targets).visibleWhen(() -> this.isPreAimRangeVisible());
+      this.debug = new SettingGroup(this, "Debug");
       this.debug2 = new BooleanValue(this, "Debug", false, this.debug);
       BooleanValue booleanValue3 = new BooleanValue(this, "OnlyInThirdPerson", true, this.debug);
       stop2 = this.debug2;
       this.debug2.getClass();
       BooleanValue booleanValue4 = stop2;
-      SettingVisibilityCondition condition4 = () -> booleanValue4.getValue();
-      this.onlyInThirdPerson = (BooleanValue)booleanValue3.withVisibility(condition4);
-      StringValue stringValue2 = new StringValue(this, "Time debug gets displayed", 1.0, 0.1, 10.0, 1, this.debug);
+      this.onlyInThirdPerson = (BooleanValue)booleanValue3.withVisibility(() -> booleanValue4.getValue());
+      DoubleValue stringValue2 = new DoubleValue(this, "Time debug gets displayed", 1.0, 0.1, 10.0, 1, this.debug);
       stop2 = this.debug2;
       this.debug2.getClass();
       BooleanValue booleanValue5 = stop2;
-      SettingVisibilityCondition condition5 = () -> booleanValue5.getValue();
-      this.timeDebugGetsDisplayed = stringValue2.visibleWhen(condition5);
+      this.timeDebugGetsDisplayed = stringValue2.visibleWhen(() -> booleanValue5.getValue());
       this.debugDisplayStartMs = 0L;
       this.debugTotalTicks = 0;
       this.debugElapsedTicks = 0;
@@ -151,27 +146,19 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 16;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
-      byte b4 = 32;
-      this.toggleEventSubscription(b4);
-      byte b5 = 40;
-      this.toggleEventSubscription(b5);
-      byte b6 = 17;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)16);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.lagRangeState == LagRangeState.NOTHING && this.inHitRangeAfterCharge && this.stop.getValue() && !this.velocityReceived && this.sTap.getValue()) {
-         float f = -1.0F;
-         event.setMoveForward(f);
-         float f2 = 0.0F;
-         event.setMoveStrafe(f2);
+         event.setMoveForward(-1.0F);
+         event.setMoveStrafe(0.0F);
       }
    }
 
@@ -195,8 +182,7 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
 
    @Override
    public void onLoadWorld(EventLoadWorld event) {
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    @Override
@@ -208,8 +194,7 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
                this.debugDisplayStartMs = System.currentTimeMillis();
                this.debugEndBounds = mc.thePlayer.getEntityBoundingBox();
                this.debugEndPos = mc.thePlayer.getInterpolatedPos(1.0F);
-               String str = "Teleported " + MathStatisticsUtil.roundToDecimalPlaces(this.debugStartPos.distanceTo(this.debugEndPos), 3) + " blocks in " + this.debugTotalTicks + " ticks";
-               this.sendChatMessage2(str);
+               this.sendChatMessage2("Teleported " + MathStatisticsUtil.roundToDecimalPlaces(this.debugStartPos.distanceTo(this.debugEndPos), 3) + " blocks in " + this.debugTotalTicks + " ticks");
                this.debugTotalTicks = 0;
                this.debugElapsedTicks = 0;
             }
@@ -240,17 +225,13 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
 
    @Override
    public void onGameLoop(EventGameLoop event) {
-      boolean value = this.correct.getValue();
-      event.setAllowSkipRender(value);
+      event.setAllowSkipRender(this.correct.getValue());
       int elapsedTicks = event.getElapsedTicks();
       EntityLivingBase entity = this.findTarget();
       if (this.lagRangeState == LagRangeState.CHARGE2) {
-         byte b = 0;
-         event.setElapsedTicks(b);
-         float f = 0.0F;
-         event.setRenderPartialTicks(f);
-         boolean flag = true;
-         event.setSkipRender(flag);
+         event.setElapsedTicks((byte)0);
+         event.setRenderPartialTicks(0.0F);
+         event.setSkipRender(true);
          this.lastLagTimeMs = System.currentTimeMillis();
       }
 
@@ -262,8 +243,7 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
             }
 
             if (elapsedTicks == 1 && (double)(System.currentTimeMillis() - this.lastLagTimeMs) > this.delayBetweenLags.getValue()) {
-               int value2 = (int)this.predictTicks.getValue();
-               if (this.shouldStartCharge(value2, entity)) {
+               if (this.shouldStartCharge((int)this.predictTicks.getValue(), entity)) {
                   this.charge1Ticks = 0;
                   this.lagRangeState = LagRangeState.CHARGE1;
                   this.velocityReceived = false;
@@ -273,13 +253,11 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
 
          if (this.lagRangeState == LagRangeState.CHARGE1) {
             this.charge1Ticks += elapsedTicks;
-            int charge1Ticks2 = this.charge1Ticks;
-            boolean flag3 = this.shouldReleaseEarly(charge1Ticks2, entity);
+            boolean flag3 = this.shouldReleaseEarly(this.charge1Ticks, entity);
             if ((double)this.charge1Ticks >= this.ticks.getValue() || flag3 || this.velocityReceived) {
                this.inHitRangeAfterCharge = false;
                if (this.charge1Ticks >= 1 && !this.velocityReceived) {
-                  int charge1Ticks3 = this.charge1Ticks;
-                  this.inHitRangeAfterCharge = this.canHitTargetAfterTicks(entity, charge1Ticks3);
+                  this.inHitRangeAfterCharge = this.canHitTargetAfterTicks(entity, this.charge1Ticks);
                }
 
                this.lagRangeState = LagRangeState.TIMER1;
@@ -299,8 +277,7 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
          }
 
          if (this.lagRangeState == LagRangeState.TIMER2) {
-            int charge2Ticks2 = this.charge2Ticks;
-            event.setElapsedTicks(charge2Ticks2);
+            event.setElapsedTicks(this.charge2Ticks);
             this.charge2Ticks = 0;
             this.lagRangeState = LagRangeState.NOTHING;
             this.charge1Ticks = 0;
@@ -308,8 +285,7 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
          }
 
          if (this.lagRangeState == LagRangeState.TIMER1) {
-            int charge1Ticks4 = this.charge1Ticks;
-            event.setElapsedTicks(charge1Ticks4);
+            event.setElapsedTicks(this.charge1Ticks);
             if (this.inHitRangeAfterCharge && this.stop.getValue()) {
                this.lagRangeState = LagRangeState.CHARGE2;
                if (ClientManagers.moduleManager.debug.isToggled() && ClientManagers.moduleManager.debug.lagRangeDebug.getValue()) {
@@ -328,12 +304,9 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
       }
 
       if (this.lagRangeState == LagRangeState.CHARGE1) {
-         byte b2 = 0;
-         event.setElapsedTicks(b2);
-         float f2 = 0.0F;
-         event.setRenderPartialTicks(f2);
-         boolean flag4 = true;
-         event.setSkipRender(flag4);
+         event.setElapsedTicks((byte)0);
+         event.setRenderPartialTicks(0.0F);
+         event.setSkipRender(true);
          this.lastLagTimeMs = System.currentTimeMillis();
       }
 
@@ -350,16 +323,9 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
       EntityLivingBase activeTarget = CombatTargetUtil.getActiveTarget();
       if (!this.onlyWhileKillAura.getValue() && activeTarget == null) {
          EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-         EntityTargetFilter targetFilter = this.targetSelection.getTargetFilter();
-         EntityTargetFilter entityTargetFilter = targetFilter;
-         entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter).filterFocus();
-         double value = this.preAimRange.getValue();
-         entityTargetSelector = entityTargetSelector.maxDistance(value);
-         TargetSelectionSettings targetSelection2 = this.targetSelection;
-         Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         double d = ClientManagers.moduleManager.range.isCombatRangeActive() ? ClientManagers.moduleManager.range.getCurrentRange() : 3.0;
-         Rotation rotation = previousRotation;
-         ToDoubleFunction toDoubleFunction = targetSelection2.createTargetComparatorKey(rotation, d);
+         entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelection.getTargetFilter()).filterFocus();
+         entityTargetSelector = entityTargetSelector.maxDistance(this.preAimRange.getValue());
+         ToDoubleFunction toDoubleFunction = this.targetSelection.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), ClientManagers.moduleManager.range.isCombatRangeActive() ? ClientManagers.moduleManager.range.getCurrentRange() : 3.0);
          Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
          return optional.isPresent() && optional.get() instanceof EntityLivingBase ? (EntityLivingBase)optional.get() : null;
       } else {
@@ -442,20 +408,13 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
          && (!this.notInLiquid.getValue() || !mc.thePlayer.isInWater() && !mc.thePlayer.isInLava())
          && (!ClientManagers.moduleManager.killAura.isToggled() || !ClientManagers.moduleManager.killAura.rangeMode.getSelectedValue().equals("Grim") || !ClientManagers.moduleManager.killAura.grimRangeActive)
          && entity.ticksExisted >= 20) {
-         Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
-         float f = 1.0F;
-         Vec3 vec = RotationUtil.getInterpolatedNearestPoint(entity, f);
-         if (positionEyes.distanceTo(vec) <= 3.0) {
+         if (mc.thePlayer.getPositionEyes(1.0F).distanceTo(RotationUtil.getInterpolatedNearestPoint(entity, 1.0F)) <= 3.0) {
             return false;
          } else {
             int n2 = mc.thePlayer.ticksExisted + n;
-            boolean flag = true;
-            int n3 = n2;
             int ticksExisted = mc.thePlayer.ticksExisted;
-            ArrayList list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted, n3, flag);
-            Vec3 interpolatedPos = mc.thePlayer.getInterpolatedPos(1.0F);
-            boolean flag2 = true;
-            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(interpolatedPos, flag2);
+            ArrayList list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted, n2, true);
+            AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(mc.thePlayer.getInterpolatedPos(1.0F), true);
 
             for (Vec3 vec2 : (Iterable<Vec3>)(list)) {
                Vec3 vec3 = vec2.addVector(0.0, (double)entity.getEyeHeight(), 0.0);
@@ -464,19 +423,12 @@ public class LagRange extends Module implements GameLoopListener, PacketListener
                }
             }
 
-            int n4 = 999999;
-            Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list, n4);
+            Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list, 999999);
             int n5 = mc.thePlayer.ticksExisted + n;
-            byte b = 0;
             int ticksExisted2 = mc.thePlayer.ticksExisted;
             int ticksExisted3 = mc.thePlayer.ticksExisted;
-            ArrayList list2 = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted3, ticksExisted2, b, n5);
-            short s = 9999;
-            Vec3 vec4 = TrajectoryPredictionUtil.getClampedPosition(list2, s).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
-            boolean flag3 = true;
-            AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(clampedPosition, flag3);
-            Vec3 vec5 = RotationUtil.clampPointToBox(vec4, box2);
-            return vec4.distanceTo(vec5) <= 3.0;
+            Vec3 vec4 = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted3, ticksExisted2, (byte)0, n5), (short)9999).addVector(0.0, (double)mc.thePlayer.getEyeHeight(), 0.0);
+            return vec4.distanceTo(RotationUtil.clampPointToBox(vec4, EntityBoundsUtil.createPlayerBoundingBox(clampedPosition, true))) <= 3.0;
          }
       } else {
          return false;

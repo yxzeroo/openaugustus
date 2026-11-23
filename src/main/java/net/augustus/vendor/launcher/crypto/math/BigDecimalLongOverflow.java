@@ -5,12 +5,9 @@ public class BigDecimalLongOverflow {
    private static final ShadedBigInteger LONGMAX;
 
    public static void check(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       ShadedBigInteger inflatedValue = ShadedBigDecimal.getInflatedValue(shadedBigDecimal);
-      ShadedBigInteger shadedBigInteger = LONGMIN;
-      if (inflatedValue.compareTo2(shadedBigInteger) >= 0) {
-         ShadedBigInteger shadedBigInteger2 = LONGMAX;
-         if (inflatedValue.compareTo2(shadedBigInteger2) <= 0) {
+      if (inflatedValue.compareTo2(LONGMIN) >= 0) {
+         if (inflatedValue.compareTo2(LONGMAX) <= 0) {
             return;
          }
       }

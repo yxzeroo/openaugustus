@@ -14,11 +14,7 @@ public class FloatProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonPropertyCodec floatCodec = configSerializerProvider.getFloatCodec();
-      String name2 = this.getName();
-      Object value2 = this.getValue();
-      String str = name2;
-      floatCodec.write(str, value2, json);
+      configSerializerProvider.getFloatCodec().write(this.getName(), this.getValue(), json);
       return json;
    }
 
@@ -27,12 +23,6 @@ public class FloatProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonPropertyCodec floatCodec = configSerializerProvider.getFloatCodec();
-      String name2 = this.getName();
-      Float f = flag ? (Float)this.getDefaultValue() : (Float)this.getValue();
-      String str = name2;
-      Object obj = floatCodec.read(str, f, json);
-      Object obj2 = obj;
-      this.applyValue(obj2);
+      this.applyValue(configSerializerProvider.getFloatCodec().read(this.getName(), flag ? (Float)this.getDefaultValue() : (Float)this.getValue(), json));
    }
 }

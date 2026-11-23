@@ -167,8 +167,7 @@ public class WorldGenBigTree extends WorldGenAbstractTree {
                double d3 = d * Math.sin(d2) + 0.5;
                double d4 = d * Math.cos(d2) + 0.5;
                BlockPos pos = this.basePos.add(d3, (double)(n3 - 1), d4);
-               BlockPos pos2 = pos.up(this.leafDistanceLimit);
-               if (this.checkBlockLine(pos, pos2) == -1) {
+               if (this.checkBlockLine(pos, pos.up(this.leafDistanceLimit)) == -1) {
                   int n4 = this.basePos.getX() - pos.getX();
                   int n5 = this.basePos.getZ() - pos.getZ();
                   double d5 = (double)pos.getY() - Math.sqrt((double)(n4 * n4 + n5 * n5)) * this.branchSlope;

@@ -131,8 +131,7 @@ public class PlayerProfileCache {
       minecraftServer.getGameProfileRepository().findProfilesByNames(new String[]{str}, Agent.MINECRAFT, obj);
       if (!minecraftServer.isServerInOnlineMode() && profiles[0] == null) {
          UUID uuid = EntityPlayer.getUUID(new GameProfile((UUID)null, str));
-         GameProfile profile = new GameProfile(uuid, str);
-         obj.onProfileLookupSucceeded(profile);
+         obj.onProfileLookupSucceeded(new GameProfile(uuid, str));
       }
 
       return profiles[0];

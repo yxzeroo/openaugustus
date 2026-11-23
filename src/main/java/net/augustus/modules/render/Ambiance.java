@@ -14,57 +14,51 @@ import net.augustus.settings.SettingChangeListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 
 public class Ambiance extends Module implements PacketListener, WorldColorListener, WorldTimeListener {
-   public final StringValue time;
-   public final StringValue timeSpeed;
-   public final StringValue rain;
+   public final DoubleValue time;
+   public final DoubleValue timeSpeed;
+   public final DoubleValue rain;
    public final BooleanValue snow;
-   public final StringValue thunder;
+   public final DoubleValue thunder;
    public final BooleanValue customWorldColor;
    public final ColorSetting worldColor;
    public final BooleanValue customFogColor;
    public final ColorSetting fogColor;
    public final BooleanValue customFogDistance;
-   public final StringValue fogDistance;
+   public final DoubleValue fogDistance;
    public long elapsedTimeOffset;
    private float savedRainStrength;
    private float savedThunderStrength;
 
    public Ambiance() {
        super("Ambiance", "Ambiente", new Color(224, 93, 40), Categorys.RENDER);
-      this.time = new StringValue(this, "Time", 1900.0, 0.0, 24000.0, 0);
-      this.timeSpeed = new StringValue(this, "TimeSpeed", 0.0, 0.0, 100.0, 1);
-      this.rain = new StringValue(this, "Rain", 0.0, 0.0, 1.0, 2);
+      this.time = new DoubleValue(this, "Time", 1900.0, 0.0, 24000.0, 0);
+      this.timeSpeed = new DoubleValue(this, "TimeSpeed", 0.0, 0.0, 100.0, 1);
+      this.rain = new DoubleValue(this, "Rain", 0.0, 0.0, 1.0, 2);
       this.snow = new BooleanValue(this, "Snow", false);
-      this.thunder = new StringValue(this, "Thunder", 0.0, 0.0, 1.0, 2);
-      BooleanValue booleanValue = new BooleanValue(this, "CustomWorldColor", false);
-      SettingChangeListener listener = () -> this.warnIfFullBrightGammaActive();
-      SettingChangeListener listener2 = listener;
-      this.customWorldColor = (BooleanValue)booleanValue.withChangeListener(listener2);
+      this.thunder = new DoubleValue(this, "Thunder", 0.0, 0.0, 1.0, 2);
+      this.customWorldColor = (BooleanValue)new BooleanValue(this, "CustomWorldColor", false).withChangeListener(() -> this.warnIfFullBrightGammaActive());
       ColorSetting colorSetting = new ColorSetting(this, "WorldColor", Augustus.getInstance().getClientColor());
       BooleanValue customWorldColor2 = this.customWorldColor;
       this.customWorldColor.getClass();
       BooleanValue booleanValue2 = customWorldColor2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.worldColor = (ColorSetting)colorSetting.withVisibility(condition);
+      this.worldColor = (ColorSetting)colorSetting.withVisibility(() -> booleanValue2.getValue());
       this.customFogColor = new BooleanValue(this, "CustomFogColor", false);
       ColorSetting colorSetting2 = new ColorSetting(this, "FogColor", Augustus.getInstance().getClientColor());
       customWorldColor2 = this.customFogColor;
       this.customFogColor.getClass();
       BooleanValue booleanValue3 = customWorldColor2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.fogColor = (ColorSetting)colorSetting2.withVisibility(condition2);
+      this.fogColor = (ColorSetting)colorSetting2.withVisibility(() -> booleanValue3.getValue());
       this.customFogDistance = new BooleanValue(this, "CustomFogDistance", false);
-      StringValue stringValue = new StringValue(this, "FogDistance", 192.0, 0.0, 1000.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "FogDistance", 192.0, 0.0, 1000.0, 0);
       customWorldColor2 = this.customFogDistance;
       this.customFogDistance.getClass();
       BooleanValue booleanValue4 = customWorldColor2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.fogDistance = stringValue.visibleWhen(condition3);
+      this.fogDistance = stringValue.visibleWhen(() -> booleanValue4.getValue());
       this.savedRainStrength = 0.0F;
       this.savedThunderStrength = 0.0F;
    }
@@ -89,46 +83,34 @@ public class Ambiance extends Module implements PacketListener, WorldColorListen
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 44;
-      this.toggleEventSubscription(b2);
-      byte b3 = 45;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)44);
+      this.toggleEventSubscription((byte)45);
    }
 
    @Override
    public void onWorldColor(EventWorldColor event) {
       if (this.customWorldColor.getValue()) {
-         byte b = 0;
-         this.worldColor.getColorInt(b);
-         float red = (float)this.worldColor.getRed();
-         event.setRed(red);
-         float green = (float)this.worldColor.getGreen();
-         event.setGreen(green);
-         float blue = (float)this.worldColor.getBlue();
-         event.setBlue(blue);
+         this.worldColor.getColorInt((byte)0);
+         event.setRed((float)this.worldColor.getRed());
+         event.setGreen((float)this.worldColor.getGreen());
+         event.setBlue((float)this.worldColor.getBlue());
       }
    }
 
    @Override
    public void onWorldColor2(EventWorldColor event) {
       if (this.customFogColor.getValue()) {
-         byte b = 0;
-         this.fogColor.getColorInt(b);
-         float red = (float)this.fogColor.getRed();
-         event.setRed(red);
-         float green = (float)this.fogColor.getGreen();
-         event.setGreen(green);
-         float blue = (float)this.fogColor.getBlue();
-         event.setBlue(blue);
+         this.fogColor.getColorInt((byte)0);
+         event.setRed((float)this.fogColor.getRed());
+         event.setGreen((float)this.fogColor.getGreen());
+         event.setBlue((float)this.fogColor.getBlue());
       }
    }
 
    @Override
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S03PacketTimeUpdate) {
+      if (event.getPacket() instanceof S03PacketTimeUpdate) {
          event.cancel();
       }
    }
@@ -136,8 +118,7 @@ public class Ambiance extends Module implements PacketListener, WorldColorListen
    @Override
    public void onWorldTime(EventWorldTime event) {
       this.elapsedTimeOffset = this.timeSpeed.getValue() > 0.0 ? (long)((double)this.elapsedTimeOffset + this.timeSpeed.getValue()) : 0L;
-      long l = (long)(this.time.getValue() + (double)this.elapsedTimeOffset);
-      event.setWorldTime(l);
+      event.setWorldTime((long)(this.time.getValue() + (double)this.elapsedTimeOffset));
       if (this.elapsedTimeOffset > 24000L) {
          this.elapsedTimeOffset = 0L;
       }
@@ -145,8 +126,7 @@ public class Ambiance extends Module implements PacketListener, WorldColorListen
 
    private void warnIfFullBrightGammaActive() {
       if (Augustus.getInstance().getModuleManager().fullBright.isToggled() && Augustus.getInstance().getModuleManager().fullBright.mode.getSelectedValue().equals("Gamma") && this.customWorldColor.getValue()) {
-         String str = "Disable gamma mode in FullBright module";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("Disable gamma mode in FullBright module");
       }
    }
 

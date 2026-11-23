@@ -36,8 +36,7 @@ public class TextFormatUtil {
 
    public static boolean isValidMinecraftUsername(String str) {
       if (str != null && str.length() < 17 && str.length() >= 3) {
-         Set set = USERNAME_CHAR_SET;
-         if (containsOnlyChars(str, set)) {
+         if (containsOnlyChars(str, USERNAME_CHAR_SET)) {
             return true;
          }
       }
@@ -49,11 +48,10 @@ public class TextFormatUtil {
       if (str != null && !str.isEmpty()) {
          Character[] chars = str.chars().mapToObj(n2 -> (char)n2).toArray(Character[]::new);
          LinkedList list = new LinkedList();
-         Character[] chars2 = chars;
          int length = chars.length;
 
          for (int i = 0; i < length; i++) {
-            char ch = chars2[i];
+            char ch = chars[i];
             if (!DIGIT_CHARS.contains(ch) && !LOWERCASE_CHARS.contains(ch) && !UPPERCASE_CHARS.contains(ch) && ch != '_') {
                list.add(ch);
             }
@@ -72,9 +70,8 @@ public class TextFormatUtil {
 
       ALPHANUMERIC_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
       USERNAME_CHAR_SET = new HashSet();
-      char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_".toCharArray();
 
-      for (char ch : chars) {
+      for (char ch : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_".toCharArray()) {
          USERNAME_CHAR_SET.add(ch);
       }
 
@@ -137,8 +134,7 @@ public class TextFormatUtil {
       int length = chars.length;
 
       for (int i = 0; i < length; i++) {
-         char ch = chars[i];
-         if (!set.contains(ch)) {
+         if (!set.contains(chars[i])) {
             return false;
          }
       }

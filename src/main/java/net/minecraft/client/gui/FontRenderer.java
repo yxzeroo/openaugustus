@@ -436,10 +436,7 @@ public class FontRenderer implements MC, IFontRenderer, IResourceManagerReloadLi
             boolean flag = true;
 
             for (int j = 0; j < n2 && flag; j++) {
-               int n7 = (n4 * n2 + j) * width;
-               int n8 = ints[n6 + n7];
-               int n9 = n8 >> 24 & 0xFF;
-               if (n9 > 16) {
+               if ((ints[n6 + ((n4 * n2 + j) * width)] >> 24 & 0xFF) > 16) {
                   flag = false;
                }
             }
@@ -803,8 +800,7 @@ public class FontRenderer implements MC, IFontRenderer, IResourceManagerReloadLi
 
    private int renderStringAligned(String str, int n, int n2, int n3, int n4, boolean flag) {
       if (this.bidiFlag) {
-         int stringWidth = this.getStringWidth(this.bidiReorder(str));
-         n = n + n3 - stringWidth;
+         n = n + n3 - this.getStringWidth(this.bidiReorder(str));
       }
 
       str = this.applyTextFilters(str);
@@ -889,8 +885,7 @@ public class FontRenderer implements MC, IFontRenderer, IResourceManagerReloadLi
       if (this.glyphWidth[ch] == 0) {
          return 0.0F;
       } else {
-         int n = ch / 256;
-         this.loadGlyphTexture(n);
+         this.loadGlyphTexture(ch / 256);
          int n2 = this.glyphWidth[ch] >>> 4;
          int n3 = this.glyphWidth[ch] & 15;
          n2 &= 15;

@@ -17,8 +17,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.cosmetics.CosmeticDataManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.labymod.ModelData;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -44,9 +44,7 @@ public class Cosmetics extends Module implements TickListener {
       this.pendingSyncOnDisable = false;
       MoreCosmeticsCore.getInstance().getModelLoader().getModelsByName().forEach((obj, obj2) -> this.registerLocalCosmeticSetting((String)obj, (CosmeticModel)obj2));
       this.hideCosmeticsOfOtherUsers = new BooleanValue(this, "Hide cosmetics of other users", false);
-      BooleanValue booleanValue = new BooleanValue(this, "Hint message that rendering of cosmetics can be disabled", true);
-      SettingVisibilityCondition condition = () -> this.isCosmeticsHintVisible();
-      this.hintMessageThatRenderingOfCosmeticsCanBeDisabled = (BooleanValue)booleanValue.withVisibility(condition);
+      this.hintMessageThatRenderingOfCosmeticsCanBeDisabled = (BooleanValue)new BooleanValue(this, "Hint message that rendering of cosmetics can be disabled", true).withVisibility(() -> this.isCosmeticsHintVisible());
    }
 
    public void onEnable() {
@@ -59,8 +57,7 @@ public class Cosmetics extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick5() {
@@ -76,9 +73,7 @@ public class Cosmetics extends Module implements TickListener {
          }
 
          int first = (Integer)tupleTriple.getFirst();
-         String second = (String)tupleTriple.getSecond();
-         int n = first;
-         if (!OnlineUserRegistry.matchesPlayerIdentity(clientPlayer, n, second)) {
+         if (!OnlineUserRegistry.matchesPlayerIdentity(clientPlayer, first, (String)tupleTriple.getSecond())) {
             return;
          }
 
@@ -87,15 +82,13 @@ public class Cosmetics extends Module implements TickListener {
             return;
          }
 
-         Collection values = third.values();
-         this.applyCosmeticEntries(values, clientPlayer);
+         this.applyCosmeticEntries(third.values(), clientPlayer);
       }
    }
 
    public void applyLocalPlayerCosmetics(AbstractClientPlayer clientPlayer) {
       if (this.isToggled()) {
-         java.util.ArrayList localCosmeticEntries2 = this.localCosmeticEntries;
-         this.applyCosmeticEntries(localCosmeticEntries2, clientPlayer);
+         this.applyCosmeticEntries(this.localCosmeticEntries, clientPlayer);
       }
    }
 
@@ -122,12 +115,7 @@ public class Cosmetics extends Module implements TickListener {
          HashMap third = (HashMap)tupleTriple.getThird();
          EntityPlayer player = this.findWorldPlayerByName(str);
          if (player instanceof AbstractClientPlayer) {
-            Collection values = third.values();
-            AbstractClientPlayer clientPlayer = (AbstractClientPlayer)player;
-            boolean flag = true;
-            AbstractClientPlayer clientPlayer2 = clientPlayer;
-            Collection items = values;
-            this.updateCosmeticEntries(items, clientPlayer2, flag);
+            this.updateCosmeticEntries(third.values(), (AbstractClientPlayer)player, true);
             this.remotePlayerCosmetics.remove(str);
          }
       }
@@ -139,24 +127,13 @@ public class Cosmetics extends Module implements TickListener {
    }
 
    private void applyCosmeticEntries(Collection items, AbstractClientPlayer clientPlayer) {
-      boolean flag = false;
-      this.updateCosmeticEntries(items, clientPlayer, flag);
+      this.updateCosmeticEntries(items, clientPlayer, false);
    }
 
    private void updateCosmeticEntries(Collection items, AbstractClientPlayer clientPlayer, boolean flag) {
       if (clientPlayer != null && items != null) {
          for (CosmeticSettingEntry cosmeticSettingEntry : (Iterable<CosmeticSettingEntry>)(items)) {
-            CosmeticDataManager cosmeticDataManager = MoreCosmeticsCore.getInstance().getCosmeticDataManager();
-            boolean flag2 = !flag && cosmeticSettingEntry.getEnabledSetting().getValue();
-            CosmeticModel model = cosmeticSettingEntry.getModel();
-            float scale = (float)cosmeticSettingEntry.getScale();
-            float height = (float)cosmeticSettingEntry.getHeight();
-            ColorSetting[] colorSettings = cosmeticSettingEntry.getColorSettings();
-            float f = height;
-            float f2 = scale;
-            CosmeticModel cosmeticModel = model;
-            boolean flag3 = flag2;
-            cosmeticDataManager.applyCosmeticToPlayer(flag3, cosmeticModel, clientPlayer, f2, f, colorSettings);
+            MoreCosmeticsCore.getInstance().getCosmeticDataManager().applyCosmeticToPlayer(!flag && cosmeticSettingEntry.getEnabledSetting().getValue(), cosmeticSettingEntry.getModel(), clientPlayer, (float)cosmeticSettingEntry.getScale(), (float)cosmeticSettingEntry.getHeight(), cosmeticSettingEntry.getColorSettings());
          }
       }
    }
@@ -177,20 +154,14 @@ public class Cosmetics extends Module implements TickListener {
 
       for (CosmeticSettingEntry cosmeticSettingEntry : (Iterable<CosmeticSettingEntry>)(this.localCosmeticEntries)) {
          CosmeticModel model = cosmeticSettingEntry.getModel();
-         CosmeticDataManager cosmeticDataManager = MoreCosmeticsCore.getInstance().getCosmeticDataManager();
-         CosmeticModel model2 = cosmeticSettingEntry.getModel();
-         boolean flag = true;
-         CosmeticModel cosmeticModel = model2;
-         ModelData orCreateModelData = cosmeticDataManager.getOrCreateModelData(cosmeticModel, flag);
+         ModelData orCreateModelData = MoreCosmeticsCore.getInstance().getCosmeticDataManager().getOrCreateModelData(cosmeticSettingEntry.getModel(), true);
          mc.thePlayer.getCosmetics().putIfAbsent(model.getId(), orCreateModelData.clone_m1());
       }
    }
 
    public void clearLocalPlayerCosmetics() {
-      boolean flag = true;
       EntityPlayerSP thePlayer = mc.thePlayer;
-      java.util.ArrayList localCosmeticEntries2 = this.localCosmeticEntries;
-      this.updateCosmeticEntries(localCosmeticEntries2, (AbstractClientPlayer)thePlayer, flag);
+      this.updateCosmeticEntries(this.localCosmeticEntries, (AbstractClientPlayer)thePlayer, true);
    }
 
    private static boolean matchesPlayerName(char ch, short s, String str, int n, EntityPlayer player) {
@@ -202,12 +173,7 @@ public class Cosmetics extends Module implements TickListener {
          HashMap third = (HashMap)tupleTriple.getThird();
          EntityPlayer player = this.findWorldPlayerByName(str);
          if (player instanceof AbstractClientPlayer) {
-            Collection values = third.values();
-            AbstractClientPlayer clientPlayer = (AbstractClientPlayer)player;
-            boolean flag = true;
-            AbstractClientPlayer clientPlayer2 = clientPlayer;
-            Collection items = values;
-            this.updateCosmeticEntries(items, clientPlayer2, flag);
+            this.updateCosmeticEntries(third.values(), (AbstractClientPlayer)player, true);
          }
       }
    }
@@ -215,11 +181,9 @@ public class Cosmetics extends Module implements TickListener {
    private static void createRemoteCosmeticEntry(HashMap map, String str, CosmeticModel cosmeticModel) {
       if (map.size() <= 40) {
          BooleanValue booleanValue = new BooleanValue(null, str, false);
-         StringValue stringValue = new StringValue(null, str + "Scale", 1.0, 0.5, 2.0, 2);
-         StringValue stringValue2 = new StringValue(null, str + "Height", 0.0, -2.0, 2.0, 2);
-         CosmeticDataManager cosmeticDataManager = MoreCosmeticsCore.getInstance().getCosmeticDataManager();
-         boolean flag = true;
-         ModelData orCreateModelData = cosmeticDataManager.getOrCreateModelData(cosmeticModel, flag);
+         DoubleValue stringValue = new DoubleValue(null, str + "Scale", 1.0, 0.5, 2.0, 2);
+         DoubleValue stringValue2 = new DoubleValue(null, str + "Height", 0.0, -2.0, 2.0, 2);
+         ModelData orCreateModelData = MoreCosmeticsCore.getInstance().getCosmeticDataManager().getOrCreateModelData(cosmeticModel, true);
          int length = orCreateModelData.model.length;
          ColorSetting[] colorSettings = new ColorSetting[length];
 
@@ -239,20 +203,16 @@ public class Cosmetics extends Module implements TickListener {
             n = atomicInteger.incrementAndGet();
          }
 
-         BooleanValue enabledSetting = cosmeticSettingEntry.getEnabledSetting();
-         boolean flag = bool && n <= maxCount;
-         enabledSetting.setValue(flag);
+         cosmeticSettingEntry.getEnabledSetting().setValue(bool && n <= maxCount);
          if (bool) {
             Float f = (Float)f1Map.get(str);
             if (f != null && !Float.isNaN(f)) {
-               double d = (double)f.floatValue();
-               cosmeticSettingEntry.setScale(d);
+               cosmeticSettingEntry.setScale((double)f.floatValue());
             }
 
             Float f2 = (Float)f2Map.get(str);
             if (f2 != null && !Float.isNaN(f2)) {
-               double d2 = (double)f2.floatValue();
-               cosmeticSettingEntry.setHeight(d2);
+               cosmeticSettingEntry.setHeight((double)f2.floatValue());
             }
 
             int[] ints = (int[])cMap.get(str);
@@ -263,16 +223,11 @@ public class Cosmetics extends Module implements TickListener {
 
             for (int i = 0; i < cosmeticSettingEntry.getColorSettings().length; i++) {
                ColorSetting colorSetting = cosmeticSettingEntry.getColorSettings()[i];
-               Color color2 = new Color(ints[i], true);
-               colorSetting.setPrimaryColor(color2);
-               double d3 = doubles[i];
-               colorSetting.setRainbowSpeed(d3);
-               double d4 = doubles2[i];
-               colorSetting.setAstolfoSpeed(d4);
-               boolean flag2 = flags[i];
-               colorSetting.setRainbowEnabled(flag2);
-               boolean flag3 = flags2[i];
-               colorSetting.setAstolfoEnabled(flag3);
+               colorSetting.setPrimaryColor(new Color(ints[i], true));
+               colorSetting.setRainbowSpeed(doubles[i]);
+               colorSetting.setAstolfoSpeed(doubles2[i]);
+               colorSetting.setRainbowEnabled(flags[i]);
+               colorSetting.setAstolfoEnabled(flags2[i]);
             }
          }
       }
@@ -283,27 +238,20 @@ public class Cosmetics extends Module implements TickListener {
    }
 
    private void registerLocalCosmeticSetting(String str, CosmeticModel cosmeticModel) {
-      DoubleValue doubleValue = (DoubleValue)(new DoubleValue(this, "Group" + str, true)).withDisplayName(str);
+      SettingGroup doubleValue = (SettingGroup)(new SettingGroup(this, "Group" + str, true)).withDisplayName(str);
       BooleanValue booleanValue = new BooleanValue(this, str, false, doubleValue);
-      StringValue stringValue = new StringValue(this, str + "Scale", 1.0, 0.5, 2.0, 2, doubleValue);
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      StringValue stringValue2 = stringValue.visibleWhen(condition);
-      stringValue = new StringValue(this, str + "Height", 0.0, -2.0, 2.0, 2, doubleValue);
-      SettingVisibilityCondition condition2 = () -> booleanValue.getValue();
-      StringValue stringValue3 = stringValue.visibleWhen(condition2);
-      CosmeticDataManager cosmeticDataManager = MoreCosmeticsCore.getInstance().getCosmeticDataManager();
-      boolean flag = true;
-      ModelData orCreateModelData = cosmeticDataManager.getOrCreateModelData(cosmeticModel, flag);
+      DoubleValue stringValue = new DoubleValue(this, str + "Scale", 1.0, 0.5, 2.0, 2, doubleValue);
+      DoubleValue stringValue2 = stringValue.visibleWhen(() -> booleanValue.getValue());
+      stringValue = new DoubleValue(this, str + "Height", 0.0, -2.0, 2.0, 2, doubleValue);
+      DoubleValue stringValue3 = stringValue.visibleWhen(() -> booleanValue.getValue());
+      ModelData orCreateModelData = MoreCosmeticsCore.getInstance().getCosmeticDataManager().getOrCreateModelData(cosmeticModel, true);
       int length = orCreateModelData.model.length;
       ColorSetting[] colorSettings = new ColorSetting[length];
 
       for (int i = 0; i < length; i++) {
          String str2 = str + "Color" + i;
          Color color2 = new Color(orCreateModelData.model[i].color);
-         String str3 = str2;
-         ColorSetting colorSetting = new ColorSetting(this, str3, color2, doubleValue);
-         SettingVisibilityCondition condition3 = () -> booleanValue.getValue();
-         colorSettings[i] = (ColorSetting)colorSetting.withVisibility(condition3);
+         colorSettings[i] = (ColorSetting)new ColorSetting(this, str2, color2, doubleValue).withVisibility(() -> booleanValue.getValue());
       }
 
       this.localCosmeticEntries.add(new CosmeticSettingEntry(cosmeticModel, booleanValue, stringValue2, stringValue3, colorSettings, null));

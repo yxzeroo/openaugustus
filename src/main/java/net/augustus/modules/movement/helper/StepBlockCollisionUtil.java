@@ -63,7 +63,6 @@ public class StepBlockCollisionUtil implements MC {
 
    public static boolean isSolidBlock(BlockPos pos) {
       IBlockState blockState = mc.theWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
-      return block.getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
+      return blockState.getBlock().getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
    }
 }

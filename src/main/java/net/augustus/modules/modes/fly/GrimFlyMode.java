@@ -34,11 +34,9 @@ public class GrimFlyMode extends FlyMode {
       if (this.receivedVelocity) {
          float f = (float)Math.toRadians((double)mc.thePlayer.rotationYaw);
          float f2 = (float)Math.toRadians((double)mc.thePlayer.rotationPitch);
-         float f3 = f + 20.0F;
-         event.setYaw(f3);
+         event.setYaw(f + 20.0F);
          event.setYaw(f2);
-         double d = Math.sin((double)f) * 10000.0;
-         event.setX(d);
+         event.setX(Math.sin((double)f) * 10000.0);
       }
    }
 
@@ -50,8 +48,7 @@ public class GrimFlyMode extends FlyMode {
    public void onReadPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof S12PacketEntityVelocity) {
-         S12PacketEntityVelocity packet2 = (S12PacketEntityVelocity)packet;
-         if (packet2.getEntityID() == mc.thePlayer.getEntityId()) {
+         if (((S12PacketEntityVelocity)packet).getEntityID() == mc.thePlayer.getEntityId()) {
             this.receivedVelocity = true;
          }
       }

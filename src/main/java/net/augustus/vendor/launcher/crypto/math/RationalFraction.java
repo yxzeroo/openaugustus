@@ -13,8 +13,7 @@ public class RationalFraction {
    public RationalFraction(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
       this.numerator = shadedBigInteger;
       this.denominator = shadedBigInteger2;
-      ShadedBigInteger zero = ShadedBigInteger.ZERO;
-      if (shadedBigInteger2.equals(zero)) {
+      if (shadedBigInteger2.equals(ShadedBigInteger.ZERO)) {
          throw new ArithmeticException("Created impossible fraction");
       }
    }
@@ -25,26 +24,20 @@ public class RationalFraction {
    }
 
    public ShadedBigDecimal toBigDecimal(ShadedMathContext shadedMathContext) {
-      ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      return shadedBigDecimal.divide3(shadedBigDecimal2, shadedMathContext);
+      return new ShadedBigDecimal(this.numerator).divide3(new ShadedBigDecimal(this.denominator), shadedMathContext);
    }
 
    public RationalFraction simplify() {
       ShadedBigInteger denominator2 = this.denominator;
       ShadedBigInteger shadedBigInteger = this.numerator.gcd(denominator2);
-      ShadedBigInteger zero = ShadedBigInteger.ZERO;
-      return shadedBigInteger.equals(zero) ? this : new RationalFraction(this.numerator.divide(shadedBigInteger), this.denominator.divide(shadedBigInteger));
+      return shadedBigInteger.equals(ShadedBigInteger.ZERO) ? this : new RationalFraction(this.numerator.divide(shadedBigInteger), this.denominator.divide(shadedBigInteger));
    }
 
    public static ShadedBigInteger lcm(ShadedBigInteger shadedBigInteger, ShadedBigInteger shadedBigInteger2) {
-      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.multiply(shadedBigInteger2);
-      ShadedBigInteger shadedBigInteger4 = shadedBigInteger.gcd(shadedBigInteger2);
-      return shadedBigInteger3.divide(shadedBigInteger4);
+      return shadedBigInteger.multiply(shadedBigInteger2).divide(shadedBigInteger.gcd(shadedBigInteger2));
    }
 
    public static RationalFraction parseFraction(String str) {
-      int invertedFlowMarker = FractionMatrixRow.getInvertedFlowMarker();
       if (str.length() == 0) {
          return null;
       } else if (str.contains("/")) {
@@ -60,16 +53,10 @@ public class RationalFraction {
    }
 
    public int compareTo(RationalFraction other) {
-      ShadedBigInteger denominator2 = this.getDenominator();
-      ShadedBigInteger denominator3 = other.getDenominator();
-      ShadedBigInteger shadedBigInteger = lcm(denominator2, denominator3);
-      ShadedBigInteger denominator4 = this.getDenominator();
-      ShadedBigInteger shadedBigInteger2 = shadedBigInteger.divide(denominator4);
-      ShadedBigInteger denominator5 = other.getDenominator();
-      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.divide(denominator5);
-      ShadedBigInteger shadedBigInteger4 = this.getNumerator().multiply(shadedBigInteger2);
-      ShadedBigInteger shadedBigInteger5 = other.getNumerator().multiply(shadedBigInteger3);
-      return shadedBigInteger4.compareTo2(shadedBigInteger5);
+      ShadedBigInteger shadedBigInteger = lcm(this.getDenominator(), other.getDenominator());
+      ShadedBigInteger shadedBigInteger2 = shadedBigInteger.divide(this.getDenominator());
+      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.divide(other.getDenominator());
+      return this.getNumerator().multiply(shadedBigInteger2).compareTo2(other.getNumerator().multiply(shadedBigInteger3));
    }
 
    public RationalFraction negate() {
@@ -77,13 +64,11 @@ public class RationalFraction {
    }
 
    public ShadedBigDecimal toBigDecimal() {
-      ShadedMathContext shadedMathContext = DEFAULT_MATH_CONTEXT;
-      return this.toBigDecimal(shadedMathContext);
+      return this.toBigDecimal(DEFAULT_MATH_CONTEXT);
    }
 
    public RationalFraction subtract2(RationalFraction rationalFraction) {
-      RationalFraction rationalFraction2 = rationalFraction.negate();
-      return this.add2(rationalFraction2);
+      return this.add2(rationalFraction.negate());
    }
 
    public ShadedBigInteger getNumerator() {
@@ -102,8 +87,7 @@ public class RationalFraction {
    }
 
    public RationalFraction divide(RationalFraction rationalFraction) {
-      RationalFraction rationalFraction2 = new RationalFraction(rationalFraction.denominator, rationalFraction.numerator);
-      return this.multiply(rationalFraction2);
+      return this.multiply(new RationalFraction(rationalFraction.denominator, rationalFraction.numerator));
    }
 
    public boolean isNegative() {
@@ -126,10 +110,8 @@ public class RationalFraction {
    public RationalFraction(ShadedBigDecimal shadedBigDecimal) {
        super();
       ShadedBigInteger[] shadedBigIntegers = fromBigDecimal(shadedBigDecimal);
-      ShadedBigInteger shadedBigInteger = shadedBigIntegers[0];
-      this.numerator = shadedBigInteger;
-      ShadedBigInteger shadedBigInteger2 = shadedBigIntegers[1];
-      this.denominator = shadedBigInteger2;
+      this.numerator = shadedBigIntegers[0];
+      this.denominator = shadedBigIntegers[1];
       ShadedBigInteger zero = ShadedBigInteger.ZERO;
       if (this.denominator.equals(zero)) {
          throw new ArithmeticException("Created impossible fraction");
@@ -138,11 +120,8 @@ public class RationalFraction {
 
    public RationalFraction add(int n) {
       ShadedBigInteger numerator2 = this.numerator;
-      ShadedBigInteger denominator2 = this.denominator;
-      ShadedBigInteger shadedBigInteger = ShadedBigInteger.valueOf((long)n);
-      ShadedBigInteger shadedBigInteger2 = denominator2.multiply(shadedBigInteger);
-      ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
-      return (new RationalFraction(numerator2.add(shadedBigInteger3), this.denominator)).simplify();
+      ShadedBigInteger shadedBigInteger2 = this.denominator.multiply(ShadedBigInteger.valueOf((long)n));
+      return (new RationalFraction(numerator2.add(shadedBigInteger2), this.denominator)).simplify();
    }
 
    public RationalFraction(long l, long l2) {
@@ -153,15 +132,11 @@ public class RationalFraction {
       int flowState = FractionMatrixRow.getFlowState();
       RationalFraction rationalFraction2 = rationalFraction;
       if (flowState != 0) {
-         ShadedBigInteger denominator2 = rationalFraction.getDenominator();
-         ShadedBigInteger one = ShadedBigInteger.ONE;
-         if (!denominator2.equals(one)) {
+         if (!rationalFraction.getDenominator().equals(ShadedBigInteger.ONE)) {
             return null;
          }
 
-         int n = rationalFraction.getNumerator().intValue();
-         int n2 = n;
-         rationalFraction2 = this.pow(n2);
+         rationalFraction2 = this.pow(rationalFraction.getNumerator().intValue());
       }
 
       return rationalFraction2;
@@ -170,25 +145,21 @@ public class RationalFraction {
    public boolean equalsFraction(RationalFraction rationalFraction) {
       int flowState = FractionMatrixRow.getFlowState();
       ShadedBigInteger numerator2 = this.numerator;
-      ShadedBigInteger numerator3 = rationalFraction.getNumerator();
-      boolean flag = numerator2.equals(numerator3);
+      boolean flag = numerator2.equals(rationalFraction.getNumerator());
       if (flowState != 0) {
          if (!flag) {
             return false;
          }
 
          numerator2 = this.denominator;
-         ShadedBigInteger denominator2 = rationalFraction.getDenominator();
-         flag = numerator2.equals(denominator2);
+         flag = numerator2.equals(rationalFraction.getDenominator());
       }
 
       return flowState == 0 ? flag : flag;
    }
 
    public RationalFraction subtract(int n) {
-      ShadedBigInteger denominator2 = this.denominator;
-      ShadedBigInteger shadedBigInteger = ShadedBigInteger.valueOf((long)n);
-      ShadedBigInteger shadedBigInteger2 = denominator2.multiply(shadedBigInteger);
+      ShadedBigInteger shadedBigInteger2 = this.denominator.multiply(ShadedBigInteger.valueOf((long)n));
       return (new RationalFraction(this.numerator.subtract(shadedBigInteger2), this.denominator)).simplify();
    }
 
@@ -237,8 +208,7 @@ public class RationalFraction {
 
    public String toDecimalString(ShadedMathContext shadedMathContext) {
       ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      shadedBigDecimal = shadedBigDecimal.divide3(shadedBigDecimal2, shadedMathContext);
+      shadedBigDecimal = shadedBigDecimal.divide3(new ShadedBigDecimal(this.denominator), shadedMathContext);
       return shadedBigDecimal.toPlainString();
    }
 
@@ -247,19 +217,15 @@ public class RationalFraction {
    }
 
    public RationalFraction round() {
-      ShadedMathContext shadedMathContext = new ShadedMathContext(10, ShadedRoundingMode.HALF_UP);
-      ShadedBigDecimal shadedBigDecimal = this.toBigDecimal(shadedMathContext);
+      ShadedBigDecimal shadedBigDecimal = this.toBigDecimal(new ShadedMathContext(10, ShadedRoundingMode.HALF_UP));
       ShadedRoundingMode halfup = ShadedRoundingMode.HALF_UP;
-      byte b = 0;
-      return new RationalFraction(shadedBigDecimal.setScale2(b, halfup));
+      return new RationalFraction(shadedBigDecimal.setScale2((byte)0, halfup));
    }
 
    public RationalFraction(String str, String str2) {
        super();
-      ShadedBigInteger shadedBigInteger = new ShadedBigInteger(str);
-      this.numerator = shadedBigInteger;
-      ShadedBigInteger shadedBigInteger2 = new ShadedBigInteger(str2);
-      this.denominator = shadedBigInteger2;
+      this.numerator = new ShadedBigInteger(str);
+      this.denominator = new ShadedBigInteger(str2);
       ShadedBigInteger zero = ShadedBigInteger.ZERO;
       if (this.denominator.equals(zero)) {
          throw new ArithmeticException("Created impossible fraction");
@@ -289,24 +255,17 @@ public class RationalFraction {
    @Override
    public String toString() {
       ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.numerator);
-      ShadedBigDecimal shadedBigDecimal2 = new ShadedBigDecimal(this.denominator);
-      ShadedMathContext shadedMathContext = DEFAULT_MATH_CONTEXT;
-      ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-      shadedBigDecimal = shadedBigDecimal.divide3(shadedBigDecimal3, shadedMathContext);
+      shadedBigDecimal = shadedBigDecimal.divide3(new ShadedBigDecimal(this.denominator), DEFAULT_MATH_CONTEXT);
       return shadedBigDecimal.toPlainString();
    }
 
    public static ShadedBigInteger[] fromBigDecimal(ShadedBigDecimal shadedBigDecimal) {
       boolean flag = shadedBigDecimal.compareTo2(ShadedBigDecimal.ZERO) < 0;
       shadedBigDecimal = shadedBigDecimal.abs();
-      ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal.setScale2(0, ShadedRoundingMode.DOWN);
-      ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal.subtract(shadedBigDecimal2);
-      int scale = shadedBigDecimal3.getScale();
+      int scale = shadedBigDecimal.subtract(shadedBigDecimal.setScale2(0, ShadedRoundingMode.DOWN)).getScale();
       ShadedBigDecimal shadedBigDecimal4 = ShadedBigDecimal.TEN.pow(scale);
       ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal.multiply(shadedBigDecimal4);
-      ShadedBigInteger shadedBigInteger = shadedBigDecimal5.toBigInteger();
-      ShadedBigInteger shadedBigInteger2 = shadedBigDecimal4.toBigInteger();
-      ShadedBigInteger shadedBigInteger3 = shadedBigInteger.gcd(shadedBigInteger2);
+      ShadedBigInteger shadedBigInteger3 = shadedBigDecimal5.toBigInteger().gcd(shadedBigDecimal4.toBigInteger());
       ShadedBigDecimal shadedBigDecimal6 = new ShadedBigDecimal(shadedBigInteger3);
       if (flag) {
          shadedBigDecimal5 = shadedBigDecimal5.multiply(new ShadedBigDecimal(-1));

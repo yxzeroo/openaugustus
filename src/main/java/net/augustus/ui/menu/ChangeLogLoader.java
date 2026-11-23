@@ -74,9 +74,8 @@ public class ChangeLogLoader {
       ArrayList list = new ArrayList(this.sections);
 
       for (Object obj : list) {
-         ChangeLogSection changeLogSection = (ChangeLogSection)obj;
 
-         for (Object obj2 : changeLogSection.getEntries()) {
+         for (Object obj2 : ((ChangeLogSection)obj).getEntries()) {
             ChangelogEntry changelogEntry = (ChangelogEntry)obj2;
             String str = changelogEntry.getLines()[0];
             if ((double)Minecraft.getMinecraft().fontRendererObj.getStringWidth(str) > d) {
@@ -95,8 +94,7 @@ public class ChangeLogLoader {
                }
 
                list2.add(sb.toString());
-               String[] strings2 = (String[])list2.toArray(new String[0]);
-               changelogEntry.setLines(strings2);
+               changelogEntry.setLines((String[])list2.toArray(new String[0]));
             }
          }
       }

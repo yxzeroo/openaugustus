@@ -30,14 +30,10 @@ public class GuiDownloadTerrain extends GuiScreen {
       super.actionPerformed(button);
       if (button.id == 0) {
          this.mc.theWorld.sendQuittingDisconnectingPacket();
-         Object obj = null;
-         this.mc.loadWorld((WorldClient)obj);
-         Minecraft mc2 = this.mc;
-         GuiMultiplayer guiMultiplayer = new GuiMultiplayer(new GuiMainMenu());
-         mc2.displayGuiScreen(guiMultiplayer);
+         this.mc.loadWorld((WorldClient)null);
+         this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
       } else if (button.id == 1) {
-         Object obj2 = null;
-         this.mc.displayGuiScreen((GuiScreen)obj2);
+         this.mc.displayGuiScreen((GuiScreen)null);
       }
    }
 

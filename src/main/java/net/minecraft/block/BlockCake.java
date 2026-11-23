@@ -152,8 +152,7 @@ public class BlockCake extends Block {
    }
 
    static {
-      String str = "bites";
-      BITES = PropertyInteger.create(str, 0, 6);
+      BITES = PropertyInteger.create("bites", 0, 6);
    }
 
    @Override

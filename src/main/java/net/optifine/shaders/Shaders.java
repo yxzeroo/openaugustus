@@ -658,8 +658,7 @@ public class Shaders {
    }
 
    private static void resetViewport() {
-      RenderScale renderScale = activeProgram.getRenderScale();
-      if (renderScale != null) {
+      if (activeProgram.getRenderScale() != null) {
          GL11.glViewport(0, 0, renderWidth, renderHeight);
       }
    }
@@ -801,8 +800,7 @@ public class Shaders {
       ShaderOption[] shaderOptions = (ShaderOption[])shaderPackOptions.clone();
       if (shaderPackGuiScreens == null) {
          if (shaderPackProfiles != null) {
-            ShaderOptionProfile shaderOptionProfile = new ShaderOptionProfile(shaderPackProfiles, shaderOptions);
-            shaderOptions = (ShaderOption[])Config.addObjectToArray(shaderOptions, shaderOptionProfile, 0);
+            shaderOptions = (ShaderOption[])Config.addObjectToArray(shaderOptions, new ShaderOptionProfile(shaderPackProfiles, shaderOptions), 0);
          }
 
          return getVisibleOptions(shaderOptions);
@@ -820,8 +818,7 @@ public class Shaders {
                if (shaderOption == null) {
                   list.add((ShaderOption)null);
                } else if (shaderOption instanceof ShaderOptionRest) {
-                  ShaderOption[] unusedOptions = getUnusedOptions(shaderPackGuiScreens, shaderOptions);
-                  list.addAll(Arrays.asList(unusedOptions));
+                  list.addAll(Arrays.asList(getUnusedOptions(shaderPackGuiScreens, shaderOptions)));
                } else {
                   list.add(shaderOption);
                }
@@ -1114,11 +1111,7 @@ public class Shaders {
    private static void updateViewport() {
       RenderScale renderScale = activeProgram.getRenderScale();
       if (renderScale != null) {
-         int n = (int)((float)renderWidth * renderScale.getOffsetX());
-         int n2 = (int)((float)renderHeight * renderScale.getOffsetY());
-         int n3 = (int)((float)renderWidth * renderScale.getScale());
-         int n4 = (int)((float)renderHeight * renderScale.getScale());
-         GL11.glViewport(n, n2, n3, n4);
+         GL11.glViewport((int)((float)renderWidth * renderScale.getOffsetX()), (int)((float)renderHeight * renderScale.getOffsetY()), (int)((float)renderWidth * renderScale.getScale()), (int)((float)renderHeight * renderScale.getScale()));
       }
    }
 
@@ -1177,8 +1170,7 @@ public class Shaders {
       HashSet set = new HashSet();
 
       for (String str : (Iterable<String>)(map.keySet())) {
-         ScreenShaderOptions screenShaderOptions = (ScreenShaderOptions)map.get(str);
-         ShaderOption[] shaderOptions2 = screenShaderOptions.getShaderOptions();
+         ShaderOption[] shaderOptions2 = ((ScreenShaderOptions)map.get(str)).getShaderOptions();
 
          for (int i = 0; i < shaderOptions2.length; i++) {
             ShaderOption shaderOption = shaderOptions2[i];
@@ -1193,8 +1185,7 @@ public class Shaders {
       for (int j = 0; j < shaderOptions.length; j++) {
          ShaderOption shaderOption2 = shaderOptions[j];
          if (shaderOption2.isVisible()) {
-            String name = shaderOption2.getName();
-            if (!set.contains(name)) {
+            if (!set.contains(shaderOption2.getName())) {
                list.add(shaderOption2);
             }
          }
@@ -1305,8 +1296,7 @@ public class Shaders {
             str = str.substring(n + 1);
          }
 
-         Program program = getProgram(str);
-         return program != null;
+         return getProgram(str) != null;
       }
    }
 
@@ -1334,8 +1324,7 @@ public class Shaders {
                Matcher matcher = patternLoadEntityDataMap.matcher(str);
                if (matcher.matches()) {
                   String str2 = matcher.group(1);
-                  String str3 = matcher.group(2);
-                  int n = Integer.parseInt(str3);
+                  int n = Integer.parseInt(matcher.group(2));
                   Block blockFromName = Block.getBlockFromName(str2);
                   if (blockFromName != null) {
                      mapBlockToEntityData.put(blockFromName, n);
@@ -1384,8 +1373,7 @@ public class Shaders {
             return 0;
          } else {
             int idFromBlock = Block.getIdFromBlock(blockType);
-            int blockMetadata = tileEntity.getBlockMetadata();
-            int mappedBlockId = BlockAliases.getMappedBlockId(idFromBlock, blockMetadata);
+            int mappedBlockId = BlockAliases.getMappedBlockId(idFromBlock, tileEntity.getBlockMetadata());
             if (mappedBlockId >= 0) {
                idFromBlock = mappedBlockId;
             }
@@ -1771,8 +1759,7 @@ public class Shaders {
             ARBShaderObjects.glValidateProgramARB(n);
             useProgram(ProgramNone);
             printLogInfo(n, program.getName());
-            int n5 = GL20.glGetProgrami(n, 35715);
-            if (n5 != 1) {
+            if (GL20.glGetProgrami(n, 35715) != 1) {
                String str4 = "\"";
                printChatAndLogError("[Shaders] Error: Invalid program " + str4 + program.getName() + str4);
                ARBShaderObjects.glDeleteObjectARB(n);
@@ -1837,8 +1824,7 @@ public class Shaders {
       } catch (Exception e) {
       }
 
-      List list2 = list.subList(size, list.size());
-      Collections.sort(list2, String.CASE_INSENSITIVE_ORDER);
+      Collections.sort(list.subList(size, list.size()), String.CASE_INSENSITIVE_ORDER);
       return list;
    }
 
@@ -1888,15 +1874,13 @@ public class Shaders {
    private static void freeCustomTextures(ICustomTexture[] customTextures) {
       if (customTextures != null) {
          for (int i = 0; i < customTextures.length; i++) {
-            ICustomTexture customTexture = customTextures[i];
-            customTexture.deleteTexture();
+            customTextures[i].deleteTexture();
          }
       }
    }
 
    public static void popProgram() {
-      Program program = programStack.pop();
-      useProgram(program);
+      useProgram(programStack.pop());
    }
 
    public static void setSkipRenderHand(boolean flag, boolean flag2) {
@@ -2027,8 +2011,7 @@ public class Shaders {
          EnumShaderOption enumShaderOption = values[i];
          String propertyKey = enumShaderOption.getPropertyKey();
          String valueDefault = enumShaderOption.getValueDefault();
-         String property = shadersConfig.getProperty(propertyKey, valueDefault);
-         setEnumShaderOption(enumShaderOption, property);
+         setEnumShaderOption(enumShaderOption, shadersConfig.getProperty(propertyKey, valueDefault));
       }
 
       loadShaderPack();
@@ -2092,13 +2075,11 @@ public class Shaders {
          } else if (!(item instanceof ItemBlock)) {
             return false;
          } else {
-            ItemBlock itemBlock = (ItemBlock)item;
-            Block block = itemBlock.getBlock();
+            Block block = ((ItemBlock)item).getBlock();
             if (block == null) {
                return false;
             } else {
-               EnumWorldBlockLayer blockLayer = block.getBlockLayer();
-               return blockLayer == EnumWorldBlockLayer.TRANSLUCENT;
+               return block.getBlockLayer() == EnumWorldBlockLayer.TRANSLUCENT;
             }
          }
       }
@@ -2390,8 +2371,7 @@ public class Shaders {
       if (n == 1286) {
          int n2 = EXTFramebufferObject.glCheckFramebufferStatusEXT(36160);
          String framebufferStatusName = getFramebufferStatusName(n2);
-         String str2 = ", fbStatus: " + n2 + " (" + framebufferStatusName + ")";
-         sb.append(str2);
+         sb.append(", fbStatus: " + n2 + " (" + framebufferStatusName + ")");
       }
 
       String name = activeProgram.getName();
@@ -2431,11 +2411,9 @@ public class Shaders {
       if (n != 0 && GlErrors.isEnabled(n)) {
          String glErrorString = Config.getGlErrorString(n);
          String glErrorDetails = getGlErrorDetails(n, str);
-         String str2 = String.format("OpenGL error: %s (%s)%s, at: %s", n, glErrorString, glErrorDetails, str);
-         SMCLog.severe(str2);
+         SMCLog.severe(String.format("OpenGL error: %s (%s)%s, at: %s", n, glErrorString, glErrorDetails, str));
          if (Config.isShowGlErrors() && TimedEvent.isActive("ShowGlErrorShaders", 10000L)) {
-            String str3 = I18n.format("of.message.openglError", new Object[]{n, glErrorString});
-            printChat(str3);
+            printChat(I18n.format("of.message.openglError", new Object[]{n, glErrorString}));
          }
       }
 
@@ -2923,8 +2901,7 @@ public class Shaders {
       str = str.trim();
 
       for (int i = 0; i < formatNames.length; i++) {
-         String str2 = formatNames[i];
-         if (str.equals(str2)) {
+         if (str.equals(formatNames[i])) {
             return formatIds[i];
          }
       }
@@ -3056,8 +3033,7 @@ public class Shaders {
       customUniforms = null;
 
       for (int i = 0; i < ProgramsAll.length; i++) {
-         Program program = ProgramsAll[i];
-         program.resetProperties();
+         ProgramsAll[i].resetProperties();
       }
 
       if (shaderPack != null) {
@@ -3146,8 +3122,7 @@ public class Shaders {
             ((Buffer)drawBuffersBuffer).limit(length);
 
             for (int i = 0; i < length; i++) {
-               int drawBuffer = getDrawBuffer(program, drawBufSettings, i);
-               drawBuffersBuffer.put(i, drawBuffer);
+               drawBuffersBuffer.put(i, getDrawBuffer(program, drawBufSettings, i));
             }
          }
       }
@@ -3554,8 +3529,7 @@ public class Shaders {
          float f4 = (float)Math.exp(Math.log(0.5) * (double)f3 / (double)eyeBrightnessHalflife);
          eyeBrightnessFadeX = eyeBrightnessFadeX * f4 + (float)(eyeBrightness & 65535) * (1.0F - f4);
          eyeBrightnessFadeY = eyeBrightnessFadeY * f4 + (float)(eyeBrightness >> 16) * (1.0F - f4);
-         Block blockAtEntityViewpoint = ActiveRenderInfo.getBlockAtEntityViewpoint(mc.theWorld, renderViewEntity, f);
-         Material material = blockAtEntityViewpoint.getMaterial();
+         Material material = ActiveRenderInfo.getBlockAtEntityViewpoint(mc.theWorld, renderViewEntity, f).getMaterial();
          if (material == Material.water) {
             isEyeInWater = 1;
          } else if (material == Material.lava) {
@@ -3572,8 +3546,7 @@ public class Shaders {
 
             blindness = 0.0F;
             if (mc.thePlayer.isPotionActive(Potion.blindness) && !((Module)ClientManagers.moduleManager.antiBlind).isToggled()) {
-               int duration = mc.thePlayer.getActivePotionEffect(Potion.blindness).getDuration();
-               blindness = Config.limit3((float)duration / 20.0F, 0.0F, 1.0F);
+               blindness = Config.limit3((float)mc.thePlayer.getActivePotionEffect(Potion.blindness).getDuration() / 20.0F, 0.0F, 1.0F);
             }
          }
 
@@ -4635,12 +4608,8 @@ public class Shaders {
                }
 
                String str3 = "/shaders/" + str2;
-               String str4 = str3 + ".vsh";
-               String str5 = str3 + ".gsh";
-               String str6 = str3 + ".fsh";
-               setupProgram(program, str4, str5, str6);
-               int id = program.getId();
-               if (id > 0) {
+               setupProgram(program, str3 + ".vsh", str3 + ".gsh", str3 + ".fsh");
+               if (program.getId() > 0) {
                   SMCLog.info("Program loaded: " + str2);
                }
 

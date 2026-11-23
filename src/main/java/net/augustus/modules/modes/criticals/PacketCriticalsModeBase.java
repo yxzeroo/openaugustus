@@ -5,19 +5,17 @@ import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.combat.Criticals;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public abstract class PacketCriticalsModeBase extends CriticalsMode implements AttackEntityListener {
    private final BooleanValue onlyOnHit;
    private boolean pendingAttack;
 
-   public PacketCriticalsModeBase(Criticals criticals, DoubleValue doubleValue, String str) {
+   public PacketCriticalsModeBase(Criticals criticals, SettingGroup doubleValue, String str) {
        super(criticals, doubleValue, str);
       BooleanValue booleanValue = new BooleanValue(this.parentModule, this.getName() + "OnlyOnHit", false, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      booleanValue = (BooleanValue)booleanValue.withVisibility(condition);
-      String str2 = "OnlyOnHit";
-      this.onlyOnHit = (BooleanValue)booleanValue.withDisplayName(str2);
+      booleanValue = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
+      this.onlyOnHit = (BooleanValue)booleanValue.withDisplayName("OnlyOnHit");
       this.pendingAttack = false;
    }
 
@@ -28,8 +26,7 @@ public abstract class PacketCriticalsModeBase extends CriticalsMode implements A
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 1;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override

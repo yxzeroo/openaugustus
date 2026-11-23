@@ -37,14 +37,10 @@ public class EntityTargetFilter {
       for (EntityTargetFilterOption entityTargetFilterOption : entityTargetFilterOptions) {
          if (entityTargetFilterOption.operator == TargetConditionOperator.OR) {
             entityTargetFilterOption.getClass();
-            EntityTargetFilterOption entityTargetFilterOption2 = entityTargetFilterOption;
-            Predicate predicate2 = obj -> entityTargetFilterOption2.matches((Entity)obj);
-            this.predicate = this.combineOr(predicate2);
+            this.predicate = this.combineOr(obj -> entityTargetFilterOption.matches((Entity)obj));
          } else {
             entityTargetFilterOption.getClass();
-            EntityTargetFilterOption entityTargetFilterOption3 = entityTargetFilterOption;
-            Predicate predicate3 = obj2 -> entityTargetFilterOption3.matches((Entity)obj2);
-            this.predicate = this.combineAnd(predicate3);
+            this.predicate = this.combineAnd(obj2 -> entityTargetFilterOption.matches((Entity)obj2));
          }
       }
    }

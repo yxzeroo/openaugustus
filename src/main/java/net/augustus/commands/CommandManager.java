@@ -48,7 +48,6 @@ public class CommandManager implements ChatListener {
    public CommandManager() {
        super();
       this.commands = new ArrayList();
-      Command.getControlFlowState();
       EventManager.getEventBus().subscribe(5, this);
       this.commands.add(new BindCommand());
       this.commands.add(new BindsCommand());
@@ -88,15 +87,13 @@ public class CommandManager implements ChatListener {
 
    public void onChat(EventChat event) {
       String message = event.getMessage();
-      Command.getControlFlowState();
 
       for (Command command : (Iterable<Command>)(this.getCommands())) {
          String[] strings = message.split(" ");
          if (strings.length > 0 && strings[0].equalsIgnoreCase(command.getCommand())) {
             command.commandAction(strings, message);
             event.cancel();
-            ConfigManager configManager = Augustus.getInstance().getConfigManager();
-            configManager.snapshotAll();
+            Augustus.getInstance().getConfigManager().snapshotAll();
          }
       }
 

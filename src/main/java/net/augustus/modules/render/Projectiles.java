@@ -15,7 +15,7 @@ import net.augustus.utils.simulation.ProjectileSimulator;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.options.ProjectilesItemOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -36,7 +36,7 @@ import org.lwjgl.opengl.GL11;
 public class Projectiles extends Module implements RenderListener, TickListener {
    public final ColorSetting lineColor;
    public final BooleanValue calculateColor;
-   public final StringValue lineWidth;
+   public final DoubleValue lineWidth;
    public final BlurShadowSettings blurShadowSettings;
    private final MultiOptionSetting items;
    private final java.util.ArrayList simulatedTrajectories;
@@ -45,10 +45,8 @@ public class Projectiles extends Module implements RenderListener, TickListener 
        super("Projectiles", "Projektile", new Color(80, 107, 91), Categorys.RENDER);
       this.lineColor = new ColorSetting(this, "Color", new Color(21, 121, 230, 180));
       this.calculateColor = new BooleanValue(this, "CalculateColor", true);
-      this.lineWidth = new StringValue(this, "LineWidth", 4.0, 1.0, 12.0, 0);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black).disableBothByDefault();
+      this.lineWidth = new DoubleValue(this, "LineWidth", 4.0, 1.0, 12.0, 0);
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black).disableBothByDefault();
       this.items = new MultiOptionSetting(this, "Items", ProjectilesItemOption.values());
       this.simulatedTrajectories = new java.util.ArrayList();
    }
@@ -64,10 +62,8 @@ public class Projectiles extends Module implements RenderListener, TickListener 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -93,17 +89,11 @@ public class Projectiles extends Module implements RenderListener, TickListener 
             )) {
             ProjectileSimulator projectileSimulator = new ProjectileSimulator();
             if (entity instanceof EntityThrowable) {
-               EntityThrowable entityThrowable = (EntityThrowable)entity;
-               projectileSimulator.initFromThrowable(entityThrowable);
-               short s = 300;
-               java.util.ArrayList list2 = projectileSimulator.simulateThrowableTrajectory(s);
-               list.add(list2);
+               projectileSimulator.initFromThrowable((EntityThrowable)entity);
+               list.add(projectileSimulator.simulateThrowableTrajectory((short)300));
             } else if (entity instanceof EntityArrow) {
-               EntityArrow entityArrow = (EntityArrow)entity;
-               projectileSimulator.initFromArrow(entityArrow);
-               short s2 = 300;
-               java.util.ArrayList list3 = projectileSimulator.simulateArrowTrajectory(s2);
-               list.add(list3);
+               projectileSimulator.initFromArrow((EntityArrow)entity);
+               list.add(projectileSimulator.simulateArrowTrajectory((short)300));
             } else {
                boolean flag = true;
                int n = 0;
@@ -126,8 +116,7 @@ public class Projectiles extends Module implements RenderListener, TickListener 
                   }
 
                   n++;
-                  MovingObjectPosition hit = mc.theWorld.rayTraceBlocks(posX, posY, posZ, posX + motionX, posY + motionY, posZ + motionZ);
-                  if (hit != null) {
+                  if (mc.theWorld.rayTraceBlocks(posX, posY, posZ, posX + motionX, posY + motionY, posZ + motionZ) != null) {
                      flag = false;
                   }
 
@@ -165,8 +154,7 @@ public class Projectiles extends Module implements RenderListener, TickListener 
       for (int i = 0; i < this.simulatedTrajectories.size(); i++) {
          java.util.ArrayList list = (java.util.ArrayList)this.simulatedTrajectories.get(i);
          if (list.size() > 1) {
-            byte b = 0;
-            int colorInt = this.lineColor.getColorInt(b);
+            int colorInt = this.lineColor.getColorInt((byte)0);
             if (this.calculateColor.getValue()) {
                Vec3 vec = (Vec3)list.get(1);
                double d = Math.min(Math.max(mc.thePlayer.getDistance(vec.xCoord, vec.yCoord, vec.zCoord), 6.0), 36.0) - 6.0;
@@ -175,8 +163,7 @@ public class Projectiles extends Module implements RenderListener, TickListener 
             }
 
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+            BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
             int n = colorInt;
             BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderTrajectoryPass(n, list, shaderRenderPass));
          }
@@ -184,9 +171,7 @@ public class Projectiles extends Module implements RenderListener, TickListener 
    }
 
    private void renderTrajectoryPass(int n, java.util.ArrayList list, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      RenderUtil.setGlColor(blurShadowSettings2.resolvePassColor(shaderRenderPass, n2));
+      RenderUtil.setGlColor(this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n)));
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
       worldRenderer.begin(3, DefaultVertexFormats.POSITION);

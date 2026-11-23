@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ViaAugustusPlatform extends UserConnectionViaVersionPlatform {
-   private static int[] platformStateFlags;
 
    public ViaAugustusPlatform() {
       super(new File("ViaVersion"));
@@ -29,16 +28,6 @@ public final class ViaAugustusPlatform extends UserConnectionViaVersionPlatform 
       return "Augustus";
    }
 
-   public static void setPlatformStateFlags(int[] ints) {
-      platformStateFlags = ints;
-   }
 
-   public static int[] getPlatformStateFlags() {
-      return platformStateFlags;
-   }
 
-   static {
-      int[] ints = new int[3];
-      setPlatformStateFlags(ints);
-   }
 }

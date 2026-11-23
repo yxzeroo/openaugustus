@@ -23,8 +23,7 @@ public class CapeUtils {
       TextureManager textureManager = Config.getTextureManager();
       ITextureObject texture = textureManager.getTexture(location);
       if (texture instanceof SimpleTexture) {
-         SimpleTexture simpleTexture = (SimpleTexture)texture;
-         simpleTexture.deleteGlTexture();
+         ((SimpleTexture)texture).deleteGlTexture();
          textureManager.deleteTexture(location);
       }
 
@@ -46,8 +45,7 @@ public class CapeUtils {
                if (threadDownloadImageData.imageFound) {
                   clientPlayer.setLocationOfCape(location);
                   if (threadDownloadImageData.getImageBuffer() instanceof CapeImageBuffer) {
-                     CapeImageBuffer imageBuffer = (CapeImageBuffer)threadDownloadImageData.getImageBuffer();
-                     clientPlayer.setElytraOfCape(imageBuffer.isElytraOfCape());
+                     clientPlayer.setElytraOfCape(((CapeImageBuffer)threadDownloadImageData.getImageBuffer()).isElytraOfCape());
                   }
                }
 

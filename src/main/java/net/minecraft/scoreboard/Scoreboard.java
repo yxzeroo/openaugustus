@@ -129,8 +129,7 @@ public class Scoreboard {
       if (map == null) {
          return false;
       } else {
-         Score score = (Score)map.get(scoreObjective);
-         return score != null;
+         return ((Score)map.get(scoreObjective)) != null;
       }
    }
 
@@ -179,8 +178,7 @@ public class Scoreboard {
 
    public void removeObjectiveFromEntity(String str, ScoreObjective scoreObjective) {
       if (scoreObjective == null) {
-         Map map = (Map)this.entitiesScoreObjectives.remove(str);
-         if (map != null) {
+         if (((Map)this.entitiesScoreObjectives.remove(str)) != null) {
             this.broadcastScoreUpdate(str);
          }
       } else {
@@ -188,8 +186,7 @@ public class Scoreboard {
          if (map2 != null) {
             Score score = (Score)map2.remove(scoreObjective);
             if (map2.size() < 1) {
-               Map map3 = (Map)this.entitiesScoreObjectives.remove(str);
-               if (map3 != null) {
+               if (((Map)this.entitiesScoreObjectives.remove(str)) != null) {
                   this.broadcastScoreUpdate(str);
                }
             } else if (score != null) {
@@ -291,8 +288,7 @@ public class Scoreboard {
          return 2;
       } else {
          if (str.startsWith("sidebar.team.")) {
-            String str2 = str.substring("sidebar.team.".length());
-            EnumChatFormatting valueByName = EnumChatFormatting.getValueByName(str2);
+            EnumChatFormatting valueByName = EnumChatFormatting.getValueByName(str.substring("sidebar.team.".length()));
             if (valueByName != null && valueByName.getColorIndex() >= 0) {
                return valueByName.getColorIndex() + 3;
             }

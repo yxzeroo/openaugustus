@@ -13,13 +13,13 @@ import net.augustus.modules.modes.motion.MotionModifierEngine;
 import net.augustus.modules.movement.helper.MotionModifierProvider;
 import net.augustus.modules.misc.Dummy;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class MotionModifierNoWebMode extends AbstractNoWebMode implements MotionModifierProvider, UpdateListener, MoveEntityListener, MoveInputListener, PacketListener, PacketDelayListener {
    private final Dummy dummy;
    private final MotionModifierEngine motionModifierEngine;
 
-   public MotionModifierNoWebMode(NoWeb noWeb, DoubleValue doubleValue, String str) {
+   public MotionModifierNoWebMode(NoWeb noWeb, SettingGroup doubleValue, String str) {
        super(noWeb, doubleValue, str);
       this.dummy = new Dummy();
       this.motionModifierEngine = new MotionModifierEngine(this.dummy);
@@ -28,14 +28,10 @@ public class MotionModifierNoWebMode extends AbstractNoWebMode implements Motion
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 25;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override

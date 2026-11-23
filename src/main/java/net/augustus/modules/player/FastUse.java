@@ -18,8 +18,8 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemFood;
@@ -29,14 +29,14 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
 
 public class FastUse extends Module implements UpdateListener, TimerListener, PacketListener, TickListener {
-   public final BooleansSetting mode;
-   public final BooleansSetting packetMode;
+   public final StringValue mode;
+   public final StringValue packetMode;
    public final BooleanValue onlyWhileMoving;
-   private final StringValue packetLoops;
-   public final StringValue packets;
-   public final StringValue grimPackets;
-   public final StringValue newPackets;
-   public final StringValue timePackets;
+   private final DoubleValue packetLoops;
+   public final DoubleValue packets;
+   public final DoubleValue grimPackets;
+   public final DoubleValue newPackets;
+   public final DoubleValue timePackets;
    public final BooleanValue onlyAtFullLife;
    private final BooleanValue onlyOnGround;
    private final MultiOptionSetting items;
@@ -44,36 +44,22 @@ public class FastUse extends Module implements UpdateListener, TimerListener, Pa
 
    public FastUse() {
        super("FastUse", "SchnellBenutzen", new Color(173, 121, 81), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "Packet", new String[]{"Packet", "TimeManipulation", "NewPacket", "Grim-1.17"});
-      BooleansSetting booleansSetting = new BooleansSetting(this, "PacketMode", "Default", new String[]{"Default", "Legit"});
-      SettingVisibilityCondition condition = () -> this.isPacketModeVisible();
-      this.packetMode = (BooleansSetting)booleansSetting.withVisibility(condition);
+      this.mode = new StringValue(this, "Mode", "Packet", new String[]{"Packet", "TimeManipulation", "NewPacket", "Grim-1.17"});
+      this.packetMode = (StringValue)new StringValue(this, "PacketMode", "Default", new String[]{"Default", "Legit"}).withVisibility(() -> this.isPacketModeVisible());
       this.onlyWhileMoving = new BooleanValue(this, "OnlyWhileMoving", false);
-      StringValue stringValue = new StringValue(this, "PacketLoops", 1.0, 1.0, 10.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "PacketLoops", 1.0, 1.0, 10.0, 0);
       SettingVisibilityCondition condition2 = () -> {
          return this.mode.getSelectedValue().equals("Packet");
       };
       this.packetLoops = stringValue.visibleWhen(condition2);
-      StringValue stringValue2 = new StringValue(this, "Packets", 20.0, 2.0, 31.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isPacketsVisible();
-      this.packets = stringValue2.visibleWhen(condition3);
-      StringValue stringValue3 = new StringValue(this, "GrimPackets", 20.0, 2.0, 31.0, 0);
-      String str = "Packets";
-      StringValue stringValue4 = stringValue3.named(str);
+      this.packets = new DoubleValue(this, "Packets", 20.0, 2.0, 31.0, 0).visibleWhen(() -> this.isPacketsVisible());
+      DoubleValue stringValue4 = new DoubleValue(this, "GrimPackets", 20.0, 2.0, 31.0, 0).named("Packets");
       SettingVisibilityCondition condition4 = () -> {
          return this.mode.getSelectedValue().equals("Grim-1.17");
       };
       this.grimPackets = stringValue4.visibleWhen(condition4);
-      StringValue stringValue5 = new StringValue(this, "NewPackets", 20.0, 2.0, 31.0, 0);
-      String str2 = "Packets";
-      StringValue stringValue6 = stringValue5.named(str2);
-      SettingVisibilityCondition condition5 = () -> this.isNewPacketsVisible();
-      this.newPackets = stringValue6.visibleWhen(condition5);
-      StringValue stringValue7 = new StringValue(this, "TimePackets", 20.0, 2.0, 31.0, 0);
-      String str3 = "Packets";
-      StringValue stringValue8 = stringValue7.named(str3);
-      SettingVisibilityCondition condition6 = () -> this.isTimePacketsVisible();
-      this.timePackets = stringValue8.visibleWhen(condition6);
+      this.newPackets = new DoubleValue(this, "NewPackets", 20.0, 2.0, 31.0, 0).named("Packets").visibleWhen(() -> this.isNewPacketsVisible());
+      this.timePackets = new DoubleValue(this, "TimePackets", 20.0, 2.0, 31.0, 0).named("Packets").visibleWhen(() -> this.isTimePacketsVisible());
       this.onlyAtFullLife = new BooleanValue(this, "OnlyAtFullLife", false);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false);
       this.items = new MultiOptionSetting(this, "Items", FastUseItemOption.values());
@@ -90,35 +76,22 @@ public class FastUse extends Module implements UpdateListener, TimerListener, Pa
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 41;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      short s = 10001;
-      byte b4 = 40;
-      this.toggleEventSubscription(b4, s);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)41);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40, (short)10001);
    }
 
    @Override
    public void onTick() {
       if (this.mode.getSelectedValue().equals("Grim-1.17")) {
          if (this.canFastUse()) {
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            Rotation currentRotation = ClientManagers.rotationController.getCurrentRotation();
-            if (previousRotation.equalsRotation(currentRotation)) {
+            if (ClientManagers.rotationController.getPreviousRotation().equalsRotation(ClientManagers.rotationController.getCurrentRotation())) {
                RotationController rotationController = ClientManagers.rotationController;
                float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
                float f = ClientManagers.rotationController.getPreviousRotation().pitch > 0.0F ? ClientManagers.rotationController.getPreviousRotation().pitch + 0.2F : ClientManagers.rotationController.getPreviousRotation().pitch - 0.2F;
                float f2;
-               float f3 = f2 = ClientManagers.rotationController.getPreviousRotation().pitch;
-               float f4 = f;
-               float f5 = yaw;
-               Rotation rotation = RotationUtil.applyGcdFix(f5, f4, f3, f2);
-               byte b = 1;
-               Rotation rotation2 = rotation;
-               rotationController.requestRotation(rotation2, b, this);
+               rotationController.requestRotation(RotationUtil.applyGcdFix(yaw, f, f2 = ClientManagers.rotationController.getPreviousRotation().pitch, f2), (byte)1, this);
             }
 
             return;
@@ -155,8 +128,7 @@ public class FastUse extends Module implements UpdateListener, TimerListener, Pa
          this.sentPacketCount = 0;
       } else {
          System.out.println(mc.thePlayer.getItemInUseCount());
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "Packet":
                int n = MathHelper.clamp_int((int)this.packets.getValue(), 2, 31);
                boolean flag = false;
@@ -213,8 +185,7 @@ public class FastUse extends Module implements UpdateListener, TimerListener, Pa
    }
 
    private int sendUseTickPacket() {
-      String selectedValue = this.packetMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.packetMode.getSelectedValue()) {
          case "Default":
             mc.thePlayer.sendQueue.addToSendQueueUnchecked(new C03PacketPlayer(true));
             break;

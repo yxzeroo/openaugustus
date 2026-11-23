@@ -4,31 +4,22 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.movement.Jesus;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 
 public class SpeedJesusMode extends AbstractJesusMode implements TickListener {
-   private final StringValue speedSpeed;
+   private final DoubleValue speedSpeed;
    private final BooleanValue speedModifyMotionY;
 
-   public SpeedJesusMode(Jesus jesus, DoubleValue doubleValue) {
+   public SpeedJesusMode(Jesus jesus, SettingGroup doubleValue) {
        super(jesus, doubleValue, "Speed");
-      StringValue stringValue = new StringValue(this.parentModule, "SpeedSpeed", 1.0, 0.0, 20.0, 2, this.modeSetting);
-      String str = "Speed";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.speedSpeed = stringValue2.visibleWhen(condition);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "SpeedModifyMotionY", true, this.modeSetting);
-      String str2 = "ModifyMotionY";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.speedModifyMotionY = (BooleanValue)booleanValue2.withVisibility(condition2);
+      this.speedSpeed = new DoubleValue(this.parentModule, "SpeedSpeed", 1.0, 0.0, 20.0, 2, this.modeSetting).named("Speed").visibleWhen(() -> this.isSelected());
+      this.speedModifyMotionY = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "SpeedModifyMotionY", true, this.modeSetting).withDisplayName("ModifyMotionY")).withVisibility(() -> this.isSelected());
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -41,7 +32,6 @@ public class SpeedJesusMode extends AbstractJesusMode implements TickListener {
 
    @Override
    public void onTick2() {
-      int[] controlFlowState22 = AbstractJesusMode.getControlFlowState2();
       if (this.shouldApplyJesus()) {
          if (mc.thePlayer.isInWater()) {
             if (!mc.gameSettings.keyBindJump.isKeyDown() && !mc.gameSettings.keyBindSneak.isKeyDown() && this.speedModifyMotionY.getValue()) {

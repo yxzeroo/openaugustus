@@ -39,9 +39,9 @@ import net.augustus.settings.options.VelocityCancelPacketOption;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.Packet;
@@ -56,11 +56,11 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
    public final BooleanValue notWhileLongJump;
    public final BooleanValue ignoreFire;
    public final BooleanValue cancelDamageSoundsFromOtherPlayers;
-   private final DoubleValue lag;
-   private final StringValue lagDuration;
-   private final StringValue lagDurationExplosion;
+   private final SettingGroup lag;
+   private final DoubleValue lagDuration;
+   private final DoubleValue lagDurationExplosion;
    private final MultiOptionSetting lagTimings;
-   private final DoubleValue packetCancelingGroup;
+   private final SettingGroup packetCancelingGroup;
    private final MultiOptionSetting packetToCancel;
    private final TimeHelper velocityLagTimer;
    private final TimeHelper explosionLagTimer;
@@ -96,37 +96,23 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
       this.notWhileLongJump = (BooleanValue)(new BooleanValue(this, "NotWhileLongJump", false)).markVisualOnly();
       this.ignoreFire = new BooleanValue(this, "IgnoreFire", true);
       this.cancelDamageSoundsFromOtherPlayers = (BooleanValue)(new BooleanValue(this, "CancelDamageSoundsFromOtherPlayers", false)).markVisualOnly();
-      this.lag = new DoubleValue(this, "Lag");
-      this.lagDuration = new StringValue(this, "LagDuration", 0.0, 0.0, 400.0, 0, this.lag);
-      this.lagDurationExplosion = new StringValue(this, "LagDurationExplosion", 0.0, 0.0, 400.0, 0, this.lag);
+      this.lag = new SettingGroup(this, "Lag");
+      this.lagDuration = new DoubleValue(this, "LagDuration", 0.0, 0.0, 400.0, 0, this.lag);
+      this.lagDurationExplosion = new DoubleValue(this, "LagDurationExplosion", 0.0, 0.0, 400.0, 0, this.lag);
       this.lagTimings = new MultiOptionSetting(this, "LagTimings", VelocityLagTimingOption.values(), this.lag);
-      DoubleValue doubleValue = new DoubleValue(this, "PacketCancelingGroup", true);
-      String str = "PacketCanceling";
-      this.packetCancelingGroup = (DoubleValue)doubleValue.withDisplayName(str);
-      MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "PacketToCancel", VelocityCancelPacketOption.values(), this.packetCancelingGroup);
-      String str2 = "PacketsToCancel";
-      this.packetToCancel = multiOptionSetting.named(str2);
+      this.packetCancelingGroup = (SettingGroup)new SettingGroup(this, "PacketCancelingGroup", true).withDisplayName("PacketCanceling");
+      this.packetToCancel = new MultiOptionSetting(this, "PacketToCancel", VelocityCancelPacketOption.values(), this.packetCancelingGroup).named("PacketsToCancel");
       this.velocityLagTimer = new TimeHelper();
       this.explosionLagTimer = new TimeHelper();
       this.attackSlowdownCount = 0;
       this.movingBackward = false;
 
       for (VelocityCancelPacketOption option : VelocityCancelPacketOption.values()) {
-         DoubleValue doubleValue2 = new DoubleValue(this, option.getName(), this.packetCancelingGroup);
-         SettingVisibilityCondition condition = option::isSelected;
-         DoubleValue doubleValue3 = doubleValue2.visibleWhen(condition);
-         BooleansSetting booleansSetting = new BooleansSetting(
+         SettingGroup doubleValue3 = new SettingGroup(this, option.getName(), this.packetCancelingGroup).visibleWhen(option::isSelected);
+         VelocityCancelPacketOption.setCancelTypeSetting(option, (StringValue)new StringValue(
             this, option.getName() + "CancelType", "None", new String[]{"None", "OnlyOnGround", "OnlyInAir", "Always"}, doubleValue3
-         );
-         String str3 = "CancelType";
-         BooleansSetting booleansSetting2 = (BooleansSetting)booleansSetting.withDisplayName(str3);
-         VelocityCancelPacketOption.setCancelTypeSetting(option, booleansSetting2);
-         StringValue stringValue = new StringValue(this, option.getName() + "PacketCount", 6.0, 1.0, 10.0, 0, doubleValue3);
-         String str4 = "PacketCount";
-         StringValue stringValue2 = stringValue.named(str4);
-         SettingVisibilityCondition condition2 = () -> isPacketCountVisible(option);
-         StringValue stringValue3 = stringValue2.visibleWhen(condition2);
-         VelocityCancelPacketOption.setPacketCountSetting(option, stringValue3);
+         ).withDisplayName("CancelType"));
+         VelocityCancelPacketOption.setPacketCountSetting(option, new DoubleValue(this, option.getName() + "PacketCount", 6.0, 1.0, 10.0, 0, doubleValue3).named("PacketCount").visibleWhen(() -> isPacketCountVisible(option)));
       }
    }
 
@@ -140,14 +126,10 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 25;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)25);
    }
 
    private boolean canProcessVelocity(EntityPlayerSP player) {
@@ -178,21 +160,16 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
 
          if (thePlayer.onGround && VelocityLagTimingOption.isOptionSelected(VelocityLagTimingOption.ON_GROUND) || !thePlayer.onGround && VelocityLagTimingOption.isOptionSelected(VelocityLagTimingOption.IN_AIR)) {
             TimeHelper velocityLagTimer2 = this.velocityLagTimer;
-            double value = this.lagDuration.getValue();
-            boolean flag = !velocityLagTimer2.reached(value) && thePlayer.ticksExisted > 20;
-            event.setDelayed(flag);
+            event.setDelayed(!velocityLagTimer2.reached(this.lagDuration.getValue()) && thePlayer.ticksExisted > 20);
             velocityLagTimer2 = this.explosionLagTimer;
-            double value2 = this.lagDurationExplosion.getValue();
-            boolean flag2 = !velocityLagTimer2.reached(value2) && thePlayer.ticksExisted > 20;
-            event.setDelayed(flag2);
+            event.setDelayed(!velocityLagTimer2.reached(this.lagDurationExplosion.getValue()) && thePlayer.ticksExisted > 20);
          }
       }
    }
 
    @Override
    public void onPacket(EventPacket event) {
-      EntityPlayerSP thePlayer = mc.thePlayer;
-      if (this.canProcessVelocity(thePlayer)) {
+      if (this.canProcessVelocity(mc.thePlayer)) {
          Packet packet = event.getPacket();
          if (mc.thePlayer != null && mc.thePlayer.ticksExisted > 20) {
             this.handlePacketCanceling(event);
@@ -219,8 +196,7 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
          if (packet2.getEntityID() == mc.thePlayer.getEntityId() && packet2.getMotionX() != 0 && packet2.getMotionZ() != 0) {
             for (VelocityCancelPacketOption option : VelocityCancelPacketOption.values()) {
                if (this.shouldCancelPacketOption(option)) {
-                  int value = (int)VelocityCancelPacketOption.getPacketCountSetting(option).getValue();
-                  VelocityCancelPacketOption.setRemainingCancelCount(option, value);
+                  VelocityCancelPacketOption.setRemainingCancelCount(option, (int)VelocityCancelPacketOption.getPacketCountSetting(option).getValue());
                }
             }
 
@@ -228,8 +204,7 @@ public class Velocity extends Module implements MoveInputListener, PacketListene
          }
       } else if (packet instanceof S08PacketPlayerPosLook) {
          for (VelocityCancelPacketOption option2 : VelocityCancelPacketOption.values()) {
-            byte b = 0;
-            VelocityCancelPacketOption.setRemainingCancelCount(option2, b);
+            VelocityCancelPacketOption.setRemainingCancelCount(option2, (byte)0);
          }
 
          return;

@@ -195,16 +195,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
       try {
          in = RegionFileCache.getChunkInputStream(this.chunkSaveLocation2, chunk.xPosition, chunk.zPosition);
          if (in != null) {
-            NBTTagCompound tag = CompressedStreamTools.read(in);
-            NBTTagCompound compoundTag = tag.getCompoundTag("Level");
-            NBTTagList tagList = compoundTag.getTagList("TileEntities", 10);
+            NBTTagList tagList = CompressedStreamTools.read(in).getCompoundTag("Level").getTagList("TileEntities", 10);
             if (tagList != null) {
                for (int i = 0; i < tagList.tagCount(); i++) {
                   NBTTagCompound compoundTagAt = tagList.getCompoundTagAt(i);
                   String string = compoundTagAt.getString("id");
                   BlockPos pos = new BlockPos(compoundTagAt.getInteger("x"), compoundTagAt.getInteger("y"), compoundTagAt.getInteger("z"));
-                  Block block = chunk.getBlock(pos);
-                  if (this.shouldImportTileEntity(string, pos, block, compoundTagAt, chunk)) {
+                  if (this.shouldImportTileEntity(string, pos, chunk.getBlock(pos), compoundTagAt, chunk)) {
                      map.put(pos, compoundTagAt);
                   } else {
                      WDLMessages.chatMessageTranslated(

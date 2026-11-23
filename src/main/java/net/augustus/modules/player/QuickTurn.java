@@ -32,10 +32,8 @@ public class QuickTurn extends Module implements MouseMoveListener, TickListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 19;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -46,11 +44,8 @@ public class QuickTurn extends Module implements MouseMoveListener, TickListener
          ClientManagers.rotationController.getPreviousRotation()
       );
       int[] ints = RotationUtil.computeMouseDeltas(rotation.yaw, rotation.pitch, ClientManagers.rotationController.getPreviousRotation().yaw, ClientManagers.rotationController.getPreviousRotation().pitch);
-      int n = ints[0];
-      event.setDeltaX(n);
-      int n2 = ints[1];
-      event.setDeltaY(n2);
-      boolean flag = false;
-      this.setToggled(flag);
+      event.setDeltaX(ints[0]);
+      event.setDeltaY(ints[1]);
+      this.setToggled(false);
    }
 }

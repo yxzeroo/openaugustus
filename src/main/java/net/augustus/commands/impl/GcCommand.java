@@ -12,8 +12,7 @@ public class GcCommand extends Command {
 
    @Override
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (clears your memory)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (clears your memory)");
    }
 
    @Override

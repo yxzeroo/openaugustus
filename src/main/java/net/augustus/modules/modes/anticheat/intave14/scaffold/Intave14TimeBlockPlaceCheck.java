@@ -65,8 +65,7 @@ public class Intave14TimeBlockPlaceCheck extends ModuleMode {
    }
 
    private boolean isBlockDirectlyBelowPlayer(BlockPos pos) {
-      Vec3 vec = new Vec3((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()).addVector(0.0, 1.0, 0.0);
-      return vec.distanceTo(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ) < 1.3;
+      return new Vec3((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()).addVector(0.0, 1.0, 0.0).distanceTo(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ) < 1.3;
    }
 
    public Intave14TimeBlockPlaceCheck(String str, AntiCheatPlayerData antiCheatPlayerData2, boolean flag) {

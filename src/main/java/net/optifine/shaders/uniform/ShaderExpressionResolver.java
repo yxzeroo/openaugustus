@@ -49,8 +49,7 @@ public class ShaderExpressionResolver implements IExpressionResolver {
       this.registerExpressions();
 
       for (String str : (Iterable<String>)(map.keySet())) {
-         IExpression expression = (IExpression)map.get(str);
-         this.registerExpression(str, expression);
+         this.registerExpression(str, (IExpression)map.get(str));
       }
    }
 
@@ -78,8 +77,7 @@ public class ShaderExpressionResolver implements IExpressionResolver {
          String str = biomeGenBase.biomeName.trim();
          str = "BIOME_" + str.toUpperCase().replace(' ', '_');
          int biomeID = biomeGenBase.biomeID;
-         ConstantFloat constantFloat = new ConstantFloat((float)biomeID);
-         this.registerExpression(str, constantFloat);
+         this.registerExpression(str, new ConstantFloat((float)biomeID));
       }
    }
 }

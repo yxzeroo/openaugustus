@@ -64,8 +64,7 @@ public class SubbandLayer1 extends Subband {
    @Override
    public boolean put_next_sample(int n, SynthesisFilter synthesisFilter, SynthesisFilter synthesisFilter2) {
       if (this.allocation != 0 && n != 2) {
-         float f = (this.sample * this.factor + this.offset) * this.scalefactor;
-         synthesisFilter.input_sample(f, this.subbandnumber);
+         synthesisFilter.input_sample((this.sample * this.factor + this.offset) * this.scalefactor, this.subbandnumber);
       }
 
       return true;

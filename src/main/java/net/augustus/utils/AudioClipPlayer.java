@@ -17,8 +17,7 @@ public class AudioClipPlayer {
 
    public void setVolume(float f, long l) {
       f = MathHelper.clamp_float(f, -79.0F, 20.0F);
-      FloatControl control = (FloatControl)this.clip.getControl(Type.MASTER_GAIN);
-      control.setValue(f);
+      ((FloatControl)this.clip.getControl(Type.MASTER_GAIN)).setValue(f);
       this.volume = f;
    }
 
@@ -42,8 +41,7 @@ public class AudioClipPlayer {
          this.clip = AudioSystem.getClip();
          this.clip.open(AudioSystem.getAudioInputStream(url));
          this.clip.start();
-         FloatControl control = (FloatControl)this.clip.getControl(Type.MASTER_GAIN);
-         control.setValue(f);
+         ((FloatControl)this.clip.getControl(Type.MASTER_GAIN)).setValue(f);
          this.volume = f;
       } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
          e.printStackTrace();
@@ -72,8 +70,7 @@ public class AudioClipPlayer {
          this.clip = AudioSystem.getClip();
          this.clip.open(AudioSystem.getAudioInputStream(file));
          this.clip.start();
-         FloatControl control = (FloatControl)this.clip.getControl(Type.MASTER_GAIN);
-         control.setValue(f);
+         ((FloatControl)this.clip.getControl(Type.MASTER_GAIN)).setValue(f);
          this.volume = f;
       } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
          e.printStackTrace();

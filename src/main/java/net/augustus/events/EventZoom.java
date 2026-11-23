@@ -17,9 +17,7 @@ public class EventZoom extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      ZoomListener listener = (ZoomListener)obj;
-      ZoomListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((ZoomListener)obj);
    }
 
    private void setFovMultiplier2(float f) {

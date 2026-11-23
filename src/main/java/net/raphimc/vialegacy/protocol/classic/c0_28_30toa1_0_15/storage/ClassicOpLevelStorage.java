@@ -45,17 +45,13 @@ public class ClassicOpLevelStorage extends StoredObject {
          this.respawn = respawn;
          if (changed) {
             String statusMessage = "§6Hack control: ";
-            String str = this.flying ? "§aFlying" : "§cFlying";
-            statusMessage = statusMessage + str;
+            statusMessage = statusMessage + (this.flying ? "§aFlying" : "§cFlying");
             statusMessage = statusMessage + " ";
-            String str2 = this.noClip ? "§aNoClip" : "§cNoClip";
-            statusMessage = statusMessage + str2;
+            statusMessage = statusMessage + (this.noClip ? "§aNoClip" : "§cNoClip");
             statusMessage = statusMessage + " ";
-            String str3 = this.speed ? "§aSpeed" : "§cSpeed";
-            statusMessage = statusMessage + str3;
+            statusMessage = statusMessage + (this.speed ? "§aSpeed" : "§cSpeed");
             statusMessage = statusMessage + " ";
-            String str4 = this.respawn ? "§aRespawn" : "§cRespawn";
-            statusMessage = statusMessage + str4;
+            statusMessage = statusMessage + (this.respawn ? "§aRespawn" : "§cRespawn");
             PacketWrapper chatMessage = PacketWrapper.create(ClientboundPacketsa1_0_15.CHAT, this.user());
             chatMessage.write(Typesb1_7_0_3.STRING, statusMessage);
             chatMessage.send(Protocolc0_28_30Toa1_0_15.class);

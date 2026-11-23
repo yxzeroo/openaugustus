@@ -195,8 +195,7 @@ public class EntitySpider extends EntityMob {
    public static class AISpiderAttack extends EntityAIAttackOnCollide {
       @Override
       public boolean continueExecuting() {
-         float brightness = this.attacker.getBrightness(1.0F);
-         if (brightness >= 0.5F && this.attacker.getRNG().nextInt(100) == 0) {
+         if (this.attacker.getBrightness(1.0F) >= 0.5F && this.attacker.getRNG().nextInt(100) == 0) {
             this.attacker.setAttackTarget((EntityLivingBase)null);
             return false;
          } else {
@@ -217,8 +216,7 @@ public class EntitySpider extends EntityMob {
    public static class AISpiderTarget extends EntityAINearestAttackableTarget {
       @Override
       public boolean shouldExecute() {
-         float brightness = this.taskOwner.getBrightness(1.0F);
-         return brightness >= 0.5F ? false : super.shouldExecute();
+         return this.taskOwner.getBrightness(1.0F) >= 0.5F ? false : super.shouldExecute();
       }
 
       public AISpiderTarget(EntitySpider entitySpider, Class clazz) {

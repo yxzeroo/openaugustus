@@ -10,36 +10,32 @@ import java.util.List;
 import java.util.Map.Entry;
 import net.augustus.modules.FeatureBase;
 import net.augustus.modules.fun.Spammer;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class SettingGroupListProperty extends AbstractConfigProperty {
    private final IndexedSettingFactory settingFactory;
    private final FeatureBase featureBase2;
 
-   private void deserializeNestedSettings(DoubleValue doubleValue, ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
+   private void deserializeNestedSettings(SettingGroup doubleValue, ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
 
       for (Setting setting : (Iterable<Setting>)(doubleValue.getChildren())) {
          setting.deserialize(configSerializerProvider, json, flag, unaryFunction);
-         if (setting instanceof DoubleValue && json.has(setting.getName())) {
+         if (setting instanceof SettingGroup && json.has(setting.getName())) {
             JsonObject asJsonObject = json.getAsJsonObject(setting.getName());
             if (asJsonObject.isJsonObject()) {
-               DoubleValue doubleValue2 = (DoubleValue)setting;
-               this.deserializeNestedSettings(doubleValue2, configSerializerProvider, asJsonObject, flag, unaryFunction);
+               this.deserializeNestedSettings((SettingGroup)setting, configSerializerProvider, asJsonObject, flag, unaryFunction);
             }
          }
       }
    }
 
    private int extractUniqueId(String str) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
 
       try {
          String str2 = str.replace("Groupygroupy", "");
          int n = str2.lastIndexOf(95);
          if (n != -1 && n < str2.length() - 1) {
-            String str3 = str2.substring(n + 1);
-            return Integer.parseInt(str3);
+            return Integer.parseInt(str2.substring(n + 1));
          }
       } catch (NumberFormatException e) {
       }
@@ -50,7 +46,6 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      BooleanProperty.getControlFlowState();
       JsonObject json2 = new JsonObject();
       List value2 = (List)this.getValue();
 
@@ -61,8 +56,7 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
          }
 
          JsonObject json3 = new JsonObject();
-         String name2 = setting.getName();
-         int n = this.extractUniqueId(name2);
+         int n = this.extractUniqueId(setting.getName());
          json3.addProperty("UniqueId", n);
          this.serializeEntry(configSerializerProvider, setting, json3, unaryFunction);
          json2.add("Entry_" + i, json3);
@@ -72,8 +66,7 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
       return json;
    }
 
-   private void serializeNestedSettings(DoubleValue doubleValue, ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
+   private void serializeNestedSettings(SettingGroup doubleValue, ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
 
       for (Setting setting : (Iterable<Setting>)(doubleValue.getChildren())) {
          if (setting != null) {
@@ -85,9 +78,8 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
                }
             }
 
-            if (setting instanceof DoubleValue) {
-               DoubleValue doubleValue2 = (DoubleValue)setting;
-               this.serializeNestedSettings(doubleValue2, configSerializerProvider, json2, unaryFunction);
+            if (setting instanceof SettingGroup) {
+               this.serializeNestedSettings((SettingGroup)setting, configSerializerProvider, json2, unaryFunction);
             }
 
             json.add(setting.getName(), json2);
@@ -104,7 +96,6 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
 
    private void serializeEntry(ConfigSerializerProvider configSerializerProvider, FeatureBase featureBase3, JsonObject json, UnaryFunction unaryFunction) {
       JsonObject json2 = new JsonObject();
-      BooleanProperty.getControlFlowState();
 
       for (ConfigProperty configProperty : (Iterable<ConfigProperty>)(featureBase3.getProperties())) {
          if (unaryFunction == null || (Boolean)unaryFunction.apply(configProperty)) {
@@ -112,21 +103,17 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
          }
       }
 
-      if (featureBase3 instanceof DoubleValue) {
-         DoubleValue doubleValue = (DoubleValue)featureBase3;
-         this.serializeNestedSettings(doubleValue, configSerializerProvider, json2, unaryFunction);
+      if (featureBase3 instanceof SettingGroup) {
+         this.serializeNestedSettings((SettingGroup)featureBase3, configSerializerProvider, json2, unaryFunction);
       }
 
       json.add(featureBase3.getName(), json2);
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
       if (!json.has(this.getName())) {
          if (flag) {
-            Object defaultValue2 = this.getDefaultValue();
-            Object obj = defaultValue2;
-            this.applyValue(obj);
+            this.applyValue(this.getDefaultValue());
          }
       } else {
          JsonElement elem = json.get(this.getName());
@@ -146,8 +133,8 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
 
                   Setting setting = this.settingFactory.createSetting(asInt);
                   setting.deserialize(configSerializerProvider, json2, flag, unaryFunction);
-                  if (setting instanceof DoubleValue && json2.has(setting.getName())) {
-                     DoubleValue doubleValue = (DoubleValue)setting;
+                  if (setting instanceof SettingGroup && json2.has(setting.getName())) {
+                     SettingGroup doubleValue = (SettingGroup)setting;
                      JsonObject asJsonObject2 = json2.getAsJsonObject(setting.getName());
                      if (asJsonObject2.isJsonObject()) {
                         this.deserializeNestedSettings(doubleValue, configSerializerProvider, asJsonObject2, flag, unaryFunction);
@@ -161,8 +148,7 @@ public class SettingGroupListProperty extends AbstractConfigProperty {
             this.applyValue(list);
             if (this.featureBase2 instanceof DynamicSettingList) {
                DynamicSettingList featureBase22 = (DynamicSettingList)this.featureBase2;
-               int n2 = n + 1;
-               featureBase22.setNextEntryId(n2);
+               featureBase22.setNextEntryId(n + 1);
                featureBase22.reindexEntryLabels();
             }
          }

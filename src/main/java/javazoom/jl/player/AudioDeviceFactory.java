@@ -13,8 +13,7 @@ public abstract class AudioDeviceFactory {
          clazz = classLoader.loadClass(str);
       }
 
-      Object obj2 = clazz.newInstance();
-      return (AudioDevice)obj2;
+      return (AudioDevice)clazz.newInstance();
    }
 
    public abstract AudioDevice createAudioDevice() throws JavaLayerException;

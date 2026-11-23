@@ -1,6 +1,5 @@
 package net.augustus.ai;
 
-import net.augustus.settings.Setting;
 import net.augustus.utils.rotation.Rotation;
 import java.io.File;
 import java.io.IOException;
@@ -34,10 +33,8 @@ public final class AiRotationPredictor {
 
       this.scaler = rotationFeatureScaler;
       if (rotationFeatureScaler != null) {
-         byte b = 0;
-         this.maxYawDelta = Math.abs(rotationFeatureScaler.getTargetSpec(b).hi);
-         byte b2 = 1;
-         this.maxPitchDelta = Math.abs(rotationFeatureScaler.getTargetSpec(b2).hi);
+         this.maxYawDelta = Math.abs(rotationFeatureScaler.getTargetSpec((byte)0).hi);
+         this.maxPitchDelta = Math.abs(rotationFeatureScaler.getTargetSpec((byte)1).hi);
       } else {
          this.maxYawDelta = 180.0F;
          this.maxPitchDelta = 90.0F;
@@ -48,7 +45,6 @@ public final class AiRotationPredictor {
          this.loadError = "failed to load model: " + this.model.getLoadError();
       }
 
-      Setting.getControlFlowMarker();
    }
 
    public boolean isReady() {
@@ -59,8 +55,7 @@ public final class AiRotationPredictor {
       if (!this.isReady()) {
          return null;
       } else {
-         AiRotationFeatureState featureState2 = this.featureState;
-         float[] floats = AiRotationFeatureExtractor.extractFeatures(player, entity, featureState2);
+         float[] floats = AiRotationFeatureExtractor.extractFeatures(player, entity, this.featureState);
          this.scaler.normalizeInPlace(floats);
          this.frameBuffer.push(floats);
          float[] floats2 = this.frameBuffer.toFlatArray();
@@ -68,11 +63,9 @@ public final class AiRotationPredictor {
          float[] floats3 = this.model.runInference(floats2, inputShape2);
          if (floats3 != null && floats3.length == 2) {
             float f = floats3[0];
-            byte b = 0;
-            float f2 = this.scaler.denormalizeTarget(b, f);
+            float f2 = this.scaler.denormalizeTarget((byte)0, f);
             float f3 = floats3[1];
-            byte b2 = 1;
-            float f4 = this.scaler.denormalizeTarget(b2, f3);
+            float f4 = this.scaler.denormalizeTarget((byte)1, f3);
             if (f2 > this.maxYawDelta) {
                f2 = this.maxYawDelta;
             } else if (f2 < -this.maxYawDelta) {

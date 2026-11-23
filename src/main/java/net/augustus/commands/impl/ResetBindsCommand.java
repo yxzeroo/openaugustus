@@ -9,12 +9,10 @@ public class ResetBindsCommand extends Command {
    public void commandAction(String[] strings, String str) {
 
       for (Module module : (Iterable<Module>)(Augustus.getInstance().getModuleManager().getModules())) {
-         byte b = 0;
-         module.setKeyCode(b);
+         module.setKeyCode((byte)0);
       }
 
-      String str2 = "§cAll module binds were reset";
-      this.sendChat(str2);
+      this.sendChat("§cAll module binds were reset");
    }
 
    public ResetBindsCommand() {
@@ -22,8 +20,7 @@ public class ResetBindsCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (resets all module binds)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (resets all module binds)");
    }
 
 }

@@ -16,23 +16,23 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 
 public class Range extends Module implements LoadWorldListener, TickListener, AttackEntityListener {
-   private final DoubleValue combat;
-   private final BooleansSetting rangeMode;
-   private final StringValue rangeInternal;
+   private final SettingGroup combat;
+   private final StringValue rangeMode;
+   private final DoubleValue rangeInternal;
    private final RangeSetting baseRange;
-   private final StringValue chanceOfExtendedRange;
+   private final DoubleValue chanceOfExtendedRange;
    private final BooleanValue onlyWhileSprinting;
    public final BooleanValue throughWalls;
-   private final DoubleValue interaction;
-   public final StringValue buildRange;
+   private final SettingGroup interaction;
+   public final DoubleValue buildRange;
    public final MultiOptionSetting slotsToApplyBuildRange;
    private double currentRange;
    private boolean useExtendedRange;
@@ -42,25 +42,19 @@ public class Range extends Module implements LoadWorldListener, TickListener, At
 
    public Range() {
        super("Range", "Distanz", new Color(65, 140, 35), Categorys.LEGIT);
-      this.combat = new DoubleValue(this, "Combat", true);
-      this.rangeMode = new BooleansSetting(this, "RangeMode", "Default", new String[]{"Default", "Dual"}, this.combat);
-      StringValue stringValue = new StringValue(this, "RangeInternal", 3.0, 3.0, 4.5, 2, this.combat);
-      String str = "Range";
-      StringValue stringValue2 = stringValue.named(str);
+      this.combat = new SettingGroup(this, "Combat", true);
+      this.rangeMode = new StringValue(this, "RangeMode", "Default", new String[]{"Default", "Dual"}, this.combat);
+      DoubleValue stringValue2 = new DoubleValue(this, "RangeInternal", 3.0, 3.0, 4.5, 2, this.combat).named("Range");
       SettingVisibilityCondition condition = () -> {
          return this.rangeMode.getSelectedValue().equals("Default");
       };
       this.rangeInternal = stringValue2.visibleWhen(condition);
-      RangeSetting rangeSetting = new RangeSetting(this, "BaseRange", "ExtendedRange", 3.0, 3.7, 3.0, 6.0, 2, this.combat);
-      SettingVisibilityCondition condition2 = () -> this.isBaseRangeVisible();
-      this.baseRange = rangeSetting.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this, "Chance of Extended Range", 50.0, 0.0, 100.0, 0, this.combat);
-      SettingVisibilityCondition condition3 = () -> this.isChanceOfExtendedRangeVisible();
-      this.chanceOfExtendedRange = stringValue3.visibleWhen(condition3);
+      this.baseRange = new RangeSetting(this, "BaseRange", "ExtendedRange", 3.0, 3.7, 3.0, 6.0, 2, this.combat).visibleWhen(() -> this.isBaseRangeVisible());
+      this.chanceOfExtendedRange = new DoubleValue(this, "Chance of Extended Range", 50.0, 0.0, 100.0, 0, this.combat).visibleWhen(() -> this.isChanceOfExtendedRangeVisible());
       this.onlyWhileSprinting = new BooleanValue(this, "OnlyWhileSprinting", false, this.combat);
       this.throughWalls = new BooleanValue(this, "ThroughWalls", false, this.combat);
-      this.interaction = new DoubleValue(this, "Interaction", true);
-      this.buildRange = new StringValue(this, "BuildRange", 4.5, 4.5, 6.0, 2, this.interaction);
+      this.interaction = new SettingGroup(this, "Interaction", true);
+      this.buildRange = new DoubleValue(this, "BuildRange", 4.5, 4.5, 6.0, 2, this.interaction);
       this.slotsToApplyBuildRange = (MultiOptionSetting)(new MultiOptionSetting(this, "SlotsToApplyBuildRange", RangeBuildSlotOption.values(), this.interaction)).markVisualOnly();
       this.currentRange = 3.0;
       this.useExtendedRange = false;
@@ -89,13 +83,11 @@ public class Range extends Module implements LoadWorldListener, TickListener, At
 
    @Override
    public void onTick2() {
-      String str = "" + this.currentRange;
-      this.setSuffix(str);
+      this.setSuffix("" + this.currentRange);
       if (this.rangeMode.getSelectedValue().equals("Default")) {
          this.currentRange = this.rangeInternal.getValue();
       } else {
-         long l = 3000L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(3000L)) {
             this.lastAttackedTarget = null;
          }
 

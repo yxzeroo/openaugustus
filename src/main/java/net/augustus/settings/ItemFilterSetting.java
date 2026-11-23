@@ -19,7 +19,7 @@ public class ItemFilterSetting {
       return itemFilterOption == null ? false : ItemFilterOption.isOptionSelected(itemFilterOption) && InventoryUtil.isNotSoupCraftIngredient(item);
    }
 
-   public ItemFilterSetting(Module module, String str, DoubleValue doubleValue, SettingVisibilityCondition condition, UnaryFunction unaryFunction) {
+   public ItemFilterSetting(Module module, String str, SettingGroup doubleValue, SettingVisibilityCondition condition, UnaryFunction unaryFunction) {
        super();
       this.itemOptions = new HashMap();
 
@@ -32,11 +32,9 @@ public class ItemFilterSetting {
       ItemFilterOption[] itemFilterOptions = (ItemFilterOption[])this.itemOptions.values().toArray(new ItemFilterOption[0]);
       Arrays.sort(itemFilterOptions, Comparator.comparing(ItemFilterOption::getName));
       if (doubleValue == null) {
-         MultiOptionSetting multiOptionSetting = (new MultiOptionSetting(module, str, itemFilterOptions)).visibleWhen(condition);
-         multiOptionSetting.markVisualOnly();
+         (new MultiOptionSetting(module, str, itemFilterOptions)).visibleWhen(condition).markVisualOnly();
       } else {
-         MultiOptionSetting multiOptionSetting2 = (new MultiOptionSetting(module, str, itemFilterOptions, doubleValue)).visibleWhen(condition);
-         multiOptionSetting2.markVisualOnly();
+         (new MultiOptionSetting(module, str, itemFilterOptions, doubleValue)).visibleWhen(condition).markVisualOnly();
       }
    }
 }

@@ -6,8 +6,7 @@ import net.augustus.commands.Command;
 public class VClipCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (clip up and down through walls)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (clip up and down through walls)");
    }
 
    public VClipCommand() {
@@ -23,11 +22,9 @@ public class VClipCommand extends Command {
             }
          }
 
-         String str2 = "vclipped";
-         this.sendChat(str2);
+         this.sendChat("vclipped");
       } else {
-         String str3 = "§7" + this.getCommand() + " [§2Distance§7]";
-         this.sendChat(str3);
+         this.sendChat("§7" + this.getCommand() + " [§2Distance§7]");
       }
    }
 

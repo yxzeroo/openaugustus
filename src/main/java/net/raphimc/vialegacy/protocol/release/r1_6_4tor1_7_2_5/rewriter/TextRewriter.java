@@ -27,8 +27,7 @@ public class TextRewriter {
       );
       TextUtils.iterateAll(component, c -> {
          if (c instanceof TranslationComponent) {
-            TranslationComponent translationComponent = (TranslationComponent)c;
-            Object[] args = translationComponent.getArgs();
+            Object[] args = ((TranslationComponent)c).getArgs();
 
             for (int i = 0; i < args.length; i++) {
                if (args[i] != null && !(args[i] instanceof TextComponent)) {

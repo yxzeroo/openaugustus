@@ -41,8 +41,7 @@ public class ItemBow extends Item {
    public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int n) {
       boolean flag = player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
       if (flag || player.inventory.hasItem(Items.arrow)) {
-         int n2 = this.getMaxItemUseDuration(stack) - n;
-         float f = (float)n2 / 20.0F;
+         float f = (float)(this.getMaxItemUseDuration(stack) - n) / 20.0F;
          f = (f * f + f * 2.0F) / 3.0F;
          if ((double)f < 0.1) {
             return;

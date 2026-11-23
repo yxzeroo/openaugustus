@@ -38,21 +38,14 @@ public class ScrollBar {
       if (d2 < d) {
          double d3 = d2 / d;
          double d4 = d3 * d2;
-         double d5 = this.scrollOffset / d3 * d3 * d3;
-         this.thumbTopY = -d5 + (double)this.topY;
+         this.thumbTopY = -(this.scrollOffset / d3 * d3 * d3) + (double)this.topY;
          this.thumbHeight = d4;
          this.viewportHeight = d2;
       }
    }
 
    public void resetDefaultBounds() {
-      int n = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 + 150;
-      int n2 = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 + 156;
-      int n3 = new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() - 40;
-      int n4 = n2;
-      byte b = 40;
-      int n5 = n;
-      this.setBounds(n5, b, n4, n3);
+      this.setBounds(new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 + 150, (byte)40, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 + 156, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() - 40);
    }
 
    public void setItemCount(int n) {
@@ -60,18 +53,15 @@ public class ScrollBar {
    }
 
    public boolean isPointOverThumb(double d, double d2) {
-      String controlFlowGuard2 = getControlFlowGuard();
       return d < this.rightX && d >= this.leftX && d2 >= this.thumbTopY && d2 < this.thumbTopY + this.thumbHeight;
    }
 
    public boolean fitsWithoutScrolling() {
-      String controlFlowGuard2 = getControlFlowGuard();
       return this.itemCount == 0 ? true : (double)(this.bottomY - this.topY) >= (double)this.itemCount * this.itemHeight + 0.0;
    }
 
    public void handleMouseDrag(double d) {
       this.recalculateThumbMetrics();
-      getControlFlowGuard();
       double d2 = this.viewportHeight / ((double)this.itemCount * this.itemHeight + 0.0);
       double d3 = (double)((int)(-d / d2));
       if (this.dragging) {
@@ -87,7 +77,6 @@ public class ScrollBar {
       pendingScrollDelta2 = MathHelper.clamp_double(pendingScrollDelta2, -this.scrollSpeed * ((double)l / 1000000.0), this.scrollSpeed * ((double)l / 1000000.0));
       this.lastUpdateNanos = System.nanoTime();
       this.pendingScrollDelta -= pendingScrollDelta2;
-      getControlFlowGuard();
       this.scrollOffset += pendingScrollDelta2;
       double scrollOffset2 = this.scrollOffset;
       this.clampScrollOffset();
@@ -150,13 +139,11 @@ public class ScrollBar {
    }
 
    public boolean isAtBottom() {
-      String controlFlowGuard2 = getControlFlowGuard();
       return this.scrollOffset == MathHelper.clamp_double(-9999999.0, Math.min(0.0, -((double)this.itemCount * this.itemHeight - (double)(this.bottomY - this.topY))), 0.0);
    }
 
    public void handleMouseClick(double d, double d2) {
       this.recalculateThumbMetrics();
-      getControlFlowGuard();
       double d3 = this.viewportHeight / ((double)this.itemCount * this.itemHeight + 0.0);
       double d4 = (double)((int)(-d2 / d3));
       if (this.dragging) {
@@ -177,7 +164,6 @@ public class ScrollBar {
    }
 
    public void handleMouseWheel() {
-      String controlFlowGuard2 = getControlFlowGuard();
       int n = Math.round((float)Augustus.getInstance().getMouseWheelTracker().consumeDelta() / 3.0F);
       this.pendingScrollDelta += (double)n;
       if (n != 0) {

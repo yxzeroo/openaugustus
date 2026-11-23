@@ -38,15 +38,12 @@ public class CreditsMenuTab extends ClientMenuTab {
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       double d = (double)mouseX;
-      double d2 = (double)mouseY;
-      double d3 = d2;
-      double d4 = d;
-      this.scrollBar.handleMouseClick(d4, d3);
+      double d3 = (double)mouseY;
+      this.scrollBar.handleMouseClick(d, d3);
    }
 
    public void initContent() {
       super.initContent();
-      CreditsSection.getControlFlowGuard();
       int n = 0;
 
       for (CreditsSection creditsSection : (Iterable<CreditsSection>)(CREDIT_SECTIONS)) {
@@ -58,16 +55,12 @@ public class CreditsMenuTab extends ClientMenuTab {
       int n2 = (int)(f + 152.0F);
       int n3 = (int)(f + 155.0F);
       int height2 = this.height;
-      int n4 = n3;
-      byte b = 52;
-      int n5 = n2;
-      this.scrollBar.setBounds(n5, b, n4, height2);
+      this.scrollBar.setBounds(n2, (byte)52, n3, height2);
    }
 
    public void drawContent(int n, int n2, float f) {
       super.drawContent(n, n2, f);
       this.scrollBar.updateAndDraw();
-      CreditsSection.getControlFlowGuard();
       int n3 = 52;
 
       for (CreditsSection creditsSection : (Iterable<CreditsSection>)(CREDIT_SECTIONS)) {
@@ -92,8 +85,7 @@ public class CreditsMenuTab extends ClientMenuTab {
          float f2 = 2.0F;
          float f3 = 2.0F;
          float f4 = 75.0F;
-         String str = sectionTitle;
-         ((AugustusGuiScreen)this).drawCenteredScaledString(str, f4, f3, f2);
+         ((AugustusGuiScreen)this).drawCenteredScaledString(sectionTitle, f4, f3, f2);
          int n5 = 0;
 
          for (String str2 : (Iterable<String>)(creditsSection.getMemberLines())) {
@@ -107,8 +99,7 @@ public class CreditsMenuTab extends ClientMenuTab {
          String str3 = EnumChatFormatting.GOLD + "Social Media ";
          float f7 = (float)n6;
          float f8 = 3.0F;
-         String str4 = str3;
-         ((AugustusGuiScreen)this).drawString(str4, f8, f7);
+         ((AugustusGuiScreen)this).drawString(str3, f8, f7);
          int n7 = 0;
 
          for (String str5 : (Iterable<String>)(creditsSection.getSocialLinks())) {

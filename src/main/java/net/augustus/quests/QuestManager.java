@@ -1,6 +1,5 @@
 package net.augustus.quests;
 
-import net.augustus.settings.Setting;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,15 +41,9 @@ public class QuestManager implements MC {
          if (serverQuest.isExpired()) {
             it.remove();
          } else if (serverQuest.isActiveForServer(str)) {
-            QuestObjective objective = serverQuest.getObjective();
-            long questId = serverQuest.getQuestId();
-            boolean flag = true;
-            objective.setActive(flag, questId);
+            serverQuest.getObjective().setActive(true, serverQuest.getQuestId());
          } else {
-            QuestObjective objective2 = serverQuest.getObjective();
-            long questId2 = serverQuest.getQuestId();
-            boolean flag2 = false;
-            objective2.setActive(flag2, questId2);
+            serverQuest.getObjective().setActive(false, serverQuest.getQuestId());
          }
 
          serverQuest.runPendingTasks();
@@ -60,10 +53,7 @@ public class QuestManager implements MC {
    public void deactivateAllQuests() {
 
       for (ServerQuest serverQuest : (Iterable<ServerQuest>)(this.quests.values())) {
-         QuestObjective objective = serverQuest.getObjective();
-         long questId = serverQuest.getQuestId();
-         boolean flag = false;
-         objective.setActive(flag, questId);
+         serverQuest.getObjective().setActive(false, serverQuest.getQuestId());
       }
    }
 
@@ -72,14 +62,10 @@ public class QuestManager implements MC {
 
       for (ServerQuest serverQuest : (Iterable<ServerQuest>)(this.quests.values())) {
          if (serverQuest.isActiveForServer(str)) {
-            QuestObjective objective = serverQuest.getObjective();
-            long questId = serverQuest.getQuestId();
-            boolean flag = true;
-            objective.setActive(flag, questId);
+            serverQuest.getObjective().setActive(true, serverQuest.getQuestId());
          }
       }
 
-      Setting.getControlFlowMarker();
    }
 
 

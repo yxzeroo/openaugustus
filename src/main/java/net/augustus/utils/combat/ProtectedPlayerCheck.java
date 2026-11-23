@@ -17,12 +17,8 @@ public class ProtectedPlayerCheck {
    public static boolean isProtectedPlayer(Entity entity) {
       Augustus.getInstance().getClass();
       if (entity instanceof EntityPlayer) {
-         EntityPlayer player = (EntityPlayer)entity;
-         byte b = 1;
-         PlayerEffectEntry playerEffect = PlayerEffectRegistry.getPlayerEffect(player, b);
-         if (playerEffect != null) {
-            long l = 1000L;
-            if (timeHelper.reached2(l)) {
+         if (PlayerEffectRegistry.getPlayerEffect((EntityPlayer)entity, (byte)1) != null) {
+            if (timeHelper.reached2(1000L)) {
                ChatUtil.sendChat3("§4ERROR: This person is in GOD mode. Unable to attack.");
                timeHelper.reset();
             }

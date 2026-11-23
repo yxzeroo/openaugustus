@@ -32,9 +32,7 @@ public class ShaderUtils {
             String str = options[i];
             ShaderOption shaderOption = getShaderOption(str, shaderOptions);
             if (shaderOption != null) {
-               String str2 = flag ? shaderOption.getValueDefault() : shaderOption.getValue();
-               String value = shaderProfile.getValue(str);
-               if (!Config.equals(str2, value)) {
+               if (!Config.equals(flag ? shaderOption.getValueDefault() : shaderOption.getValue(), shaderProfile.getValue(str))) {
                   return false;
                }
             }

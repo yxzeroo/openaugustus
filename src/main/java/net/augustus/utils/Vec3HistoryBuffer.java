@@ -21,9 +21,8 @@ public class Vec3HistoryBuffer {
    }
 
    public void add(long l, Vec3 vec) {
-      boolean flag = false;
       this.positions.add(vec);
-      if (flag && this.positions.size() > this.maxSize) {
+      if (false && this.positions.size() > this.maxSize) {
          this.positions.remove(0);
       }
    }

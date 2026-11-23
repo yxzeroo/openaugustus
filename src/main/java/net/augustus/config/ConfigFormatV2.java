@@ -26,8 +26,7 @@ public class ConfigFormatV2 implements ModuleConfigCodec {
 
       for (Object obj : entries) {
          Entry entry = (Entry)obj;
-         String key = (String)entry.getKey();
-         if (!key.equals("Config_Version")) {
+         if (!((String)entry.getKey()).equals("Config_Version")) {
             list.add(((JsonElement)entry.getValue()).getAsString());
          }
       }
@@ -98,11 +97,9 @@ public class ConfigFormatV2 implements ModuleConfigCodec {
          if (elem2 != null && elem2.isJsonObject()) {
             JsonObject asJsonObject = elem2.getAsJsonObject();
             boolean flag = !asJsonObject.has("Config_Editable") || Boolean.parseBoolean(asJsonObject.get("Config_Editable").getAsString());
-            boolean flag2 = asJsonObject.has("Config_Author") && !asJsonObject.get("Config_Author").isJsonNull()
-               && Augustus.getInstance().getUsername().equals(asJsonObject.get("Config_Author").getAsString());
-            Augustus.getInstance().setConfigEditingEnabled(flag || flag2);
-            ClickGuiScreen.configEditable = flag || flag2;
-            ClickGuiScreen.protectedConfigCreator = !flag && flag2;
+            Augustus.getInstance().setConfigEditingEnabled(true);
+            ClickGuiScreen.configEditable = flag;
+            ClickGuiScreen.protectedConfigCreator = false;
             JsonObject asJsonObject2 = json.get("Configuration").getAsJsonObject();
             ModuleSettingsConfigSection.abstractFeature.deserialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, asJsonObject2, true, var -> shouldLoadProperty((ConfigProperty)var));
          }

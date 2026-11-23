@@ -22,8 +22,7 @@ public interface IBuilderProcess extends IBaritoneProcess {
 
    @Deprecated
    default boolean build(String str, BlockPos pos) {
-      File file = new File(new File(Minecraft.getMinecraft().mcDataDir, f), str);
-      return this.build(str, file, pos);
+      return this.build(str, new File(new File(Minecraft.getMinecraft().mcDataDir, f), str), pos);
    }
 
    void clearArea(BlockPos pos, BlockPos pos2);

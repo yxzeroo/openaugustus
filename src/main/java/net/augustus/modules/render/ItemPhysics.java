@@ -30,8 +30,7 @@ public class ItemPhysics extends Module {
 
    public int transformDroppedItem(EntityItem entityItem, double d, double d2, double d3, float f, IBakedModel bakedModel) {
       ItemStack entityItem2 = entityItem.getEntityItem();
-      Item item = entityItem2.getItem();
-      if (item == null) {
+      if (entityItem2.getItem() == null) {
          return 0;
       } else {
          boolean isGui3d = bakedModel.isGui3d();
@@ -59,8 +58,7 @@ public class ItemPhysics extends Module {
 
          float f9 = 10.0F;
          if (!entityItem.onGround && this.rotate.getValue()) {
-            float f10 = (float)entityItem.getAge() * f9 % 360.0F;
-            GlStateManager.rotate(f10, 1.0F, 0.0F, 1.0F);
+            GlStateManager.rotate((float)entityItem.getAge() * f9 % 360.0F, 1.0F, 0.0F, 1.0F);
          }
 
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

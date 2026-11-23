@@ -38,8 +38,7 @@ public class LegitHopSpeedMode extends SpeedMode {
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (MoveUtil.isMoving()) {
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
       }
    }
 }

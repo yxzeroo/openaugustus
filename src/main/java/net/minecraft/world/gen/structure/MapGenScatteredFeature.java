@@ -53,8 +53,7 @@ public class MapGenScatteredFeature extends MapGenStructure {
    public boolean isSwampHut(BlockPos pos) {
       StructureStart structureAt = this.getStructureAt(pos);
       if (structureAt != null && structureAt instanceof MapGenScatteredFeature.Start && !structureAt.components.isEmpty()) {
-         StructureComponent first = (StructureComponent)structureAt.components.getFirst();
-         return first instanceof ComponentScatteredFeaturePieces.SwampHut;
+         return ((StructureComponent)structureAt.components.getFirst()) instanceof ComponentScatteredFeaturePieces.SwampHut;
       } else {
          return false;
       }

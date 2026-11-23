@@ -21,15 +21,15 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 
 public class DistributionClickPatternMode extends AbstractClickPatternMode {
-   private final BooleansSetting distributionClickPattern;
+   private final StringValue distributionClickPattern;
    private final ClickPatternManager clickPatternManager;
-   private final StringValue resolution;
-   private final StringValue resatimport;
+   private final DoubleValue resolution;
+   private final DoubleValue resatimport;
    private ClickPattern selectedImportPattern;
    private GraphSetting pressedDistributionGraph;
    private GraphSetting unpressedDistributionGraph;
@@ -37,7 +37,7 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
    private GraphPointBuilder graphPointBuilder;
    private TextLabelSetting averageCps;
    private TextLabelSetting averageDcps;
-   private StringValue buffersize;
+   private DoubleValue buffersize;
    private TextLabelSetting averageFlawedKurtosis;
    private TextLabelSetting minFlawedKurtosis;
    private TextLabelSetting averageKurtosis;
@@ -49,45 +49,28 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
    private static final int MIN_GRAPH_MAX_Y = 10;
    private int lastClickTick;
 
-   public DistributionClickPatternMode(Module module, DoubleValue doubleValue) {
+   public DistributionClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "Distribution");
       this.graphPointBuilder = new GraphPointBuilder();
       this.nextClickTimeMs = 0L;
       this.releaseTimeMs = 0L;
-      boolean flag = false;
-      this.graphPointBuilder.xEditable(flag);
-      boolean flag2 = true;
-      this.graphPointBuilder.yEditable(flag2);
-      GraphPointBuilder graphPointBuilder2 = this.graphPointBuilder;
-      Runnable runnable = () -> this.resetAnalysisLabelsAndScale();
-      graphPointBuilder2.onChange(runnable);
-      boolean flag3 = true;
-      this.graphPointBuilder.highlightZero(flag3);
-      DoubleValue doubleValue2 = new DoubleValue(module, "Pressed", doubleValue);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      DoubleValue doubleValue3 = doubleValue2.visibleWhen(condition);
-      DoubleValue doubleValue4 = new DoubleValue(module, "Unpressed", doubleValue);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      DoubleValue doubleValue5 = doubleValue4.visibleWhen(condition2);
+      this.graphPointBuilder.xEditable(false);
+      this.graphPointBuilder.yEditable(true);
+      this.graphPointBuilder.onChange(() -> this.resetAnalysisLabelsAndScale());
+      this.graphPointBuilder.highlightZero(true);
+      SettingGroup doubleValue3 = new SettingGroup(module, "Pressed", doubleValue).visibleWhen(() -> this.isSelected());
+      SettingGroup doubleValue5 = new SettingGroup(module, "Unpressed", doubleValue).visibleWhen(() -> this.isSelected());
       this.pressedDistributionGraph = new GraphSetting(module, "Pressedtime Distribution", new ArrayList(), 0.0, 200.0, 0.0, 10.0, doubleValue3, this.graphPointBuilder);
       this.unpressedDistributionGraph = new GraphSetting(module, "Unpressedtime Distribution", new ArrayList(), 0.0, 200.0, 0.0, 10.0, doubleValue5, this.graphPointBuilder);
-      GraphSetting graphSetting = this.pressedDistributionGraph;
-      this.addGraphShiftActions(module, doubleValue3, graphSetting);
-      GraphSetting graphSetting2 = this.unpressedDistributionGraph;
-      this.addGraphShiftActions(module, doubleValue5, graphSetting2);
-      BooleanValue booleanValue = new BooleanValue(module, "Prevent tripleclicks", true, doubleValue);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.preventTripleclicks = (BooleanValue)booleanValue.withVisibility(condition3);
-      DoubleValue doubleValue6 = new DoubleValue(module, "Import", doubleValue);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      DoubleValue doubleValue7 = doubleValue6.visibleWhen(condition4);
-      DoubleValue doubleValue8 = new DoubleValue(module, "Analysis", doubleValue);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      DoubleValue doubleValue9 = doubleValue8.visibleWhen(condition5);
+      this.addGraphShiftActions(module, doubleValue3, this.pressedDistributionGraph);
+      this.addGraphShiftActions(module, doubleValue5, this.unpressedDistributionGraph);
+      this.preventTripleclicks = (BooleanValue)new BooleanValue(module, "Prevent tripleclicks", true, doubleValue).withVisibility(() -> this.isSelected());
+      SettingGroup doubleValue7 = new SettingGroup(module, "Import", doubleValue).visibleWhen(() -> this.isSelected());
+      SettingGroup doubleValue9 = new SettingGroup(module, "Analysis", doubleValue).visibleWhen(() -> this.isSelected());
       new ActionSetting(module, "Analyze", () -> this.runDistributionAnalysis(), doubleValue9);
       this.averageCps = new TextLabelSetting(module, doubleValue9, "Average CPS: -");
       this.averageDcps = new TextLabelSetting(module, doubleValue9, "Average DCPS: -");
-      this.buffersize = new StringValue(module, "Buffersize", 50.0, 4.0, 1000.0, 0, doubleValue9);
+      this.buffersize = new DoubleValue(module, "Buffersize", 50.0, 4.0, 1000.0, 0, doubleValue9);
       this.averageFlawedKurtosis = new TextLabelSetting(module, doubleValue9, "Average flawed Kurtosis: -");
       this.minFlawedKurtosis = new TextLabelSetting(module, doubleValue9, "Min flawed Kurtosis: -");
       String str = "Frap moment";
@@ -98,35 +81,22 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
       this.minKurtosis = new TextLabelSetting(module, doubleValue9, "Min Kurtosis: -");
       this.worstCps = new TextLabelSetting(module, doubleValue9, "Worst CPS: -");
       this.probabilities = new TextLabelSetting(module, doubleValue9, "Probabilities: -");
-      BooleansSetting booleansSetting = new BooleansSetting(module, "DistributionClickPattern", "", new String[0], doubleValue7);
-      String str3 = "ClickPattern";
-      this.distributionClickPattern = (BooleansSetting)booleansSetting.withDisplayName(str3);
-      ClickPatternManagerBuilder builder = ClickPatternManager.builder();
-      BooleansSetting booleansSetting2 = this.distributionClickPattern;
-      Consumer consumer = obj -> this.selectedImportPattern = (ClickPattern)obj;
-      BooleansSetting booleansSetting3 = booleansSetting2;
-      this.clickPatternManager = builder.withSelectorAndCallback(booleansSetting3, consumer).build();
-      StringValue stringValue = new StringValue(module, "Resolution", 20.0, 1.0, 100.0, 0, doubleValue7);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.resolution = stringValue.visibleWhen(condition6);
-      BooleansSetting booleansSetting4 = this.distributionClickPattern;
+      this.distributionClickPattern = (StringValue)new StringValue(module, "DistributionClickPattern", "", new String[0], doubleValue7).withDisplayName("ClickPattern");
+      this.clickPatternManager = ClickPatternManager.builder().withSelectorAndCallback(this.distributionClickPattern, obj -> this.selectedImportPattern = (ClickPattern)obj).build();
+      this.resolution = new DoubleValue(module, "Resolution", 20.0, 1.0, 100.0, 0, doubleValue7).visibleWhen(() -> this.isSelected());
+      StringValue booleansSetting4 = this.distributionClickPattern;
       SettingChangeListener listener = () -> {
-         ClickPatternManager clickPatternManager2 = this.clickPatternManager;
-         String selectedValue = this.distributionClickPattern.getSelectedValue();
-         this.selectedImportPattern = clickPatternManager2.getPattern(selectedValue);
+         this.selectedImportPattern = this.clickPatternManager.getPattern(this.distributionClickPattern.getSelectedValue());
       };
-      SettingChangeListener listener2 = listener;
-      booleansSetting4.withChangeListener(listener2);
+      booleansSetting4.withChangeListener(listener);
       this.clickPatternManager.startWatchingAndLoad();
-      StringValue stringValue2 = new StringValue(module, "resatimport", this.resolution.getValue(), this.resolution.getMinValue(), this.resolution.getMaxValue(), 0, doubleValue);
-      SettingVisibilityCondition condition7 = () -> false;
-      this.resatimport = stringValue2.visibleWhen(condition7);
+      this.resatimport = new DoubleValue(module, "resatimport", this.resolution.getValue(), this.resolution.getMinValue(), this.resolution.getMaxValue(), 0, doubleValue).visibleWhen(() -> false);
       new ActionSetting(module, "Import pattern", () -> this.importSelectedPattern(), doubleValue7);
       this.initDefaultDistribution();
       this.resetAnalysisLabelsAndScale();
    }
 
-   private void addGraphShiftActions(Module module, DoubleValue doubleValue, GraphSetting graphSetting) {
+   private void addGraphShiftActions(Module module, SettingGroup doubleValue, GraphSetting graphSetting) {
       new ActionSetting(module, "Shift left", () -> this.shiftGraphLeft(graphSetting), doubleValue);
       new ActionSetting(module, "Shift right", () -> this.shiftGraphRight(graphSetting), doubleValue);
    }
@@ -136,22 +106,18 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
          for (int i = 0; i < graphSetting.getPoints().size(); i++) {
             GraphPoint graphPoint = (GraphPoint)graphSetting.getPoints().get(i);
             if (graphSetting.getPoints().size() > i + n) {
-               double y = ((GraphPoint)graphSetting.getPoints().get(i + n)).getY();
-               graphPoint.setY(y);
+               graphPoint.setY(((GraphPoint)graphSetting.getPoints().get(i + n)).getY());
             } else {
-               double d = 0.0;
-               graphPoint.setY(d);
+               graphPoint.setY(0.0);
             }
          }
       } else {
          for (int j = graphSetting.getPoints().size() - 1; j >= 0; j--) {
             GraphPoint graphPoint2 = (GraphPoint)graphSetting.getPoints().get(j);
             if (j > 0) {
-               double y2 = ((GraphPoint)graphSetting.getPoints().get(j + n)).getY();
-               graphPoint2.setY(y2);
+               graphPoint2.setY(((GraphPoint)graphSetting.getPoints().get(j + n)).getY());
             } else {
-               double d2 = 0.0;
-               graphPoint2.setY(d2);
+               graphPoint2.setY(0.0);
             }
          }
       }
@@ -165,8 +131,7 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
       long l = System.currentTimeMillis();
       if (this.lastClickTick != mc.thePlayer.ticksExisted - 1) {
          this.nextClickTimeMs = l - 50L;
-         long l2 = l - 50L;
-         this.advanceClicksUntil(l2);
+         this.advanceClicksUntil(l - 50L);
       }
 
       n = this.advanceClicksUntil(l);
@@ -180,9 +145,7 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
       n = ((ClickModuleContext)this.parentModule).applyHitReduction(n);
       if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks() || n != n) {
          n = 0;
-         ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-         boolean flag2 = false;
-         parentModule2.setHoldingAttack(flag2);
+         ((ClickModuleContext)this.parentModule).setHoldingAttack(false);
       }
 
       this.lastClickTick = mc.thePlayer.ticksExisted;
@@ -194,10 +157,8 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
 
       while (l >= this.nextClickTimeMs) {
          n++;
-         GraphSetting graphSetting = this.pressedDistributionGraph;
-         int n2 = Math.max(1, this.sampleDelayFromGraph(graphSetting));
-         GraphSetting graphSetting2 = this.unpressedDistributionGraph;
-         int n3 = Math.max(1, this.sampleDelayFromGraph(graphSetting2));
+         int n2 = Math.max(1, this.sampleDelayFromGraph(this.pressedDistributionGraph));
+         int n3 = Math.max(1, this.sampleDelayFromGraph(this.unpressedDistributionGraph));
          this.releaseTimeMs = this.nextClickTimeMs + (long)n2;
          this.nextClickTimeMs += (long)(n2 + n3);
       }
@@ -297,10 +258,8 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
 
          while (l >= l2) {
             n5++;
-            GraphSetting graphSetting = this.pressedDistributionGraph;
-            int n6 = Math.max(1, this.sampleDelayFromGraph(graphSetting));
-            GraphSetting graphSetting2 = this.unpressedDistributionGraph;
-            int n7 = Math.max(1, this.sampleDelayFromGraph(graphSetting2));
+            int n6 = Math.max(1, this.sampleDelayFromGraph(this.pressedDistributionGraph));
+            int n7 = Math.max(1, this.sampleDelayFromGraph(this.unpressedDistributionGraph));
             l2 += (long)(n6 + n7);
          }
 
@@ -309,8 +268,7 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
          }
 
          for (int j = 0; j < n5; j++) {
-            double d = (double)(50 * n3);
-            doubleSampleWindow.add(d);
+            doubleSampleWindow.add((double)(50 * n3));
             n3 = 0;
          }
 
@@ -331,8 +289,7 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
 
          n2 += n5;
          n3++;
-         double d4 = (double)n5;
-         doubleSampleWindow2.add(d4);
+         doubleSampleWindow2.add((double)n5);
          if (doubleSampleWindow2.isFull()) {
             MutableReference mutableReference = (MutableReference)(treeMap.computeIfAbsent((int)doubleSampleWindow2.sum(), obj -> new MutableReference(0)));
             Integer num = (Integer)mutableReference.getValue() + 1;
@@ -359,23 +316,17 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
       }
 
       TextLabelSetting averageCps2 = this.averageCps;
-      String str = "Average CPS: " + MathStatisticsUtil.roundToDecimalPlaces((double)n2 / ((double)l2 / 1000.0), 2);
-      averageCps2.setText(str);
+      averageCps2.setText("Average CPS: " + MathStatisticsUtil.roundToDecimalPlaces((double)n2 / ((double)l2 / 1000.0), 2));
       averageCps2 = this.averageDcps;
-      String str2 = "Average DCPS: " + MathStatisticsUtil.roundToDecimalPlaces((double)n / ((double)l2 / 1000.0), 2);
-      averageCps2.setText(str2);
+      averageCps2.setText("Average DCPS: " + MathStatisticsUtil.roundToDecimalPlaces((double)n / ((double)l2 / 1000.0), 2));
       averageCps2 = this.averageKurtosis;
-      String str3 = "Average Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(accumulator.getMean(), 2);
-      averageCps2.setText(str3);
+      averageCps2.setText("Average Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(accumulator.getMean(), 2));
       averageCps2 = this.minKurtosis;
-      String str4 = "Min Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(minKurtosisTracker.getMinValue(), 2);
-      averageCps2.setText(str4);
+      averageCps2.setText("Min Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(minKurtosisTracker.getMinValue(), 2));
       averageCps2 = this.averageFlawedKurtosis;
-      String str5 = "Flawed average Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(accumulator2.getMean(), 2);
-      averageCps2.setText(str5);
+      averageCps2.setText("Flawed average Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(accumulator2.getMean(), 2));
       averageCps2 = this.minFlawedKurtosis;
-      String str6 = "Flawed min Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(minKurtosisTracker2.getMinValue(), 2);
-      averageCps2.setText(str6);
+      averageCps2.setText("Flawed min Kurtosis: " + MathStatisticsUtil.roundToDecimalPlaces(minKurtosisTracker2.getMinValue(), 2));
       String str7 = "Worstcase CPS: " + 1000 / (n8 + n9);
       this.worstCps.setText(str7);
       StringBuilder sb = new StringBuilder("Probabilities (sampled):\n");
@@ -388,27 +339,18 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
       }
 
       averageCps2 = this.probabilities;
-      String str8 = sb.toString();
-      averageCps2.setText(str8);
+      averageCps2.setText(sb.toString());
    }
 
    public void importSelectedPattern() {
       if (this.selectedImportPattern != null) {
          List points = this.pressedDistributionGraph.getPoints();
          ArrayList pressedDelays = this.selectedImportPattern.pressedDelays;
-         int value = (int)this.resolution.getValue();
-         ArrayList list = pressedDelays;
-         List list2 = points;
-         this.populateHistogramPoints(list2, list, value);
+         this.populateHistogramPoints(points, pressedDelays, (int)this.resolution.getValue());
          points = this.unpressedDistributionGraph.getPoints();
          pressedDelays = this.selectedImportPattern.unpressedDelays;
-         int value2 = (int)this.resolution.getValue();
-         ArrayList list3 = pressedDelays;
-         List list4 = points;
-         this.populateHistogramPoints(list4, list3, value2);
-         StringValue resatimport2 = this.resatimport;
-         double value3 = this.resolution.getValue();
-         resatimport2.setValue(value3);
+         this.populateHistogramPoints(points, pressedDelays, (int)this.resolution.getValue());
+         this.resatimport.setValue(this.resolution.getValue());
          this.resetAnalysisLabelsAndScale();
       }
    }
@@ -434,19 +376,14 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
          int n4 = (Integer)list2.get(k);
          ClickDelayHistogramBin clickDelayHistogramBin2 = (ClickDelayHistogramBin)map.get(n4);
          if (clickDelayHistogramBin2 != null) {
-            int n5 = ClickDelayHistogramBin.accessSampleCount(clickDelayHistogramBin2) + 1;
-            clickDelayHistogramBin2.setSampleCount(n5);
+            clickDelayHistogramBin2.setSampleCount(ClickDelayHistogramBin.accessSampleCount(clickDelayHistogramBin2) + 1);
             n3++;
          }
       }
 
       for (int m = 0; m < list3.size(); m++) {
          ClickDelayHistogramBin clickDelayHistogramBin3 = (ClickDelayHistogramBin)list3.get(m);
-         GraphPointBuilder graphPointBuilder2 = this.graphPointBuilder;
-         double d = (double)(ClickDelayHistogramBin.accessMinDelay(clickDelayHistogramBin3) + ClickDelayHistogramBin.accessMaxDelay(clickDelayHistogramBin3)) / 2.0;
-         double d2 = (double)ClickDelayHistogramBin.accessSampleCount(clickDelayHistogramBin3) * 100.0 / (double)n3;
-         double d3 = d;
-         list.add(graphPointBuilder2.buildAt(d3, d2));
+         list.add(this.graphPointBuilder.buildAt((double)(ClickDelayHistogramBin.accessMinDelay(clickDelayHistogramBin3) + ClickDelayHistogramBin.accessMaxDelay(clickDelayHistogramBin3)) / 2.0, (double)ClickDelayHistogramBin.accessSampleCount(clickDelayHistogramBin3) * 100.0 / (double)n3));
       }
    }
 
@@ -472,13 +409,11 @@ public class DistributionClickPatternMode extends AbstractClickPatternMode {
    }
 
    private void shiftGraphRight(GraphSetting graphSetting) {
-      byte b = -1;
-      this.shiftGraphPoints(graphSetting, b);
+      this.shiftGraphPoints(graphSetting, (byte)-1);
    }
 
    private void shiftGraphLeft(GraphSetting graphSetting) {
-      byte b = 1;
-      this.shiftGraphPoints(graphSetting, b);
+      this.shiftGraphPoints(graphSetting, (byte)1);
    }
 
 }

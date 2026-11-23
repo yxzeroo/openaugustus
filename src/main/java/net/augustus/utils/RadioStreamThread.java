@@ -32,8 +32,7 @@ public class RadioStreamThread extends Thread {
          if (this.playing.get()) {
             try {
                this.player = new Player(new URL(this.streamUrl).openStream());
-               boolean flag = true;
-               this.player.setGain((float)(ClientManagers.moduleManager.radio.volume.getValue(flag) * 0.8600000143051147 - 80.0));
+               this.player.setGain((float)(ClientManagers.moduleManager.radio.volume.getValue(true) * 0.8600000143051147 - 80.0));
                this.player.play(this.playing);
             } catch (Throwable e) {
             }

@@ -200,8 +200,7 @@ public class ChunkType extends Type<Chunk> {
       }
 
       boolean biomes = chunk.isFullChunk() && chunk.getBiomeData() != null;
-      int totalSize = getSize(storageArrays, (short)chunk.getBitmask(), biomes);
-      byte[] chunkData = new byte[totalSize];
+      byte[] chunkData = new byte[getSize(storageArrays, (short)chunk.getBitmask(), biomes)];
       int dataPosition = 0;
 
       for (int ix = 0; ix < storageArrays.length; ix++) {
@@ -258,8 +257,7 @@ public class ChunkType extends Type<Chunk> {
 
    public static int getSize(short primaryBitMask, short additionalBitMask, boolean fullChunk, boolean skyLight) {
       int primarySectionCount = Integer.bitCount(primaryBitMask & '\uffff');
-      int additionalSectionCount = Integer.bitCount(additionalBitMask & '\uffff');
-      int size = 8192 * primarySectionCount + 2048 * additionalSectionCount;
+      int size = 8192 * primarySectionCount + 2048 * Integer.bitCount(additionalBitMask & '\uffff');
       if (skyLight) {
          size += 2048 * primarySectionCount;
       }

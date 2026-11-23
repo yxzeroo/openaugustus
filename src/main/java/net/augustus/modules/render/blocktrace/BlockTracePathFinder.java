@@ -31,8 +31,7 @@ public class BlockTracePathFinder {
 
       for (int i = 0; !priorityQueue.isEmpty(); i++) {
          BlockTraceNode blockTraceNode2 = (BlockTraceNode)priorityQueue.poll();
-         TraceBlockPos traceBlockPos3 = blockTraceNode2.getTraceBlockPos();
-         if (traceBlockPos3.getBlockPos().equalsPos(traceBlockPos2.getBlockPos())) {
+         if (blockTraceNode2.getTraceBlockPos().getBlockPos().equalsPos(traceBlockPos2.getBlockPos())) {
             return blockTraceNode2;
          }
 

@@ -332,8 +332,7 @@ public class IntegratedServer extends MinecraftServer {
    }
 
    private void fixWorldTime(WorldServer world) {
-      WorldInfo worldInfo = world.getWorldInfo();
-      if (worldInfo.getGameType().getID() == 1) {
+      if (world.getWorldInfo().getGameType().getID() == 1) {
          long worldTime = world.getWorldTime();
          long l = worldTime % 24000L;
          if (Config.isTimeDayOnly()) {
@@ -381,13 +380,11 @@ public class IntegratedServer extends MinecraftServer {
       this.setConfigManager(new IntegratedPlayerList(this));
       this.mc = mc2;
       this.theWorldSettings = this.isDemo() ? DemoWorldServer.demoWorldSettings : worldSettings;
-      ISaveHandler saveLoader = this.getActiveAnvilConverter().getSaveLoader(str, false);
-      WorldInfo worldInfo = saveLoader.loadWorldInfo();
+      WorldInfo worldInfo = this.getActiveAnvilConverter().getSaveLoader(str, false).loadWorldInfo();
       if (worldInfo != null) {
          NBTTagCompound playerNBTTagCompound = worldInfo.getPlayerNBTTagCompound();
          if (playerNBTTagCompound != null && playerNBTTagCompound.hasKey("Dimension")) {
-            int integer = playerNBTTagCompound.getInteger("Dimension");
-            PacketThreadUtil.lastDimensionId = integer;
+            PacketThreadUtil.lastDimensionId = playerNBTTagCompound.getInteger("Dimension");
             this.mc.loadingScreen.setLoadingProgress(-1);
          }
       }

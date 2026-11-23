@@ -13,15 +13,12 @@ public class VendorPacketEncoder extends MessageToByteEncoder {
 
    @Override
    public void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-      VendorPacket packet = (VendorPacket)msg;
-      VendorPacket packet2 = packet;
-      this.encodePacket(ctx, packet2, out);
+      this.encodePacket(ctx, (VendorPacket)msg, out);
    }
 
    public void encodePacket(ChannelHandlerContext ctx, VendorPacket packet, ByteBuf buf) throws IOException, Exception {
       Object obj = null;
       int n = 0;
-      String opaqueStateTag = VendorPacketBuffer.getOpaqueStateTag();
       this.timingGuard.enterStep1();
       n = (Integer)AugustusServerClient.getInstance().outboundPacketIds.get(packet.getClass()) + 7;
       if (packet instanceof SecurityAlertPacket) {
@@ -31,9 +28,7 @@ public class VendorPacketEncoder extends MessageToByteEncoder {
       if (n >= 0) {
          obj = new VendorPacketBuffer(buf);
          ((VendorPacketBuffer)obj).writeInt(n);
-         VendorPacket packet2 = packet;
-         VendorPacketBuffer vendorPacketBuffer = (VendorPacketBuffer)obj;
-         packet2.writePacketData(vendorPacketBuffer);
+         packet.writePacketData((VendorPacketBuffer)obj);
       } else {
          throw new NullPointerException("Couldn't find id of packet " + packet.getClass().getSimpleName());
       }

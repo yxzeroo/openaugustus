@@ -8,8 +8,7 @@ public class EventBlockBreak extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      BlockBreakListener listener = (BlockBreakListener)obj;
-      this.call2(listener);
+      this.call2((BlockBreakListener)obj);
    }
 
    public void call2(BlockBreakListener listener) {

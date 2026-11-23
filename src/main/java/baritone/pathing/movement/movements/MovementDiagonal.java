@@ -72,10 +72,8 @@ public class MovementDiagonal extends Movement {
                d += 2.316423442205235;
             }
 
-            Block block2 = calculationContext.get(n, n2 - 1, n5).getBlock();
-            if (!MovementHelper.isLava(block2)) {
-               Block block3 = calculationContext.get(n4, n2 - 1, n3).getBlock();
-               if (!MovementHelper.isLava(block3)) {
+            if (!MovementHelper.isLava(calculationContext.get(n, n2 - 1, n5).getBlock())) {
+               if (!MovementHelper.isLava(calculationContext.get(n4, n2 - 1, n3).getBlock())) {
                   Block block4 = calculationContext.getBlock(n, n2, n3);
                   boolean flag3 = false;
                   if (MovementHelper.isWater(block4) || MovementHelper.isWater(state.getBlock())) {

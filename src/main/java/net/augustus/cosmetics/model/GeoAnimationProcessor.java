@@ -38,8 +38,7 @@ public class GeoAnimationProcessor {
    }
 
    public IGeoBone getBone(String str) {
-      Stream stream = this.modelRendererList.stream();
-      return (IGeoBone)(stream.filter(obj -> ((IGeoBone)obj).getName().equals(str)).findFirst().orElse(null));
+      return (IGeoBone)(this.modelRendererList.stream().filter(obj -> ((IGeoBone)obj).getName().equals(str)).findFirst().orElse(null));
    }
 
    public GeoAnimationProcessor(IGeoAnimatableModel geoAnimatableModel) {
@@ -61,9 +60,7 @@ public class GeoAnimationProcessor {
       this.animatedEntities.add(num);
       GeoAnimationData orCreateAnimationData = geoAnimatable.getFactory().getOrCreateAnimationData(num);
       HashMap map = this.createNewDirtyTracker();
-      HashMap boneSnapshotCollection = orCreateAnimationData.getBoneSnapshotCollection();
-      HashMap map2 = boneSnapshotCollection;
-      this.updateBoneSnapshots(map2);
+      this.updateBoneSnapshots(orCreateAnimationData.getBoneSnapshotCollection());
       HashMap boneSnapshotCollection2 = orCreateAnimationData.getBoneSnapshotCollection();
 
       for (GeoAnimationController geoAnimationController : (Iterable<GeoAnimationController>)(orCreateAnimationData.getAnimationControllers().values())) {
@@ -74,8 +71,7 @@ public class GeoAnimationProcessor {
 
          geoAnimationController.isJustStarting = orCreateAnimationData.isFirstTick;
          geoAnimationEvent.setController(geoAnimationController);
-         List modelRendererList2 = this.modelRendererList;
-         geoAnimationController.process(d, geoAnimationEvent, modelRendererList2, boneSnapshotCollection2, molangParser, flag);
+         geoAnimationController.process(d, geoAnimationEvent, this.modelRendererList, boneSnapshotCollection2, molangParser, flag);
 
          for (GeoBoneAnimationQueue geoBoneAnimationQueue : (Iterable<GeoBoneAnimationQueue>)(geoAnimationController.getBoneAnimationQueues().values())) {
             IGeoBone bone = geoBoneAnimationQueue.bone;
@@ -94,17 +90,11 @@ public class GeoAnimationProcessor {
             if (geoBoneDirtyTracker != null) {
                if (geoAnimationPoint != null && geoAnimationPoint2 != null && geoAnimationPoint3 != null) {
                   UnaryFunction customEasingMethod = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType = geoAnimationController.easingType;
-                  float f = GeoEasingInterpolator.lerpValues(geoAnimationPoint, easingType, customEasingMethod) + initialSnapshot.rotationValueX;
-                  bone.setRotationX(f);
+                  bone.setRotationX(GeoEasingInterpolator.lerpValues(geoAnimationPoint, geoAnimationController.easingType, customEasingMethod) + initialSnapshot.rotationValueX);
                   UnaryFunction customEasingMethod2 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType2 = geoAnimationController.easingType;
-                  float f2 = GeoEasingInterpolator.lerpValues(geoAnimationPoint2, easingType2, customEasingMethod2) + initialSnapshot.rotationValueY;
-                  bone.setRotationY(f2);
+                  bone.setRotationY(GeoEasingInterpolator.lerpValues(geoAnimationPoint2, geoAnimationController.easingType, customEasingMethod2) + initialSnapshot.rotationValueY);
                   UnaryFunction customEasingMethod3 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType3 = geoAnimationController.easingType;
-                  float f3 = GeoEasingInterpolator.lerpValues(geoAnimationPoint3, easingType3, customEasingMethod3) + initialSnapshot.rotationValueZ;
-                  bone.setRotationZ(f3);
+                  bone.setRotationZ(GeoEasingInterpolator.lerpValues(geoAnimationPoint3, geoAnimationController.easingType, customEasingMethod3) + initialSnapshot.rotationValueZ);
                   right.rotationValueX = bone.getRotationX();
                   right.rotationValueY = bone.getRotationY();
                   right.rotationValueZ = bone.getRotationZ();
@@ -114,17 +104,11 @@ public class GeoAnimationProcessor {
 
                if (geoAnimationPoint4 != null && geoAnimationPoint5 != null && geoAnimationPoint6 != null) {
                   UnaryFunction customEasingMethod4 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType4 = geoAnimationController.easingType;
-                  float f4 = GeoEasingInterpolator.lerpValues(geoAnimationPoint4, easingType4, customEasingMethod4);
-                  bone.setPositionX(f4);
+                  bone.setPositionX(GeoEasingInterpolator.lerpValues(geoAnimationPoint4, geoAnimationController.easingType, customEasingMethod4));
                   UnaryFunction customEasingMethod5 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType5 = geoAnimationController.easingType;
-                  float f5 = GeoEasingInterpolator.lerpValues(geoAnimationPoint5, easingType5, customEasingMethod5);
-                  bone.setPositionY(f5);
+                  bone.setPositionY(GeoEasingInterpolator.lerpValues(geoAnimationPoint5, geoAnimationController.easingType, customEasingMethod5));
                   UnaryFunction customEasingMethod6 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType6 = geoAnimationController.easingType;
-                  float f6 = GeoEasingInterpolator.lerpValues(geoAnimationPoint6, easingType6, customEasingMethod6);
-                  bone.setPositionZ(f6);
+                  bone.setPositionZ(GeoEasingInterpolator.lerpValues(geoAnimationPoint6, geoAnimationController.easingType, customEasingMethod6));
                   right.positionOffsetX = bone.getPositionX();
                   right.positionOffsetY = bone.getPositionY();
                   right.positionOffsetZ = bone.getPositionZ();
@@ -134,17 +118,11 @@ public class GeoAnimationProcessor {
 
                if (geoAnimationPoint7 != null && geoAnimationPoint8 != null && geoAnimationPoint9 != null) {
                   UnaryFunction customEasingMethod7 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType7 = geoAnimationController.easingType;
-                  float f7 = GeoEasingInterpolator.lerpValues(geoAnimationPoint7, easingType7, customEasingMethod7);
-                  bone.setScaleX(f7);
+                  bone.setScaleX(GeoEasingInterpolator.lerpValues(geoAnimationPoint7, geoAnimationController.easingType, customEasingMethod7));
                   UnaryFunction customEasingMethod8 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType8 = geoAnimationController.easingType;
-                  float f8 = GeoEasingInterpolator.lerpValues(geoAnimationPoint8, easingType8, customEasingMethod8);
-                  bone.setScaleY(f8);
+                  bone.setScaleY(GeoEasingInterpolator.lerpValues(geoAnimationPoint8, geoAnimationController.easingType, customEasingMethod8));
                   UnaryFunction customEasingMethod9 = geoAnimationController.customEasingMethod;
-                  GeoEasingType easingType9 = geoAnimationController.easingType;
-                  float f9 = GeoEasingInterpolator.lerpValues(geoAnimationPoint9, easingType9, customEasingMethod9);
-                  bone.setScaleZ(f9);
+                  bone.setScaleZ(GeoEasingInterpolator.lerpValues(geoAnimationPoint9, geoAnimationController.easingType, customEasingMethod9));
                   right.scaleValueX = bone.getScaleX();
                   right.scaleValueY = bone.getScaleY();
                   right.scaleValueZ = bone.getScaleZ();
@@ -178,12 +156,9 @@ public class GeoAnimationProcessor {
                }
 
                double d2 = Math.min((d - (double)right2.mostRecentResetRotationTick) / resetTickLength, 1.0);
-               float f10 = GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueX, (double)initialSnapshot2.rotationValueX);
-               model2.setRotationX(f10);
-               float f11 = GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueY, (double)initialSnapshot2.rotationValueY);
-               model2.setRotationY(f11);
-               float f12 = GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueZ, (double)initialSnapshot2.rotationValueZ);
-               model2.setRotationZ(f12);
+               model2.setRotationX(GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueX, (double)initialSnapshot2.rotationValueX));
+               model2.setRotationY(GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueY, (double)initialSnapshot2.rotationValueY));
+               model2.setRotationZ(GeoEasingInterpolator.lerpFloatValues(d2, (double)right2.rotationValueZ, (double)initialSnapshot2.rotationValueZ));
                if (d2 >= 1.0) {
                   right2.rotationValueX = model2.getRotationX();
                   right2.rotationValueY = model2.getRotationY();
@@ -198,12 +173,9 @@ public class GeoAnimationProcessor {
                }
 
                double d3 = Math.min((d - (double)right2.mostRecentResetPositionTick) / resetTickLength, 1.0);
-               float f13 = GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetX, (double)initialSnapshot2.positionOffsetX);
-               model2.setPositionX(f13);
-               float f14 = GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetY, (double)initialSnapshot2.positionOffsetY);
-               model2.setPositionY(f14);
-               float f15 = GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetZ, (double)initialSnapshot2.positionOffsetZ);
-               model2.setPositionZ(f15);
+               model2.setPositionX(GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetX, (double)initialSnapshot2.positionOffsetX));
+               model2.setPositionY(GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetY, (double)initialSnapshot2.positionOffsetY));
+               model2.setPositionZ(GeoEasingInterpolator.lerpFloatValues(d3, (double)right2.positionOffsetZ, (double)initialSnapshot2.positionOffsetZ));
                if (d3 >= 1.0) {
                   right2.positionOffsetX = model2.getPositionX();
                   right2.positionOffsetY = model2.getPositionY();
@@ -218,12 +190,9 @@ public class GeoAnimationProcessor {
                }
 
                double d4 = Math.min((d - (double)right2.mostRecentResetScaleTick) / resetTickLength, 1.0);
-               float f16 = GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueX, (double)initialSnapshot2.scaleValueX);
-               model2.setScaleX(f16);
-               float f17 = GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueY, (double)initialSnapshot2.scaleValueY);
-               model2.setScaleY(f17);
-               float f18 = GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueZ, (double)initialSnapshot2.scaleValueZ);
-               model2.setScaleZ(f18);
+               model2.setScaleX(GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueX, (double)initialSnapshot2.scaleValueX));
+               model2.setScaleY(GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueY, (double)initialSnapshot2.scaleValueY));
+               model2.setScaleZ(GeoEasingInterpolator.lerpFloatValues(d4, (double)right2.scaleValueZ, (double)initialSnapshot2.scaleValueZ));
                if (d4 >= 1.0) {
                   right2.scaleValueX = model2.getScaleX();
                   right2.scaleValueY = model2.getScaleY();

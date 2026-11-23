@@ -19,9 +19,7 @@ public class PathFinder {
    private PathEntity createEntityPathTo(IBlockAccess world, Entity entity, double d, double d2, double d3, float f) {
       this.path.clearPath();
       this.nodeProcessor.initProcessor(world, entity);
-      PathPoint pathPointTo = this.nodeProcessor.getPathPointTo(entity);
-      PathPoint pathPointToCoords = this.nodeProcessor.getPathPointToCoords(entity, d, d2, d3);
-      PathEntity pathEntity = this.addToPath(entity, pathPointTo, pathPointToCoords, f);
+      PathEntity pathEntity = this.addToPath(entity, this.nodeProcessor.getPathPointTo(entity), this.nodeProcessor.getPathPointToCoords(entity, d, d2, d3), f);
       this.nodeProcessor.postProcess();
       return pathEntity;
    }

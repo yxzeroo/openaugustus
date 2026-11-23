@@ -8,7 +8,6 @@ public class Base64VarIntCodec {
    private static final long a = 41724036735061L;
 
    private static byte[] decodeBase64(long l, String str) {
-      int invertedFlowMarker = Pkcs1Padding.getInvertedFlowMarker();
       int length = str.length();
       if (str.charAt(length - 1) == '=') {
          length--;
@@ -47,7 +46,6 @@ public class Base64VarIntCodec {
 
    public static int[] readVarInt(byte[] bytes, int n) {
       int n2 = 0;
-      Pkcs1Padding.getFlowState();
       int n3 = 0;
 
       int n4;
@@ -62,7 +60,6 @@ public class Base64VarIntCodec {
 
    public static String encodeBase64(int n, byte[] bytes, int n2, char ch, int n3, char ch2) {
       StringBuilder sb = new StringBuilder((n3 + 2) / 3 * 4);
-      Pkcs1Padding.getFlowState();
 
       for (int i = n2; i < n2 + n3; i += 3) {
          int n4 = 0;
@@ -126,8 +123,7 @@ public class Base64VarIntCodec {
    }
 
    static {
-      String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-      BASE64_CHARS = str.toCharArray();
+      BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
       int n = 0;
 
       while (n < BASE64_CHARS.length) {

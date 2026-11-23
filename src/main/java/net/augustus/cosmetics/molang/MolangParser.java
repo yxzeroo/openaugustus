@@ -27,8 +27,7 @@ public class MolangParser extends MathBuilder {
             try {
                return new MolangValueExpression(this, new ConstantExpression((double)Float.parseFloat(asJsonPrimitive.getAsString())));
             } catch (Exception e) {
-               String asString = asJsonPrimitive.getAsString();
-               return this.parseExpression(asString);
+               return this.parseExpression(asJsonPrimitive.getAsString());
             }
          } else {
             return new MolangValueExpression(this, new ConstantExpression(asJsonPrimitive.getAsDouble()));
@@ -43,59 +42,41 @@ public class MolangParser extends MathBuilder {
       this.functions.put("cos", CosDegreesFunction.class);
       this.functions.put("sin", SinDegreesFunction.class);
       String str = "math.abs";
-      String str2 = "abs";
-      this.remap(str2, str);
+      this.remap("abs", str);
       String str3 = "math.ceil";
-      String str4 = "ceil";
-      this.remap(str4, str3);
+      this.remap("ceil", str3);
       String str5 = "math.clamp";
-      String str6 = "clamp";
-      this.remap(str6, str5);
+      this.remap("clamp", str5);
       String str7 = "math.cos";
-      String str8 = "cos";
-      this.remap(str8, str7);
+      this.remap("cos", str7);
       String str9 = "math.exp";
-      String str10 = "exp";
-      this.remap(str10, str9);
+      this.remap("exp", str9);
       String str11 = "math.floor";
-      String str12 = "floor";
-      this.remap(str12, str11);
+      this.remap("floor", str11);
       String str13 = "math.lerp";
-      String str14 = "lerp";
-      this.remap(str14, str13);
+      this.remap("lerp", str13);
       String str15 = "math.lerprotate";
-      String str16 = "lerprotate";
-      this.remap(str16, str15);
+      this.remap("lerprotate", str15);
       String str17 = "math.ln";
-      String str18 = "ln";
-      this.remap(str18, str17);
+      this.remap("ln", str17);
       String str19 = "math.max";
-      String str20 = "max";
-      this.remap(str20, str19);
+      this.remap("max", str19);
       String str21 = "math.min";
-      String str22 = "min";
-      this.remap(str22, str21);
+      this.remap("min", str21);
       String str23 = "math.mod";
-      String str24 = "mod";
-      this.remap(str24, str23);
+      this.remap("mod", str23);
       String str25 = "math.pow";
-      String str26 = "pow";
-      this.remap(str26, str25);
+      this.remap("pow", str25);
       String str27 = "math.random";
-      String str28 = "random";
-      this.remap(str28, str27);
+      this.remap("random", str27);
       String str29 = "math.round";
-      String str30 = "round";
-      this.remap(str30, str29);
+      this.remap("round", str29);
       String str31 = "math.sin";
-      String str32 = "sin";
-      this.remap(str32, str31);
+      this.remap("sin", str31);
       String str33 = "math.sqrt";
-      String str34 = "sqrt";
-      this.remap(str34, str33);
+      this.remap("sqrt", str33);
       String str35 = "math.trunc";
-      String str36 = "trunc";
-      this.remap(str36, str35);
+      this.remap("trunc", str35);
    }
 
    @Override
@@ -153,11 +134,9 @@ public class MolangParser extends MathBuilder {
          }
       } else {
          try {
-            String[] strings = this.breakdownChars(str);
-            List list = this.breakdown(strings);
+            List list = this.breakdown(this.breakdownChars(str));
             if (list.size() >= 3 && list.get(0) instanceof String) {
-               Object obj = list.get(0);
-               if (this.isVariable(obj) && list.get(1).equals("=")) {
+               if (this.isVariable(list.get(0)) && list.get(1).equals("=")) {
                   String str3 = (String)list.get(0);
                   list = list.subList(2, list.size());
                   Object obj2 = null;

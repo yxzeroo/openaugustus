@@ -168,8 +168,7 @@ public class Block {
             spawnAsEntity(world, pos, stack);
          }
       } else {
-         int fortuneModifier = EnchantmentHelper.getFortuneModifier(player);
-         this.dropBlockAsItem(world, pos, state, fortuneModifier);
+         this.dropBlockAsItem(world, pos, state, EnchantmentHelper.getFortuneModifier(player));
       }
    }
 
@@ -1407,9 +1406,7 @@ public class Block {
 
    public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB box, List list, Entity entity) {
       AxisAlignedBB collisionBoundingBox = this.getCollisionBoundingBox(world, state, pos.getX(), pos.getY(), pos.getZ());
-      Block block = world.getBlockState(pos).getBlock();
-      EventBlockBoundingBox event = BlockBoundingBoxListener.onBlockBoundingBox(collisionBoundingBox, block, pos);
-      collisionBoundingBox = event.getBoundingBox();
+      collisionBoundingBox = BlockBoundingBoxListener.onBlockBoundingBox(collisionBoundingBox, world.getBlockState(pos).getBlock(), pos).getBoundingBox();
       if (collisionBoundingBox != null && box.intersectsWith(collisionBoundingBox)) {
          list.add(collisionBoundingBox);
       }

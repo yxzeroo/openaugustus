@@ -71,7 +71,6 @@ public class HFNoiseTexture implements ICustomTexture {
    }
 
    private byte random(int n, int n2, int n3) {
-      int n4 = (this.random(n) + this.random(n2 * 19)) * this.random(n3 * 23) - n3;
-      return (byte)(this.random(n4) % 128);
+      return (byte)(this.random((this.random(n) + this.random(n2 * 19)) * this.random(n3 * 23) - n3) % 128);
    }
 }

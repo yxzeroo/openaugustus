@@ -27,8 +27,7 @@ public class ModelRenderer extends Module implements TickListener {
    }
 
    public void onEnable() {
-      int n = GL11.glGenTextures();
-      GlStateManager.bindTexture(n);
+      GlStateManager.bindTexture(GL11.glGenTextures());
       String str = "amongus.mtl";
       ObjModelLoader.loadObjModel("amongus.obj", str);
       this.modelLoadPending = true;
@@ -39,8 +38,7 @@ public class ModelRenderer extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {

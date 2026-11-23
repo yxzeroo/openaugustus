@@ -2,7 +2,6 @@ package net.augustus.ui.menu;
 
 import net.augustus.Augustus;
 import net.augustus.ClientManagers;
-import net.augustus.events.EventMotion;
 import net.augustus.render.RenderUtil;
 import net.augustus.ui.GuiButtonClickHandler;
 import net.augustus.utils.render.BlurShadowManager;
@@ -17,12 +16,10 @@ import net.minecraft.client.renderer.GlStateManager;
 public class ClassicMainMenuScreen extends AbstractMainMenuScreen {
 
    private void onClientMenuClick(GuiButton button) {
-      ClientTabContainerScreen clientTabContainerScreen = new ClientTabContainerScreen(this, 0);
-      this.openScreen(clientTabContainerScreen);
+      this.openScreen(new ClientTabContainerScreen(this, 0));
    }
 
    private void renderMenuBackdrop(ShaderRenderPass shaderRenderPass) {
-      int[] controlFlowState = EventMotion.getControlFlowState();
       if (ClientManagers.moduleManager.augustusServer.roundedButtons.getValue()) {
          RenderUtil.drawRoundedRect(
             (float)(this.getCenterX() - 115),
@@ -49,60 +46,29 @@ public class ClassicMainMenuScreen extends AbstractMainMenuScreen {
       int n2 = this.getCenterX() - 100;
       int n3 = n + 60;
       String optionsLabel2 = this.optionsLabel;
-      GuiButtonClickHandler guiButtonClickHandler = button -> this.onOptionsClick(button);
-      String str = optionsLabel2;
-      byte b = 20;
-      byte b2 = 98;
-      int n4 = n3;
-      int n5 = n2;
-      this.addButton(n5, n4, b2, b, str, guiButtonClickHandler);
+      this.addButton(n2, n3, (byte)98, (byte)20, optionsLabel2, button -> this.onOptionsClick(button));
       int n6 = this.getCenterX() + 2;
       n3 = n + 60;
       optionsLabel2 = this.quitLabel;
-      GuiButtonClickHandler guiButtonClickHandler2 = button2 -> this.mc.shutdown();
-      String str2 = optionsLabel2;
-      byte b3 = 20;
-      byte b4 = 98;
-      int n7 = n3;
-      int n8 = n6;
-      this.addButton(n8, n7, b4, b3, str2, guiButtonClickHandler2);
-      EventMotion.getControlFlowState();
+      this.addButton(n6, n3, (byte)98, (byte)20, optionsLabel2, button2 -> this.mc.shutdown());
       n3 = this.getCenterX() - 100;
       int n9 = n - 24;
       String singleplayerLabel2 = this.singleplayerLabel;
       GuiButtonClickHandler guiButtonClickHandler3 = button3 -> {
-         GuiSelectWorld guiSelectWorld = new GuiSelectWorld(this);
-         this.openScreen(guiSelectWorld);
+         this.openScreen(new GuiSelectWorld(this));
       };
-      String str3 = singleplayerLabel2;
-      byte b5 = 20;
-      short s = 200;
-      int n10 = n9;
-      int n11 = n3;
-      this.addButton(n11, n10, s, b5, str3, guiButtonClickHandler3);
+      this.addButton(n3, n9, (short)200, (byte)20, singleplayerLabel2, guiButtonClickHandler3);
       int n12 = this.getCenterX() - 100;
       optionsLabel2 = this.multiplayerLabel;
-      GuiButtonClickHandler guiButtonClickHandler4 = button4 -> this.onMultiplayerClick(button4);
-      String str4 = optionsLabel2;
-      byte b6 = 20;
-      short s2 = 200;
-      int n13 = n12;
-      this.addButton(n13, n, s2, b6, str4, guiButtonClickHandler4);
+      this.addButton(n12, n, (short)200, (byte)20, optionsLabel2, button4 -> this.onMultiplayerClick(button4));
       int n14 = this.getCenterX() - 100;
       n3 = n + 24;
       optionsLabel2 = Augustus.getInstance().getName();
-      GuiButtonClickHandler guiButtonClickHandler5 = button5 -> this.onClientMenuClick(button5);
-      String str5 = optionsLabel2;
-      byte b7 = 20;
-      short s3 = 200;
-      int n15 = n3;
-      int n16 = n14;
-      this.addButton(n16, n15, s3, b7, str5, guiButtonClickHandler5);
+      this.addButton(n14, n3, (short)200, (byte)20, optionsLabel2, button5 -> this.onClientMenuClick(button5));
    }
 
    private void onMultiplayerClick(GuiButton button) {
-      GuiMultiplayer guiMultiplayer = new GuiMultiplayer(this);
-      this.openScreen(guiMultiplayer);
+      this.openScreen(new GuiMultiplayer(this));
    }
 
    @Override
@@ -113,19 +79,10 @@ public class ClassicMainMenuScreen extends AbstractMainMenuScreen {
       super.drawContent(n, n2, f);
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       AugustusServer.renderConnectionStatus(false);
-      Augustus instance = Augustus.getInstance();
-      String name = instance.getName();
-      float f2 = (float)this.getCenterX() / 5.0F;
-      float f3 = (((float)this.getCenterY() / 2.0F - 24.0F) / 5.0F - 3.0F) / 2.0F + 3.0F;
-      float f4 = 5.0F;
-      float f5 = f3;
-      float f6 = f2;
-      String str = name;
-      this.drawCenteredScaledString(str, f6, f5, f4);
+      this.drawCenteredScaledString(Augustus.getInstance().getName(), (float)this.getCenterX() / 5.0F, (((float)this.getCenterY() / 2.0F - 24.0F) / 5.0F - 3.0F) / 2.0F + 3.0F, 5.0F);
    }
 
    private void onOptionsClick(GuiButton button) {
-      GuiOptions guiOptions = new GuiOptions(this, this.mc.gameSettings);
-      this.openScreen(guiOptions);
+      this.openScreen(new GuiOptions(this, this.mc.gameSettings));
    }
 }

@@ -185,9 +185,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
    }
 
    public void setLocationAndAngles(double d, double d2, double d3, float f, float f2) {
-      BoundedHistoryList positionHistory2 = this.positionHistory;
-      Vec3 vec = new Vec3(d, d2, d3);
-      positionHistory2.add(vec);
+      this.positionHistory.add(new Vec3(d, d2, d3));
       this.lastTickPosX = this.prevPosX = this.posX = d;
       this.lastTickPosY = this.prevPosY = this.posY = d2;
       this.lastTickPosZ = this.prevPosZ = this.posZ = d3;
@@ -220,8 +218,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       double d4 = this.posX - d;
       double d5 = this.posY - d2;
       double d6 = this.posZ - d3;
-      double d7 = d4 * d4 + d5 * d5 + d6 * d6;
-      return this.isInRangeToRenderDist(d7);
+      return this.isInRangeToRenderDist(d4 * d4 + d5 * d5 + d6 * d6);
    }
 
    public void setPositionAndUpdate(double d, double d2, double d3) {
@@ -286,8 +283,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          yawPitchHelper.realLastPitch = yawPitchHelper.realLastPitch + (yawPitchHelper.realPitch - realPitch);
          yawPitchHelper.realLastYaw = yawPitchHelper.realLastYaw + (yawPitchHelper.realYaw - realYaw);
          float yaw = rotation.yaw;
-         float realLastYaw = yawPitchHelper.realLastYaw;
-         float f3 = yawPitchHelper.alignYawToReference(realLastYaw, yaw);
+         float f3 = yawPitchHelper.alignYawToReference(yawPitchHelper.realLastYaw, yaw);
          this.rotationYaw = rotation.yaw;
          this.rotationPitch = rotation.pitch;
          this.prevRotationPitch = yawPitchHelper.realLastPitch;
@@ -388,9 +384,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       this.posX = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0;
       this.posY = this.getEntityBoundingBox().minY;
       this.posZ = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0;
-      BoundedHistoryList positionHistory2 = this.positionHistory;
-      Vec3 vec = new Vec3(this.posX, this.posY, this.posZ);
-      positionHistory2.add(vec);
+      this.positionHistory.add(new Vec3(this.posX, this.posY, this.posZ));
    }
 
    public void applyEnchantments(EntityLivingBase entity, Entity entity2) {
@@ -442,9 +436,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       if (f == 1.0F) {
          return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
       } else {
-         float f2 = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f;
-         float f3 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f;
-         return this.getVectorForRotation(f2, f3);
+         return this.getVectorForRotation(this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f, this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f);
       }
    }
 
@@ -673,8 +665,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
    }
 
    public boolean isOffsetPositionInLiquid(double d, double d2, double d3) {
-      AxisAlignedBB box = this.getEntityBoundingBox().offset(d, d2, d3);
-      return this.isLiquidPresentInAABB(box);
+      return this.isLiquidPresentInAABB(this.getEntityBoundingBox().offset(d, d2, d3));
    }
 
    public void setAir(int n) {
@@ -689,15 +680,12 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       double d2 = MathHelper.clamp_double(positionEyes.yCoord, box.minY, box.maxY);
       double d3 = MathHelper.clamp_double(positionEyes.zCoord, box.minZ, box.maxZ);
       Vec3 vec = new Vec3(d, d2, d3);
-      Vec3 vec2 = new Vec3(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
-      return (float)vec2.distanceTo(vec);
+      return (float)new Vec3(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ).distanceTo(vec);
    }
 
    public Vec3 getLookCustom2(float f, float f2, float f3) {
       if (f != 1.0F && f != 2.0F) {
-         float f4 = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f;
-         float f5 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f;
-         return this.getVectorForRotation(f4, f5);
+         return this.getVectorForRotation(this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f, this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f);
       } else {
          return this.getVectorForRotation(f3, f2);
       }
@@ -797,8 +785,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       double d4 = d - (double)pos.getX();
       double d5 = d2 - (double)pos.getY();
       double d6 = d3 - (double)pos.getZ();
-      List collisionBoxes = this.entityWorld.getCollisionBoxes(this.getEntityBoundingBox());
-      if (collisionBoxes.isEmpty() && !this.entityWorld.isBlockFullCube(pos)) {
+      if (this.entityWorld.getCollisionBoxes(this.getEntityBoundingBox()).isEmpty() && !this.entityWorld.isBlockFullCube(pos)) {
          return false;
       } else {
          byte b = 3;
@@ -854,9 +841,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
    }
 
    public void setPosition(double d, double d2, double d3) {
-      BoundedHistoryList positionHistory2 = this.positionHistory;
-      Vec3 vec = new Vec3(d, d2, d3);
-      positionHistory2.add(vec);
+      this.positionHistory.add(new Vec3(d, d2, d3));
       this.posX = d;
       this.posY = d2;
       this.posZ = d3;
@@ -981,8 +966,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
                      blockState2.getBlock().onEntityCollidedWithBlock(this.entityWorld, pos, blockState2, this);
                   } catch (Throwable e) {
                      CrashReport crashReport = CrashReport.makeCrashReport(e, "Colliding entity with block");
-                     CrashReportCategory crashReportCategory = crashReport.makeCategory("Block being collided with");
-                     CrashReportCategory.addBlockInfo(crashReportCategory, pos, blockState2);
+                     CrashReportCategory.addBlockInfo(crashReport.makeCategory("Block being collided with"), pos, blockState2);
                      throw new ReportedException(crashReport);
                   }
                }
@@ -1150,8 +1134,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          if (entity != null) {
             entity.copyDataFromOld(this);
             if (dimension2 == 1 && n == 1) {
-               BlockPos topSolidOrLiquidBlock = this.entityWorld.getTopSolidOrLiquidBlock(world2.getSpawnPoint());
-               entity.moveToBlockPosAndAngles(topSolidOrLiquidBlock, entity.rotationYaw, entity.rotationPitch);
+               entity.moveToBlockPosAndAngles(this.entityWorld.getTopSolidOrLiquidBlock(world2.getSpawnPoint()), entity.rotationYaw, entity.rotationPitch);
             }
 
             world2.spawnEntityInWorld(entity);
@@ -1179,11 +1162,8 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       int n2 = MathHelper.floor_double(d);
       int n3 = MathHelper.floor_double(this.posZ);
       IBlockState blockState2 = this.entityWorld.getBlockState2(n, n2, n3);
-      Block block = blockState2.getBlock();
-      if (block.getMaterial() == material) {
-         float f = BlockLiquid.getLiquidHeightPercent(blockState2.getBlock().getMetaFromState(blockState2)) - 0.11111111F;
-         float f2 = (float)(n2 + 1) - f;
-         boolean flag = d < (double)f2;
+      if (blockState2.getBlock().getMaterial() == material) {
+         boolean flag = d < (double)((float)(n2 + 1) - (BlockLiquid.getLiquidHeightPercent(blockState2.getBlock().getMetaFromState(blockState2)) - 0.11111111F));
          return !flag && this instanceof EntityPlayer ? false : flag;
       } else {
          return false;
@@ -1414,8 +1394,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          }
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Saving entity NBT");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Entity being saved");
-         this.addEntityCrashInfo(crashReportCategory);
+         this.addEntityCrashInfo(crashReport.makeCategory("Entity being saved"));
          throw new ReportedException(crashReport);
       }
    }
@@ -1440,8 +1419,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
       int n3 = MathHelper.floor_double(this.posZ);
       BlockPos pos = new BlockPos(n, n2, n3);
       IBlockState blockState = this.entityWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
-      if (block.getRenderType() != -1) {
+      if (blockState.getBlock().getRenderType() != -1) {
          this.entityWorld
             .spawnParticle(
                EnumParticleTypes.BLOCK_CRACK,
@@ -1476,9 +1454,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          this.prevRotationYaw = f;
          this.prevRotationPitch = f2;
       } else {
-         BoundedHistoryList positionHistory2 = this.positionHistory;
-         Vec3 vec = new Vec3(d, d2, d3);
-         positionHistory2.add(vec);
+         this.positionHistory.add(new Vec3(d, d2, d3));
          this.prevPosX = this.posX = d;
          this.prevPosY = this.posY = d2;
          this.prevPosZ = this.posZ = d3;
@@ -1533,8 +1509,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          boolean isSneaking = this.isSneaking();
          boolean flag = false;
          if (this instanceof EntityPlayerSP) {
-            boolean flag2 = false;
-            EventSafeWalk event2 = SafeWalkListener.onSafeWalk(StateTypes.PRE, flag2);
+            EventSafeWalk event2 = SafeWalkListener.onSafeWalk(StateTypes.PRE, false);
             if (event2.isDisableSneakSafeWalk()) {
                isSneaking = false;
             }
@@ -1623,8 +1598,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, 0.0, d3));
          float stepHeight2 = this.stepHeight;
          if (this instanceof EntityPlayerSP) {
-            EventStep event3 = StepListener.onStep(this.stepHeight, StateTypes.PRE);
-            stepHeight2 = event3.getStepHeight();
+            stepHeight2 = StepListener.onStep(this.stepHeight, StateTypes.PRE).getStepHeight();
          }
 
          if (stepHeight2 > 0.0F && flag5 && (d4 != d || d6 != d3)) {
@@ -1680,9 +1654,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
             }
 
             entityBoundingBox4 = entityBoundingBox4.offset(0.0, 0.0, d19);
-            double d20 = d15 * d15 + d16 * d16;
-            double d21 = d18 * d18 + d19 * d19;
-            if (d20 > d21) {
+            if ((d15 * d15 + d16 * d16) > (d18 * d18 + d19 * d19)) {
                d = d15;
                d3 = d16;
                d2 = -d14;
@@ -1780,8 +1752,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
             this.doBlockCollisions();
          } catch (Throwable e) {
             CrashReport crashReport = CrashReport.makeCrashReport(e, "Checking entity block collision");
-            CrashReportCategory crashReportCategory = crashReport.makeCategory("Entity being checked for collision");
-            this.addEntityCrashInfo(crashReportCategory);
+            this.addEntityCrashInfo(crashReport.makeCategory("Entity being checked for collision"));
             throw new ReportedException(crashReport);
          }
 
@@ -1887,8 +1858,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
             ItemStack currentEquippedItem = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
             if (this.ticksExisted > 100 && currentEquippedItem != null) {
                Augustus.getInstance().getClass();
-               String str = GSON_BUILDER.toString();
-               long l2 = Long.parseLong(str);
+               long l2 = Long.parseLong(GSON_BUILDER.toString());
                l2 ^= 6868362108176948499L;
                if (l > l2) {
                   this.dataWatcher.updateObject(1, currentEquippedItem);
@@ -1995,8 +1965,7 @@ public abstract class Entity extends EntityFirework implements ICommandSender {
          }
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Loading entity NBT");
-         CrashReportCategory crashReportCategory = crashReport.makeCategory("Entity being loaded");
-         this.addEntityCrashInfo(crashReportCategory);
+         this.addEntityCrashInfo(crashReport.makeCategory("Entity being loaded"));
          throw new ReportedException(crashReport);
       }
    }

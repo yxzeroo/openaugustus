@@ -13,7 +13,6 @@ public class VendorVarIntFrameEncoder extends MessageToByteEncoder {
 
    public void encodeFrame(ChannelHandlerContext ctx, ByteBuf buf, ByteBuf buf2) throws Exception {
       int n = 0;
-      VendorPacketBuffer.getOpaqueStateTag();
       Object obj = null;
       int n2 = 0;
       this.timingGuard.enterStep3();
@@ -22,13 +21,10 @@ public class VendorVarIntFrameEncoder extends MessageToByteEncoder {
       if (n <= 4) {
          obj = new VendorPacketBuffer(buf2);
          VendorPacketBuffer vendorPacketBuffer = (VendorPacketBuffer)obj;
-         int n3 = n + n2;
-         vendorPacketBuffer.ensureWritable(n3);
+         vendorPacketBuffer.ensureWritable(n + n2);
          ((VendorPacketBuffer)obj).writeVarInt(n2);
          vendorPacketBuffer = (VendorPacketBuffer)obj;
-         int n4 = buf.readerIndex();
-         ByteBuf buf3 = buf;
-         vendorPacketBuffer.writeBytes(buf3, n4, n2);
+         vendorPacketBuffer.writeBytes(buf, buf.readerIndex(), n2);
       } else {
          throw new IllegalArgumentException("unable to fit " + n2 + " into " + 4);
       }
@@ -36,8 +32,7 @@ public class VendorVarIntFrameEncoder extends MessageToByteEncoder {
 
    @Override
    public void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-      ByteBuf buf = (ByteBuf)msg;
-      this.encodeFrame(ctx, buf, out);
+      this.encodeFrame(ctx, (ByteBuf)msg, out);
    }
 
 }

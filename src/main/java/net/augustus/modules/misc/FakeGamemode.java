@@ -5,16 +5,16 @@ import java.awt.Color;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.events.listeners.TickListener;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public class FakeGamemode extends Module implements TickListener {
    private WorldSettings.GameType previousGameType;
-   private BooleansSetting gamemode;
+   private StringValue gamemode;
 
    public FakeGamemode() {
        super("FakeGamemode", "UnechterSpielmodus", new Color(243, 245, 152), Categorys.MISC);
       this.previousGameType = WorldSettings.GameType.SURVIVAL;
-      this.gamemode = (BooleansSetting)(new BooleansSetting(this, "Gamemode", "Creative", new String[]{"Survival", "Creative", "Adventure", "Spectator"}))
+      this.gamemode = (StringValue)(new StringValue(this, "Gamemode", "Creative", new String[]{"Survival", "Creative", "Adventure", "Spectator"}))
          .markVisualOnly();
    }
 
@@ -29,8 +29,7 @@ public class FakeGamemode extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {

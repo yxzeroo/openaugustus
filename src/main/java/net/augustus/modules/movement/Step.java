@@ -22,8 +22,8 @@ import net.augustus.events.EventMoveEntity;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
@@ -31,10 +31,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 
 public class Step extends Module implements TickListener, MoveEntityListener, UpdateListener, MotionListener, StepListener, MoveInputListener {
-   public BooleansSetting modes;
-   public final StringValue height;
-   public final StringValue delay;
-   public final StringValue timer;
+   public StringValue modes;
+   public final DoubleValue height;
+   public final DoubleValue delay;
+   public final DoubleValue timer;
    public final BooleanValue slowDown;
    private final TimeHelper stepDelayTimer;
    public final TimeHelper postStepTimer;
@@ -48,21 +48,13 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    public Step() {
        super("Step", "Schritt", new Color(129, 147, 164), Categorys.MOVEMENT);
-      this.modes = new BooleansSetting(
+      this.modes = new StringValue(
          this, "Modes", "Vanilla", new String[]{"Vanilla", "NCPPacket", "Verus", "Vulcan", "Intave", "IntaveTest", "Legit", "Hypixel"}
       );
-      StringValue stringValue = new StringValue(this, "Height", 1.0, 1.0, 5.0, 2);
-      SettingVisibilityCondition condition = () -> this.isHeightVisible();
-      this.height = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this, "Delay", 400.0, 0.0, 1000.0, 0);
-      SettingVisibilityCondition condition2 = () -> this.isDelayVisible();
-      this.delay = stringValue2.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this, "Timer", 0.3, 0.05, 1.0, 2);
-      SettingVisibilityCondition condition3 = () -> this.isTimerVisible();
-      this.timer = stringValue3.visibleWhen(condition3);
-      BooleanValue booleanValue = new BooleanValue(this, "SlowDown", true);
-      SettingVisibilityCondition condition4 = () -> this.isSlowDownVisible();
-      this.slowDown = (BooleanValue)booleanValue.withVisibility(condition4);
+      this.height = new DoubleValue(this, "Height", 1.0, 1.0, 5.0, 2).visibleWhen(() -> this.isHeightVisible());
+      this.delay = new DoubleValue(this, "Delay", 400.0, 0.0, 1000.0, 0).visibleWhen(() -> this.isDelayVisible());
+      this.timer = new DoubleValue(this, "Timer", 0.3, 0.05, 1.0, 2).visibleWhen(() -> this.isTimerVisible());
+      this.slowDown = (BooleanValue)new BooleanValue(this, "SlowDown", true).withVisibility(() -> this.isSlowDownVisible());
       this.stepDelayTimer = new TimeHelper();
       this.postStepTimer = new TimeHelper();
       this.preMovePosX = 0.0;
@@ -79,7 +71,6 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void onDisable() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer != null) {
          mc.thePlayer.stepHeight = 0.6F;
       }
@@ -89,18 +80,12 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 20;
-      this.toggleEventSubscription(b2);
-      byte b3 = 43;
-      this.toggleEventSubscription(b3);
-      byte b4 = 18;
-      this.toggleEventSubscription(b4);
-      byte b5 = 37;
-      this.toggleEventSubscription(b5);
-      byte b6 = 21;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)37);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -115,7 +100,6 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void onMoveEntity2(EventMoveEntity event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       this.onGroundTicks = mc.thePlayer.onGround ? this.onGroundTicks + 1 : 0;
       if (this.modes.getSelectedValue().equals("Legit")) {
          AutoWalk autoWalk = Augustus.getInstance().getModuleManager().autoWalk;
@@ -134,13 +118,10 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void onUpdate2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String selectedValue = this.modes.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.modes.getSelectedValue());
       if (this.modes.getSelectedValue().equals("Hypixel")) {
          if (mc.thePlayer.onGround) {
-            double d = 1.0;
-            if (this.canStepUpHeight(d) && MoveUtil.isMoving()) {
+            if (this.canStepUpHeight(1.0) && MoveUtil.isMoving()) {
                mc.thePlayer.jump();
                this.hypixelStepping = true;
                return;
@@ -165,15 +146,10 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
    @Override
    public void onMotion(EventMotion event) {
       this.ticksSinceVulcanStep++;
-      Fly.getCachedSettings();
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "Intave":
-            double value = this.height.getValue();
-            double d = value;
-            if (this.canStepUpHeight(d)) {
-               long l = 6000L;
-               if (this.stepDelayTimer.reached2(l) && !mc.gameSettings.keyBindJump.isKeyDown()) {
+            if (this.canStepUpHeight(this.height.getValue())) {
+               if (this.stepDelayTimer.reached2(6000L) && !mc.gameSettings.keyBindJump.isKeyDown()) {
                   this.canStep = false;
                   mc.thePlayer.jump();
                   mc.thePlayer.motionY = Math.min(mc.thePlayer.motionY, 0.6);
@@ -181,18 +157,14 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
             }
 
             if (!this.canStep) {
-               double value2 = this.height.getValue();
-               double d2 = value2;
-               if (!this.canStepUpHeight(d2)) {
+               if (!this.canStepUpHeight(this.height.getValue())) {
                   this.stepDelayTimer.reset();
                   this.canStep = true;
                }
             }
             break;
          case "IntaveTest":
-            double value3 = this.height.getValue();
-            double d3 = value3;
-            if (this.canStepUpHeight(d3)) {
+            if (this.canStepUpHeight(this.height.getValue())) {
                if (mc.thePlayer.onGround) {
                   mc.thePlayer.motionY = 0.429;
                   PlayerUtil.triggerJumpStat();
@@ -221,24 +193,18 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void onStep(EventStep event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.timerModified) {
          mc.getTimer().timerSpeed = 1.0F;
          this.postStepTimer.reset();
          this.timerModified = false;
       }
 
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "Vanilla":
          case "NCPPacket":
-            float value = (float)this.height.getValue();
-            event.setStepHeight(value);
-            TimeHelper stepDelayTimer2 = this.stepDelayTimer;
-            long value2 = (long)this.delay.getValue();
-            if (!stepDelayTimer2.reached2(value2)) {
-               float f = 0.6F;
-               event.setStepHeight(f);
+            event.setStepHeight((float)this.height.getValue());
+            if (!this.stepDelayTimer.reached2((long)this.delay.getValue())) {
+               event.setStepHeight(0.6F);
                this.canStep = false;
             } else {
                this.canStep = true;
@@ -250,9 +216,7 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
    @Override
    public void onStep() {
       Vec3 vec = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-      Fly.getCachedSettings();
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "Vanilla":
             if (mc.thePlayer.getEntityBoundingBox().minY - vec.yCoord > 0.6 && this.canStep && this.timer.getValue() != 1.0) {
                mc.getTimer().timerSpeed = (float)this.timer.getValue();
@@ -328,7 +292,6 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
    }
 
    private boolean canStepUpHeight(double d) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer.isCollidedHorizontally && this.isLicenseTimestampValid()) {
          BlockPos pos = null;
 
@@ -384,10 +347,8 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.modes.getSelectedValue().equals("Vulcan") && this.ticksSinceVulcanStep < 5) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
       }
    }
 
@@ -396,23 +357,19 @@ public class Step extends Module implements TickListener, MoveEntityListener, Up
    }
 
    private boolean isTimerVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.modes.getSelectedValue().equals("NCPPacket") || this.modes.getSelectedValue().equals("Vanilla");
    }
 
    private boolean isDelayVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.modes.getSelectedValue().equals("NCPPacket") || this.modes.getSelectedValue().equals("Vanilla");
    }
 
    private boolean isHeightVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.modes.getSelectedValue().equals("Verus") && !this.modes.getSelectedValue().equals("Vulcan");
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

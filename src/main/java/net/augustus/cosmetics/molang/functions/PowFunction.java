@@ -11,10 +11,7 @@ public class PowFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      double arg = this.getArg(b);
-      byte b2 = 1;
-      return Math.pow(arg, this.getArg(b2));
+      return Math.pow(this.getArg((byte)0), this.getArg((byte)1));
    }
 
    public PowFunction(MolangValue[] molangValues, String str) throws Exception {

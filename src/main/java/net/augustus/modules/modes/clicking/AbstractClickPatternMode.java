@@ -4,11 +4,11 @@ import net.minecraft.util.MovingObjectPosition;
 import net.augustus.events.EventClick;
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public abstract class AbstractClickPatternMode extends AbstractSubMode {
 
-   public AbstractClickPatternMode(Module module, DoubleValue doubleValue, String str) {
+   public AbstractClickPatternMode(Module module, SettingGroup doubleValue, String str) {
       super(module, doubleValue, str);
    }
 

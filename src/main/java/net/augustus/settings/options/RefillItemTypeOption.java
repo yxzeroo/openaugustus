@@ -52,16 +52,12 @@ public enum RefillItemTypeOption implements SelectableOption {
       containerSlotQuery = containerSlotQuery.fromSlot(n);
       int n2 = num2;
       containerSlotQuery = containerSlotQuery.toSlot(n2);
-      ItemPotion potionitem = Items.potionitem;
-      List list = containerSlotQuery.filterItemExact(potionitem).toSlotIndexList();
-      return (List)list.stream().filter(obj -> {
+      return (List)containerSlotQuery.filterItemExact(Items.potionitem).toSlotIndexList().stream().filter(obj -> {
          ItemStack stack = MC.mc.thePlayer.inventoryContainer.getSlot((Integer)obj).getStack();
          if (stack != null && stack.getItem() instanceof ItemPotion) {
-            ItemPotion item = (ItemPotion)stack.getItem();
-            List effects = item.getEffects(stack);
+            List effects = ((ItemPotion)stack.getItem()).getEffects(stack);
             if (effects != null && !effects.isEmpty()) {
-               PotionEffect potionEffect = (PotionEffect)effects.get(0);
-               return potionEffect.getPotionID() == 6;
+               return ((PotionEffect)effects.get(0)).getPotionID() == 6;
             } else {
                return false;
             }
@@ -71,8 +67,7 @@ public enum RefillItemTypeOption implements SelectableOption {
       }).sorted(Comparator.comparingDouble(obj2 -> {
          ItemStack stack2 = MC.mc.thePlayer.inventoryContainer.getSlot((Integer)obj2).getStack();
          if (stack2 != null && stack2.getItem() instanceof ItemPotion) {
-            ItemPotion item2 = (ItemPotion)stack2.getItem();
-            List effects2 = item2.getEffects(stack2);
+            List effects2 = ((ItemPotion)stack2.getItem()).getEffects(stack2);
             if (effects2 != null && !effects2.isEmpty()) {
                PotionEffect potionEffect2 = (PotionEffect)effects2.get(0);
                return potionEffect2.getPotionID() != 6 ? -10.0 : (double)potionEffect2.getAmplifier();
@@ -91,8 +86,7 @@ public enum RefillItemTypeOption implements SelectableOption {
       containerSlotQuery = containerSlotQuery.fromSlot(n);
       int n2 = num2;
       containerSlotQuery = containerSlotQuery.toSlot(n2);
-      Item mushroomStew = Items.mushroom_stew;
-      return containerSlotQuery.filterItemExact(mushroomStew).toSlotIndexList();
+      return containerSlotQuery.filterItemExact(Items.mushroom_stew).toSlotIndexList();
    }
 
 }

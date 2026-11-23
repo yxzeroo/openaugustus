@@ -239,8 +239,7 @@ public class EntityFirework {
                this.particleMaxAge = this.fireworkExplosions.tagCount() * 2 - 1;
 
                for (int i = 0; i < this.fireworkExplosions.tagCount(); i++) {
-                  NBTTagCompound compoundTagAt = this.fireworkExplosions.getCompoundTagAt(i);
-                  if (compoundTagAt.getBoolean("Flicker")) {
+                  if (this.fireworkExplosions.getCompoundTagAt(i).getBoolean("Flicker")) {
                      this.twinkle = true;
                      this.particleMaxAge += 15;
                      break;
@@ -306,8 +305,7 @@ public class EntityFirework {
                flag = true;
             } else {
                for (int i = 0; i < this.fireworkExplosions.tagCount(); i++) {
-                  NBTTagCompound compoundTagAt = this.fireworkExplosions.getCompoundTagAt(i);
-                  if (compoundTagAt.getByte("Type") == 1) {
+                  if (this.fireworkExplosions.getCompoundTagAt(i).getByte("Type") == 1) {
                      flag = true;
                      break;
                   }
@@ -406,8 +404,7 @@ public class EntityFirework {
          sparkFX.setAlphaF(0.99F);
          sparkFX.setTrail(flag);
          sparkFX.setTwinkle(flag2);
-         int n = this.rand.nextInt(ints.length);
-         sparkFX.setColour(ints[n]);
+         sparkFX.setColour(ints[this.rand.nextInt(ints.length)]);
          if (ints2 != null && ints2.length > 0) {
             sparkFX.setFadeColour(ints2[this.rand.nextInt(ints2.length)]);
          }

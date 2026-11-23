@@ -177,8 +177,7 @@ public class PlayerItemParser {
 
    public static ModelRenderer parseModelRenderer(JsonObject json, ModelBase modelBase, int[] ints, String str) {
       ModelRenderer modelRenderer = new ModelRenderer(modelBase);
-      String string = Json.getString(json, "id");
-      modelRenderer.setId(string);
+      modelRenderer.setId(Json.getString(json, "id"));
       float f = Json.getFloat(json, "scale", 1.0F);
       modelRenderer.scaleX = f;
       modelRenderer.scaleY = f;
@@ -318,18 +317,15 @@ public class PlayerItemParser {
 
       JsonObject json2 = (JsonObject)json.get("submodel");
       if (json2 != null) {
-         ModelRenderer modelRenderer2 = parseModelRenderer(json2, modelBase, ints2, str);
-         modelRenderer.addChild(modelRenderer2);
+         modelRenderer.addChild(parseModelRenderer(json2, modelBase, ints2, str));
       }
 
       JsonArray array = (JsonArray)json.get("submodels");
       if (array != null) {
          for (int m = 0; m < array.size(); m++) {
-            JsonObject json3 = (JsonObject)array.get(m);
-            ModelRenderer modelRenderer3 = parseModelRenderer(json3, modelBase, ints2, str);
+            ModelRenderer modelRenderer3 = parseModelRenderer((JsonObject)array.get(m), modelBase, ints2, str);
             if (modelRenderer3.getId() != null) {
-               ModelRenderer child = modelRenderer.getChild(modelRenderer3.getId());
-               if (child != null) {
+               if (modelRenderer.getChild(modelRenderer3.getId()) != null) {
                   Config.warn("Duplicate model ID: " + modelRenderer3.getId());
                }
             }
@@ -347,8 +343,7 @@ public class PlayerItemParser {
          Config.warn("Unknown model type: " + string);
          return null;
       } else {
-         String string2 = Json.getString(json, "attachTo");
-         int n = parseAttachModel(string2);
+         int n = parseAttachModel(Json.getString(json, "attachTo"));
          ModelPlayerItem modelPlayerItem = new ModelPlayerItem();
          modelPlayerItem.textureWidth = dimension.width;
          modelPlayerItem.textureHeight = dimension.height;

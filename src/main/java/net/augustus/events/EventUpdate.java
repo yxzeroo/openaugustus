@@ -28,7 +28,6 @@ public class EventUpdate extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      UpdateListener listener = (UpdateListener)obj;
-      this.call2(listener);
+      this.call2((UpdateListener)obj);
    }
 }

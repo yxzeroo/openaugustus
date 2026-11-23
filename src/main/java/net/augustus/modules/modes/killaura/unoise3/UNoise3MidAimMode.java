@@ -6,7 +6,6 @@ public class UNoise3MidAimMode extends UNoise3AimMode {
 
    @Override
    public double computeTargetAngle(UNoise3AimContext uNoise3AimContext) {
-      int[] controlFlowState = UNoise3CircleAimMode.getControlFlowState();
       double d = 0.5;
       double d2 = HitboxAngleUtil.lerpRange(uNoise3AimContext.expandedAngleBounds, d);
       if (this.isSurfaceRestrictionActive()) {

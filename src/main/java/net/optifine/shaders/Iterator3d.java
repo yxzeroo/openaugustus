@@ -82,17 +82,10 @@ public class Iterator3d implements Iterator {
       this.kX = flag ? -1 : 1;
       this.kY = flag2 ? -1 : 1;
       this.kZ = flag3 ? -1 : 1;
-      Vec3 vec = new Vec3((double)(pos2.getX() - pos.getX()), (double)(pos2.getY() - pos.getY()), (double)(pos2.getZ() - pos.getZ()));
-      Vec3 vec2 = vec.normalize();
-      Vec3 vec3 = new Vec3(1.0, 0.0, 0.0);
-      double d = vec2.dotProduct(vec3);
-      double d2 = Math.abs(d);
-      Vec3 vec4 = new Vec3(0.0, 1.0, 0.0);
-      double d3 = vec2.dotProduct(vec4);
-      double d4 = Math.abs(d3);
-      Vec3 vec5 = new Vec3(0.0, 0.0, 1.0);
-      double d5 = vec2.dotProduct(vec5);
-      double d6 = Math.abs(d5);
+      Vec3 vec2 = new Vec3((double)(pos2.getX() - pos.getX()), (double)(pos2.getY() - pos.getY()), (double)(pos2.getZ() - pos.getZ())).normalize();
+      double d2 = Math.abs(vec2.dotProduct(new Vec3(1.0, 0.0, 0.0)));
+      double d4 = Math.abs(vec2.dotProduct(new Vec3(0.0, 1.0, 0.0)));
+      double d6 = Math.abs(vec2.dotProduct(new Vec3(0.0, 0.0, 1.0)));
       if (d6 >= d4 && d6 >= d2) {
          this.axis = 2;
          BlockPos pos3 = new BlockPos(pos.getZ(), pos.getY() - n, pos.getX() - n2);

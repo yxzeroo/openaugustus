@@ -20,8 +20,7 @@ public class MultiworldInfo {
          this.description = new ArrayList();
          this.description.add("Defined dimensions:");
          File file = new File(WDL.mc.mcDataDir, "saves");
-         File file2 = new File(file, WDL.getWorldFolderName(this.folderName));
-         File[] files = file2.listFiles();
+         File[] files = new File(file, WDL.getWorldFolderName(this.folderName)).listFiles();
          if (files != null) {
             for (File file3 : files) {
                if (file3.listFiles() != null && file3.listFiles().length != 0) {

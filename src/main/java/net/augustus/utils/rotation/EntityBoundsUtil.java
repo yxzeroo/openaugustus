@@ -8,8 +8,7 @@ import net.minecraft.util.Vec3;
 public class EntityBoundsUtil {
 
    public static AxisAlignedBB getEntityBoundingBox(Entity entity, boolean flag) {
-      Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
-      return getEntityBoundingBoxAt(entity, interpolatedPos, flag);
+      return getEntityBoundingBoxAt(entity, entity.getInterpolatedPos(1.0F), flag);
    }
 
    public static double getShortestAngleDistance(double d, double d2) {
@@ -60,9 +59,7 @@ public class EntityBoundsUtil {
    public static AxisAlignedBB getEntityBoundingBoxAt(Entity entity, Vec3 vec, boolean flag) {
       float f = flag ? entity.getCollisionBorderSize() : 0.0F;
       float height = entity.height;
-      float width = entity.width;
-      float f2 = f;
-      return createBoundingBox(vec, f2, width, height);
+      return createBoundingBox(vec, f, entity.width, height);
    }
 
    public static double getShortestSignedAngleDelta(double d, double d2) {
@@ -79,9 +76,7 @@ public class EntityBoundsUtil {
    public static AxisAlignedBB createPlayerBoundingBox(Vec3 vec, boolean flag) {
       float f = flag ? 0.1F : 0.0F;
       float f2 = 1.8F;
-      float f3 = 0.6F;
-      float f4 = f;
-      return createBoundingBox(vec, f4, f3, f2);
+      return createBoundingBox(vec, f, 0.6F, f2);
    }
 
 

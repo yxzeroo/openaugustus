@@ -23,8 +23,7 @@ public class NaturalTextures {
          if (naturalProperties == null) {
             return bakedQuad;
          } else {
-            int side = ConnectedTextures.getSide(bakedQuad.getFace());
-            int random = Config.getRandom(pos, side);
+            int random = Config.getRandom(pos, ConnectedTextures.getSide(bakedQuad.getFace()));
             int n = 0;
             boolean flag = false;
             if (naturalProperties.rotation > 1) {

@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -30,41 +30,27 @@ import net.minecraft.util.Vec3;
 public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxListener, PacketListener, RenderListener {
    private List virtualFencePositions;
    private Map virtualFenceBoxes;
-   private final StringValue fenceExtraStrength;
+   private final DoubleValue fenceExtraStrength;
    private final BooleanValue fenceOnlyWhileMoving;
    private final BooleanValue fenceVertical;
 
-   public FenceVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public FenceVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Fence");
       this.virtualFencePositions = new ArrayList();
       this.virtualFenceBoxes = new HashMap();
-      StringValue stringValue = new StringValue(this.parentModule, "FenceExtraStrength", 0.075, 0.0, 0.075, 3, this.modeSetting);
-      String str = "Extra Strength";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.fenceExtraStrength = stringValue2.visibleWhen(condition);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "FenceOnlyWhileMoving", false, this.modeSetting);
-      String str2 = "Only While Moving";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.fenceOnlyWhileMoving = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this.parentModule, "FenceVertical", false, this.modeSetting);
-      String str3 = "Vertical";
-      BooleanValue booleanValue4 = (BooleanValue)booleanValue3.withDisplayName(str3);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.fenceVertical = (BooleanValue)booleanValue4.withVisibility(condition3);
+      this.fenceExtraStrength = new DoubleValue(this.parentModule, "FenceExtraStrength", 0.075, 0.0, 0.075, 3, this.modeSetting).named("Extra Strength").visibleWhen(() -> this.isSelected());
+      this.fenceOnlyWhileMoving = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "FenceOnlyWhileMoving", false, this.modeSetting).withDisplayName("Only While Moving")).withVisibility(() -> this.isSelected());
+      this.fenceVertical = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "FenceVertical", false, this.modeSetting).withDisplayName("Vertical")).withVisibility(() -> this.isSelected());
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new FenceVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new FenceVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 3;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)3);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -83,8 +69,7 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
             S12PacketEntityVelocity packet2 = (S12PacketEntityVelocity)packet;
             if (packet2.getEntityID() == mc.thePlayer.getEntityId() && (!this.fenceOnlyWhileMoving.getValue() || MoveUtil.isMoving())) {
                Vec3 vec = new Vec3((double)packet2.getMotionX(), (double)packet2.getMotionY(), (double)packet2.getMotionZ());
-               boolean flag = true;
-               double value = this.fenceExtraStrength.getValue(flag);
+               double value = this.fenceExtraStrength.getValue(true);
                BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.lastGroundY, mc.thePlayer.posZ);
                double d = mc.thePlayer.posX % 1.0;
                double d2 = mc.thePlayer.posZ % 1.0;
@@ -154,24 +139,16 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
    public void buildFenceBoundingBox(BlockPos pos) {
       int x = pos.getX();
       int n = pos.getZ() - 1;
-      int y = pos.getY();
-      int n2 = x;
-      boolean flag = this.hasFenceAt(n2, y, n);
+      boolean flag = this.hasFenceAt(x, pos.getY(), n);
       x = pos.getX();
       int n3 = pos.getZ() + 1;
-      int y2 = pos.getY();
-      int n4 = x;
-      boolean flag2 = this.hasFenceAt(n4, y2, n3);
+      boolean flag2 = this.hasFenceAt(x, pos.getY(), n3);
       int n5 = pos.getX() - 1;
       int z = pos.getZ();
-      int y3 = pos.getY();
-      int n6 = n5;
-      boolean flag3 = this.hasFenceAt(n6, y3, z);
+      boolean flag3 = this.hasFenceAt(n5, pos.getY(), z);
       n5 = pos.getX() + 1;
       int z2 = pos.getZ();
-      int y4 = pos.getY();
-      int n7 = n5;
-      boolean flag4 = this.hasFenceAt(n7, y4, z2);
+      boolean flag4 = this.hasFenceAt(n5, pos.getY(), z2);
       float f = 0.375F;
       float f2 = 0.625F;
       float f3 = 0.375F;
@@ -190,11 +167,7 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
          double d3 = (double)f2;
          double d4 = (double)f4;
          double d5 = 1.5;
-         double d6 = d3;
-         double d7 = d2;
-         double d8 = 0.0;
-         double d9 = d;
-         this.putFenceBoundingBox(pos, d9, d8, d7, d6, d5, d4);
+         this.putFenceBoundingBox(pos, d, 0.0, d2, d3, d5, d4);
       }
 
       f3 = 0.375F;
@@ -213,11 +186,7 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
          double d12 = (double)f2;
          double d13 = (double)f4;
          double d14 = 1.5;
-         double d15 = d12;
-         double d16 = d11;
-         double d17 = 0.0;
-         double d18 = d10;
-         this.putFenceBoundingBox(pos, d18, d17, d16, d15, d14, d13);
+         this.putFenceBoundingBox(pos, d10, 0.0, d11, d12, d14, d13);
       }
 
       if (flag) {
@@ -249,9 +218,7 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
    }
 
    private boolean isAirBlock(BlockPos pos) {
-      IBlockState blockState = mc.theWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
-      return block.getMaterial() == Material.air;
+      return mc.theWorld.getBlockState(pos).getBlock().getMaterial() == Material.air;
    }
 
    public List computeFencePositions(BlockPos pos, Vec3 vec) {
@@ -282,13 +249,11 @@ public class FenceVelocityMode extends VelocityMode implements BlockBoundingBoxL
          }
 
          if (flag) {
-            byte b3 = 0;
-            this.addAirColumn(b, b3, pos, list);
+            this.addAirColumn(b, (byte)0, pos, list);
          }
 
          if (flag2) {
-            byte b4 = 0;
-            this.addAirColumn(b4, b2, pos, list);
+            this.addAirColumn((byte)0, b2, pos, list);
          }
 
          if (this.fenceVertical.getValue()) {

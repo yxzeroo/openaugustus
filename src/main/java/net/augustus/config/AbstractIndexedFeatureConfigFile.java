@@ -29,9 +29,7 @@ public abstract class AbstractIndexedFeatureConfigFile extends JsonConfigFile {
 
    @Override
    public void deserialize(JsonElement elem) {
-      JsonObject json = (JsonObject)elem;
-      JsonObject json2 = json;
-      this.deserializeIndexed(json2);
+      this.deserializeIndexed((JsonObject)elem);
    }
 
    public JsonObject serializeIndexed() {
@@ -46,9 +44,7 @@ public abstract class AbstractIndexedFeatureConfigFile extends JsonConfigFile {
             FeatureBase featureBase = (FeatureBase)this.features.get(n);
             GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
             UnaryFunction saveFilter = this.getSaveFilter();
-            Object obj = null;
-            GsonConfigSerializerProvider provider = gsonserializerprovider;
-            JsonObject json3 = featureBase.serialize(provider, (JsonObject)obj, saveFilter);
+            JsonObject json3 = featureBase.serialize(gsonserializerprovider, (JsonObject)null, saveFilter);
             json2 = json;
             if (settings == null) {
                break;
@@ -89,13 +85,8 @@ public abstract class AbstractIndexedFeatureConfigFile extends JsonConfigFile {
 
             FeatureBase featureBase = (FeatureBase)obj;
             JsonObject asJsonObject = value.getAsJsonObject();
-            GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
-            UnaryFunction loadFilter = this.getLoadFilter();
-            boolean flag = false;
-            GsonConfigSerializerProvider provider = gsonserializerprovider;
-            featureBase.deserialize(provider, asJsonObject, flag, loadFilter);
-            Supplier supplier = () -> featureBase;
-            this.onEntryLoaded(supplier);
+            featureBase.deserialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, asJsonObject, false, this.getLoadFilter());
+            this.onEntryLoaded(() -> featureBase);
          }
 
          if (cachedSettings == null) {

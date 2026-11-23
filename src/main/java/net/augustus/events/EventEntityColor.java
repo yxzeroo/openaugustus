@@ -49,8 +49,7 @@ public class EventEntityColor extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      EntityColorListener listener = (EntityColorListener)obj;
-      this.call2(listener);
+      this.call2((EntityColorListener)obj);
    }
 
    public void setRed(float f) {

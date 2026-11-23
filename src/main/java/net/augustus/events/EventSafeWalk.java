@@ -36,8 +36,7 @@ public class EventSafeWalk extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      SafeWalkListener listener = (SafeWalkListener)obj;
-      this.call2(listener);
+      this.call2((SafeWalkListener)obj);
    }
 
    public boolean isClippedAtEdge() {

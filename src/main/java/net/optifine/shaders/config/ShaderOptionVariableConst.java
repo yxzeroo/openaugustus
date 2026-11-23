@@ -48,8 +48,7 @@ public class ShaderOptionVariableConst extends ShaderOptionVariable {
       if (!matcher.matches()) {
          return false;
       } else {
-         String str2 = matcher.group(2);
-         return str2.matches(this.getName());
+         return matcher.group(2).matches(this.getName());
       }
    }
 }

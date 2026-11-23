@@ -12,7 +12,7 @@ import net.augustus.events.listeners.GameLoopListener;
 import net.augustus.utils.combat.CombatTargetUtil;
 import net.augustus.utils.player.PlayerUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -22,9 +22,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoopListener {
-   private final StringValue blinkTicks;
-   private final StringValue timerTicks;
-   private final StringValue maxTargetHurttime;
+   private final DoubleValue blinkTicks;
+   private final DoubleValue timerTicks;
+   private final DoubleValue maxTargetHurttime;
    private final BooleanValue correct;
    private final BooleanValue dynamic;
    private final BooleanValue debug;
@@ -36,9 +36,9 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
 
    public TimerRangeV3() {
        super("TimerRangeV3", "ZeitDistanzV3", new Color(23, 233, 123), Categorys.LATENCY);
-      this.blinkTicks = new StringValue(this, "BlinkTicks", 2.0, 0.0, 10.0, 0);
-      this.timerTicks = new StringValue(this, "TimerTicks", 5.0, 0.0, 10.0, 0);
-      this.maxTargetHurttime = new StringValue(this, "MaxTargetHurttime", 3.0, 0.0, 10.0, 0);
+      this.blinkTicks = new DoubleValue(this, "BlinkTicks", 2.0, 0.0, 10.0, 0);
+      this.timerTicks = new DoubleValue(this, "TimerTicks", 5.0, 0.0, 10.0, 0);
+      this.maxTargetHurttime = new DoubleValue(this, "MaxTargetHurttime", 3.0, 0.0, 10.0, 0);
       this.correct = new BooleanValue(this, "Correct", false);
       this.dynamic = new BooleanValue(this, "Dynamic", true);
       this.debug = new BooleanValue(this, "Debug", false);
@@ -57,23 +57,18 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
    }
 
    public void updateEventSubscriptions() {
-      byte b = 16;
-      this.toggleEventSubscription(b);
-      byte b2 = 25;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)16);
+      this.toggleEventSubscription((byte)25);
    }
 
    public void onGameLoop(EventGameLoop event) {
       EntityLivingBase activeTarget = CombatTargetUtil.getActiveTarget();
-      boolean value = this.correct.getValue();
-      event.setAllowSkipRender(value);
+      event.setAllowSkipRender(this.correct.getValue());
       if (this.timerRangeV3State == TimerRangeV3State.NOTHING && activeTarget != null && event.getElapsedTicks() >= 1) {
          boolean flag = false;
          if (!(this.blinkTicks.getValue() > 0.0)) {
             for (int i = (int)this.timerTicks.getValue(); i > 0; i--) {
-               byte b = 0;
-               byte b2 = 0;
-               if (this.simulateTimerAdvantage(activeTarget, i, b2, b)) {
+               if (this.simulateTimerAdvantage(activeTarget, i, (byte)0, (byte)0)) {
                   this.timerRangeV3State = TimerRangeV3State.TIMER;
                   this.plannedTimerTicks = i;
                   flag = true;
@@ -88,12 +83,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
             this.connectionLagElapsedTicks = 0;
 
             for (int j = (int)((double)((int)this.timerTicks.getValue()) + this.blinkTicks.getValue()); j > 0; j--) {
-               int n = (int)Math.min((double)j, this.timerTicks.getValue());
-               int n2 = (int)Math.max((double)j - this.timerTicks.getValue(), 0.0);
-               byte b3 = 0;
-               int n3 = n2;
-               int n4 = n;
-               if (this.simulateTimerAdvantage(activeTarget, n4, n3, b3)) {
+               if (this.simulateTimerAdvantage(activeTarget, (int)Math.min((double)j, this.timerTicks.getValue()), (int)Math.max((double)j - this.timerTicks.getValue(), 0.0), (byte)0)) {
                   this.timerRangeV3State = TimerRangeV3State.CONNECTION_LAG;
                   this.plannedTimerTicks = (int)Math.min((double)j, this.timerTicks.getValue());
                   this.plannedConnectionLagTicks = (int)Math.max((double)j - this.timerTicks.getValue(), 0.0);
@@ -119,9 +109,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
                boolean flag2 = false;
 
                for (int k = (int)this.timerTicks.getValue(); k > 0; k--) {
-                  byte b4 = 0;
-                  byte b5 = 0;
-                  if (this.simulateTimerAdvantage(activeTarget, k, b5, b4)) {
+                  if (this.simulateTimerAdvantage(activeTarget, k, (byte)0, (byte)0)) {
                      this.timerRangeV3State = TimerRangeV3State.TIMER;
                      this.plannedTimerTicks = k;
                      flag2 = true;
@@ -136,13 +124,11 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
                if (!flag2) {
                   this.timerRangeV3State = TimerRangeV3State.NOTHING;
                   if (this.debug.getValue()) {
-                     String str = "Abort Timer After Connection Lag";
-                     this.sendChatMessage2(str);
+                     this.sendChatMessage2("Abort Timer After Connection Lag");
                   }
                }
             } else {
-               String str2 = "LAAG..";
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2("LAAG..");
             }
 
             this.connectionLagElapsedTicks = this.connectionLagElapsedTicks + mc.getTimer().elapsedTicks;
@@ -154,30 +140,24 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
 
       if (this.timerRangeV3State == TimerRangeV3State.TIMER) {
          if (activeTarget != null) {
-            int plannedTimerTicks2 = this.plannedTimerTicks;
-            event.setElapsedTicks(plannedTimerTicks2);
+            event.setElapsedTicks(this.plannedTimerTicks);
             this.timerRangeV3State = TimerRangeV3State.GAME_LAG;
             this.gameLagElapsedTicks = 0;
             if (this.debug.getValue()) {
-               String str3 = "TimerSuccessful " + this.plannedTimerTicks;
-               this.sendChatMessage2(str3);
+               this.sendChatMessage2("TimerSuccessful " + this.plannedTimerTicks);
             }
          } else {
             this.timerRangeV3State = TimerRangeV3State.NOTHING;
          }
       } else if (this.timerRangeV3State == TimerRangeV3State.GAME_LAG) {
          if (this.gameLagElapsedTicks <= this.plannedTimerTicks) {
-            byte b6 = 0;
-            event.setElapsedTicks(b6);
-            float f = 0.0F;
-            event.setRenderPartialTicks(f);
-            boolean flag3 = true;
-            event.setSkipRender(flag3);
+            event.setElapsedTicks((byte)0);
+            event.setRenderPartialTicks(0.0F);
+            event.setSkipRender(true);
          } else {
             this.timerRangeV3State = TimerRangeV3State.NOTHING;
             if (this.debug.getValue()) {
-               String str4 = "LastTimerStop";
-               this.sendChatMessage2(str4);
+               this.sendChatMessage2("LastTimerStop");
             }
          }
       }
@@ -191,12 +171,10 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
    public void onPacketDelay(EventPacketDelay event) {
       if (this.timerRangeV3State == TimerRangeV3State.CONNECTION_LAG) {
          if (event.getPacket() instanceof C03PacketPlayer) {
-            String str = "C03";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("C03");
          }
 
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       } else {
          this.connectionLagElapsedTicks = 0;
       }
@@ -211,8 +189,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
       } else {
          double[] doubles = PlayerUtil.predictPlayerPosition(n2 - 1, mc.thePlayer);
          vec = new Vec3(doubles[0], doubles[1], doubles[2]);
-         int n4 = n2 - 1;
-         double[] doubles2 = PlayerUtil.predictTargetPosition(entity, n4);
+         double[] doubles2 = PlayerUtil.predictTargetPosition(entity, n2 - 1);
          vec2 = new Vec3(doubles2[0], doubles2[1], doubles2[2]);
       }
 
@@ -322,8 +299,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
       double d6 = MathHelper.clamp_double(vec9.xCoord, box.minX, box.maxX);
       double d7 = MathHelper.clamp_double(vec9.zCoord, box.minZ, box.maxZ);
       double d8 = d6 - doubles3[3];
-      double d9 = d7 - doubles3[5];
-      float f6 = (float)(MathHelper.atan2(d9, d8) * 180.0 / 3.141592653589793 - 90.0);
+      float f6 = (float)(MathHelper.atan2(d7 - doubles3[5], d8) * 180.0 / 3.141592653589793 - 90.0);
       int n6 = 1 + EnchantmentHelper.getKnockbackModifier(mc.thePlayer);
       vec8 = vec8.addVector(
          (double)(-MathHelper.sin(f6 * 3.1415927F / 180.0F) * (float)n6 * 0.5F),
@@ -368,8 +344,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
             MathHelper.clamp_double(vec10.zCoord, box2.minZ, box2.maxZ)
          );
          double d10 = vec8.xCoord * -1.0;
-         double d11 = vec8.zCoord * -1.0;
-         float f12 = (float)(MathHelper.atan2(d11, d10) * 180.0 / 3.141592653589793 - 90.0);
+         float f12 = (float)(MathHelper.atan2(vec8.zCoord * -1.0, d10) * 180.0 / 3.141592653589793 - 90.0);
          float f13 = MathHelper.sin(f12 * 3.1415927F / 180.0F);
          float f14 = MathHelper.cos(f12 * 3.1415927F / 180.0F);
          vec8 = vec8.addVector((double)(f9 * f14 - f10 * f13), 0.0, (double)(f10 * f14 + f9 * f13));
@@ -397,8 +372,7 @@ public class TimerRangeV3 extends Module implements PacketDelayListener, GameLoo
          && vec12.distanceTo(vec13) > 3.0
          && vec15.distanceTo(vec16) < d12
          && mc.thePlayer.getDistanceToEntityBox(entity) > 3.0F) {
-         String str = vec12.distanceTo(vec13) + "  " + vec15.distanceTo(vec16);
-         this.sendChatMessage2(str);
+         this.sendChatMessage2(vec12.distanceTo(vec13) + "  " + vec15.distanceTo(vec16));
       }
 
       return (double)entity.hurtTime <= this.maxTargetHurttime.getValue()

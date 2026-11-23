@@ -80,8 +80,7 @@ public class GuiShaders extends GuiScreenOF {
 
       drawCenteredString(this.fontRendererObj, this.screenTitle + " ", this.width / 2, 15, 16777215);
       String str = "OpenGL: " + Shaders.glVersionString + ", " + Shaders.glVendorString + ", " + Shaders.glRendererString;
-      int stringWidth = this.fontRendererObj.getStringWidth(str);
-      if (stringWidth < this.width - 5) {
+      if (this.fontRendererObj.getStringWidth(str) < this.width - 5) {
          drawCenteredString(this.fontRendererObj, str, this.width / 2, this.height - 40, 8421504);
       } else {
          this.drawString(this.fontRendererObj, str, 5, this.height - 40, 8421504);
@@ -102,8 +101,7 @@ public class GuiShaders extends GuiScreenOF {
 
    public static int getValueIndex(float f, float[] floats) {
       for (int i = 0; i < floats.length; i++) {
-         float f2 = floats[i];
-         if (f2 >= f) {
+         if (floats[i] >= f) {
             return i;
          }
       }
@@ -363,8 +361,7 @@ public class GuiShaders extends GuiScreenOF {
    }
 
    public static String toStringValue(float f, float[] floats, String[] strings) {
-      int valueIndex = getValueIndex(f, floats);
-      return strings[valueIndex];
+      return strings[getValueIndex(f, floats)];
    }
 
 

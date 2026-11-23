@@ -102,9 +102,8 @@ public class EntityAIControlledByPlayer extends EntityAIBase {
       int n8 = MathHelper.floor_float(this.thisEntity.width + 1.0F);
       if (n != n4 || n3 != n5) {
          Block block = this.thisEntity.entityWorld.getBlockState(new BlockPos(n, n2, n3)).getBlock();
-         boolean flag = !this.isStairOrSlab(block)
-            && (block.getMaterial() != Material.air || !this.isStairOrSlab(this.thisEntity.entityWorld.getBlockState(new BlockPos(n, n2 - 1, n3)).getBlock()));
-         if (flag
+         if ((!this.isStairOrSlab(block)
+            && (block.getMaterial() != Material.air || !this.isStairOrSlab(this.thisEntity.entityWorld.getBlockState(new BlockPos(n, n2 - 1, n3)).getBlock())))
             && 0 == WalkNodeProcessor.evaluateNode(this.thisEntity.entityWorld, this.thisEntity, n4, n2, n5, n6, n7, n8, false, false, true)
             && 1 == WalkNodeProcessor.evaluateNode(this.thisEntity.entityWorld, this.thisEntity, n, n2 + 1, n3, n6, n7, n8, false, false, true)
             && 1 == WalkNodeProcessor.evaluateNode(this.thisEntity.entityWorld, this.thisEntity, n4, n2 + 1, n5, n6, n7, n8, false, false, true)) {

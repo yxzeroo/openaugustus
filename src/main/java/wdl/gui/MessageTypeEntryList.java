@@ -13,9 +13,8 @@ public class MessageTypeEntryList extends ArrayList {
 
    public MessageTypeEntryList(GuiMessageTypeList guiMessageTypeList) {
       this.parentList = guiMessageTypeList;
-      Map map = WDLMessages.getTypes().asMap();
 
-      for (Entry entry : (Iterable<Entry>)(map.entrySet())) {
+      for (Entry entry : (Iterable<Entry>)(WDLMessages.getTypes().asMap().entrySet())) {
          this.add(new GuiWDLMessagesCategoryEntry(this.parentList, (MessageTypeCategory)entry.getKey()));
 
          for (IWDLMessageType wdlMessageType : (Iterable<IWDLMessageType>)((Collection)entry.getValue())) {

@@ -70,15 +70,11 @@ public class GuiWDLPermissions extends GuiScreen {
       }
 
       if (button.id == 201) {
-         Minecraft mc2 = this.mc;
-         GuiWDLPermissionRequest guiWDLPermissionRequest = new GuiWDLPermissionRequest(this.parent);
-         mc2.displayGuiScreen(guiWDLPermissionRequest);
+         this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
       }
 
       if (button.id == 202) {
-         Minecraft mc3 = this.mc;
-         GuiWDLChunkOverrides guiWDLChunkOverrides = new GuiWDLChunkOverrides(this.parent);
-         mc3.displayGuiScreen(guiWDLChunkOverrides);
+         this.mc.displayGuiScreen(new GuiWDLChunkOverrides(this.parent));
       }
    }
 

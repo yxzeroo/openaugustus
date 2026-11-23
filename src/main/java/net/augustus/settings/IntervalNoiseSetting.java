@@ -6,12 +6,11 @@ import net.augustus.modules.Module;
 public class IntervalNoiseSetting extends AbstractNoiseSetting {
    public RangeSetting intervalRange;
    private Exception creationTrace;
-   private StringValue sharpnessSetting;
+   private DoubleValue sharpnessSetting;
 
    @Override
    public double sample() {
-      float f = 0.0F;
-      return this.sampleWithOffset(f);
+      return this.sampleWithOffset(0.0F);
    }
 
    @Override
@@ -71,14 +70,10 @@ public class IntervalNoiseSetting extends AbstractNoiseSetting {
          } else {
             double d3 = d / d2 * 0.5 + 0.5;
             if (this.sharpnessSetting != null) {
-               boolean flag = true;
-               d3 = Math.pow(d3, this.sharpnessSetting.getValue(flag));
+               d3 = Math.pow(d3, this.sharpnessSetting.getValue(true));
             }
 
-            boolean flag2 = true;
-            double minValue = this.intervalRange.getMinValue(flag2);
-            boolean flag3 = true;
-            double d4 = MathStatisticsUtil.lerp(minValue, this.intervalRange.getMaxValue(flag3), d3);
+            double d4 = MathStatisticsUtil.lerp(this.intervalRange.getMinValue(true), this.intervalRange.getMaxValue(true), d3);
             if (this.normalized) {
                d4 /= this.intervalRange.getMaximumBound();
             }
@@ -92,7 +87,7 @@ public class IntervalNoiseSetting extends AbstractNoiseSetting {
    public void renderTooltip() {
    }
 
-   public IntervalNoiseSetting(Module module, String str, DoubleValue doubleValue, boolean flag) {
+   public IntervalNoiseSetting(Module module, String str, SettingGroup doubleValue, boolean flag) {
        super(module, str, doubleValue, flag);
       this.normalized = flag;
       this.creationTrace = new Exception();
@@ -104,15 +99,11 @@ public class IntervalNoiseSetting extends AbstractNoiseSetting {
    }
 
    public void enableSharpness(int n) {
-      StringValue stringValue = new StringValue(this.getParentModule(), this.getName() + "_sharpness", (double)n, 0.5, 10.0, 0, this.noisegroup);
-      String str = "Sharpness";
-      this.sharpnessSetting = stringValue.named(str);
+      this.sharpnessSetting = new DoubleValue(this.getParentModule(), this.getName() + "_sharpness", (double)n, 0.5, 10.0, 0, this.noisegroup).named("Sharpness");
    }
 
    public IntervalNoiseSetting withInterval(double d, double d2, double d3, double d4, int n) {
-      RangeSetting rangeSetting = new RangeSetting(this.getParentModule(), this.getName() + "_interval", d3, d4, d, d2, n, this.noisegroup);
-      String displayName2 = this.getDisplayName();
-      this.intervalRange = rangeSetting.named(displayName2);
+      this.intervalRange = new RangeSetting(this.getParentModule(), this.getName() + "_interval", d3, d4, d, d2, n, this.noisegroup).named(this.getDisplayName());
       return this;
    }
 

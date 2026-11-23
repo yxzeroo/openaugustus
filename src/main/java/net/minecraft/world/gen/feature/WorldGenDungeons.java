@@ -53,8 +53,7 @@ public class WorldGenDungeons extends WorldGenerator {
          for (int j = -1; j <= 4; j++) {
             for (int k = n5; k <= n6; k++) {
                BlockPos pos2 = pos.add(i, j, k);
-               Material material = world.getBlockState(pos2).getBlock().getMaterial();
-               boolean isSolid = material.isSolid();
+               boolean isSolid = world.getBlockState(pos2).getBlock().getMaterial().isSolid();
                if (j == -1 && !isSolid) {
                   return false;
                }

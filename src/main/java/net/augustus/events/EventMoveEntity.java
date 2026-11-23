@@ -15,8 +15,7 @@ public class EventMoveEntity extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      MoveEntityListener listener = (MoveEntityListener)obj;
-      this.call2(listener);
+      this.call2((MoveEntityListener)obj);
    }
 
    public double getY() {

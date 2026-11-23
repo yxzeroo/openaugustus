@@ -64,16 +64,13 @@ public class VulcanOnGroundSpeedMode extends SpeedMode {
                      }
 
                      if (mc.thePlayer.ticksExisted % 2 == 0) {
-                        double d3 = d2 + 0.323;
-                        vec2d = vec2d.scale(d3);
+                        vec2d = vec2d.scale(d2 + 0.323);
                      } else {
                         vec2d = vec2d.scale(d2);
                      }
 
-                     double d4 = vec2d.x;
-                     event.setX(d4);
-                     double d5 = vec2d.y;
-                     event.setZ(d5);
+                     event.setX(vec2d.x);
+                     event.setZ(vec2d.y);
                   }
                }
             }
@@ -112,8 +109,7 @@ public class VulcanOnGroundSpeedMode extends SpeedMode {
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (this.spoofingAirGround) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
       }
    }
 }

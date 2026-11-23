@@ -63,9 +63,7 @@ public class NetworkPlayerInfo {
       this.renderVisibilityId = 0L;
       this.gameProfile = addPlayerData.getProfile();
       this.playerName = this.gameProfile.getName();
-      ProtectorManager protectorManager = Augustus.getInstance().getProtectorManager();
-      String name = this.gameProfile.getName();
-      this.protectedName = protectorManager.getProtectedName(name);
+      this.protectedName = Augustus.getInstance().getProtectorManager().getProtectedName(this.gameProfile.getName());
       this.gameType = addPlayerData.getGameMode();
       this.responseTime = addPlayerData.getPing();
       this.displayName = addPlayerData.getDisplayName();
@@ -217,9 +215,7 @@ public class NetworkPlayerInfo {
       this.healthBlinkTime = 0L;
       this.renderVisibilityId = 0L;
       this.gameProfile = profile;
-      ProtectorManager protectorManager = Augustus.getInstance().getProtectorManager();
-      String name = this.gameProfile.getName();
-      this.protectedName = protectorManager.getProtectedName(name);
+      this.protectedName = Augustus.getInstance().getProtectorManager().getProtectedName(this.gameProfile.getName());
       this.playerName = this.gameProfile.getName();
    }
 
@@ -233,9 +229,7 @@ public class NetworkPlayerInfo {
             case 1:
                NetworkPlayerInfo.setLocationSkinInternal(this.networkPlayerInfo, location);
                if (ClientManagers.moduleManager.protector.isToggled()) {
-                  NetworkPlayerInfo networkPlayerInfo2 = this.networkPlayerInfo;
-                  ProtectorManager protectorManager = Augustus.getInstance().getProtectorManager();
-                  NetworkPlayerInfo.setLocationSkinInternal(networkPlayerInfo2, protectorManager.getNextProtectorSkin());
+                  NetworkPlayerInfo.setLocationSkinInternal(this.networkPlayerInfo, Augustus.getInstance().getProtectorManager().getNextProtectorSkin());
                }
 
                if (ClientManagers.moduleManager.customSkin.isToggled() && NetworkPlayerInfo.getPlayerName(this.networkPlayerInfo).equals(Minecraft.getMinecraft().session.getUsername())) {

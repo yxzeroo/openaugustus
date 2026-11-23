@@ -153,8 +153,7 @@ public class Potion {
       if (potionEffect.getIsPotionDurationMax()) {
          return "**:**";
       } else {
-         int duration = potionEffect.getDuration();
-         return StringUtils.ticksToElapsedTime(duration);
+         return StringUtils.ticksToElapsedTime(potionEffect.getDuration());
       }
    }
 
@@ -173,8 +172,7 @@ public class Potion {
             }
          }
       } else {
-         int n3 = (int)(d * (double)(4 << n) + 0.5);
-         entity3.heal((float)n3);
+         entity3.heal((float)((int)(d * (double)(4 << n) + 0.5)));
       }
    }
 

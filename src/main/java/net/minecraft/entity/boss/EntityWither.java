@@ -116,8 +116,7 @@ public class EntityWither extends EntityMob implements IRangedAttackMob, IBossDi
       if (n <= 0) {
          return this.posX;
       } else {
-         float f = (this.renderYawOffset + (float)(180 * (n - 1))) / 180.0F * (float) Math.PI;
-         float f2 = MathHelper.cos(f);
+         float f2 = MathHelper.cos((this.renderYawOffset + (float)(180 * (n - 1))) / 180.0F * (float) Math.PI);
          return this.posX + (double)f2 * 1.3;
       }
    }
@@ -210,8 +209,7 @@ public class EntityWither extends EntityMob implements IRangedAttackMob, IBossDi
       if (n <= 0) {
          return this.posZ;
       } else {
-         float f = (this.renderYawOffset + (float)(180 * (n - 1))) / 180.0F * (float) Math.PI;
-         float f2 = MathHelper.sin(f);
+         float f2 = MathHelper.sin((this.renderYawOffset + (float)(180 * (n - 1))) / 180.0F * (float) Math.PI);
          return this.posZ + (double)f2 * 1.3;
       }
    }
@@ -230,8 +228,7 @@ public class EntityWither extends EntityMob implements IRangedAttackMob, IBossDi
          return false;
       } else {
          if (this.isArmored()) {
-            Entity sourceOfDamage = damageSource.getSourceOfDamage();
-            if (sourceOfDamage instanceof EntityArrow) {
+            if (damageSource.getSourceOfDamage() instanceof EntityArrow) {
                return false;
             }
          }
@@ -285,10 +282,7 @@ public class EntityWither extends EntityMob implements IRangedAttackMob, IBossDi
                   if (n3 > 15) {
                      float f = 10.0F;
                      float f2 = 5.0F;
-                     double randomDoubleInRange = MathHelper.getRandomDoubleInRange(this.rand, this.posX - (double)f, this.posX + (double)f);
-                     double randomDoubleInRange2 = MathHelper.getRandomDoubleInRange(this.rand, this.posY - (double)f2, this.posY + (double)f2);
-                     double randomDoubleInRange3 = MathHelper.getRandomDoubleInRange(this.rand, this.posZ - (double)f, this.posZ + (double)f);
-                     this.launchWitherSkullToCoords(i + 1, randomDoubleInRange, randomDoubleInRange2, randomDoubleInRange3, true);
+                     this.launchWitherSkullToCoords(i + 1, MathHelper.getRandomDoubleInRange(this.rand, this.posX - (double)f, this.posX + (double)f), MathHelper.getRandomDoubleInRange(this.rand, this.posY - (double)f2, this.posY + (double)f2), MathHelper.getRandomDoubleInRange(this.rand, this.posZ - (double)f, this.posZ + (double)f), true);
                      this.idleHeadUpdates[i - 1] = 0;
                   }
                }

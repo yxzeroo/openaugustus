@@ -20,13 +20,13 @@ import net.augustus.events.EventMoveEntity;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
 public class AirStuck extends Module implements MoveEntityListener, MoveInputListener, UpdateListener, PacketListener, GameLoopListener, TickListener, KeyListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    private final BooleanValue motionstopLegacy;
    private final BooleanValue sneak;
    private final BooleanValue delayIncomingPackets;
@@ -40,27 +40,19 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
 
    public AirStuck() {
        super("AirStuck", "LuftStecken", new Color(78, 186, 112), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "NewNoRotate", new String[]{"NewNoRotate", "NoRotate", "CanRotate", "Intave", "Dead"});
+      this.mode = new StringValue(this, "Mode", "NewNoRotate", new String[]{"NewNoRotate", "NoRotate", "CanRotate", "Intave", "Dead"});
       this.motionstopLegacy = new BooleanValue(this, "MotionStop (Legacy)", false);
       BooleanValue booleanValue = new BooleanValue(this, "Sneak", true);
       BooleanValue motionstopLegacy2 = this.motionstopLegacy;
       this.motionstopLegacy.getClass();
-      BooleanValue booleanValue2 = motionstopLegacy2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.sneak = (BooleanValue)booleanValue.withVisibility(condition);
+      this.sneak = (BooleanValue)booleanValue.withVisibility(() -> motionstopLegacy2.getValue());
       this.delayIncomingPackets = new BooleanValue(this, "DelayIncomingPackets", true);
       booleanValue = new BooleanValue(this, "OnlyInAir", true);
-      SettingVisibilityCondition condition2 = () -> this.isOnlyInAirVisible();
-      this.onlyInAir = (BooleanValue)booleanValue.withVisibility(condition2);
+      this.onlyInAir = (BooleanValue)booleanValue.withVisibility(() -> this.isOnlyInAirVisible());
       booleanValue = new BooleanValue(this, "Intervals", true);
-      SettingVisibilityCondition condition3 = () -> this.isIntervalsVisible();
-      this.intervals = (BooleanValue)booleanValue.withVisibility(condition3);
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "Interval", 15.0, 20.0, 1.0, 100.0, 0)).withoutNotInARow();
-      SettingVisibilityCondition condition4 = () -> this.isIntervalVisible();
-      this.interval = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "IntervalBreakDuration", 1.0, 1.0, 1.0, 10.0, 0)).withoutNotInARow();
-      SettingVisibilityCondition condition5 = () -> this.isIntervalBreakDurationVisible();
-      this.intervalBreakDuration = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition5);
+      this.intervals = (BooleanValue)booleanValue.withVisibility(() -> this.isIntervalsVisible());
+      this.interval = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "Interval", 15.0, 20.0, 1.0, 100.0, 0)).withoutNotInARow().withVisibility(() -> this.isIntervalVisible());
+      this.intervalBreakDuration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "IntervalBreakDuration", 1.0, 1.0, 1.0, 10.0, 0)).withoutNotInARow().withVisibility(() -> this.isIntervalBreakDurationVisible());
       this.blockKeyAndMouseInputs = new BooleanValue(this, "BlockKeyAndMouseInputs", true);
       this.tickCounter = new TickCounter();
       this.shouldMarkDead = false;
@@ -80,20 +72,13 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 43;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 16;
-      this.toggleEventSubscription(b5);
-      byte b6 = 40;
-      this.toggleEventSubscription(b6);
-      byte b7 = 14;
-      this.toggleEventSubscription(b7);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)16);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)14);
    }
 
    @Override
@@ -118,19 +103,15 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
    @Override
    public void onMoveEntity(EventMoveEntity event) {
       if (this.motionstopLegacy.getValue() && this.shouldFreeze()) {
-         double d = 0.0;
-         event.setX(d);
-         double d2 = 0.0;
-         event.setY(d2);
-         double d3 = 0.0;
-         event.setZ(d3);
+         event.setX(0.0);
+         event.setY(0.0);
+         event.setZ(0.0);
       }
    }
 
    @Override
    public void onUpdate(EventUpdate event) {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (this.shouldFreeze()) {
          if (this.mode.getSelectedValue().equals("Dead") && this.shouldMarkDead) {
             mc.thePlayer.isDead = true;
@@ -150,10 +131,8 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
    @Override
    public void onGameLoop(EventGameLoop event) {
       if (this.shouldFreeze() && this.delayIncomingPackets.getValue()) {
-         boolean flag = true;
-         event.setSkipRender(flag);
-         boolean flag2 = true;
-         event.setAllowSkipRender(flag2);
+         event.setSkipRender(true);
+         event.setAllowSkipRender(true);
       }
    }
 
@@ -167,8 +146,7 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.sneak.getValue() && this.shouldFreeze() && this.motionstopLegacy.getValue()) {
-         boolean flag = true;
-         event.setSneak(flag);
+         event.setSneak(true);
       }
    }
 
@@ -176,8 +154,7 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
    public void onPacket2(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof C03PacketPlayer && this.shouldFreeze()) {
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "NoRotate":
                event.cancel();
                break;
@@ -193,8 +170,7 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
    public void onPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (mc.thePlayer == null) {
-         boolean flag = false;
-         this.setToggled(flag);
+         this.setToggled(false);
       }
 
       if (this.mode.getSelectedValue().equals("Intave") && packet instanceof S08PacketPlayerPosLook) {
@@ -206,11 +182,9 @@ public class AirStuck extends Module implements MoveEntityListener, MoveInputLis
       boolean flag = mc.thePlayer != null && (!mc.thePlayer.onGround || !this.onlyInAir.getValue());
       if (flag && this.intervals.getValue()) {
          TickCounter tickCounter2 = this.tickCounter;
-         int lastIntValue = this.interval.getLastIntValue();
-         if (tickCounter2.hasReached2(lastIntValue)) {
+         if (tickCounter2.hasReached2(this.interval.getLastIntValue())) {
             tickCounter2 = this.tickCounter;
-            int n = this.interval.getLastIntValue() + this.intervalBreakDuration.getLastIntValue();
-            if (!tickCounter2.hasReached2(n)) {
+            if (!tickCounter2.hasReached2(this.interval.getLastIntValue() + this.intervalBreakDuration.getLastIntValue())) {
                flag = false;
             } else {
                this.interval.nextValue();

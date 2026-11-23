@@ -95,8 +95,7 @@ public abstract class Enchantment {
    }
 
    public String getTranslatedName(int n) {
-      String str = StatCollector.translateToLocal(this.getName());
-      return str + " " + StatCollector.translateToLocal("enchantment.level." + n);
+      return StatCollector.translateToLocal(this.getName()) + " " + StatCollector.translateToLocal("enchantment.level." + n);
    }
 
    public int getWeight() {

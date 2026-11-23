@@ -127,7 +127,6 @@ public class BlockCommandBlock extends BlockContainer {
 
    @Override
    public boolean canBlockBeActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing facing, float f, float f2, float f3) {
-      TileEntity tileEntity = world.getTileEntity(pos);
-      return tileEntity instanceof TileEntityCommandBlock && player.capabilities.isCreativeMode;
+      return world.getTileEntity(pos) instanceof TileEntityCommandBlock && player.capabilities.isCreativeMode;
    }
 }

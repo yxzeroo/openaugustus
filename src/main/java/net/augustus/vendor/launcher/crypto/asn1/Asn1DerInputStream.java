@@ -14,9 +14,7 @@ public class Asn1DerInputStream {
 
    public String getGeneralString() throws IOException {
       String str = "ASCII";
-      String str2 = "General";
-      byte b = 27;
-      return this.readString(b, str2, str);
+      return this.readString((byte)27, "General", str);
    }
 
    public void mark(int n) {
@@ -35,8 +33,7 @@ public class Asn1DerInputStream {
    }
 
    public Asn1DerValue[] getSequence(int n) throws IOException {
-      byte b = (byte)this.buffer.read();
-      this.tag = b;
+      this.tag = (byte)this.buffer.read();
       if (this.tag != 48) {
          throw new IOException("Sequence tag error");
       } else {
@@ -50,18 +47,14 @@ public class Asn1DerInputStream {
 
    public String getUTF8String() throws IOException {
       String str = "UTF8";
-      String str2 = "UTF-8";
-      byte b = 12;
-      return this.readString(b, str2, str);
+      return this.readString((byte)12, "UTF-8", str);
    }
 
    public Date getUTCTime() throws IOException {
       if (this.buffer.read() != 23) {
          throw new IOException("DER input, UTCtime tag invalid ");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         return buffer2.getUTCTime(length);
+         return this.buffer.getUTCTime(getLength(this.buffer));
       }
    }
 
@@ -69,9 +62,7 @@ public class Asn1DerInputStream {
       if (this.buffer.read() != 24) {
          throw new IOException("DER input, GeneralizedTime tag invalid ");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         return buffer2.getGeneralizedTime(length);
+         return this.buffer.getGeneralizedTime(getLength(this.buffer));
       }
    }
 
@@ -91,8 +82,7 @@ public class Asn1DerInputStream {
    }
 
    public Asn1DerValue[] getSet(int n, boolean flag) throws IOException {
-      byte b = (byte)this.buffer.read();
-      this.tag = b;
+      this.tag = (byte)this.buffer.read();
       if (!flag && this.tag != 49) {
          throw new IOException("Set tag error");
       } else {
@@ -120,18 +110,14 @@ public class Asn1DerInputStream {
 
    public String getT61String() throws IOException {
       String str = "ISO-8859-1";
-      String str2 = "T61";
-      byte b = 20;
-      return this.readString(b, str2, str);
+      return this.readString((byte)20, "T61", str);
    }
 
    public int getInteger() throws IOException {
       if (this.buffer.read() != 2) {
          throw new IOException("DER input, Integer tag error");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         return buffer2.getInteger(length);
+         return this.buffer.getInteger(getLength(this.buffer));
       }
    }
 
@@ -153,9 +139,7 @@ public class Asn1DerInputStream {
       if (this.buffer.read() != 3) {
          throw new IOException("DER input not an bit string");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         return buffer2.getBitString(length);
+         return this.buffer.getBitString(getLength(this.buffer));
       }
    }
 
@@ -163,11 +147,7 @@ public class Asn1DerInputStream {
       if (this.buffer.read() != 2) {
          throw new IOException("DER input, Integer tag error");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         boolean flag = true;
-         int n = length;
-         return buffer2.getBigInteger(n, flag);
+         return this.buffer.getBigInteger(getLength(this.buffer), true);
       }
    }
 
@@ -188,8 +168,7 @@ public class Asn1DerInputStream {
          in.readFully(bytes, b2, n2);
          in.close();
          Asn1DerIndefLenConverter asn1DerIndefLenConverter = new Asn1DerIndefLenConverter();
-         Asn1DerInputBuffer asn1DerInputBuffer = new Asn1DerInputBuffer(asn1DerIndefLenConverter.convert(bytes), this.buffer.allowBER);
-         this.buffer = asn1DerInputBuffer;
+         this.buffer = new Asn1DerInputBuffer(asn1DerIndefLenConverter.convert(bytes), this.buffer.allowBER);
          if (this.tag != this.buffer.read()) {
             throw new IOException("Indefinite length encoding not supported");
          }
@@ -204,15 +183,13 @@ public class Asn1DerInputStream {
          if (this.buffer.available() == length) {
             asn1DerInputStream = this;
          } else {
-            boolean flag = true;
-            asn1DerInputStream = this.subStream(length, flag);
+            asn1DerInputStream = this.subStream(length, true);
          }
 
          Vector vector = new Vector(n);
 
          do {
-            Asn1DerValue asn1DerValue = new Asn1DerValue(asn1DerInputStream.buffer, this.buffer.allowBER);
-            vector.addElement(asn1DerValue);
+            vector.addElement(new Asn1DerValue(asn1DerInputStream.buffer, this.buffer.allowBER));
          } while (asn1DerInputStream.available() > 0);
 
          if (asn1DerInputStream.available() != 0) {
@@ -234,19 +211,13 @@ public class Asn1DerInputStream {
       if (this.buffer.read() != 10) {
          throw new IOException("DER input, Enumerated tag error");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         return buffer2.getInteger(length);
+         return this.buffer.getInteger(getLength(this.buffer));
       }
    }
 
    public Asn1DerInputStream(byte[] bytes) throws IOException {
        super();
-      int length = bytes.length;
-      boolean flag = true;
-      int n = length;
-      byte b = 0;
-      this.init(bytes, b, n, flag);
+      this.init(bytes, (byte)0, bytes.length, true);
    }
 
    public int getLength() throws IOException {
@@ -279,24 +250,17 @@ public class Asn1DerInputStream {
       if (this.buffer.read() != 2) {
          throw new IOException("DER input, Integer tag error");
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int length = getLength(this.buffer);
-         boolean flag = false;
-         int n = length;
-         return buffer2.getBigInteger(n, flag);
+         return this.buffer.getBigInteger(getLength(this.buffer), false);
       }
    }
 
    public String getIA5String() throws IOException {
       String str = "ASCII";
-      String str2 = "IA5";
-      byte b = 22;
-      return this.readString(b, str2, str);
+      return this.readString((byte)22, "IA5", str);
    }
 
    public Asn1DerValue[] getSet(int n) throws IOException {
-      byte b = (byte)this.buffer.read();
-      this.tag = b;
+      this.tag = (byte)this.buffer.read();
       if (this.tag != 49) {
          throw new IOException("Set tag error");
       } else {
@@ -306,8 +270,7 @@ public class Asn1DerInputStream {
 
    public Asn1DerInputStream(byte[] bytes, int n, int n2) throws IOException {
        super();
-      boolean flag = true;
-      this.init(bytes, n, n2, flag);
+      this.init(bytes, n, n2, true);
    }
 
    public BitArray getUnalignedBitString() throws IOException {
@@ -344,11 +307,9 @@ public class Asn1DerInputStream {
             byte[] bytes2 = new byte[n2];
             System.arraycopy(bytes, n, bytes2, 0, n2);
             Asn1DerIndefLenConverter asn1DerIndefLenConverter = new Asn1DerIndefLenConverter();
-            Asn1DerInputBuffer asn1DerInputBuffer = new Asn1DerInputBuffer(asn1DerIndefLenConverter.convert(bytes2), flag);
-            this.buffer = asn1DerInputBuffer;
+            this.buffer = new Asn1DerInputBuffer(asn1DerIndefLenConverter.convert(bytes2), flag);
          } else {
-            Asn1DerInputBuffer asn1DerInputBuffer2 = new Asn1DerInputBuffer(bytes, n, n2, flag);
-            this.buffer = asn1DerInputBuffer2;
+            this.buffer = new Asn1DerInputBuffer(bytes, n, n2, flag);
          }
 
          this.buffer.mark(2147483647);
@@ -405,16 +366,12 @@ public class Asn1DerInputStream {
 
    public String getPrintableString() throws IOException {
       String str = "ASCII";
-      String str2 = "Printable";
-      byte b = 19;
-      return this.readString(b, str2, str);
+      return this.readString((byte)19, "Printable", str);
    }
 
    public String getBMPString() throws IOException {
       String str = "UnicodeBigUnmarked";
-      String str2 = "BMP";
-      byte b = 30;
-      return this.readString(b, str2, str);
+      return this.readString((byte)30, "BMP", str);
    }
 
 

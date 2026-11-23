@@ -147,8 +147,7 @@ public class SaveHandler implements IPlayerFileData, ISaveHandler {
       File file = new File(this.worldDirectory, "level.dat");
       if (file.exists()) {
          try {
-            NBTTagCompound tag = CompressedStreamTools.readCompressed(new FileInputStream(file));
-            NBTTagCompound compoundTag = tag.getCompoundTag("Data");
+            NBTTagCompound compoundTag = CompressedStreamTools.readCompressed(new FileInputStream(file)).getCompoundTag("Data");
             return new WorldInfo(compoundTag);
          } catch (Exception e) {
             e.printStackTrace();
@@ -158,8 +157,7 @@ public class SaveHandler implements IPlayerFileData, ISaveHandler {
       file = new File(this.worldDirectory, "level.dat_old");
       if (file.exists()) {
          try {
-            NBTTagCompound tag2 = CompressedStreamTools.readCompressed(new FileInputStream(file));
-            NBTTagCompound compoundTag2 = tag2.getCompoundTag("Data");
+            NBTTagCompound compoundTag2 = CompressedStreamTools.readCompressed(new FileInputStream(file)).getCompoundTag("Data");
             return new WorldInfo(compoundTag2);
          } catch (Exception e2) {
             e2.printStackTrace();

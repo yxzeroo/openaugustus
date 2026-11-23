@@ -1388,10 +1388,7 @@ public class InlinedAesGcmCipher {
    }
 
    private static String bytesToHex(byte[] bytes) {
-      int length = bytes.length;
-      int n = length;
-      byte b = 0;
-      return bytesToHex(bytes, b, n);
+      return bytesToHex(bytes, (byte)0, bytes.length);
    }
 
    private byte[] computeAuthTag(byte[] bytes, byte[] bytes2, byte[] bytes3, int[] ints, byte[] bytes4) {
@@ -2862,8 +2859,7 @@ public class InlinedAesGcmCipher {
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.decrypt(bytes, bytes2, (byte[])obj);
+      return this.decrypt(bytes, bytes2, (byte[])null);
    }
 
    private void ghashMultiply(long l, byte[] bytes) {
@@ -2891,8 +2887,7 @@ public class InlinedAesGcmCipher {
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.encrypt(bytes, bytes2, (byte[])obj);
+      return this.encrypt(bytes, bytes2, (byte[])null);
    }
 
 }

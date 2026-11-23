@@ -99,8 +99,7 @@ public final class NBTUtil {
          NBTTagCompound tag2 = (NBTTagCompound)nbt2;
 
          for (String str : (Iterable<String>)(tag.getKeySet())) {
-            NBTBase tag3 = tag.getTag(str);
-            if (!areNBTEquals(tag3, tag2.getTag(str), flag)) {
+            if (!areNBTEquals(tag.getTag(str), tag2.getTag(str), flag)) {
                return false;
             }
          }

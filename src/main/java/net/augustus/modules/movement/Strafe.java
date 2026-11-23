@@ -14,48 +14,40 @@ import net.augustus.utils.player.PlayerUtil;
 import net.augustus.events.EventMoveEntity;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class Strafe extends Module implements MoveEntityListener, UpdateListener {
-   public final BooleansSetting mode;
-   public final BooleansSetting event;
-   public final StringValue percentage;
+   public final StringValue mode;
+   public final StringValue event;
+   public final DoubleValue percentage;
    public final BooleanValue strafeOnGround;
-   public final BooleansSetting timingOnGround;
+   public final StringValue timingOnGround;
    public final RangeSetting hurtTimeStrafeOnGround;
    public final BooleanValue strafeOnAir;
-   public final BooleansSetting timinInAir;
+   public final StringValue timinInAir;
    public final RangeSetting hurtTimeStrafeInAir;
    public final BooleanValue backwardsStrafe;
 
    public Strafe() {
        super("Strafe", "Bestrafung", new Color(50, 168, 82), Categorys.MOVEMENT);
-      this.mode = new BooleansSetting(this, "Mode", "Normal", new String[]{"Normal", "Matrix", "Intave"});
-      this.event = new BooleansSetting(this, "Event", "Pre", new String[]{"Pre", "Mid", "OtherMid", "Post"});
-      StringValue stringValue = new StringValue(this, "Percentage", 100.0, 0.0, 100.0, 0);
-      SettingVisibilityCondition condition = () -> this.isPercentageVisible();
-      this.percentage = stringValue.visibleWhen(condition);
+      this.mode = new StringValue(this, "Mode", "Normal", new String[]{"Normal", "Matrix", "Intave"});
+      this.event = new StringValue(this, "Event", "Pre", new String[]{"Pre", "Mid", "OtherMid", "Post"});
+      this.percentage = new DoubleValue(this, "Percentage", 100.0, 0.0, 100.0, 0).visibleWhen(() -> this.isPercentageVisible());
       this.strafeOnGround = new BooleanValue(this, "StrafeOnGround", false);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "TimingOnGround", "Always", new String[]{"Always", "NotWhileKB", "OnlyWhileKB"});
+      StringValue booleansSetting = new StringValue(this, "TimingOnGround", "Always", new String[]{"Always", "NotWhileKB", "OnlyWhileKB"});
       BooleanValue strafeOnGround2 = this.strafeOnGround;
       this.strafeOnGround.getClass();
       BooleanValue booleanValue = strafeOnGround2;
-      SettingVisibilityCondition condition2 = () -> booleanValue.getValue();
-      this.timingOnGround = (BooleansSetting)booleansSetting.withVisibility(condition2);
-      RangeSetting rangeSetting = new RangeSetting(this, "HurtTimeStrafeOnGround", 0.0, 10.0, 0.0, 10.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isHurtTimeOnGroundVisible();
-      this.hurtTimeStrafeOnGround = rangeSetting.visibleWhen(condition3);
+      this.timingOnGround = (StringValue)booleansSetting.withVisibility(() -> booleanValue.getValue());
+      this.hurtTimeStrafeOnGround = new RangeSetting(this, "HurtTimeStrafeOnGround", 0.0, 10.0, 0.0, 10.0, 0).visibleWhen(() -> this.isHurtTimeOnGroundVisible());
       this.strafeOnAir = new BooleanValue(this, "StrafeOnAir", true);
-      BooleansSetting booleansSetting2 = new BooleansSetting(this, "TiminInAir", "Always", new String[]{"Always", "NotWhileKB", "OnlyWhileKB"});
+      StringValue booleansSetting2 = new StringValue(this, "TiminInAir", "Always", new String[]{"Always", "NotWhileKB", "OnlyWhileKB"});
       strafeOnGround2 = this.strafeOnAir;
       this.strafeOnAir.getClass();
       BooleanValue booleanValue2 = strafeOnGround2;
-      SettingVisibilityCondition condition4 = () -> booleanValue2.getValue();
-      this.timinInAir = (BooleansSetting)booleansSetting2.withVisibility(condition4);
-      RangeSetting rangeSetting2 = new RangeSetting(this, "HurtTimeStrafeInAir", 0.0, 10.0, 0.0, 10.0, 0);
-      SettingVisibilityCondition condition5 = () -> this.isHurtTimeInAirVisible();
-      this.hurtTimeStrafeInAir = rangeSetting2.visibleWhen(condition5);
+      this.timinInAir = (StringValue)booleansSetting2.withVisibility(() -> booleanValue2.getValue());
+      this.hurtTimeStrafeInAir = new RangeSetting(this, "HurtTimeStrafeInAir", 0.0, 10.0, 0.0, 10.0, 0).visibleWhen(() -> this.isHurtTimeInAirVisible());
       this.backwardsStrafe = new BooleanValue(this, "BackwardsStrafe", true);
    }
 
@@ -69,15 +61,12 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
    public void onUpdate() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.event.getSelectedValue().equals("Post")) {
          this.applyStrafe();
       }
@@ -85,7 +74,6 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
 
    @Override
    public void onUpdate2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.event.getSelectedValue().equals("Pre")) {
          this.applyStrafe();
       }
@@ -93,15 +81,12 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
 
    @Override
    public void onMoveEntity(EventMoveEntity event2) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.canStrafe()) {
          if (!BlockUtil.isScaffoldActiveAndValid()) {
             if (this.event.getSelectedValue().equals("Mid")) {
-               boolean flag = true;
-               this.applyMidStrafe(event2, flag);
+               this.applyMidStrafe(event2, true);
             } else if (this.event.getSelectedValue().equals("OtherMid")) {
-               boolean flag2 = false;
-               this.applyMidStrafe(event2, flag2);
+               this.applyMidStrafe(event2, false);
             }
          }
       }
@@ -109,11 +94,9 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
 
    private void applyMidStrafe(EventMoveEntity event2, boolean flag) {
       double x = event2.getX();
-      Fly.getCachedSettings();
       double z = event2.getZ();
       double d = Math.sqrt(x * x + z * z);
-      String selectedValue = this.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.mode.getSelectedValue()) {
          case "Normal":
             if (MoveUtil.isMoving()) {
                float f = (float)(this.percentage.getValue() / 100.0);
@@ -139,8 +122,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
                && mc.thePlayer.hurtTime == 0
                && !mc.thePlayer.isCollidedVertically
                && !mc.thePlayer.isBurning()) {
-               double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
-               if (doubles[9] == 1.0) {
+               if (PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] == 1.0) {
                   float f2 = (float)(this.percentage.getValue() / 100.0);
                   double d6 = d * (double)f2;
                   double d7 = (double)(1.0F - f2);
@@ -174,7 +156,6 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
    }
 
    private static double getMatrixStrafeDirection() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       float movementYaw = MoveUtil.getMovementYaw();
       if (mc.thePlayer.moveForward < 0.0F) {
          movementYaw += 180.0F;
@@ -197,11 +178,9 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
    }
 
    private void applyStrafe() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.canStrafe()) {
          if (!BlockUtil.isScaffoldActiveAndValid()) {
-            String selectedValue = this.mode.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.mode.getSelectedValue()) {
                case "Normal":
                   MoveUtil.strafe((float)(this.percentage.getValue() / 100.0));
                   break;
@@ -210,8 +189,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
                   break;
                case "Intave":
                   if (!mc.thePlayer.onGround) {
-                     double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
-                     if (doubles[9] == 1.0) {
+                     if (PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] == 1.0) {
                         MoveUtil.strafe((float)(this.percentage.getValue() / 100.0));
                      }
                   }
@@ -221,7 +199,6 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
    }
 
    private boolean canStrafe() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (MoveUtil.getCorrectedMoveInputs()[0] < 0 && !this.backwardsStrafe.getValue() && this.isLicenseTimestampValid()) {
          return false;
       } else if (mc.thePlayer.onGround) {
@@ -231,8 +208,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
             return false;
          } else if (this.timingOnGround.getSelectedValue().equals("OnlyWhileKB")) {
             if (mc.thePlayer.hurtTime != 0 && (double)mc.thePlayer.hurtTime >= this.hurtTimeStrafeOnGround.getMinValue()) {
-               double hurtTime = (double)mc.thePlayer.hurtTime;
-               if (hurtTime <= this.hurtTimeStrafeOnGround.getMaxValue()) {
+               if (((double)mc.thePlayer.hurtTime) <= this.hurtTimeStrafeOnGround.getMaxValue()) {
                   return true;
                }
             }
@@ -240,8 +216,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
             return false;
          } else if (mc.thePlayer.hurtTime != 0) {
             if ((double)mc.thePlayer.hurtTime >= this.hurtTimeStrafeOnGround.getMinValue()) {
-               double hurtTime2 = (double)mc.thePlayer.hurtTime;
-               if (hurtTime2 <= this.hurtTimeStrafeOnGround.getMaxValue()) {
+               if (((double)mc.thePlayer.hurtTime) <= this.hurtTimeStrafeOnGround.getMaxValue()) {
                   return true;
                }
             }
@@ -256,8 +231,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
          return false;
       } else if (this.timinInAir.getSelectedValue().equals("OnlyWhileKB")) {
          if (mc.thePlayer.hurtTime != 0 && (double)mc.thePlayer.hurtTime >= this.hurtTimeStrafeInAir.getMinValue()) {
-            double hurtTime3 = (double)mc.thePlayer.hurtTime;
-            if (hurtTime3 <= this.hurtTimeStrafeInAir.getMaxValue()) {
+            if (((double)mc.thePlayer.hurtTime) <= this.hurtTimeStrafeInAir.getMaxValue()) {
                return true;
             }
          }
@@ -265,8 +239,7 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
          return false;
       } else if (mc.thePlayer.hurtTime != 0) {
          if ((double)mc.thePlayer.hurtTime >= this.hurtTimeStrafeInAir.getMinValue()) {
-            double hurtTime4 = (double)mc.thePlayer.hurtTime;
-            if (hurtTime4 <= this.hurtTimeStrafeInAir.getMaxValue()) {
+            if (((double)mc.thePlayer.hurtTime) <= this.hurtTimeStrafeInAir.getMaxValue()) {
                return true;
             }
          }
@@ -278,23 +251,19 @@ public class Strafe extends Module implements MoveEntityListener, UpdateListener
    }
 
    private boolean isHurtTimeInAirVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.strafeOnAir.getValue() && !this.timinInAir.getSelectedValue().equals("NotWhileKB");
    }
 
    private boolean isHurtTimeOnGroundVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.strafeOnGround.getValue() && !this.timingOnGround.getSelectedValue().equals("NotWhileKB");
    }
 
    private boolean isPercentageVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.mode.getSelectedValue().equals("Matrix");
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

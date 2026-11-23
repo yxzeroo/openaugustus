@@ -39,8 +39,7 @@ public class GuiWinGame extends GuiScreen {
       float f3 = (float)this.height - ((float)this.time + f) * 0.5F * this.scrollSpeed;
       float f4 = 0.015625F;
       float f5 = ((float)this.time + f - 0.0F) * 0.02F;
-      float f6 = (float)(this.totalScrollLength + this.height + this.height + 24) / this.scrollSpeed;
-      float f7 = (f6 - 20.0F - ((float)this.time + f)) * 0.005F;
+      float f7 = (((float)(this.totalScrollLength + this.height + this.height + 24) / this.scrollSpeed) - 20.0F - ((float)this.time + f)) * 0.005F;
       if (f7 < f5) {
          f5 = f7;
       }

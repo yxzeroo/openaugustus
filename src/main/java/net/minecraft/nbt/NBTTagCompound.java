@@ -213,8 +213,7 @@ public class NBTTagCompound extends NBTBase {
    @Override
    public void write(DataOutput dataOutput) throws IOException {
       for (String str : (Iterable<String>)(this.tagMap.keySet())) {
-         NBTBase nbt = (NBTBase)this.tagMap.get(str);
-         writeEntry(str, nbt, dataOutput);
+         writeEntry(str, (NBTBase)this.tagMap.get(str), dataOutput);
       }
 
       dataOutput.writeByte(0);
@@ -225,8 +224,7 @@ public class NBTTagCompound extends NBTBase {
          NBTBase nbt = (NBTBase)tag.tagMap.get(str);
          if (nbt.getId() == 10) {
             if (this.hasKey(str, 10)) {
-               NBTTagCompound compoundTag = this.getCompoundTag(str);
-               compoundTag.merge((NBTTagCompound)nbt);
+               this.getCompoundTag(str).merge((NBTTagCompound)nbt);
             } else {
                this.setTag(str, nbt.copy());
             }

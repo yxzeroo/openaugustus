@@ -48,8 +48,7 @@ public class BlockPressurePlate extends BlockBasePressurePlate {
    }
 
    static {
-      String str = "powered";
-      POWERED = PropertyBool.create(str);
+      POWERED = PropertyBool.create("powered");
    }
 
    @Override

@@ -20,7 +20,6 @@ public class VendorPacketDecoder extends ByteToMessageDecoder {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      String opaqueStateTag = VendorPacketBuffer.getOpaqueStateTag();
       this.timingGuard.enterStep3();
       if (in.readableBytes() != 0) {
          obj3 = new VendorPacketBuffer(in);
@@ -31,9 +30,7 @@ public class VendorPacketDecoder extends ByteToMessageDecoder {
          }
 
          obj = (VendorPacket)((Supplier)obj2).get();
-         VendorPacket packet = (VendorPacket)obj;
-         VendorPacketBuffer vendorPacketBuffer = (VendorPacketBuffer)obj3;
-         packet.readPacketData(vendorPacketBuffer);
+         ((VendorPacket)obj).readPacketData((VendorPacketBuffer)obj3);
          out.add((VendorPacket)obj);
       }
    }

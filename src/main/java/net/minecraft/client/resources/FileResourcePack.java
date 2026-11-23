@@ -40,8 +40,7 @@ public class FileResourcePack extends AbstractResourcePack implements Closeable 
       HashSet set = Sets.newHashSet();
 
       while (en.hasMoreElements()) {
-         ZipEntry zipEntry = (ZipEntry)en.nextElement();
-         String name = zipEntry.getName();
+         String name = ((ZipEntry)en.nextElement()).getName();
          if (name.startsWith("assets/")) {
             ArrayList list = Lists.newArrayList(entryNameSplitter.split(name));
             if (list.size() > 1) {

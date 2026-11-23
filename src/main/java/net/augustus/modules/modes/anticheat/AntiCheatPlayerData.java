@@ -37,8 +37,7 @@ public final class AntiCheatPlayerData implements MC {
       double d4 = nearestPointOnEntity.yCoord + 1.6200000047683716 - (d2 + 1.6200000047683716);
       double d5 = nearestPointOnEntity.xCoord - d;
       double d6 = nearestPointOnEntity.zCoord - d3;
-      double d7 = Math.sqrt(d5 * d5 + d6 * d6);
-      return (float)(-Math.atan2(d4, d7) * 180.0 / 3.141592653589793);
+      return (float)(-Math.atan2(d4, Math.sqrt(d5 * d5 + d6 * d6)) * 180.0 / 3.141592653589793);
    }
 
    public int getTargetEntityId() {
@@ -47,15 +46,13 @@ public final class AntiCheatPlayerData implements MC {
 
    private static float computeYawToPos(Vec3 vec, double d, double d2) {
       double d3 = vec.xCoord - d;
-      double d4 = vec.zCoord - d2;
-      return (float)Math.toDegrees(Math.atan2(d4, d3)) - 90.0F;
+      return (float)Math.toDegrees(Math.atan2(vec.zCoord - d2, d3)) - 90.0F;
    }
 
    public boolean hasAttackedWithin(long l, long l2) {
-      Object obj = null;
       long l3;
       int n = (l3 = System.currentTimeMillis() - this.lastAttackTime - l) == 0L ? 0 : (l3 < 0L ? -1 : 1);
-      if (obj == null) {
+      if (null == null) {
          n = n <= 0 ? 1 : 0;
       }
 
@@ -94,8 +91,7 @@ public final class AntiCheatPlayerData implements MC {
    private static float computeServerYawToEntity(Entity entity, double d, double d2) {
       Vec3 nearestPointOnEntity = RotationUtil.getNearestPointOnEntity(entity);
       double d3 = nearestPointOnEntity.xCoord - d;
-      double d4 = nearestPointOnEntity.zCoord - d2;
-      return (float)Math.toDegrees(Math.atan2(d4, d3)) - 90.0F;
+      return (float)Math.toDegrees(Math.atan2(nearestPointOnEntity.zCoord - d2, d3)) - 90.0F;
    }
 
    public void updateTracking() {
@@ -129,8 +125,7 @@ public final class AntiCheatPlayerData implements MC {
       double d4 = vec.yCoord + 1.6200000047683716 - (d2 + 1.6200000047683716);
       double d5 = vec.xCoord - d;
       double d6 = vec.zCoord - d3;
-      double d7 = Math.sqrt(d5 * d5 + d6 * d6);
-      return (float)(-Math.atan2(d4, d7) * 180.0 / 3.141592653589793);
+      return (float)(-Math.atan2(d4, Math.sqrt(d5 * d5 + d6 * d6)) * 180.0 / 3.141592653589793);
    }
 
    public float getPrevYawToTarget() {
@@ -138,10 +133,9 @@ public final class AntiCheatPlayerData implements MC {
    }
 
    public boolean hasSwitchedTargetWithin(char ch, long l, long l2) {
-      Object obj = null;
       long l3;
       int n = (l3 = System.currentTimeMillis() - this.lastTargetSwitchTime - l) == 0L ? 0 : (l3 < 0L ? -1 : 1);
-      if (obj == null) {
+      if (null == null) {
          n = n <= 0 ? 1 : 0;
       }
 
@@ -161,10 +155,9 @@ public final class AntiCheatPlayerData implements MC {
    }
 
    public boolean isActionRecent(long l) {
-      Object obj = null;
       long l2;
       int n = (l2 = System.currentTimeMillis() - this.lastActionTime - 2000L) == 0L ? 0 : (l2 < 0L ? -1 : 1);
-      if (obj == null) {
+      if (null == null) {
          n = n < 0 ? 1 : 0;
       }
 

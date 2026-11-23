@@ -64,7 +64,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public List readByteArrayList() {
       int n = 0;
-      getOpaqueStateTag();
       Object obj = null;
       boolean flag = false;
       n = this.readInt();
@@ -115,15 +114,9 @@ public class VendorPacketBuffer extends ByteBuf {
    public String readUtfString() {
       int n = 0;
       Object obj = null;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.delegateBuf.readInt();
-      VendorPacketBuffer vendorPacketBuffer = this;
-      int n2 = this.delegateBuf.readerIndex();
-      Charset utF8 = StandardCharsets.UTF_8;
-      int n3 = n2;
-      obj = vendorPacketBuffer.toString(n3, n, utF8);
-      int n4 = this.readerIndex() + n;
-      this.readerIndex(n4);
+      obj = this.toString(this.delegateBuf.readerIndex(), n, StandardCharsets.UTF_8);
+      this.readerIndex(this.readerIndex() + n);
       return (String)obj;
    }
 
@@ -131,11 +124,9 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      getOpaqueStateTag();
       boolean flag = false;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj3 = map.entrySet().iterator();
 
       while (((Iterator)obj3).hasNext()) {
@@ -143,8 +134,7 @@ public class VendorPacketBuffer extends ByteBuf {
          obj = (String)((Entry)obj2).getKey();
          flag = (Boolean)((Entry)obj2).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj);
          this.writeBoolean(flag);
       }
    }
@@ -162,7 +152,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public void writeStringMatrix(String[][] stringsArr) {
       Object obj = null;
       Object obj2 = null;
-      getOpaqueStateTag();
       boolean flag = false;
       int n = 0;
       this.delegateBuf.writeInt(stringsArr.length);
@@ -171,9 +160,7 @@ public class VendorPacketBuffer extends ByteBuf {
 
       for (int i = 0; i < n; i++) {
          obj2 = ((String[][])obj)[i];
-         VendorPacketBuffer vendorPacketBuffer = this;
-         String[] strings = (String[])obj2;
-         vendorPacketBuffer.writeStringArray(strings);
+         this.writeStringArray((String[])obj2);
       }
    }
 
@@ -194,7 +181,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public static int getVarIntSize(int n) {
       boolean flag = false;
-      String opaqueStateTag2 = getOpaqueStateTag();
 
       for (int i = 1; i < 5; i++) {
          if ((n & -1 << i * 7) == 0) {
@@ -218,7 +204,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public byte[][] readByteMatrix() {
       boolean flag = false;
       int n = 0;
-      getOpaqueStateTag();
       Object obj = null;
       n = this.readInt();
       obj = new byte[n][];
@@ -292,7 +277,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeBooleanArray(boolean[] flags) {
       int n = 0;
-      getOpaqueStateTag();
       boolean flag = false;
       boolean flag2 = false;
       Object obj = null;
@@ -315,11 +299,9 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj = null;
       Object obj2 = null;
       Object obj3 = null;
-      getOpaqueStateTag();
       Object obj4 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj2 = map.entrySet().iterator();
 
       while (((Iterator)obj2).hasNext()) {
@@ -327,11 +309,9 @@ public class VendorPacketBuffer extends ByteBuf {
          obj4 = (String)((Entry)obj3).getKey();
          obj = (int[])((Entry)obj3).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj4;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj4);
          vendorPacketBuffer = this;
-         int[] ints = (int[])obj;
-         vendorPacketBuffer.writeIntArray(ints);
+         vendorPacketBuffer.writeIntArray((int[])obj);
       }
    }
 
@@ -360,7 +340,6 @@ public class VendorPacketBuffer extends ByteBuf {
    }
 
    public void writeNullTerminatedAscii(String str) {
-      String opaqueStateTag2 = getOpaqueStateTag();
       this.delegateBuf.writeBytes(str.getBytes(StandardCharsets.US_ASCII));
       this.delegateBuf.writeByte(0);
    }
@@ -403,7 +382,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public Map readBooleanArrayMap() {
       Object obj = null;
       Object obj2 = null;
-      getOpaqueStateTag();
       int n = 0;
       int n2 = 0;
       Object obj3 = null;
@@ -462,18 +440,15 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeByteArrayList(List list) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = list.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(list.size());
       obj = list.iterator();
 
       while (((Iterator)obj).hasNext()) {
          obj2 = (byte[])((Iterator)obj).next();
          vendorPacketBuffer = this;
-         byte[] bytes = (byte[])obj2;
-         vendorPacketBuffer.writeByteArray(bytes);
+         vendorPacketBuffer.writeByteArray((byte[])obj2);
       }
    }
 
@@ -519,7 +494,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeDoubleMatrix(double[][] doublesArr) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       boolean flag = false;
       int n = 0;
@@ -529,9 +503,7 @@ public class VendorPacketBuffer extends ByteBuf {
 
       for (int i = 0; i < n; i++) {
          obj = ((double[][])obj2)[i];
-         VendorPacketBuffer vendorPacketBuffer = this;
-         double[] doubles = (double[])obj;
-         vendorPacketBuffer.writeDoubleArray(doubles);
+         this.writeDoubleArray((double[])obj);
       }
    }
 
@@ -587,7 +559,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeIntArray(int[] ints) {
       boolean flag = false;
-      getOpaqueStateTag();
       int n = 0;
       Object obj = null;
       int n2 = 0;
@@ -605,7 +576,6 @@ public class VendorPacketBuffer extends ByteBuf {
       byte b = 0;
       int n = 0;
       int n2 = 0;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = 0;
       n2 = 0;
 
@@ -646,7 +616,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public String readNullTerminatedAscii() {
       byte b = 0;
-      getOpaqueStateTag();
       Object obj = null;
       obj = new StringBuilder();
 
@@ -683,7 +652,6 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj2 = null;
       boolean flag2 = false;
       Object obj3 = null;
-      getOpaqueStateTag();
       int n = 0;
       Object obj4 = null;
       Object obj5 = null;
@@ -725,7 +693,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public double[] readDoubleArray() {
       int n = 0;
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       n = this.delegateBuf.readInt();
       if (n >= 400) {
@@ -757,10 +724,7 @@ public class VendorPacketBuffer extends ByteBuf {
    }
 
    public void writeByteArray(byte[] bytes) {
-      String opaqueStateTag2 = getOpaqueStateTag();
-      VendorPacketBuffer vendorPacketBuffer = this;
-      int length = bytes.length;
-      vendorPacketBuffer.writeInt(length);
+      this.writeInt(bytes.length);
       this.delegateBuf.writeBytes(bytes);
    }
 
@@ -787,7 +751,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public void writeIntMatrix(int[][] intsArr) {
       Object obj = null;
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj2 = null;
       int n = 0;
       this.delegateBuf.writeInt(intsArr.length);
@@ -796,16 +759,13 @@ public class VendorPacketBuffer extends ByteBuf {
 
       for (int i = 0; i < n; i++) {
          obj = ((int[][])obj2)[i];
-         VendorPacketBuffer vendorPacketBuffer = this;
-         int[] ints = (int[])obj;
-         vendorPacketBuffer.writeIntArray(ints);
+         this.writeIntArray((int[])obj);
       }
    }
 
    public void writeBooleanMatrix(boolean[][] flagsArr) {
       boolean flag = false;
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       int n = 0;
       this.delegateBuf.writeInt(flagsArr.length);
@@ -814,9 +774,7 @@ public class VendorPacketBuffer extends ByteBuf {
 
       for (int i = 0; i < n; i++) {
          obj = ((boolean[][])obj2)[i];
-         VendorPacketBuffer vendorPacketBuffer = this;
-         boolean[] flags = (boolean[])obj;
-         vendorPacketBuffer.writeBooleanArray(flags);
+         this.writeBooleanArray((boolean[])obj);
       }
    }
 
@@ -881,7 +839,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public boolean[][] readBooleanMatrix() {
       Object obj = null;
-      getOpaqueStateTag();
       boolean flag = false;
       int n = 0;
       n = this.delegateBuf.readInt();
@@ -944,18 +901,15 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeStringList(List list) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = list.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(list.size());
       obj2 = list.iterator();
 
       while (((Iterator)obj2).hasNext()) {
          obj = (String)((Iterator)obj2).next();
          vendorPacketBuffer = this;
-         String str = (String)obj;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj);
       }
    }
 
@@ -982,7 +936,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public List readStringList() {
       int n = 0;
-      getOpaqueStateTag();
       boolean flag = false;
       Object obj = null;
       n = this.readInt();
@@ -1007,7 +960,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeStringArray(String[] strings) {
       boolean flag = false;
-      getOpaqueStateTag();
       int n = 0;
       Object obj = null;
       Object obj2 = null;
@@ -1017,9 +969,7 @@ public class VendorPacketBuffer extends ByteBuf {
 
       for (int i = 0; i < n; i++) {
          obj = ((String[])obj2)[i];
-         VendorPacketBuffer vendorPacketBuffer = this;
-         String str = (String)obj;
-         vendorPacketBuffer.writeUtfString(str);
+         this.writeUtfString((String)obj);
       }
    }
 
@@ -1039,13 +989,11 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeDoubleArrayMap(Map map) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj = map.entrySet().iterator();
 
       while (((Iterator)obj).hasNext()) {
@@ -1053,11 +1001,9 @@ public class VendorPacketBuffer extends ByteBuf {
          obj3 = (String)((Entry)obj2).getKey();
          obj4 = (double[])((Entry)obj2).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj3;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj3);
          vendorPacketBuffer = this;
-         double[] doubles = (double[])obj4;
-         vendorPacketBuffer.writeDoubleArray(doubles);
+         vendorPacketBuffer.writeDoubleArray((double[])obj4);
       }
    }
 
@@ -1071,18 +1017,15 @@ public class VendorPacketBuffer extends ByteBuf {
       int n = 0;
       Object obj = null;
       Object obj2 = null;
-      String opaqueStateTag2 = getOpaqueStateTag();
       VendorPacketBuffer vendorPacketBuffer = this;
-      int length = bytesArr.length;
-      vendorPacketBuffer.writeInt(length);
+      vendorPacketBuffer.writeInt(bytesArr.length);
       obj2 = bytesArr;
       n = ((byte[][])obj2).length;
 
       for (int i = 0; i < n; i++) {
          obj = ((byte[][])obj2)[i];
          vendorPacketBuffer = this;
-         byte[] bytes = (byte[])obj;
-         vendorPacketBuffer.writeByteArray(bytes);
+         vendorPacketBuffer.writeByteArray((byte[])obj);
       }
    }
 
@@ -1133,7 +1076,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public String[] readStringArray() {
       Object obj = null;
-      getOpaqueStateTag();
       int n = 0;
       boolean flag = false;
       n = this.delegateBuf.readInt();
@@ -1156,8 +1098,7 @@ public class VendorPacketBuffer extends ByteBuf {
    }
 
    public void writeEnumOrdinal(Enum obj, long l) {
-      int n = obj.ordinal();
-      this.writeInt(n);
+      this.writeInt(obj.ordinal());
    }
 
    @Override
@@ -1184,7 +1125,6 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj = null;
       int n = 0;
       boolean flag = false;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.delegateBuf.readInt();
       if (n >= 400) {
          return (double[][])null;
@@ -1225,12 +1165,9 @@ public class VendorPacketBuffer extends ByteBuf {
    }
 
    public void writeVarInt(int n) {
-      String opaqueStateTag2 = getOpaqueStateTag();
 
       while ((n & -128) != 0) {
-         VendorPacketBuffer vendorPacketBuffer = this;
-         int n2 = n & 127 | 128;
-         vendorPacketBuffer.writeByte(n2);
+         this.writeByte(n & 127 | 128);
          n >>>= 7;
       }
 
@@ -1249,7 +1186,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeUtfString(String str) {
       Object obj = null;
-      String opaqueStateTag2 = getOpaqueStateTag();
       obj = str.getBytes(StandardCharsets.UTF_8);
       if (((byte[])obj).length <= 32767) {
          this.delegateBuf.writeInt(((byte[])obj).length);
@@ -1263,7 +1199,6 @@ public class VendorPacketBuffer extends ByteBuf {
       boolean flag = false;
       Object obj3 = null;
       int n = 0;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.readInt();
       obj = new HashMap(n);
 
@@ -1316,10 +1251,8 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj2 = null;
       float f = 0.0F;
       Object obj3 = null;
-      String opaqueStateTag2 = getOpaqueStateTag();
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj = map.entrySet().iterator();
 
       while (((Iterator)obj).hasNext()) {
@@ -1327,8 +1260,7 @@ public class VendorPacketBuffer extends ByteBuf {
          obj2 = (String)((Entry)obj3).getKey();
          f = (Float)((Entry)obj3).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj2;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj2);
          this.writeFloat(f);
       }
    }
@@ -1342,7 +1274,6 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj = null;
       boolean flag = false;
       int n = 0;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.delegateBuf.readInt();
       if (n >= 400) {
          return (int[][])null;
@@ -1364,13 +1295,11 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeByteArrayMap(Map map) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj3 = map.entrySet().iterator();
 
       while (((Iterator)obj3).hasNext()) {
@@ -1378,11 +1307,9 @@ public class VendorPacketBuffer extends ByteBuf {
          obj4 = (String)((Entry)obj).getKey();
          obj2 = (byte[])((Entry)obj).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj4;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj4);
          vendorPacketBuffer = this;
-         byte[] bytes = (byte[])obj2;
-         vendorPacketBuffer.writeByteArray(bytes);
+         vendorPacketBuffer.writeByteArray((byte[])obj2);
       }
    }
 
@@ -1392,7 +1319,6 @@ public class VendorPacketBuffer extends ByteBuf {
       Object obj = null;
       int n = 0;
       Object obj2 = null;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.readInt();
       obj2 = new HashMap(n);
 
@@ -1417,13 +1343,11 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public void writeBooleanArrayMap(Map map) {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       Object obj4 = null;
       VendorPacketBuffer vendorPacketBuffer = this;
-      int size = map.size();
-      vendorPacketBuffer.writeInt(size);
+      vendorPacketBuffer.writeInt(map.size());
       obj4 = map.entrySet().iterator();
 
       while (((Iterator)obj4).hasNext()) {
@@ -1431,11 +1355,9 @@ public class VendorPacketBuffer extends ByteBuf {
          obj = (String)((Entry)obj3).getKey();
          obj2 = (boolean[])((Entry)obj3).getValue();
          vendorPacketBuffer = this;
-         String str = (String)obj;
-         vendorPacketBuffer.writeUtfString(str);
+         vendorPacketBuffer.writeUtfString((String)obj);
          vendorPacketBuffer = this;
-         boolean[] flags = (boolean[])obj2;
-         vendorPacketBuffer.writeBooleanArray(flags);
+         vendorPacketBuffer.writeBooleanArray((boolean[])obj2);
       }
    }
 
@@ -1491,7 +1413,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public String[][] readStringMatrix() {
       boolean flag = false;
       Object obj = null;
-      getOpaqueStateTag();
       int n = 0;
       n = this.delegateBuf.readInt();
       if (n >= 400) {
@@ -1554,7 +1475,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public Map readFloatMap() {
       Object obj = null;
       int n = 0;
-      getOpaqueStateTag();
       boolean flag = false;
       Object obj2 = null;
       float f = 0.0F;
@@ -1589,7 +1509,6 @@ public class VendorPacketBuffer extends ByteBuf {
       boolean flag = false;
       Object obj = null;
       int n = 0;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.delegateBuf.readInt();
       if (n >= 400) {
          return null;
@@ -1616,7 +1535,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public Map readDoubleArrayMap() {
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       int n = 0;
@@ -1635,7 +1553,6 @@ public class VendorPacketBuffer extends ByteBuf {
 
    public boolean[] readBooleanArray() {
       boolean flag = false;
-      getOpaqueStateTag();
       Object obj = null;
       int n = 0;
       n = this.delegateBuf.readInt();
@@ -1670,7 +1587,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public void writeDoubleArray(double[] doubles) {
       boolean flag = false;
       double d = 0.0;
-      getOpaqueStateTag();
       Object obj = null;
       int n = 0;
       this.delegateBuf.writeInt(doubles.length);
@@ -1701,7 +1617,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public Map readByteArrayMap() {
       int n = 0;
       Object obj = null;
-      getOpaqueStateTag();
       Object obj2 = null;
       Object obj3 = null;
       boolean flag = false;
@@ -1750,7 +1665,6 @@ public class VendorPacketBuffer extends ByteBuf {
    public byte[] readByteArray() {
       Object obj = null;
       int n = 0;
-      String opaqueStateTag2 = getOpaqueStateTag();
       n = this.readInt();
       obj = new byte[n];
       this.delegateBuf.readBytes((byte[])obj);
@@ -1768,7 +1682,6 @@ public class VendorPacketBuffer extends ByteBuf {
    }
 
    public void writeUuid(short s, int n, char ch, UUID uuid) {
-      String opaqueStateTag2 = getOpaqueStateTag();
       this.delegateBuf.writeLong(uuid.getMostSignificantBits());
       this.delegateBuf.writeLong(uuid.getLeastSignificantBits());
    }

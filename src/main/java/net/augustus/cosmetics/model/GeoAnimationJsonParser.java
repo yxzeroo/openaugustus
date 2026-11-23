@@ -137,8 +137,7 @@ public class GeoAnimationJsonParser {
 
          try {
             Set rotationKeyFrames = getRotationKeyFrames(asJsonObject3);
-            ArrayList list2 = new ArrayList(rotationKeyFrames);
-            geoBoneAnimation.rotationKeyFrames = AnimationKeyframeParser.convertJsonToRotationKeyFrames(list2, molangParser);
+            geoBoneAnimation.rotationKeyFrames = AnimationKeyframeParser.convertJsonToRotationKeyFrames(new ArrayList(rotationKeyFrames), molangParser);
          } catch (Exception e3) {
             geoBoneAnimation.rotationKeyFrames = new GeoVectorKeyFrameList();
          }
@@ -159,8 +158,7 @@ public class GeoAnimationJsonParser {
          return ImmutableSet.of(new SimpleEntry<>("0", elem.getAsJsonArray()));
       } else if (elem.isJsonPrimitive()) {
          JsonPrimitive asJsonPrimitive = elem.getAsJsonPrimitive();
-         Gson gson = new Gson();
-         JsonElement elem2 = gson.toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
+         JsonElement elem2 = new Gson().toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
          return ImmutableSet.of(new SimpleEntry<>("0", elem2));
       } else {
          return getObjectListAsArray(elem.getAsJsonObject());
@@ -182,8 +180,7 @@ public class GeoAnimationJsonParser {
          return ImmutableSet.of(new SimpleEntry<>("0", elem.getAsJsonArray()));
       } else if (elem.isJsonPrimitive()) {
          JsonPrimitive asJsonPrimitive = elem.getAsJsonPrimitive();
-         Gson gson = new Gson();
-         JsonElement elem2 = gson.toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
+         JsonElement elem2 = new Gson().toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
          return ImmutableSet.of(new SimpleEntry<>("0", elem2));
       } else {
          return getObjectListAsArray(elem.getAsJsonObject());
@@ -201,8 +198,7 @@ public class GeoAnimationJsonParser {
          return ImmutableSet.of(new SimpleEntry<>("0", elem.getAsJsonArray()));
       } else if (elem.isJsonPrimitive()) {
          JsonPrimitive asJsonPrimitive = elem.getAsJsonPrimitive();
-         Gson gson = new Gson();
-         JsonElement elem2 = gson.toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
+         JsonElement elem2 = new Gson().toJsonTree(Arrays.asList(asJsonPrimitive, asJsonPrimitive, asJsonPrimitive));
          return ImmutableSet.of(new SimpleEntry<>("0", elem2));
       } else {
          return getObjectListAsArray(elem.getAsJsonObject());

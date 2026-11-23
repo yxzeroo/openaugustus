@@ -2,7 +2,6 @@ package net.augustus.vendor.crypto;
 
 
 
-import net.augustus.vendor.RemoteFileInspector;
 public class EntropyPrng {
    private int[] indexTable;
    private long lastOutput;
@@ -39,7 +38,6 @@ public class EntropyPrng {
       long l10 = 0L;
       long l11 = 0L;
       int n7 = 0;
-      RemoteFileInspector.getOpaqueStateTag();
       Object obj2 = null;
       int n8 = 0;
       int n9 = 0;
@@ -346,7 +344,6 @@ public class EntropyPrng {
    }
 
    public EntropyPrng(long l) {
-      RemoteFileInspector.getOpaqueStateTag();
       this.SALT_SIZE = 32;
       this.mixMultipliers = new long[]{
          -7046029254386353131L,

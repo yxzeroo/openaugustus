@@ -62,8 +62,7 @@ public class SaveFormatOld implements ISaveFormat {
          if (file2.exists()) {
             try {
                NBTTagCompound tag = CompressedStreamTools.readCompressed(new FileInputStream(file2));
-               NBTTagCompound compoundTag = tag.getCompoundTag("Data");
-               compoundTag.setString("LevelName", str2);
+               tag.getCompoundTag("Data").setString("LevelName", str2);
                CompressedStreamTools.writeCompressed(tag, new FileOutputStream(file2));
             } catch (Exception e) {
                e.printStackTrace();
@@ -110,8 +109,7 @@ public class SaveFormatOld implements ISaveFormat {
          File file2 = new File(file, "level.dat");
          if (file2.exists()) {
             try {
-               NBTTagCompound tag = CompressedStreamTools.readCompressed(new FileInputStream(file2));
-               NBTTagCompound compoundTag = tag.getCompoundTag("Data");
+               NBTTagCompound compoundTag = CompressedStreamTools.readCompressed(new FileInputStream(file2)).getCompoundTag("Data");
                return new WorldInfo(compoundTag);
             } catch (Exception e) {
                LOGGER.error("Exception reading " + file2, e);
@@ -121,8 +119,7 @@ public class SaveFormatOld implements ISaveFormat {
          file2 = new File(file, "level.dat_old");
          if (file2.exists()) {
             try {
-               NBTTagCompound tag2 = CompressedStreamTools.readCompressed(new FileInputStream(file2));
-               NBTTagCompound compoundTag2 = tag2.getCompoundTag("Data");
+               NBTTagCompound compoundTag2 = CompressedStreamTools.readCompressed(new FileInputStream(file2)).getCompoundTag("Data");
                return new WorldInfo(compoundTag2);
             } catch (Exception e2) {
                LOGGER.error("Exception reading " + file2, e2);
@@ -169,8 +166,7 @@ public class SaveFormatOld implements ISaveFormat {
 
    @Override
    public boolean canLoadWorld(String str) {
-      File file = new File(this.savesDirectory, str);
-      return file.isDirectory();
+      return new File(this.savesDirectory, str).isDirectory();
    }
 
    public static boolean deleteFiles(File[] files) {

@@ -2,7 +2,6 @@ package net.augustus.vendor.crypto;
 
 
 
-import net.augustus.settings.Setting;
 public class SBoxSubstitutionTokenCipher {
    private byte primaryKeyByte;
    private byte secondaryKeyByte;
@@ -21,42 +20,23 @@ public class SBoxSubstitutionTokenCipher {
          this.secondaryKeyByte ^= (byte)((int)(l >> 8 & 255L));
          SBoxSubstitutionTokenCipher cipher = this;
          byte[] bytes2 = (byte[])obj;
-         int n = ints[0];
-         int n2 = ints[1];
-         int n3 = n;
-         byte[] bytes3 = bytes2;
-         obj = cipher.applyLinearSBoxRound(bytes3, n3, n2);
+         obj = cipher.applyLinearSBoxRound(bytes2, ints[0], ints[1]);
          cipher = this;
          bytes2 = (byte[])obj;
-         byte b = (byte)(ints[2] & 0xFF);
-         byte b2 = b;
-         byte[] bytes4 = bytes2;
-         obj = cipher.applyRotateSBoxRound(bytes4, b2, l);
+         obj = cipher.applyRotateSBoxRound(bytes2, (byte)(ints[2] & 0xFF), l);
 
          for (int i = 0; i < 2; i++) {
             cipher = this;
-            byte[] bytes5 = (byte[])obj;
-            int n4 = ints[(i + 1) % ((int[])ints).length];
-            byte[] bytes6 = bytes5;
-            obj = cipher.applyParityInvertRound(bytes6, n4);
+            obj = cipher.applyParityInvertRound((byte[])obj, ints[(i + 1) % ((int[])ints).length]);
             cipher = this;
             bytes2 = (byte[])obj;
-            byte b3 = (byte)((int)(l >> i * 16 & 255L));
-            byte[] bytes7 = bytes2;
-            obj = cipher.applyAlternatingShiftRound(bytes7, b3);
+            obj = cipher.applyAlternatingShiftRound(bytes2, (byte)((int)(l >> i * 16 & 255L)));
          }
 
          cipher = this;
-         byte[] bytes8 = (byte[])obj;
-         int n5 = (int)(l & 65535L);
-         int n6 = n5;
-         byte[] bytes9 = bytes8;
-         obj = cipher.applyChainedSBoxRound(bytes9, n6);
+         obj = cipher.applyChainedSBoxRound((byte[])obj, (int)(l & 65535L));
          cipher = this;
-         byte[] bytes10 = (byte[])obj;
-         byte[] bytes11 = cipher.finalizeAndSwapHalves(bytes10);
-         Setting.getControlFlowMarker();
-         return bytes11;
+         return cipher.finalizeAndSwapHalves((byte[])obj);
       } else {
          return new byte[0];
       }

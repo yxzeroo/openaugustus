@@ -15,8 +15,7 @@ public class AquaCommand extends Command {
 
          sb.setLength(Math.max(0, sb.length() - 1));
       } else {
-         String str2 = "§7" + this.getCommand() + " [§2+message§7]";
-         this.sendChat(str2);
+         this.sendChat("§7" + this.getCommand() + " [§2+message§7]");
       }
    }
 
@@ -25,8 +24,7 @@ public class AquaCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (send messages to other Augustus/Aqua users (unsafe))";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (send messages to other Augustus/Aqua users (unsafe))");
    }
 
 }

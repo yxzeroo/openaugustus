@@ -25,13 +25,11 @@ public class BlockCarpet extends Block {
    }
 
    static {
-      String str = "color";
-      COLOR = PropertyEnum.create(str, EnumDyeColor.class);
+      COLOR = PropertyEnum.create("color", EnumDyeColor.class);
    }
 
    public void setBlockBoundsFromMeta(int n) {
-      byte b = 0;
-      float f = (float)(1 + b) / 16.0F;
+      float f = (float)(1 + ((byte)0)) / 16.0F;
       this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
    }
 

@@ -6,15 +6,13 @@ public class ModelUpdater {
 
    public void update() {
       for (int i = 0; i < this.modelVariableUpdaters.length; i++) {
-         ModelVariableUpdater modelVariableUpdater = this.modelVariableUpdaters[i];
-         modelVariableUpdater.update();
+         this.modelVariableUpdaters[i].update();
       }
    }
 
    public boolean initialize(IModelResolver modelResolver) {
       for (int i = 0; i < this.modelVariableUpdaters.length; i++) {
-         ModelVariableUpdater modelVariableUpdater = this.modelVariableUpdaters[i];
-         if (!modelVariableUpdater.initialize(modelResolver)) {
+         if (!this.modelVariableUpdaters[i].initialize(modelResolver)) {
             return false;
          }
       }

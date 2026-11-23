@@ -183,9 +183,7 @@ public class Baritone implements IBaritone {
             Thread.sleep(100L);
             Minecraft mc2 = this.mc;
             Runnable runnable = () -> {
-               Minecraft mc3 = this.mc;
-               GuiClick guiClick = new GuiClick();
-               mc3.displayGuiScreen(guiClick);
+               this.mc.displayGuiScreen(new GuiClick());
             };
             mc2.addScheduledTask(runnable);
          } catch (Exception e) {

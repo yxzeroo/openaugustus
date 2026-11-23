@@ -1,7 +1,6 @@
 package net.augustus.cosmetics.molang;
 
 public class MolangInterpolations {
-   private static int[] flowState;
 
    public static double lerp2(double d, double d2, double d3) {
       return d + (d2 - d) * d3;
@@ -14,7 +13,6 @@ public class MolangInterpolations {
    }
 
    public static double normalizeYaw(double d, double d2) {
-      int[] flowState2 = getFlowState();
       double d3 = d - d2;
       if (!(d3 > 180.0) && !(d3 < -180.0)) {
          return d2;
@@ -28,17 +26,6 @@ public class MolangInterpolations {
       return f + (f2 - f) * f3;
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 
-   static {
-      if (getFlowState() == null) {
-         setFlowState(new int[2]);
-      }
-   }
 }

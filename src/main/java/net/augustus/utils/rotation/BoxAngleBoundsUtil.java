@@ -15,8 +15,7 @@ public class BoxAngleBoundsUtil {
       double d3 = getShortestAngularDistance(d2, sortedYawRange[0]);
       double d4 = getShortestAngularDistance(sortedYawRange[0], sortedYawRange[1]);
       double d5 = getShortestAngularDistance(sortedYawRange[1], d2);
-      double d6 = sortedYawRange[1] - sortedYawRange[0];
-      double d7 = d3 / d6;
+      double d7 = d3 / (sortedYawRange[1] - sortedYawRange[0]);
       if (d5 > d4) {
          d7 = -d7;
       }
@@ -28,8 +27,7 @@ public class BoxAngleBoundsUtil {
       double[] extremeYawAngles = getExtremeYawAngles(vec, box);
       double d = normalizeAngle360(extremeYawAngles[0]);
       double d2 = normalizeAngle360(extremeYawAngles[1]);
-      double d3 = Math.abs(d - d2);
-      if (d3 > 180.0) {
+      if (Math.abs(d - d2) > 180.0) {
          if (d < d2) {
             d += 360.0;
          } else {
@@ -51,10 +49,8 @@ public class BoxAngleBoundsUtil {
       double[] doubles = new double[4];
 
       for (int i = 0; i < vecs.length; i++) {
-         Vec3 vec2 = vecs[i];
-         Vec3 vec3 = vec2.subtract(vec);
-         double d = Math.toDegrees(Math.atan2(vec3.zCoord, vec3.xCoord));
-         doubles[i] = d;
+         Vec3 vec3 = vecs[i].subtract(vec);
+         doubles[i] = Math.toDegrees(Math.atan2(vec3.zCoord, vec3.xCoord));
       }
 
       double d2 = 0.0;
@@ -119,10 +115,8 @@ public class BoxAngleBoundsUtil {
       double[] doubles = new double[8];
 
       for (int i = 0; i < vecs.length; i++) {
-         Vec3 vec2 = vecs[i];
-         Vec3 vec3 = vec2.subtract(vec);
-         double d = -Math.toDegrees(Math.atan2(vec3.yCoord, Math.sqrt(vec3.xCoord * vec3.xCoord + vec3.zCoord * vec3.zCoord)));
-         doubles[i] = d;
+         Vec3 vec3 = vecs[i].subtract(vec);
+         doubles[i] = -Math.toDegrees(Math.atan2(vec3.yCoord, Math.sqrt(vec3.xCoord * vec3.xCoord + vec3.zCoord * vec3.zCoord)));
       }
 
       return findMinMaxWithIndices(doubles);
@@ -143,9 +137,7 @@ public class BoxAngleBoundsUtil {
 
    public static final double getNormalizedPitchPosition(AxisAlignedBB box, Vec3 vec, double d) {
       double[] pitchRange = getPitchRange(vec, box);
-      double d2 = d - pitchRange[0];
-      double d3 = pitchRange[1] - pitchRange[0];
-      return d2 / d3;
+      return (d - pitchRange[0]) / (pitchRange[1] - pitchRange[0]);
    }
 
    public static double getShortestAngularDistance(double d, double d2) {

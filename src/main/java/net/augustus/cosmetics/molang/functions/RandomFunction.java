@@ -9,24 +9,19 @@ public class RandomFunction extends MolangFunction {
    public double get() {
       double d = 0.0;
       if (this.args.length >= 3) {
-         byte b = 2;
-         this.random.setSeed((long)this.getArg(b));
+         this.random.setSeed((long)this.getArg((byte)2));
          d = this.random.nextDouble();
       } else {
          d = Math.random();
       }
 
       if (this.args.length >= 2) {
-         byte b2 = 0;
-         double arg = this.getArg(b2);
-         byte b3 = 1;
-         double arg2 = this.getArg(b3);
+         double arg = this.getArg((byte)0);
+         double arg2 = this.getArg((byte)1);
          double d2 = Math.min(arg, arg2);
-         double d3 = Math.max(arg, arg2);
-         d = d * (d3 - d2) + d2;
+         d = d * (Math.max(arg, arg2) - d2) + d2;
       } else if (this.args.length >= 1) {
-         byte b4 = 0;
-         d *= this.getArg(b4);
+         d *= this.getArg((byte)0);
       }
 
       return d;

@@ -35,8 +35,7 @@ public class BlockFenceGate extends BlockDirectional {
       if ((Boolean)state.getValue(OPEN)) {
          return null;
       } else {
-         EnumFacing.Axis axis = ((EnumFacing)state.getValue(FACING)).getAxis();
-         return axis == EnumFacing.Axis.Z
+         return ((EnumFacing)state.getValue(FACING)).getAxis() == EnumFacing.Axis.Z
             ? new AxisAlignedBB(
                (double)n, (double)n2, (double)((float)n3 + 0.375F), (double)(n + 1), (double)((float)n2 + 1.5F), (double)((float)n3 + 0.625F)
             )
@@ -81,8 +80,7 @@ public class BlockFenceGate extends BlockDirectional {
 
    @Override
    public void setBlockBoundsBasedOnState(IBlockAccess world, int n, int n2, int n3) {
-      EnumFacing.Axis axis = ((EnumFacing)world.getBlockState2(n, n2, n3).getValue(FACING)).getAxis();
-      if (axis == EnumFacing.Axis.Z) {
+      if (((EnumFacing)world.getBlockState2(n, n2, n3).getValue(FACING)).getAxis() == EnumFacing.Axis.Z) {
          this.setBlockBounds(0.0F, 0.0F, 0.375F, 1.0F, 1.0F, 0.625F);
       } else {
          this.setBlockBounds(0.375F, 0.0F, 0.0F, 0.625F, 1.0F, 1.0F);

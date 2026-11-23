@@ -10,9 +10,7 @@ public class EventPotionParticle extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      PotionParticleListener listener = (PotionParticleListener)obj;
-      PotionParticleListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((PotionParticleListener)obj);
    }
 
    public static void reset(EventPotionParticle event, Entity entity2) {

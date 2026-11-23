@@ -116,7 +116,6 @@ public class EventSprint extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      SprintListener listener = (SprintListener)obj;
-      this.call2(listener);
+      this.call2((SprintListener)obj);
    }
 }

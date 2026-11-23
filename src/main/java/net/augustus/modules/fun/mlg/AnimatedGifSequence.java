@@ -24,8 +24,7 @@ public class AnimatedGifSequence {
    private long lastFrameTimeMs;
 
    public ResourceLocation getCurrentFrame() {
-      int frameDelayMs2 = this.frameDelayMs;
-      return this.updateAndGetFrame(frameDelayMs2);
+      return this.updateAndGetFrame(this.frameDelayMs);
    }
 
    public int getWidth() {

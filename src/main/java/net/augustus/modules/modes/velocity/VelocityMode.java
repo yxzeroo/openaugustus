@@ -2,11 +2,11 @@ package net.augustus.modules.modes.velocity;
 
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public abstract class VelocityMode extends AbstractSubMode {
 
-   public VelocityMode(Velocity velocity, DoubleValue doubleValue, String str) {
+   public VelocityMode(Velocity velocity, SettingGroup doubleValue, String str) {
       super(velocity, doubleValue, str);
    }
 

@@ -5,8 +5,7 @@ import net.augustus.cosmetics.molang.ast.MolangValue;
 public class TruncFunction extends MolangFunction {
 
    public double get() {
-      byte b = 0;
-      double arg = this.getArg(b);
+      double arg = this.getArg((byte)0);
       return arg < 0.0 ? Math.ceil(arg) : Math.floor(arg);
    }
 

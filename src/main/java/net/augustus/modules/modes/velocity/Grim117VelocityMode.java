@@ -7,7 +7,7 @@ import net.augustus.events.listeners.MotionListener;
 import net.augustus.events.listeners.PacketListener;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -19,16 +19,14 @@ public class Grim117VelocityMode extends VelocityMode implements PacketListener,
    private int lastSetbackTick = 0;
    private int cancelStage = 1;
 
-   public Grim117VelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public Grim117VelocityMode(Velocity velocity, SettingGroup doubleValue) {
       super(velocity, doubleValue, "Grim-1.17");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 18;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
@@ -40,7 +38,7 @@ public class Grim117VelocityMode extends VelocityMode implements PacketListener,
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new Grim117VelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new Grim117VelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -48,8 +46,7 @@ public class Grim117VelocityMode extends VelocityMode implements PacketListener,
       if (this.canApplyVelocity()) {
          Packet packet = event.getPacket();
          if (packet instanceof S12PacketEntityVelocity) {
-            S12PacketEntityVelocity packet2 = (S12PacketEntityVelocity)packet;
-            if (packet2.getEntityID() == mc.thePlayer.getEntityId() && this.lastSetbackTick != mc.thePlayer.ticksExisted) {
+            if (((S12PacketEntityVelocity)packet).getEntityID() == mc.thePlayer.getEntityId() && this.lastSetbackTick != mc.thePlayer.ticksExisted) {
                event.cancel();
                this.cancelStage = 1;
             }

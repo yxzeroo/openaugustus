@@ -48,25 +48,18 @@ public class S2CResourceChunkPacket implements LauncherPacket {
             }
 
             if (b <= 4) {
-               S2CResourceChunkPacket packet = this;
-               String str = nettyPacketBuf.readNullTerminatedString();
-               packet.clientName = str;
+               this.clientName = nettyPacketBuf.readNullTerminatedString();
             } else {
                S2CResourceChunkPacket packet2 = this;
-               int n = nettyPacketBuf.readInt();
-               packet2.nativesTotalSize = n;
+               packet2.nativesTotalSize = nettyPacketBuf.readInt();
                packet2 = this;
-               byte[] bytes = nettyPacketBuf.readByteArray();
-               packet2.resourcesChunk = bytes;
+               packet2.resourcesChunk = nettyPacketBuf.readByteArray();
                packet2 = this;
-               byte[] bytes2 = nettyPacketBuf.readByteArray();
-               packet2.nativesChunk = bytes2;
+               packet2.nativesChunk = nettyPacketBuf.readByteArray();
             }
          }
 
-         S2CResourceChunkPacket packet3 = this;
-         int n2 = nettyPacketBuf.readInt();
-         packet3.resourcesTotalSize = n2;
+         this.resourcesTotalSize = nettyPacketBuf.readInt();
       }
    }
 

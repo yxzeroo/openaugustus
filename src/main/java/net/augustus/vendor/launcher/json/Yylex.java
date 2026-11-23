@@ -826,7 +826,6 @@ public class Yylex {
 
    public final void yyclose(int n, short s, short s2) throws IOException {
       this.zzAtEOF = true;
-      JsonParseException.getControlFlowTag();
       this.zzEndRead = this.zzStartRead;
       if (this.zzReader != null) {
          this.zzReader.close();
@@ -835,7 +834,6 @@ public class Yylex {
 
    private boolean zzRefill(long l) throws IOException {
       l = a ^ l;
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       if (this.zzStartRead > 0) {
          System.arraycopy(this.zzBuffer, this.zzStartRead, this.zzBuffer, 0, this.zzEndRead - this.zzStartRead);
          this.zzEndRead = this.zzEndRead - this.zzStartRead;
@@ -917,7 +915,6 @@ public class Yylex {
 
    public final void yyreset(Reader reader) {
       this.zzReader = reader;
-      JsonParseException.getControlFlowTag();
       this.zzAtBOL = true;
       this.zzAtEOF = false;
       this.zzEndRead = this.zzStartRead = 0;

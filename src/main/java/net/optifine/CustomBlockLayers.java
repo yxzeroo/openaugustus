@@ -26,15 +26,12 @@ public class CustomBlockLayers {
    }
 
    private static void readLayer(String str, EnumWorldBlockLayer enumWorldBlockLayer, Properties properties, List list) {
-      String str2 = "layer." + str;
-      String property = properties.getProperty(str2);
+      String property = properties.getProperty("layer." + str);
       if (property != null) {
-         ConnectedParser connectedParser = new ConnectedParser("CustomBlockLayers");
-         MatchBlock[] matchBlocks = connectedParser.parseMatchBlocks(property);
+         MatchBlock[] matchBlocks = new ConnectedParser("CustomBlockLayers").parseMatchBlocks(property);
          if (matchBlocks != null) {
             for (int i = 0; i < matchBlocks.length; i++) {
-               MatchBlock matchBlock = matchBlocks[i];
-               int blockId = matchBlock.getBlockId();
+               int blockId = matchBlocks[i].getBlockId();
                if (blockId > 0) {
                   while (list.size() < blockId + 1) {
                      list.add(null);
@@ -59,8 +56,7 @@ public class CustomBlockLayers {
       } else if (!(state instanceof BlockStateBase)) {
          return null;
       } else {
-         BlockStateBase blockStateBase = (BlockStateBase)state;
-         int blockId = blockStateBase.getBlockId();
+         int blockId = ((BlockStateBase)state).getBlockId();
          return blockId > 0 && blockId < renderLayers.length ? renderLayers[blockId] : null;
       }
    }
@@ -82,8 +78,7 @@ public class CustomBlockLayers {
       if (Config.isShaderPackLoaded()) {
          PropertiesOrdered blockLayerProperties = BlockAliases.getBlockLayerProperties();
          if (blockLayerProperties != null) {
-            String str2 = "shaders/block.properties";
-            readLayers(str2, blockLayerProperties, list);
+            readLayers("shaders/block.properties", blockLayerProperties, list);
          }
       }
 

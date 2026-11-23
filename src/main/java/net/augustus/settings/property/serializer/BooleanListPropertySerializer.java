@@ -13,8 +13,7 @@ public final class BooleanListPropertySerializer implements JsonListPropertyCode
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Boolean bool = (Boolean)obj;
-      this.writeBooleanElement(array, bool);
+      this.writeBooleanElement(array, (Boolean)obj);
    }
 
    public void writeBooleanElement(JsonArray array, Boolean bool) {

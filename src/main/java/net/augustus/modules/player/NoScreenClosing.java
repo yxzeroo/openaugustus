@@ -32,14 +32,12 @@ public class NoScreenClosing extends Module implements PacketListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S2EPacketCloseWindow
+      if (event.getPacket() instanceof S2EPacketCloseWindow
          && (
             mc.currentScreen instanceof GuiInventory && NoScreenClosingScreenOption.isOptionSelected(NoScreenClosingScreenOption.INVENTORY)
                || mc.currentScreen instanceof ClickGuiScreen && NoScreenClosingScreenOption.isOptionSelected(NoScreenClosingScreenOption.CLICK_GUI)

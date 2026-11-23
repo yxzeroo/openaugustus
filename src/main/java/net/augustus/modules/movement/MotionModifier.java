@@ -35,16 +35,11 @@ public class MotionModifier extends Module implements MoveEntityListener, Update
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
-      byte b4 = 25;
-      this.toggleEventSubscription(b4);
-      byte b5 = 26;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override

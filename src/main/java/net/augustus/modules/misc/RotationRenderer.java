@@ -80,8 +80,7 @@ public class RotationRenderer extends Module implements RenderListener, TickList
             ArrayList list = new ArrayList();
 
             for (int i = 0; i < array.size(); i++) {
-               JsonObject asJsonObject = array.get(i).getAsJsonObject();
-               list.add(gson.fromJson(asJsonObject, RecordedTickFrame.class));
+               list.add(gson.fromJson(array.get(i).getAsJsonObject(), RecordedTickFrame.class));
             }
 
             for (RecordedTickFrame recordedTickFrame : (Iterable<RecordedTickFrame>)(list)) {
@@ -92,8 +91,7 @@ public class RotationRenderer extends Module implements RenderListener, TickList
 
             this.originOffset = ((Vec3)this.targetPositions.get(0)).addVector(0.0, -100.0, 0.0);
             this.playbackIndex = 0.0;
-            String str = "Loaded " + this.recordedRotations.size() + " ticks!";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Loaded " + this.recordedRotations.size() + " ticks!");
          } catch (Throwable e) {
             e.printStackTrace();
             this.toggle();
@@ -113,10 +111,8 @@ public class RotationRenderer extends Module implements RenderListener, TickList
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick() {
@@ -216,8 +212,7 @@ public class RotationRenderer extends Module implements RenderListener, TickList
          Vec3 vec2 = ((Vec3)this.targetPositions.get(i)).subtract(this.originOffset);
          Vec3 vec3 = vec.add(lookVector.scale(6.0));
          Vec3 vec4 = vec.add(lookVector.scale(0.1));
-         boolean flag2 = true;
-         AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec2, flag2);
+         AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec2, true);
          float f2 = (float)n / 20.0F;
          if (n >= 18) {
             f2 *= 0.1F;
@@ -250,8 +245,7 @@ public class RotationRenderer extends Module implements RenderListener, TickList
       int n3 = (int)Math.min(Math.ceil(this.playbackIndex), (double)this.recordedRotations.size());
       double d = this.playbackIndex % 1.0;
       Vec3 vec5 = ((Vec3)this.targetPositions.get(n2)).lerp((Vec3)this.targetPositions.get(n3), d).subtract(this.originOffset);
-      boolean flag3 = true;
-      AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(vec5, flag3);
+      AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(vec5, true);
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       RenderUtil.drawOutlinedBoundingBox(AxisAlignedBB.fromCenter(vec5.addVector(0.0, 1.62, 0.0), 0.05));
       GlStateManager.color(0.0F, 1.0F, 0.0F, 1.0F);
@@ -286,58 +280,40 @@ public class RotationRenderer extends Module implements RenderListener, TickList
       BoundedHistoryList boundedHistoryList2 = new BoundedHistoryList(10);
 
       for (int k = Math.max((int)this.playbackIndex - 10, 0); (double)k < Math.min(Math.ceil(this.playbackIndex) - 1.0, (double)this.playerPositions.size()); k++) {
-         PlayerTickSnapshot playerTickSnapshot = new PlayerTickSnapshot((Vec3)this.playerPositions.get(k), k);
-         boundedHistoryList.add(playerTickSnapshot);
+         boundedHistoryList.add(new PlayerTickSnapshot((Vec3)this.playerPositions.get(k), k));
       }
 
       for (int m = Math.max((int)this.playbackIndex - 10, 0); (double)m < Math.min(Math.ceil(this.playbackIndex) - 1.0, (double)this.targetPositions.size()); m++) {
-         Object obj = this.targetPositions.get(m);
-         boundedHistoryList2.add(obj);
+         boundedHistoryList2.add(this.targetPositions.get(m));
       }
 
       if (boundedHistoryList.isFull()) {
-         byte b = 0;
-         double d5 = this.predictLinearRegressionAngle(boundedHistoryList, boundedHistoryList2, b, flag);
-         byte b2 = 1;
-         double d6 = this.predictLinearRegressionAngle(boundedHistoryList, boundedHistoryList2, b2, flag);
+         double d5 = this.predictLinearRegressionAngle(boundedHistoryList, boundedHistoryList2, (byte)0, flag);
+         double d6 = this.predictLinearRegressionAngle(boundedHistoryList, boundedHistoryList2, (byte)1, flag);
          Vec3 vec6 = vec5.addVector(0.0, 1.62, 0.0);
          double[] doubles6 = new double[]{d5, doubles2[1]};
          double[] doubles7 = new double[]{d5, doubles3[1]};
          float f3 = 0.0F;
          float f4 = 1.0F;
-         float f5 = 1.0F;
-         double[] doubles8 = doubles7;
-         double[] doubles9 = doubles6;
-         Vec3 vec7 = vec6;
-         this.renderInterpolatedLookRay(vec7, doubles9, doubles8, d, n2, n3, f5, f4, f3);
+         this.renderInterpolatedLookRay(vec6, doubles6, doubles7, d, n2, n3, 1.0F, f4, f3);
          vec6 = vec5.addVector(0.0, 1.62, 0.0);
          doubles6 = new double[]{d6, doubles2[1]};
          doubles7 = new double[]{d6, doubles3[1]};
          float f6 = 0.0F;
          float f7 = 1.0F;
-         float f8 = 1.0F;
-         double[] doubles10 = doubles7;
-         double[] doubles11 = doubles6;
-         Vec3 vec8 = vec6;
-         this.renderInterpolatedLookRay(vec8, doubles11, doubles10, d, n2, n3, f8, f7, f6);
+         this.renderInterpolatedLookRay(vec6, doubles6, doubles7, d, n2, n3, 1.0F, f7, f6);
       }
 
       Vec3 vec9 = vec5.addVector(0.0, 1.62, 0.0);
       float f9 = 1.0F;
       float f10 = 1.0F;
-      float f11 = 1.0F;
-      Vec3 vec10 = vec9;
-      this.renderInterpolatedLookRay(vec10, doubles2, doubles3, d, n2, n3, f11, f10, f9);
+      this.renderInterpolatedLookRay(vec9, doubles2, doubles3, d, n2, n3, 1.0F, f10, f9);
       vec9 = vec5.addVector(0.0, 1.62, 0.0);
       double[] doubles12 = new double[]{d3, doubles2[1]};
       double[] doubles13 = new double[]{d3, doubles3[1]};
       float f12 = 0.4F;
       float f13 = 0.5F;
-      float f14 = 0.8F;
-      double[] doubles14 = doubles13;
-      double[] doubles15 = doubles12;
-      Vec3 vec11 = vec9;
-      this.renderInterpolatedLookRay(vec11, doubles15, doubles14, d, n2, n3, f14, f13, f12);
+      this.renderInterpolatedLookRay(vec9, doubles12, doubles13, d, n2, n3, 0.8F, f13, f12);
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       RenderUtil.drawOutlinedBoundingBox(box2);
       RenderUtil.end3DRender();
@@ -353,21 +329,13 @@ public class RotationRenderer extends Module implements RenderListener, TickList
       int n2 = 0;
 
       for (int i = 3; i > 0; i--) {
-         int n3 = i + 4;
-         PlayerTickSnapshot fromEnd = (PlayerTickSnapshot)boundedHistoryList.getFromEnd(n3);
-         Vec3 position = fromEnd.position;
-         int n4 = i + 4;
-         Vec3 fromEnd2 = (Vec3)boundedHistoryList2.getFromEnd(n4);
-         boolean flag2 = true;
-         AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(fromEnd2, flag2);
-         double[] yawRange = HitboxAngleUtil.getYawRange(position, box);
+         PlayerTickSnapshot fromEnd = (PlayerTickSnapshot)boundedHistoryList.getFromEnd(i + 4);
+         double[] yawRange = HitboxAngleUtil.getYawRange(fromEnd.position, EntityBoundsUtil.createPlayerBoundingBox((Vec3)boundedHistoryList2.getFromEnd(i + 4), true));
          if (Double.isNaN(d)) {
             d = MathHelper.wrapAngleTo180_double(yawRange[n]);
-            double d4 = 0.0;
-            doubleSampleWindow.add(d4);
+            doubleSampleWindow.add(0.0);
             d2 = d;
-            byte b = 0;
-            n2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd(b)).ticksExisted - fromEnd.ticksExisted;
+            n2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd((byte)0)).ticksExisted - fromEnd.ticksExisted;
          } else {
             double d5 = EntityBoundsUtil.getShortestSignedAngleDelta(MathHelper.wrapAngleTo180_double(d2), MathHelper.wrapAngleTo180_double(yawRange[n])) + d3;
             doubleSampleWindow.add(d5);
@@ -389,26 +357,18 @@ public class RotationRenderer extends Module implements RenderListener, TickList
          d10 += Math.pow(d11 - (doubles[0] * (double)j + doubles[1]), 2.0);
       }
 
-      byte b2 = 0;
-      Vec3 position2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd(b2)).position;
-      byte b3 = 0;
-      Vec3 fromEnd3 = (Vec3)boundedHistoryList2.getFromEnd(b3);
-      boolean flag3 = true;
-      AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(fromEnd3, flag3);
+      Vec3 position2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd((byte)0)).position;
+      Vec3 fromEnd3 = (Vec3)boundedHistoryList2.getFromEnd((byte)0);
       double d12 = Math.abs(
          EntityBoundsUtil.getShortestSignedAngleDelta(
-            MathHelper.wrapAngleTo180_double(HitboxAngleUtil.getYawRange(position2, box2)[n]), MathHelper.wrapAngleTo180_double(d6 + d)
+            MathHelper.wrapAngleTo180_double(HitboxAngleUtil.getYawRange(position2, EntityBoundsUtil.createPlayerBoundingBox(fromEnd3, true))[n]), MathHelper.wrapAngleTo180_double(d6 + d)
          )
       );
-      byte b4 = 0;
-      position2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd(b4)).position;
-      byte b5 = 0;
-      fromEnd3 = (Vec3)boundedHistoryList2.getFromEnd(b5);
-      boolean flag4 = true;
-      AxisAlignedBB box3 = EntityBoundsUtil.createPlayerBoundingBox(fromEnd3, flag4);
+      position2 = ((PlayerTickSnapshot)boundedHistoryList.getFromEnd((byte)0)).position;
+      fromEnd3 = (Vec3)boundedHistoryList2.getFromEnd((byte)0);
       double d13 = Math.abs(
          EntityBoundsUtil.getShortestSignedAngleDelta(
-            MathHelper.wrapAngleTo180_double(HitboxAngleUtil.getYawRange(position2, box3)[n]), MathHelper.wrapAngleTo180_double(d7 + d)
+            MathHelper.wrapAngleTo180_double(HitboxAngleUtil.getYawRange(position2, EntityBoundsUtil.createPlayerBoundingBox(fromEnd3, true))[n]), MathHelper.wrapAngleTo180_double(d7 + d)
          )
       );
       if (flag) {

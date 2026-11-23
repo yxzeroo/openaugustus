@@ -22,8 +22,7 @@ public class ThreadLanServerPing extends Thread {
 
    @Override
    public void run() {
-      String pingResponse = getPingResponse(this.motd, this.address);
-      byte[] bytes = pingResponse.getBytes();
+      byte[] bytes = getPingResponse(this.motd, this.address).getBytes();
 
       while (!this.isInterrupted() && this.isStopping) {
          try {
@@ -71,8 +70,7 @@ public class ThreadLanServerPing extends Thread {
       if (n < 0) {
          return null;
       } else {
-         int n2 = str.indexOf("[/MOTD]", n + "[/MOTD]".length());
-         if (n2 >= 0) {
+         if (str.indexOf("[/MOTD]", n + "[/MOTD]".length()) >= 0) {
             return null;
          } else {
             int n3 = str.indexOf("[AD]", n + "[/MOTD]".length());

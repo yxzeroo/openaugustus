@@ -52,21 +52,17 @@ public class AirPlaceFlyMode extends FlyMode {
       if (event.isJump()) {
          this.verticalStepDir = 1;
       } else if (event.isSneak()) {
-         boolean flag = false;
-         event.setSneak(flag);
+         event.setSneak(false);
          this.verticalStepDir = -1;
       }
 
-      boolean flag2 = true;
-      event.setJump(flag2);
+      event.setJump(true);
    }
 
    @Override
    public void onClick(EventClick event) {
-      boolean flag = true;
-      event.setBlockAllClicks(flag);
-      boolean flag2 = true;
-      event.setIgnoreVanillaClicks(flag2);
+      event.setBlockAllClicks(true);
+      event.setIgnoreVanillaClicks(true);
       if (mc.thePlayer.posY - 0.5 < (double)this.targetYLevel && !mc.thePlayer.onGround && mc.thePlayer.motionY < 0.0) {
          double d = mc.thePlayer.posX + mc.thePlayer.lastMotionX * 2.0;
          double d2 = mc.thePlayer.posZ + mc.thePlayer.lastMotionZ * 2.0;
@@ -87,9 +83,7 @@ public class AirPlaceFlyMode extends FlyMode {
    public void onEarlyTick() {
       RotationController rotationController = Augustus.getInstance().getRotationController();
       Fly fly2 = Augustus.getInstance().getModuleManager().fly;
-      byte b = -100;
-      float f = 90.0F;
-      rotationController.requestPitch(f, b, fly2);
+      rotationController.requestPitch(90.0F, (byte)-100, fly2);
    }
 
    @Override
@@ -104,19 +98,15 @@ public class AirPlaceFlyMode extends FlyMode {
    public void onSilentSlot() {
       int n = this.findBlockHotbarSlot();
       if (n != -1) {
-         short s = -1000;
-         SilentSlotManager.requestSlot(Augustus.getInstance().getModuleManager().fly, s, n);
+         SilentSlotManager.requestSlot(Augustus.getInstance().getModuleManager().fly, (short)-1000, n);
       }
    }
 
    private int findBlockHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      Predicate predicate = obj -> obj instanceof ItemBlock;
-      containerSlotQuery = containerSlotQuery.filterItem(predicate);
-      BiPredicate biPredicate = (obj2, obj3) -> isValidPlaceableBlock((ItemStack)obj2, (Integer)obj3);
-      OptionalInt optionalInt = containerSlotQuery.filterStackAndSlot(biPredicate).findFirstSlotIndex();
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      containerSlotQuery = containerSlotQuery.filterItem(obj -> obj instanceof ItemBlock);
+      OptionalInt optionalInt = containerSlotQuery.filterStackAndSlot((obj2, obj3) -> isValidPlaceableBlock((ItemStack)obj2, (Integer)obj3)).findFirstSlotIndex();
       return optionalInt.isPresent() ? optionalInt.getAsInt() - 36 : -1;
    }
 

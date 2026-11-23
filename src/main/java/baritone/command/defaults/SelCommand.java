@@ -76,8 +76,7 @@ public class SelCommand extends Command {
                      return new TabCompleteHelper().append2(SelTransformTarget.getAllNames()).filterPrefix(argConsumer.getString()).sortAlphabetically().getStream();
                   }
 
-                  SelTransformTarget byName2 = SelTransformTarget.getByName(argConsumer.getString());
-                  if (byName2 != null && argConsumer.hasExactlyOne()) {
+                  if (SelTransformTarget.getByName(argConsumer.getString()) != null && argConsumer.hasExactlyOne()) {
                      return argConsumer.tabCompleteDatatype(ForEnumFacing.INSTANCE);
                   }
                }
@@ -190,8 +189,7 @@ public class SelCommand extends Command {
                            return obj;
                      }
                   };
-                  ISchematic schematic = (ISchematic)(unaryOperator.apply(new FillSchematic(size.getX(), size.getY(), size.getZ(), blockOptionalMeta)));
-                  compositeSchematic.put(schematic, betterBlockPos3.x2 - betterBlockPos.x2, betterBlockPos3.y2 - betterBlockPos.y2, betterBlockPos3.z2 - betterBlockPos.z2);
+                  compositeSchematic.put((ISchematic)(unaryOperator.apply(new FillSchematic(size.getX(), size.getY(), size.getZ(), blockOptionalMeta))), betterBlockPos3.x2 - betterBlockPos.x2, betterBlockPos3.y2 - betterBlockPos.y2, betterBlockPos3.z2 - betterBlockPos.z2);
                }
 
                this.baritone.getBuilderProcess().build2("Fill", compositeSchematic, betterBlockPos);
@@ -227,8 +225,7 @@ public class SelCommand extends Command {
                      }
                   }
 
-                  SelCommand.DefaultStaticSchematic obj2 = new SelCommand.DefaultStaticSchematic(this, statesArrs, size2);
-                  compositeSchematic2.put(obj2, betterBlockPos8.x2 - betterBlockPos6.x2, betterBlockPos8.y2 - betterBlockPos6.y2, betterBlockPos8.z2 - betterBlockPos6.z2);
+                  compositeSchematic2.put(new SelCommand.DefaultStaticSchematic(this, statesArrs, size2), betterBlockPos8.x2 - betterBlockPos6.x2, betterBlockPos8.y2 - betterBlockPos6.y2, betterBlockPos8.z2 - betterBlockPos6.z2);
                }
 
                this.clipboard = compositeSchematic2;

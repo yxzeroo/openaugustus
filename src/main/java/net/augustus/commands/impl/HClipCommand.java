@@ -7,8 +7,7 @@ import net.augustus.utils.MoveUtil;
 public class HClipCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (clip forwards and sidewards through walls)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (clip forwards and sidewards through walls)");
    }
 
    public void commandAction(String[] strings, String str) {
@@ -21,8 +20,7 @@ public class HClipCommand extends Command {
             }
          }
 
-         String str2 = "hclipped";
-         this.sendChat(str2);
+         this.sendChat("hclipped");
       } else if (strings.length == 2) {
          double d3 = Double.parseDouble(strings[1]);
          double d4 = Math.toRadians((double)MoveUtil.getDirectionDegrees(false));
@@ -32,10 +30,8 @@ public class HClipCommand extends Command {
             mc.thePlayer.setPosition(mc.thePlayer.posX + d5, mc.thePlayer.posY, mc.thePlayer.posZ + d6);
          }
       } else {
-         String str3 = "§7" + this.getCommand() + " [§2DistanceX§7] [§2DistanceZ§7] or";
-         this.sendChat(str3);
-         String str4 = "§7" + this.getCommand() + " [§2DistanceXZ§7]";
-         this.sendChat(str4);
+         this.sendChat("§7" + this.getCommand() + " [§2DistanceX§7] [§2DistanceZ§7] or");
+         this.sendChat("§7" + this.getCommand() + " [§2DistanceXZ§7]");
       }
    }
 

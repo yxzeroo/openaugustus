@@ -63,8 +63,7 @@ public class Protocolb1_2_0_2Tob1_3_0_1
 
          switch (status) {
             case 0:
-               IdAndData blockBeingBroken = ((ChunkTracker)wrapper.user().get(ChunkTracker.class)).getBlockNotNull(pos);
-               if (BlockHardnessList.canBeBrokenInstantly(blockBeingBroken)) {
+               if (BlockHardnessList.canBeBrokenInstantly(((ChunkTracker)wrapper.user().get(ChunkTracker.class)).getBlockNotNull(pos))) {
                   sendBlockDigPacket(wrapper.user(), (short)0, pos, facing);
                   sendBlockDigPacket(wrapper.user(), (short)3, pos, facing);
                   sendBlockDigPacket(wrapper.user(), (short)1, pos, facing);

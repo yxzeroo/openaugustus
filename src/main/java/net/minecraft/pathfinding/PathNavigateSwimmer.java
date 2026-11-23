@@ -11,12 +11,11 @@ public class PathNavigateSwimmer extends PathNavigate {
    public void pathFollow() {
       Vec3 entityPosition = this.getEntityPosition();
       float f = this.theEntity.width * this.theEntity.width;
-      byte b = 6;
       if (entityPosition.squareDistanceTo(this.currentPath.getVectorFromIndex(this.theEntity, this.currentPath.getCurrentPathIndex())) < (double)f) {
          this.currentPath.incrementPathIndex();
       }
 
-      for (int i = Math.min(this.currentPath.getCurrentPathIndex() + b, this.currentPath.getCurrentPathLength() - 1);
+      for (int i = Math.min(this.currentPath.getCurrentPathIndex() + ((byte)6), this.currentPath.getCurrentPathLength() - 1);
          i > this.currentPath.getCurrentPathIndex();
          i--
       ) {

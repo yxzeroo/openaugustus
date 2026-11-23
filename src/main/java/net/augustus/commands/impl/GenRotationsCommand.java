@@ -76,8 +76,7 @@ public class GenRotationsCommand extends Command {
             }
 
             ChatUtil.sendChat3("Loaded " + list3.size() + " ticks!");
-            File file2 = new File(file.getCanonicalPath() + "_" + System.currentTimeMillis());
-            file2.createNewFile();
+            new File(file.getCanonicalPath() + "_" + System.currentTimeMillis()).createNewFile();
             Vec3 interpolatedPos = mc.thePlayer.getInterpolatedPos(1.0F);
             int ticksExisted = mc.thePlayer.ticksExisted;
             mc.thePlayer.setPosition(interpolatedPos.xCoord, interpolatedPos.yCoord, interpolatedPos.zCoord);

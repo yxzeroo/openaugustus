@@ -11,8 +11,7 @@ public class EventInventoryClick extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      InventoryClickListener listener = (InventoryClickListener)obj;
-      this.call2(listener);
+      this.call2((InventoryClickListener)obj);
    }
 
    public EventInventoryClick() {

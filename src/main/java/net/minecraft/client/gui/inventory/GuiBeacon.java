@@ -63,8 +63,7 @@ public class GuiBeacon extends GuiContainer {
 
          int id = button.id;
          int n = id & 0xFF;
-         int n2 = id >> 8;
-         if (n2 < 3) {
+         if ((id >> 8) < 3) {
             this.tileBeacon.setField(1, n);
          } else {
             this.tileBeacon.setField(2, n);
@@ -198,7 +197,6 @@ public class GuiBeacon extends GuiContainer {
             mc.getTextureManager().bindTexture(GuiBeacon.accessBeaconGuiTextures());
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = n >= this.xPosition && n2 >= this.yPosition && n < this.xPosition + this.width && n2 < this.yPosition + this.height;
-            short s = 219;
             int n3 = 0;
             if (!this.enabled) {
                n3 += this.width * 2;
@@ -208,7 +206,7 @@ public class GuiBeacon extends GuiContainer {
                n3 += this.width * 3;
             }
 
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, n3, s, this.width, this.height);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, n3, (short)219, this.width, this.height);
             if (!GuiBeacon.accessBeaconGuiTextures().equals(this.iconTexture)) {
                mc.getTextureManager().bindTexture(this.iconTexture);
             }

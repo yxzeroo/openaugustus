@@ -110,8 +110,7 @@ public class Player {
    }
 
    public boolean skipFrame() throws JavaLayerException {
-      Header header = this.bitstream.readFrame();
-      if (header == null) {
+      if (this.bitstream.readFrame() == null) {
          return false;
       } else {
          this.bitstream.closeFrame();
@@ -134,8 +133,7 @@ public class Player {
       if (audioDevice != null) {
          this.audio = audioDevice;
       } else {
-         FactoryRegistry factoryRegistry = FactoryRegistry.systemRegistry();
-         this.audio = factoryRegistry.createAudioDevice();
+         this.audio = FactoryRegistry.systemRegistry().createAudioDevice();
       }
 
       this.audio.open(this.decoder);

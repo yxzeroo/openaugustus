@@ -51,8 +51,7 @@ public class PlayerItemsLayer implements LayerRenderer {
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          GlStateManager.disableRescaleNormal();
          GlStateManager.enableCull();
-         ModelPlayer playerModel = this.renderPlayer.getPlayerModel();
-         PlayerConfigurations.renderPlayerItems(playerModel, clientPlayer, f, f2);
+         PlayerConfigurations.renderPlayerItems(this.renderPlayer.getPlayerModel(), clientPlayer, f, f2);
          GlStateManager.disableCull();
       }
    }

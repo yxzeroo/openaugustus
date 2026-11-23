@@ -133,9 +133,7 @@ public class RotationUtil implements MC {
    private PredictiveAimSolver predictiveAimSolver;
 
    public static float accelerateAngle(float f, float f2, float f3, float f4, RandomizedRangeSettings randomizedRangeSettings) {
-      float f5 = (float)randomizedRangeSettings.nextDouble();
-      float minValue = (float)randomizedRangeSettings.getMinValue();
-      return accelerateAngle(f, f2, f3, f4, f5, minValue, (float)randomizedRangeSettings.getMaxValue(), false, 0.0F);
+      return accelerateAngle(f, f2, f3, f4, (float)randomizedRangeSettings.nextDouble(), (float)randomizedRangeSettings.getMinValue(), (float)randomizedRangeSettings.getMaxValue(), false, 0.0F);
    }
 
    private RotationDeltaCandidate selectBestDeltaCandidate(
@@ -160,30 +158,15 @@ public class RotationUtil implements MC {
          double d = Math.abs((double)rotationDeltaCandidate.getYawDelta() - this.lastCandidateDelta[0]);
          double d2 = Math.abs((double)rotationDeltaCandidate.getPitchDelta() - this.lastCandidateDelta[1]);
          if (!rotationDeltaCandidate.isDeviationBelow(f11)) {
-            double d3 = (double)f12;
-            double d4 = (double)f13;
-            double d5 = d3;
-            if (rotationDeltaCandidate.exceedsThreshold(d5, d4)
+            if (rotationDeltaCandidate.exceedsThreshold((double)f12, (double)f13)
                && Math.abs(this.lastAdvancedRotation.yaw - f + rotationDeltaCandidate.getYawDelta()) < f3
                && Math.abs(this.lastAdvancedRotation.pitch - f2 + rotationDeltaCandidate.getPitchDelta()) < f4) {
-               Rotation lastAdvancedRotation2 = this.lastAdvancedRotation;
-               Rotation rotation = this.previousAdvancedRotation;
-               Rotation rotation2 = new Rotation(f, f2);
-               Rotation rotation3 = rotation;
-               Rotation rotation4 = lastAdvancedRotation2;
-               if (rotationDeltaCandidate.computeDistanceToSegment(rotation4, rotation3, rotation2) > 180.0F - f10) {
-                  Rotation lastAdvancedRotation3 = this.lastAdvancedRotation;
-                  Rotation rotation5 = new Rotation(f + rotationDeltaCandidate.getYawDelta(), f2 + rotationDeltaCandidate.getPitchDelta());
-                  Rotation rotation6 = lastAdvancedRotation3;
-                  if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate, rotation6, rotation5) > (double)f5) {
+               if (rotationDeltaCandidate.computeDistanceToSegment(this.lastAdvancedRotation, this.previousAdvancedRotation, new Rotation(f, f2)) > 180.0F - f10) {
+                  if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate, this.lastAdvancedRotation, new Rotation(f + rotationDeltaCandidate.getYawDelta(), f2 + rotationDeltaCandidate.getPitchDelta())) > (double)f5) {
                      double d6 = (double)f6;
-                     double d7 = (double)f8;
-                     double d8 = d6;
-                     if (this.isStrictlyBetween(d, d8, d7)) {
+                     if (this.isStrictlyBetween(d, d6, (double)f8)) {
                         d6 = (double)f7;
-                        double d9 = (double)f9;
-                        double d10 = d6;
-                        if (this.isStrictlyBetween(d2, d10, d9)) {
+                        if (this.isStrictlyBetween(d2, d6, (double)f9)) {
                            list2.add(rotationDeltaCandidate);
                         }
                      }
@@ -198,28 +181,13 @@ public class RotationUtil implements MC {
             double d11 = Math.abs((double)rotationDeltaCandidate2.getYawDelta() - this.lastCandidateDelta[0]);
             double d12 = Math.abs((double)rotationDeltaCandidate2.getPitchDelta() - this.lastCandidateDelta[1]);
             if (!rotationDeltaCandidate2.isDeviationBelow(f11)) {
-               double d13 = (double)f12;
-               double d14 = (double)f13;
-               double d15 = d13;
-               if (rotationDeltaCandidate2.exceedsThreshold(d15, d14)) {
-                  Rotation lastAdvancedRotation4 = this.lastAdvancedRotation;
-                  Rotation rotation7 = this.previousAdvancedRotation;
-                  Rotation rotation8 = new Rotation(f, f2);
-                  Rotation rotation9 = rotation7;
-                  Rotation rotation10 = lastAdvancedRotation4;
-                  if (rotationDeltaCandidate2.computeDistanceToSegment(rotation10, rotation9, rotation8) > 180.0F - f10) {
-                     Rotation lastAdvancedRotation5 = this.lastAdvancedRotation;
-                     Rotation rotation11 = new Rotation(f + rotationDeltaCandidate2.getYawDelta(), f2 + rotationDeltaCandidate2.getPitchDelta());
-                     Rotation rotation12 = lastAdvancedRotation5;
-                     if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate2, rotation12, rotation11) > (double)f5) {
+               if (rotationDeltaCandidate2.exceedsThreshold((double)f12, (double)f13)) {
+                  if (rotationDeltaCandidate2.computeDistanceToSegment(this.lastAdvancedRotation, this.previousAdvancedRotation, new Rotation(f, f2)) > 180.0F - f10) {
+                     if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate2, this.lastAdvancedRotation, new Rotation(f + rotationDeltaCandidate2.getYawDelta(), f2 + rotationDeltaCandidate2.getPitchDelta())) > (double)f5) {
                         double d16 = (double)f6;
-                        double d17 = (double)f8;
-                        double d18 = d16;
-                        if (this.isStrictlyBetween(d11, d18, d17)) {
+                        if (this.isStrictlyBetween(d11, d16, (double)f8)) {
                            d16 = (double)f7;
-                           double d19 = (double)f9;
-                           double d20 = d16;
-                           if (this.isStrictlyBetween(d12, d20, d19)) {
+                           if (this.isStrictlyBetween(d12, d16, (double)f9)) {
                               list2.add(rotationDeltaCandidate2);
                            }
                         }
@@ -235,22 +203,12 @@ public class RotationUtil implements MC {
             double d21 = Math.abs((double)rotationDeltaCandidate3.getYawDelta() - this.lastCandidateDelta[0]);
             double d22 = Math.abs((double)rotationDeltaCandidate3.getPitchDelta() - this.lastCandidateDelta[1]);
             if (!rotationDeltaCandidate3.isDeviationBelow(f11)) {
-               double d23 = (double)f12;
-               double d24 = (double)f13;
-               double d25 = d23;
-               if (rotationDeltaCandidate3.exceedsThreshold(d25, d24)) {
-                  Rotation lastAdvancedRotation6 = this.lastAdvancedRotation;
-                  Rotation rotation13 = new Rotation(f + rotationDeltaCandidate3.getYawDelta(), f2 + rotationDeltaCandidate3.getPitchDelta());
-                  Rotation rotation14 = lastAdvancedRotation6;
-                  if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate3, rotation14, rotation13) > (double)f5) {
+               if (rotationDeltaCandidate3.exceedsThreshold((double)f12, (double)f13)) {
+                  if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate3, this.lastAdvancedRotation, new Rotation(f + rotationDeltaCandidate3.getYawDelta(), f2 + rotationDeltaCandidate3.getPitchDelta())) > (double)f5) {
                      double d26 = (double)f6;
-                     double d27 = (double)f8 * 1.4;
-                     double d28 = d26;
-                     if (this.isStrictlyBetween(d21, d28, d27)) {
+                     if (this.isStrictlyBetween(d21, d26, (double)f8 * 1.4)) {
                         d26 = (double)f7;
-                        double d29 = (double)f9 * 1.4;
-                        double d30 = d26;
-                        if (this.isStrictlyBetween(d22, d30, d29)) {
+                        if (this.isStrictlyBetween(d22, d26, (double)f9 * 1.4)) {
                            list2.add(rotationDeltaCandidate3);
                         }
                      }
@@ -270,18 +228,11 @@ public class RotationUtil implements MC {
             double d31 = Math.abs((double)rotationDeltaCandidate4.getYawDelta() - this.lastCandidateDelta[0]);
             double d32 = Math.abs((double)rotationDeltaCandidate4.getPitchDelta() - this.lastCandidateDelta[1]);
             if (!rotationDeltaCandidate4.isDeviationBelow(f11)) {
-               Rotation lastAdvancedRotation7 = this.lastAdvancedRotation;
-               Rotation rotation15 = new Rotation(f + rotationDeltaCandidate4.getYawDelta(), f2 + rotationDeltaCandidate4.getPitchDelta());
-               Rotation rotation16 = lastAdvancedRotation7;
-               if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate4, rotation16, rotation15) > (double)f5) {
+               if (RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate4, this.lastAdvancedRotation, new Rotation(f + rotationDeltaCandidate4.getYawDelta(), f2 + rotationDeltaCandidate4.getPitchDelta())) > (double)f5) {
                   double d33 = (double)f6;
-                  double d34 = (double)f8 * 1.4;
-                  double d35 = d33;
-                  if (this.isStrictlyBetween(d31, d35, d34)) {
+                  if (this.isStrictlyBetween(d31, d33, (double)f8 * 1.4)) {
                      d33 = (double)f7;
-                     double d36 = (double)f9 * 1.4;
-                     double d37 = d33;
-                     if (this.isStrictlyBetween(d32, d37, d36)) {
+                     if (this.isStrictlyBetween(d32, d33, (double)f9 * 1.4)) {
                         list2.add(rotationDeltaCandidate4);
                      }
                   }
@@ -298,10 +249,7 @@ public class RotationUtil implements MC {
       if (list2.isEmpty()) {
          for (RotationDeltaCandidate rotationDeltaCandidate5 : (Iterable<RotationDeltaCandidate>)(list)) {
             if (!rotationDeltaCandidate5.isDeviationBelow(f11)) {
-               double d38 = (double)f12;
-               double d39 = (double)f13;
-               double d40 = d38;
-               if (rotationDeltaCandidate5.exceedsThreshold(d40, d39)) {
+               if (rotationDeltaCandidate5.exceedsThreshold((double)f12, (double)f13)) {
                   list2.add(rotationDeltaCandidate5);
                }
             }
@@ -372,9 +320,7 @@ public class RotationUtil implements MC {
          case "IntaveTest":
             long l = (long)this.intaveTestResetIntervalMs;
             if (this.timeHelper.reached2(l)) {
-               short s = 1000;
-               short s2 = 500;
-               this.intaveTestResetIntervalMs = DefaultRandomGenerator.instance.nextInt2(s2, s);
+               this.intaveTestResetIntervalMs = DefaultRandomGenerator.instance.nextInt2((short)500, (short)1000);
                double d21 = box.maxX - box.minX;
                double d22 = box.maxY - box.minY;
                double d23 = box.maxZ - box.minZ;
@@ -571,8 +517,7 @@ public class RotationUtil implements MC {
          float f9 = (float)n * f8;
          float f10 = (float)n2 * f8;
          float f11 = (float)((double)f3 + (double)f9 * 0.15);
-         float f12 = (float)((double)f4 - (double)f10 * 0.15);
-         float f13 = MathHelper.clamp_float(f12, -90.0F, 90.0F);
+         float f13 = MathHelper.clamp_float((float)((double)f4 - (double)f10 * 0.15), -90.0F, 90.0F);
          rotation.yaw = f11;
          rotation.pitch = f13;
          return rotation;
@@ -615,8 +560,7 @@ public class RotationUtil implements MC {
             float f18 = (float)((Integer)list.get(j)).intValue() * f15;
             float f19 = (float)((Integer)list2.get(j)).intValue() * f15;
             float f20 = (float)((double)f16 + (double)f18 * 0.15);
-            float f21 = (float)((double)f17 - (double)f19 * 0.15);
-            float f22 = MathHelper.clamp_float(f21, -90.0F, 90.0F);
+            float f22 = MathHelper.clamp_float((float)((double)f17 - (double)f19 * 0.15), -90.0F, 90.0F);
             f16 = f20;
             f17 = f22;
          }
@@ -630,8 +574,7 @@ public class RotationUtil implements MC {
          float f23 = (float)n9 * f15;
          float f24 = (float)n10 * f15;
          float f25 = (float)((double)f16 + (double)f23 * 0.15);
-         float f26 = (float)((double)f17 - (double)f24 * 0.15);
-         float f27 = MathHelper.clamp_float(f26, -90.0F, 90.0F);
+         float f27 = MathHelper.clamp_float((float)((double)f17 - (double)f24 * 0.15), -90.0F, 90.0F);
          rotation.yaw = f25;
          rotation.pitch = f27;
          return rotation;
@@ -643,8 +586,7 @@ public class RotationUtil implements MC {
    }
 
    public void setMouseVelocity(Vec2d vec2d) {
-      double d = 1.0;
-      this.mouseVelocity = vec2d.scale(d);
+      this.mouseVelocity = vec2d.scale(1.0);
    }
 
    public static float wrapAngleTo180(float f) {
@@ -718,8 +660,7 @@ public class RotationUtil implements MC {
 
    public static Vec3 getInterpolatedNearestLookPoint(Entity entity, float f, int n, int n2, Rotation rotation) {
       Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
-      double d = (double)f;
-      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, d);
+      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, (double)f);
       double d2 = interpolatedEntityBox.maxX - interpolatedEntityBox.minX;
       double d3 = interpolatedEntityBox.maxY - interpolatedEntityBox.minY;
       double d4 = d2 * ((double)n2 / 100.0);
@@ -735,10 +676,7 @@ public class RotationUtil implements MC {
    }
 
    private double scoreCandidateByDistanceToLast(float f, float f2, RotationDeltaCandidate rotationDeltaCandidate) {
-      Rotation lastAdvancedRotation2 = this.lastAdvancedRotation;
-      Rotation rotation = new Rotation(f + rotationDeltaCandidate.getYawDelta(), f2 + rotationDeltaCandidate.getPitchDelta());
-      Rotation rotation2 = lastAdvancedRotation2;
-      return RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate, rotation2, rotation);
+      return RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate, this.lastAdvancedRotation, new Rotation(f + rotationDeltaCandidate.getYawDelta(), f2 + rotationDeltaCandidate.getPitchDelta()));
    }
 
    public static boolean isNearCardinalYaw(float f) {
@@ -780,11 +718,9 @@ public class RotationUtil implements MC {
       }
 
       TargetPositionTracker targetPositionTracker2 = playerPositionTracker;
-      double d5 = 1.0 + Math.random();
-      targetPositionTracker2.updateTrackedPosition(d5);
+      targetPositionTracker2.updateTrackedPosition(1.0 + Math.random());
       targetPositionTracker2 = targetPositionTracker;
-      double d6 = 1.0 + Math.random();
-      targetPositionTracker2.updateTrackedPosition(d6);
+      targetPositionTracker2.updateTrackedPosition(1.0 + Math.random());
       double d7 = 90.0;
       double d8 = -90.0;
       int n = ThreadLocalRandom.current().nextInt(4, 6);
@@ -799,22 +735,15 @@ public class RotationUtil implements MC {
          mc.thePlayer.movementInput.sneak,
          MoveInputStage.PRE
       );
-      double d9 = posZ;
-      double d10 = posY;
-      double d11 = posX;
-      ArrayList list = PlayerUtil.predictPlayerTrajectory(n, thePlayer, d11, d10, d9, event);
-      int size = list.size();
-      ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, size);
+      ArrayList list = PlayerUtil.predictPlayerTrajectory(n, thePlayer, posX, posY, posZ, event);
+      ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, list.size());
       list.add(mc.thePlayer.getInterpolatedPos(1.0F));
       list2.add(entity.getInterpolatedPos(1.0F));
       int n2 = Math.min(list.size(), list2.size());
 
       for (int i = 0; i < n2; i++) {
-         Vec3 vec2 = (Vec3)list2.get(i);
-         boolean flag = true;
-         AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec2, flag);
-         Vec3 vec3 = ((Vec3)list.get(i)).addVector(0.0, (double)entity2.getEyeHeight(), 0.0);
-         double[] pitchRange = HitboxAngleUtil.getPitchRange(vec3, box);
+         AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox((Vec3)list2.get(i), true);
+         double[] pitchRange = HitboxAngleUtil.getPitchRange(((Vec3)list.get(i)).addVector(0.0, (double)entity2.getEyeHeight(), 0.0), box);
          d7 = Math.min(pitchRange[0], d7);
          d8 = Math.max(pitchRange[1], d8);
       }
@@ -828,25 +757,17 @@ public class RotationUtil implements MC {
          Vec3 vec5 = playerPositionTracker.getTrackedPosition().addVector(0.0, (double)entity2.getEyeHeight(), 0.0);
          Vec3 interpolatedPos = entity.getInterpolatedPos(f3);
          Vec3 trackedPosition = targetPositionTracker.getTrackedPosition();
-         boolean flag2 = true;
-         AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(interpolatedPos, flag2);
-         boolean flag3 = true;
-         AxisAlignedBB box3 = EntityBoundsUtil.createPlayerBoundingBox(trackedPosition, flag3);
+         AxisAlignedBB box2 = EntityBoundsUtil.createPlayerBoundingBox(interpolatedPos, true);
+         AxisAlignedBB box3 = EntityBoundsUtil.createPlayerBoundingBox(trackedPosition, true);
          double[] yawRange = HitboxAngleUtil.getYawRange(vec4, box2);
-         DoubleSampleWindow yawChangeWindow2 = this.yawChangeWindow;
-         double d13 = HitboxAngleUtil.getShortestAngularDistance(this.lastTargetMinYaw, yawRange[0]) * 3.0;
-         yawChangeWindow2.add(d13);
+         this.yawChangeWindow.add(HitboxAngleUtil.getShortestAngularDistance(this.lastTargetMinYaw, yawRange[0]) * 3.0);
          this.lastTargetMinYaw = yawRange[0];
          double normalizedPitchInBox = HitboxAngleUtil.getNormalizedPitchInBox(box2, vec4, d2);
-         double d14 = (double)f;
-         double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(box2, vec4, d14);
-         double d15 = (double)f2;
-         double normalizedPitchInBox2 = HitboxAngleUtil.getNormalizedPitchInBox(box2, vec4, d15);
+         double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(box2, vec4, (double)f);
+         double normalizedPitchInBox2 = HitboxAngleUtil.getNormalizedPitchInBox(box2, vec4, (double)f2);
          posY = (double)f;
          posZ = (double)f2;
-         double d16 = posZ;
-         double d17 = posY;
-         double d18 = getNormalizedAnglesInBox(vec5, box3, d17, d16)[0];
+         double d18 = getNormalizedAnglesInBox(vec5, box3, posY, posZ)[0];
          if (this.noiseBezierProgress > 1.0) {
             this.noiseBezierCurve = null;
             this.noiseBezierProgress = 0.0;
@@ -891,8 +812,7 @@ public class RotationUtil implements MC {
             d22 = MathStatisticsUtil.lerp(MathHelper.clamp_double((double)f2, d7, d8), (d7 + d8) * 0.5, 0.01 * Math.random());
          }
 
-         MovingObjectPosition hit = RayTraceUtil.rayTraceDefaultReach(f3, (float)d21, (float)d22);
-         if (hit == null) {
+         if (RayTraceUtil.rayTraceDefaultReach(f3, (float)d21, (float)d22) == null) {
             return new Rotation((float)d3, (float)d4);
          }
 
@@ -921,15 +841,12 @@ public class RotationUtil implements MC {
             }
          }
 
-         Vec2d vec2d5 = new Vec2d(d23 / 0.15 / d28, d24 / 0.15 / d27);
-         double length2 = vec2d5.length();
+         double length2 = new Vec2d(d23 / 0.15 / d28, d24 / 0.15 / d27).length();
          Vec2d vec2d6 = new Vec2d(
             (vec2d4.x - this.mouseVelocity.x) * Math.min(length2, d26) / length2, (vec2d4.y - this.mouseVelocity.y) * Math.min(length, d26) / length / d27
          );
          if (Double.isNaN(vec2d6.x) || Double.isNaN(vec2d6.y)) {
-            Vec2d vec2d7 = new Vec2d(Math.random(), Math.random());
-            double d29 = 0.01;
-            vec2d6 = vec2d7.scale(d29);
+            vec2d6 = new Vec2d(Math.random(), Math.random()).scale(0.01);
          }
 
          Vec2d vec2d8 = new Vec2d(this.mouseVelocity.x, this.mouseVelocity.y);
@@ -954,9 +871,7 @@ public class RotationUtil implements MC {
 
          Vec2d vec2d9 = vec2d8.add(vec2d6);
          double d32 = 1.0 - d12;
-         Vec2d vec2d10 = this.mouseVelocity.scale(d32);
-         Vec2d vec2d11 = vec2d9.scale(d12);
-         this.mouseVelocity = vec2d10.add(vec2d11);
+         this.mouseVelocity = this.mouseVelocity.scale(d32).add(vec2d9.scale(d12));
          f = MathHelper.wrapAngleTo180_float(f + (float)(this.mouseVelocity.x * 0.15 * d12));
          f2 = MathHelper.clamp_float(f2 + (float)(this.mouseVelocity.y * 0.15 * d12), -90.0F, 90.0F);
          d28 = 0.2;
@@ -986,24 +901,17 @@ public class RotationUtil implements MC {
       double d3 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * d;
       double d4 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * d;
       float f = entity.width / 2.0F;
-      AxisAlignedBB box = new AxisAlignedBB(
+      return new AxisAlignedBB(
          d2 - (double)f, d3, d4 - (double)f, d2 + (double)f, d3 + (double)entity.height, d4 + (double)f
-      );
-      return box.expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
+      ).expand((double)collisionBorderSize, (double)collisionBorderSize, (double)collisionBorderSize);
    }
 
    public float stepPitchAccelerated(float f, float f2, float f3, RandomizedRangeSettings randomizedRangeSettings, float f4) {
       boolean isGuardActive = AntiSamplerGuard.isGuardActive(1);
       f4 = Math.abs(f4);
       float f5 = (float)randomizedRangeSettings.nextValue() + (float)(isGuardActive ? 15 : 0);
-      double d = randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0);
-      double d2 = d + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
-      float f6 = updateAngle(f2, f3, 180.0F);
-      float f7 = f6 - f2;
-      double d3 = (double)Math.abs(f7 / Math.max(f4, 1.0F));
-      double d4 = Math.abs((double)f4 / d2);
-      float f8 = MathHelper.clamp_float(f4 + (d3 > d4 ? f5 : -f5), 0.0F, f);
-      float f9 = updateAngle(f2, f3, f8);
+      double d2 = (randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0)) + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
+      float f9 = updateAngle(f2, f3, MathHelper.clamp_float(f4 + (((double)Math.abs((updateAngle(f2, f3, 180.0F) - f2) / Math.max(f4, 1.0F))) > Math.abs((double)f4 / d2) ? f5 : -f5), 0.0F, f));
       return f9 == f2 ? f2 : applyPitchGcd(f9, f2);
    }
 
@@ -1037,9 +945,7 @@ public class RotationUtil implements MC {
       Rotation lastAdvancedRotation2 = this.lastAdvancedRotation;
       Rotation rotation = this.previousAdvancedRotation;
       Rotation rotation2 = new Rotation(f, f2);
-      Rotation rotation3 = rotation;
-      Rotation rotation4 = lastAdvancedRotation2;
-      return (double)(180.0F - rotationDeltaCandidate.computeDistanceToSegment(rotation4, rotation3, rotation2));
+      return (double)(180.0F - rotationDeltaCandidate.computeDistanceToSegment(lastAdvancedRotation2, rotation, rotation2));
    }
 
    private static double rotationDistance2D(Rotation rotation, Rotation rotation2) {
@@ -1075,10 +981,8 @@ public class RotationUtil implements MC {
 
    public static float getEntityLookAngleToPlayer(Entity entity) {
       double d = mc.thePlayer.posX - entity.posX;
-      double d2 = mc.thePlayer.posZ - entity.posZ;
-      float f = (float)(MathHelper.atan2(d2, d) * 180.0 / Math.PI - 90.0);
-      float f2 = MathHelper.wrapAngleTo180_float(entity.getRotationYawHead());
-      return (float)HitboxAngleUtil.getShortestAngularDistance((double)f2, (double)f);
+      float f = (float)(MathHelper.atan2(mc.thePlayer.posZ - entity.posZ, d) * 180.0 / Math.PI - 90.0);
+      return (float)HitboxAngleUtil.getShortestAngularDistance((double)MathHelper.wrapAngleTo180_float(entity.getRotationYawHead()), (double)f);
    }
 
    public Rotation stepVelocityTowardsAngles(double d, double d2, double d3, double d4, double d5) {
@@ -1099,17 +1003,14 @@ public class RotationUtil implements MC {
             (vec2d.x - this.mouseVelocity.x) * Math.min(length, d5) / length, (vec2d.y - this.mouseVelocity.y) * Math.min(length, d5) / length
          );
          if (Double.isNaN(vec2d2.x) || Double.isNaN(vec2d2.y)) {
-            Vec2d vec2d3 = new Vec2d(Math.random(), Math.random());
-            double d9 = 0.01;
-            vec2d2 = vec2d3.scale(d9);
+            vec2d2 = new Vec2d(Math.random(), Math.random()).scale(0.01);
          }
 
          Vec2d vec2d4 = new Vec2d(this.mouseVelocity.x, this.mouseVelocity.y);
          if (Math.signum(this.mouseVelocity.x) == Math.signum(vec2d2.x)) {
             double d10 = Math.abs(this.mouseVelocity.x);
             double d11 = Math.abs(vec2d2.x);
-            double d12 = -0.5 * (d10 * d10 / (d11 * d11)) + d10 * d10 / d11;
-            if (d12 > Math.abs(vec2d.x)) {
+            if ((-0.5 * (d10 * d10 / (d11 * d11)) + d10 * d10 / d11) > Math.abs(vec2d.x)) {
                vec2d2.x *= -1.0;
             }
          }
@@ -1117,18 +1018,14 @@ public class RotationUtil implements MC {
          if (Math.signum(this.mouseVelocity.y) == Math.signum(vec2d2.y)) {
             double d13 = Math.abs(this.mouseVelocity.y);
             double d14 = Math.abs(vec2d2.y);
-            double d15 = -0.5 * (d13 * d13 / (d14 * d14)) + d13 * d13 / d14;
-            if (d15 > Math.abs(vec2d.y)) {
+            if ((-0.5 * (d13 * d13 / (d14 * d14)) + d13 * d13 / d14) > Math.abs(vec2d.y)) {
                vec2d2.y *= -1.0;
             }
          }
 
          vec2d4 = vec2d4.add(vec2d2);
          double d16 = 0.0;
-         Vec2d vec2d5 = this.mouseVelocity.scale(d16);
-         double d17 = 1.0;
-         Vec2d vec2d6 = vec2d4.scale(d17);
-         this.mouseVelocity = vec2d5.add(vec2d6);
+         this.mouseVelocity = this.mouseVelocity.scale(d16).add(vec2d4.scale(1.0));
          double d18 = this.mouseVelocity.x * 0.15 * 1.0;
          double d19 = this.mouseVelocity.y * 0.15 * 1.0;
          this.lastSubstepMouseDeltas[i] = new double[]{this.mouseVelocity.x * 1.0 / (double)f2, this.mouseVelocity.y * 1.0 / (double)f2};
@@ -1151,14 +1048,11 @@ public class RotationUtil implements MC {
       Rotation lastAdvancedRotation2 = this.lastAdvancedRotation;
       Rotation rotation = this.previousAdvancedRotation;
       Rotation rotation2 = new Rotation(f, f2);
-      Rotation rotation3 = rotation;
-      Rotation rotation4 = lastAdvancedRotation2;
-      return (double)(180.0F - rotationDeltaCandidate.computeDistanceToSegment(rotation4, rotation3, rotation2));
+      return (double)(180.0F - rotationDeltaCandidate.computeDistanceToSegment(lastAdvancedRotation2, rotation, rotation2));
    }
 
    public static Rotation applyMouseSensitivityFix(Rotation rotation, float f, float f2, float f3, float f4) {
-      String selectedValue = ClientManagers.moduleManager.rotationHandler.mouseSensMode.getSelectedValue();
-      return applyMouseSensitivityFix(rotation, f, f2, f3, f4, selectedValue);
+      return applyMouseSensitivityFix(rotation, f, f2, f3, f4, ClientManagers.moduleManager.rotationHandler.mouseSensMode.getSelectedValue());
    }
 
    private float sampleRandomOffset(String str, double d, float f) {
@@ -1185,19 +1079,11 @@ public class RotationUtil implements MC {
    }
 
    public BezierCurve2D createBezierCurve(Rotation rotation, Rotation rotation2, int n, double d, double d2, boolean flag) {
-      double yaw = (double)rotation.yaw;
-      double pitch = (double)rotation.pitch;
-      double yaw2 = (double)rotation2.yaw;
-      double pitch2 = (double)rotation2.pitch;
-      double d3 = yaw2;
-      double d4 = pitch;
-      double d5 = yaw;
-      return this.createBezierCurve(d5, d4, d3, pitch2, n, d, d2, flag);
+      return this.createBezierCurve((double)rotation.yaw, (double)rotation.pitch, (double)rotation2.yaw, (double)rotation2.pitch, n, d, d2, flag);
    }
 
    public static double lerpPitch(double d, double d2, double d3) {
-      double d4 = d2 - d;
-      return MathHelper.clamp_double(d + d4 * d3, -90.0, 90.0);
+      return MathHelper.clamp_double(d + (d2 - d) * d3, -90.0, 90.0);
    }
 
    public static double[] projectNormalizedAnglesBetweenOrigins(Vec3 vec, Vec3 vec2, AxisAlignedBB box, AxisAlignedBB box2, double d, double d2) {
@@ -1219,13 +1105,9 @@ public class RotationUtil implements MC {
    public static float accelerateAngle(float f, float f2, float f3, float f4, float f5, float f6, float f7, boolean flag, float f8) {
       f4 = Math.abs(f4);
       double d = (double)(f6 + (f7 - f6) / 2.0F);
-      float f9 = updateAngle(f, f2, 180.0F);
-      float f10 = f9 - f;
+      float f10 = updateAngle(f, f2, 180.0F) - f;
       double d2 = (double)(flag ? Math.abs(f8) : 0.0F);
-      double d3 = (double)Math.abs(f10 / Math.max(f4, 1.0F));
-      double d4 = Math.abs(((double)f4 - d2) / d);
-      float f11 = MathHelper.clamp_float(f4 + (d3 > d4 ? f5 : -f5), 0.0F, f3);
-      return updateAngle(f, f2, f11);
+      return updateAngle(f, f2, MathHelper.clamp_float(f4 + (((double)Math.abs(f10 / Math.max(f4, 1.0F))) > Math.abs(((double)f4 - d2) / d) ? f5 : -f5), 0.0F, f3));
    }
 
    public void generateDeltaCandidates(float f, int n) {
@@ -1339,9 +1221,7 @@ public class RotationUtil implements MC {
    }
 
    public static Rotation applyGcdFix(float f, float f2, float f3, float f4) {
-      Rotation rotation = new Rotation();
-      String selectedValue = ClientManagers.moduleManager.rotationHandler.mouseSensMode.getSelectedValue();
-      return applyMouseSensitivityFix(rotation, f, f2, f3, f4, selectedValue);
+      return applyMouseSensitivityFix(new Rotation(), f, f2, f3, f4, ClientManagers.moduleManager.rotationHandler.mouseSensMode.getSelectedValue());
    }
 
    public void reset() {
@@ -1451,8 +1331,7 @@ public class RotationUtil implements MC {
          boolean flag5 = hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && hit.entityHit instanceof EntityLivingBase;
          ArrayList list = new ArrayList();
          if (flag2) {
-            int n = (int)d;
-            if (this.rollPercentageChance(n)) {
+            if (this.rollPercentageChance((int)d)) {
                if (flag5) {
                   MovingObjectPosition hit2 = RayTraceUtil.rayTraceEntity(1.0F, f3, f4, d2, 0.0);
                   if (hit2 != null
@@ -1484,17 +1363,14 @@ public class RotationUtil implements MC {
          }
 
          if (flag5 && flag4 && entity.hurtTime > 3) {
-            float f18 = applyYawGcd(updateAngle(f3, f5, 180.0F), f3);
-            if (CombatOptimizationUtil.shouldReduceSprintKnockback(entity, f18)) {
+            if (CombatOptimizationUtil.shouldReduceSprintKnockback(entity, applyYawGcd(updateAngle(f3, f5, 180.0F), f3))) {
                flag5 = false;
             }
          }
 
          if (flag5) {
             for (RotationDeltaCandidate rotationDeltaCandidate : (Iterable<RotationDeltaCandidate>)(this.deltaCandidates)) {
-               float f19 = f + rotationDeltaCandidate.getYawDelta();
-               float f20 = f2 + rotationDeltaCandidate.getPitchDelta();
-               rotation = applyGcdFix(f19, f20, f3, f4);
+               rotation = applyGcdFix(f + rotationDeltaCandidate.getYawDelta(), f2 + rotationDeltaCandidate.getPitchDelta(), f3, f4);
                double d6 = 0.0;
                MovingObjectPosition hit4 = RayTraceUtil.rayTraceEntity(1.0F, rotation, d2, d6);
                if (hit4 != null && hit4.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && hit4.entityHit instanceof EntityLivingBase) {
@@ -1506,8 +1382,7 @@ public class RotationUtil implements MC {
          }
 
          this.ticksSincePitchReset++;
-         ArrayList list2 = list.isEmpty() ? this.deltaCandidates : list;
-         RotationDeltaCandidate rotationDeltaCandidate2 = this.selectBestDeltaCandidate(list2, f, f2, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17);
+         RotationDeltaCandidate rotationDeltaCandidate2 = this.selectBestDeltaCandidate(list.isEmpty() ? this.deltaCandidates : list, f, f2, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17);
          RotationDeltaCandidate.incrementHitCount(rotationDeltaCandidate2);
          f += rotationDeltaCandidate2.getYawDelta();
          f2 += rotationDeltaCandidate2.getPitchDelta();
@@ -1523,9 +1398,7 @@ public class RotationUtil implements MC {
             double[] pitchRange = HitboxAngleUtil.getPitchRange(mc.thePlayer.getPositionEyes(1.0F), box);
             pitchRange[0] = MathHelper.clamp_double(pitchRange[0] - randomizedRangeSettings.nextValue(), -90.0, 90.0);
             pitchRange[1] = MathHelper.clamp_double(pitchRange[1] + randomizedRangeSettings.nextValue(), -90.0, 90.0);
-            double d7 = Math.abs((double)f2 - pitchRange[0]);
-            double d8 = Math.abs((double)f2 - pitchRange[1]);
-            f2 = (float)(d7 < d8 ? pitchRange[0] : pitchRange[1]);
+            f2 = (float)(Math.abs((double)f2 - pitchRange[0]) < Math.abs((double)f2 - pitchRange[1]) ? pitchRange[0] : pitchRange[1]);
          }
 
          return new Rotation(f, f2);
@@ -1641,22 +1514,14 @@ public class RotationUtil implements MC {
          return new Rotation(f, f2);
       } else {
          RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-         double minValue = randomizedRangeSettings3.getMinValue();
-         double maxValue = randomizedRangeSettings3.getMaxValue();
-         double d8 = minValue;
-         float f15 = instance.nextFloat2(d8, maxValue);
+         float f15 = instance.nextFloat2(randomizedRangeSettings3.getMinValue(), randomizedRangeSettings3.getMaxValue());
          instance = DefaultRandomGenerator.instance;
-         double minValue2 = randomizedRangeSettings4.getMinValue();
-         double maxValue2 = randomizedRangeSettings4.getMaxValue();
-         double d9 = minValue2;
-         float f16 = instance.nextFloat2(d9, maxValue2);
+         float f16 = instance.nextFloat2(randomizedRangeSettings4.getMinValue(), randomizedRangeSettings4.getMaxValue());
          Vec3 vec2;
          if (flag2 && vec != null) {
             vec2 = vec;
          } else {
-            Rotation rotation = new Rotation(f, f2);
-            Rotation rotation2 = rotation;
-            vec2 = this.selectEntityAimPoint(entity, str3, n, n2, n3, n4, rotation2);
+            vec2 = this.selectEntityAimPoint(entity, str3, n, n2, n3, n4, new Rotation(f, f2));
          }
 
          Vec3 vec3 = vec2;
@@ -1680,14 +1545,7 @@ public class RotationUtil implements MC {
          );
          boolean flag11 = false;
          if (str.equals("Noise")) {
-            EntityPlayerSP thePlayer = mc.thePlayer;
-            double d10 = (double)f17;
-            double d11 = (double)f18;
-            Vec3 vec5 = new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ);
-            double d12 = d11;
-            double d13 = d10;
-            EntityPlayerSP player = thePlayer;
-            Rotation rotation3 = this.computeNoise1Rotation(entity, player, f, f2, d13, d12, vec5);
+            Rotation rotation3 = this.computeNoise1Rotation(entity, mc.thePlayer, f, f2, (double)f17, (double)f18, new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ));
             f17 = rotation3.yaw;
             f18 = rotation3.pitch;
             flag11 = true;
@@ -1725,15 +1583,7 @@ public class RotationUtil implements MC {
             this.bezierRotationEngine.pitchOffsetSpeed = this.bezierPitchOffsetSpeed;
             this.bezierRotationEngine.adaptCurveIfNeeded = this.bezierAdaptCurveIfNeeded;
             this.bezierRotationEngine.applyRecordedMouseJitter = this.bezierApplyRecordedMouseJitter;
-            BezierRotationEngine bezierRotationEngine2 = this.bezierRotationEngine;
-            EntityPlayerSP thePlayer2 = mc.thePlayer;
-            double d14 = (double)f17;
-            double d15 = (double)f18;
-            Vec3 vec6 = new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ);
-            double d16 = d15;
-            double d17 = d14;
-            EntityPlayerSP player2 = thePlayer2;
-            Rotation rotation4 = bezierRotationEngine2.computeRotation(entity, player2, f, f2, d17, d16, vec6, vec3);
+            Rotation rotation4 = this.bezierRotationEngine.computeRotation(entity, mc.thePlayer, f, f2, (double)f17, (double)f18, new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ), vec3);
             f17 = rotation4.yaw;
             f18 = rotation4.pitch;
             flag11 = true;
@@ -1748,30 +1598,13 @@ public class RotationUtil implements MC {
             this.predictiveAimSolver.maxAimSpeed = this.turboMaxAimSpeed;
             this.predictiveAimSolver.minLeadDistanceScale = this.turboMinLeadDistanceScale;
             this.predictiveAimSolver.betterAccelerationFactor = this.turboBetterAccelerationFactor;
-            PredictiveAimSolver predictiveAimSolver2 = this.predictiveAimSolver;
-            EntityPlayerSP thePlayer3 = mc.thePlayer;
-            double d18 = (double)f17;
-            double d19 = (double)f18;
-            Vec3 vec7 = new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ);
-            Vec3 vec8 = vec7;
-            double d20 = d19;
-            double d21 = d18;
-            EntityPlayerSP player3 = thePlayer3;
-            Rotation rotation5 = predictiveAimSolver2.computeRotation(entity, player3, f, f2, d21, d20, vec8, vec3);
+            Rotation rotation5 = this.predictiveAimSolver.computeRotation(entity, mc.thePlayer, f, f2, (double)f17, (double)f18, new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ), vec3);
             f17 = rotation5.yaw;
             f18 = rotation5.pitch;
             flag11 = true;
          } else if (str.equals("Noise3")) {
             if (this.uNoise3RotationEngine != null) {
-               UNoise3RotationEngine uNoise3RotationEngine2 = this.uNoise3RotationEngine;
-               EntityPlayerSP thePlayer4 = mc.thePlayer;
-               double d22 = (double)f17;
-               double d23 = (double)f18;
-               Vec3 vec9 = new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ);
-               double d24 = d23;
-               double d25 = d22;
-               EntityPlayerSP player4 = thePlayer4;
-               Rotation rotation6 = uNoise3RotationEngine2.computeRotation(entity, player4, f, f2, d25, d24, vec9, vec3);
+               Rotation rotation6 = this.uNoise3RotationEngine.computeRotation(entity, mc.thePlayer, f, f2, (double)f17, (double)f18, new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ), vec3);
                f17 = rotation6.yaw;
                f18 = rotation6.pitch;
                flag11 = true;
@@ -1781,12 +1614,7 @@ public class RotationUtil implements MC {
                EntityPlayerSP thePlayer5 = mc.thePlayer;
                Rotation rotation7 = this.aiRotationPredictor.predict(thePlayer5, entity);
                if (rotation7 != null) {
-                  AiRotationPredictor aiRotationPredictor2 = this.aiRotationPredictor;
-                  float f21 = ClientManagers.rotationController.getPreviousRotation().yaw - ClientManagers.rotationController.getLastTickRotation().yaw;
-                  float f22 = ClientManagers.rotationController.getPreviousRotation().pitch - ClientManagers.rotationController.getLastTickRotation().pitch;
-                  float f23 = f22;
-                  float f24 = f21;
-                  aiRotationPredictor2.recordRotationDelta(f24, f23);
+                  this.aiRotationPredictor.recordRotationDelta(ClientManagers.rotationController.getPreviousRotation().yaw - ClientManagers.rotationController.getLastTickRotation().yaw, ClientManagers.rotationController.getPreviousRotation().pitch - ClientManagers.rotationController.getLastTickRotation().pitch);
                   float f25 = MathHelper.clamp_float(f2 + rotation7.pitch, -90.0F, 90.0F);
                   f17 = f + rotation7.yaw;
                   f18 = f25;
@@ -1801,15 +1629,11 @@ public class RotationUtil implements MC {
 
          TimerRangeV2 timerRangeV2 = Augustus.getInstance().getModuleManager().timerRangeV2;
          if (timerRangeV2.hasPredictedTargetBox() && ClientManagers.moduleManager.killAura.timerRangeV2Fix.getValue()) {
-            AxisAlignedBB predictedTargetBox = timerRangeV2.getPredictedTargetBox();
-            Vec3 nearestPointInBox = getNearestPointInBox(predictedTargetBox);
+            Vec3 nearestPointInBox = getNearestPointInBox(timerRangeV2.getPredictedTargetBox());
             Vec3 vec10 = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
             Rotation rotation8 = new Rotation(f, f2);
             float f26 = 180.0F;
-            float f27 = 180.0F;
-            Rotation rotation9 = rotation8;
-            Vec3 vec11 = vec10;
-            Rotation rotationsBetweenPoints = getRotationsBetweenPoints(nearestPointInBox, vec11, rotation9, f27, f26);
+            Rotation rotationsBetweenPoints = getRotationsBetweenPoints(nearestPointInBox, vec10, rotation8, 180.0F, f26);
             f17 = rotationsBetweenPoints.yaw;
             f18 = rotationsBetweenPoints.pitch;
          }
@@ -1821,10 +1645,7 @@ public class RotationUtil implements MC {
             }
          }
 
-         float f28 = updateAngle(f, f17, 180.0F);
-         float f29 = updateAngle(f2, f18, 180.0F);
-         float f30 = f28;
-         this.updateTargetRotationHistory(entity, f30, f29);
+         this.updateTargetRotationHistory(entity, updateAngle(f, f17, 180.0F), updateAngle(f2, f18, 180.0F));
          float f31;
          float f32;
          if (flag) {
@@ -1838,10 +1659,8 @@ public class RotationUtil implements MC {
             boolean isGuardActive = AntiSamplerGuard.isGuardActive(1);
             float f37 = (float)randomizedRangeSettings.nextDouble() + (float)(isGuardActive ? 15 : 0);
             float f38 = (float)randomizedRangeSettings2.nextDouble() + (float)(isGuardActive ? 15 : 0);
-            double d26 = randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0);
-            double d27 = d26 + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
-            double d28 = randomizedRangeSettings2.getMinValue() + (double)(isGuardActive ? 15 : 0);
-            double d29 = d28 + (randomizedRangeSettings2.getMaxValue() - randomizedRangeSettings2.getMinValue()) / 2.0;
+            double d27 = (randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0)) + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
+            double d29 = (randomizedRangeSettings2.getMinValue() + (double)(isGuardActive ? 15 : 0)) + (randomizedRangeSettings2.getMaxValue() - randomizedRangeSettings2.getMinValue()) / 2.0;
             float f39 = updateAngle(f, f17, 180.0F);
             float f40 = updateAngle(f2, f18, 180.0F);
             float f41 = f39 - f;
@@ -1879,22 +1698,14 @@ public class RotationUtil implements MC {
                }
                break;
             case "Doubled":
-               double d39 = (double)f3;
-               float f45 = this.sampleRandomOffset(str4, d39, f32);
-               double d40 = (double)f3;
-               float f46 = this.sampleRandomOffset(str4, d40, f32);
-               double d41 = (double)f3;
-               float f47 = this.sampleRandomOffset(str4, d41, f32);
-               double d42 = (double)f3;
-               float f48 = this.sampleRandomOffset(str4, d42, f32);
-               double d43 = (double)f3;
-               float f49 = this.sampleRandomOffset(str4, d43, f31);
-               double d44 = (double)f3;
-               float f50 = this.sampleRandomOffset(str4, d44, f31);
-               double d45 = (double)f3;
-               float f51 = this.sampleRandomOffset(str4, d45, f31);
-               double d46 = (double)f3;
-               float f52 = this.sampleRandomOffset(str4, d46, f31);
+               float f45 = this.sampleRandomOffset(str4, (double)f3, f32);
+               float f46 = this.sampleRandomOffset(str4, (double)f3, f32);
+               float f47 = this.sampleRandomOffset(str4, (double)f3, f32);
+               float f48 = this.sampleRandomOffset(str4, (double)f3, f32);
+               float f49 = this.sampleRandomOffset(str4, (double)f3, f31);
+               float f50 = this.sampleRandomOffset(str4, (double)f3, f31);
+               float f51 = this.sampleRandomOffset(str4, (double)f3, f31);
+               float f52 = this.sampleRandomOffset(str4, (double)f3, f31);
                RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
                double d47 = (double)Math.max(f45, f46);
                double d48 = (double)Math.min(f45, f46);
@@ -1913,10 +1724,8 @@ public class RotationUtil implements MC {
                f32 += instance5.nextSecureFloat(d54, d53);
                break;
             case "Hybrid":
-               double d55 = (double)f3;
-               double d56 = (double)this.sampleRandomOffset(str4, d55, f32);
-               double d57 = (double)f3;
-               double d58 = (double)this.sampleRandomOffset(str4, d57, f31);
+               double d56 = (double)this.sampleRandomOffset(str4, (double)f3, f32);
+               double d58 = (double)this.sampleRandomOffset(str4, (double)f3, f31);
                MovingObjectPosition hit = RayTraceUtil.rayTraceEntity(1.0F, f31, f32, d, 0.0);
                if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
                   for (int i = 1; i < 10; i += 1) {
@@ -1977,9 +1786,8 @@ public class RotationUtil implements MC {
                }
                break;
             case "Advanced":
-               boolean flag13 = true;
                Rotation rotation11 = this.computeAdvancedRotation(
-                  flag13,
+                  true,
                   entity,
                   f31,
                   f32,
@@ -2046,37 +1854,29 @@ public class RotationUtil implements MC {
          f31 = rotation13.yaw;
          f32 = rotation13.pitch;
          if (timerRangeV2.hasPredictedTargetBox() && this.bezierRotationEngine != null && ClientManagers.moduleManager.killAura.timerRangeV2Fix.getValue()) {
-            boolean flag15 = false;
-            this.bezierRotationEngine.syncCurrentRotation(f31, f32, flag15);
+            this.bezierRotationEngine.syncCurrentRotation(f31, f32, false);
             double d69 = (double)f32;
             this.bezierRotationEngine.overrideTargetPitch(d69);
          }
 
          Vec3 vec12 = new Vec3(this.aimDeltaX, this.aimDeltaY, this.aimDeltaZ);
-         boolean flag16 = !str5.equals("None")
+         if ((!str5.equals("None")
             && (str5.equals("Always") || entity.hurtTime <= 2 || CombatOptimizationUtil.shouldReduceSprintKnockback(entity, f))
-            && Math.random() <= (double)n6 / 100.0;
-         if (flag16 && (vec12.length() <= d || (double)mc.thePlayer.getDistanceToEntityBox(entity) <= d)) {
+            && Math.random() <= (double)n6 / 100.0) && (vec12.length() <= d || (double)mc.thePlayer.getDistanceToEntityBox(entity) <= d)) {
             MovingObjectPosition hit6 = RayTraceUtil.rayTraceEntity(1.0F, f31, f32, d, 0.0);
             if (hit6 != null && !(hit6.entityHit instanceof EntityLivingBase)) {
                hit6 = RayTraceUtil.rayTraceEntity(1.0F, f31, f32, 6.0, 0.0);
                MovingObjectPosition hit7 = RayTraceUtil.rayTraceEntity(1.0F, f19, f20, 6.0, 0.0);
                if (hit6 != null && hit7 != null && hit6.entityHit instanceof EntityLivingBase && hit7.entityHit == hit6.entityHit) {
                   Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
-                  Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
-                  boolean flag17 = true;
-                  AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(interpolatedPos, flag17);
+                  AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(entity.getInterpolatedPos(1.0F), true);
                   double[] yawRange = HitboxAngleUtil.getYawRange(positionEyes, box);
                   double[] pitchRange = HitboxAngleUtil.getPitchRange(positionEyes, box);
                   double length = hit6.hitVec.subtract(positionEyes).length();
-                  double d70 = MathHelper.wrapAngleTo180_double((double)f19);
-                  double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(box, positionEyes, d70);
-                  double d71 = (double)f20;
-                  double normalizedPitchInBox = HitboxAngleUtil.getNormalizedPitchInBox(box, positionEyes, d71);
-                  double d72 = MathHelper.wrapAngleTo180_double((double)f);
-                  double normalizedYawInBox2 = HitboxAngleUtil.getNormalizedYawInBox(box, positionEyes, d72);
-                  double d73 = (double)f2;
-                  double normalizedPitchInBox2 = HitboxAngleUtil.getNormalizedPitchInBox(box, positionEyes, d73);
+                  double normalizedYawInBox = HitboxAngleUtil.getNormalizedYawInBox(box, positionEyes, MathHelper.wrapAngleTo180_double((double)f19));
+                  double normalizedPitchInBox = HitboxAngleUtil.getNormalizedPitchInBox(box, positionEyes, (double)f20);
+                  double normalizedYawInBox2 = HitboxAngleUtil.getNormalizedYawInBox(box, positionEyes, MathHelper.wrapAngleTo180_double((double)f));
+                  double normalizedPitchInBox2 = HitboxAngleUtil.getNormalizedPitchInBox(box, positionEyes, (double)f2);
                   Rotation rotation14 = null;
                   Rotation rotation15 = null;
 
@@ -2130,8 +1930,7 @@ public class RotationUtil implements MC {
                                  f31 = rotation16.yaw;
                                  f32 = rotation16.pitch;
                                  if (this.bezierRotationEngine != null) {
-                                    boolean flag18 = false;
-                                    this.bezierRotationEngine.syncCurrentRotation(f31, f32, flag18);
+                                    this.bezierRotationEngine.syncCurrentRotation(f31, f32, false);
                                     double d81 = (double)f32;
                                     this.bezierRotationEngine.overrideTargetPitch(d81);
                                  }
@@ -2151,9 +1950,7 @@ public class RotationUtil implements MC {
    }
 
    private boolean rollPercentageChance(int n) {
-      byte b = 99;
-      byte b2 = 0;
-      return DefaultRandomGenerator.instance.nextInt2(b2, b) < n;
+      return DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)99) < n;
    }
 
    public static int[] computeMouseDeltas(float f, float f2, float f3, float f4) {
@@ -2169,8 +1966,7 @@ public class RotationUtil implements MC {
    public static AxisAlignedBB createEntityBoxAt(EntityLivingBase entity, Vec3 vec) {
       double zCoord = vec.zCoord;
       double yCoord = vec.yCoord;
-      double xCoord = vec.xCoord;
-      return createEntityBoxAt(entity, xCoord, yCoord, zCoord);
+      return createEntityBoxAt(entity, vec.xCoord, yCoord, zCoord);
    }
 
    public static float updatePitchWithGcd(float f, float f2, float f3) {
@@ -2191,8 +1987,7 @@ public class RotationUtil implements MC {
 
    public static Vec3 getInterpolatedBestHitVec(Entity entity, float f, int n, int n2) {
       Vec3 positionEyes = mc.thePlayer.getPositionEyes(f);
-      double d = (double)f;
-      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, d);
+      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, (double)f);
       double d2 = interpolatedEntityBox.maxX - interpolatedEntityBox.minX;
       double d3 = interpolatedEntityBox.maxY - interpolatedEntityBox.minY;
       double d4 = d2 * ((double)n2 / 100.0);
@@ -2208,21 +2003,16 @@ public class RotationUtil implements MC {
       boolean isGuardActive = AntiSamplerGuard.isGuardActive(1);
       f4 = Math.abs(f4);
       float f5 = (float)randomizedRangeSettings.nextValue() + (float)(isGuardActive ? 15 : 0);
-      double d = randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0);
-      double d2 = d + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
-      float f6 = updateAngle(f2, f3, 180.0F);
-      float f7 = f6 - f2;
-      double d3 = (double)Math.abs(f7 / Math.max(f4, 1.0F));
+      double d2 = (randomizedRangeSettings.getMinValue() + (double)(isGuardActive ? 15 : 0)) + (randomizedRangeSettings.getMaxValue() - randomizedRangeSettings.getMinValue()) / 2.0;
+      double d3 = (double)Math.abs((updateAngle(f2, f3, 180.0F) - f2) / Math.max(f4, 1.0F));
       double d4 = Math.abs((double)f4 / d2);
-      float f8 = MathHelper.clamp_float(Math.abs(f4) + (d3 > d4 ? f5 : -f5), 0.0F, f);
-      float f9 = updateAngle(f2, f3, f8);
+      float f9 = updateAngle(f2, f3, MathHelper.clamp_float(Math.abs(f4) + (d3 > d4 ? f5 : -f5), 0.0F, f));
       return f9 == f2 ? f2 : applyYawGcd(f9, f2);
    }
 
    public static Vec3 getInterpolatedNearestPoint(Entity entity, float f) {
       Vec3 positionEyes = mc.thePlayer.getPositionEyes(f);
-      double d = (double)f;
-      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, d);
+      AxisAlignedBB interpolatedEntityBox = getInterpolatedEntityBox(entity, (double)f);
       double d2 = MathHelper.clamp_double(positionEyes.xCoord, interpolatedEntityBox.minX, interpolatedEntityBox.maxX);
       double d3 = MathHelper.clamp_double(positionEyes.yCoord, interpolatedEntityBox.minY, interpolatedEntityBox.maxY);
       double d4 = MathHelper.clamp_double(positionEyes.zCoord, interpolatedEntityBox.minZ, interpolatedEntityBox.maxZ);
@@ -2253,11 +2043,8 @@ public class RotationUtil implements MC {
       }
 
       double d7 = ThreadLocalRandom.current().nextDouble(0.4, 0.6);
-      double d8 = ThreadLocalRandom.current().nextDouble(-1.0, 1.0);
-      double d9 = MathHelper.clamp_double(d8 * vec2d2.length() * d5, -d6, d6);
-      Vec2d vec2d4 = vec2d2.scale(d7);
-      Vec2d vec2d5 = vec2d3.scale(d9);
-      Vec2d vec2d6 = vec2d4.add(vec2d5);
+      double d9 = MathHelper.clamp_double(ThreadLocalRandom.current().nextDouble(-1.0, 1.0) * vec2d2.length() * d5, -d6, d6);
+      Vec2d vec2d6 = vec2d2.scale(d7).add(vec2d3.scale(d9));
       if (vec2d3.length() == 0.0) {
          vec2d6 = new Vec2d(0.0, 0.0);
       }
@@ -2270,8 +2057,7 @@ public class RotationUtil implements MC {
          bezierCurve2D.controlPoints.add(vec2d2.add(vec2d));
       }
 
-      double d10 = 1.0 / (double)(n + 1);
-      bezierCurve2D.setProgress(d10);
+      bezierCurve2D.setProgress(1.0 / (double)(n + 1));
       bezierCurve2D.durationTicks = n;
       return bezierCurve2D;
    }
@@ -2279,8 +2065,7 @@ public class RotationUtil implements MC {
    public static double lerpYaw(double d, double d2, double d3) {
       d = MathHelper.wrapAngleTo180_double(d);
       d2 = MathHelper.wrapAngleTo180_double(d2);
-      double d4 = EntityBoundsUtil.getShortestSignedAngleDelta(d, d2);
-      return MathHelper.wrapAngleTo180_double(d + d4 * d3);
+      return MathHelper.wrapAngleTo180_double(d + EntityBoundsUtil.getShortestSignedAngleDelta(d, d2) * d3);
    }
 
    public static AxisAlignedBB getExpandedEntityBox(EntityLivingBase entity) {
@@ -2303,8 +2088,7 @@ public class RotationUtil implements MC {
    public static Vec3 getNearestPointOnEntityAt(Vec3 vec, EntityLivingBase entity, Vec3 vec2) {
       double zCoord = vec2.zCoord;
       double yCoord = vec2.yCoord;
-      double xCoord = vec2.xCoord;
-      return getNearestPointOnEntityAt(vec, entity, xCoord, yCoord, zCoord);
+      return getNearestPointOnEntityAt(vec, entity, vec2.xCoord, yCoord, zCoord);
    }
 
    public RotationKinematicState captureCurrentKinematicState() {
@@ -2399,8 +2183,7 @@ public class RotationUtil implements MC {
 
    public RotationKinematicState stepAndAdvanceBezierCurve(BezierRotationStepper bezierRotationStepper, RotationKinematicState rotationKinematicState, BezierCurve2D bezierCurve2D, int n, double d) {
       RotationKinematicState rotationKinematicState2 = bezierRotationStepper.step(rotationKinematicState, bezierCurve2D, d);
-      double d2 = 1.0 / (double)(n + 1);
-      bezierCurve2D.advanceProgress(d2);
+      bezierCurve2D.advanceProgress(1.0 / (double)(n + 1));
       return rotationKinematicState2;
    }
 
@@ -2412,8 +2195,7 @@ public class RotationUtil implements MC {
       MovingObjectPosition hit = RayTraceUtil.rayTraceEntity(1.0F, rotation, d, d2);
       boolean flag = hit != null && hit.entityHit instanceof EntityLivingBase;
       if (flag && entity.hurtTime > 3) {
-         float f7 = applyYawGcd(updateAngle(f, f5, 180.0F), f);
-         if (CombatOptimizationUtil.shouldReduceSprintKnockback(entity, f7)) {
+         if (CombatOptimizationUtil.shouldReduceSprintKnockback(entity, applyYawGcd(updateAngle(f, f5, 180.0F), f))) {
             flag = false;
          }
       }
@@ -2445,13 +2227,11 @@ public class RotationUtil implements MC {
          double d3 = 0.0;
          Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
          Rotation rotation2 = new Rotation(f3 + rotationDeltaCandidate2.getYawDelta(), f4 + rotationDeltaCandidate2.getPitchDelta());
-         Rotation rotation3 = previousRotation;
-         d3 += 1.0 - Math.min(RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate2, rotation3, rotation2), 20.0) / 20.0;
+         d3 += 1.0 - Math.min(RotationDeltaCandidate.computeRotationDistance(rotationDeltaCandidate2, previousRotation, rotation2), 20.0) / 20.0;
          map.put(rotationDeltaCandidate2, d3);
       }
 
-      Set keys = map.keySet();
-      List list2 = (List)keys.stream().sorted(Comparator.comparingDouble(obj -> ((Number)map.get(obj)).doubleValue())).collect(Collectors.toList());
+      List list2 = (List)map.keySet().stream().sorted(Comparator.comparingDouble(obj -> ((Number)map.get(obj)).doubleValue())).collect(Collectors.toList());
       RotationDeltaCandidate rotationDeltaCandidate3 = (RotationDeltaCandidate)list2.get(list2.size() - 1);
       this.lastPolarTargetYaw = f5;
       this.lastPolarTargetPitch = f6;

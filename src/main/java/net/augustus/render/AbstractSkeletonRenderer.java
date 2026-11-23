@@ -24,74 +24,38 @@ public abstract class AbstractSkeletonRenderer {
    public void renderSkeleton(ModelBase modelBase, double d, double d2, double d3) {
       this.currentModel = modelBase;
       this.vertexCoordIndex = 0;
-      float f = (float)d;
-      float f2 = (float)d2;
-      float f3 = (float)d3;
-      float f4 = f2;
-      float f5 = f;
-      this.renderSkeletonBones(f5, f4, f3);
+      this.renderSkeletonBones((float)d, (float)d2, (float)d3);
    }
 
    public void renderSkeletonBones(float f, float f2, float f3) {
-      ModelRenderer head = this.getHead();
-      SkeletonBoxConsumer skeletonBoxConsumer = (modelRenderer, modelBox, list) -> this.emitHeadJoint(f, modelRenderer, modelBox, list);
-      byte b = 0;
-      ModelRenderer modelRenderer2 = head;
-      this.withPartTransform(modelRenderer2, b, skeletonBoxConsumer);
+      this.withPartTransform(this.getHead(), (byte)0, (modelRenderer, modelBox, list) -> this.emitHeadJoint(f, modelRenderer, modelBox, list));
       ModelRenderer body = this.getBody();
       SkeletonBoxConsumer skeletonBoxConsumer2 = (modelRenderer3, modelBox2, list2) -> {
          float boxCenterX = this.getBoxCenterX(modelBox2);
          float boxCenterZ = this.getBoxCenterZ(modelBox2);
-         float topY = this.getTopY(list2);
-         this.addTransformedVertex(boxCenterX, topY, boxCenterZ);
-         float f4 = this.getBottomY(list2) + this.getBodyBottomOffset();
-         this.addTransformedVertex(boxCenterX, f4, boxCenterZ);
+         this.addTransformedVertex(boxCenterX, this.getTopY(list2), boxCenterZ);
+         this.addTransformedVertex(boxCenterX, this.getBottomY(list2) + this.getBodyBottomOffset(), boxCenterZ);
          this.flushLineStrip();
       };
-      byte b2 = 0;
-      ModelRenderer modelRenderer4 = body;
-      this.withPartTransform(modelRenderer4, b2, skeletonBoxConsumer2);
+      this.withPartTransform(body, (byte)0, skeletonBoxConsumer2);
       int n;
-      ModelRenderer rightLeg = this.getRightLeg();
-      SkeletonBoxConsumer skeletonBoxConsumer3 = (modelRenderer5, modelBox3, list3) -> this.emitRightLegBone(f3, modelRenderer5, modelBox3, list3);
-      byte b3 = 0;
-      ModelRenderer modelRenderer6 = rightLeg;
-      this.withPartTransform(modelRenderer6, b3, skeletonBoxConsumer3);
-      ModelRenderer body2 = this.getBody();
-      SkeletonBoxConsumer skeletonBoxConsumer4 = (modelRenderer7, modelBox4, list4) -> this.emitBodyBottomJoint(modelRenderer7, modelBox4, list4);
-      byte b4 = 0;
-      ModelRenderer modelRenderer8 = body2;
-      this.withPartTransform(modelRenderer8, b4, skeletonBoxConsumer4);
-      ModelRenderer leftLeg = this.getLeftLeg();
-      SkeletonBoxConsumer skeletonBoxConsumer5 = (modelRenderer9, modelBox5, list5) -> this.emitLeftLegBone(f3, modelRenderer9, modelBox5, list5);
-      byte b5 = 0;
-      ModelRenderer modelRenderer10 = leftLeg;
-      this.withPartTransform(modelRenderer10, b5, skeletonBoxConsumer5);
+      this.withPartTransform(this.getRightLeg(), (byte)0, (modelRenderer5, modelBox3, list3) -> this.emitRightLegBone(f3, modelRenderer5, modelBox3, list3));
+      this.withPartTransform(this.getBody(), (byte)0, (modelRenderer7, modelBox4, list4) -> this.emitBodyBottomJoint(modelRenderer7, modelBox4, list4));
+      this.withPartTransform(this.getLeftLeg(), (byte)0, (modelRenderer9, modelBox5, list5) -> this.emitLeftLegBone(f3, modelRenderer9, modelBox5, list5));
       ModelRenderer rightArm = this.getRightArm();
       n = this.getRightArmCubeIndex();
-      SkeletonBoxConsumer skeletonBoxConsumer6 = (modelRenderer11, modelBox6, list6) -> this.emitRightArmBone(f2, modelRenderer11, modelBox6, list6);
-      int n2 = n;
-      ModelRenderer modelRenderer12 = rightArm;
-      this.withPartTransform(modelRenderer12, n2, skeletonBoxConsumer6);
-      ModelRenderer body3 = this.getBody();
-      SkeletonBoxConsumer skeletonBoxConsumer7 = (modelRenderer13, modelBox7, list7) -> this.emitBodyTopJoint(modelRenderer13, modelBox7, list7);
-      byte b6 = 0;
-      ModelRenderer modelRenderer14 = body3;
-      this.withPartTransform(modelRenderer14, b6, skeletonBoxConsumer7);
+      this.withPartTransform(rightArm, n, (modelRenderer11, modelBox6, list6) -> this.emitRightArmBone(f2, modelRenderer11, modelBox6, list6));
+      this.withPartTransform(this.getBody(), (byte)0, (modelRenderer13, modelBox7, list7) -> this.emitBodyTopJoint(modelRenderer13, modelBox7, list7));
       ModelRenderer leftArm = this.getLeftArm();
       n = this.getLeftArmCubeIndex();
       SkeletonBoxConsumer skeletonBoxConsumer8 = (modelRenderer15, modelBox8, list8) -> {
          float boxCenterX2 = this.getBoxCenterX(modelBox8);
          float boxCenterZ2 = this.getBoxCenterZ(modelBox8);
-         float topY2 = this.getTopY(list8);
-         this.addTransformedVertex(boxCenterX2, topY2, boxCenterZ2);
-         float f5 = this.getBottomY(list8) + f2;
-         this.addTransformedVertex(boxCenterX2, f5, boxCenterZ2);
+         this.addTransformedVertex(boxCenterX2, this.getTopY(list8), boxCenterZ2);
+         this.addTransformedVertex(boxCenterX2, this.getBottomY(list8) + f2, boxCenterZ2);
          this.flushLineStrip();
       };
-      int n3 = n;
-      ModelRenderer modelRenderer16 = leftArm;
-      this.withPartTransform(modelRenderer16, n3, skeletonBoxConsumer8);
+      this.withPartTransform(leftArm, n, skeletonBoxConsumer8);
    }
 
    public void withPartTransform(ModelRenderer modelRenderer, int n, SkeletonBoxConsumer skeletonBoxConsumer) {
@@ -163,8 +127,7 @@ public abstract class AbstractSkeletonRenderer {
 
       GlStateManager.translate(-modelRenderer.offsetX, -modelRenderer.offsetY, -modelRenderer.offsetZ);
       GlStateManager.popMatrix();
-      ModelBox modelBox = (ModelBox)cubeList.get(n);
-      skeletonBoxConsumer.accept(modelRenderer, modelBox, cubeList);
+      skeletonBoxConsumer.accept(modelRenderer, (ModelBox)cubeList.get(n), cubeList);
    }
 
    public void addTransformedVertex(float f, float f2, float f3) {
@@ -196,14 +159,12 @@ public abstract class AbstractSkeletonRenderer {
 
    public float getBoxCenterX(ModelBox modelBox) {
       float posX2 = modelBox.posX2;
-      float posX1 = modelBox.posX1;
-      return this.midpoint(posX1, posX2) / 16.0F;
+      return this.midpoint(modelBox.posX1, posX2) / 16.0F;
    }
 
    public float getBoxCenterZ(ModelBox modelBox) {
       float posZ2 = modelBox.posZ2;
-      float posZ1 = modelBox.posZ1;
-      return this.midpoint(posZ1, posZ2) / 16.0F;
+      return this.midpoint(modelBox.posZ1, posZ2) / 16.0F;
    }
 
    public float midpoint(float f, float f2) {
@@ -223,33 +184,27 @@ public abstract class AbstractSkeletonRenderer {
    }
 
    public final ModelRenderer getHead() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getHead(currentModel2);
+      return this.getHead(this.currentModel);
    }
 
    public final ModelRenderer getBody() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getBody(currentModel2);
+      return this.getBody(this.currentModel);
    }
 
    public final ModelRenderer getRightLeg() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getRightLeg(currentModel2);
+      return this.getRightLeg(this.currentModel);
    }
 
    public final ModelRenderer getLeftLeg() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getLeftLeg(currentModel2);
+      return this.getLeftLeg(this.currentModel);
    }
 
    public final ModelRenderer getRightArm() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getRightArm(currentModel2);
+      return this.getRightArm(this.currentModel);
    }
 
    public final ModelRenderer getLeftArm() {
-      ModelBase currentModel2 = this.currentModel;
-      return this.getLeftArm(currentModel2);
+      return this.getLeftArm(this.currentModel);
    }
 
    public abstract ModelRenderer getHead(ModelBase modelBase);
@@ -279,50 +234,41 @@ public abstract class AbstractSkeletonRenderer {
    private void emitBodyTopJoint(ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float topY = this.getTopY(list);
-      this.addTransformedVertex(boxCenterX, topY, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getTopY(list), boxCenterZ);
    }
 
    private void emitRightArmBone(float f, ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float f2 = this.getBottomY(list) + f;
-      this.addTransformedVertex(boxCenterX, f2, boxCenterZ);
-      float topY = this.getTopY(list);
-      this.addTransformedVertex(boxCenterX, topY, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getBottomY(list) + f, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getTopY(list), boxCenterZ);
    }
 
    private void emitLeftLegBone(float f, ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float topY = this.getTopY(list);
-      this.addTransformedVertex(boxCenterX, topY, boxCenterZ);
-      float f2 = this.getBottomY(list) + f;
-      this.addTransformedVertex(boxCenterX, f2, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getTopY(list), boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getBottomY(list) + f, boxCenterZ);
       this.flushLineStrip();
    }
 
    private void emitBodyBottomJoint(ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float f = this.getBottomY(list) + this.getBodyBottomOffset();
-      this.addTransformedVertex(boxCenterX, f, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getBottomY(list) + this.getBodyBottomOffset(), boxCenterZ);
    }
 
    private void emitRightLegBone(float f, ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float f2 = this.getBottomY(list) + f;
-      this.addTransformedVertex(boxCenterX, f2, boxCenterZ);
-      float topY = this.getTopY(list);
-      this.addTransformedVertex(boxCenterX, topY, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getBottomY(list) + f, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getTopY(list), boxCenterZ);
    }
 
    private void emitHeadJoint(float f, ModelRenderer modelRenderer, ModelBox modelBox, List list) {
       float boxCenterX = this.getBoxCenterX(modelBox);
       float boxCenterZ = this.getBoxCenterZ(modelBox);
-      float f2 = this.getTopY(list) + f;
-      this.addTransformedVertex(boxCenterX, f2, boxCenterZ);
+      this.addTransformedVertex(boxCenterX, this.getTopY(list) + f, boxCenterZ);
    }
 
 

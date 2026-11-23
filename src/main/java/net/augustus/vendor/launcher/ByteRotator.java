@@ -5,7 +5,6 @@ public class ByteRotator {
 
    public static void rotateRight(byte[] bytes, int n) {
       int n2 = 0;
-      ClientArchiveHolder.getControlFlowMarker();
       byte[] bytes2 = null;
       int n3 = 0;
       int n4 = (int)e;

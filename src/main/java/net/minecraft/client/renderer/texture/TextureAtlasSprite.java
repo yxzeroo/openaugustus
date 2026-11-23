@@ -71,14 +71,13 @@ public class TextureAtlasSprite {
             this.frameCounter = (this.frameCounter + 1) % n;
             this.tickCounter = 0;
             int frameIndex2 = this.animationMetadata.getFrameIndex(this.frameCounter);
-            boolean flag = false;
             boolean isSpriteSingle2 = this.isSpriteSingle;
             if (!this.animationActive) {
                return;
             }
 
             if (frameIndex != frameIndex2 && frameIndex2 >= 0 && frameIndex2 < this.framesTextureData.size()) {
-               TextureUtil.uploadTextureMipmap((int[][])this.framesTextureData.get(frameIndex2), this.width, this.height, this.originX, this.originY, flag, isSpriteSingle2);
+               TextureUtil.uploadTextureMipmap((int[][])this.framesTextureData.get(frameIndex2), this.width, this.height, this.originX, this.originY, false, isSpriteSingle2);
             }
          } else if (this.animationMetadata.isInterpolate()) {
             if (!this.animationActive) {
@@ -358,8 +357,7 @@ public class TextureAtlasSprite {
 
          for (int i = 0; i < ints.length; i++) {
             int n = ints[i];
-            int n2 = n >> 24 & 0xFF;
-            if (n2 >= 16) {
+            if ((n >> 24 & 0xFF) >= 16) {
                int n3 = n >> 16 & 0xFF;
                int n4 = n >> 8 & 0xFF;
                int n5 = n & 0xFF;
@@ -371,15 +369,10 @@ public class TextureAtlasSprite {
          }
 
          if (l4 > 0L) {
-            int n6 = (int)(l / l4);
-            int n7 = (int)(l2 / l4);
-            int n8 = (int)(l3 / l4);
-            int n9 = n6 << 16 | n7 << 8 | n8;
+            int n9 = ((int)(l / l4)) << 16 | ((int)(l2 / l4)) << 8 | ((int)(l3 / l4));
 
             for (int j = 0; j < ints.length; j++) {
-               int n10 = ints[j];
-               int n11 = n10 >> 24 & 0xFF;
-               if (n11 <= 16) {
+               if ((ints[j] >> 24 & 0xFF) <= 16) {
                   ints[j] = n9;
                }
             }
@@ -393,8 +386,7 @@ public class TextureAtlasSprite {
 
    public float toSingleU(float f) {
       f -= this.baseU;
-      float f2 = (float)this.sheetWidth / (float)this.width;
-      return f * f2;
+      return f * ((float)this.sheetWidth / (float)this.width);
    }
 
    public int[][] getFrameTextureData(int n) {
@@ -497,8 +489,7 @@ public class TextureAtlasSprite {
             int[][] intsArr2 = (int[][])this.framesTextureData.get(k);
             if (intsArr2 != null && !this.iconName.startsWith("minecraft:blocks/leaves_")) {
                for (int m = 0; m < intsArr2.length; m++) {
-                  int[] ints = intsArr2[m];
-                  this.fixTransparentColor(ints);
+                  this.fixTransparentColor(intsArr2[m]);
                }
             }
          }
@@ -554,8 +545,7 @@ public class TextureAtlasSprite {
 
    public float toSingleV(float f) {
       f -= this.baseV;
-      float f2 = (float)this.sheetHeight / (float)this.height;
-      return f * f2;
+      return f * ((float)this.sheetHeight / (float)this.height);
    }
 
    public List getFramesTextureData() {

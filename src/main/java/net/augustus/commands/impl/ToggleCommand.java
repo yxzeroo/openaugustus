@@ -8,8 +8,7 @@ import net.augustus.modules.Module;
 public class ToggleCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Toggles a module)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Toggles a module)");
    }
 
    public ToggleCommand() {
@@ -21,8 +20,7 @@ public class ToggleCommand extends Command {
          for (Module module : (Iterable<Module>)(Augustus.getInstance().getModuleManager().getModules())) {
             if (strings[1].equalsIgnoreCase(((FeatureBase)module).getName()) && !module.isHiddenInGui()) {
                module.toggle();
-               StringBuilder sb = new StringBuilder().append("§c").append(((FeatureBase)module).getName());
-               StringBuilder sb2 = sb.append(" §7toggled ");
+               StringBuilder sb2 = new StringBuilder().append("§c").append(((FeatureBase)module).getName()).append(" §7toggled ");
                String str2;
                if (module.isToggled()) {
                   str2 = "§2on";
@@ -30,14 +28,12 @@ public class ToggleCommand extends Command {
                   str2 = "§4off";
                }
 
-               String str3 = sb2.append(str2).toString();
-               this.sendChat(str3);
+               this.sendChat(sb2.append(str2).toString());
                return;
             }
          }
       } else {
-         String str4 = "§7" + this.getCommand() + " [§2Module§7]";
-         this.sendChat(str4);
+         this.sendChat("§7" + this.getCommand() + " [§2Module§7]");
       }
    }
 

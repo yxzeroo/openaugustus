@@ -30,8 +30,7 @@ public class GuiBrewingStand extends GuiContainer {
             this.drawTexturedModalRect(n3 + 97, n4 + 16, 176, 0, 9, n5);
          }
 
-         int n6 = field / 2 % 7;
-         switch (n6) {
+         switch (field / 2 % 7) {
             case 0:
                n5 = 29;
                break;

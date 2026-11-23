@@ -7,7 +7,7 @@ import java.awt.Color;
 import net.augustus.modules.Module;
 
 public class BlurShadowSettings extends SettingComposite {
-   private final DoubleValue parentGroup;
+   private final SettingGroup parentGroup;
    private String namePrefix;
    private final Module parentModule;
    private BooleanValue shadow;
@@ -16,26 +16,18 @@ public class BlurShadowSettings extends SettingComposite {
    private BooleanValue useCustomShadowColor;
 
    public BlurShadowSettings withCustomShadowColor(Color color) {
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, this.namePrefix + "CustomShadowColor", false, this.parentGroup);
-      SettingVisibilityCondition condition = () -> this.isCustomShadowToggleVisible();
-      Setting setting = booleanValue.withVisibility(condition);
-      String str = "CustomShadowColor";
-      this.useCustomShadowColor = (BooleanValue)this.registerNamedSetting(str, setting);
-      ColorSetting colorSetting = new ColorSetting(this.parentModule, this.namePrefix + "CustomShadowColorValue", color, this.parentGroup);
-      String str2 = "CustomShadowColor";
-      ColorSetting colorSetting2 = (ColorSetting)colorSetting.withDisplayName(str2);
-      SettingVisibilityCondition condition2 = () -> this.isCustomShadowColorVisible();
-      Setting setting2 = colorSetting2.withVisibility(condition2);
-      String str3 = "CustomShadowColorValue";
-      this.customShadowColor = (ColorSetting)this.registerNamedSetting(str3, setting2);
+      Setting setting = new BooleanValue(this.parentModule, this.namePrefix + "CustomShadowColor", false, this.parentGroup).withVisibility(() -> this.isCustomShadowToggleVisible());
+      this.useCustomShadowColor = (BooleanValue)this.registerNamedSetting("CustomShadowColor", setting);
+      Setting setting2 = ((ColorSetting)new ColorSetting(this.parentModule, this.namePrefix + "CustomShadowColorValue", color, this.parentGroup).withDisplayName("CustomShadowColor")).withVisibility(() -> this.isCustomShadowColorVisible());
+      this.customShadowColor = (ColorSetting)this.registerNamedSetting("CustomShadowColorValue", setting2);
       return this;
    }
 
-   public BlurShadowSettings(Module module, DoubleValue doubleValue) {
+   public BlurShadowSettings(Module module, SettingGroup doubleValue) {
        this(module, "", doubleValue);
    }
 
-   public BlurShadowSettings(Module module, String str, DoubleValue doubleValue) {
+   public BlurShadowSettings(Module module, String str, SettingGroup doubleValue) {
        super();
       this.useCustomShadowColor = null;
       this.customShadowColor = null;
@@ -44,11 +36,9 @@ public class BlurShadowSettings extends SettingComposite {
       this.parentGroup = doubleValue;
       this.parentModule = module;
       BooleanValue booleanValue = new BooleanValue(module, str + "Blur", true, doubleValue);
-      String str2 = "Blur";
-      this.blur = (BooleanValue)this.registerNamedSetting(str2, booleanValue);
+      this.blur = (BooleanValue)this.registerNamedSetting("Blur", booleanValue);
       BooleanValue booleanValue2 = new BooleanValue(module, str + "Shadow", true, doubleValue);
-      String str3 = "Shadow";
-      this.shadow = (BooleanValue)this.registerNamedSetting(str3, booleanValue2);
+      this.shadow = (BooleanValue)this.registerNamedSetting("Shadow", booleanValue2);
    }
 
    public BlurShadowSettings(Module module) {
@@ -58,8 +48,7 @@ public class BlurShadowSettings extends SettingComposite {
    public int resolveShadowColor(int n) {
       int n2;
       if (this.useCustomShadowColor != null && this.useCustomShadowColor.getValue()) {
-         byte b = 0;
-         n2 = this.customShadowColor.getColorInt(b);
+         n2 = this.customShadowColor.getColorInt((byte)0);
       } else {
          n2 = n;
       }
@@ -76,17 +65,13 @@ public class BlurShadowSettings extends SettingComposite {
    }
 
    public BlurShadowSettings withCustomShadowColor2(int n) {
-      Color color = new Color(n);
-      Color color2 = color;
-      return this.withCustomShadowColor(color2);
+      return this.withCustomShadowColor(new Color(n));
    }
 
    public BlurShadowSettings disableBlurByDefault() {
       if (this.blur != null) {
-         boolean flag = false;
-         this.blur.setValue(flag);
-         boolean flag2 = false;
-         this.blur.setDefaultValue(flag2);
+         this.blur.setValue(false);
+         this.blur.setDefaultValue(false);
       }
 
       return this;
@@ -95,8 +80,7 @@ public class BlurShadowSettings extends SettingComposite {
    public int resolvePassColor(ShaderRenderPass shaderRenderPass, int n) {
       int n2;
       if (shaderRenderPass == ShaderRenderPass.SHADOW && this.useCustomShadowColor != null && this.useCustomShadowColor.getValue()) {
-         byte b = 0;
-         n2 = this.customShadowColor.getColorInt(b);
+         n2 = this.customShadowColor.getColorInt((byte)0);
       } else {
          n2 = n;
       }
@@ -122,10 +106,8 @@ public class BlurShadowSettings extends SettingComposite {
 
    public BlurShadowSettings disableShadowByDefault() {
       if (this.shadow != null) {
-         boolean flag = false;
-         this.shadow.setValue(flag);
-         boolean flag2 = false;
-         this.shadow.setDefaultValue(flag2);
+         this.shadow.setValue(false);
+         this.shadow.setDefaultValue(false);
       }
 
       return this;
@@ -133,17 +115,13 @@ public class BlurShadowSettings extends SettingComposite {
 
    public BlurShadowSettings disableBothByDefault() {
       if (this.shadow != null) {
-         boolean flag = false;
-         this.shadow.setValue(flag);
-         boolean flag2 = false;
-         this.shadow.setDefaultValue(flag2);
+         this.shadow.setValue(false);
+         this.shadow.setDefaultValue(false);
       }
 
       if (this.blur != null) {
-         boolean flag3 = false;
-         this.blur.setValue(flag3);
-         boolean flag4 = false;
-         this.blur.setDefaultValue(flag4);
+         this.blur.setValue(false);
+         this.blur.setDefaultValue(false);
       }
 
       return this;

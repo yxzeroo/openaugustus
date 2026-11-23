@@ -8,7 +8,6 @@ import net.raphimc.vialegacy.protocol.release.r1_6_4tor1_7_2_5.provider.Encrypti
 public final class ViaLegacyEncryptionProvider extends EncryptionProvider {
    @Override
    public void enableDecryption(UserConnection userConnection) {
-      NetworkManager networkManager = (NetworkManager)userConnection.getChannel().attr(ViaAugustus.CONNECTION_ATTRIBUTE_KEY).get();
-      networkManager.enableViaLegacyDecryption();
+      ((NetworkManager)userConnection.getChannel().attr(ViaAugustus.CONNECTION_ATTRIBUTE_KEY).get()).enableViaLegacyDecryption();
    }
 }

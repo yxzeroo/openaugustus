@@ -12,7 +12,6 @@ public class OfficialConfigListItem extends AbstractConfigListItem {
 
    @Override
    public void loadConfig() {
-      ConfigManager configManager = Augustus.getInstance().getConfigManager();
-      configManager.snapshotAll();
+      Augustus.getInstance().getConfigManager().snapshotAll();
    }
 }

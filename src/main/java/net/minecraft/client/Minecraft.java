@@ -379,16 +379,13 @@ public class Minecraft implements IThreadListener {
             return;
          }
 
-         boolean flag = true;
-         this.inGameHasFocus = flag;
+         this.inGameHasFocus = true;
          this.mouseHelper.grabMouseCursor();
-         GuiScreen screen = (GuiScreen)null;
-         this.displayGuiScreen(screen);
+         this.displayGuiScreen((GuiScreen)null);
          mc = this;
       }
 
-      short s = 10000;
-      mc.leftClickCounter = s;
+      mc.leftClickCounter = (short)10000;
       Augustus.getInstance().getModuleManager().saveMoveKeys.resetInGameTicks();
    }
 
@@ -477,8 +474,7 @@ public class Minecraft implements IThreadListener {
                      block = block3;
                   }
 
-                  Block block5 = block;
-                  n = block5.getDamageValue(this.theWorld, blockPos);
+                  n = block.getDamageValue(this.theWorld, blockPos);
                   flag = ((Item)obj).getHasSubtypes();
                   break exitBlock;
                }
@@ -537,8 +533,7 @@ public class Minecraft implements IThreadListener {
          if (isControlFlowDisabled) {
             if (b3 != 0) {
                exitBlock6: {
-                  EntityItemFrame entityHit = (EntityItemFrame)this.objectMouseOver.entityHit;
-                  ItemStack displayedItem = entityHit.getDisplayedItem();
+                  ItemStack displayedItem = ((EntityItemFrame)this.objectMouseOver.entityHit).getDisplayedItem();
                   ItemStack stack = displayedItem;
                   if (isControlFlowDisabled) {
                      if (displayedItem == null) {
@@ -767,8 +762,7 @@ public class Minecraft implements IThreadListener {
 
       while (true) {
          if (it.hasNext()) {
-            ResourcePackRepository.Entry entry = (ResourcePackRepository.Entry)it.next();
-            list.add(entry.getResourcePack());
+            list.add(((ResourcePackRepository.Entry)it.next()).getResourcePack());
             if (!flag) {
                break;
             }
@@ -890,8 +884,7 @@ public class Minecraft implements IThreadListener {
 
       if (!isControlFlowFlag) {
          if (n10 > 0) {
-            int n11 = this.rightClickDelayTimer - 1;
-            this.rightClickDelayTimer = n11;
+            this.rightClickDelayTimer = this.rightClickDelayTimer - 1;
          }
 
          this.mcProfiler.startSection("gui");
@@ -904,8 +897,7 @@ public class Minecraft implements IThreadListener {
          }
 
          this.mcProfiler.endSection();
-         MovingObjectPosition hit = new MovingObjectPosition(this.lastObjectMouseOver);
-         this.previousObjectMouseOver = hit;
+         this.previousObjectMouseOver = new MovingObjectPosition(this.lastObjectMouseOver);
          n10 = n;
          if (this.theWorld != null && this.thePlayer != null) {
             if (n2 == 0 || ClientManagers.moduleManager.rotationHandler.rotationMode.getSelectedValue().equals("Tick")) {
@@ -959,8 +951,7 @@ public class Minecraft implements IThreadListener {
                            n10 = (f = this.thePlayer.getCurrentHealth() - 0.0F) == 0.0F ? 0 : (f < 0.0F ? -1 : 1);
                            if (!isControlFlowFlag) {
                               if (n10 <= 0) {
-                                 GuiScreen screen3 = (GuiScreen)null;
-                                 this.displayGuiScreen(screen3);
+                                 this.displayGuiScreen((GuiScreen)null);
                                  if (!isControlFlowFlag) {
                                     break exitBlock3;
                                  }
@@ -987,8 +978,7 @@ public class Minecraft implements IThreadListener {
                               break exitBlock3;
                            }
 
-                           GuiSleepMP guiSleepMP = new GuiSleepMP();
-                           this.displayGuiScreen(guiSleepMP);
+                           this.displayGuiScreen(new GuiSleepMP());
                            if (!isControlFlowFlag) {
                               break exitBlock3;
                            }
@@ -1018,8 +1008,7 @@ public class Minecraft implements IThreadListener {
                      }
 
                      if (!this.thePlayer.isPlayerSleeping()) {
-                        GuiScreen screen4 = (GuiScreen)null;
-                        this.displayGuiScreen(screen4);
+                        this.displayGuiScreen((GuiScreen)null);
                      }
                   }
                }
@@ -1048,8 +1037,7 @@ public class Minecraft implements IThreadListener {
             }
          }
 
-         short s = 10000;
-         this.leftClickCounter = s;
+         this.leftClickCounter = (short)10000;
       }
 
       BiFunction biFunction;
@@ -1109,8 +1097,7 @@ public class Minecraft implements IThreadListener {
                                                    this.currentScreen.handleInput();
                                                 } catch (Throwable e) {
                                                    CrashReport crashReport = CrashReport.makeCrashReport(e, "Updating screen events");
-                                                   CrashReportCategory crashReportCategory = crashReport.makeCategory("Affected screen");
-                                                   crashReportCategory.addCrashSectionCallable("Screen name", new Minecraft.ValueCallable(this));
+                                                   crashReport.makeCategory("Affected screen").addCrashSectionCallable("Screen name", new Minecraft.ValueCallable(this));
                                                    throw new ReportedException(crashReport);
                                                 }
 
@@ -1124,8 +1111,7 @@ public class Minecraft implements IThreadListener {
                                                       this.currentScreen.updateScreen();
                                                    } catch (Throwable e2) {
                                                       CrashReport crashReport2 = CrashReport.makeCrashReport(e2, "Ticking screen");
-                                                      CrashReportCategory crashReportCategory2 = crashReport2.makeCategory("Affected screen");
-                                                      crashReportCategory2.addCrashSectionCallable("Screen name", new Minecraft.ValueCallable2(this));
+                                                      crashReport2.makeCategory("Affected screen").addCrashSectionCallable("Screen name", new Minecraft.ValueCallable2(this));
                                                       throw new ReportedException(crashReport2);
                                                    }
                                                 }
@@ -1140,12 +1126,10 @@ public class Minecraft implements IThreadListener {
                                           }
 
                                           if (screen2 != null) {
-                                             GuiScreen currentScreen2 = this.currentScreen;
-                                             boolean flag3 = this.shouldAllowUserInput(currentScreen2);
+                                             boolean flag3 = this.shouldAllowUserInput(this.currentScreen);
                                              if (isControlFlowFlag) {
                                                 if (flag3) {
-                                                   int n12 = this.ticksWithoutScreen + 1;
-                                                   this.ticksWithoutScreen = n12;
+                                                   this.ticksWithoutScreen = this.ticksWithoutScreen + 1;
                                                    if (!isControlFlowFlag) {
                                                       if (isControlFlowFlag) {
                                                          n10 = (this.entityRenderer.isShaderActive()) ? 1 : 0;
@@ -1175,8 +1159,7 @@ public class Minecraft implements IThreadListener {
                                                       }
 
                                                       TickListener.onTick2(TickPhase.TICK);
-                                                      int n13 = this.joinPlayerCounter + 1;
-                                                      this.joinPlayerCounter = n13;
+                                                      this.joinPlayerCounter = this.joinPlayerCounter + 1;
                                                       n10 = this.joinPlayerCounter;
                                                       if (isControlFlowFlag) {
                                                          if (!isControlFlowFlag) {
@@ -1270,8 +1253,7 @@ public class Minecraft implements IThreadListener {
                                                 while (Mouse.next()) {
                                                    int eventButton = Mouse.getEventButton();
                                                    ToggleUtil.onMouseInput(false);
-                                                   EventKey event = KeyListener.onKey(eventButton, true, Mouse.getEventButtonState(), KeyInputSource.MOUSE);
-                                                   n10 = (event.isCancelled()) ? 1 : 0;
+                                                   n10 = (KeyListener.onKey(eventButton, true, Mouse.getEventButtonState(), KeyInputSource.MOUSE).isCancelled()) ? 1 : 0;
                                                    if (isControlFlowFlag) {
                                                       break exitBlock24;
                                                    }
@@ -1473,8 +1455,7 @@ public class Minecraft implements IThreadListener {
                                           }
 
                                           if (n10 > 0) {
-                                             int n15 = this.leftClickCounter - 1;
-                                             this.leftClickCounter = n15;
+                                             this.leftClickCounter = this.leftClickCounter - 1;
                                           }
 
                                           mc5 = this;
@@ -1496,8 +1477,7 @@ public class Minecraft implements IThreadListener {
                                              int n16;
                                              n16 = n10;
                                              boolean eventKeyState = Keyboard.getEventKeyState();
-                                             EventKey event2 = KeyListener.onKey(n16, false, Keyboard.getEventKeyState(), KeyInputSource.KEYBOARD);
-                                             n10 = (event2.isCancelled()) ? 1 : 0;
+                                             n10 = (KeyListener.onKey(n16, false, Keyboard.getEventKeyState(), KeyInputSource.KEYBOARD).isCancelled()) ? 1 : 0;
                                              exitBlock34:
                                              if (!isControlFlowFlag) {
                                                 if (n10 == 0) {
@@ -1543,8 +1523,7 @@ public class Minecraft implements IThreadListener {
                                                          }
                                                       }
 
-                                                      long l5 = -1L;
-                                                      this.debugCrashKeyPressTime = l5;
+                                                      this.debugCrashKeyPressTime = -1L;
                                                       if (!isControlFlowFlag) {
                                                          break exitBlock35;
                                                       }
@@ -1562,8 +1541,7 @@ public class Minecraft implements IThreadListener {
                                                 }
 
                                                 if (n10 != 0) {
-                                                   long systemTime2 = getSystemTime();
-                                                   this.debugCrashKeyPressTime = systemTime2;
+                                                   this.debugCrashKeyPressTime = getSystemTime();
                                                 }
                                              }
 
@@ -1964,8 +1942,7 @@ public class Minecraft implements IThreadListener {
 
                                              if (!isControlFlowFlag) {
                                                 if (n10 == 11) {
-                                                   byte b2 = 0;
-                                                   this.updateDebugProfilerName(b2);
+                                                   this.updateDebugProfilerName((byte)0);
                                                 }
 
                                                 n10 = 0;
@@ -1981,8 +1958,7 @@ public class Minecraft implements IThreadListener {
                                                 }
 
                                                 if (n16 == n9) {
-                                                   int n19 = n18 + 1;
-                                                   this.updateDebugProfilerName(n19);
+                                                   this.updateDebugProfilerName(n18 + 1);
                                                 }
 
                                                 n18++;
@@ -2093,8 +2069,7 @@ public class Minecraft implements IThreadListener {
                                                 mc17 = this;
                                              }
 
-                                             GuiInventory guiInventory = new GuiInventory(this.thePlayer);
-                                             mc17.displayGuiScreen(guiInventory);
+                                             mc17.displayGuiScreen(new GuiInventory(this.thePlayer));
                                              if (isControlFlowFlag) {
                                                 break;
                                              }
@@ -2158,8 +2133,7 @@ public class Minecraft implements IThreadListener {
                                                 break;
                                              }
 
-                                             GuiChat guiChat = new GuiChat();
-                                             this.displayGuiScreen(guiChat);
+                                             this.displayGuiScreen(new GuiChat());
                                              if (isControlFlowFlag) {
                                                 break;
                                              }
@@ -2189,8 +2163,7 @@ public class Minecraft implements IThreadListener {
                                                 }
 
                                                 if (n20 != 0) {
-                                                   GuiChat guiChat2 = new GuiChat("/");
-                                                   this.displayGuiScreen(guiChat2);
+                                                   this.displayGuiScreen(new GuiChat("/"));
                                                 }
                                              }
                                           }
@@ -2204,10 +2177,7 @@ public class Minecraft implements IThreadListener {
                                        boolean isKeyDown = this.gameSettings.keyBindUseItem.isKeyDown();
                                        boolean isKeyDown2 = this.gameSettings.keyBindAttack.isKeyDown();
                                        Runnable runnable = this::rightClickMouse;
-                                       Runnable runnable2 = this::clickMouse;
-                                       boolean flag4 = isKeyDown2;
-                                       boolean flag5 = isKeyDown;
-                                       EventClick event3 = ClickListener.onClick(left, flag5, flag4, runnable2, runnable);
+                                       EventClick event3 = ClickListener.onClick(left, isKeyDown, isKeyDown2, this::clickMouse, runnable);
                                        n10 = event3.getLeftClicks();
                                        int n21 = (event3.isIgnoreVanillaClicks()) ? 1 : 0;
                                        if (!isControlFlowFlag) {
@@ -2353,9 +2323,7 @@ public class Minecraft implements IThreadListener {
                                                                      }
 
                                                                      if (mc10.wasLeftClicking) {
-                                                                        byte b6 = 100;
-                                                                        byte b7 = 0;
-                                                                        n28 = DefaultRandomGenerator.instance.nextInt2(b7, b6);
+                                                                        n28 = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)100);
                                                                         if (isControlFlowFlag) {
                                                                            break exitBlock65;
                                                                         }
@@ -2640,9 +2608,7 @@ public class Minecraft implements IThreadListener {
                                                                         ItemStack currentEquippedItem = this.thePlayer.getCurrentEquippedItem();
                                                                         BlockPos blockPos = this.objectMouseOver.getBlockPos();
                                                                         Vec3 hitVec = this.objectMouseOver.hitVec;
-                                                                        EnumFacing sideHit = this.objectMouseOver.sideHit;
-                                                                        BlockPos pos = blockPos;
-                                                                        b8 = (byte)((PlayerUtil.canPlaceBlockAt(currentEquippedItem, pos, sideHit, hitVec)) ? 1 : 0);
+                                                                        b8 = (byte)((PlayerUtil.canPlaceBlockAt(currentEquippedItem, blockPos, this.objectMouseOver.sideHit, hitVec)) ? 1 : 0);
                                                                      }
 
                                                                      exitBlock87: {
@@ -2896,8 +2862,7 @@ public class Minecraft implements IThreadListener {
                               }
 
                               if (n10 != 0) {
-                                 int n32 = this.ticksWithoutScreen + 1;
-                                 this.ticksWithoutScreen = n32;
+                                 this.ticksWithoutScreen = this.ticksWithoutScreen + 1;
                                  if (!isControlFlowFlag) {
                                     if (isControlFlowFlag) {
                                        n10 = (this.entityRenderer.isShaderActive()) ? 1 : 0;
@@ -2927,8 +2892,7 @@ public class Minecraft implements IThreadListener {
                                     }
 
                                     TickListener.onTick2(TickPhase.TICK);
-                                    int n33 = this.joinPlayerCounter + 1;
-                                    this.joinPlayerCounter = n33;
+                                    this.joinPlayerCounter = this.joinPlayerCounter + 1;
                                     n10 = this.joinPlayerCounter;
                                     if (isControlFlowFlag) {
                                        if (!isControlFlowFlag) {
@@ -3003,8 +2967,7 @@ public class Minecraft implements IThreadListener {
                               mc8 = this;
                            }
 
-                           byte b9 = 0;
-                           mc8.ticksWithoutScreen = b9;
+                           mc8.ticksWithoutScreen = (byte)0;
                            if (isControlFlowFlag) {
                               n10 = (this.entityRenderer.isShaderActive()) ? 1 : 0;
                               if (isControlFlowFlag) {
@@ -3033,8 +2996,7 @@ public class Minecraft implements IThreadListener {
                            }
 
                            TickListener.onTick2(TickPhase.TICK);
-                           int n34 = this.joinPlayerCounter + 1;
-                           this.joinPlayerCounter = n34;
+                           this.joinPlayerCounter = this.joinPlayerCounter + 1;
                            n10 = this.joinPlayerCounter;
                            if (isControlFlowFlag) {
                               if (!isControlFlowFlag) {
@@ -3105,8 +3067,7 @@ public class Minecraft implements IThreadListener {
                         }
 
                         if (n10 == n9) {
-                           byte b10 = 0;
-                           this.joinPlayerCounter = b10;
+                           this.joinPlayerCounter = (byte)0;
                            this.theWorld.joinEntityInSurroundings(this.thePlayer);
                         }
 
@@ -3230,8 +3191,7 @@ public class Minecraft implements IThreadListener {
                            WorldClient theWorld2 = this.theWorld;
                            if (!isControlFlowFlag) {
                               if (this.theWorld == null) {
-                                 CrashReportCategory crashReportCategory3 = crashReport3.makeCategory("Affected level");
-                                 crashReportCategory3.addCrashSection("Problem", "Level is null!");
+                                 crashReport3.makeCategory("Affected level").addCrashSection("Problem", "Level is null!");
                                  if (!isControlFlowFlag) {
                                     throw new ReportedException(crashReport3);
                                  }
@@ -3321,8 +3281,7 @@ public class Minecraft implements IThreadListener {
          mc15 = this;
       }
 
-      long systemTime3 = getSystemTime();
-      mc15.systemTime = systemTime3;
+      mc15.systemTime = getSystemTime();
       ToggleUtil.flushPendingToggles();
       if (Augustus.getInstance().getModuleManager().baritone.isToggled()) {
          for (IBaritone baritone6 : (Iterable<IBaritone>)(BaritoneAPI.getProvider().getAllBaritones())) {
@@ -3369,8 +3328,7 @@ public class Minecraft implements IThreadListener {
          }
 
          KeyBinding.unPressAllKeys();
-         boolean flag = false;
-         this.inGameHasFocus = flag;
+         this.inGameHasFocus = false;
          mc = this;
       }
 
@@ -3396,7 +3354,6 @@ public class Minecraft implements IThreadListener {
       crashReport.getCategory().addCrashSectionCallable("Launched Version", new Minecraft.ValueCallable3(this));
       boolean isControlFlowDisabled = isControlFlowDisabled();
       crashReport.getCategory().addCrashSectionCallable("LWJGL", new Minecraft.ValueCallable4(this));
-      boolean flag = isControlFlowDisabled;
       crashReport.getCategory().addCrashSectionCallable("OpenGL", new Minecraft.ValueCallable5(this));
       crashReport.getCategory().addCrashSectionCallable("GL Caps", new Minecraft.ValueCallable6(this));
       crashReport.getCategory().addCrashSectionCallable("Using VBOs", new Minecraft.ValueCallable7(this));
@@ -3406,7 +3363,7 @@ public class Minecraft implements IThreadListener {
       crashReport.getCategory().addCrashSectionCallable("Current Language", new Minecraft.ValueCallable11(this));
       crashReport.getCategory().addCrashSectionCallable("Profiler Position", new Minecraft.ValueCallable12(this));
       CrashReport crashReport2 = crashReport;
-      if (flag) {
+      if (isControlFlowDisabled) {
          crashReport.getCategory().addCrashSectionCallable("CPU", new Minecraft.ValueCallable13(this));
          if (this.theWorld != null) {
             this.theWorld.addWorldInfoToCrashReport(crashReport);
@@ -3470,8 +3427,7 @@ public class Minecraft implements IThreadListener {
 
             int n3 = length;
             if (n3 >= 0) {
-               String str = this.debugProfilerName.substring(0, n3);
-               this.debugProfilerName = str;
+               this.debugProfilerName = this.debugProfilerName.substring(0, n3);
             }
 
             if (!isControlFlowFlag) {
@@ -3505,8 +3461,7 @@ public class Minecraft implements IThreadListener {
          }
 
          if (n2 > 0) {
-            String str2 = this.debugProfilerName + ".";
-            this.debugProfilerName = str2;
+            this.debugProfilerName = this.debugProfilerName + ".";
          }
 
          obj = this;
@@ -3564,8 +3519,7 @@ public class Minecraft implements IThreadListener {
 
    public void setWindowIcon(boolean flag) {
       boolean isControlFlowDisabled = isControlFlowDisabled();
-      Util.EnumOS osType = Util.getOSType();
-      if (osType != Util.EnumOS.OSX) {
+      if (Util.getOSType() != Util.EnumOS.OSX) {
          InputStream in = null;
          InputStream in2 = null;
          boolean flag2 = false /* VF: Semaphore variable */;
@@ -3658,8 +3612,7 @@ public class Minecraft implements IThreadListener {
             ItemStack stack;
             exitBlock4: {
                n2 = n;
-               byte b2 = 4;
-               this.rightClickDelayTimer = b2;
+               this.rightClickDelayTimer = (byte)4;
                b = 1;
                stack = this.thePlayer.inventory.getCurrentItem();
                if (flag) {
@@ -3725,8 +3678,7 @@ public class Minecraft implements IThreadListener {
                      }
 
                      int n3 = n;
-                     EventBlockPlace event = BlockPlaceListener.onBlockPlace3(BlockPlaceStage.PRE);
-                     boolean isCancelled = event.isCancelled();
+                     boolean isCancelled = BlockPlaceListener.onBlockPlace3(BlockPlaceStage.PRE).isCancelled();
                      if (flag) {
                         if (isCancelled) {
                            this.rightClickDelayTimer = n2;
@@ -3834,8 +3786,7 @@ public class Minecraft implements IThreadListener {
          LOGGER.info("Stopping!");
 
          try {
-            WorldClient world = (WorldClient)null;
-            this.loadWorld(world);
+            this.loadWorld((WorldClient)null);
          } catch (Throwable e) {
          }
 
@@ -3878,8 +3829,7 @@ public class Minecraft implements IThreadListener {
    }
 
    public void loadWorld(WorldClient world) {
-      String str = "";
-      this.loadWorld(world, str);
+      this.loadWorld(world, "");
    }
 
    public void toggleFullscreen() {
@@ -4025,8 +3975,7 @@ public class Minecraft implements IThreadListener {
                   }
 
                   if (this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                     byte b = 0;
-                     this.leftClickCounter = b;
+                     this.leftClickCounter = (byte)0;
                   }
                }
             }
@@ -4110,8 +4059,7 @@ public class Minecraft implements IThreadListener {
                break exitBlock10;
             }
 
-            byte b2 = 10;
-            this.leftClickCounter = b2;
+            this.leftClickCounter = (byte)10;
             if (!flag2) {
                break exitBlock10;
             }
@@ -4169,11 +4117,9 @@ public class Minecraft implements IThreadListener {
                         break exitBlock14;
                      }
 
-                     byte b3 = 10;
-                     this.leftClickCounter = b3;
+                     this.leftClickCounter = (byte)10;
                      if (ClientManagers.moduleManager.fixes.isToggled() && ClientManagers.moduleManager.fixes.hitDelayFixMode.getSelectedValue().equals("Default")) {
-                        byte b4 = 0;
-                        this.leftClickCounter = b4;
+                        this.leftClickCounter = (byte)0;
                      }
                   }
 
@@ -4199,8 +4145,7 @@ public class Minecraft implements IThreadListener {
    }
 
    public void shutdown() {
-      boolean flag = false;
-      this.running = flag;
+      this.running = false;
    }
 
    public TextureMap getTextureMapBlocks() {
@@ -4496,8 +4441,7 @@ public class Minecraft implements IThreadListener {
    }
 
    public void crashed(CrashReport crashReport) {
-      boolean flag = true;
-      this.hasCrashed = flag;
+      this.hasCrashed = true;
       this.crashReporter = crashReport;
    }
 
@@ -4513,8 +4457,7 @@ public class Minecraft implements IThreadListener {
       Minecraft mc;
       RawMouseInputThread.INSTANCE.start();
       boolean isControlFlowDisabled = isControlFlowDisabled();
-      GameSettings gameSettings2 = new GameSettings(this, this.mcDataDir);
-      this.gameSettings = gameSettings2;
+      this.gameSettings = new GameSettings(this, this.mcDataDir);
       KeyBinding.rebuildMovementKeyMap();
       this.defaultResourcePacks.add(this.mcDefaultResourcePack);
       flag3 = isControlFlowDisabled;
@@ -4535,8 +4478,7 @@ public class Minecraft implements IThreadListener {
          }
 
          LOGGER.info("LWJGL Version: " + Sys.getVersion());
-         boolean flag4 = false;
-         this.setWindowIcon(flag4);
+         this.setWindowIcon(false);
          this.setInitialDisplayMode();
          mc = this;
       }
@@ -4561,8 +4503,7 @@ public class Minecraft implements IThreadListener {
                         this.audioPlayer.playResource(str);
                         double d = 0.6;
                         this.audioPlayer.setVolume(d);
-                        byte b = 10;
-                        this.audioPlayer.setCycleCount(b);
+                        this.audioPlayer.setCycleCount((byte)10);
                         if (flag3) {
                            break exitBlock4;
                         }
@@ -4601,8 +4542,7 @@ public class Minecraft implements IThreadListener {
                         this.audioPlayer.playResource(str2);
                         double d2 = 1.0;
                         this.audioPlayer.setVolume(d2);
-                        byte b2 = 10;
-                        this.audioPlayer.setCycleCount(b2);
+                        this.audioPlayer.setCycleCount((byte)10);
                         if (flag3) {
                            break exitBlock4;
                         }
@@ -4641,8 +4581,7 @@ public class Minecraft implements IThreadListener {
                         this.audioPlayer.playResource(str3);
                         double d3 = 1.0;
                         this.audioPlayer.setVolume(d3);
-                        byte b3 = 10;
-                        this.audioPlayer.setCycleCount(b3);
+                        this.audioPlayer.setCycleCount((byte)10);
                         if (flag3) {
                            break exitBlock4;
                         }
@@ -4681,8 +4620,7 @@ public class Minecraft implements IThreadListener {
                         this.audioPlayer.playResource(str4);
                         double d4 = 1.0;
                         this.audioPlayer.setVolume(d4);
-                        byte b4 = 10;
-                        this.audioPlayer.setCycleCount(b4);
+                        this.audioPlayer.setCycleCount((byte)10);
                         if (flag3) {
                            break exitBlock4;
                         }
@@ -4721,8 +4659,7 @@ public class Minecraft implements IThreadListener {
                         this.audioPlayer.playResource(str5);
                         double d5 = 1.0;
                         this.audioPlayer.setVolume(d5);
-                        byte b5 = 10;
-                        this.audioPlayer.setCycleCount(b5);
+                        this.audioPlayer.setCycleCount((byte)10);
                         if (flag3) {
                            break exitBlock4;
                         }
@@ -4747,8 +4684,7 @@ public class Minecraft implements IThreadListener {
                      this.audioPlayer.playResource(str6);
                      double d6 = 1.0;
                      this.audioPlayer.setVolume(d6);
-                     byte b6 = 10;
-                     this.audioPlayer.setCycleCount(b6);
+                     this.audioPlayer.setCycleCount((byte)10);
                      if (flag3) {
                         break exitBlock4;
                      }
@@ -4830,14 +4766,10 @@ public class Minecraft implements IThreadListener {
                         }
 
                         try {
-                           JavaFxAudioPlayer audioPlayer2 = this.audioPlayer;
-                           String absolutePath = file2.getAbsolutePath();
-                           String str7 = absolutePath;
-                           audioPlayer2.playFile(str7);
+                           this.audioPlayer.playFile(file2.getAbsolutePath());
                            double d7 = 0.6;
                            this.audioPlayer.setVolume(d7);
-                           byte b7 = 10;
-                           this.audioPlayer.setCycleCount(b7);
+                           this.audioPlayer.setCycleCount((byte)10);
                            if (flag3) {
                               break;
                            }
@@ -4867,38 +4799,27 @@ public class Minecraft implements IThreadListener {
             }
 
             OpenGlHelper.initializeTextures();
-            ResizableFramebuffer resizableFramebuffer = new ResizableFramebuffer(this.displayWidth, this.displayHeight, true);
-            this.framebufferMc = resizableFramebuffer;
-            ResizableFramebuffer resizableFramebuffer2 = new ResizableFramebuffer(this.displayWidth, this.displayHeight, true);
-            this.blurFramebuffer = resizableFramebuffer2;
+            this.framebufferMc = new ResizableFramebuffer(this.displayWidth, this.displayHeight, true);
+            this.blurFramebuffer = new ResizableFramebuffer(this.displayWidth, this.displayHeight, true);
             this.framebufferMc.setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
             this.blurFramebuffer.setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
             this.registerMetadataSerializers();
-            ResourcePackRepository resourcePackRepository = new ResourcePackRepository(
+            this.mcResourcePackRepository = new ResourcePackRepository(
                this.fileResourcepacks, new File(this.mcDataDir, "server-resource-packs"), this.mcDefaultResourcePack, this.metadataSerializer_, this.gameSettings
             );
-            this.mcResourcePackRepository = resourcePackRepository;
-            SimpleReloadableResourceManager manager = new SimpleReloadableResourceManager(this.metadataSerializer_);
-            this.mcResourceManager = manager;
-            LanguageManager languageManager = new LanguageManager(this.metadataSerializer_, this.gameSettings.language);
-            this.mcLanguageManager = languageManager;
+            this.mcResourceManager = new SimpleReloadableResourceManager(this.metadataSerializer_);
+            this.mcLanguageManager = new LanguageManager(this.metadataSerializer_, this.gameSettings.language);
             this.mcResourceManager.registerReloadListener(this.mcLanguageManager);
             this.refreshResources();
-            TextureManager textureManager = new TextureManager(this.mcResourceManager);
-            this.renderEngine = textureManager;
+            this.renderEngine = new TextureManager(this.mcResourceManager);
             this.mcResourceManager.registerReloadListener(this.renderEngine);
-            TextureManager renderEngine2 = this.renderEngine;
-            this.drawSplashScreen(renderEngine2);
-            SkinManager skinManager2 = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
-            this.skinManager = skinManager2;
-            AnvilSaveConverter anvilSaveConverter = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
-            this.saveLoader = anvilSaveConverter;
+            this.drawSplashScreen(this.renderEngine);
+            this.skinManager = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
+            this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
             this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
             this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
-            MusicTicker musicTicker = new MusicTicker(this);
-            this.mcMusicTicker = musicTicker;
-            FontRenderer fontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
-            this.fontRendererObj = fontRenderer;
+            this.mcMusicTicker = new MusicTicker(this);
+            this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
             mc = this;
             if (!flag3) {
                break exitBlock2;
@@ -4909,15 +4830,13 @@ public class Minecraft implements IThreadListener {
                this.fontRendererObj.setBidiFlag(this.mcLanguageManager.isCurrentLanguageBidirectional());
             }
 
-            FontRenderer fontRenderer2 = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
-            this.standardGalacticFontRenderer = fontRenderer2;
+            this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
             this.mcResourceManager.registerReloadListener(this.fontRendererObj);
             this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
             this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
             this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
             AchievementList.openInventory.setStatStringFormatter(new Minecraft.DefaultStatStringFormat(this));
-            RawMouseHelper rawMouseHelper = new RawMouseHelper();
-            this.mouseHelper = rawMouseHelper;
+            this.mouseHelper = new RawMouseHelper();
             this.checkGLError("Pre startup");
             GlStateManager.enableTexture2D();
             GlStateManager.shadeModel(7425);
@@ -4931,8 +4850,7 @@ public class Minecraft implements IThreadListener {
             GlStateManager.loadIdentity();
             GlStateManager.matrixMode(5888);
             this.checkGLError("Startup");
-            TextureMap textureMap = new TextureMap("textures");
-            this.textureMapBlocks = textureMap;
+            this.textureMapBlocks = new TextureMap("textures");
             this.textureMapBlocks.setMipmapLevels(this.gameSettings.mipmapLevels);
             this.renderEngine.loadTickableTexture(TextureMap.locationBlocksTexture, this.textureMapBlocks);
          }
@@ -4948,42 +4866,30 @@ public class Minecraft implements IThreadListener {
 
       exitBlock17: {
          mc.textureMapBlocks.setBlurMipmapDirect(false, (mipmapLevels != 0));
-         ModelManager modelManager2 = new ModelManager(this.textureMapBlocks);
-         this.modelManager = modelManager2;
+         this.modelManager = new ModelManager(this.textureMapBlocks);
          this.mcResourceManager.registerReloadListener(this.modelManager);
-         RenderItem renderItem2 = new RenderItem(this.renderEngine, this.modelManager);
-         this.renderItem = renderItem2;
-         RenderManager renderManager2 = new RenderManager(this.renderEngine, this.renderItem);
-         this.renderManager = renderManager2;
-         ItemRenderer itemRenderer2 = new ItemRenderer(this);
-         this.itemRenderer = itemRenderer2;
+         this.renderItem = new RenderItem(this.renderEngine, this.modelManager);
+         this.renderManager = new RenderManager(this.renderEngine, this.renderItem);
+         this.itemRenderer = new ItemRenderer(this);
          this.mcResourceManager.registerReloadListener(this.renderItem);
-         EntityRenderer entityRenderer2 = new EntityRenderer(this, this.mcResourceManager);
-         this.entityRenderer = entityRenderer2;
+         this.entityRenderer = new EntityRenderer(this, this.mcResourceManager);
          this.mcResourceManager.registerReloadListener(this.entityRenderer);
-         BlockRendererDispatcher blockRendererDispatcher = new BlockRendererDispatcher(this.modelManager.getBlockModelShapes(), this.gameSettings);
-         this.blockRenderDispatcher = blockRendererDispatcher;
+         this.blockRenderDispatcher = new BlockRendererDispatcher(this.modelManager.getBlockModelShapes(), this.gameSettings);
          this.mcResourceManager.registerReloadListener(this.blockRenderDispatcher);
-         RenderGlobal renderGlobal2 = new RenderGlobal(this);
-         this.renderGlobal = renderGlobal2;
+         this.renderGlobal = new RenderGlobal(this);
          this.mcResourceManager.registerReloadListener(this.renderGlobal);
-         GuiAchievement guiAchievement2 = new GuiAchievement(this);
-         this.guiAchievement = guiAchievement2;
+         this.guiAchievement = new GuiAchievement(this);
          GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
-         EffectRenderer effectRenderer2 = new EffectRenderer(this.theWorld, this.renderEngine);
-         this.effectRenderer = effectRenderer2;
+         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
          this.checkGLError("Post startup");
-         GuiIngameHook guiIngameHook = new GuiIngameHook(this);
-         this.ingameGUI = guiIngameHook;
+         this.ingameGUI = new GuiIngameHook(this);
          Augustus.getInstance().preStart();
-         Augustus instance = Augustus.getInstance();
-         instance.start();
+         Augustus.getInstance().start();
          Runtime.getRuntime().addShutdownHook(new Thread(Augustus.getInstance()::getMouseWheelTracker));
          mc = this;
          if (flag3) {
             if (this.serverName != null) {
-               GuiConnecting guiConnecting = new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort);
-               this.displayGuiScreen(guiConnecting);
+               this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
                if (flag3) {
                   break exitBlock17;
                }
@@ -4992,17 +4898,14 @@ public class Minecraft implements IThreadListener {
             mc = this;
          }
 
-         GuiMainMenu guiMainMenu = new GuiMainMenu();
-         mc.displayGuiScreen(guiMainMenu);
+         mc.displayGuiScreen(new GuiMainMenu());
       }
 
       exitBlock18: {
          exitBlock19: {
             this.renderEngine.deleteTexture(this.mojangLogo);
-            Object obj = null;
-            this.mojangLogo = (ResourceLocation)obj;
-            LoadingScreenRenderer loadingScreenRenderer = new LoadingScreenRenderer(this);
-            this.loadingScreen = loadingScreenRenderer;
+            this.mojangLogo = (ResourceLocation)null;
+            this.loadingScreen = new LoadingScreenRenderer(this);
             flag2 = this.gameSettings.fullScreen;
             exitBlock20:
             if (flag3) {
@@ -5155,10 +5058,8 @@ public class Minecraft implements IThreadListener {
                      byte b = 1;
                      if (flag4) {
                         if (this.realTimer.elapsedTicks >= 1) {
-                           long l2 = this.realElapsedTicks + (long)elapsedTicks;
-                           this.projectedRealTicks = l2;
-                           long l3 = this.gameElapsedTicks + (long)n3;
-                           this.projectedGameTicks = l3;
+                           this.projectedRealTicks = this.realElapsedTicks + (long)elapsedTicks;
+                           this.projectedGameTicks = this.gameElapsedTicks + (long)n3;
                         }
 
                         n = this.realTimer.elapsedTicks;
@@ -5171,16 +5072,14 @@ public class Minecraft implements IThreadListener {
 
                      if (n >= b) {
                         int n4 = (int)(this.projectedRealTicks - this.projectedGameTicks);
-                        boolean flag5 = ClientManagers.moduleManager.timeManipulation.shouldChargeTick(n4);
-                        this.skipGameTick = flag5;
+                        this.skipGameTick = ClientManagers.moduleManager.timeManipulation.shouldChargeTick(n4);
                         n = (this.skipGameTick) ? 1 : 0;
                         if (!flag4) {
                            break exitBlock9;
                         }
 
                         if (this.skipGameTick) {
-                           long l4 = this.projectedGameTicks - (long)n3;
-                           this.projectedGameTicks = l4;
+                           this.projectedGameTicks = this.projectedGameTicks - (long)n3;
                         }
                      }
 
@@ -5200,9 +5099,7 @@ public class Minecraft implements IThreadListener {
                   mc2 = this;
                }
 
-               long l5 = mc2.gameElapsedTicks + (long)this.timer.elapsedTicks;
-               long l6 = this.realElapsedTicks + (long)this.realTimer.elapsedTicks;
-               int n5 = (int)(l5 - l6);
+               int n5 = (int)((mc2.gameElapsedTicks + (long)this.timer.elapsedTicks) - (this.realElapsedTicks + (long)this.realTimer.elapsedTicks));
                mc2 = this;
                if (!flag4) {
                   break exitBlock6;
@@ -5234,9 +5131,7 @@ public class Minecraft implements IThreadListener {
                                  }
 
                                  TimerEventType tick = TimerEventType.TICK;
-                                 float timerSpeed = this.realTimer.timerSpeed;
-                                 int n7 = elapsedTicks2;
-                                 event = TimerListener.onTimer(n7, timerSpeed, tick);
+                                 event = TimerListener.onTimer(elapsedTicks2, this.realTimer.timerSpeed, tick);
                                  this.timer.elapsedTicks = this.timer.elapsedTicks
                                     + (int)Math.min((double)event.getExtraTicks(), ClientManagers.moduleManager.timeManipulation.minTicksAvailable.getValue() - (double)n5);
                               }
@@ -5356,8 +5251,7 @@ public class Minecraft implements IThreadListener {
                   PacketFlushMarker packetFlushMarker = new PacketFlushMarker();
                   packetFlushMarker.tickBoundary = true;
                   this.getNetHandler().getNetworkManager().receivePacketAsync(packetFlushMarker);
-                  boolean flag7 = false;
-                  ClientManagers.moduleManager.packetHandler.setFlushingPackets(flag7);
+                  ClientManagers.moduleManager.packetHandler.setFlushingPackets(false);
                }
             }
          }
@@ -5520,8 +5414,7 @@ public class Minecraft implements IThreadListener {
 
             while (true) {
                if (n11 < this.timer.elapsedTicks) {
-                  int n12 = n10 - n11;
-                  this.runTick(n12, n11);
+                  this.runTick(n10 - n11, n11);
                   n11++;
                   if (!flag4) {
                      break;
@@ -5537,16 +5430,14 @@ public class Minecraft implements IThreadListener {
                   elapsedTicks4 = this.timer.elapsedTicks > 1 ? 1 : 0;
                }
 
-               int n13 = elapsedTicks4;
-               this.ranMultipleTicks = (n13 != 0);
+               this.ranMultipleTicks = (elapsedTicks4 != 0);
                TickListener.onTick2(TickPhase.POST);
                ClientManagers.moduleManager.rotationHandler.framesPerTick = ClientManagers.moduleManager.rotationHandler.framesSinceLastTick;
                ClientManagers.moduleManager.rotationHandler.framesSinceLastTick = 0;
                break;
             }
 
-            GuiScreen currentScreen2 = this.currentScreen;
-            this.previousScreen = currentScreen2;
+            this.previousScreen = this.currentScreen;
          }
 
          mc4 = this;
@@ -5639,8 +5530,7 @@ public class Minecraft implements IThreadListener {
             mc4 = this;
          }
 
-         long l9 = System.nanoTime();
-         mc4.prevFrameTime = l9;
+         mc4.prevFrameTime = System.nanoTime();
       }
 
       exitBlock28: {
@@ -5687,8 +5577,7 @@ public class Minecraft implements IThreadListener {
          this.mcProfiler.endSection();
          this.mcProfiler.endSection();
          this.checkGLError("Post render");
-         int n14 = this.fpsCounter + 1;
-         this.fpsCounter = n14;
+         this.fpsCounter = this.fpsCounter + 1;
       }
 
       boolean flag8;
@@ -5734,8 +5623,7 @@ public class Minecraft implements IThreadListener {
          flag8 = false;
       }
 
-      boolean flag9 = flag8;
-      this.isGamePaused = flag9;
+      this.isGamePaused = flag8;
       long l10 = System.nanoTime();
       this.frameTimer.addFrame(l10 - this.startNanoTime);
       this.startNanoTime = l10;
@@ -5787,13 +5675,10 @@ public class Minecraft implements IThreadListener {
 
             array[6] = obj;
             array[7] = OpenGlHelper.useVbo() ? " vbo" : "";
-            String str = String.format("%d fps (%d chunk update%s) T: %s%s%s%s%s", array);
-            this.debug = str;
+            this.debug = String.format("%d fps (%d chunk update%s) T: %s%s%s%s%s", array);
             RenderChunk.renderChunksUpdated = 0;
-            long l11 = this.debugUpdateTime + 1000L;
-            this.debugUpdateTime = l11;
-            byte b3 = 0;
-            this.fpsCounter = b3;
+            this.debugUpdateTime = this.debugUpdateTime + 1000L;
+            this.fpsCounter = (byte)0;
             if (flag4) {
                continue;
             }
@@ -5877,15 +5762,13 @@ public class Minecraft implements IThreadListener {
          }
       }
 
-      Exception e3 = (Exception)obj;
-      return Futures.immediateFailedFuture(e3);
+      return Futures.immediateFailedFuture((Exception)obj);
    }
 
    private void createDisplay() throws LWJGLException {
       Display.setResizable(true);
       boolean isControlFlowFlag = isControlFlowFlag();
       Display.setTitle(Augustus.getInstance().getName() + " " + Augustus.getInstance().getVersion());
-      boolean flag = isControlFlowFlag;
 
       try {
          Display.create(new PixelFormat().withDepthBits(24));
@@ -5899,7 +5782,7 @@ public class Minecraft implements IThreadListener {
 
          exitBlock: {
             Minecraft mc = this;
-            if (!flag) {
+            if (!isControlFlowFlag) {
                if (!this.fullscreen) {
                   break exitBlock;
                }
@@ -5919,14 +5802,13 @@ public class Minecraft implements IThreadListener {
       int[] rgb = image.getRGB(0, 0, image.getWidth(), image.getHeight(), (int[])null, 0, image.getWidth());
       boolean isControlFlowDisabled = isControlFlowDisabled();
       ByteBuffer buf = ByteBuffer.allocate(4 * rgb.length);
-      int[] ints = rgb;
       boolean flag = isControlFlowDisabled;
       int length = rgb.length;
       int n = 0;
 
       while (true) {
          if (n < length) {
-            int n2 = ints[n];
+            int n2 = rgb[n];
             buf.putInt(n2 << 8 | n2 >> 24 & 0xFF);
             n++;
             if (!flag) {
@@ -5954,8 +5836,7 @@ public class Minecraft implements IThreadListener {
 
       try {
          System.gc();
-         WorldClient world = (WorldClient)null;
-         this.loadWorld(world);
+         this.loadWorld((WorldClient)null);
       } catch (Throwable e2) {
       }
 
@@ -5974,66 +5855,42 @@ public class Minecraft implements IThreadListener {
          this.audioPlayer = new JavaFxAudioPlayer();
          this.realElapsedTicks = 0L;
          this.gameElapsedTicks = 0L;
-         long l = 0L;
-         this.projectedRealTicks = l;
-         long l2 = 0L;
-         this.projectedGameTicks = l2;
+         this.projectedRealTicks = 0L;
+         this.projectedGameTicks = 0L;
          this.realTotalTicks = 0.0F;
          this.gameTotalTicks = 0.0F;
-         boolean flag2 = true;
-         this.enableGLErrorChecking = flag2;
+         this.enableGLErrorChecking = true;
          boolean isControlFlowFlag = isControlFlowFlag();
-         boolean flag3 = false;
-         this.connectedToRealms = flag3;
+         this.connectedToRealms = false;
          this.timer = new Timer(20.0F);
-         Timer timer2 = new Timer(20.0F);
-         this.realTimer = timer2;
-         byte b = 0;
-         this.ticksLookingAtEntity = b;
-         byte b2 = 0;
-         this.ticksNotLookingAtEntity = b2;
-         long systemTime2 = getSystemTime();
-         this.systemTime = systemTime2;
+         this.realTimer = new Timer(20.0F);
+         this.ticksLookingAtEntity = (byte)0;
+         this.ticksNotLookingAtEntity = (byte)0;
+         this.systemTime = getSystemTime();
          this.frameTimer = new FrameTimer();
-         long l3 = System.nanoTime();
-         this.startNanoTime = l3;
+         this.startNanoTime = System.nanoTime();
          this.mcProfiler = new Profiler();
-         long l4 = -1L;
-         this.debugCrashKeyPressTime = l4;
+         this.debugCrashKeyPressTime = -1L;
          this.metadataSerializer_ = new IMetadataSerializer();
          this.defaultResourcePacks = Lists.newArrayList();
          this.scheduledTasks = Queues.newArrayDeque();
          this.priorityScheduledTasks = Queues.newArrayDeque();
          this.mcThread = Thread.currentThread();
-         boolean flag4 = true;
-         this.running = flag4;
-         String str = "";
-         this.debug = str;
-         boolean flag5 = true;
-         this.renderChunksMany = flag5;
-         boolean flag6 = false;
-         this.wasLeftClicking = flag6;
-         long systemTime3 = getSystemTime();
-         this.debugUpdateTime = systemTime3;
-         long l5 = -1L;
-         this.prevFrameTime = l5;
-         String str2 = "root";
-         this.debugProfilerName = str2;
-         byte b3 = 0;
-         this.ticksWithoutScreen = b3;
-         boolean flag7 = false;
-         this.skipGameTick = flag7;
-         long systemTime4 = getSystemTime();
-         this.lastRenderTime = systemTime4;
-         DoubleSampleWindow doubleSampleWindow = new DoubleSampleWindow(40);
-         this.tickTimeWindow = doubleSampleWindow;
-         DoubleSampleWindow doubleSampleWindow2 = new DoubleSampleWindow(40);
-         this.frameTimeWindow = doubleSampleWindow2;
-         boolean flag8 = false;
-         this.ranMultipleTicks = flag8;
+         this.running = true;
+         this.debug = "";
+         this.renderChunksMany = true;
+         this.wasLeftClicking = false;
+         this.debugUpdateTime = getSystemTime();
+         this.prevFrameTime = -1L;
+         this.debugProfilerName = "root";
+         this.ticksWithoutScreen = (byte)0;
+         this.skipGameTick = false;
+         this.lastRenderTime = getSystemTime();
+         this.tickTimeWindow = new DoubleSampleWindow(40);
+         this.frameTimeWindow = new DoubleSampleWindow(40);
+         this.ranMultipleTicks = false;
          flag = isControlFlowFlag;
-         byte b4 = 0;
-         this.remainingTicksInFrame = b4;
+         this.remainingTicksInFrame = (byte)0;
          this.tickHistory = new ArrayList();
          theMinecraft = this;
          this.mcDataDir = gameConfiguration.folderInfo.mcDataDir;
@@ -6056,10 +5913,8 @@ public class Minecraft implements IThreadListener {
       }
 
       this.proxy = proxy2;
-      MinecraftSessionService minecraftSessionService = new YggdrasilAuthenticationService(gameConfiguration.userInfo.proxy, UUID.randomUUID().toString()).createMinecraftSessionService();
-      this.sessionService = minecraftSessionService;
-      Session session2 = gameConfiguration.userInfo.session;
-      this.session = session2;
+      this.sessionService = new YggdrasilAuthenticationService(gameConfiguration.userInfo.proxy, UUID.randomUUID().toString()).createMinecraftSessionService();
+      this.session = gameConfiguration.userInfo.session;
       LOGGER.info("Setting user: " + this.session.getUsername());
       LOGGER.info("(Session ID is " + this.session.getSessionID() + ")");
       this.isDemo = gameConfiguration.gameInfo.isDemo;
@@ -6075,20 +5930,15 @@ public class Minecraft implements IThreadListener {
       }
 
       this.displayHeight = height;
-      int width2 = gameConfiguration.displayInfo.width;
-      this.tempDisplayWidth = width2;
-      int height2 = gameConfiguration.displayInfo.height;
-      this.tempDisplayHeight = height2;
+      this.tempDisplayWidth = gameConfiguration.displayInfo.width;
+      this.tempDisplayHeight = gameConfiguration.displayInfo.height;
       this.fullscreen = gameConfiguration.displayInfo.fullscreen;
       this.java64bit = isJvm64bit();
-      IntegratedServer integratedServer = new IntegratedServer(this);
-      this.theIntegratedServer = integratedServer;
+      this.theIntegratedServer = new IntegratedServer(this);
       if (!flag) {
          if (gameConfiguration.serverInfo.serverName != null) {
-            String serverName2 = gameConfiguration.serverInfo.serverName;
-            this.serverName = serverName2;
-            int serverPort2 = gameConfiguration.serverInfo.serverPort;
-            this.serverPort = serverPort2;
+            this.serverName = gameConfiguration.serverInfo.serverName;
+            this.serverPort = gameConfiguration.serverInfo.serverPort;
          }
 
          ImageIO.setUseCache(false);
@@ -6109,16 +5959,14 @@ public class Minecraft implements IThreadListener {
       boolean isControlFlowFlag = isControlFlowFlag();
       this.displayHeight = Math.max(1, n2);
       WindowResizeListener.onWindowResize(this.displayWidth, this.displayHeight);
-      boolean flag = isControlFlowFlag;
       Minecraft mc = this;
-      if (!flag) {
+      if (!isControlFlowFlag) {
          if (this.currentScreen != null) {
             ScaledResolution sr = new ScaledResolution(this);
             this.currentScreen.onResize(this, sr.getScaledWidth(), sr.getScaledHeight());
          }
 
-         LoadingScreenRenderer loadingScreenRenderer = new LoadingScreenRenderer(this);
-         this.loadingScreen = loadingScreenRenderer;
+         this.loadingScreen = new LoadingScreenRenderer(this);
          mc = this;
       }
 
@@ -6197,8 +6045,7 @@ public class Minecraft implements IThreadListener {
    @Override
    public ListenableFuture addScheduledTaskDirect(Runnable runnable) {
       Validate.notNull(runnable);
-      Callable callable = Executors.callable(runnable);
-      return this.addPriorityScheduledTask(callable);
+      return this.addPriorityScheduledTask(Executors.callable(runnable));
    }
 
    public boolean isJava64bit() {
@@ -6368,8 +6215,7 @@ public class Minecraft implements IThreadListener {
       }
 
       int displayHeight3 = this.displayHeight;
-      int displayWidth2 = this.displayWidth;
-      mc.resize(displayWidth2, displayHeight3);
+      mc.resize(this.displayWidth, displayHeight3);
    }
 
    public static int getDebugFPS() {
@@ -6410,8 +6256,7 @@ public class Minecraft implements IThreadListener {
       PlayerControllerMP playerControllerMP;
       WorldClient world;
       exitBlock2: {
-         Object obj = null;
-         this.renderViewEntity = (Entity)obj;
+         this.renderViewEntity = (Entity)null;
          player = this.thePlayer;
          playerControllerMP = this.playerController;
          world = this.theWorld;
@@ -6428,12 +6273,10 @@ public class Minecraft implements IThreadListener {
          statFileWriter = thePlayer3.getStatFileWriter();
       }
 
-      EntityPlayerSP player2 = playerControllerMP.createClientPlayer(world, statFileWriter);
-      this.thePlayer = player2;
+      this.thePlayer = playerControllerMP.createClientPlayer(world, statFileWriter);
       this.thePlayer.getDataWatcher().updateWatchedObjectsFromList(player.getDataWatcher().getAllWatched());
       this.thePlayer.dimension = n;
-      EntityPlayerSP thePlayer4 = this.thePlayer;
-      this.renderViewEntity = thePlayer4;
+      this.renderViewEntity = this.thePlayer;
       this.thePlayer.preparePlayerToSpawn();
       this.thePlayer.setClientBrand(str);
       this.theWorld.spawnEntityInWorld(this.thePlayer);
@@ -6451,8 +6294,7 @@ public class Minecraft implements IThreadListener {
          mc = this;
       }
 
-      GuiScreen screen = (GuiScreen)null;
-      mc.displayGuiScreen(screen);
+      mc.displayGuiScreen((GuiScreen)null);
    }
 
    public boolean isNotInGui() {
@@ -6575,8 +6417,7 @@ public class Minecraft implements IThreadListener {
                   }
                }
 
-               Object obj = null;
-               this.theIntegratedServer = (IntegratedServer)obj;
+               this.theIntegratedServer = (IntegratedServer)null;
                this.guiAchievement.clearAchievements();
                mc = this;
             }
@@ -6584,10 +6425,8 @@ public class Minecraft implements IThreadListener {
             mc.entityRenderer.getMapItemRenderer().clearLoadedMaps();
          }
 
-         Object obj2 = null;
-         this.renderViewEntity = (Entity)obj2;
-         Object obj3 = null;
-         this.myNetworkManager = (NetworkManager)obj3;
+         this.renderViewEntity = (Entity)null;
+         this.myNetworkManager = (NetworkManager)null;
       }
 
       exitBlock7: {
@@ -6618,10 +6457,8 @@ public class Minecraft implements IThreadListener {
                   if (this.theWorld != null) {
                      this.mcResourcePackRepository.clearResourcePack();
                      this.ingameGUI.resetPlayersOverlayFooterHeader();
-                     ServerData serverData = (ServerData)null;
-                     this.setServerData(serverData);
-                     boolean flag2 = false;
-                     this.integratedServerIsRunning = flag2;
+                     this.setServerData((ServerData)null);
+                     this.integratedServerIsRunning = false;
                   }
                }
 
@@ -6655,8 +6492,7 @@ public class Minecraft implements IThreadListener {
                EntityPlayerSP thePlayer2 = mc2.thePlayer;
                if (flag) {
                   if (mc2.thePlayer == null) {
-                     EntityPlayerSP player = this.playerController.createClientPlayer(world, new StatFileWriter());
-                     this.thePlayer = player;
+                     this.thePlayer = this.playerController.createClientPlayer(world, new StatFileWriter());
                      this.playerController.flipPlayer(this.thePlayer);
                   }
 
@@ -6667,8 +6503,7 @@ public class Minecraft implements IThreadListener {
 
                thePlayer2.movementInput = new MovementInputFromOptions(this.gameSettings);
                this.playerController.setPlayerCapabilities(this.thePlayer);
-               EntityPlayerSP thePlayer3 = this.thePlayer;
-               this.renderViewEntity = thePlayer3;
+               this.renderViewEntity = this.thePlayer;
 
                try {
                   WorldLoadWarmup.warmup();
@@ -6684,12 +6519,10 @@ public class Minecraft implements IThreadListener {
             this.saveLoader.flushCache();
          }
 
-         Object obj4 = null;
-         this.thePlayer = (EntityPlayerSP)obj4;
+         this.thePlayer = (EntityPlayerSP)null;
       }
 
-      long l = 0L;
-      this.systemTime = l;
+      this.systemTime = 0L;
       if (Augustus.getInstance().getModuleManager().baritone.isToggled()) {
          BaritoneAPI.getProvider().getPrimaryBaritone().getGameEventHandler().onWorldEvent(new WorldEvent(world, EventState.POST));
       }
@@ -6710,7 +6543,6 @@ public class Minecraft implements IThreadListener {
 
    private static boolean isJvm64bit() {
       String[] strings = new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
-      String[] strings2 = strings;
       boolean isControlFlowDisabled = isControlFlowDisabled();
       int length = strings.length;
       int n = 0;
@@ -6718,8 +6550,7 @@ public class Minecraft implements IThreadListener {
 
       while (true) {
          if (n < length) {
-            String str = strings2[n];
-            String property = System.getProperty(str);
+            String property = System.getProperty(strings[n]);
             if (flag) {
                if (property != null) {
                   isControlFlowDisabled = property.contains("64");
@@ -6829,8 +6660,7 @@ public class Minecraft implements IThreadListener {
       int n = (flag) ? 1 : 0;
       if (isControlFlowDisabled) {
          if (!flag) {
-            byte b = 0;
-            this.leftClickCounter = b;
+            this.leftClickCounter = (byte)0;
          }
 
          n = this.leftClickCounter;
@@ -6913,8 +6743,7 @@ public class Minecraft implements IThreadListener {
       }
 
       if (n != 0) {
-         byte b2 = 0;
-         this.leftClickCounter = b2;
+         this.leftClickCounter = (byte)0;
       }
    }
 
@@ -6994,8 +6823,7 @@ public class Minecraft implements IThreadListener {
                int scaledWidth = sr.getScaledWidth();
                int scaledHeight = sr.getScaledHeight();
                ((GuiScreen)screen).setWorldAndResolution(this, scaledWidth, scaledHeight);
-               boolean flag = false;
-               this.skipRenderWorld = flag;
+               this.skipRenderWorld = false;
                if (isControlFlowDisabled) {
                   break exitBlock;
                }
@@ -7022,8 +6850,7 @@ public class Minecraft implements IThreadListener {
    @Override
    public ListenableFuture addScheduledTask(Runnable runnable) {
       Validate.notNull(runnable);
-      Callable callable = Executors.callable(runnable);
-      return this.addScheduledTask(callable);
+      return this.addScheduledTask(Executors.callable(runnable));
    }
 
    public Framebuffer getFramebuffer() {
@@ -7038,8 +6865,7 @@ public class Minecraft implements IThreadListener {
       EntityPlayerSP player = null;
       Minecraft mc;
       exitBlock: {
-         boolean flag2 = false;
-         this.hittingBlockCustom = flag2;
+         this.hittingBlockCustom = false;
          boolean isControlFlowDisabled = isControlFlowDisabled();
          int currentItem = this.thePlayer.inventory.currentItem;
          boolean flag3 = isControlFlowDisabled;
@@ -7047,8 +6873,7 @@ public class Minecraft implements IThreadListener {
          int n2 = (flag) ? 1 : 0;
          if (flag3) {
             if (!flag) {
-               byte b = 0;
-               this.leftClickCounter = b;
+               this.leftClickCounter = (byte)0;
             }
 
             mc = this;
@@ -7100,8 +6925,7 @@ public class Minecraft implements IThreadListener {
 
                         this.effectRenderer.addBlockHitEffects(pos, hit.sideHit);
                         this.thePlayer.swingItem();
-                        boolean flag4 = true;
-                        this.hittingBlockCustom = flag4;
+                        this.hittingBlockCustom = true;
                         if (flag3) {
                            break exitBlock3;
                         }
@@ -7145,8 +6969,7 @@ public class Minecraft implements IThreadListener {
          mc = this;
       }
 
-      boolean prevHittingBlockCustom2 = this.prevHittingBlockCustom;
-      mc.hittingBlockCustom = prevHittingBlockCustom2;
+      mc.hittingBlockCustom = this.prevHittingBlockCustom;
    }
 
    public void displayInGameMenu() {
@@ -7157,8 +6980,7 @@ public class Minecraft implements IThreadListener {
             return;
          }
 
-         GuiIngameMenu guiIngameMenu = new GuiIngameMenu();
-         this.displayGuiScreen(guiIngameMenu);
+         this.displayGuiScreen(new GuiIngameMenu());
          mc = this;
       }
 
@@ -7206,8 +7028,7 @@ public class Minecraft implements IThreadListener {
       WorldInfo worldInfo;
       WorldSettings worldSettings2;
       exitBlock: {
-         WorldClient world = (WorldClient)null;
-         this.loadWorld(world);
+         this.loadWorld((WorldClient)null);
          System.gc();
          ISaveHandler saveLoader2 = this.saveLoader.getSaveLoader(str, false);
          boolean isControlFlowFlag = isControlFlowFlag();
@@ -7241,11 +7062,9 @@ public class Minecraft implements IThreadListener {
       }
 
       try {
-         IntegratedServer integratedServer = new IntegratedServer(this, str, str2, worldSettings);
-         this.theIntegratedServer = integratedServer;
+         this.theIntegratedServer = new IntegratedServer(this, str, str2, worldSettings);
          this.theIntegratedServer.startServerThread();
-         boolean flag2 = true;
-         this.integratedServerIsRunning = flag2;
+         this.integratedServerIsRunning = true;
       } catch (Throwable e) {
          CrashReport crashReport = CrashReport.makeCrashReport(e, "Starting integrated server");
          CrashReportCategory crashReportCategory = crashReport.makeCategory("Starting integrated server");
@@ -7291,8 +7110,7 @@ public class Minecraft implements IThreadListener {
             }
          }
 
-         GuiScreen screen = (GuiScreen)null;
-         this.displayGuiScreen(screen);
+         this.displayGuiScreen((GuiScreen)null);
          break;
       }
 
@@ -7304,8 +7122,7 @@ public class Minecraft implements IThreadListener {
       this.myNetworkManager = networkManager;
       DiscordRpcManager discordRpcManager = Augustus.getInstance().getDiscordRpcManager();
       String str3 = "Ingame";
-      String str4 = "Playing lonely in singleplayer";
-      discordRpcManager.updatePresence(str4, str3);
+      discordRpcManager.updatePresence("Playing lonely in singleplayer", str3);
    }
 
    public ListenableFuture addPriorityScheduledTask(Callable callable) {
@@ -7339,8 +7156,7 @@ public class Minecraft implements IThreadListener {
          }
       }
 
-      Exception e3 = (Exception)obj;
-      return Futures.immediateFailedFuture(e3);
+      return Futures.immediateFailedFuture((Exception)obj);
    }
 
    public boolean isGamePaused() {
@@ -7350,7 +7166,6 @@ public class Minecraft implements IThreadListener {
    public void draw(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9, int n10) {
       float f = 0.00390625F;
       float f2 = 0.00390625F;
-      isControlFlowFlag();
       WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
       worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
       worldRenderer.pos((double)n, (double)(n2 + n6), 0.0)
@@ -7434,8 +7249,7 @@ public class Minecraft implements IThreadListener {
          e.printStackTrace();
       }
 
-      ResourceLocation dynamicTextureLocation = textureManager.getDynamicTextureLocation("logo", new DynamicTexture(image));
-      this.mojangLogo = dynamicTextureLocation;
+      this.mojangLogo = textureManager.getDynamicTextureLocation("logo", new DynamicTexture(image));
       textureManager.bindTexture(this.mojangLogo);
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
@@ -7448,17 +7262,7 @@ public class Minecraft implements IThreadListener {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       short s = 256;
       short s2 = 256;
-      int n = (sr.getScaledWidth() - s) / 2;
-      int n2 = (sr.getScaledHeight() - s2) / 2;
-      short s3 = 255;
-      short s4 = 255;
-      short s5 = 255;
-      short s6 = 255;
-      byte b = 0;
-      byte b2 = 0;
-      int n3 = n2;
-      int n4 = n;
-      this.draw(n4, n3, b2, b, s, s2, s6, s5, s4, s3);
+      this.draw((sr.getScaledWidth() - s) / 2, (sr.getScaledHeight() - s2) / 2, (byte)0, (byte)0, s, s2, (short)255, (short)255, (short)255, (short)255);
       GlStateManager.disableLighting();
       GlStateManager.disableFog();
       framebuffer.unbindFramebuffer();
@@ -7492,8 +7296,7 @@ public class Minecraft implements IThreadListener {
    }
 
    public static boolean isControlFlowDisabled() {
-      boolean isControlFlowFlag = isControlFlowFlag();
-      return !isControlFlowFlag;
+      return !isControlFlowFlag();
    }
 
    static {

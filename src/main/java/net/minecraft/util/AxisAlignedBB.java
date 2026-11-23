@@ -261,8 +261,7 @@ public class AxisAlignedBB {
       }
 
       if (flag6) {
-         double d42 = squareDistance(d, d2, d3, d25, d26, d27);
-         if (d42 < maxvalue) {
+         if (squareDistance(d, d2, d3, d25, d26, d27) < maxvalue) {
             d34 = d25;
             d35 = d26;
             d36 = d27;

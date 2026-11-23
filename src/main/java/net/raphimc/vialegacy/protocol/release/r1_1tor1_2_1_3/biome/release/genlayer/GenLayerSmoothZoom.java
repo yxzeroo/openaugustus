@@ -19,8 +19,7 @@ public class GenLayerSmoothZoom extends GenLayer {
       int i2 = k1 << 1;
 
       for (int j2 = 0; j2 < l1 - 1; j2++) {
-         int k2 = j2 << 1;
-         int i3 = k2 * i2;
+         int i3 = (j2 << 1) * i2;
          int j3 = ai[0 + (j2 + 0) * k1];
          int k3 = ai[0 + (j2 + 1) * k1];
 

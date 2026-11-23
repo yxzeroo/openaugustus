@@ -39,8 +39,7 @@ public class MathBuilder {
 
    public boolean isOperator2(Object obj) {
       if (obj instanceof String) {
-         String str = (String)obj;
-         if (this.isOperator(str)) {
+         if (this.isOperator((String)obj)) {
             return true;
          }
       }
@@ -54,10 +53,8 @@ public class MathBuilder {
 
    public boolean isVariable(Object obj) {
       if (obj instanceof String) {
-         String str = (String)obj;
-         if (!this.isDecimal(str)) {
-            String str2 = (String)obj;
-            if (!this.isOperator(str2)) {
+         if (!this.isDecimal((String)obj)) {
+            if (!this.isOperator((String)obj)) {
                return true;
             }
          }
@@ -96,9 +93,7 @@ public class MathBuilder {
             list2.add(this.parseSymbols(list3));
          }
 
-         Class clazz = (Class)this.functions.get(str);
-         Constructor constructor = clazz.getConstructor(MolangValue[].class, String.class);
-         return (MolangFunction)constructor.newInstance(list2.toArray(new MolangValue[list2.size()]), str);
+         return (MolangFunction)((Class)this.functions.get(str)).getConstructor(MolangValue[].class, String.class).newInstance(list2.toArray(new MolangValue[list2.size()]), str);
       }
    }
 
@@ -144,10 +139,8 @@ public class MathBuilder {
        super();
       this.variables = new HashMap();
       this.functions = new HashMap();
-      MolangVariable molangVariable = new MolangVariable("PI", 3.141592653589793);
-      this.register(molangVariable);
-      MolangVariable molangVariable2 = new MolangVariable("E", 2.718281828459045);
-      this.register(molangVariable2);
+      this.register(new MolangVariable("PI", 3.141592653589793));
+      this.register(new MolangVariable("E", 2.718281828459045));
       this.functions.put("floor", FloorFunction.class);
       this.functions.put("round", RoundFunction.class);
       this.functions.put("ceil", CeilFunction.class);
@@ -172,8 +165,7 @@ public class MathBuilder {
       int n2 = n;
 
       for (int i = list.size(); n2 < i; n2++) {
-         Object obj = list.get(n2);
-         if (this.isOperator2(obj)) {
+         if (this.isOperator2(list.get(n2))) {
             return n2;
          }
       }
@@ -186,8 +178,7 @@ public class MathBuilder {
    }
 
    public int seekLastOperator(List list) {
-      int n = list.size() - 1;
-      return this.seekPreviousOperator(list, n);
+      return this.seekPreviousOperator(list, list.size() - 1);
    }
 
    public MolangValue tryTernary(List list) throws Exception {
@@ -217,10 +208,8 @@ public class MathBuilder {
       }
 
       if (n2 == n4 && n > 0 && n + 1 < n3 && n3 < size - 1) {
-         List list2 = list.subList(0, n);
-         MolangValue molangValue = this.parseSymbols(list2);
-         List list3 = list.subList(n + 1, n3);
-         MolangValue molangValue2 = this.parseSymbols(list3);
+         MolangValue molangValue = this.parseSymbols(list.subList(0, n));
+         MolangValue molangValue2 = this.parseSymbols(list.subList(n + 1, n3));
          List list4 = list.subList(n3 + 1, size);
          return new TernaryExpression(molangValue, molangValue2, this.parseSymbols(list4));
       } else {
@@ -239,8 +228,7 @@ public class MathBuilder {
          exitBlock: {
             str2 = strings[i];
             if (i > 0) {
-               String str3 = strings[i - 1] + str2;
-               if (this.isOperator(str3)) {
+               if (this.isOperator(strings[i - 1] + str2)) {
                   flag = true;
                   break exitBlock;
                }
@@ -270,8 +258,7 @@ public class MathBuilder {
                   }
 
                   if (n == 0) {
-                     String[] strings2 = str.split("(?!^)");
-                     list.add(this.breakdown(strings2));
+                     list.add(this.breakdown(str.split("(?!^)")));
                      i = j;
                      str = "";
                      break;
@@ -287,9 +274,7 @@ public class MathBuilder {
                   int size = list.size();
                   flag3 = size == 0 && str.isEmpty();
                   if (size > 0) {
-                     Object obj = list.get(size - 1);
-                     Object obj2 = obj;
-                     if ((this.isOperator2(obj2) || list.get(size - 1).equals(",")) && str.isEmpty()) {
+                     if ((this.isOperator2(list.get(size - 1)) || list.get(size - 1).equals(",")) && str.isEmpty()) {
                         flag = true;
                         break exitBlock2;
                      }
@@ -327,9 +312,8 @@ public class MathBuilder {
    }
 
    public MolangOperation operationForOperator(String str) throws Exception {
-      MolangOperation[] values = MolangOperation.values();
 
-      for (MolangOperation molangOperation : values) {
+      for (MolangOperation molangOperation : MolangOperation.values()) {
          if (molangOperation.sign.equals(str)) {
             return molangOperation;
          }
@@ -364,8 +348,7 @@ public class MathBuilder {
    }
 
    public int seekFirstOperator(List list) {
-      byte b = 0;
-      return this.seekNextOperator(list, b);
+      return this.seekNextOperator(list, (byte)0);
    }
 
    public MolangValue parseSymbols(List list) throws Exception {
@@ -375,17 +358,13 @@ public class MathBuilder {
       } else {
          int size = list.size();
          if (size == 1) {
-            Object obj = list.get(0);
-            return this.valueFromObject(obj);
+            return this.valueFromObject(list.get(0));
          } else {
             if (size == 2) {
                Object obj2 = list.get(0);
                Object obj3 = list.get(1);
                if ((this.isVariable(obj2) || obj2.equals("-")) && obj3 instanceof List) {
-                  String str = (String)obj2;
-                  List list2 = (List)obj3;
-                  String str2 = str;
-                  return this.createFunction(str2, list2);
+                  return this.createFunction((String)obj2, (List)obj3);
                }
             }
 
@@ -393,39 +372,29 @@ public class MathBuilder {
             int n2 = n = this.seekLastOperator(list);
 
             while (n != -1) {
-               int n3 = n - 1;
-               int n4 = this.seekPreviousOperator(list, n3);
+               int n4 = this.seekPreviousOperator(list, n - 1);
                if (n4 != -1) {
                   String str3 = (String)list.get(n4);
-                  String str4 = str3;
-                  MolangOperation molangOperation = this.operationForOperator(str4);
+                  MolangOperation molangOperation = this.operationForOperator(str3);
                   str3 = (String)list.get(n);
-                  String str5 = str3;
-                  MolangOperation molangOperation2 = this.operationForOperator(str5);
+                  MolangOperation molangOperation2 = this.operationForOperator(str3);
                   if (molangOperation2.value > molangOperation.value) {
-                     List list3 = list.subList(0, n4);
-                     MolangValue molangValue2 = this.parseSymbols(list3);
-                     List list4 = list.subList(n4 + 1, size);
-                     MolangValue molangValue3 = this.parseSymbols(list4);
+                     MolangValue molangValue2 = this.parseSymbols(list.subList(0, n4));
+                     MolangValue molangValue3 = this.parseSymbols(list.subList(n4 + 1, size));
                      return new BinaryExpression(molangOperation, molangValue2, molangValue3);
                   }
 
                   if (molangOperation.value > molangOperation2.value) {
                      str3 = (String)list.get(n2);
-                     String str6 = str3;
-                     MolangOperation molangOperation3 = this.operationForOperator(str6);
+                     MolangOperation molangOperation3 = this.operationForOperator(str3);
                      if (molangOperation3.value < molangOperation.value) {
-                        List list5 = list.subList(0, n2);
-                        MolangValue molangValue4 = this.parseSymbols(list5);
-                        List list6 = list.subList(n2 + 1, size);
-                        MolangValue molangValue5 = this.parseSymbols(list6);
+                        MolangValue molangValue4 = this.parseSymbols(list.subList(0, n2));
+                        MolangValue molangValue5 = this.parseSymbols(list.subList(n2 + 1, size));
                         return new BinaryExpression(molangOperation3, molangValue4, molangValue5);
                      }
 
-                     List list7 = list.subList(0, n);
-                     MolangValue molangValue6 = this.parseSymbols(list7);
-                     List list8 = list.subList(n + 1, size);
-                     MolangValue molangValue7 = this.parseSymbols(list8);
+                     MolangValue molangValue6 = this.parseSymbols(list.subList(0, n));
+                     MolangValue molangValue7 = this.parseSymbols(list.subList(n + 1, size));
                      return new BinaryExpression(molangOperation2, molangValue6, molangValue7);
                   }
                }
@@ -433,11 +402,8 @@ public class MathBuilder {
                n = n4;
             }
 
-            String str7 = (String)list.get(n2);
-            String str8 = str7;
-            MolangOperation molangOperation4 = this.operationForOperator(str8);
-            List list9 = list.subList(0, n2);
-            MolangValue molangValue8 = this.parseSymbols(list9);
+            MolangOperation molangOperation4 = this.operationForOperator((String)list.get(n2));
+            MolangValue molangValue8 = this.parseSymbols(list.subList(0, n2));
             List list10 = list.subList(n2 + 1, size);
             return new BinaryExpression(molangOperation4, molangValue8, this.parseSymbols(list10));
          }
@@ -445,16 +411,13 @@ public class MathBuilder {
    }
 
    public MolangValue parse(String str) throws Exception {
-      String[] strings = this.breakdownChars(str);
-      List list = this.breakdown(strings);
-      return this.parseSymbols(list);
+      return this.parseSymbols(this.breakdown(this.breakdownChars(str)));
    }
 
    public int seekPreviousOperator(List list, int n) {
 
       for (int i = n; i >= 0; i--) {
-         Object obj = list.get(i);
-         if (this.isOperator2(obj)) {
+         if (this.isOperator2(list.get(i))) {
             return i;
          }
       }

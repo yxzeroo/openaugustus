@@ -76,9 +76,9 @@ import net.augustus.events.listeners.SwingListener;
 import net.augustus.utils.rotation.BezierRotationStepper;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -118,39 +118,39 @@ public class Scaffold
    SilentSlotListener,
    AIMoveSpeedListener,
    UpdateListener {
-   private final DoubleValue rotations;
-   private final DoubleValue rotationSpeed;
+   private final SettingGroup rotations;
+   private final SettingGroup rotationSpeed;
    private final BooleanValue modeNew;
-   private final StringValue aimSpeed;
+   private final DoubleValue aimSpeed;
    private final RandomizedRangeSettings yawSpeed;
    private final RandomizedRangeSettings pitchSpeed;
    private final RandomizedRangeSettings yawAcceleration;
    private final RandomizedRangeSettings pitchAcceleration;
    private final BooleanValue customBlockClutchRotationSpeeds;
-   private final DoubleValue blockClutchRotationSpeed;
+   private final SettingGroup blockClutchRotationSpeed;
    private final BooleanValue blockClutchModeNew;
-   private final StringValue blockClutchAimSpeed;
+   private final DoubleValue blockClutchAimSpeed;
    private final RandomizedRangeSettings blockClutchYawSpeed;
    private final RandomizedRangeSettings blockClutchPitchSpeed;
    private final RandomizedRangeSettings blockClutchYawAcceleration;
    private final RandomizedRangeSettings blockClutchPitchAcceleration;
    private final RandomizedRangeSettings keepRotationsAfterModuleDisable;
-   private final DoubleValue rotationRandomization;
+   private final SettingGroup rotationRandomization;
    private final BooleanValue randomizePitch;
-   private final StringValue randomizePitchChanceWhileYawRotation;
-   private final StringValue randomizePitchChanceOnBlock;
-   private final StringValue randomizePitchChanceInAir;
+   private final DoubleValue randomizePitchChanceWhileYawRotation;
+   private final DoubleValue randomizePitchChanceOnBlock;
+   private final DoubleValue randomizePitchChanceInAir;
    private final BooleanValue otherPitchRandomization;
    private final RandomizedRangeSettings randomizePitchVal;
    private final RandomizedRangeSettings randomizePitchInterval;
    private final BooleanValue randomizeYaw;
-   private final StringValue randomizeYawChanceWhilePitchRotation;
-   private final StringValue randomizeYawChanceOnBlock;
-   private final StringValue randomizeYawChanceOnAir;
+   private final DoubleValue randomizeYawChanceWhilePitchRotation;
+   private final DoubleValue randomizeYawChanceOnBlock;
+   private final DoubleValue randomizeYawChanceOnAir;
    private final BooleanValue otherYawRandomization;
    private final RandomizedRangeSettings randomizeYawVal;
    private final RandomizedRangeSettings randomizeYawInterval;
-   private final DoubleValue staticPitchSettings;
+   private final SettingGroup staticPitchSettings;
    private final BooleanValue staticPitchBool;
    private final BooleanValue staticPitchAtJump;
    private final BooleanValue staticPitchRandomizeOnlyAtStart;
@@ -174,7 +174,7 @@ public class Scaffold
    public final BooleanValue improveOnlyAtClutch;
    public final BooleanValue extraBlockSearch;
    public final BooleanValue extraBlockSearchOnlyAtClutch;
-   public final DoubleValue strafeSettings;
+   public final SettingGroup strafeSettings;
    public final BooleanValue strafe;
    public final BooleanValue strafeOnlyWhileJump;
    public final RandomizedRangeSettings strafeDegree;
@@ -192,23 +192,23 @@ public class Scaffold
    public final BooleanValue ignoreStartAtEdgeAtBlockClutch;
    public final BooleanValue edgeRotateCheck;
    public final BooleanValue edgePlaceCheck;
-   private final BooleansSetting flickMode;
+   private final StringValue flickMode;
    private final BooleanValue flickUserStrafeSettingForForwardLooking;
    public final BooleanValue otherRotation;
    public final BooleanValue recycleRotation;
    public final BooleanValue intave;
    public final BooleanValue intaveSafe;
    public final BooleanValue intaveFast;
-   public final BooleansSetting pitchSelection;
-   public final StringValue maxPitchCorrection;
-   public final StringValue maxPitchCorrectionAtBlockClutch;
+   public final StringValue pitchSelection;
+   public final DoubleValue maxPitchCorrection;
+   public final DoubleValue maxPitchCorrectionAtBlockClutch;
    public final BooleanValue expand;
-   public final StringValue expandLength;
-   public final DoubleValue clicking;
+   public final DoubleValue expandLength;
+   public final SettingGroup clicking;
    public final BooleanValue noSwing;
    public final BooleanValue serverSideNoSwing;
    public final RandomizedRangeSettings cps;
-   private final BooleansSetting dcpsMode;
+   private final StringValue dcpsMode;
    public final RandomizedRangeSettings dcps;
    public final BooleanValue forcePlaceIfYouWouldFallDown;
    public final BooleanValue alwaysPlaceWhenPossible;
@@ -216,13 +216,13 @@ public class Scaffold
    private final BooleanValue delayClick;
    public final BooleanValue oneClick;
    private final BooleanValue stopClickingAtSneaking;
-   public final StringValue maxYawRotationDeltaToPlaceBlocks;
-   public final StringValue maxPitchRotationDeltaToPlaceBlocks;
-   public final StringValue maxYawRotationDeltaToPlaceBlocksAtBlockClutch;
-   public final StringValue maxPitchRotationDeltaToPlaceBlocksAtBlockClutch;
-   public final DoubleValue movement;
+   public final DoubleValue maxYawRotationDeltaToPlaceBlocks;
+   public final DoubleValue maxPitchRotationDeltaToPlaceBlocks;
+   public final DoubleValue maxYawRotationDeltaToPlaceBlocksAtBlockClutch;
+   public final DoubleValue maxPitchRotationDeltaToPlaceBlocksAtBlockClutch;
+   public final SettingGroup movement;
    public final BooleanValue removeSneakStop;
-   public final DoubleValue sneaking;
+   public final SettingGroup sneaking;
    public final BooleanValue sneak;
    public final BooleanValue timeJumpForOneStackForward;
    public final BooleanValue oneStackForward;
@@ -235,13 +235,13 @@ public class Scaffold
    public final RangeSetting startSneakDistToBlock;
    public final RangeSetting sneakBlocksForward;
    public final RangeSetting sneakBlocksDiagonal;
-   public final StringValue sneakSlowDown;
+   public final DoubleValue sneakSlowDown;
    public final BooleanValue earlySneakCalculation;
    public final BooleanValue earlySneakCalculationOnlyAtSpeedEffect;
-   public final BooleansSetting adhsMode;
-   public BooleansSetting moveFix;
+   public final StringValue adhsMode;
+   public StringValue moveFix;
    public final BooleanValue moveFixIntave;
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue jumpSprint;
    public final BooleanValue hover;
    public final BooleanValue stopAtStart;
@@ -252,14 +252,14 @@ public class Scaffold
    public final BooleanValue ignoreSpeedMotion;
    private final BooleanValue sneakAtRotation;
    private final BooleanValue stopAtRotation;
-   public final DoubleValue godBridging;
+   public final SettingGroup godBridging;
    public final BooleanValue godBridge;
    public final BooleanValue disableGodbridgeSafetyFeature;
    public final RandomizedRangeSettings resetGodBridgeAfterXJumps;
    public final RandomizedRangeSettings jumpAfterXBlocks;
    public final RandomizedRangeSettings jumpDelayAfterPlace;
    public final RandomizedRangeSettings startDelay;
-   public final DoubleValue moonWalking;
+   public final SettingGroup moonWalking;
    public final BooleanValue moonWalk;
    public final BooleanValue onlyOnGround;
    public final RandomizedRangeSettings moonWalkWideness;
@@ -269,54 +269,54 @@ public class Scaffold
    public final RandomizedRangeSettings postPlacementStrafeTicks;
    public final RandomizedRangeSettings minMoonwalkTicks;
    public final RandomizedRangeSettings directionChangeDelay;
-   public final DoubleValue sameYBlockGroup;
+   public final SettingGroup sameYBlockGroup;
    public final BooleanValue sameYBlock;
    public final BooleanValue stopMovementAfterJump;
-   public final DoubleValue sameYGroup;
+   public final SettingGroup sameYGroup;
    public final BooleanValue sameY;
    public final BooleanValue autoJump;
    public final BooleanValue intaveFast2;
    public final BooleanValue tellyBridge;
-   public final DoubleValue safeWalkGroup;
+   public final SettingGroup safeWalkGroup;
    public final BooleanValue safeWalk;
    public final BooleanValue safeWalkAir;
    public final BooleanValue safeWalkOnlyDiagonal;
-   public final DoubleValue jumpGroup;
+   public final SettingGroup jumpGroup;
    public final BooleanValue jump;
    public final BooleanValue jumpOnlyWhileSpacePressed;
    public final RandomizedRangeSettings jumpAfterXBlocksForward;
    public final RandomizedRangeSettings jumpAfterXBlocksDiagonal;
-   public final DoubleValue timeGroup;
-   public final StringValue timer;
+   public final SettingGroup timeGroup;
+   public final DoubleValue timer;
    public final BooleanValue timerDrop;
    public final RangeSetting timerSpeed;
-   public final DoubleValue motionMultiplier;
+   public final SettingGroup motionMultiplier;
    public final RandomizedRangeSettings motionMultiplierAirForward;
    public final RandomizedRangeSettings motionMultiplierAirStrafe;
    public final RandomizedRangeSettings motionMultiplierGroundForward;
    public final RandomizedRangeSettings motionMultiplierGroundStrafe;
-   public final DoubleValue miscellaneous;
-   public final BooleansSetting towerMode;
+   public final SettingGroup miscellaneous;
+   public final StringValue towerMode;
    public final BooleanValue towerWhileMoving;
-   public final StringValue constantMotion;
-   public final StringValue jumpMotion;
-   public final BooleansSetting silentMode;
+   public final DoubleValue constantMotion;
+   public final DoubleValue jumpMotion;
+   public final StringValue silentMode;
    public final BooleanValue useBiggestStackSilent;
    public final RandomizedRangeSettings silentStartDelay;
    public final RandomizedRangeSettings silentSwitchDelay;
    public final RandomizedRangeSettings stackCountToStartSwitchProcess;
    public final RandomizedRangeSettings backSwitchTickDelay;
    public final BooleanValue dynamicBackSwitchTickDelay;
-   public final DoubleValue visuals;
+   public final SettingGroup visuals;
    private final BooleanValue thirdPersonMode;
    public final BooleanValue hideSneakAnimation;
    public final BooleanValue blockCount;
-   private final StringValue x;
-   private final StringValue y;
-   private final StringValue scale;
+   private final DoubleValue x;
+   private final DoubleValue y;
+   private final DoubleValue scale;
    private final BooleanValue backGround;
    private final ColorSetting backgroundColor;
-   private final StringValue roundFactor;
+   private final DoubleValue roundFactor;
    public final BlurShadowSettings blockCount2;
    public final BooleanValue esp;
    public final ColorSetting espColor;
@@ -430,69 +430,42 @@ public class Scaffold
 
    public Scaffold() {
       super("Scaffold", "Gerüst", new Color(182, 194, 207), Categorys.WORLD);
-      this.rotations = new DoubleValue(this, "Rotations", true);
-      this.rotationSpeed = new DoubleValue(this, "RotationSpeed", true, this.rotations);
-      BooleanValue booleanValue = new BooleanValue(this, "ModeNew", false, this.rotationSpeed);
-      SettingVisibilityCondition condition = () -> this.isModeNewVisible();
-      this.modeNew = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "AimSpeed", 50.0, 0.0, 100.0, 0, this.rotationSpeed);
-      SettingVisibilityCondition condition2 = () -> this.isAimSpeedVisible();
-      this.aimSpeed = stringValue.visibleWhen(condition2);
+      this.rotations = new SettingGroup(this, "Rotations", true);
+      this.rotationSpeed = new SettingGroup(this, "RotationSpeed", true, this.rotations);
+      this.modeNew = (BooleanValue)new BooleanValue(this, "ModeNew", false, this.rotationSpeed).withVisibility(() -> this.isModeNewVisible());
+      this.aimSpeed = new DoubleValue(this, "AimSpeed", 50.0, 0.0, 100.0, 0, this.rotationSpeed).visibleWhen(() -> this.isAimSpeedVisible());
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "YawSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow();
       SettingVisibilityCondition condition3 = () -> {
          return !this.modeNew.isVisible() || !this.modeNew.getValue();
       };
       this.yawSpeed = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition3);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "PitchSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow();
-      SettingVisibilityCondition condition4 = () -> this.isPitchSpeedVisible();
-      this.pitchSpeed = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition4);
+      this.pitchSpeed = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "PitchSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow().withVisibility(() -> this.isPitchSpeedVisible());
       RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "YawAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow();
       SettingVisibilityCondition condition5 = () -> {
          return !this.modeNew.isVisible() || !this.modeNew.getValue();
       };
       this.yawAcceleration = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition5);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this, "PitchAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow();
-      SettingVisibilityCondition condition6 = () -> this.isPitchAccelerationVisible();
-      this.pitchAcceleration = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition6);
+      this.pitchAcceleration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "PitchAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.rotationSpeed)).withoutNotInARow().withVisibility(() -> this.isPitchAccelerationVisible());
       this.customBlockClutchRotationSpeeds = new BooleanValue(this, "CustomBlockClutchRotationSpeeds", false, this.rotationSpeed);
-      DoubleValue doubleValue = new DoubleValue(this, "BlockClutchRotationSpeed", true, this.rotationSpeed);
+      SettingGroup doubleValue = new SettingGroup(this, "BlockClutchRotationSpeed", true, this.rotationSpeed);
       BooleanValue booleanValue2 = this.customBlockClutchRotationSpeeds;
       this.customBlockClutchRotationSpeeds.getClass();
       BooleanValue booleanValue3 = booleanValue2;
-      SettingVisibilityCondition condition7 = () -> booleanValue3.getValue();
-      this.blockClutchRotationSpeed = doubleValue.visibleWhen(condition7);
-      BooleanValue booleanValue4 = new BooleanValue(this, "BlockClutchModeNew", false, this.blockClutchRotationSpeed);
-      String str = "ModeNew";
-      BooleanValue booleanValue5 = (BooleanValue)booleanValue4.withDisplayName(str);
-      SettingVisibilityCondition condition8 = () -> this.isBlockClutchModeNewVisible();
-      this.blockClutchModeNew = (BooleanValue)booleanValue5.withVisibility(condition8);
-      StringValue stringValue2 = new StringValue(this, "BlockClutchAimSpeed", 50.0, 0.0, 100.0, 0, this.blockClutchRotationSpeed);
-      String str2 = "AimSpeed";
-      StringValue stringValue3 = stringValue2.named(str2);
-      SettingVisibilityCondition condition9 = () -> this.isBlockClutchAimSpeedVisible();
-      this.blockClutchAimSpeed = stringValue3.visibleWhen(condition9);
-      RandomizedRangeSettings randomizedRangeSettings5 = (new RandomizedRangeSettings(this, "BlockClutchYawSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.blockClutchRotationSpeed)).withoutNotInARow();
-      String str3 = "YawSpeed";
-      RandomizedRangeSettings randomizedRangeSettings6 = (RandomizedRangeSettings)randomizedRangeSettings5.withDisplayNamePrefix(str3);
+      this.blockClutchRotationSpeed = doubleValue.visibleWhen(() -> booleanValue3.getValue());
+      this.blockClutchModeNew = (BooleanValue)((BooleanValue)new BooleanValue(this, "BlockClutchModeNew", false, this.blockClutchRotationSpeed).withDisplayName("ModeNew")).withVisibility(() -> this.isBlockClutchModeNewVisible());
+      this.blockClutchAimSpeed = new DoubleValue(this, "BlockClutchAimSpeed", 50.0, 0.0, 100.0, 0, this.blockClutchRotationSpeed).named("AimSpeed").visibleWhen(() -> this.isBlockClutchAimSpeedVisible());
+      RandomizedRangeSettings randomizedRangeSettings6 = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "BlockClutchYawSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.blockClutchRotationSpeed)).withoutNotInARow().withDisplayNamePrefix("YawSpeed");
       SettingVisibilityCondition condition10 = () -> {
          return !this.blockClutchModeNew.isVisible() || !this.blockClutchModeNew.getValue();
       };
       this.blockClutchYawSpeed = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition10);
-      RandomizedRangeSettings randomizedRangeSettings7 = (new RandomizedRangeSettings(this, "BlockClutchPitchSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.blockClutchRotationSpeed)).withoutNotInARow();
-      String str4 = "PitchSpeed";
-      RandomizedRangeSettings randomizedRangeSettings8 = (RandomizedRangeSettings)randomizedRangeSettings7.withDisplayNamePrefix(str4);
-      SettingVisibilityCondition condition11 = () -> this.isBlockClutchPitchSpeedVisible();
-      this.blockClutchPitchSpeed = (RandomizedRangeSettings)randomizedRangeSettings8.withVisibility(condition11);
-      RandomizedRangeSettings randomizedRangeSettings9 = new RandomizedRangeSettings(this, "BlockClutchYawAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.blockClutchRotationSpeed);
-      String str5 = "YawAcceleration";
-      RandomizedRangeSettings randomizedRangeSettings10 = ((RandomizedRangeSettings)randomizedRangeSettings9.withDisplayNamePrefix(str5)).withoutNotInARow();
+      this.blockClutchPitchSpeed = (RandomizedRangeSettings)((RandomizedRangeSettings)(new RandomizedRangeSettings(this, "BlockClutchPitchSpeed", 30.0, 50.0, 0.0, 180.0, 1, this.blockClutchRotationSpeed)).withoutNotInARow().withDisplayNamePrefix("PitchSpeed")).withVisibility(() -> this.isBlockClutchPitchSpeedVisible());
+      RandomizedRangeSettings randomizedRangeSettings10 = ((RandomizedRangeSettings)new RandomizedRangeSettings(this, "BlockClutchYawAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.blockClutchRotationSpeed).withDisplayNamePrefix("YawAcceleration")).withoutNotInARow();
       SettingVisibilityCondition condition12 = () -> {
          return !this.blockClutchModeNew.isVisible() || !this.blockClutchModeNew.getValue();
       };
       this.blockClutchYawAcceleration = (RandomizedRangeSettings)randomizedRangeSettings10.withVisibility(condition12);
-      RandomizedRangeSettings randomizedRangeSettings11 = new RandomizedRangeSettings(this, "BlockClutchPitchAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.blockClutchRotationSpeed);
-      String str6 = "PitchAcceleration";
-      RandomizedRangeSettings randomizedRangeSettings12 = ((RandomizedRangeSettings)randomizedRangeSettings11.withDisplayNamePrefix(str6)).withoutNotInARow();
+      RandomizedRangeSettings randomizedRangeSettings12 = ((RandomizedRangeSettings)new RandomizedRangeSettings(this, "BlockClutchPitchAcceleration", 7.0, 15.0, 1.0, 180.0, 1, this.blockClutchRotationSpeed).withDisplayNamePrefix("PitchAcceleration")).withoutNotInARow();
       SettingVisibilityCondition condition13 = () -> {
          return !this.blockClutchModeNew.isVisible() || !this.blockClutchModeNew.getValue();
       };
@@ -502,17 +475,11 @@ public class Scaffold
          return this.moveFix.getSelectedValue().equals("Default");
       };
       this.keepRotationsAfterModuleDisable = (RandomizedRangeSettings)randomizedRangeSettings13.withVisibility(condition14);
-      this.rotationRandomization = new DoubleValue(this, "RotationRandomization", true, this.rotations);
+      this.rotationRandomization = new SettingGroup(this, "RotationRandomization", true, this.rotations);
       this.randomizePitch = new BooleanValue(this, "RandomizePitch", false, this.rotationRandomization);
-      StringValue stringValue4 = new StringValue(this, "RandomizePitchChanceWhileYawRotation", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition15 = () -> this.isRandomizePitchChanceWhileYawVisible();
-      this.randomizePitchChanceWhileYawRotation = stringValue4.visibleWhen(condition15);
-      StringValue stringValue5 = new StringValue(this, "RandomizePitchChanceOnBlock", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition16 = () -> this.isRandomizePitchChanceOnBlockVisible();
-      this.randomizePitchChanceOnBlock = stringValue5.visibleWhen(condition16);
-      StringValue stringValue6 = new StringValue(this, "RandomizePitchChanceInAir", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition17 = () -> this.isRandomizePitchChanceInAirVisible();
-      this.randomizePitchChanceInAir = stringValue6.visibleWhen(condition17);
+      this.randomizePitchChanceWhileYawRotation = new DoubleValue(this, "RandomizePitchChanceWhileYawRotation", 100.0, 0.0, 100.0, 0, this.rotationRandomization).visibleWhen(() -> this.isRandomizePitchChanceWhileYawVisible());
+      this.randomizePitchChanceOnBlock = new DoubleValue(this, "RandomizePitchChanceOnBlock", 100.0, 0.0, 100.0, 0, this.rotationRandomization).visibleWhen(() -> this.isRandomizePitchChanceOnBlockVisible());
+      this.randomizePitchChanceInAir = new DoubleValue(this, "RandomizePitchChanceInAir", 100.0, 0.0, 100.0, 0, this.rotationRandomization).visibleWhen(() -> this.isRandomizePitchChanceInAirVisible());
       BooleanValue booleanValue6 = new BooleanValue(this, "OtherPitchRandomization", false, this.rotationRandomization);
       SettingVisibilityCondition condition18 = () -> {
          return this.randomizePitch.getValue() && this.randomizePitch.isVisible();
@@ -523,88 +490,63 @@ public class Scaffold
          return !this.otherPitchRandomization.getValue() && this.randomizePitch.getValue() && this.randomizePitch.isVisible();
       };
       this.randomizePitchVal = (RandomizedRangeSettings)randomizedRangeSettings14.withVisibility(condition19);
-      RandomizedRangeSettings randomizedRangeSettings15 = new RandomizedRangeSettings(this, "RandomizePitchInterval", 2.0, 4.0, 0.0, 20.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition20 = () -> this.isRandomizePitchIntervalVisible();
-      this.randomizePitchInterval = (RandomizedRangeSettings)randomizedRangeSettings15.withVisibility(condition20);
+      this.randomizePitchInterval = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "RandomizePitchInterval", 2.0, 4.0, 0.0, 20.0, 0, this.rotationRandomization).withVisibility(() -> this.isRandomizePitchIntervalVisible());
       this.randomizeYaw = new BooleanValue(this, "RandomizeYaw", false, this.rotationRandomization);
-      StringValue stringValue7 = new StringValue(this, "RandomizeYawChanceWhilePitchRotation", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition21 = () -> this.isRandomizeYawChanceWhilePitchVisible();
-      this.randomizeYawChanceWhilePitchRotation = stringValue7.visibleWhen(condition21);
-      StringValue stringValue8 = new StringValue(this, "RandomizeYawChanceOnBlock", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition22 = () -> this.isRandomizeYawChanceOnBlockVisible();
-      this.randomizeYawChanceOnBlock = stringValue8.visibleWhen(condition22);
-      StringValue stringValue9 = new StringValue(this, "RandomizeYawChanceOnAir", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
+      this.randomizeYawChanceWhilePitchRotation = new DoubleValue(this, "RandomizeYawChanceWhilePitchRotation", 100.0, 0.0, 100.0, 0, this.rotationRandomization).visibleWhen(() -> this.isRandomizeYawChanceWhilePitchVisible());
+      this.randomizeYawChanceOnBlock = new DoubleValue(this, "RandomizeYawChanceOnBlock", 100.0, 0.0, 100.0, 0, this.rotationRandomization).visibleWhen(() -> this.isRandomizeYawChanceOnBlockVisible());
+      DoubleValue stringValue9 = new DoubleValue(this, "RandomizeYawChanceOnAir", 100.0, 0.0, 100.0, 0, this.rotationRandomization);
       SettingVisibilityCondition condition23 = () -> {
          return this.randomizeYaw.getValue() && this.randomizeYaw.isVisible();
       };
       this.randomizeYawChanceOnAir = stringValue9.visibleWhen(condition23);
-      BooleanValue booleanValue7 = new BooleanValue(this, "OtherYawRandomization", false, this.rotationRandomization);
-      SettingVisibilityCondition condition24 = () -> this.isOtherYawRandomizationVisible();
-      this.otherYawRandomization = (BooleanValue)booleanValue7.withVisibility(condition24);
-      RandomizedRangeSettings randomizedRangeSettings16 = (new RandomizedRangeSettings(this, "RandomizeYawVal", -1.0, 1.0, -10.0, 10.0, 2, this.rotationRandomization)).withoutNotInARow();
-      SettingVisibilityCondition condition25 = () -> this.isRandomizeYawValVisible();
-      this.randomizeYawVal = (RandomizedRangeSettings)randomizedRangeSettings16.withVisibility(condition25);
-      RandomizedRangeSettings randomizedRangeSettings17 = new RandomizedRangeSettings(this, "RandomizeYawInterval", 2.0, 4.0, 0.0, 20.0, 0, this.rotationRandomization);
-      SettingVisibilityCondition condition26 = () -> this.isRandomizeYawIntervalVisible();
-      this.randomizeYawInterval = (RandomizedRangeSettings)randomizedRangeSettings17.withVisibility(condition26);
-      this.staticPitchSettings = new DoubleValue(this, "StaticPitchSettings", true, this.rotations);
-      BooleanValue booleanValue8 = new BooleanValue(this, "StaticPitchBool", false, this.staticPitchSettings);
-      String str7 = "StaticPitch";
-      this.staticPitchBool = (BooleanValue)booleanValue8.withDisplayName(str7);
+      this.otherYawRandomization = (BooleanValue)new BooleanValue(this, "OtherYawRandomization", false, this.rotationRandomization).withVisibility(() -> this.isOtherYawRandomizationVisible());
+      this.randomizeYawVal = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "RandomizeYawVal", -1.0, 1.0, -10.0, 10.0, 2, this.rotationRandomization)).withoutNotInARow().withVisibility(() -> this.isRandomizeYawValVisible());
+      this.randomizeYawInterval = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "RandomizeYawInterval", 2.0, 4.0, 0.0, 20.0, 0, this.rotationRandomization).withVisibility(() -> this.isRandomizeYawIntervalVisible());
+      this.staticPitchSettings = new SettingGroup(this, "StaticPitchSettings", true, this.rotations);
+      this.staticPitchBool = (BooleanValue)new BooleanValue(this, "StaticPitchBool", false, this.staticPitchSettings).withDisplayName("StaticPitch");
       BooleanValue booleanValue9 = new BooleanValue(this, "StaticPitchAtJump", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBool;
       this.staticPitchBool.getClass();
       BooleanValue booleanValue10 = booleanValue2;
-      SettingVisibilityCondition condition27 = () -> booleanValue10.getValue();
-      this.staticPitchAtJump = (BooleanValue)booleanValue9.withVisibility(condition27);
+      this.staticPitchAtJump = (BooleanValue)booleanValue9.withVisibility(() -> booleanValue10.getValue());
       BooleanValue booleanValue11 = new BooleanValue(this, "StaticPitchRandomizeOnlyAtStart", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBool;
       this.staticPitchBool.getClass();
       BooleanValue booleanValue12 = booleanValue2;
-      SettingVisibilityCondition condition28 = () -> booleanValue12.getValue();
-      this.staticPitchRandomizeOnlyAtStart = (BooleanValue)booleanValue11.withVisibility(condition28);
+      this.staticPitchRandomizeOnlyAtStart = (BooleanValue)booleanValue11.withVisibility(() -> booleanValue12.getValue());
       BooleanValue booleanValue13 = new BooleanValue(this, "IgnoreStaticPitchForBlockClutches", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBool;
       this.staticPitchBool.getClass();
       BooleanValue booleanValue14 = booleanValue2;
-      SettingVisibilityCondition condition29 = () -> booleanValue14.getValue();
-      this.ignoreStaticPitchForBlockClutches = (BooleanValue)booleanValue13.withVisibility(condition29);
+      this.ignoreStaticPitchForBlockClutches = (BooleanValue)booleanValue13.withVisibility(() -> booleanValue14.getValue());
       RandomizedRangeSettings randomizedRangeSettings18 = (new RandomizedRangeSettings(this, "StaticPitch", 80.0, 80.0, 0.0, 90.0, 2, this.staticPitchSettings)).withoutNotInARow();
       String str8 = "MaxStaticPitchForward";
-      String str9 = "MinStaticPitchForward";
-      RandomizedRangeSettings randomizedRangeSettings19 = randomizedRangeSettings18.withRangeNames(str9, str8);
+      RandomizedRangeSettings randomizedRangeSettings19 = randomizedRangeSettings18.withRangeNames("MinStaticPitchForward", str8);
       booleanValue2 = this.staticPitchBool;
       this.staticPitchBool.getClass();
       BooleanValue booleanValue15 = booleanValue2;
-      SettingVisibilityCondition condition30 = () -> booleanValue15.getValue();
-      this.staticPitch = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(condition30);
-      BooleanValue booleanValue16 = new BooleanValue(this, "StaticPitchBoolDiagonal", false, this.staticPitchSettings);
-      String str10 = "StaticPitchDiagonal";
-      this.staticPitchBoolDiagonal = (BooleanValue)booleanValue16.withDisplayName(str10);
+      this.staticPitch = (RandomizedRangeSettings)randomizedRangeSettings19.withVisibility(() -> booleanValue15.getValue());
+      this.staticPitchBoolDiagonal = (BooleanValue)new BooleanValue(this, "StaticPitchBoolDiagonal", false, this.staticPitchSettings).withDisplayName("StaticPitchDiagonal");
       BooleanValue booleanValue17 = new BooleanValue(this, "StaticPitchAtJumpDiagonal", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBoolDiagonal;
       this.staticPitchBoolDiagonal.getClass();
       BooleanValue booleanValue18 = booleanValue2;
-      SettingVisibilityCondition condition31 = () -> booleanValue18.getValue();
-      this.staticPitchAtJumpDiagonal = (BooleanValue)booleanValue17.withVisibility(condition31);
+      this.staticPitchAtJumpDiagonal = (BooleanValue)booleanValue17.withVisibility(() -> booleanValue18.getValue());
       BooleanValue booleanValue19 = new BooleanValue(this, "StaticPitchRandomizeOnlyAtStartDiagonal", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBoolDiagonal;
       this.staticPitchBoolDiagonal.getClass();
       BooleanValue booleanValue20 = booleanValue2;
-      SettingVisibilityCondition condition32 = () -> booleanValue20.getValue();
-      this.staticPitchRandomizeOnlyAtStartDiagonal = (BooleanValue)booleanValue19.withVisibility(condition32);
+      this.staticPitchRandomizeOnlyAtStartDiagonal = (BooleanValue)booleanValue19.withVisibility(() -> booleanValue20.getValue());
       BooleanValue booleanValue21 = new BooleanValue(this, "IgnoreStaticPitchForBlockClutchesDiagonal", false, this.staticPitchSettings);
       booleanValue2 = this.staticPitchBoolDiagonal;
       this.staticPitchBoolDiagonal.getClass();
       BooleanValue booleanValue22 = booleanValue2;
-      SettingVisibilityCondition condition33 = () -> booleanValue22.getValue();
-      this.ignoreStaticPitchForBlockClutchesDiagonal = (BooleanValue)booleanValue21.withVisibility(condition33);
+      this.ignoreStaticPitchForBlockClutchesDiagonal = (BooleanValue)booleanValue21.withVisibility(() -> booleanValue22.getValue());
       RandomizedRangeSettings randomizedRangeSettings20 = (new RandomizedRangeSettings(this, "StaticPitchDiagonal", 80.0, 80.0, 0.0, 90.0, 2, this.staticPitchSettings)).withoutNotInARow();
       booleanValue2 = this.staticPitchBoolDiagonal;
       this.staticPitchBoolDiagonal.getClass();
       BooleanValue booleanValue23 = booleanValue2;
-      SettingVisibilityCondition condition34 = () -> booleanValue23.getValue();
-      this.staticPitchDiagonal = (RandomizedRangeSettings)randomizedRangeSettings20.withVisibility(condition34);
+      this.staticPitchDiagonal = (RandomizedRangeSettings)randomizedRangeSettings20.withVisibility(() -> booleanValue23.getValue());
       BooleanValue booleanValue24 = new BooleanValue(this, "MinimalMouseMovement", false, this.staticPitchSettings);
       SettingVisibilityCondition condition35 = () -> {
          return this.staticPitchBool.getValue() || this.staticPitchBoolDiagonal.getValue();
@@ -616,113 +558,80 @@ public class Scaffold
       booleanValue2 = this.strictYaw;
       this.strictYaw.getClass();
       BooleanValue booleanValue25 = booleanValue2;
-      SettingVisibilityCondition condition36 = () -> booleanValue25.getValue();
-      this.strictYawIncorrectFactor = (RandomizedRangeSettings)randomizedRangeSettings21.withVisibility(condition36);
+      this.strictYawIncorrectFactor = (RandomizedRangeSettings)randomizedRangeSettings21.withVisibility(() -> booleanValue25.getValue());
       RandomizedRangeSettings randomizedRangeSettings22 = (new RandomizedRangeSettings(this, "StartDelayAfterDirectionChange", 0.0, 0.0, 0.0, 20.0, 0, this.rotations)).withoutNotInARow();
       booleanValue2 = this.strictYaw;
       this.strictYaw.getClass();
       BooleanValue booleanValue26 = booleanValue2;
-      SettingVisibilityCondition condition37 = () -> booleanValue26.getValue();
-      this.startDelayAfterDirectionChange = (RandomizedRangeSettings)randomizedRangeSettings22.withVisibility(condition37);
-      BooleanValue booleanValue27 = new BooleanValue(this, "IgnoreStartDelayAfterDirectionChangeAtBlockClutch", false, this.rotations);
-      SettingVisibilityCondition condition38 = () -> this.isIgnoreDirChangeDelayClutchVisible();
-      this.ignoreStartDelayAfterDirectionChangeAtBlockClutch = (BooleanValue)booleanValue27.withVisibility(condition38);
+      this.startDelayAfterDirectionChange = (RandomizedRangeSettings)randomizedRangeSettings22.withVisibility(() -> booleanValue26.getValue());
+      this.ignoreStartDelayAfterDirectionChangeAtBlockClutch = (BooleanValue)new BooleanValue(this, "IgnoreStartDelayAfterDirectionChangeAtBlockClutch", false, this.rotations).withVisibility(() -> this.isIgnoreDirChangeDelayClutchVisible());
       BooleanValue booleanValue28 = new BooleanValue(this, "ChangeDirectionOnlyIfBlockUnderYou", false, this.rotations);
       booleanValue2 = this.strictYaw;
       this.strictYaw.getClass();
       BooleanValue booleanValue29 = booleanValue2;
-      SettingVisibilityCondition condition39 = () -> booleanValue29.getValue();
-      this.changeDirectionOnlyIfBlockUnderYou = (BooleanValue)booleanValue28.withVisibility(condition39);
+      this.changeDirectionOnlyIfBlockUnderYou = (BooleanValue)booleanValue28.withVisibility(() -> booleanValue29.getValue());
       this.rotateWithMovement = new BooleanValue(this, "RotateWithMovement", true, this.rotations);
       booleanValue2 = new BooleanValue(this, "RotateWithMovementOnlyOrthogonal", false, this.rotations);
       BooleanValue rotateWithMovement2 = this.rotateWithMovement;
       this.rotateWithMovement.getClass();
-      BooleanValue booleanValue30 = rotateWithMovement2;
-      SettingVisibilityCondition condition40 = () -> booleanValue30.getValue();
-      this.rotateWithMovementOnlyOrthogonal = (BooleanValue)booleanValue2.withVisibility(condition40);
+      this.rotateWithMovementOnlyOrthogonal = (BooleanValue)booleanValue2.withVisibility(() -> rotateWithMovement2.getValue());
       this.improve = new BooleanValue(this, "Improve", true, this.rotations);
       booleanValue2 = new BooleanValue(this, "ImproveOnlyAtClutch", false, this.rotations);
-      SettingVisibilityCondition condition41 = () -> this.isImproveOnlyAtClutchVisible();
-      this.improveOnlyAtClutch = (BooleanValue)booleanValue2.withVisibility(condition41);
+      this.improveOnlyAtClutch = (BooleanValue)booleanValue2.withVisibility(() -> this.isImproveOnlyAtClutchVisible());
       this.extraBlockSearch = new BooleanValue(this, "ExtraBlockSearch", true, this.rotations);
       booleanValue2 = new BooleanValue(this, "ExtraBlockSearchOnlyAtClutch", false, this.rotations);
       BooleanValue extraBlockSearch2 = this.extraBlockSearch;
       this.extraBlockSearch.getClass();
-      BooleanValue booleanValue31 = extraBlockSearch2;
-      SettingVisibilityCondition condition42 = () -> booleanValue31.getValue();
-      this.extraBlockSearchOnlyAtClutch = (BooleanValue)booleanValue2.withVisibility(condition42);
-      this.strafeSettings = new DoubleValue(this, "StrafeSettings", true, this.rotations);
+      this.extraBlockSearchOnlyAtClutch = (BooleanValue)booleanValue2.withVisibility(() -> extraBlockSearch2.getValue());
+      this.strafeSettings = new SettingGroup(this, "StrafeSettings", true, this.rotations);
       this.strafe = new BooleanValue(this, "Strafe", false, this.strafeSettings);
       booleanValue2 = new BooleanValue(this, "StrafeOnlyWhileJump", false, this.strafeSettings);
-      SettingVisibilityCondition condition43 = () -> this.isStrafeOnlyWhileJumpVisible();
-      this.strafeOnlyWhileJump = (BooleanValue)booleanValue2.withVisibility(condition43);
+      this.strafeOnlyWhileJump = (BooleanValue)booleanValue2.withVisibility(() -> this.isStrafeOnlyWhileJumpVisible());
       RandomizedRangeSettings randomizedRangeSettings23 = (new RandomizedRangeSettings(this, "StrafeDegree", 40.0, 45.0, 1.0, 50.0, 2, this.strafeSettings)).withoutNotInARow();
       booleanValue2 = this.strafe;
       this.strafe.getClass();
       BooleanValue booleanValue32 = booleanValue2;
-      SettingVisibilityCondition condition44 = () -> booleanValue32.getValue();
-      this.strafeDegree = (RandomizedRangeSettings)randomizedRangeSettings23.withVisibility(condition44);
-      RandomizedRangeSettings randomizedRangeSettings24 = (new RandomizedRangeSettings(this, "StrafeWidth", 0.35, 0.39, 0.0, 0.4, 2, this.strafeSettings)).withoutNotInARow();
-      SettingVisibilityCondition condition45 = () -> this.isStrafeWidthVisible();
-      this.strafeWidth = (RandomizedRangeSettings)randomizedRangeSettings24.withVisibility(condition45);
+      this.strafeDegree = (RandomizedRangeSettings)randomizedRangeSettings23.withVisibility(() -> booleanValue32.getValue());
+      this.strafeWidth = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "StrafeWidth", 0.35, 0.39, 0.0, 0.4, 2, this.strafeSettings)).withoutNotInARow().withVisibility(() -> this.isStrafeWidthVisible());
       BooleanValue booleanValue33 = new BooleanValue(this, "CorrectRotationWhileBuilding", true, this.strafeSettings);
       booleanValue2 = this.strafe;
       this.strafe.getClass();
       BooleanValue booleanValue34 = booleanValue2;
-      SettingVisibilityCondition condition46 = () -> booleanValue34.getValue();
-      this.correctRotationWhileBuilding = (BooleanValue)booleanValue33.withVisibility(condition46);
+      this.correctRotationWhileBuilding = (BooleanValue)booleanValue33.withVisibility(() -> booleanValue34.getValue());
       BooleanValue booleanValue35 = new BooleanValue(this, "CorrectStrafeWithKeyBinds", true, this.strafeSettings);
       booleanValue2 = this.strafe;
       this.strafe.getClass();
       BooleanValue booleanValue36 = booleanValue2;
-      SettingVisibilityCondition condition47 = () -> booleanValue36.getValue();
-      this.correctStrafeWithKeyBinds = (BooleanValue)booleanValue35.withVisibility(condition47);
-      BooleanValue booleanValue37 = new BooleanValue(this, "CorrectStrafeWithKeyBindsCage", false, this.strafeSettings);
-      SettingVisibilityCondition condition48 = () -> this.isStrafeKeyBindCageVisible();
-      this.correctStrafeWithKeyBindsCage = (BooleanValue)booleanValue37.withVisibility(condition48);
-      RandomizedRangeSettings randomizedRangeSettings25 = (new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsWidth", -0.05, 0.05, -0.3, 0.3, 2, this.strafeSettings))
+      this.correctStrafeWithKeyBinds = (BooleanValue)booleanValue35.withVisibility(() -> booleanValue36.getValue());
+      this.correctStrafeWithKeyBindsCage = (BooleanValue)new BooleanValue(this, "CorrectStrafeWithKeyBindsCage", false, this.strafeSettings).withVisibility(() -> this.isStrafeKeyBindCageVisible());
+      this.correctStrafeWithKeyBindsWidth = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsWidth", -0.05, 0.05, -0.3, 0.3, 2, this.strafeSettings))
          .withoutNotInARow()
-         .withoutNotInARow();
-      SettingVisibilityCondition condition49 = () -> this.isStrafeKeyBindWidthVisible();
-      this.correctStrafeWithKeyBindsWidth = (RandomizedRangeSettings)randomizedRangeSettings25.withVisibility(condition49);
+         .withoutNotInARow().withVisibility(() -> this.isStrafeKeyBindWidthVisible());
       RandomizedRangeSettings randomizedRangeSettings26 = new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsDuration", 1.0, 3.0, 1.0, 5.0, 0, this.strafeSettings);
       SettingVisibilityCondition condition50 = () -> {
          return this.correctStrafeWithKeyBinds.getValue() && this.correctStrafeWithKeyBinds.isVisible();
       };
       this.correctStrafeWithKeyBindsDuration = (RandomizedRangeSettings)randomizedRangeSettings26.withVisibility(condition50);
-      RandomizedRangeSettings randomizedRangeSettings27 = (new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsMiddle", 0.5, 0.5, 0.2, 0.8, 2, this.strafeSettings)).withoutNotInARow();
-      SettingVisibilityCondition condition51 = () -> this.isStrafeKeyBindMiddleVisible();
-      this.correctStrafeWithKeyBindsMiddle = (RandomizedRangeSettings)randomizedRangeSettings27.withVisibility(condition51);
-      RangeSetting rangeSetting = new RangeSetting(this, "CorrectStrafeWithKeyBindsMiddleExclusion", 0.0, 0.0, 0.2, 0.8, 2, this.strafeSettings);
-      SettingVisibilityCondition condition52 = () -> this.isStrafeKeyBindMiddleExclusionVisible();
-      this.correctStrafeWithKeyBindsMiddleExclusion = rangeSetting.visibleWhen(condition52);
-      RandomizedRangeSettings randomizedRangeSettings28 = (new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsDelayToRecalculateMiddle", 15.0, 30.0, 0.0, 40.0, 0, this.strafeSettings))
-         .withoutNotInARow();
-      String str11 = "DelayToRecalculateMiddle";
-      RandomizedRangeSettings randomizedRangeSettings29 = (RandomizedRangeSettings)randomizedRangeSettings28.withDisplayNamePrefix(str11);
-      SettingVisibilityCondition condition53 = () -> this.isStrafeKeyBindRecalcDelayVisible();
-      this.correctStrafeWithKeyBindsDelayToRecalculateMiddle = (RandomizedRangeSettings)randomizedRangeSettings29.withVisibility(condition53);
+      this.correctStrafeWithKeyBindsMiddle = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsMiddle", 0.5, 0.5, 0.2, 0.8, 2, this.strafeSettings)).withoutNotInARow().withVisibility(() -> this.isStrafeKeyBindMiddleVisible());
+      this.correctStrafeWithKeyBindsMiddleExclusion = new RangeSetting(this, "CorrectStrafeWithKeyBindsMiddleExclusion", 0.0, 0.0, 0.2, 0.8, 2, this.strafeSettings).visibleWhen(() -> this.isStrafeKeyBindMiddleExclusionVisible());
+      RandomizedRangeSettings randomizedRangeSettings29 = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "CorrectStrafeWithKeyBindsDelayToRecalculateMiddle", 15.0, 30.0, 0.0, 40.0, 0, this.strafeSettings))
+         .withoutNotInARow().withDisplayNamePrefix("DelayToRecalculateMiddle");
+      this.correctStrafeWithKeyBindsDelayToRecalculateMiddle = (RandomizedRangeSettings)randomizedRangeSettings29.withVisibility(() -> this.isStrafeKeyBindRecalcDelayVisible());
       this.startAtEdge = new BooleanValue(this, "StartAtEdge", false, this.rotations);
       RandomizedRangeSettings randomizedRangeSettings30 = (new RandomizedRangeSettings(this, "StartAtEdgeDelay", 2.0, 4.0, 0.0, 10.0, 0, this.rotations)).withoutNotInARow();
       booleanValue2 = this.startAtEdge;
       this.startAtEdge.getClass();
       BooleanValue booleanValue38 = booleanValue2;
-      SettingVisibilityCondition condition54 = () -> booleanValue38.getValue();
-      this.startAtEdgeDelay = (RandomizedRangeSettings)randomizedRangeSettings30.withVisibility(condition54);
-      BooleanValue booleanValue39 = new BooleanValue(this, "IgnoreStartAtEdgeAtBlockClutch", false, this.rotations);
-      SettingVisibilityCondition condition55 = () -> this.isIgnoreStartAtEdgeClutchVisible();
-      this.ignoreStartAtEdgeAtBlockClutch = (BooleanValue)booleanValue39.withVisibility(condition55);
+      this.startAtEdgeDelay = (RandomizedRangeSettings)randomizedRangeSettings30.withVisibility(() -> booleanValue38.getValue());
+      this.ignoreStartAtEdgeAtBlockClutch = (BooleanValue)new BooleanValue(this, "IgnoreStartAtEdgeAtBlockClutch", false, this.rotations).withVisibility(() -> this.isIgnoreStartAtEdgeClutchVisible());
       this.edgeRotateCheck = new BooleanValue(this, "EdgeRotateCheck", false, this.rotations);
       BooleanValue booleanValue40 = new BooleanValue(this, "EdgePlaceCheck", false, this.rotations);
       booleanValue2 = this.edgeRotateCheck;
       this.edgeRotateCheck.getClass();
       BooleanValue booleanValue41 = booleanValue2;
-      SettingVisibilityCondition condition56 = () -> booleanValue41.getValue();
-      this.edgePlaceCheck = (BooleanValue)booleanValue40.withVisibility(condition56);
-      this.flickMode = new BooleansSetting(this, "FlickMode", "None", new String[]{"None", "Simple", "Jump"}, this.rotations);
-      BooleanValue booleanValue42 = new BooleanValue(this, "FlickUserStrafeSettingForForwardLooking", false, this.rotations);
-      SettingVisibilityCondition condition57 = () -> this.isFlickForwardStrafeVisible();
-      this.flickUserStrafeSettingForForwardLooking = (BooleanValue)booleanValue42.withVisibility(condition57);
+      this.edgePlaceCheck = (BooleanValue)booleanValue40.withVisibility(() -> booleanValue41.getValue());
+      this.flickMode = new StringValue(this, "FlickMode", "None", new String[]{"None", "Simple", "Jump"}, this.rotations);
+      this.flickUserStrafeSettingForForwardLooking = (BooleanValue)new BooleanValue(this, "FlickUserStrafeSettingForForwardLooking", false, this.rotations).withVisibility(() -> this.isFlickForwardStrafeVisible());
       this.otherRotation = new BooleanValue(this, "OtherRotation", true, this.rotations);
       this.recycleRotation = new BooleanValue(this, "RecycleRotation", false, this.rotations);
       this.intave = new BooleanValue(this, "Intave", true, this.rotations);
@@ -730,40 +639,32 @@ public class Scaffold
       booleanValue2 = this.intave;
       this.intave.getClass();
       BooleanValue booleanValue44 = booleanValue2;
-      SettingVisibilityCondition condition58 = () -> booleanValue44.getValue();
-      this.intaveSafe = (BooleanValue)booleanValue43.withVisibility(condition58);
+      this.intaveSafe = (BooleanValue)booleanValue43.withVisibility(() -> booleanValue44.getValue());
       BooleanValue booleanValue45 = new BooleanValue(this, "IntaveFast", false, this.rotations);
       booleanValue2 = this.intave;
       this.intave.getClass();
       BooleanValue booleanValue46 = booleanValue2;
-      SettingVisibilityCondition condition59 = () -> booleanValue46.getValue();
-      this.intaveFast = (BooleanValue)booleanValue45.withVisibility(condition59);
-      this.pitchSelection = new BooleansSetting(
+      this.intaveFast = (BooleanValue)booleanValue45.withVisibility(() -> booleanValue46.getValue());
+      this.pitchSelection = new StringValue(
          this, "PitchSelection", "Nearest", new String[]{"Nearest", "Furthest", "Highest", "Lowest", "Mid", "Random"}, this.rotations
       );
-      StringValue stringValue10 = new StringValue(this, "MaxPitchCorrection", 180.0, 0.0, 180.0, 2, this.rotations);
-      SettingVisibilityCondition condition60 = () -> this.isMaxPitchCorrectionVisible();
-      this.maxPitchCorrection = stringValue10.visibleWhen(condition60);
-      StringValue stringValue11 = new StringValue(this, "MaxPitchCorrectionAtBlockClutch", 180.0, 0.0, 180.0, 2, this.rotations);
-      SettingVisibilityCondition condition61 = () -> this.isMaxPitchCorrectionClutchVisible();
-      this.maxPitchCorrectionAtBlockClutch = stringValue11.visibleWhen(condition61);
+      this.maxPitchCorrection = new DoubleValue(this, "MaxPitchCorrection", 180.0, 0.0, 180.0, 2, this.rotations).visibleWhen(() -> this.isMaxPitchCorrectionVisible());
+      this.maxPitchCorrectionAtBlockClutch = new DoubleValue(this, "MaxPitchCorrectionAtBlockClutch", 180.0, 0.0, 180.0, 2, this.rotations).visibleWhen(() -> this.isMaxPitchCorrectionClutchVisible());
       this.expand = new BooleanValue(this, "Expand", false, this.rotations);
-      StringValue stringValue12 = new StringValue(this, "ExpandLength", 1.0, 1.0, 10.0, 1, this.rotations);
+      DoubleValue stringValue12 = new DoubleValue(this, "ExpandLength", 1.0, 1.0, 10.0, 1, this.rotations);
       booleanValue2 = this.expand;
       this.expand.getClass();
       BooleanValue booleanValue47 = booleanValue2;
-      SettingVisibilityCondition condition62 = () -> booleanValue47.getValue();
-      this.expandLength = stringValue12.visibleWhen(condition62);
-      this.clicking = new DoubleValue(this, "Clicking", true);
+      this.expandLength = stringValue12.visibleWhen(() -> booleanValue47.getValue());
+      this.clicking = new SettingGroup(this, "Clicking", true);
       this.noSwing = new BooleanValue(this, "NoSwing", false, this.clicking);
       BooleanValue booleanValue48 = new BooleanValue(this, "ServerSideNoSwing", false, this.clicking);
       booleanValue2 = this.noSwing;
       this.noSwing.getClass();
       BooleanValue booleanValue49 = booleanValue2;
-      SettingVisibilityCondition condition63 = () -> booleanValue49.getValue();
-      this.serverSideNoSwing = (BooleanValue)booleanValue48.withVisibility(condition63);
+      this.serverSideNoSwing = (BooleanValue)booleanValue48.withVisibility(() -> booleanValue49.getValue());
       this.cps = (new RandomizedRangeSettings(this, "CPS", 10.0, 20.0, 0.0, 40.0, 0, this.clicking)).withoutNotInARow();
-      this.dcpsMode = new BooleansSetting(this, "DCPSMode", "External", new String[]{"Internal", "External"}, this.clicking);
+      this.dcpsMode = new StringValue(this, "DCPSMode", "External", new String[]{"Internal", "External"}, this.clicking);
       RandomizedRangeSettings randomizedRangeSettings31 = (new RandomizedRangeSettings(this, "DCPS", 2.0, 4.0, 0.0, 20.0, 0, this.clicking)).withoutNotInARow();
       SettingVisibilityCondition condition64 = () -> {
          return this.dcpsMode.getSelectedValue().equals("External");
@@ -774,103 +675,77 @@ public class Scaffold
       this.clickPause = new BooleanValue(this, "ClickPause", false, this.clicking);
       this.delayClick = new BooleanValue(this, "DelayClick", false, this.clicking);
       this.oneClick = new BooleanValue(this, "OneClick", false, this.clicking);
-      BooleanValue booleanValue50 = new BooleanValue(this, "StopClickingAtSneaking", false, this.clicking);
-      String str12 = "StopClickingAtSneakingOnGround";
-      this.stopClickingAtSneaking = (BooleanValue)booleanValue50.withDisplayName(str12);
-      this.maxYawRotationDeltaToPlaceBlocks = new StringValue(this, "MaxYawRotationDeltaToPlaceBlocks", 180.0, 0.0, 180.0, 2, this.clicking);
-      this.maxPitchRotationDeltaToPlaceBlocks = new StringValue(this, "MaxPitchRotationDeltaToPlaceBlocks", 180.0, 0.0, 180.0, 2, this.clicking);
-      this.maxYawRotationDeltaToPlaceBlocksAtBlockClutch = new StringValue(this, "MaxYawRotationDeltaToPlaceBlocksAtBlockClutch", 180.0, 0.0, 180.0, 2, this.clicking);
-      this.maxPitchRotationDeltaToPlaceBlocksAtBlockClutch = new StringValue(this, "MaxPitchRotationDeltaToPlaceBlocksAtBlockClutch", 180.0, 0.0, 180.0, 2, this.clicking);
-      this.movement = new DoubleValue(this, "Movement", true);
+      this.stopClickingAtSneaking = (BooleanValue)new BooleanValue(this, "StopClickingAtSneaking", false, this.clicking).withDisplayName("StopClickingAtSneakingOnGround");
+      this.maxYawRotationDeltaToPlaceBlocks = new DoubleValue(this, "MaxYawRotationDeltaToPlaceBlocks", 180.0, 0.0, 180.0, 2, this.clicking);
+      this.maxPitchRotationDeltaToPlaceBlocks = new DoubleValue(this, "MaxPitchRotationDeltaToPlaceBlocks", 180.0, 0.0, 180.0, 2, this.clicking);
+      this.maxYawRotationDeltaToPlaceBlocksAtBlockClutch = new DoubleValue(this, "MaxYawRotationDeltaToPlaceBlocksAtBlockClutch", 180.0, 0.0, 180.0, 2, this.clicking);
+      this.maxPitchRotationDeltaToPlaceBlocksAtBlockClutch = new DoubleValue(this, "MaxPitchRotationDeltaToPlaceBlocksAtBlockClutch", 180.0, 0.0, 180.0, 2, this.clicking);
+      this.movement = new SettingGroup(this, "Movement", true);
       this.removeSneakStop = new BooleanValue(this, "RemoveSneakStop", false, this.movement);
-      this.sneaking = new DoubleValue(this, "Sneaking", true, this.movement);
+      this.sneaking = new SettingGroup(this, "Sneaking", true, this.movement);
       this.sneak = new BooleanValue(this, "Sneak", false, this.sneaking);
       BooleanValue booleanValue51 = new BooleanValue(this, "TimeJumpForOneStackForward", false, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue52 = booleanValue2;
-      SettingVisibilityCondition condition65 = () -> booleanValue52.getValue();
-      this.timeJumpForOneStackForward = (BooleanValue)booleanValue51.withVisibility(condition65);
+      this.timeJumpForOneStackForward = (BooleanValue)booleanValue51.withVisibility(() -> booleanValue52.getValue());
       BooleanValue booleanValue53 = new BooleanValue(this, "OneStackForward", false, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue54 = booleanValue2;
-      SettingVisibilityCondition condition66 = () -> booleanValue54.getValue();
-      this.oneStackForward = (BooleanValue)booleanValue53.withVisibility(condition66);
-      RangeSetting rangeSetting2 = new RangeSetting(this, "MinOffGroundSneakTickForward", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition67 = () -> this.isMinOffGroundSneakForwardVisible();
-      this.minOffGroundSneakTickForward = rangeSetting2.visibleWhen(condition67);
-      RangeSetting rangeSetting3 = new RangeSetting(this, "MaxOffGroundSneakTickForward", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition68 = () -> this.isMaxOffGroundSneakForwardVisible();
-      this.maxOffGroundSneakTickForward = rangeSetting3.visibleWhen(condition68);
+      this.oneStackForward = (BooleanValue)booleanValue53.withVisibility(() -> booleanValue54.getValue());
+      this.minOffGroundSneakTickForward = new RangeSetting(this, "MinOffGroundSneakTickForward", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMinOffGroundSneakForwardVisible());
+      this.maxOffGroundSneakTickForward = new RangeSetting(this, "MaxOffGroundSneakTickForward", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMaxOffGroundSneakForwardVisible());
       BooleanValue booleanValue55 = new BooleanValue(this, "OneStackDiagonal", false, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue56 = booleanValue2;
-      SettingVisibilityCondition condition69 = () -> booleanValue56.getValue();
-      this.oneStackDiagonal = (BooleanValue)booleanValue55.withVisibility(condition69);
-      RangeSetting rangeSetting4 = new RangeSetting(this, "MinOffGroundSneakTickDiagonal", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition70 = () -> this.isMinOffGroundSneakDiagonalVisible();
-      this.minOffGroundSneakTickDiagonal = rangeSetting4.visibleWhen(condition70);
-      RangeSetting rangeSetting5 = new RangeSetting(this, "MaxOffGroundSneakTickDiagonal", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking);
-      SettingVisibilityCondition condition71 = () -> this.isMaxOffGroundSneakDiagonalVisible();
-      this.maxOffGroundSneakTickDiagonal = rangeSetting5.visibleWhen(condition71);
+      this.oneStackDiagonal = (BooleanValue)booleanValue55.withVisibility(() -> booleanValue56.getValue());
+      this.minOffGroundSneakTickDiagonal = new RangeSetting(this, "MinOffGroundSneakTickDiagonal", 1.0, 2.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMinOffGroundSneakDiagonalVisible());
+      this.maxOffGroundSneakTickDiagonal = new RangeSetting(this, "MaxOffGroundSneakTickDiagonal", 10.0, 11.0, 0.0, 12.0, 0, this.sneaking).visibleWhen(() -> this.isMaxOffGroundSneakDiagonalVisible());
       RandomizedRangeSettings randomizedRangeSettings32 = new RandomizedRangeSettings(this, "SneakTicks", 1.0, 2.0, 0.0, 10.0, 0, this.sneaking);
       double d = 15.0;
       double d2 = 8.0;
       double d3 = 30.0;
       double d4 = 1.0;
       double d5 = 3.0;
-      double d6 = 3.0;
-      RandomizedRangeSettings randomizedRangeSettings33 = randomizedRangeSettings32.withOutliers(d6, d5, d4, d3, d2, d);
+      RandomizedRangeSettings randomizedRangeSettings33 = randomizedRangeSettings32.withOutliers(3.0, d5, d4, d3, d2, d);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue57 = booleanValue2;
-      SettingVisibilityCondition condition72 = () -> booleanValue57.getValue();
-      this.sneakTicks = (RandomizedRangeSettings)randomizedRangeSettings33.withVisibility(condition72);
+      this.sneakTicks = (RandomizedRangeSettings)randomizedRangeSettings33.withVisibility(() -> booleanValue57.getValue());
       RangeSetting rangeSetting6 = new RangeSetting(this, "StartSneakDistToBlock", 0.05, 0.2, -0.2, 0.5, 2, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue58 = booleanValue2;
-      SettingVisibilityCondition condition73 = () -> booleanValue58.getValue();
-      this.startSneakDistToBlock = rangeSetting6.visibleWhen(condition73);
+      this.startSneakDistToBlock = rangeSetting6.visibleWhen(() -> booleanValue58.getValue());
       RangeSetting rangeSetting7 = new RangeSetting(this, "SneakBlocksForward", 1.0, 2.0, 0.0, 15.0, 0, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue59 = booleanValue2;
-      SettingVisibilityCondition condition74 = () -> booleanValue59.getValue();
-      this.sneakBlocksForward = rangeSetting7.visibleWhen(condition74);
+      this.sneakBlocksForward = rangeSetting7.visibleWhen(() -> booleanValue59.getValue());
       RangeSetting rangeSetting8 = new RangeSetting(this, "SneakBlocksDiagonal", 1.0, 2.0, 0.0, 15.0, 0, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue60 = booleanValue2;
-      SettingVisibilityCondition condition75 = () -> booleanValue60.getValue();
-      this.sneakBlocksDiagonal = rangeSetting8.visibleWhen(condition75);
-      StringValue stringValue13 = new StringValue(this, "SneakSlowDown", 0.3, 0.3, 1.0, 2, this.sneaking);
+      this.sneakBlocksDiagonal = rangeSetting8.visibleWhen(() -> booleanValue60.getValue());
+      DoubleValue stringValue13 = new DoubleValue(this, "SneakSlowDown", 0.3, 0.3, 1.0, 2, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue61 = booleanValue2;
-      SettingVisibilityCondition condition76 = () -> booleanValue61.getValue();
-      this.sneakSlowDown = stringValue13.visibleWhen(condition76);
+      this.sneakSlowDown = stringValue13.visibleWhen(() -> booleanValue61.getValue());
       BooleanValue booleanValue62 = new BooleanValue(this, "EarlySneakCalculation", true, this.sneaking);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue63 = booleanValue2;
-      SettingVisibilityCondition condition77 = () -> booleanValue63.getValue();
-      this.earlySneakCalculation = (BooleanValue)booleanValue62.withVisibility(condition77);
-      BooleanValue booleanValue64 = new BooleanValue(this, "EarlySneakCalculationOnlyAtSpeedEffect", true, this.sneaking);
-      SettingVisibilityCondition condition78 = () -> this.isEarlySneakSpeedOnlyVisible();
-      this.earlySneakCalculationOnlyAtSpeedEffect = (BooleanValue)booleanValue64.withVisibility(condition78);
-      this.adhsMode = new BooleansSetting(this, "ADHSMode", "None", new String[]{"None", "ADS", "ADHS"}, this.movement);
-      this.moveFix = new BooleansSetting(this, "MoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement);
-      BooleanValue booleanValue65 = new BooleanValue(this, "MoveFixIntave", true, this.movement);
-      SettingVisibilityCondition condition79 = () -> this.isMoveFixIntaveVisible();
-      this.moveFixIntave = (BooleanValue)booleanValue65.withVisibility(condition79);
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.earlySneakCalculation = (BooleanValue)booleanValue62.withVisibility(() -> booleanValue63.getValue());
+      this.earlySneakCalculationOnlyAtSpeedEffect = (BooleanValue)new BooleanValue(this, "EarlySneakCalculationOnlyAtSpeedEffect", true, this.sneaking).withVisibility(() -> this.isEarlySneakSpeedOnlyVisible());
+      this.adhsMode = new StringValue(this, "ADHSMode", "None", new String[]{"None", "ADS", "ADHS"}, this.movement);
+      this.moveFix = new StringValue(this, "MoveFix", "Default", new String[]{"None", "Default", "Advanced"}, this.movement);
+      this.moveFixIntave = (BooleanValue)new BooleanValue(this, "MoveFixIntave", true, this.movement).withVisibility(() -> this.isMoveFixIntaveVisible());
+      this.mode = (StringValue)new StringValue(
          this, "Mode", "None", new String[]{"None", "Legit", "AllDirection", "AllDirectionMotion"}, this.movement
-      );
-      String str13 = "SprintMode";
-      this.mode = (BooleansSetting)booleansSetting.withDisplayName(str13);
+      ).withDisplayName("SprintMode");
       this.jumpSprint = new BooleanValue(this, "JumpSprint", false, this.movement);
       this.hover = new BooleanValue(this, "Hover", false, this.movement);
       this.stopAtStart = new BooleanValue(this, "StopAtStart", false, this.movement);
@@ -881,34 +756,30 @@ public class Scaffold
       this.ignoreSpeedMotion = new BooleanValue(this, "IgnoreSpeedMotion", false, this.movement);
       this.sneakAtRotation = new BooleanValue(this, "SneakAtRotation", false, this.movement);
       this.stopAtRotation = new BooleanValue(this, "StopAtRotation", false, this.movement);
-      this.godBridging = new DoubleValue(this, "GodBridging", true, this.movement);
+      this.godBridging = new SettingGroup(this, "GodBridging", true, this.movement);
       this.godBridge = new BooleanValue(this, "GodBridge", false, this.godBridging);
       this.disableGodbridgeSafetyFeature = new BooleanValue(this, "DisableGodbridgeSafetyFeature", false, this.godBridging);
       RandomizedRangeSettings randomizedRangeSettings34 = new RandomizedRangeSettings(this, "ResetGodBridgeAfterXJumps", 7.0, 8.0, 0.0, 12.0, 0, this.godBridging);
       booleanValue2 = this.godBridge;
       this.godBridge.getClass();
       BooleanValue booleanValue66 = booleanValue2;
-      SettingVisibilityCondition condition80 = () -> booleanValue66.getValue();
-      this.resetGodBridgeAfterXJumps = (RandomizedRangeSettings)randomizedRangeSettings34.withVisibility(condition80);
+      this.resetGodBridgeAfterXJumps = (RandomizedRangeSettings)randomizedRangeSettings34.withVisibility(() -> booleanValue66.getValue());
       RandomizedRangeSettings randomizedRangeSettings35 = (new RandomizedRangeSettings(this, "JumpAfterXBlocks", 8.0, 8.0, 0.0, 9.0, 0, this.godBridging)).withoutNotInARow();
       booleanValue2 = this.godBridge;
       this.godBridge.getClass();
       BooleanValue booleanValue67 = booleanValue2;
-      SettingVisibilityCondition condition81 = () -> booleanValue67.getValue();
-      this.jumpAfterXBlocks = (RandomizedRangeSettings)randomizedRangeSettings35.withVisibility(condition81);
+      this.jumpAfterXBlocks = (RandomizedRangeSettings)randomizedRangeSettings35.withVisibility(() -> booleanValue67.getValue());
       RandomizedRangeSettings randomizedRangeSettings36 = new RandomizedRangeSettings(this, "JumpDelayAfterPlace", 0.0, 0.0, 0.0, 1.0, 0, this.godBridging);
       booleanValue2 = this.godBridge;
       this.godBridge.getClass();
       BooleanValue booleanValue68 = booleanValue2;
-      SettingVisibilityCondition condition82 = () -> booleanValue68.getValue();
-      this.jumpDelayAfterPlace = (RandomizedRangeSettings)randomizedRangeSettings36.withVisibility(condition82);
+      this.jumpDelayAfterPlace = (RandomizedRangeSettings)randomizedRangeSettings36.withVisibility(() -> booleanValue68.getValue());
       RandomizedRangeSettings randomizedRangeSettings37 = (new RandomizedRangeSettings(this, "StartDelay", 10.0, 13.0, 8.0, 20.0, 0, this.godBridging)).withoutNotInARow();
       booleanValue2 = this.godBridge;
       this.godBridge.getClass();
       BooleanValue booleanValue69 = booleanValue2;
-      SettingVisibilityCondition condition83 = () -> booleanValue69.getValue();
-      this.startDelay = (RandomizedRangeSettings)randomizedRangeSettings37.withVisibility(condition83);
-      this.moonWalking = new DoubleValue(this, "MoonWalking", true, this.movement);
+      this.startDelay = (RandomizedRangeSettings)randomizedRangeSettings37.withVisibility(() -> booleanValue69.getValue());
+      this.moonWalking = new SettingGroup(this, "MoonWalking", true, this.movement);
       this.moonWalk = new BooleanValue(this, "MoonWalk", true, this.moonWalking);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false, this.moonWalking);
       RandomizedRangeSettings randomizedRangeSettings38 = (new RandomizedRangeSettings(this, "MoonWalkWideness", 0.05, 0.1, 0.0, 0.3, 2, this.moonWalking)).withoutNotInARow();
@@ -921,191 +792,138 @@ public class Scaffold
          return this.moonWalk.getValue() && this.moonWalk.isVisible();
       };
       this.moonWalkStartDistToBlock = rangeSetting9.visibleWhen(condition85);
-      RandomizedRangeSettings randomizedRangeSettings39 = new RandomizedRangeSettings(this, "MoonWalkMiddle", 0.5, 0.5, 0.2, 0.8, 2, this.moonWalking);
-      SettingVisibilityCondition condition86 = () -> this.isMoonWalkMiddleVisible();
-      this.moonWalkMiddle = (RandomizedRangeSettings)randomizedRangeSettings39.withVisibility(condition86);
-      RandomizedRangeSettings randomizedRangeSettings40 = new RandomizedRangeSettings(this, "DelayToRecalculateMiddle", 15.0, 30.0, 0.0, 40.0, 0, this.moonWalking);
-      SettingVisibilityCondition condition87 = () -> this.isDelayToRecalculateMiddleVisible();
-      this.delayToRecalculateMiddle = (RandomizedRangeSettings)randomizedRangeSettings40.withVisibility(condition87);
+      this.moonWalkMiddle = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "MoonWalkMiddle", 0.5, 0.5, 0.2, 0.8, 2, this.moonWalking).withVisibility(() -> this.isMoonWalkMiddleVisible());
+      this.delayToRecalculateMiddle = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "DelayToRecalculateMiddle", 15.0, 30.0, 0.0, 40.0, 0, this.moonWalking).withVisibility(() -> this.isDelayToRecalculateMiddleVisible());
       RandomizedRangeSettings randomizedRangeSettings41 = (new RandomizedRangeSettings(this, "PostPlacementStrafeTicks", 0.0, 0.0, 0.0, 8.0, 0, this.moonWalking)).withMaxInARow();
-      boolean flag = false;
       double d7 = 15.0;
       double d8 = 0.0;
       double d9 = 8.0;
       double d10 = 0.0;
       double d11 = 8.0;
-      double d12 = 5.0;
-      RandomizedRangeSettings randomizedRangeSettings42 = randomizedRangeSettings41.withOutliers(d12, d11, d10, d9, d8, d7, flag);
-      SettingVisibilityCondition condition88 = () -> this.isPostPlacementStrafeTicksVisible();
-      this.postPlacementStrafeTicks = (RandomizedRangeSettings)randomizedRangeSettings42.withVisibility(condition88);
+      this.postPlacementStrafeTicks = (RandomizedRangeSettings)randomizedRangeSettings41.withOutliers(5.0, d11, d10, d9, d8, d7, false).withVisibility(() -> this.isPostPlacementStrafeTicksVisible());
       RandomizedRangeSettings randomizedRangeSettings43 = (new RandomizedRangeSettings(this, "MinMoonwalkTicks", 0.0, 0.0, 0.0, 10.0, 0, this.moonWalking)).withMaxInARow();
-      boolean flag2 = false;
       double d13 = 15.0;
       double d14 = 0.0;
       double d15 = 10.0;
       double d16 = 0.0;
       double d17 = 12.0;
-      double d18 = 8.0;
-      RandomizedRangeSettings randomizedRangeSettings44 = randomizedRangeSettings43.withOutliers(d18, d17, d16, d15, d14, d13, flag2);
+      RandomizedRangeSettings randomizedRangeSettings44 = randomizedRangeSettings43.withOutliers(8.0, d17, d16, d15, d14, d13, false);
       SettingVisibilityCondition condition89 = () -> {
          return this.moonWalk.getValue() && this.moonWalk.isVisible();
       };
       this.minMoonwalkTicks = (RandomizedRangeSettings)randomizedRangeSettings44.withVisibility(condition89);
-      RandomizedRangeSettings randomizedRangeSettings45 = (new RandomizedRangeSettings(this, "DirectionChangeDelay", 0.0, 0.0, 0.0, 3.0, 0, this.moonWalking)).withMaxInARow();
-      SettingVisibilityCondition condition90 = () -> this.isDirectionChangeDelayVisible();
-      this.directionChangeDelay = (RandomizedRangeSettings)randomizedRangeSettings45.withVisibility(condition90);
-      this.sameYBlockGroup = new DoubleValue(this, "SameYBlockGroup", true, this.movement);
+      this.directionChangeDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "DirectionChangeDelay", 0.0, 0.0, 0.0, 3.0, 0, this.moonWalking)).withMaxInARow().withVisibility(() -> this.isDirectionChangeDelayVisible());
+      this.sameYBlockGroup = new SettingGroup(this, "SameYBlockGroup", true, this.movement);
       this.sameYBlock = new BooleanValue(this, "SameYBlock", false, this.sameYBlockGroup);
       BooleanValue booleanValue70 = new BooleanValue(this, "StopMovementAfterJump", true, this.sameYBlockGroup);
       booleanValue2 = this.sameYBlock;
       this.sameYBlock.getClass();
       BooleanValue booleanValue71 = booleanValue2;
-      SettingVisibilityCondition condition91 = () -> booleanValue71.getValue();
-      this.stopMovementAfterJump = (BooleanValue)booleanValue70.withVisibility(condition91);
-      this.sameYGroup = new DoubleValue(this, "SameYGroup", true, this.movement);
+      this.stopMovementAfterJump = (BooleanValue)booleanValue70.withVisibility(() -> booleanValue71.getValue());
+      this.sameYGroup = new SettingGroup(this, "SameYGroup", true, this.movement);
       this.sameY = new BooleanValue(this, "SameY", false, this.sameYGroup);
       BooleanValue booleanValue72 = new BooleanValue(this, "AutoJump", false, this.sameYGroup);
       booleanValue2 = this.sameY;
       this.sameY.getClass();
       BooleanValue booleanValue73 = booleanValue2;
-      SettingVisibilityCondition condition92 = () -> booleanValue73.getValue();
-      this.autoJump = (BooleanValue)booleanValue72.withVisibility(condition92);
-      BooleanValue booleanValue74 = new BooleanValue(this, "IntaveFast2", true, this.sameYGroup);
-      SettingVisibilityCondition condition93 = () -> this.isIntaveFast2Visible();
-      this.intaveFast2 = (BooleanValue)booleanValue74.withVisibility(condition93);
-      BooleanValue booleanValue75 = new BooleanValue(this, "TellyBridge", false, this.sameYGroup);
-      SettingVisibilityCondition condition94 = () -> this.isTellyBridgeVisible();
-      this.tellyBridge = (BooleanValue)booleanValue75.withVisibility(condition94);
-      this.safeWalkGroup = new DoubleValue(this, "SafeWalkGroup", true, this.movement);
+      this.autoJump = (BooleanValue)booleanValue72.withVisibility(() -> booleanValue73.getValue());
+      this.intaveFast2 = (BooleanValue)new BooleanValue(this, "IntaveFast2", true, this.sameYGroup).withVisibility(() -> this.isIntaveFast2Visible());
+      this.tellyBridge = (BooleanValue)new BooleanValue(this, "TellyBridge", false, this.sameYGroup).withVisibility(() -> this.isTellyBridgeVisible());
+      this.safeWalkGroup = new SettingGroup(this, "SafeWalkGroup", true, this.movement);
       this.safeWalk = new BooleanValue(this, "SafeWalk", false, this.safeWalkGroup);
       BooleanValue booleanValue76 = new BooleanValue(this, "SafeWalkAir", false, this.safeWalkGroup);
       booleanValue2 = this.safeWalk;
       this.safeWalk.getClass();
       BooleanValue booleanValue77 = booleanValue2;
-      SettingVisibilityCondition condition95 = () -> booleanValue77.getValue();
-      this.safeWalkAir = (BooleanValue)booleanValue76.withVisibility(condition95);
+      this.safeWalkAir = (BooleanValue)booleanValue76.withVisibility(() -> booleanValue77.getValue());
       BooleanValue booleanValue78 = new BooleanValue(this, "SafeWalkOnlyDiagonal", false, this.safeWalkGroup);
       booleanValue2 = this.safeWalk;
       this.safeWalk.getClass();
       BooleanValue booleanValue79 = booleanValue2;
-      SettingVisibilityCondition condition96 = () -> booleanValue79.getValue();
-      this.safeWalkOnlyDiagonal = (BooleanValue)booleanValue78.withVisibility(condition96);
-      this.jumpGroup = new DoubleValue(this, "JumpGroup", true, this.movement);
+      this.safeWalkOnlyDiagonal = (BooleanValue)booleanValue78.withVisibility(() -> booleanValue79.getValue());
+      this.jumpGroup = new SettingGroup(this, "JumpGroup", true, this.movement);
       this.jump = new BooleanValue(this, "Jump", false, this.jumpGroup);
       BooleanValue booleanValue80 = new BooleanValue(this, "JumpOnlyWhileSpacePressed", false, this.jumpGroup);
       booleanValue2 = this.jump;
       this.jump.getClass();
       BooleanValue booleanValue81 = booleanValue2;
-      SettingVisibilityCondition condition97 = () -> booleanValue81.getValue();
-      this.jumpOnlyWhileSpacePressed = (BooleanValue)booleanValue80.withVisibility(condition97);
+      this.jumpOnlyWhileSpacePressed = (BooleanValue)booleanValue80.withVisibility(() -> booleanValue81.getValue());
       RandomizedRangeSettings randomizedRangeSettings46 = (new RandomizedRangeSettings(this, "JumpAfterXBlocksForward", 6.0, 6.0, 0.0, 10.0, 0, this.jumpGroup)).withoutNotInARow();
       booleanValue2 = this.jump;
       this.jump.getClass();
       BooleanValue booleanValue82 = booleanValue2;
-      SettingVisibilityCondition condition98 = () -> booleanValue82.getValue();
-      this.jumpAfterXBlocksForward = (RandomizedRangeSettings)randomizedRangeSettings46.withVisibility(condition98);
+      this.jumpAfterXBlocksForward = (RandomizedRangeSettings)randomizedRangeSettings46.withVisibility(() -> booleanValue82.getValue());
       RandomizedRangeSettings randomizedRangeSettings47 = (new RandomizedRangeSettings(this, "JumpAfterXBlocksDiagonal", 6.0, 6.0, 0.0, 10.0, 0, this.jumpGroup)).withoutNotInARow();
       booleanValue2 = this.jump;
       this.jump.getClass();
       BooleanValue booleanValue83 = booleanValue2;
-      SettingVisibilityCondition condition99 = () -> booleanValue83.getValue();
-      this.jumpAfterXBlocksDiagonal = (RandomizedRangeSettings)randomizedRangeSettings47.withVisibility(condition99);
-      this.timeGroup = new DoubleValue(this, "TimeGroup", true, this.movement);
-      this.timer = new StringValue(this, "Timer", 1.0, 0.1, 4.0, 2, this.timeGroup);
+      this.jumpAfterXBlocksDiagonal = (RandomizedRangeSettings)randomizedRangeSettings47.withVisibility(() -> booleanValue83.getValue());
+      this.timeGroup = new SettingGroup(this, "TimeGroup", true, this.movement);
+      this.timer = new DoubleValue(this, "Timer", 1.0, 0.1, 4.0, 2, this.timeGroup);
       this.timerDrop = new BooleanValue(this, "TimerDrop", false, this.timeGroup);
-      RangeSetting rangeSetting10 = new RangeSetting(this, "TimerSpeed", 0.1, 50.0, 0.0, 50.0, 2, this.timeGroup);
-      SettingVisibilityCondition condition100 = () -> this.isTimerSpeedVisible();
-      this.timerSpeed = rangeSetting10.visibleWhen(condition100);
-      this.motionMultiplier = new DoubleValue(this, "MotionMultiplier", true, this.movement);
+      this.timerSpeed = new RangeSetting(this, "TimerSpeed", 0.1, 50.0, 0.0, 50.0, 2, this.timeGroup).visibleWhen(() -> this.isTimerSpeedVisible());
+      this.motionMultiplier = new SettingGroup(this, "MotionMultiplier", true, this.movement);
       this.motionMultiplierAirForward = new RandomizedRangeSettings(this, "MotionMultiplierAirForward", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplier);
       this.motionMultiplierAirStrafe = new RandomizedRangeSettings(this, "MotionMultiplierAirStrafe", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplier);
       this.motionMultiplierGroundForward = new RandomizedRangeSettings(this, "MotionMultiplierGroundForward", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplier);
       this.motionMultiplierGroundStrafe = new RandomizedRangeSettings(this, "MotionMultiplierGroundStrafe", 1.0, 1.0, 0.1, 2.0, 2, this.motionMultiplier);
-      this.miscellaneous = new DoubleValue(this, "Miscellaneous", true);
-      this.towerMode = new BooleansSetting(
+      this.miscellaneous = new SettingGroup(this, "Miscellaneous", true);
+      this.towerMode = new StringValue(
          this, "TowerMode", "Legit", new String[]{"Legit", "Intave1", "Intave2", "NCP", "NCPFast", "Verus", "ConstantMotion", "Jump"}, this.miscellaneous
       );
-      BooleanValue booleanValue84 = new BooleanValue(this, "TowerWhileMoving", false, this.miscellaneous);
-      SettingVisibilityCondition condition101 = () -> this.isTowerWhileMovingVisible();
-      this.towerWhileMoving = (BooleanValue)booleanValue84.withVisibility(condition101);
-      StringValue stringValue14 = new StringValue(this, "ConstantMotion", 0.3, 0.01, 0.4, 2, this.miscellaneous);
-      SettingVisibilityCondition condition102 = () -> this.isConstantMotionVisible();
-      this.constantMotion = stringValue14.visibleWhen(condition102);
-      StringValue stringValue15 = new StringValue(this, "JumpMotion", 0.5, 0.37, 1.0, 2, this.miscellaneous);
+      this.towerWhileMoving = (BooleanValue)new BooleanValue(this, "TowerWhileMoving", false, this.miscellaneous).withVisibility(() -> this.isTowerWhileMovingVisible());
+      this.constantMotion = new DoubleValue(this, "ConstantMotion", 0.3, 0.01, 0.4, 2, this.miscellaneous).visibleWhen(() -> this.isConstantMotionVisible());
+      DoubleValue stringValue15 = new DoubleValue(this, "JumpMotion", 0.5, 0.37, 1.0, 2, this.miscellaneous);
       SettingVisibilityCondition condition103 = () -> {
          return this.towerMode.getSelectedValue().equals("Jump");
       };
       this.jumpMotion = stringValue15.visibleWhen(condition103);
-      this.silentMode = new BooleansSetting(this, "SilentMode", "Default", new String[]{"None", "Legit", "Default", "Exploit"}, this.miscellaneous);
-      BooleanValue booleanValue85 = new BooleanValue(this, "UseBiggestStackSilent", false, this.miscellaneous);
-      SettingVisibilityCondition condition104 = () -> this.isUseBiggestStackSilentVisible();
-      this.useBiggestStackSilent = (BooleanValue)booleanValue85.withVisibility(condition104);
-      RandomizedRangeSettings randomizedRangeSettings48 = new RandomizedRangeSettings(this, "SilentStartDelay", 0.0, 0.0, 0.0, 10.0, 0, this.miscellaneous);
-      SettingVisibilityCondition condition105 = () -> this.isSilentStartDelayVisible();
-      this.silentStartDelay = (RandomizedRangeSettings)randomizedRangeSettings48.withVisibility(condition105);
-      RandomizedRangeSettings randomizedRangeSettings49 = new RandomizedRangeSettings(this, "SilentSwitchDelay", 0.0, 0.0, 0.0, 10.0, 0, this.miscellaneous);
-      SettingVisibilityCondition condition106 = () -> this.isSilentSwitchDelayVisible();
-      this.silentSwitchDelay = (RandomizedRangeSettings)randomizedRangeSettings49.withVisibility(condition106);
-      RandomizedRangeSettings randomizedRangeSettings50 = new RandomizedRangeSettings(this, "StackCountToStartSwitchProcess", 0.0, 0.0, 0.0, 5.0, 0, this.miscellaneous);
-      SettingVisibilityCondition condition107 = () -> this.isStackCountToStartSwitchVisible();
-      this.stackCountToStartSwitchProcess = (RandomizedRangeSettings)randomizedRangeSettings50.withVisibility(condition107);
-      RandomizedRangeSettings randomizedRangeSettings51 = (new RandomizedRangeSettings(this, "BackSwitchTickDelay", 5.0, 10.0, 0.0, 40.0, 0, this.miscellaneous)).withoutNotInARow();
-      SettingVisibilityCondition condition108 = () -> this.isBackSwitchTickDelayVisible();
-      this.backSwitchTickDelay = (RandomizedRangeSettings)randomizedRangeSettings51.withVisibility(condition108);
-      BooleanValue booleanValue86 = new BooleanValue(this, "DynamicBackSwitchTickDelay", true, this.miscellaneous);
-      SettingVisibilityCondition condition109 = () -> this.isDynamicBackSwitchTickDelayVisible();
-      this.dynamicBackSwitchTickDelay = (BooleanValue)booleanValue86.withVisibility(condition109);
-      this.visuals = (DoubleValue)(new DoubleValue(this, "Visuals", true)).markVisualOnly();
+      this.silentMode = new StringValue(this, "SilentMode", "Default", new String[]{"None", "Legit", "Default", "Exploit"}, this.miscellaneous);
+      this.useBiggestStackSilent = (BooleanValue)new BooleanValue(this, "UseBiggestStackSilent", false, this.miscellaneous).withVisibility(() -> this.isUseBiggestStackSilentVisible());
+      this.silentStartDelay = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "SilentStartDelay", 0.0, 0.0, 0.0, 10.0, 0, this.miscellaneous).withVisibility(() -> this.isSilentStartDelayVisible());
+      this.silentSwitchDelay = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "SilentSwitchDelay", 0.0, 0.0, 0.0, 10.0, 0, this.miscellaneous).withVisibility(() -> this.isSilentSwitchDelayVisible());
+      this.stackCountToStartSwitchProcess = (RandomizedRangeSettings)new RandomizedRangeSettings(this, "StackCountToStartSwitchProcess", 0.0, 0.0, 0.0, 5.0, 0, this.miscellaneous).withVisibility(() -> this.isStackCountToStartSwitchVisible());
+      this.backSwitchTickDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "BackSwitchTickDelay", 5.0, 10.0, 0.0, 40.0, 0, this.miscellaneous)).withoutNotInARow().withVisibility(() -> this.isBackSwitchTickDelayVisible());
+      this.dynamicBackSwitchTickDelay = (BooleanValue)new BooleanValue(this, "DynamicBackSwitchTickDelay", true, this.miscellaneous).withVisibility(() -> this.isDynamicBackSwitchTickDelayVisible());
+      this.visuals = (SettingGroup)(new SettingGroup(this, "Visuals", true)).markVisualOnly();
       this.thirdPersonMode = (BooleanValue)(new BooleanValue(this, "ThirdPersonMode", false, this.visuals)).markVisualOnly();
       BooleanValue booleanValue87 = new BooleanValue(this, "HideSneakAnimation", false, this.visuals);
       booleanValue2 = this.sneak;
       this.sneak.getClass();
       BooleanValue booleanValue88 = booleanValue2;
-      SettingVisibilityCondition condition110 = () -> booleanValue88.getValue();
-      this.hideSneakAnimation = (BooleanValue)((BooleanValue)booleanValue87.withVisibility(condition110)).markVisualOnly();
+      this.hideSneakAnimation = (BooleanValue)((BooleanValue)booleanValue87.withVisibility(() -> booleanValue88.getValue())).markVisualOnly();
       this.blockCount = (BooleanValue)(new BooleanValue(this, "BlockCount", true, this.visuals)).markVisualOnly();
-      StringValue stringValue16 = new StringValue(this, "X", 50.0, 0.0, 100.0, 2, this.visuals);
+      DoubleValue stringValue16 = new DoubleValue(this, "X", 50.0, 0.0, 100.0, 2, this.visuals);
       booleanValue2 = this.blockCount;
       this.blockCount.getClass();
       BooleanValue booleanValue89 = booleanValue2;
-      SettingVisibilityCondition condition111 = () -> booleanValue89.getValue();
-      this.x = (StringValue)stringValue16.visibleWhen(condition111).markVisualOnly();
-      StringValue stringValue17 = new StringValue(this, "Y", 53.0, 0.0, 100.0, 2, this.visuals);
+      this.x = (DoubleValue)stringValue16.visibleWhen(() -> booleanValue89.getValue()).markVisualOnly();
+      DoubleValue stringValue17 = new DoubleValue(this, "Y", 53.0, 0.0, 100.0, 2, this.visuals);
       booleanValue2 = this.blockCount;
       this.blockCount.getClass();
       BooleanValue booleanValue90 = booleanValue2;
-      SettingVisibilityCondition condition112 = () -> booleanValue90.getValue();
-      this.y = (StringValue)stringValue17.visibleWhen(condition112).markVisualOnly();
-      StringValue stringValue18 = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 1, this.visuals);
+      this.y = (DoubleValue)stringValue17.visibleWhen(() -> booleanValue90.getValue()).markVisualOnly();
+      DoubleValue stringValue18 = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 1, this.visuals);
       booleanValue2 = this.blockCount;
       this.blockCount.getClass();
       BooleanValue booleanValue91 = booleanValue2;
-      SettingVisibilityCondition condition113 = () -> booleanValue91.getValue();
-      this.scale = (StringValue)stringValue18.visibleWhen(condition113).markVisualOnly();
+      this.scale = (DoubleValue)stringValue18.visibleWhen(() -> booleanValue91.getValue()).markVisualOnly();
       BooleanValue booleanValue92 = new BooleanValue(this, "BackGround", true, this.visuals);
       booleanValue2 = this.blockCount;
       this.blockCount.getClass();
       BooleanValue booleanValue93 = booleanValue2;
-      SettingVisibilityCondition condition114 = () -> booleanValue93.getValue();
-      this.backGround = (BooleanValue)((BooleanValue)booleanValue92.withVisibility(condition114)).markVisualOnly();
+      this.backGround = (BooleanValue)((BooleanValue)booleanValue92.withVisibility(() -> booleanValue93.getValue())).markVisualOnly();
       Color color2 = new Color(0, 0, 0, 100);
-      DoubleValue visuals2 = this.visuals;
+      SettingGroup visuals2 = this.visuals;
       Color color3 = color2;
       String str14 = "BackGroundColor";
       ColorSetting colorSetting = new ColorSetting(this, str14, color3, visuals2);
       booleanValue2 = this.backGround;
       this.backGround.getClass();
       BooleanValue booleanValue94 = booleanValue2;
-      SettingVisibilityCondition condition115 = () -> booleanValue94.getValue();
-      this.backgroundColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(condition115)).markVisualOnly();
-      StringValue stringValue19 = new StringValue(this, "RoundFactor", 5.0, 0.0, 11.0, 0, this.visuals);
-      SettingVisibilityCondition condition116 = () -> this.isRoundFactorVisible();
-      this.roundFactor = (StringValue)stringValue19.visibleWhen(condition116).markVisualOnly();
-      BlurShadowSettings blurShadowSettings = new BlurShadowSettings(this, "BlockCount", this.visuals);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings2 = blurShadowSettings.withCustomShadowColor(black);
-      SettingVisibilityCondition condition117 = () -> this.isBlockCountShadowVisible();
-      this.blockCount2 = (BlurShadowSettings)((BlurShadowSettings)blurShadowSettings2.withVisibility(condition117)).markAllVisualOnly();
+      this.backgroundColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(() -> booleanValue94.getValue())).markVisualOnly();
+      this.roundFactor = (DoubleValue)new DoubleValue(this, "RoundFactor", 5.0, 0.0, 11.0, 0, this.visuals).visibleWhen(() -> this.isRoundFactorVisible()).markVisualOnly();
+      this.blockCount2 = (BlurShadowSettings)((BlurShadowSettings)new BlurShadowSettings(this, "BlockCount", this.visuals).withCustomShadowColor(Color.black).withVisibility(() -> this.isBlockCountShadowVisible())).markAllVisualOnly();
       this.esp = (BooleanValue)(new BooleanValue(this, "ESP", true, this.visuals)).markVisualOnly();
       color2 = new Color(41, 146, 222, 100);
       visuals2 = this.visuals;
@@ -1115,16 +933,12 @@ public class Scaffold
       booleanValue2 = this.esp;
       this.esp.getClass();
       BooleanValue booleanValue95 = booleanValue2;
-      SettingVisibilityCondition condition118 = () -> booleanValue95.getValue();
-      this.espColor = (ColorSetting)((ColorSetting)colorSetting2.withVisibility(condition118)).markVisualOnly();
-      BlurShadowSettings blurShadowSettings3 = new BlurShadowSettings(this, "ESP", this.visuals);
-      Color black2 = Color.black;
-      BlurShadowSettings blurShadowSettings4 = blurShadowSettings3.withCustomShadowColor(black2);
+      this.espColor = (ColorSetting)((ColorSetting)colorSetting2.withVisibility(() -> booleanValue95.getValue())).markVisualOnly();
+      BlurShadowSettings blurShadowSettings4 = new BlurShadowSettings(this, "ESP", this.visuals).withCustomShadowColor(Color.black);
       booleanValue2 = this.esp;
       this.esp.getClass();
       BooleanValue booleanValue96 = booleanValue2;
-      SettingVisibilityCondition condition119 = () -> booleanValue96.getValue();
-      this.esp2 = (BlurShadowSettings)((BlurShadowSettings)blurShadowSettings4.withVisibility(condition119)).markAllVisualOnly();
+      this.esp2 = (BlurShadowSettings)((BlurShadowSettings)blurShadowSettings4.withVisibility(() -> booleanValue96.getValue())).markAllVisualOnly();
       this.lastPlacedBlockPos = null;
       this.targetBlockPos = null;
       this.tellyPredictedBlockDistance = 0;
@@ -1252,9 +1066,7 @@ public class Scaffold
       this.jumpDelayAfterPlace.nextValue();
       this.resetGodBridgeAfterXJumps.nextValue();
       this.jumpAfterXBlocks.nextValue();
-      byte b = 7;
-      byte b2 = 5;
-      this.godBridgeSneakSetupTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+      this.godBridgeSneakSetupTicks = DefaultRandomGenerator.instance.nextInt2((byte)5, (byte)7);
       this.jumpAfterXBlocks.nextValue();
       this.sneakTicks.nextValue();
       this.blocksPlacedSinceJump = this.jumpOnlyWhileSpacePressed.getValue() ? 10000 : 0;
@@ -1265,15 +1077,9 @@ public class Scaffold
       this.previousTargetBlockPos = null;
       this.firstSilentSwitchPending = true;
       this.silentStartDelay.nextValue();
-      short s = 255;
-      short s2 = 145;
-      this.stopAtStartDelayMs = DefaultRandomGenerator.instance.nextInt2(s2, s);
-      byte b3 = 3;
-      byte b4 = 1;
-      this.startEdgeSneakTicks = DefaultRandomGenerator.instance.nextInt2(b4, b3);
-      byte b5 = 3;
-      byte b6 = 1;
-      this.postDirectionChangeSneakTicks = DefaultRandomGenerator.instance.nextInt2(b6, b5);
+      this.stopAtStartDelayMs = DefaultRandomGenerator.instance.nextInt2((short)145, (short)255);
+      this.startEdgeSneakTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
+      this.postDirectionChangeSneakTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
       this.strafeCorrectionMiddle = this.rollStrafeCorrectionMiddle();
       this.staticPitch.nextValue();
       this.staticPitchDiagonal.nextValue();
@@ -1315,40 +1121,22 @@ public class Scaffold
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 20;
-      byte b3 = 36;
-      this.toggleEventSubscription(b3, b2);
-      byte b4 = 7;
-      this.toggleEventSubscription(b4);
-      byte b5 = 40;
-      this.toggleEventSubscription(b5);
-      byte b6 = 24;
-      this.toggleEventSubscription(b6);
-      byte b7 = 20;
-      this.toggleEventSubscription(b7);
-      byte b8 = 5;
-      byte b9 = 21;
-      this.toggleEventSubscription(b9, b8);
-      byte b10 = 18;
-      this.toggleEventSubscription(b10);
-      byte b11 = 32;
-      this.toggleEventSubscription(b11);
-      byte b12 = 29;
-      this.toggleEventSubscription(b12);
-      byte b13 = 26;
-      this.toggleEventSubscription(b13);
-      byte b14 = 33;
-      this.toggleEventSubscription(b14);
-      byte b15 = 39;
-      this.toggleEventSubscription(b15);
-      byte b16 = 34;
-      this.toggleEventSubscription(b16);
-      byte b17 = 0;
-      this.toggleEventSubscription(b17);
-      byte b18 = 43;
-      this.toggleEventSubscription(b18);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)36, (byte)20);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)24);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)21, (byte)5);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)29);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)33);
+      this.toggleEventSubscription((byte)39);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)0);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -1362,8 +1150,7 @@ public class Scaffold
             && this.targetBlockPos != null
             && (this.towerWhileMoving.getValue() && mc.gameSettings.keyBindJump.isKeyDown() || this.isStationaryTowering())
             && BlockUtil.isValidScaffoldBlock(mc.thePlayer.getCurrentEquippedItem())) {
-            String selectedValue = this.towerMode.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.towerMode.getSelectedValue()) {
                case "Intave1":
                   if (mc.thePlayer.onGround) {
                      mc.thePlayer.motionY = 0.405;
@@ -1502,8 +1289,7 @@ public class Scaffold
 
          exitBlock: {
             if (this.startAtEdge.getValue() && !mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().getMaterial().isReplaceable()) {
-               boolean flag3 = true;
-               if (!this.checkBlockClutchState(flag3)) {
+               if (!this.checkBlockClutchState(true)) {
                   break exitBlock;
                }
             }
@@ -1570,8 +1356,7 @@ public class Scaffold
       this.directionChangeDelayCounter.increment();
       if (!this.waitingForStartEdge) {
          event.cancel();
-         boolean flag = true;
-         event.setBlockAllClicks(flag);
+         event.setBlockAllClicks(true);
          this.intaveBlockPlacePenalty = 0.0;
          double d = (double)Math.abs(ClientManagers.rotationController.getCurrentRotation().yaw - ClientManagers.rotationController.getPreviousRotation().yaw);
          double d2 = (double)Math.abs(ClientManagers.rotationController.getCurrentRotation().pitch - ClientManagers.rotationController.getPreviousRotation().pitch);
@@ -1585,16 +1370,13 @@ public class Scaffold
          exitBlock: {
             exitBlock2: {
                if (!flag2) {
-                  TickCounter tickCounter = this.startAtEdgeDelayCounter;
-                  int lastIntValue = this.startAtEdgeDelay.getLastIntValue();
-                  if (tickCounter.hasReached2(lastIntValue)) {
+                  if (this.startAtEdgeDelayCounter.hasReached2(this.startAtEdgeDelay.getLastIntValue())) {
                      break exitBlock2;
                   }
                }
 
                if (this.startAtEdge.getValue() && !this.hasPlacedFirstBlock) {
-                  boolean flag4 = true;
-                  if (!this.checkBlockClutchState(flag4) || !this.ignoreStartAtEdgeAtBlockClutch.getValue()) {
+                  if (!this.checkBlockClutchState(true) || !this.ignoreStartAtEdgeAtBlockClutch.getValue()) {
                      flag3 = false;
                      break exitBlock;
                   }
@@ -1610,10 +1392,8 @@ public class Scaffold
          double d4 = Math.abs(d2);
          exitBlock3:
          if (this.isBlockClutching()) {
-            boolean flag6 = true;
-            if (!(d3 > this.maxYawRotationDeltaToPlaceBlocksAtBlockClutch.getValue(flag6))) {
-               boolean flag7 = true;
-               if (!(d4 > this.maxPitchRotationDeltaToPlaceBlocksAtBlockClutch.getValue(flag7))) {
+            if (!(d3 > this.maxYawRotationDeltaToPlaceBlocksAtBlockClutch.getValue(true))) {
+               if (!(d4 > this.maxPitchRotationDeltaToPlaceBlocksAtBlockClutch.getValue(true))) {
                   break exitBlock3;
                }
             }
@@ -1621,10 +1401,8 @@ public class Scaffold
             flag5 = false;
          } else {
             exitBlock4: {
-               boolean flag8 = true;
-               if (!(d3 > this.maxYawRotationDeltaToPlaceBlocks.getValue(flag8))) {
-                  boolean flag9 = true;
-                  if (!(d4 > this.maxPitchRotationDeltaToPlaceBlocks.getValue(flag9))) {
+               if (!(d3 > this.maxYawRotationDeltaToPlaceBlocks.getValue(true))) {
+                  if (!(d4 > this.maxPitchRotationDeltaToPlaceBlocks.getValue(true))) {
                      break exitBlock4;
                   }
                }
@@ -1643,15 +1421,11 @@ public class Scaffold
                this.directionChangeDelayCounter.reset();
             }
 
-            TickCounter tickCounter2 = this.directionChangeDelayCounter;
-            int lastIntValue2 = this.startDelayAfterDirectionChange.getLastIntValue();
-            if (!tickCounter2.hasReached2(lastIntValue2)) {
+            if (!this.directionChangeDelayCounter.hasReached2(this.startDelayAfterDirectionChange.getLastIntValue())) {
                flag5 = false;
                this.ticksSinceDirectionChange = 0;
             } else {
-               byte b = 3;
-               byte b2 = 1;
-               this.postDirectionChangeSneakTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+               this.postDirectionChangeSneakTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
                this.startDelayAfterDirectionChange.nextValue();
                this.directionChangePending = false;
             }
@@ -1676,9 +1450,7 @@ public class Scaffold
                         ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(n2).getStack();
                         BlockPos blockPos = this.blockPlacementData.getBlockPos();
                         Vec3 hitVec = this.blockPlacementData.getHitVec();
-                        EnumFacing facing = this.blockPlacementData.getFacing();
-                        BlockPos pos = blockPos;
-                        if (!PlayerUtil.canPlaceBlockAt(stack, pos, facing, hitVec)) {
+                        if (!PlayerUtil.canPlaceBlockAt(stack, blockPos, this.blockPlacementData.getFacing(), hitVec)) {
                            return false;
                         }
 
@@ -1695,12 +1467,7 @@ public class Scaffold
                         this.lastRightClickTimer.reset();
                         this.lastPlaceTimer.reset();
                         flag10 = false;
-                        RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-                        double minValue = this.moonWalkStartDistToBlock.getMinValue();
-                        double maxValue = this.moonWalkStartDistToBlock.getMaxValue();
-                        double d5 = maxValue;
-                        double d6 = minValue;
-                        this.moonWalkEdgeExpandDist = -instance.nextDouble(d6, d5);
+                        this.moonWalkEdgeExpandDist = -DefaultRandomGenerator.instance.nextDouble(this.moonWalkStartDistToBlock.getMinValue(), this.moonWalkStartDistToBlock.getMaxValue());
                         this.ticksSinceLastPlace = 0;
                         this.postPlacementStrafeTicks.nextValue();
                         this.placedBlockSinceEnable = true;
@@ -1738,8 +1505,7 @@ public class Scaffold
                   BlockPos blockPos2 = mc.objectMouseOver.getBlockPos();
                   EnumFacing sideHit = mc.objectMouseOver.sideHit;
                   if (sideHit == EnumFacing.UP) {
-                     ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
-                     boolean flag11 = PlayerUtil.canPlaceHeldItemAtMouseOver(currentEquippedItem);
+                     boolean flag11 = PlayerUtil.canPlaceHeldItemAtMouseOver(mc.thePlayer.getCurrentEquippedItem());
                      if ((!this.sameY.getValue() || !flag11 || this.rightClickHeldOnGround || this.isStationaryTowering())
                         && blockPos2.equalsPos(this.targetBlockPos)
                         && this.canClickWithPause()
@@ -1747,8 +1513,7 @@ public class Scaffold
                         && !this.sameYBlockTopPlaced) {
                         exitBlock5: {
                            if (!(ClientManagers.rotationController.getPreviousRotation().pitch < 85.0F) && this.intave.getValue() && !this.otherRotation.getValue()) {
-                              ItemStack currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
-                              if (PlayerUtil.canPlaceHeldItemAtMouseOver(currentEquippedItem2)) {
+                              if (PlayerUtil.canPlaceHeldItemAtMouseOver(mc.thePlayer.getCurrentEquippedItem())) {
                                  flag3 = false;
                                  break exitBlock5;
                               }
@@ -1760,21 +1525,13 @@ public class Scaffold
                         boolean flag12 = flag3;
                         double d7;
                         if (this.intave.getValue() && this.intaveSafe.getValue()) {
-                           Intave14TimeBlockPlaceCheck check = this.intave14TimeBlockPlaceCheck;
-                           BlockPos pos2 = blockPos2.offset(sideHit);
-                           BlockPos blockPos3 = mc.objectMouseOver.getBlockPos();
-                           BlockPos pos3 = pos2;
-                           d7 = check.computePlaceTimeDeficit(pos3, blockPos3);
+                           d7 = this.intave14TimeBlockPlaceCheck.computePlaceTimeDeficit(blockPos2.offset(sideHit), mc.objectMouseOver.getBlockPos());
                         } else {
                            d7 = 0.0;
                         }
 
                         this.intaveBlockPlacePenalty = d7;
-                        BridgeClickController bridgeClickController3 = this.bridgeClickController;
-                        MovingObjectPosition objectMouseOver = mc.objectMouseOver;
-                        ScaffoldPlaceCondition scaffoldPlaceCondition2 = () -> this.placeTopBlock(flag12);
-                        MovingObjectPosition hit2 = objectMouseOver;
-                        bridgeClickController3.handleBlockClick(hit2, event, scaffoldPlaceCondition2);
+                        this.bridgeClickController.handleBlockClick(mc.objectMouseOver, event, () -> this.placeTopBlock(flag12));
                      }
                   } else if ((
                         blockPos2.equalsPos(this.targetBlockPos)
@@ -1793,11 +1550,7 @@ public class Scaffold
                      && this.canPlaceAtEdge()) {
                      double d8;
                      if (this.intave.getValue() && this.intaveSafe.getValue()) {
-                        Intave14TimeBlockPlaceCheck check2 = this.intave14TimeBlockPlaceCheck;
-                        BlockPos pos4 = mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit);
-                        BlockPos blockPos4 = mc.objectMouseOver.getBlockPos();
-                        BlockPos pos5 = pos4;
-                        d8 = check2.computePlaceTimeDeficit(pos5, blockPos4);
+                        d8 = this.intave14TimeBlockPlaceCheck.computePlaceTimeDeficit(mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit), mc.objectMouseOver.getBlockPos());
                      } else {
                         d8 = 0.0;
                      }
@@ -1805,8 +1558,7 @@ public class Scaffold
                      exitBlock6: {
                         this.intaveBlockPlacePenalty = d8;
                         if (!(ClientManagers.rotationController.getPreviousRotation().pitch < 85.0F) && this.intave.getValue() && !this.otherRotation.getValue()) {
-                           ItemStack currentEquippedItem3 = mc.thePlayer.getCurrentEquippedItem();
-                           if (PlayerUtil.canPlaceHeldItemAtMouseOver(currentEquippedItem3)) {
+                           if (PlayerUtil.canPlaceHeldItemAtMouseOver(mc.thePlayer.getCurrentEquippedItem())) {
                               flag3 = false;
                               break exitBlock6;
                            }
@@ -1816,13 +1568,7 @@ public class Scaffold
                      }
 
                      boolean flag13 = flag3;
-                     BridgeClickController bridgeClickController4 = this.bridgeClickController;
-                     MovingObjectPosition objectMouseOver2 = mc.objectMouseOver;
-                     ScaffoldPlaceCondition scaffoldPlaceCondition3 = () -> this.placeSideBlock(flag13);
-                     boolean flag14 = this.wouldFallNextTick();
-                     ScaffoldPlaceCondition scaffoldPlaceCondition4 = scaffoldPlaceCondition3;
-                     MovingObjectPosition hit3 = objectMouseOver2;
-                     bridgeClickController4.handleBlockClick(hit3, event, scaffoldPlaceCondition4, flag14);
+                     this.bridgeClickController.handleBlockClick(mc.objectMouseOver, event, () -> this.placeSideBlock(flag13), this.wouldFallNextTick());
                   }
                }
 
@@ -1843,9 +1589,7 @@ public class Scaffold
    @Override
    public void onPacket2(EventPacket event) {
       if (this.intave.getValue() && this.intaveSafe.getValue() && this.waitingForStartEdge) {
-         Intave14TimeBlockPlaceCheck check = this.intave14TimeBlockPlaceCheck;
-         Packet packet = event.getPacket();
-         check.onClientPacket(packet);
+         this.intave14TimeBlockPlaceCheck.onClientPacket(event.getPacket());
       }
    }
 
@@ -1855,8 +1599,7 @@ public class Scaffold
          if (!this.waitingForStartEdge) {
             if (MoveUtil.isMoving()) {
                if (this.isTellyBridgeEnabled() && this.blocksSinceLastSneak > 0 && !mc.thePlayer.isSprinting()) {
-                  boolean flag = false;
-                  event.setJump(flag);
+                  event.setJump(false);
                }
             }
 
@@ -1871,16 +1614,12 @@ public class Scaffold
                   }
                }
 
-               boolean flag2 = true;
-               event.setJump(flag2);
+               event.setJump(true);
                if (this.isTellyBridgeEnabled() && mc.thePlayer.onGround) {
                   double[] doubles = PlayerUtil.predictPlayerPosition(9, mc.thePlayer);
                   double d = doubles[0];
-                  double d2 = doubles[2];
-                  double d3 = d2;
-                  double d4 = d;
-                  BlockPlacementData blockPlacementData2 = this.blockPlacementData;
-                  this.tellyPredictedBlockDistance = this.countVoxelStepsToTarget(blockPlacementData2, d4, d3);
+                  double d3 = doubles[2];
+                  this.tellyPredictedBlockDistance = this.countVoxelStepsToTarget(this.blockPlacementData, d, d3);
                }
             }
          }
@@ -1895,14 +1634,12 @@ public class Scaffold
       if (this.canRunScaffoldInCurrentScreen()) {
          if (!this.waitingForStartEdge) {
             if (this.startAtEdge.getValue() && (!this.hasPlacedFirstBlock || this.ticksSinceFirstPlace < this.startEdgeSneakTicks)) {
-               boolean flag = true;
-               event.setSneak(flag);
+               event.setSneak(true);
             }
 
             if (this.strictYaw.getValue() && (!this.ignoreStartDelayAfterDirectionChangeAtBlockClutch.getValue() || !this.isBlockClutching())) {
                if (this.startDelayAfterDirectionChange.getMaxValue() > 0.0 && (this.directionChangePending || this.ticksSinceDirectionChange <= this.postDirectionChangeSneakTicks)) {
-                  boolean flag2 = true;
-                  event.setSneak(flag2);
+                  event.setSneak(true);
                }
             }
 
@@ -1940,21 +1677,17 @@ public class Scaffold
             if ((double)Math.abs(ClientManagers.rotationController.getPreviousRotation().yaw - ClientManagers.rotationController.getLastTickRotation().yaw) > 1.5
                || (double)Math.abs(ClientManagers.rotationController.getCurrentRotation().yaw - ClientManagers.rotationController.getPreviousRotation().yaw) > 1.5) {
                if (this.sneakAtRotation.getValue()) {
-                  boolean flag5 = true;
-                  event.setSneak(flag5);
+                  event.setSneak(true);
                }
 
                if (this.stopAtRotation.getValue()) {
-                  float f = 0.0F;
-                  event.setMoveForward(f);
-                  float f2 = 0.0F;
-                  event.setMoveStrafe(f2);
+                  event.setMoveForward(0.0F);
+                  event.setMoveStrafe(0.0F);
                }
             }
 
             if (this.hover.getValue() && !this.hoverJumpStarted && mc.thePlayer.onGround) {
-               boolean flag6 = true;
-               event.setJump(flag6);
+               event.setJump(true);
                this.hoverJumpStarted = true;
             }
 
@@ -1981,8 +1714,7 @@ public class Scaffold
                         this.reducingVelocity = false;
                      }
 
-                     float f3 = (float)(MathHelper.atan2(d2, d) * 180.0 / Math.PI - 90.0);
-                     event.setYaw(f3);
+                     event.setYaw((float)(MathHelper.atan2(d2, d) * 180.0 / Math.PI - 90.0));
                   }
                }
             }
@@ -1996,85 +1728,66 @@ public class Scaffold
                && !this.towerMode.getSelectedValue().equals("Intave1")
                && !this.towerMode.getSelectedValue().equals("Intave2")
                && !this.towerMode.getSelectedValue().equals("Legit")) {
-               boolean flag7 = false;
-               event.setJump(flag7);
+               event.setJump(false);
             }
 
             if (this.sneakNoBlocks.getValue()) {
-               ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
-               if (!BlockUtil.isValidScaffoldBlock(currentEquippedItem)
+               if (!BlockUtil.isValidScaffoldBlock(mc.thePlayer.getCurrentEquippedItem())
                   && (this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending || this.silentMode.getSelectedValue().equals("None"))
                   && mc.thePlayer.onGround
                   && !mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ)).getBlock().isFullBlock()) {
-                  boolean flag8 = true;
-                  event.setSneak(flag8);
+                  event.setSneak(true);
                }
             }
 
             if (this.stopNoBlocks.getValue()) {
-               ItemStack currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
-               if (!BlockUtil.isValidScaffoldBlock(currentEquippedItem2) && (this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending || this.silentMode.getSelectedValue().equals("None"))) {
-                  float f4 = 0.0F;
-                  event.setMoveForward(f4);
-                  float f5 = 0.0F;
-                  event.setMoveStrafe(f5);
+               if (!BlockUtil.isValidScaffoldBlock(mc.thePlayer.getCurrentEquippedItem()) && (this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending || this.silentMode.getSelectedValue().equals("None"))) {
+                  event.setMoveForward(0.0F);
+                  event.setMoveStrafe(0.0F);
                }
             }
 
             if (this.sneak.getValue()) {
-               double value = this.sneakSlowDown.getValue();
-               event.setSneakForwardMultiplier(value);
-               double value2 = this.sneakSlowDown.getValue();
-               event.setSneakStrafeMultiplier(value2);
+               event.setSneakForwardMultiplier(this.sneakSlowDown.getValue());
+               event.setSneakStrafeMultiplier(this.sneakSlowDown.getValue());
             }
 
             if (this.isIntaveFastSneakActive()) {
-               boolean flag9 = true;
-               event.setSneak(flag9);
-               double d3 = 1.0;
-               event.setSneakForwardMultiplier(d3);
-               double d4 = 0.0;
-               event.setSneakStrafeMultiplier(d4);
+               event.setSneak(true);
+               event.setSneakForwardMultiplier(1.0);
+               event.setSneakStrafeMultiplier(0.0);
             }
 
             if (this.moveFix.getSelectedValue().equals("Default")) {
-               MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-               event.setMoveFixMode(moveFixMode);
+               event.setMoveFixMode(MoveFixMode.DEFAULT);
             } else if (this.moveFix.getSelectedValue().equals("Advanced")) {
-               MoveFixMode advanced = MoveFixMode.ADVANCED;
-               event.setMoveFixMode(advanced);
+               event.setMoveFixMode(MoveFixMode.ADVANCED);
             }
 
             if (!this.moveFix.getSelectedValue().equals("None") && RotationUtil.isNearCardinalYaw(this.getMovementYaw())) {
-               boolean flag10 = false;
-               float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-               float f6 = this.applyStrictYaw(realYaw, flag10);
+               float f6 = this.applyStrictYaw(Augustus.getInstance().getYawPitchHelper().realYaw, false);
                this.cachedStrictMoveYaw = f6;
                event.setYaw(f6);
             }
 
             if (this.moveFixIntave.getValue() && !this.moveFix.getSelectedValue().equals("None")) {
-               boolean flag11 = true;
-               event.setPreventInstantReverse(flag11);
+               event.setPreventInstantReverse(true);
             }
 
             if (this.sameY.getValue() && this.intave.getValue() && this.intaveFast2.getValue() && this.rightClickHeldOnGround) {
-               boolean flag12 = true;
-               event.setJump(flag12);
+               event.setJump(true);
             }
 
             if (this.stopAtStart.getValue()) {
                long stopAtStartDelayMs2 = (long)this.stopAtStartDelayMs;
                if (!this.enableTimer.reached2(stopAtStartDelayMs2)) {
-                  float f7 = 0.0F;
-                  event.setMoveForward(f7);
+                  event.setMoveForward(0.0F);
                }
             }
 
             if (this.jump.getValue()) {
                if (this.jumpOnlyWhileSpacePressed.getValue() && MoveUtil.isMoving()) {
-                  boolean flag13 = false;
-                  event.setJump(flag13);
+                  event.setJump(false);
                   isKeyDown = false;
                }
 
@@ -2083,8 +1796,7 @@ public class Scaffold
                   this.blocksPlacedSinceJump = 0;
                   this.jumpAfterXBlocksForward.nextValue();
                   this.jumpAfterXBlocksDiagonal.nextValue();
-                  boolean flag14 = true;
-                  event.setJump(flag14);
+                  event.setJump(true);
                }
             }
 
@@ -2094,14 +1806,11 @@ public class Scaffold
                   isKeyDown = !mc.thePlayer.onGround;
                   if ((mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().getMaterial().isReplaceable() || !this.hasPlacedFirstBlock)
                      && mc.thePlayer.onGround) {
-                     boolean flag15 = true;
-                     event.setJump(flag15);
-                     boolean flag16 = true;
-                     event.setSneak(flag16);
+                     event.setJump(true);
+                     event.setSneak(true);
                      isKeyDown = true;
                   } else {
-                     boolean flag17 = false;
-                     event.setJump(flag17);
+                     event.setJump(false);
                   }
                }
 
@@ -2114,49 +1823,38 @@ public class Scaffold
                         RandomNumberGenerator instance = DefaultRandomGenerator.instance;
                         double minValue = this.minOffGroundSneakTickDiagonal.getMinValue();
                         double maxValue = this.minOffGroundSneakTickDiagonal.getMaxValue();
-                        double d5 = maxValue;
-                        double d6 = minValue;
-                        this.minOffGroundSneakDiagonal = instance.nextInt(d6, d5);
+                        this.minOffGroundSneakDiagonal = instance.nextInt(minValue, maxValue);
                         RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
                         minValue = this.maxOffGroundSneakTickDiagonal.getMinValue();
                         maxValue = this.maxOffGroundSneakTickDiagonal.getMaxValue();
-                        double d7 = maxValue;
-                        double d8 = minValue;
-                        this.maxOffGroundSneakDiagonal = instance2.nextInt(d8, d7);
+                        this.maxOffGroundSneakDiagonal = instance2.nextInt(minValue, maxValue);
                      }
 
                      if (this.oneStackForward.getValue()) {
                         RandomNumberGenerator instance3 = DefaultRandomGenerator.instance;
                         double minValue2 = this.minOffGroundSneakTickForward.getMinValue();
                         double maxValue2 = this.minOffGroundSneakTickForward.getMaxValue();
-                        double d9 = maxValue2;
-                        double d10 = minValue2;
-                        this.minOffGroundSneakForward = instance3.nextInt(d10, d9);
+                        this.minOffGroundSneakForward = instance3.nextInt(minValue2, maxValue2);
                         RandomNumberGenerator instance4 = DefaultRandomGenerator.instance;
                         minValue2 = this.maxOffGroundSneakTickForward.getMinValue();
                         maxValue2 = this.maxOffGroundSneakTickForward.getMaxValue();
-                        double d11 = maxValue2;
-                        double d12 = minValue2;
-                        this.maxOffGroundSneakForward = instance4.nextInt(d12, d11);
+                        this.maxOffGroundSneakForward = instance4.nextInt(minValue2, maxValue2);
                      }
                   }
 
                   if (this.oneStackDiagonal.getValue() && !flag18 && this.offGroundTicks >= this.minOffGroundSneakDiagonal && this.offGroundTicks < this.maxOffGroundSneakDiagonal) {
-                     boolean flag19 = true;
-                     event.setSneak(flag19);
+                     event.setSneak(true);
                   }
 
                   if (this.oneStackForward.getValue() && flag18 && this.offGroundTicks >= this.minOffGroundSneakForward && this.offGroundTicks < this.maxOffGroundSneakForward) {
-                     boolean flag20 = true;
-                     event.setSneak(flag20);
+                     event.setSneak(true);
                   }
                }
 
                if (!isKeyDown
                   && (!this.sameYBlockJumpActive || !this.sameYBlock.getValue())
                   && (this.sneakHoldTicks < this.sneakTicks.getLastIntValue() - 1 || !this.isOverSupportBlock && (flag18 ? this.blocksSinceLastSneak >= this.sneakIntervalBlocksForward : this.blocksSinceLastSneak >= this.sneakIntervalBlocksDiagonal))) {
-                  boolean flag21 = true;
-                  event.setSneak(flag21);
+                  event.setSneak(true);
                   this.sneakingOnGroundForEdge = mc.thePlayer.onGround;
                }
 
@@ -2170,24 +1868,15 @@ public class Scaffold
                   RandomNumberGenerator instance5 = DefaultRandomGenerator.instance;
                   double minValue3 = this.sneakBlocksForward.getMinValue();
                   double maxValue3 = this.sneakBlocksForward.getMaxValue();
-                  double d13 = maxValue3;
-                  double d14 = minValue3;
-                  this.sneakIntervalBlocksForward = instance5.nextInt(d14, d13);
+                  this.sneakIntervalBlocksForward = instance5.nextInt(minValue3, maxValue3);
                   RandomNumberGenerator instance6 = DefaultRandomGenerator.instance;
                   minValue3 = this.sneakBlocksDiagonal.getMinValue();
                   maxValue3 = this.sneakBlocksDiagonal.getMaxValue();
-                  double d15 = maxValue3;
-                  double d16 = minValue3;
-                  this.sneakIntervalBlocksDiagonal = instance6.nextInt(d16, d15);
+                  this.sneakIntervalBlocksDiagonal = instance6.nextInt(minValue3, maxValue3);
                }
 
                if (!event.isSneak() && this.wasSneakingLastTick) {
-                  RandomNumberGenerator instance7 = DefaultRandomGenerator.instance;
-                  double minValue4 = this.startSneakDistToBlock.getMinValue();
-                  double maxValue4 = this.startSneakDistToBlock.getMaxValue();
-                  double d17 = maxValue4;
-                  double d18 = minValue4;
-                  this.sneakEdgeExpandDist = -instance7.nextDouble(d18, d17);
+                  this.sneakEdgeExpandDist = -DefaultRandomGenerator.instance.nextDouble(this.startSneakDistToBlock.getMinValue(), this.startSneakDistToBlock.getMaxValue());
                }
 
                this.wasSneakingLastTick = event.isSneak();
@@ -2197,19 +1886,16 @@ public class Scaffold
                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
                   for (PotionEffect potionEffect : (Iterable<PotionEffect>)(mc.thePlayer.getActivePotionEffects())) {
                      if (potionEffect.getPotionID() == Potion.moveSpeed.id && mc.thePlayer.ticksExisted % (3 + potionEffect.getAmplifier()) != 0) {
-                        boolean flag22 = true;
-                        event.setSneak(flag22);
+                        event.setSneak(true);
                         break;
                      }
                   }
                } else if (this.adhsMode.getSelectedValue().equals("ADS")) {
                   if (mc.thePlayer.ticksExisted % 3 == 0 || mc.thePlayer.ticksExisted % 4 == 0) {
-                     boolean flag23 = true;
-                     event.setSneak(flag23);
+                     event.setSneak(true);
                   }
                } else if (this.adhsMode.getSelectedValue().equals("ADHS") && mc.thePlayer.ticksExisted % 2 == 0) {
-                  boolean flag24 = true;
-                  event.setSneak(flag24);
+                  event.setSneak(true);
                }
             }
 
@@ -2357,14 +2043,11 @@ public class Scaffold
                }
 
                TickCounter tickCounter = this.strafeCorrectionCounter;
-               int lastIntValue = this.correctStrafeWithKeyBindsDuration.getLastIntValue();
-               if (!tickCounter.hasReached2(lastIntValue)) {
+               if (!tickCounter.hasReached2(this.correctStrafeWithKeyBindsDuration.getLastIntValue())) {
                   if (event.getMoveForward() != 0.0F) {
-                     float f8 = (float)this.keyBindStrafeCorrectionDir;
-                     event.setMoveStrafe(f8);
+                     event.setMoveStrafe((float)this.keyBindStrafeCorrectionDir);
                   } else if (event.getMoveStrafe() != 0.0F) {
-                     float f9 = (float)this.keyBindStrafeCorrectionDir;
-                     event.setMoveForward(f9);
+                     event.setMoveForward((float)this.keyBindStrafeCorrectionDir);
                   }
 
                   this.strafeCorrectionActive = true;
@@ -2373,8 +2056,7 @@ public class Scaffold
                   this.correctStrafeWithKeyBindsWidth.nextValue();
                   this.correctStrafeWithKeyBindsDuration.nextValue();
                   tickCounter = this.strafeMiddleRecalcCounter;
-                  int lastIntValue2 = this.correctStrafeWithKeyBindsDelayToRecalculateMiddle.getLastIntValue();
-                  if (tickCounter.hasReached2(lastIntValue2)) {
+                  if (tickCounter.hasReached2(this.correctStrafeWithKeyBindsDelayToRecalculateMiddle.getLastIntValue())) {
                      this.correctStrafeWithKeyBindsDelayToRecalculateMiddle.nextValue();
                      this.strafeMiddleRecalcCounter.reset();
                      this.strafeCorrectionMiddle = this.rollStrafeCorrectionMiddle();
@@ -2389,10 +2071,8 @@ public class Scaffold
 
                if (this.stopMovementUntilLand && this.stopMovementAfterJump.getValue()) {
                   if (!mc.thePlayer.onGround) {
-                     float f10 = 0.0F;
-                     event.setMoveForward(f10);
-                     float f11 = 0.0F;
-                     event.setMoveStrafe(f11);
+                     event.setMoveForward(0.0F);
+                     event.setMoveStrafe(0.0F);
                   } else {
                      this.stopMovementUntilLand = false;
                   }
@@ -2407,12 +2087,10 @@ public class Scaffold
 
             if (this.intaveBlockPlacePenalty > 0.0) {
                if (mc.thePlayer.onGround) {
-                  boolean flag26 = true;
-                  event.setSneak(flag26);
+                  event.setSneak(true);
                }
 
-               float f12 = this.intaveBlockPlacePenalty > 22.5 ? -1.0F : 0.0F;
-               event.setMoveForward(f12);
+               event.setMoveForward(this.intaveBlockPlacePenalty > 22.5 ? -1.0F : 0.0F);
             }
 
             if (this.intave.getValue() && this.intaveSafe.getValue()) {
@@ -2445,21 +2123,16 @@ public class Scaffold
 
          if (!RotationUtil.isNearCardinalYaw(Augustus.getInstance().getYawPitchHelper().realYaw)) {
             if (this.godBridgeResetting && !this.disableGodbridgeSafetyFeature.getValue()) {
-               boolean flag = true;
-               event.setSneak(flag);
+               event.setSneak(true);
                if (event.getMoveForward() > 0.0F && this.safeWalkEdgeDetected && this.lastGodBridgePosX == mc.thePlayer.posX && this.lastGodBridgePosZ == mc.thePlayer.posZ || this.godBridgeSetupTicks > 3) {
-                  float f = 0.0F;
-                  event.setMoveForward(f);
-                  float f2 = 0.0F;
-                  event.setMoveStrafe(f2);
+                  event.setMoveForward(0.0F);
+                  event.setMoveStrafe(0.0F);
                   this.godBridgeSetupTicks++;
                   if ((double)this.godBridgeSetupTicks > this.startDelay.nextValue() - 4.0) {
                      if ((double)this.godBridgeSetupTicks < this.startDelay.nextValue() - 4.0 + 5.0) {
-                        float f3 = 1.0F;
-                        event.setMoveStrafe(f3);
+                        event.setMoveStrafe(1.0F);
                      } else if ((double)this.godBridgeSetupTicks < this.startDelay.nextValue() - 4.0 + 7.0) {
-                        float f4 = -1.0F;
-                        event.setMoveForward(f4);
+                        event.setMoveForward(-1.0F);
                      } else {
                         this.godBridgeResetting = false;
                      }
@@ -2478,16 +2151,14 @@ public class Scaffold
                if (this.godBridgeJumpCount >= this.resetGodBridgeAfterXJumps.getLastIntValue()) {
                   this.resetGodBridgeState();
                } else {
-                  boolean flag2 = true;
-                  event.setJump(flag2);
+                  event.setJump(true);
                   this.godBridgePlacedBlocks = 0;
                }
             }
 
             this.ticksSinceGodBridgePlace++;
             if (!this.godBridgeResetting) {
-               float f5 = 0.0F;
-               event.setMoveStrafe(f5);
+               event.setMoveStrafe(0.0F);
             } else {
                this.godBridgePlacedBlocks = 0;
                if (!(event.getMoveForward() <= 0.0F) && !this.alignGodBridgePosition(event) && (this.safeWalkEdgeDetected || this.godBridgeSetupTicks > 3)) {
@@ -2495,19 +2166,15 @@ public class Scaffold
                      this.godBridgeResetting = false;
                   } else {
                      this.godBridgeSetupTicks++;
-                     float f6 = 0.0F;
-                     event.setMoveForward(f6);
-                     float f7 = 0.0F;
-                     event.setMoveStrafe(f7);
+                     event.setMoveForward(0.0F);
+                     event.setMoveStrafe(0.0F);
                      if (this.godBridgeSetupTicks < this.godBridgeSneakSetupTicks) {
-                        boolean flag3 = true;
-                        event.setSneak(flag3);
+                        event.setSneak(true);
                      }
                   }
                } else {
                   this.resetGodBridgeState();
-                  boolean flag4 = true;
-                  event.setSneak(flag4);
+                  event.setSneak(true);
                }
             }
          }
@@ -2523,8 +2190,7 @@ public class Scaffold
          }
 
          if (!(this.correctStrafeWithKeyBindsMiddle.getMinValue() < this.correctStrafeWithKeyBindsMiddleExclusion.getMinValue())) {
-            double maxValue = this.correctStrafeWithKeyBindsMiddle.getMaxValue();
-            if (!(maxValue > this.correctStrafeWithKeyBindsMiddleExclusion.getMaxValue())) {
+            if (!(this.correctStrafeWithKeyBindsMiddle.getMaxValue() > this.correctStrafeWithKeyBindsMiddleExclusion.getMaxValue())) {
                break;
             }
          }
@@ -2537,8 +2203,7 @@ public class Scaffold
    public void onOrientCamera(EventOrientCamera event) {
       if (!this.waitingForStartEdge) {
          if (this.sneak.getValue() && this.hideSneakAnimation.getValue()) {
-            float f = 1.62F;
-            event.setEyeHeight(f);
+            event.setEyeHeight(1.62F);
          }
       }
    }
@@ -2547,8 +2212,7 @@ public class Scaffold
    public void onMove(EventMove event) {
       if (!this.waitingForStartEdge) {
          if (this.moveFix.getSelectedValue().equals("None")) {
-            float movementYaw = MoveUtil.getMovementYaw();
-            event.setYaw(movementYaw);
+            event.setYaw(MoveUtil.getMovementYaw());
          }
       }
    }
@@ -2557,8 +2221,7 @@ public class Scaffold
    public void onMove2(EventMove event) {
       if (!this.waitingForStartEdge) {
          if (this.moveFix.getSelectedValue().equals("None")) {
-            float movementYaw = MoveUtil.getMovementYaw();
-            event.setYaw(movementYaw);
+            event.setYaw(MoveUtil.getMovementYaw());
          }
 
          if (this.intave.getValue() && this.intaveSafe.getValue()) {
@@ -2592,8 +2255,7 @@ public class Scaffold
                ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
                if (currentEquippedItem != null && BlockUtil.isValidScaffoldBlock(currentEquippedItem)
                   || mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ)).getBlock().isFullBlock()) {
-                  boolean flag = true;
-                  event.setDisableSneakSafeWalk(flag);
+                  event.setDisableSneakSafeWalk(true);
                }
             }
          }
@@ -2601,27 +2263,20 @@ public class Scaffold
          if (this.safeWalk.getValue()
             && (this.safeWalkAir.getValue() || mc.thePlayer.onGround)
             && (!this.safeWalkOnlyDiagonal.getValue() || !RotationUtil.isNearCardinalYaw(ClientManagers.rotationController.getPreviousRotation().yaw))) {
-            boolean flag2 = true;
-            event.setSafeWalk(flag2);
-            boolean flag3 = false;
-            event.setDisableSneakSafeWalk(flag3);
+            event.setSafeWalk(true);
+            event.setDisableSneakSafeWalk(false);
          }
 
          if (this.safeWalkNoBlocks.getValue()) {
-            ItemStack currentEquippedItem2 = mc.thePlayer.getCurrentEquippedItem();
-            if (!BlockUtil.isValidScaffoldBlock(currentEquippedItem2) && this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending) {
-               boolean flag4 = true;
-               event.setSafeWalk(flag4);
-               boolean flag5 = false;
-               event.setDisableSneakSafeWalk(flag5);
+            if (!BlockUtil.isValidScaffoldBlock(mc.thePlayer.getCurrentEquippedItem()) && this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending) {
+               event.setSafeWalk(true);
+               event.setDisableSneakSafeWalk(false);
             }
          }
 
          if (this.sneakNoBlocks.getValue()) {
-            ItemStack currentEquippedItem3 = mc.thePlayer.getCurrentEquippedItem();
-            if (!BlockUtil.isValidScaffoldBlock(currentEquippedItem3) && this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending) {
-               boolean flag6 = false;
-               event.setDisableSneakSafeWalk(flag6);
+            if (!BlockUtil.isValidScaffoldBlock(mc.thePlayer.getCurrentEquippedItem()) && this.getSelectedBlockSlot() < 0 && !this.firstSilentSwitchPending) {
+               event.setDisableSneakSafeWalk(false);
             }
          }
       }
@@ -2630,30 +2285,25 @@ public class Scaffold
    @Override
    public void onSwing(EventSwing event) {
       if (this.noSwing.getValue()) {
-         boolean flag = true;
-         event.setCancelClientSwing(flag);
+         event.setCancelClientSwing(true);
       }
    }
 
    @Override
    public void onSprint3(EventSprint event) {
-      boolean flag = !this.mode.getSelectedValue().equals("None");
-      event.setSprintKeyDown(flag);
-      boolean flag2 = this.mode.getSelectedValue().equals("AllDirection") && MoveUtil.isMoving();
-      event.setForceSprint(flag2);
+      event.setSprintKeyDown(!this.mode.getSelectedValue().equals("None"));
+      event.setForceSprint(this.mode.getSelectedValue().equals("AllDirection") && MoveUtil.isMoving());
    }
 
    @Override
    public void onSprint(EventSprint event) {
-      boolean flag = this.jumpSprint.getValue() && MoveUtil.isMoving();
-      event.setOmniJumpSprint(flag);
+      event.setOmniJumpSprint(this.jumpSprint.getValue() && MoveUtil.isMoving());
    }
 
    @Override
    public void onSprint2(EventSprint event) {
       if (!this.waitingForStartEdge) {
-         boolean flag = this.mode.getSelectedValue().equals("AllDirectionMotion") && MoveUtil.isMoving();
-         event.setMotionSprint(flag);
+         event.setMotionSprint(this.mode.getSelectedValue().equals("AllDirectionMotion") && MoveUtil.isMoving());
       }
    }
 
@@ -2666,8 +2316,7 @@ public class Scaffold
                   if (mc.thePlayer.ticksExisted % 3 == 0) {
                      mc.getTimer().timerSpeed = (float)MathHelper.clamp_double(this.timerSpeed.getMinValue(), 0.1F, 100.0);
                   } else {
-                     Timer timer2 = mc.getTimer();
-                     timer2.timerSpeed = (float)MathHelper.clamp_double(this.timerSpeed.getMaxValue(), 0.1F, 100.0);
+                     mc.getTimer().timerSpeed = (float)MathHelper.clamp_double(this.timerSpeed.getMaxValue(), 0.1F, 100.0);
                   }
                }
             } else {
@@ -2680,10 +2329,8 @@ public class Scaffold
          if (this.hover.getValue() && this.hoverJumpStarted && mc.thePlayer.ticksExisted % 2 == 0 && mc.thePlayer.onGround && event.getY() % 1.0 == 0.0) {
             this.hoverOffsetActive = true;
             double d = Math.random() * 1.0E-4;
-            double d2 = event.getY() + d;
-            event.setY(d2);
-            boolean flag = false;
-            event.setOnGround(flag);
+            event.setY(event.getY() + d);
+            event.setOnGround(false);
          }
       }
    }
@@ -2698,10 +2345,8 @@ public class Scaffold
             d = RotationUtil.isNearCardinalYaw(ClientManagers.rotationController.getPreviousRotation().yaw) ? this.motionMultiplierAirForward.nextValue() : this.motionMultiplierAirStrafe.nextValue();
          }
 
-         double d2 = event.getX() * d;
-         event.setX(d2);
-         double d3 = event.getZ() * d;
-         event.setZ(d3);
+         event.setX(event.getX() * d);
+         event.setZ(event.getZ() * d);
       }
    }
 
@@ -2716,8 +2361,7 @@ public class Scaffold
             && this.hotbarBlockCount > 0
             && mc.thePlayer.hurtTime <= 0
             && !mc.thePlayer.isSprinting()) {
-            long l = 400L;
-            if (this.enableTimer.reached2(l)) {
+            if (this.enableTimer.reached2(400L)) {
                if (mc.thePlayer.onGround) {
                   mc.thePlayer.jump();
                } else if (mc.thePlayer.motionY > 0.0) {
@@ -2736,21 +2380,17 @@ public class Scaffold
       boolean flag2 = horizontalFacing == EnumFacing.NORTH || horizontalFacing == EnumFacing.EAST;
       if (d2 < 0.5) {
          if (d2 < 0.2) {
-            float f = flag2 ? -1.0F : 1.0F;
-            event.setMoveStrafe(f);
+            event.setMoveStrafe(flag2 ? -1.0F : 1.0F);
             flag = true;
          } else if (d2 > 0.3) {
-            float f2 = flag2 ? 1.0F : -1.0F;
-            event.setMoveStrafe(f2);
+            event.setMoveStrafe(flag2 ? 1.0F : -1.0F);
             flag = true;
          }
       } else if (d2 < 0.7) {
-         float f3 = flag2 ? -1.0F : 1.0F;
-         event.setMoveStrafe(f3);
+         event.setMoveStrafe(flag2 ? -1.0F : 1.0F);
          flag = true;
       } else if (d2 > 0.8) {
-         float f4 = flag2 ? 1.0F : -1.0F;
-         event.setMoveStrafe(f4);
+         event.setMoveStrafe(flag2 ? 1.0F : -1.0F);
          flag = true;
       }
 
@@ -2761,9 +2401,7 @@ public class Scaffold
       if (!this.godBridgeResetting) {
          this.resetGodBridgeAfterXJumps.nextValue();
          this.startDelay.nextValue();
-         byte b = 7;
-         byte b2 = 5;
-         this.godBridgeSneakSetupTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+         this.godBridgeSneakSetupTicks = DefaultRandomGenerator.instance.nextInt2((byte)5, (byte)7);
       }
 
       this.godBridgeResetting = true;
@@ -2782,37 +2420,21 @@ public class Scaffold
          || mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ).getBlock().getMaterial() != Material.air) {
          float f2 = MathHelper.wrapAngleTo180_float(f);
          if (f2 > -25.0F && f2 < 25.0F) {
-            byte b = 0;
-            float f3 = 0.0F;
-            return this.applyStrictYawError(f3, b, flag);
+            return this.applyStrictYawError(0.0F, (byte)0, flag);
          } else if (f2 > -25.0F && f2 < 70.0F) {
-            byte b2 = 1;
-            float f4 = 45.0F;
-            return this.applyStrictYawError(f4, b2, flag);
+            return this.applyStrictYawError(45.0F, (byte)1, flag);
          } else if (f2 > 70.0F && f2 < 115.0F) {
-            byte b3 = 2;
-            float f5 = 90.0F;
-            return this.applyStrictYawError(f5, b3, flag);
+            return this.applyStrictYawError(90.0F, (byte)2, flag);
          } else if (f2 > 115.0F && f2 < 160.0F) {
-            byte b4 = 3;
-            float f6 = 135.0F;
-            return this.applyStrictYawError(f6, b4, flag);
+            return this.applyStrictYawError(135.0F, (byte)3, flag);
          } else if (f2 > 160.0F || f2 < -160.0F) {
-            byte b5 = 4;
-            float f7 = 180.0F;
-            return this.applyStrictYawError(f7, b5, flag);
+            return this.applyStrictYawError(180.0F, (byte)4, flag);
          } else if (f2 > -160.0F && f2 < -115.0F) {
-            byte b6 = 5;
-            float f8 = -135.0F;
-            return this.applyStrictYawError(f8, b6, flag);
+            return this.applyStrictYawError(-135.0F, (byte)5, flag);
          } else if (f2 > -115.0F && f2 < -70.0F) {
-            byte b7 = 6;
-            float f9 = -90.0F;
-            return this.applyStrictYawError(f9, b7, flag);
+            return this.applyStrictYawError(-90.0F, (byte)6, flag);
          } else if (f2 > -70.0F && f2 < -25.0F) {
-            byte b8 = 7;
-            float f10 = -45.0F;
-            return this.applyStrictYawError(f10, b8, flag);
+            return this.applyStrictYawError(-45.0F, (byte)7, flag);
          } else {
             return f;
          }
@@ -2869,15 +2491,12 @@ public class Scaffold
    }
 
    private float getMovementYaw() {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      return this.applyMovementYawOffset(realYaw);
+      return this.applyMovementYawOffset(Augustus.getInstance().getYawPitchHelper().realYaw);
    }
 
    private float computeBaseBridgeYaw() {
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      float f = this.applyMovementYawOffset(realYaw);
-      boolean flag = true;
-      f = this.applyStrictYaw(f, flag);
+      float f = this.applyMovementYawOffset(Augustus.getInstance().getYawPitchHelper().realYaw);
+      f = this.applyStrictYaw(f, true);
       if (this.isTellyBridgeEnabled() && !mc.thePlayer.onGround) {
          f = this.cachedStrictRotationYaw;
       } else {
@@ -2889,10 +2508,8 @@ public class Scaffold
          double posY = mc.thePlayer.posY;
          double d2 = mc.thePlayer.posZ + mc.thePlayer.motionZ;
          Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         boolean flag2 = false;
          float f2 = 180.0F;
-         float f3 = 180.0F;
-         float yaw = RotationUtil.getRotationsToPos(d, posY, d2, previousRotation, f3, f2, flag2).yaw;
+         float yaw = RotationUtil.getRotationsToPos(d, posY, d2, previousRotation, 180.0F, f2, false).yaw;
          if (Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta((double)MathHelper.wrapAngleTo180_float(yaw), (double)MathHelper.wrapAngleTo180_float(f))) > 12.0
                && !this.moonWalk.getValue()
                && mc.thePlayer.hurtResistantTime != 0
@@ -2922,8 +2539,7 @@ public class Scaffold
       }
 
       if (this.reduceYawRotation.getValue() && MoveUtil.isMoving()) {
-         long l = 500L;
-         if (this.enableTimer.reached2(l)) {
+         if (this.enableTimer.reached2(500L)) {
             if (Math.abs(this.lastTargetYaw - f) < 25.0F) {
                f = this.lastTargetYaw;
             } else {
@@ -2945,36 +2561,23 @@ public class Scaffold
    private void updateExpandRotation() {
       float f = this.rollActiveYawSpeed();
       float f2 = this.rollActivePitchSpeed();
-      RotationUtil rotationUtil2 = this.rotationUtil;
-      float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
-      float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-      float f3 = yaw;
-      float f4 = rotationUtil2.stepYawWithGcd(f, f3, realYaw);
+      float f4 = this.rotationUtil.stepYawWithGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw, Augustus.getInstance().getYawPitchHelper().realYaw);
       if (this.isStationaryTowering() && this.targetBlockPos != null) {
          Block block = mc.theWorld.getBlockState(this.targetBlockPos).getBlock();
          Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
-         double d = MathHelper.clamp_double(
+         Rotation rotationsToPos = RotationUtil.getRotationsToPos(MathHelper.clamp_double(
             positionEyes.xCoord, (double)this.targetBlockPos.getX() + block.getBlockBoundsMinX(), (double)this.targetBlockPos.getX() + block.getBlockBoundsMaxY()
-         );
-         double d2 = MathHelper.clamp_double(
+         ), MathHelper.clamp_double(
             positionEyes.yCoord, (double)this.targetBlockPos.getY() + block.getBlockBoundsMinY(), (double)this.targetBlockPos.getY() + block.getBlockBoundsMaxY() - 0.02
-         );
-         double d3 = MathHelper.clamp_double(
+         ), MathHelper.clamp_double(
             positionEyes.zCoord, (double)this.targetBlockPos.getZ() + block.getBlockBoundsMinZ(), (double)this.targetBlockPos.getZ() + block.getBlockBoundsMaxZ()
-         );
-         Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         boolean flag = true;
-         Rotation rotationsToPos = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation, f, f2, flag);
+         ), ClientManagers.rotationController.getPreviousRotation(), f, f2, true);
          if (new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ).equalsXZ(this.targetBlockPos)) {
             rotationsToPos.yaw = f4;
          }
 
-         Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-         rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, previousRotation2);
-         RotationController rotationController = ClientManagers.rotationController;
-         int rotationPriority = this.getRotationPriority();
-         byte b = -1;
-         rotationController.requestRotation(rotationsToPos, b, this, rotationPriority);
+         rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, ClientManagers.rotationController.getPreviousRotation());
+         ClientManagers.rotationController.requestRotation(rotationsToPos, (byte)-1, this, this.getRotationPriority());
       } else {
          double value = this.expandLength.getValue();
          double d4 = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -3007,26 +2610,14 @@ public class Scaffold
                && mc.theWorld.getBlockState(pos).getBlock().isFullBlock()
                && !mc.theWorld.getBlockState(pos.up()).getBlock().isFullBlock()) {
                this.blockPlacementData = new BlockPlacementData(pos, EnumFacing.UP, new Vec3(d5, mc.thePlayer.lastGroundY, d6));
-               double xCoord = this.blockPlacementData.getHitVec().xCoord;
-               double yCoord = this.blockPlacementData.getHitVec().yCoord;
-               double zCoord = this.blockPlacementData.getHitVec().zCoord;
-               Rotation previousRotation3 = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag2 = false;
-               Rotation rotationsToPos2 = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation3, f, f2, flag2);
+               Rotation rotationsToPos2 = RotationUtil.getRotationsToPos(this.blockPlacementData.getHitVec().xCoord, this.blockPlacementData.getHitVec().yCoord, this.blockPlacementData.getHitVec().zCoord, ClientManagers.rotationController.getPreviousRotation(), f, f2, false);
                RotationUtil rotationUtil3 = this.rotationUtil;
                float yaw2 = rotationsToPos2.yaw;
-               float yaw3 = ClientManagers.rotationController.getPreviousRotation().yaw;
-               f4 = rotationUtil3.stepYawWithGcd(f, yaw3, yaw2);
+               f4 = rotationUtil3.stepYawWithGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw, yaw2);
                RotationUtil rotationUtil4 = this.rotationUtil;
                float pitch = rotationsToPos2.pitch;
-               float pitch2 = ClientManagers.rotationController.getPreviousRotation().pitch;
-               float f5 = rotationUtil4.updatePitchWithIntaveSin(f2, pitch2, pitch);
-               RotationController rotationController2 = ClientManagers.rotationController;
-               Rotation rotation = new Rotation(f4, f5);
-               int rotationPriority2 = this.getRotationPriority();
-               byte b2 = -1;
-               Rotation rotation2 = rotation;
-               rotationController2.requestRotation(rotation2, b2, this, rotationPriority2);
+               float f5 = rotationUtil4.updatePitchWithIntaveSin(f2, ClientManagers.rotationController.getPreviousRotation().pitch, pitch);
+               ClientManagers.rotationController.requestRotation(new Rotation(f4, f5), (byte)-1, this, this.getRotationPriority());
                return;
             }
          }
@@ -3042,26 +2633,14 @@ public class Scaffold
                && !hit.getBlockPos().equalsPos(new BlockPos(d8, d9, d10))) {
                this.blockPlacementData = new BlockPlacementData(hit.getBlockPos(), hit.sideHit, hit.hitVec);
                this.targetBlockPos = this.blockPlacementData.getBlockPos();
-               double xCoord2 = this.blockPlacementData.getHitVec().xCoord;
-               double yCoord2 = this.blockPlacementData.getHitVec().yCoord;
-               double zCoord2 = this.blockPlacementData.getHitVec().zCoord;
-               Rotation previousRotation4 = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag3 = false;
-               Rotation rotationsToPos3 = RotationUtil.getRotationsToPos(xCoord2, yCoord2, zCoord2, previousRotation4, f, f2, flag3);
+               Rotation rotationsToPos3 = RotationUtil.getRotationsToPos(this.blockPlacementData.getHitVec().xCoord, this.blockPlacementData.getHitVec().yCoord, this.blockPlacementData.getHitVec().zCoord, ClientManagers.rotationController.getPreviousRotation(), f, f2, false);
                RotationUtil rotationUtil5 = this.rotationUtil;
                float yaw4 = rotationsToPos3.yaw;
-               float yaw5 = ClientManagers.rotationController.getPreviousRotation().yaw;
-               f4 = rotationUtil5.stepYawWithGcd(f, yaw5, yaw4);
+               f4 = rotationUtil5.stepYawWithGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw, yaw4);
                RotationUtil rotationUtil6 = this.rotationUtil;
                float pitch3 = rotationsToPos3.pitch;
-               float pitch4 = ClientManagers.rotationController.getPreviousRotation().pitch;
-               float f6 = rotationUtil6.updatePitchWithIntaveSin(f2, pitch4, pitch3);
-               RotationController rotationController3 = ClientManagers.rotationController;
-               Rotation rotation3 = new Rotation(f4, f6);
-               int rotationPriority3 = this.getRotationPriority();
-               byte b3 = -1;
-               Rotation rotation4 = rotation3;
-               rotationController3.requestRotation(rotation4, b3, this, rotationPriority3);
+               float f6 = rotationUtil6.updatePitchWithIntaveSin(f2, ClientManagers.rotationController.getPreviousRotation().pitch, pitch3);
+               ClientManagers.rotationController.requestRotation(new Rotation(f4, f6), (byte)-1, this, this.getRotationPriority());
                return;
             }
          }
@@ -3073,33 +2652,16 @@ public class Scaffold
          if (MoveUtil.isMoving() && hit2 != null && hit2.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             this.blockPlacementData = new BlockPlacementData(hit2.getBlockPos(), hit2.sideHit, hit2.hitVec);
             this.targetBlockPos = this.blockPlacementData.getBlockPos();
-            double xCoord3 = this.blockPlacementData.getHitVec().xCoord;
-            double yCoord3 = this.blockPlacementData.getHitVec().yCoord;
-            double zCoord3 = this.blockPlacementData.getHitVec().zCoord;
-            Rotation previousRotation5 = ClientManagers.rotationController.getPreviousRotation();
-            boolean flag4 = false;
-            Rotation rotationsToPos4 = RotationUtil.getRotationsToPos(xCoord3, yCoord3, zCoord3, previousRotation5, f, f2, flag4);
+            Rotation rotationsToPos4 = RotationUtil.getRotationsToPos(this.blockPlacementData.getHitVec().xCoord, this.blockPlacementData.getHitVec().yCoord, this.blockPlacementData.getHitVec().zCoord, ClientManagers.rotationController.getPreviousRotation(), f, f2, false);
             RotationUtil rotationUtil7 = this.rotationUtil;
             float yaw6 = rotationsToPos4.yaw;
-            float yaw7 = ClientManagers.rotationController.getPreviousRotation().yaw;
-            f4 = rotationUtil7.stepYawWithGcd(f, yaw7, yaw6);
+            f4 = rotationUtil7.stepYawWithGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw, yaw6);
             RotationUtil rotationUtil8 = this.rotationUtil;
             float pitch5 = rotationsToPos4.pitch;
-            float pitch6 = ClientManagers.rotationController.getPreviousRotation().pitch;
-            float f7 = rotationUtil8.updatePitchWithIntaveSin(f2, pitch6, pitch5);
-            RotationController rotationController4 = ClientManagers.rotationController;
-            Rotation rotation5 = new Rotation(f4, f7);
-            int rotationPriority4 = this.getRotationPriority();
-            byte b4 = -1;
-            Rotation rotation6 = rotation5;
-            rotationController4.requestRotation(rotation6, b4, this, rotationPriority4);
+            float f7 = rotationUtil8.updatePitchWithIntaveSin(f2, ClientManagers.rotationController.getPreviousRotation().pitch, pitch5);
+            ClientManagers.rotationController.requestRotation(new Rotation(f4, f7), (byte)-1, this, this.getRotationPriority());
          } else {
-            RotationController rotationController5 = ClientManagers.rotationController;
-            Rotation previousRotation6 = ClientManagers.rotationController.getPreviousRotation();
-            int rotationPriority5 = this.getRotationPriority();
-            byte b5 = -1;
-            Rotation rotation7 = previousRotation6;
-            rotationController5.requestRotation(rotation7, b5, this, rotationPriority5);
+            ClientManagers.rotationController.requestRotation(ClientManagers.rotationController.getPreviousRotation(), (byte)-1, this, this.getRotationPriority());
          }
       }
    }
@@ -3150,9 +2712,7 @@ public class Scaffold
             d = 0.5 + d3;
             d2 = 0.5 - d3;
          } else {
-            Vec3 vectorForRotation = mc.thePlayer.getVectorForRotation(80.0F, 0.0F);
-            Vec3 vectorForRotation2 = mc.thePlayer.getVectorForRotation(80.0F, this.strafeYawOffset);
-            double d4 = MathHelper.clamp_double(MathStatisticsUtil.lawOfSinesSide(MathStatisticsUtil.angleBetweenDegrees(vectorForRotation, vectorForRotation2), 90.0, 1.6) - 0.05, 0.0, 0.5);
+            double d4 = MathHelper.clamp_double(MathStatisticsUtil.lawOfSinesSide(MathStatisticsUtil.angleBetweenDegrees(mc.thePlayer.getVectorForRotation(80.0F, 0.0F), mc.thePlayer.getVectorForRotation(80.0F, this.strafeYawOffset)), 90.0, 1.6) - 0.05, 0.0, 0.5);
             d = 0.5 + d4;
             d2 = 0.5 - d4;
          }
@@ -3227,8 +2787,7 @@ public class Scaffold
 
       exitBlock4: {
          if (MoveUtil.isMoving()) {
-            long l = 200L;
-            if (this.enableTimer.reached2(l) && this.keepInitialPitch) {
+            if (this.enableTimer.reached2(200L) && this.keepInitialPitch) {
                break exitBlock4;
             }
          }
@@ -3262,25 +2821,17 @@ public class Scaffold
                double d9 = (double)this.targetBlockPos.getZ() + block.getBlockBoundsMaxZ();
                ArrayList list = new ArrayList();
                Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag6 = false;
                float f3 = 180.0F;
-               float f4 = 180.0F;
-               list.add(RotationUtil.getRotationsToPos(d5, d7, d8, previousRotation, f4, f3, flag6).yaw);
+               list.add(RotationUtil.getRotationsToPos(d5, d7, d8, previousRotation, 180.0F, f3, false).yaw);
                previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag7 = false;
                float f5 = 180.0F;
-               float f6 = 180.0F;
-               list.add(RotationUtil.getRotationsToPos(d5, d7, d9, previousRotation, f6, f5, flag7).yaw);
+               list.add(RotationUtil.getRotationsToPos(d5, d7, d9, previousRotation, 180.0F, f5, false).yaw);
                previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag8 = false;
                float f7 = 180.0F;
-               float f8 = 180.0F;
-               list.add(RotationUtil.getRotationsToPos(d6, d7, d8, previousRotation, f8, f7, flag8).yaw);
+               list.add(RotationUtil.getRotationsToPos(d6, d7, d8, previousRotation, 180.0F, f7, false).yaw);
                previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag9 = false;
                float f9 = 180.0F;
-               float f10 = 180.0F;
-               list.add(RotationUtil.getRotationsToPos(d6, d7, d9, previousRotation, f10, f9, flag9).yaw);
+               list.add(RotationUtil.getRotationsToPos(d6, d7, d9, previousRotation, 180.0F, f9, false).yaw);
                Collections.sort(list);
                f = MathHelper.clamp_float(f2, (Float)list.get(0) + 0.5F, (Float)list.get(list.size() - 1) - 0.5F);
                this.lastTargetYaw = flag ? f - this.strafeYawOffset : f;
@@ -3299,20 +2850,16 @@ public class Scaffold
                positionEyes.zCoord, (double)this.targetBlockPos.getZ() + block.getBlockBoundsMinZ(), (double)this.targetBlockPos.getZ() + block.getBlockBoundsMaxZ()
             );
             Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-            boolean flag10 = false;
             float f11 = 180.0F;
-            float f12 = 180.0F;
-            Rotation rotationsToPos = RotationUtil.getRotationsToPos(d10, d11, d12, previousRotation2, f12, f11, flag10);
+            Rotation rotationsToPos = RotationUtil.getRotationsToPos(d10, d11, d12, previousRotation2, 180.0F, f11, false);
             if (new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ).equalsXZ(this.targetBlockPos)) {
                rotationsToPos.yaw = f;
             }
 
-            Rotation previousRotation3 = ClientManagers.rotationController.getPreviousRotation();
-            rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, previousRotation3);
+            rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, ClientManagers.rotationController.getPreviousRotation());
             return new TuplePair(rotationsToPos, true);
          } else {
-            boolean isNearCardinalYaw = RotationUtil.isNearCardinalYaw(f);
-            if (isNearCardinalYaw && this.isLicenseValid()) {
+            if (RotationUtil.isNearCardinalYaw(f) && this.isLicenseValid()) {
                if (this.staticPitchBool.getValue() && (!mc.gameSettings.keyBindJump.isKeyDown() || this.staticPitchAtJump.getValue()) && !this.shouldIgnoreStaticPitchForClutch()) {
                   if (!this.staticPitchRandomizeOnlyAtStart.getValue()) {
                      this.staticPitch.nextValue();
@@ -3348,12 +2895,8 @@ public class Scaffold
             this.minimalMouseMoveCounter.increment();
             int n = this.minimalMouseMoveDurationTicks;
             if (this.minimalMouseMoveCounter.hasReached2(n)) {
-               short s = 1500;
-               short s2 = 750;
-               this.minimalMouseMoveIntervalMs = DefaultRandomGenerator.instance.nextInt2(s2, s);
-               byte b = 2;
-               byte b2 = 1;
-               this.minimalMouseMoveDurationTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+               this.minimalMouseMoveIntervalMs = DefaultRandomGenerator.instance.nextInt2((short)750, (short)1500);
+               this.minimalMouseMoveDurationTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)2);
                this.minimalMouseMoveCounter.reset();
                this.minimalMouseMoveTimer.reset();
             }
@@ -3417,30 +2960,20 @@ public class Scaffold
          this.bezierRotationStepper.aimSpeed = this.getActiveAimSpeed() / 100.0 * 16.0 + 2.0;
          this.bezierRotationStepper.adaptCurveIfNeeded = true;
          byte b = 3;
-         Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-         Rotation lastBezierRotation2 = this.lastBezierRotation;
-         if (!previousRotation.equalsRotation(lastBezierRotation2) || this.rotationKinematicState == null || this.bezierCurve == null) {
-            RotationUtil rotationUtil2 = this.rotationUtil;
-            Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-            this.rotationKinematicState = rotationUtil2.createKinematicState(previousRotation2);
+         if (!ClientManagers.rotationController.getPreviousRotation().equalsRotation(this.lastBezierRotation) || this.rotationKinematicState == null || this.bezierCurve == null) {
+            this.rotationKinematicState = this.rotationUtil.createKinematicState(ClientManagers.rotationController.getPreviousRotation());
             RotationUtil rotationUtil3 = this.rotationUtil;
             Rotation previousRotation3 = ClientManagers.rotationController.getPreviousRotation();
-            boolean flag = false;
             double d = 10.0;
-            double d2 = 0.3;
-            Rotation rotation2 = previousRotation3;
-            this.bezierCurve = rotationUtil3.createBezierCurve(rotation2, first, b, d2, d, flag);
+            this.bezierCurve = rotationUtil3.createBezierCurve(previousRotation3, first, b, 0.3, d, false);
             this.bezierTickCounter = 0;
          }
 
          if (this.bezierTickCounter % b == 0) {
             RotationUtil rotationUtil4 = this.rotationUtil;
             Rotation previousRotation4 = ClientManagers.rotationController.getPreviousRotation();
-            boolean flag2 = false;
             double d3 = 10.0;
-            double d4 = 0.3;
-            Rotation rotation3 = previousRotation4;
-            this.bezierCurve = rotationUtil4.createBezierCurve(rotation3, first, b, d4, d3, flag2);
+            this.bezierCurve = rotationUtil4.createBezierCurve(previousRotation4, first, b, 0.3, d3, false);
          }
 
          double d5 = 0.0;
@@ -3462,43 +2995,30 @@ public class Scaffold
          RotationUtil rotationUtil5 = this.rotationUtil;
          float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
          float yaw2 = first.yaw;
-         RandomizedRangeSettings activeYawAcceleration = this.getActiveYawAcceleration();
-         float f3 = ClientManagers.rotationController.getPreviousRotation().yaw - ClientManagers.rotationController.getLastTickRotation().yaw;
-         RandomizedRangeSettings randomizedRangeSettings = activeYawAcceleration;
-         float f4 = yaw2;
-         float f5 = yaw;
-         float f6 = rotationUtil5.stepYawAccelerated(f, f5, f4, randomizedRangeSettings, f3);
+         float f6 = rotationUtil5.stepYawAccelerated(f, yaw, yaw2, this.getActiveYawAcceleration(), ClientManagers.rotationController.getPreviousRotation().yaw - ClientManagers.rotationController.getLastTickRotation().yaw);
          RotationUtil rotationUtil6 = this.rotationUtil;
          yaw2 = ClientManagers.rotationController.getPreviousRotation().pitch;
          float f7 = RotationUtil.applyPitchGcd(first.pitch, ClientManagers.rotationController.getPreviousRotation().pitch);
          RandomizedRangeSettings randomizedRangeSettings2 = this.getActivePitchAcceleration();
          float f8 = ClientManagers.rotationController.getPreviousRotation().pitch - ClientManagers.rotationController.getLastTickRotation().pitch;
-         RandomizedRangeSettings randomizedRangeSettings3 = randomizedRangeSettings2;
-         float f9 = f7;
          float f10 = yaw2;
-         rotation = new Rotation(f6, rotationUtil6.stepPitchAccelerated(f2, f10, f9, randomizedRangeSettings3, f8));
+         rotation = new Rotation(f6, rotationUtil6.stepPitchAccelerated(f2, f10, f7, randomizedRangeSettings2, f8));
       }
 
       if ((Boolean)tuplePair.getSecond()) {
-         boolean flag3 = false;
-         Object obj = null;
          float pitch = rotation.pitch;
-         float yaw3 = rotation.yaw;
-         this.applyScaffoldRotation(yaw3, pitch, (MovingObjectPosition)obj, flag3);
+         this.applyScaffoldRotation(rotation.yaw, pitch, (MovingObjectPosition)null, false);
       } else {
          float yaw4 = rotation.yaw;
          float pitch2 = rotation.pitch;
          if (this.targetBlockPos == null) {
-            Object obj2 = null;
-            this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)obj2);
+            this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)null);
          } else {
             if (this.isStationaryTowering()) {
-               Object obj3 = null;
-               this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)obj3);
+               this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)null);
             } else {
                if (this.godBridge.getValue()) {
-                  Object obj4 = null;
-                  this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)obj4);
+                  this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)null);
                   return;
                }
 
@@ -3524,9 +3044,7 @@ public class Scaffold
                   float f11 = yaw4;
                   if (this.randomizeYaw.getValue() && this.randomizeYawChanceWhilePitchRotation.getValue() > 0.0 && yaw4 == ClientManagers.rotationController.getPreviousRotation().yaw) {
                      this.yawRandomizationTriggered = true;
-                     boolean flag5 = true;
-                     float f12 = this.computeYawRandomOffset(flag5);
-                     yaw4 = RotationUtil.applyYawGcd(f12 + yaw4, ClientManagers.rotationController.getPreviousRotation().yaw);
+                     yaw4 = RotationUtil.applyYawGcd(this.computeYawRandomOffset(true) + yaw4, ClientManagers.rotationController.getPreviousRotation().yaw);
                   }
 
                   ArrayList list = new ArrayList();
@@ -3561,11 +3079,7 @@ public class Scaffold
                   if (scaffoldRaycastResult != null) {
                      TuplePair tuplePair2 = this.clampPitchCorrection(scaffoldRaycastResult, yaw4);
                      float first2 = (Float)tuplePair2.getFirst();
-                     MovingObjectPosition second = (MovingObjectPosition)tuplePair2.getSecond();
-                     boolean flag7 = true;
-                     MovingObjectPosition hit3 = second;
-                     float f15 = first2;
-                     this.applyScaffoldRotation(yaw4, f15, hit3, flag7);
+                     this.applyScaffoldRotation(yaw4, first2, (MovingObjectPosition)tuplePair2.getSecond(), true);
                      return;
                   }
 
@@ -3635,11 +3149,7 @@ public class Scaffold
                         if (scaffoldRaycastResult != null) {
                            TuplePair tuplePair3 = this.clampPitchCorrection(scaffoldRaycastResult, f21);
                            float first3 = (Float)tuplePair3.getFirst();
-                           MovingObjectPosition second2 = (MovingObjectPosition)tuplePair3.getSecond();
-                           boolean flag8 = true;
-                           MovingObjectPosition hit5 = second2;
-                           float f23 = first3;
-                           this.applyScaffoldRotation(f21, f23, hit5, flag8);
+                           this.applyScaffoldRotation(f21, first3, (MovingObjectPosition)tuplePair3.getSecond(), true);
                            return;
                         }
                      }
@@ -3649,8 +3159,7 @@ public class Scaffold
                }
             }
 
-            Object obj5 = null;
-            this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)obj5);
+            this.applyScaffoldRotation(yaw4, pitch2, (MovingObjectPosition)null);
          }
       }
    }
@@ -3672,8 +3181,7 @@ public class Scaffold
    }
 
    private boolean isBlockClutching() {
-      boolean flag = false;
-      return this.checkBlockClutchState(flag);
+      return this.checkBlockClutchState(false);
    }
 
    private boolean checkBlockClutchState(boolean flag) {
@@ -3702,8 +3210,7 @@ public class Scaffold
       if (list.isEmpty()) {
          return null;
       } else {
-         String selectedValue = this.pitchSelection.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.pitchSelection.getSelectedValue()) {
             case "Nearest":
                list.sort(Comparator.comparingDouble(obj -> this.getPitchDeltaScore((ScaffoldRaycastResult)obj)));
                return (ScaffoldRaycastResult)list.get(0);
@@ -3734,10 +3241,7 @@ public class Scaffold
                list.sort(Comparator.comparingDouble(obj3 -> this.scoreMidPitchCandidate(f, (ScaffoldRaycastResult)obj3)));
                return (ScaffoldRaycastResult)list.get(0);
             case "Random":
-               RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-               int n = list.size() - 1;
-               byte b = 0;
-               return (ScaffoldRaycastResult)list.get(instance.nextInt2(b, n));
+               return (ScaffoldRaycastResult)list.get(DefaultRandomGenerator.instance.nextInt2((byte)0, list.size() - 1));
             default:
                return null;
          }
@@ -3757,16 +3261,10 @@ public class Scaffold
             double d3 = -0.2;
             f = (float)Math.sin(d + (double)DefaultRandomGenerator.instance.nextFloat2(d3, d2)) * 0.75F;
          } else {
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double d4 = -this.randomizeYawVal.getLastValue();
-            double d5 = this.randomizeYawVal.nextValue();
-            double d6 = d4;
-            f = instance.nextFloat2(d6, d5);
+            f = DefaultRandomGenerator.instance.nextFloat2(-this.randomizeYawVal.getLastValue(), this.randomizeYawVal.nextValue());
          }
 
-         TickCounter yawRandomizeCounter2 = this.yawRandomizeCounter;
-         int lastIntValue = this.randomizeYawInterval.getLastIntValue();
-         if (yawRandomizeCounter2.hasReached2(lastIntValue)) {
+         if (this.yawRandomizeCounter.hasReached2(this.randomizeYawInterval.getLastIntValue())) {
             this.yawRandomizeCounter.reset();
             this.randomizeYawInterval.nextValue();
             this.randomizeYawVal.nextValue();
@@ -3790,16 +3288,10 @@ public class Scaffold
             double d3 = -0.2;
             f = (float)Math.sin(d + (double)DefaultRandomGenerator.instance.nextFloat2(d3, d2) + 1000.0) * 0.75F;
          } else {
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double d4 = -this.randomizePitchVal.getLastValue();
-            double d5 = this.randomizePitchVal.nextValue();
-            double d6 = d4;
-            f = instance.nextFloat2(d6, d5);
+            f = DefaultRandomGenerator.instance.nextFloat2(-this.randomizePitchVal.getLastValue(), this.randomizePitchVal.nextValue());
          }
 
-         TickCounter pitchRandomizeCounter2 = this.pitchRandomizeCounter;
-         int lastIntValue = this.randomizePitchInterval.getLastIntValue();
-         if (pitchRandomizeCounter2.hasReached2(lastIntValue)) {
+         if (this.pitchRandomizeCounter.hasReached2(this.randomizePitchInterval.getLastIntValue())) {
             this.pitchRandomizeCounter.reset();
             this.randomizePitchInterval.nextValue();
             this.randomizePitchVal.nextValue();
@@ -3821,26 +3313,19 @@ public class Scaffold
    }
 
    private void applyScaffoldRotation(float f, float f2, MovingObjectPosition hit) {
-      boolean flag = false;
-      this.applyScaffoldRotation(f, f2, hit, flag);
+      this.applyScaffoldRotation(f, f2, hit, false);
    }
 
    private void applyScaffoldRotation(float f, float f2, MovingObjectPosition hit, boolean flag) {
-      boolean flag2 = false;
-      this.applyScaffoldRotation(f, f2, hit, flag, flag2);
+      this.applyScaffoldRotation(f, f2, hit, flag, false);
    }
 
    private void applyScaffoldRotation(float f, float f2, MovingObjectPosition hit, boolean flag, boolean flag2) {
-      RotationUtil rotationUtil2 = this.rotationUtil;
-      Rotation rotation = new Rotation(f, f2);
-      Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-      Rotation rotation2 = rotation;
-      rotationUtil2.updateLastRotationSpeeds(rotation2, previousRotation);
+      this.rotationUtil.updateLastRotationSpeeds(new Rotation(f, f2), ClientManagers.rotationController.getPreviousRotation());
       this.overrideRayTrace = hit;
       if (this.randomizeYaw.getValue() && this.randomizeYawChanceWhilePitchRotation.getValue() > 0.0 && f2 != ClientManagers.rotationController.getPreviousRotation().pitch && !flag && f == ClientManagers.rotationController.getPreviousRotation().yaw) {
          this.yawRandomizationTriggered = true;
-         boolean flag3 = true;
-         f = RotationUtil.applyYawGcd(this.computeYawRandomOffset(flag3) + f, ClientManagers.rotationController.getPreviousRotation().yaw);
+         f = RotationUtil.applyYawGcd(this.computeYawRandomOffset(true) + f, ClientManagers.rotationController.getPreviousRotation().yaw);
          if (this.overrideRayTrace != null) {
             this.overrideRayTrace = RayCastUtil.rayCast(1.0F, f, f2);
          }
@@ -3848,12 +3333,10 @@ public class Scaffold
 
       if ((f != ClientManagers.rotationController.getPreviousRotation().yaw || this.getPitchRandomizeChance() > 0.0) && this.randomizePitch.getValue() && f2 == ClientManagers.rotationController.getPreviousRotation().pitch) {
          this.pitchRandomizationTriggered = true;
-         boolean flag4 = f != ClientManagers.rotationController.getPreviousRotation().yaw;
-         f2 = RotationUtil.applyPitchGcd(this.computePitchRandomOffset(flag4) + f2, ClientManagers.rotationController.getPreviousRotation().pitch);
+         f2 = RotationUtil.applyPitchGcd(this.computePitchRandomOffset(f != ClientManagers.rotationController.getPreviousRotation().yaw) + f2, ClientManagers.rotationController.getPreviousRotation().pitch);
          if (f == ClientManagers.rotationController.getPreviousRotation().yaw == this.randomizeYaw.getValue() && this.randomizeYawChanceWhilePitchRotation.getValue() > 0.0 && f2 != ClientManagers.rotationController.getPreviousRotation().pitch) {
             this.yawRandomizationTriggered = true;
-            boolean flag5 = true;
-            f = RotationUtil.applyYawGcd(this.computeYawRandomOffset(flag5) + f, ClientManagers.rotationController.getPreviousRotation().yaw);
+            f = RotationUtil.applyYawGcd(this.computeYawRandomOffset(true) + f, ClientManagers.rotationController.getPreviousRotation().yaw);
          }
 
          if (this.overrideRayTrace != null) {
@@ -3865,12 +3348,7 @@ public class Scaffold
          this.resetGodBridgeState();
       }
 
-      RotationController rotationController = ClientManagers.rotationController;
-      float[] floats = new float[]{f, f2};
-      int rotationPriority = this.getRotationPriority();
-      byte b = -1;
-      float[] floats2 = floats;
-      rotationController.requestRotation2(floats2, b, this, rotationPriority);
+      ClientManagers.rotationController.requestRotation2(new float[]{f, f2}, (byte)-1, this, this.getRotationPriority());
    }
 
    private int getRotationPriority() {
@@ -3900,8 +3378,7 @@ public class Scaffold
    }
 
    private boolean isAtBlockEdge() {
-      float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
-      return this.isAtBlockEdgeForYaw(yaw);
+      return this.isAtBlockEdgeForYaw(ClientManagers.rotationController.getPreviousRotation().yaw);
    }
 
    private boolean isAtBlockEdgeForYaw(float f) {
@@ -3934,9 +3411,7 @@ public class Scaffold
 
       if (this.lastMoonWalkSide == 2) {
          this.moonWalkWideness.nextValue();
-         TickCounter tickCounter = this.moonWalkMiddleRecalcCounter;
-         int lastIntValue = this.delayToRecalculateMiddle.getLastIntValue();
-         if (tickCounter.hasReached2(lastIntValue)) {
+         if (this.moonWalkMiddleRecalcCounter.hasReached2(this.delayToRecalculateMiddle.getLastIntValue())) {
             this.moonWalkMiddle.nextValue();
             this.delayToRecalculateMiddle.nextValue();
             this.moonWalkMiddleRecalcCounter.reset();
@@ -3955,9 +3430,7 @@ public class Scaffold
 
       if (this.lastMoonWalkSide == 1) {
          this.moonWalkWideness.nextValue();
-         TickCounter tickCounter = this.moonWalkMiddleRecalcCounter;
-         int lastIntValue = this.delayToRecalculateMiddle.getLastIntValue();
-         if (tickCounter.hasReached2(lastIntValue)) {
+         if (this.moonWalkMiddleRecalcCounter.hasReached2(this.delayToRecalculateMiddle.getLastIntValue())) {
             this.moonWalkMiddle.nextValue();
             this.delayToRecalculateMiddle.nextValue();
             this.moonWalkMiddleRecalcCounter.reset();
@@ -3989,10 +3462,8 @@ public class Scaffold
       if (this.lastAppliedStrafeInput != 0 && moonWalkStrafeDir2 != 0 && this.lastAppliedStrafeInput != moonWalkStrafeDir2) {
          this.moonWalkDirChangeTicks = 0;
          this.directionChangeDelay.nextValue();
-         int lastIntValue = this.directionChangeDelay.getLastIntValue();
-         if (lastIntValue > 0) {
-            Block block = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock();
-            if (block.getMaterial() == Material.air && mc.thePlayer.onGround) {
+         if (this.directionChangeDelay.getLastIntValue() > 0) {
+            if (mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().getMaterial() == Material.air && mc.thePlayer.onGround) {
                this.moonWalkDirChangeTicks = 100;
             }
          }
@@ -4000,11 +3471,9 @@ public class Scaffold
 
       if (this.moonWalkDirChangeTicks >= this.directionChangeDelay.getLastIntValue()) {
          if (event.getMoveForward() != 0.0F) {
-            float f = (float)moonWalkStrafeDir2;
-            event.setMoveStrafe(f);
+            event.setMoveStrafe((float)moonWalkStrafeDir2);
          } else if (event.getMoveStrafe() != 0.0F) {
-            float f2 = (float)moonWalkStrafeDir2;
-            event.setMoveForward(f2);
+            event.setMoveForward((float)moonWalkStrafeDir2);
          }
       }
    }
@@ -4074,9 +3543,8 @@ public class Scaffold
    }
 
    private boolean shouldRotateBackwardInTelly() {
-      boolean flag = !mc.thePlayer.onGround && mc.thePlayer.airTicks < 1
-         || mc.thePlayer.onGround && PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] == 1.0 && MoveUtil.hasHorizontalMotion();
-      return !flag;
+      return !(!mc.thePlayer.onGround && mc.thePlayer.airTicks < 1
+         || mc.thePlayer.onGround && PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] == 1.0 && MoveUtil.hasHorizontalMotion());
    }
 
    private int countVoxelStepsToTarget(BlockPlacementData blockPlacementData2, double d, double d2) {
@@ -4246,10 +3714,7 @@ public class Scaffold
                   + (double)(d3 == 1.5 && this.sameYBlock.getValue() ? -10 : 0)
                   + (double)j / 20.0
                   - (hit.getBlockPos().equals(this.lastPlacedBlockPos) ? 1.5 : 0.0);
-               Vec3 vec = hitVec;
-               EnumFacing facing = sideHit;
-               BlockPos pos2 = blockPos2;
-               list.add(new BlockPlacementData(pos2, facing, vec, d10));
+               list.add(new BlockPlacementData(blockPos2, sideHit, hitVec, d10));
                list2.add(hit.getBlockPos());
             }
          }
@@ -4287,10 +3752,7 @@ public class Scaffold
                   Vec3 hitVec2 = hit2.hitVec;
                   double d18 = mc.thePlayer.getDistance((double)blockPos3.getX() + 0.5, (double)blockPos3.getY() + 0.5, (double)blockPos3.getZ() + 0.5)
                      + (double)(d11 == 1.5 && this.sameYBlock.getValue() ? -10 : 0);
-                  Vec3 vec2 = hitVec2;
-                  EnumFacing facing2 = sideHit2;
-                  BlockPos pos3 = blockPos4;
-                  list.add(new BlockPlacementData(pos3, facing2, vec2, d18));
+                  list.add(new BlockPlacementData(blockPos4, sideHit2, hitVec2, d18));
                   list2.add(hit2.getBlockPos());
                }
             }
@@ -4326,21 +3788,13 @@ public class Scaffold
    public void onRender(float f) {
       if (this.esp.getValue()) {
          RenderUtil.begin3DRender();
-         byte b = 0;
-         int colorInt = this.espColor.getColorInt(b);
+         int colorInt = this.espColor.getColorInt((byte)0);
          float f2 = 0.0F;
          if (this.targetBlockPos != null) {
             GlStateManager.alphaFunc(516, 0.0F);
-            boolean isBlurActive = this.esp2.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, this.esp2.isShadowActive());
+            BlurShadowManager.enableOneShotPass(this.esp2.isBlurActive(), this.esp2.isShadowActive());
             BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
-               BlockPos targetBlockPos2 = this.targetBlockPos;
-               BlurShadowSettings esp22 = this.esp2;
-               int n = ColorUtil.resolvePassColor(shaderRenderPass, colorInt);
-               int n2 = esp22.resolvePassColor(shaderRenderPass, n);
-               float f3 = 1.0F;
-               int n3 = n2;
-               RenderUtil.drawBlockEspBox(targetBlockPos2, n3, f3, f2);
+               RenderUtil.drawBlockEspBox(this.targetBlockPos, this.esp2.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, colorInt)), 1.0F, f2);
             });
          }
 
@@ -4368,25 +3822,18 @@ public class Scaffold
          int n = MathHelper.ceiling_double_int(d);
          int n2 = MathHelper.ceiling_double_int(d2);
          String str = this.hotbarBlockCount + "";
-         int stringWidth = mc.fontRendererObj.getStringWidth(str);
-         int n3 = (20 + stringWidth) / 2;
+         int n3 = (20 + mc.fontRendererObj.getStringWidth(str)) / 2;
          int n4 = n3 + 2 + (int)((double)(n - (n3 + 2) * 2) * (this.x.getValue() / 100.0));
          int n5 = 2 + (int)((double)(n2 - 19) * (this.y.getValue() / 100.0));
          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          if (this.backGround.getValue()) {
-            byte b = 0;
-            int colorInt = this.backgroundColor.getColorInt(b);
-            boolean isBlurActive = this.blockCount2.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, this.blockCount2.isShadowActive());
+            int colorInt = this.backgroundColor.getColorInt((byte)0);
+            BlurShadowManager.enableOneShotPass(this.blockCount2.isBlurActive(), this.blockCount2.isShadowActive());
             BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderBlockCountBackground(n4, n3, n5, colorInt, shaderRenderPass));
          }
 
          RenderHelper.enableGUIStandardItemLighting();
-         ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(this.getSelectedBlockSlot() + 36).getStack();
-         int n6 = n4 - n3;
-         boolean flag = false;
-         int n7 = n6;
-         RenderUtil.renderItemIntoGuiElevated(stack, n7, n5, flag);
+         RenderUtil.renderItemIntoGuiElevated(mc.thePlayer.inventoryContainer.getSlot(this.getSelectedBlockSlot() + 36).getStack(), n4 - n3, n5, false);
          RenderHelper.disableStandardItemLighting();
          mc.fontRendererObj.drawString(str, n4 - n3 + 20, n5 + 4, -1);
          GL11.glPopMatrix();
@@ -4441,9 +3888,7 @@ public class Scaffold
          } else if (n2 < 0) {
             this.selectedBlockSlot = n2;
          } else {
-            TickCounter silentSwitchCounter2 = this.silentSwitchCounter;
-            int n3 = (this.firstSilentSwitchPending ? this.silentStartDelay.getLastIntValue() : this.silentSwitchDelay.getLastIntValue()) + 1;
-            if (silentSwitchCounter2.hasReached2(n3)) {
+            if (this.silentSwitchCounter.hasReached2((this.firstSilentSwitchPending ? this.silentStartDelay.getLastIntValue() : this.silentSwitchDelay.getLastIntValue()) + 1)) {
                this.slotMinStackThresholds.put(n2, this.stackCountToStartSwitchProcess.getLastIntValue());
                this.selectedBlockSlot = n2;
                this.firstSilentSwitchPending = false;
@@ -4488,9 +3933,7 @@ public class Scaffold
                }
             }
 
-            boolean flag = !this.silentMode.getSelectedValue().equals("Legit");
-            byte b = -1;
-            SilentSlotManager.scheduleSlotSwitch(this, b, n2, n3, flag);
+            SilentSlotManager.scheduleSlotSwitch(this, (byte)-1, n2, n3, !this.silentMode.getSelectedValue().equals("Legit"));
          }
       } else {
          this.selectedBlockSlot = 0;
@@ -4501,8 +3944,7 @@ public class Scaffold
    public void onAIMoveSpeed(EventAIMoveSpeed event) {
       if (!this.waitingForStartEdge) {
          if (this.ignoreSpeedMotion.getValue()) {
-            float f = MathHelper.clamp_float(event.getMoveSpeed(), -0.13000001F, 0.13000001F);
-            event.setMoveSpeed(f);
+            event.setMoveSpeed(MathHelper.clamp_float(event.getMoveSpeed(), -0.13000001F, 0.13000001F));
          }
       }
    }
@@ -4525,8 +3967,7 @@ public class Scaffold
 
    private boolean wouldFallNextTick() {
       if (mc.thePlayer.onGround && this.forcePlaceIfYouWouldFallDown.getValue()) {
-         double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
-         return doubles[9] != 1.0;
+         return PlayerUtil.predictPlayerPosition(0, mc.thePlayer)[9] != 1.0;
       } else {
          return false;
       }
@@ -4585,14 +4026,7 @@ public class Scaffold
    }
 
    private void renderBlockCountBackground(int n, int n2, int n3, int n4, ShaderRenderPass shaderRenderPass) {
-      float f = (float)(n - n2 - 2);
-      float f2 = (float)(n3 - 2);
-      float f3 = (float)(n + n2 + 2);
-      float f4 = (float)(n3 + 15 + 2);
-      float value = (float)this.roundFactor.getValue();
-      BlurShadowSettings blockCount22 = this.blockCount2;
-      int n5 = ColorUtil.resolvePassColor(shaderRenderPass, n4);
-      RenderUtil.drawRoundedRect(f, f2, f3, f4, value, 1, blockCount22.resolvePassColor(shaderRenderPass, n5));
+      RenderUtil.drawRoundedRect((float)(n - n2 - 2), (float)(n3 - 2), (float)(n + n2 + 2), (float)(n3 + 15 + 2), (float)this.roundFactor.getValue(), 1, this.blockCount2.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n4)));
    }
 
    private double scoreMidPitchCandidate(float f, ScaffoldRaycastResult scaffoldRaycastResult) {
@@ -4609,8 +4043,7 @@ public class Scaffold
          int n = -1;
          if (this.silentMode.getSelectedValue().equals("Exploit")) {
             int n2 = this.getSelectedBlockSlot() + 36;
-            ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(n2).getStack();
-            if (!PlayerUtil.canPlaceHeldItemAtMouseOver(stack)) {
+            if (!PlayerUtil.canPlaceHeldItemAtMouseOver(mc.thePlayer.inventoryContainer.getSlot(n2).getStack())) {
                return false;
             }
 
@@ -4628,12 +4061,7 @@ public class Scaffold
             this.lastRightClickTimer.reset();
             this.lastPlaceTimer.reset();
             flag2 = false;
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.moonWalkStartDistToBlock.getMinValue();
-            double maxValue = this.moonWalkStartDistToBlock.getMaxValue();
-            double d = maxValue;
-            double d2 = minValue;
-            this.moonWalkEdgeExpandDist = -instance.nextDouble(d2, d);
+            this.moonWalkEdgeExpandDist = -DefaultRandomGenerator.instance.nextDouble(this.moonWalkStartDistToBlock.getMinValue(), this.moonWalkStartDistToBlock.getMaxValue());
             this.ticksSinceLastPlace = 0;
             this.postPlacementStrafeTicks.nextValue();
             this.placedBlockSinceEnable = true;
@@ -4672,8 +4100,7 @@ public class Scaffold
          int n = -1;
          if (this.silentMode.getSelectedValue().equals("Exploit")) {
             int n2 = this.getSelectedBlockSlot() + 36;
-            ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(n2).getStack();
-            if (!PlayerUtil.canPlaceHeldItemAtMouseOver(stack)) {
+            if (!PlayerUtil.canPlaceHeldItemAtMouseOver(mc.thePlayer.inventoryContainer.getSlot(n2).getStack())) {
                return false;
             }
 
@@ -4693,12 +4120,7 @@ public class Scaffold
             this.lastRightClickTimer.reset();
             this.lastPlaceTimer.reset();
             flag2 = false;
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.moonWalkStartDistToBlock.getMinValue();
-            double maxValue = this.moonWalkStartDistToBlock.getMaxValue();
-            double d = maxValue;
-            double d2 = minValue;
-            this.moonWalkEdgeExpandDist = -instance.nextDouble(d2, d);
+            this.moonWalkEdgeExpandDist = -DefaultRandomGenerator.instance.nextDouble(this.moonWalkStartDistToBlock.getMinValue(), this.moonWalkStartDistToBlock.getMaxValue());
             this.ticksSinceLastPlace = 0;
             this.postPlacementStrafeTicks.nextValue();
             this.placedBlockSinceEnable = true;

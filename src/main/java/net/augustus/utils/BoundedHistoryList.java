@@ -12,8 +12,7 @@ public class BoundedHistoryList {
    }
 
    public Object getFromEnd(int n) {
-      int n2 = this.entries.size() - n - 1;
-      return this.get(n2);
+      return this.get(this.entries.size() - n - 1);
    }
 
    public int size() {

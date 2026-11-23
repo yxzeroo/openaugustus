@@ -31,8 +31,7 @@ public class HurtTimeHitCheck extends ModuleMode {
       int length = hurtTimeBuffers2.length;
 
       for (int i = 0; i < length; i++) {
-         StatisticalSampleBuffer statisticalSampleBuffer = hurtTimeBuffers2[i];
-         if (!statisticalSampleBuffer.isFull()) {
+         if (!hurtTimeBuffers2[i].isFull()) {
             return false;
          }
       }
@@ -45,9 +44,8 @@ public class HurtTimeHitCheck extends ModuleMode {
    }
 
    private void clearAllBuffers(long l, short s) {
-      StatisticalSampleBuffer[] hurtTimeBuffers2 = this.hurtTimeBuffers;
 
-      for (StatisticalSampleBuffer statisticalSampleBuffer : hurtTimeBuffers2) {
+      for (StatisticalSampleBuffer statisticalSampleBuffer : this.hurtTimeBuffers) {
          statisticalSampleBuffer.clear();
       }
    }

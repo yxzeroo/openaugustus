@@ -44,8 +44,7 @@ public class Protocolr1_3_1_2Tor1_4_2
    protected void registerPackets() {
       super.registerPackets();
       this.registerClientbound(ClientboundPackets1_3_1.DISCONNECT, wrapper -> {
-         State currentState = wrapper.user().getProtocolInfo().getServerState();
-         if (currentState == State.STATUS) {
+         if (wrapper.user().getProtocolInfo().getServerState() == State.STATUS) {
             String reason = (String)wrapper.read(Types1_6_4.STRING);
 
             try {
@@ -56,11 +55,7 @@ public class Protocolr1_3_1_2Tor1_4_2
                String str = pingParts[0];
                String str2 = pingParts[1];
                String str3 = pingParts[2];
-               String str4 = str2;
-               String str5 = str;
-               String str6 = name;
-               int n = version;
-               String out = "§1\u0000" + n + "\u0000" + str6 + "\u0000" + str5 + "\u0000" + str4 + "\u0000" + str3;
+               String out = "§1\u0000" + version + "\u0000" + name + "\u0000" + str + "\u0000" + str2 + "\u0000" + str3;
                wrapper.write(Types1_6_4.STRING, out);
             } catch (Throwable e) {
                ViaLegacy.getPlatform().getLogger().log(Level.WARNING, "Could not parse 1.3.1 ping: " + reason, e);
@@ -270,8 +265,7 @@ public class Protocolr1_3_1_2Tor1_4_2
                      byte icon = (byte)(data[i * 3 + 1] % 16);
                      byte centerX = data[i * 3 + 2];
                      byte centerZ = data[i * 3 + 3];
-                     byte iconRotation = (byte)(data[i * 3 + 1] / 16);
-                     data[i * 3 + 1] = (byte)(icon << 4 | iconRotation & 15);
+                     data[i * 3 + 1] = (byte)(icon << 4 | ((byte)(data[i * 3 + 1] / 16)) & 15);
                      data[i * 3 + 2] = centerX;
                      data[i * 3 + 3] = centerZ;
                   }

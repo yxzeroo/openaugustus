@@ -14,8 +14,8 @@ public class RangeSetting extends Setting {
    private boolean wasMaxFieldFocused;
    private boolean wasMinFieldFocused;
    private final DoubleProperty f;
-   public StringValue min;
-   public StringValue max;
+   public DoubleValue min;
+   public DoubleValue max;
    private final DoubleProperty s;
    private int labelWidth;
 
@@ -26,55 +26,31 @@ public class RangeSetting extends Setting {
    @Override
    public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
       super.render(n, n2, n3, n4, n5, n6 * 2, customFontUtil, flag);
-      boolean flag2 = this.labelWidth == -1;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
-         String str = this.min.getDisplayName() + ": ";
-         String str2 = str;
-         this.labelWidth = (int)customFontUtil.getStringWidth(str2);
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
+         this.labelWidth = (int)customFontUtil.getStringWidth(this.min.getDisplayName() + ": ");
       }
 
       if (this.maxFirst) {
          this.max.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
-         double value = this.max.getValue();
-         this.setMaxValue(value);
-         StringValue min2 = this.min;
-         int n7 = n4 + this.max.getHeight();
-         int n8 = n7;
-         min2.render(n, n2, n3, n8, n5, n6, customFontUtil, flag);
-         double value2 = this.min.getValue();
-         double d = value2;
-         this.setMinValue(d);
+         this.setMaxValue(this.max.getValue());
+         this.min.render(n, n2, n3, n4 + this.max.getHeight(), n5, n6, customFontUtil, flag);
+         this.setMinValue(this.min.getValue());
       } else {
          this.min.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
-         double value3 = this.min.getValue();
-         double d2 = value3;
-         this.setMinValue(d2);
-         StringValue max2 = this.max;
-         int n9 = n4 + this.min.getHeight();
-         int n10 = n9;
-         max2.render(n, n2, n3, n10, n5, n6, customFontUtil, flag);
-         double value4 = this.max.getValue();
-         this.setMaxValue(value4);
+         this.setMinValue(this.min.getValue());
+         this.max.render(n, n2, n3, n4 + this.min.getHeight(), n5, n6, customFontUtil, flag);
+         this.setMaxValue(this.max.getValue());
       }
 
-      double minValue = this.getMinValue();
-      if (minValue > this.getMaxValue()) {
+      if (this.getMinValue() > this.getMaxValue()) {
          if (this.min.getSlider().isDragging() || this.wasMinFieldFocused && !this.min.getTextField().isFocused() || this.min.isWasArrowAdjusting() || this.min.isScrollAdjusted()) {
-            StringValue max3 = this.max;
-            double value5 = this.min.getValue();
-            max3.setValue(value5);
-            double value6 = this.max.getValue();
-            this.setMaxValue(value6);
+            this.max.setValue(this.min.getValue());
+            this.setMaxValue(this.max.getValue());
          }
 
          if (this.max.getSlider().isDragging() || this.wasMaxFieldFocused && !this.max.getTextField().isFocused() || this.max.isWasArrowAdjusting() || this.max.isScrollAdjusted()) {
-            StringValue min3 = this.min;
-            double value7 = this.max.getValue();
-            min3.setValue(value7);
-            double value8 = this.min.getValue();
-            double d3 = value8;
-            this.setMinValue(d3);
+            this.min.setValue(this.max.getValue());
+            this.setMinValue(this.min.getValue());
          }
       }
 
@@ -94,14 +70,10 @@ public class RangeSetting extends Setting {
       this.max.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
    }
 
-   public RangeSetting(Module module, String str, String str2, double d, double d2, double d3, double d4, int n, DoubleValue doubleValue) {
+   public RangeSetting(Module module, String str, String str2, double d, double d2, double d3, double d4, int n, SettingGroup doubleValue) {
        super(module, doubleValue, str + str2);
-      DoubleProperty doubleProperty = new DoubleProperty(this, "F", 0.0);
-      Consumer consumer = obj -> this.setMinValue((double)obj);
-      this.f = (DoubleProperty)doubleProperty.withOnValueChanged(consumer);
-      DoubleProperty doubleProperty2 = new DoubleProperty(this, "S", 0.0);
-      Consumer consumer2 = obj2 -> this.setMaxValue((double)obj2);
-      this.s = (DoubleProperty)doubleProperty2.withOnValueChanged(consumer2);
+      this.f = (DoubleProperty)new DoubleProperty(this, "F", 0.0).withOnValueChanged(obj -> this.setMinValue((double)obj));
+      this.s = (DoubleProperty)new DoubleProperty(this, "S", 0.0).withOnValueChanged(obj2 -> this.setMaxValue((double)obj2));
       this.maxFirst = false;
       this.labelWidth = -1;
       this.valueUpdatedCallback = null;
@@ -109,24 +81,18 @@ public class RangeSetting extends Setting {
       this.wasMaxFieldFocused = false;
       DoubleProperty doubleProperty3 = this.f;
       Double d5 = d;
-      Double d6 = d5;
-      doubleProperty3.setValue(d6);
+      doubleProperty3.setValue(d5);
       doubleProperty3 = this.s;
       Double d7 = d2;
-      Double d8 = d7;
-      doubleProperty3.setValue(d8);
+      doubleProperty3.setValue(d7);
       doubleProperty3 = this.f;
       Double d9 = d;
       doubleProperty3.setDefaultValue(d9);
       doubleProperty3 = this.s;
       Double d10 = d2;
       doubleProperty3.setDefaultValue(d10);
-      StringValue stringValue = new StringValue(str, d, d3, d4, n);
-      SettingVisibilityCondition condition = () -> this.isVisible();
-      this.min = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(str2, d2, d3, d4, n);
-      SettingVisibilityCondition condition2 = () -> this.isVisible();
-      this.max = stringValue2.visibleWhen(condition2);
+      this.min = new DoubleValue(str, d, d3, d4, n).visibleWhen(() -> this.isVisible());
+      this.max = new DoubleValue(str2, d2, d3, d4, n).visibleWhen(() -> this.isVisible());
    }
 
    public void setDecimalPlaces(long l, int n) {
@@ -136,12 +102,8 @@ public class RangeSetting extends Setting {
 
    public RangeSetting(Module module, String str, double d, double d2, double d3, double d4, int n) {
        super(module, null, str);
-      DoubleProperty doubleProperty = new DoubleProperty(this, "F", 0.0);
-      Consumer consumer = obj -> this.setMinValue((double)obj);
-      this.f = (DoubleProperty)doubleProperty.withOnValueChanged(consumer);
-      DoubleProperty doubleProperty2 = new DoubleProperty(this, "S", 0.0);
-      Consumer consumer2 = obj2 -> this.setMaxValue((double)obj2);
-      this.s = (DoubleProperty)doubleProperty2.withOnValueChanged(consumer2);
+      this.f = (DoubleProperty)new DoubleProperty(this, "F", 0.0).withOnValueChanged(obj -> this.setMinValue((double)obj));
+      this.s = (DoubleProperty)new DoubleProperty(this, "S", 0.0).withOnValueChanged(obj2 -> this.setMaxValue((double)obj2));
       this.maxFirst = false;
       this.labelWidth = -1;
       this.valueUpdatedCallback = null;
@@ -149,24 +111,18 @@ public class RangeSetting extends Setting {
       this.wasMaxFieldFocused = false;
       DoubleProperty doubleProperty3 = this.f;
       Double d5 = d;
-      Double d6 = d5;
-      doubleProperty3.setValue(d6);
+      doubleProperty3.setValue(d5);
       doubleProperty3 = this.s;
       Double d7 = d2;
-      Double d8 = d7;
-      doubleProperty3.setValue(d8);
+      doubleProperty3.setValue(d7);
       doubleProperty3 = this.f;
       Double d9 = d;
       doubleProperty3.setDefaultValue(d9);
       doubleProperty3 = this.s;
       Double d10 = d2;
       doubleProperty3.setDefaultValue(d10);
-      StringValue stringValue = new StringValue("Min" + str, d, d3, d4, n);
-      SettingVisibilityCondition condition = () -> this.isVisible();
-      this.min = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue("Max" + str, d2, d3, d4, n);
-      SettingVisibilityCondition condition2 = () -> this.isVisible();
-      this.max = stringValue2.visibleWhen(condition2);
+      this.min = new DoubleValue("Min" + str, d, d3, d4, n).visibleWhen(() -> this.isVisible());
+      this.max = new DoubleValue("Max" + str, d2, d3, d4, n).visibleWhen(() -> this.isVisible());
    }
 
    @Override
@@ -175,8 +131,7 @@ public class RangeSetting extends Setting {
    }
 
    public double getMinValue() {
-      boolean flag = false;
-      return this.getMinValue(flag);
+      return this.getMinValue(false);
    }
 
    @Override
@@ -185,8 +140,7 @@ public class RangeSetting extends Setting {
    }
 
    public double getMaxValue() {
-      boolean flag = false;
-      return this.getMaxValue(flag);
+      return this.getMaxValue(false);
    }
 
    @Override
@@ -195,11 +149,7 @@ public class RangeSetting extends Setting {
    }
 
    public RangeSetting named(String str) {
-      String str2 = "Min" + str;
-      String str3 = "Max" + str;
-      String str4 = str3;
-      String str5 = str2;
-      return this.withBoundNames(str5, str4);
+      return this.withBoundNames("Min" + str, "Max" + str);
    }
 
    public double getMaxValue(boolean flag) {
@@ -218,22 +168,18 @@ public class RangeSetting extends Setting {
    @Override
    public void applyTranslation(String str, String str2) {
       if (str2.equals("English_Default")) {
-         boolean flag = true;
-         this.min.setLabelDirty(flag);
-         boolean flag2 = true;
-         this.max.setLabelDirty(flag2);
+         this.min.setLabelDirty(true);
+         this.max.setLabelDirty(true);
          String str3 = "";
          this.min.setTranslatedName(str3);
          String str4 = "";
          this.max.setTranslatedName(str4);
       } else {
          if (this.min.getName().equalsIgnoreCase(str)) {
-            boolean flag3 = true;
-            this.min.setLabelDirty(flag3);
+            this.min.setLabelDirty(true);
             this.min.setTranslatedName(str2);
          } else if (this.max.getName().equalsIgnoreCase(str)) {
-            boolean flag4 = true;
-            this.max.setLabelDirty(flag4);
+            this.max.setLabelDirty(true);
             this.max.setTranslatedName(str2);
          }
       }
@@ -244,20 +190,15 @@ public class RangeSetting extends Setting {
       this.f.resetToDefault();
       this.s.resetToDefault();
       double value = (Double)this.f.getValue();
-      double d = value;
-      this.setMinValue(d);
+      this.setMinValue(value);
       double value2 = (Double)this.s.getValue();
       this.setMaxValue(value2);
    }
 
    public RangeSetting(Module module, String str, String str2, double d, double d2, double d3, double d4, int n) {
        super(module, null, str + str2);
-      DoubleProperty doubleProperty = new DoubleProperty(this, "F", 0.0);
-      Consumer consumer = obj -> this.setMinValue((double)obj);
-      this.f = (DoubleProperty)doubleProperty.withOnValueChanged(consumer);
-      DoubleProperty doubleProperty2 = new DoubleProperty(this, "S", 0.0);
-      Consumer consumer2 = obj2 -> this.setMaxValue((double)obj2);
-      this.s = (DoubleProperty)doubleProperty2.withOnValueChanged(consumer2);
+      this.f = (DoubleProperty)new DoubleProperty(this, "F", 0.0).withOnValueChanged(obj -> this.setMinValue((double)obj));
+      this.s = (DoubleProperty)new DoubleProperty(this, "S", 0.0).withOnValueChanged(obj2 -> this.setMaxValue((double)obj2));
       this.maxFirst = false;
       this.labelWidth = -1;
       this.valueUpdatedCallback = null;
@@ -265,24 +206,18 @@ public class RangeSetting extends Setting {
       this.wasMaxFieldFocused = false;
       DoubleProperty doubleProperty3 = this.f;
       Double d5 = d;
-      Double d6 = d5;
-      doubleProperty3.setValue(d6);
+      doubleProperty3.setValue(d5);
       doubleProperty3 = this.s;
       Double d7 = d2;
-      Double d8 = d7;
-      doubleProperty3.setValue(d8);
+      doubleProperty3.setValue(d7);
       doubleProperty3 = this.f;
       Double d9 = d;
       doubleProperty3.setDefaultValue(d9);
       doubleProperty3 = this.s;
       Double d10 = d2;
       doubleProperty3.setDefaultValue(d10);
-      StringValue stringValue = new StringValue(str, d, d3, d4, n);
-      SettingVisibilityCondition condition = () -> this.isVisible();
-      this.min = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(str2, d2, d3, d4, n);
-      SettingVisibilityCondition condition2 = () -> this.isVisible();
-      this.max = stringValue2.visibleWhen(condition2);
+      this.min = new DoubleValue(str, d, d3, d4, n).visibleWhen(() -> this.isVisible());
+      this.max = new DoubleValue(str2, d2, d3, d4, n).visibleWhen(() -> this.isVisible());
    }
 
    @Override
@@ -301,14 +236,10 @@ public class RangeSetting extends Setting {
       return this.min.getDecimalPlaces();
    }
 
-   public RangeSetting(Module module, String str, double d, double d2, double d3, double d4, int n, DoubleValue doubleValue) {
+   public RangeSetting(Module module, String str, double d, double d2, double d3, double d4, int n, SettingGroup doubleValue) {
        super(module, doubleValue, str);
-      DoubleProperty doubleProperty = new DoubleProperty(this, "F", 0.0);
-      Consumer consumer = obj -> this.setMinValue((double)obj);
-      this.f = (DoubleProperty)doubleProperty.withOnValueChanged(consumer);
-      DoubleProperty doubleProperty2 = new DoubleProperty(this, "S", 0.0);
-      Consumer consumer2 = obj2 -> this.setMaxValue((double)obj2);
-      this.s = (DoubleProperty)doubleProperty2.withOnValueChanged(consumer2);
+      this.f = (DoubleProperty)new DoubleProperty(this, "F", 0.0).withOnValueChanged(obj -> this.setMinValue((double)obj));
+      this.s = (DoubleProperty)new DoubleProperty(this, "S", 0.0).withOnValueChanged(obj2 -> this.setMaxValue((double)obj2));
       this.maxFirst = false;
       this.labelWidth = -1;
       this.valueUpdatedCallback = null;
@@ -316,31 +247,24 @@ public class RangeSetting extends Setting {
       this.wasMaxFieldFocused = false;
       DoubleProperty doubleProperty3 = this.f;
       Double d5 = d;
-      Double d6 = d5;
-      doubleProperty3.setValue(d6);
+      doubleProperty3.setValue(d5);
       doubleProperty3 = this.s;
       Double d7 = d2;
-      Double d8 = d7;
-      doubleProperty3.setValue(d8);
+      doubleProperty3.setValue(d7);
       doubleProperty3 = this.f;
       Double d9 = d;
       doubleProperty3.setDefaultValue(d9);
       doubleProperty3 = this.s;
       Double d10 = d2;
       doubleProperty3.setDefaultValue(d10);
-      StringValue stringValue = new StringValue("Min" + str, d, d3, d4, n);
-      SettingVisibilityCondition condition = () -> this.isVisible();
-      this.min = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue("Max" + str, d2, d3, d4, n);
-      SettingVisibilityCondition condition2 = () -> this.isVisible();
-      this.max = stringValue2.visibleWhen(condition2);
+      this.min = new DoubleValue("Min" + str, d, d3, d4, n).visibleWhen(() -> this.isVisible());
+      this.max = new DoubleValue("Max" + str, d2, d3, d4, n).visibleWhen(() -> this.isVisible());
    }
 
    public void setMinValue(double d) {
       DoubleProperty doubleProperty = this.f;
       Double d2 = d;
-      Double d3 = d2;
-      doubleProperty.setValue(d3);
+      doubleProperty.setValue(d2);
       this.min.setValue(d);
    }
 
@@ -364,8 +288,7 @@ public class RangeSetting extends Setting {
    public void setMaxValue(double d) {
       DoubleProperty doubleProperty = this.s;
       Double d2 = d;
-      Double d3 = d2;
-      doubleProperty.setValue(d3);
+      doubleProperty.setValue(d2);
       this.max.setValue(d);
    }
 
@@ -384,11 +307,8 @@ public class RangeSetting extends Setting {
 
    @Override
    public void randomize() {
-      double d = MathStatisticsUtil.lerp(this.min.getMinValue(), this.min.getMaxValue(), Math.random());
-      double d2 = d;
-      this.setMinValue(d2);
-      double d3 = MathStatisticsUtil.lerp((Double)this.f.getValue(), this.max.getMaxValue(), Math.random());
-      this.setMaxValue(d3);
+      this.setMinValue(MathStatisticsUtil.lerp(this.min.getMinValue(), this.min.getMaxValue(), Math.random()));
+      this.setMaxValue(MathStatisticsUtil.lerp((Double)this.f.getValue(), this.max.getMaxValue(), Math.random()));
    }
 
    public double getMinimumBound(long l) {
@@ -407,14 +327,13 @@ public class RangeSetting extends Setting {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    public RangeSetting onChange(SettingChangeListener listener) {
       this.changeListener = listener;
-      this.min = (StringValue)this.min.withChangeListener(listener);
-      this.max = (StringValue)this.max.withChangeListener(listener);
+      this.min = (DoubleValue)this.min.withChangeListener(listener);
+      this.max = (DoubleValue)this.max.withChangeListener(listener);
       return this;
    }
 

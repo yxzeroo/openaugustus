@@ -58,8 +58,7 @@ public class BlockMycelium extends Block {
    }
 
    static {
-      String str = "snowy";
-      SNOWY = PropertyBool.create(str);
+      SNOWY = PropertyBool.create("snowy");
    }
 
    @Override

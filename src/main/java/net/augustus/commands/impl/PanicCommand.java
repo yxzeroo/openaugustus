@@ -16,9 +16,7 @@ public class PanicCommand extends Command {
 
       for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
          if (module.isToggled() && (module.getCategorys() != Categorys.RENDER || !flag)) {
-            boolean flag2 = false;
-            boolean flag3 = false;
-            module.setToggled(flag3, flag2);
+            module.setToggled(false, false);
          }
       }
 
@@ -26,8 +24,7 @@ public class PanicCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (disables all modules, except for visuals when norender is specified (.panic norender))";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (disables all modules, except for visuals when norender is specified (.panic norender))");
    }
 
 }

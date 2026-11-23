@@ -9,8 +9,7 @@ public class RangeListInt {
 
    public boolean isInRange(int n) {
       for (int i = 0; i < this.ranges.length; i++) {
-         RangeInt rangeInt = this.ranges[i];
-         if (rangeInt.isInRange(n)) {
+         if (this.ranges[i].isInRange(n)) {
             return true;
          }
       }

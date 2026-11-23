@@ -3314,8 +3314,7 @@ public class AltUsernameGenerator {
    public List nounList;
 
    private static String addRandomNumbers(String str) {
-      int n = random.nextInt(4);
-      switch (n) {
+      switch (random.nextInt(4)) {
          case 0:
             return str + (1980 + random.nextInt(31));
          case 1:
@@ -3345,8 +3344,7 @@ public class AltUsernameGenerator {
    }
 
    private static String randomizeCase(String str) {
-      int n = random.nextInt(4);
-      switch (n) {
+      switch (random.nextInt(4)) {
          case 0:
             return str.toLowerCase();
          case 1:
@@ -5567,8 +5565,7 @@ public class AltUsernameGenerator {
       StringBuilder sb = new StringBuilder(str);
 
       for (int i = 0; i < sb.length(); i++) {
-         char ch = sb.charAt(i);
-         switch (Character.toLowerCase(ch)) {
+         switch (Character.toLowerCase(sb.charAt(i))) {
             case 'a':
                if (random.nextBoolean()) {
                   sb.setCharAt(i, '4');
@@ -5667,8 +5664,7 @@ public class AltUsernameGenerator {
    private static String addWrapperAffix(String str) {
       String[] strings = new String[]{"_", "x", "X"};
       String str2 = strings[random.nextInt(strings.length)];
-      int n = random.nextInt(3);
-      switch (n) {
+      switch (random.nextInt(3)) {
          case 0:
             return str2 + str + str2;
          case 1:
@@ -5715,8 +5711,7 @@ public class AltUsernameGenerator {
       StringBuilder sb = new StringBuilder();
 
       for (int i = 0; i < n; i++) {
-         int n2 = random.nextInt(5);
-         switch (n2) {
+         switch (random.nextInt(5)) {
             case 0:
                sb.append(pickRandom(PREFIXES));
                break;

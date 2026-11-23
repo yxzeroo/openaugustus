@@ -40,18 +40,15 @@ public class OldHypixelSpeedMode extends SpeedMode {
          double d = 0.01;
          double d2 = 0.009;
          double[] doubles = MoveUtil.calculateForwardMotion((double)DefaultRandomGenerator.instance.nextFloat2(d2, d), MoveUtil.getDirectionDegrees(false));
-         double d3 = event.getX() + doubles[0];
-         event.setX(d3);
-         double d4 = event.getZ() + doubles[1];
-         event.setZ(d4);
+         event.setX(event.getX() + doubles[0]);
+         event.setZ(event.getZ() + doubles[1]);
       }
    }
 
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (MoveUtil.isMoving()) {
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
       }
    }
 

@@ -36,7 +36,6 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
        super(module, null, str);
       this.modeProperties = new ArrayList();
       this.subModes = new ArrayList();
-      AbstractSubMode.getControlFlowState();
       this.labelWidth = -1;
       this.modeWidthCache = new ConcurrentHashMap();
       this.dragToggleState = 0;
@@ -47,17 +46,13 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
       for (int i = 0; i < biFunctions.length; i++) {
          int n = i;
          String name = ((AbstractSubMode)biFunctions[i].apply(null, null)).getName();
-         DoubleValue doubleValue = (DoubleValue)(new DoubleValue(module, str + name + "Group_MCSV", true)).withDisplayName(name);
-         SettingVisibilityCondition condition = () -> this.isSubModeGroupVisible(n, doubleValue);
-         doubleValue.visibleWhen(condition);
+         SettingGroup doubleValue = (SettingGroup)(new SettingGroup(module, str + name + "Group_MCSV", true)).withDisplayName(name);
+         doubleValue.visibleWhen(() -> this.isSubModeGroupVisible(n, doubleValue));
          AbstractSubMode subMode = (AbstractSubMode)biFunctions[i].apply(module, doubleValue);
-         Supplier supplier = () -> this.enabledStates[n];
-         subMode.setVisibilitySupplier(supplier);
+         subMode.setVisibilitySupplier(() -> this.enabledStates[n]);
          this.subModes.add(subMode);
          List modeProperties2 = this.modeProperties;
-         BooleanProperty booleanProperty = new BooleanProperty(this, subMode.getName(), false);
-         Supplier supplier2 = () -> this.enabledStates[n];
-         BooleanProperty booleanProperty2 = (BooleanProperty)booleanProperty.withValueSupplier(supplier2);
+         BooleanProperty booleanProperty2 = (BooleanProperty)new BooleanProperty(this, subMode.getName(), false).withValueSupplier(() -> this.enabledStates[n]);
          Consumer consumer = obj -> {
             this.enabledStates[n] = (Boolean)(obj);
             if (this.ownerModule.isToggled()) {
@@ -71,9 +66,8 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
       module.getToggleListeners().add(this);
    }
 
-   public MultiModeSetting(Module module, String str, DoubleValue doubleValue, BiFunction[] biFunctions) {
+   public MultiModeSetting(Module module, String str, SettingGroup doubleValue, BiFunction[] biFunctions) {
        super(module, doubleValue, str);
-      AbstractSubMode.getControlFlowState();
       this.modeProperties = new ArrayList();
       this.subModes = new ArrayList();
       this.labelWidth = -1;
@@ -86,17 +80,13 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
       for (int i = 0; i < biFunctions.length; i++) {
          int n = i;
          String name = ((AbstractSubMode)biFunctions[i].apply(null, null)).getName();
-         DoubleValue doubleValue2 = (DoubleValue)(new DoubleValue(module, str + name + "Group_MCSV", true)).withDisplayName(name);
-         SettingVisibilityCondition condition = () -> this.isNestedSubModeGroupVisible(n, doubleValue2);
-         doubleValue2.visibleWhen(condition);
+         SettingGroup doubleValue2 = (SettingGroup)(new SettingGroup(module, str + name + "Group_MCSV", true)).withDisplayName(name);
+         doubleValue2.visibleWhen(() -> this.isNestedSubModeGroupVisible(n, doubleValue2));
          AbstractSubMode subMode = (AbstractSubMode)biFunctions[i].apply(module, doubleValue2);
-         Supplier supplier = () -> this.enabledStates[n];
-         subMode.setVisibilitySupplier(supplier);
+         subMode.setVisibilitySupplier(() -> this.enabledStates[n]);
          this.subModes.add(subMode);
          List modeProperties2 = this.modeProperties;
-         BooleanProperty booleanProperty = new BooleanProperty(this, subMode.getName(), false);
-         Supplier supplier2 = () -> this.enabledStates[n];
-         BooleanProperty booleanProperty2 = (BooleanProperty)booleanProperty.withValueSupplier(supplier2);
+         BooleanProperty booleanProperty2 = (BooleanProperty)new BooleanProperty(this, subMode.getName(), false).withValueSupplier(() -> this.enabledStates[n]);
          Consumer consumer = obj -> {
             this.enabledStates[n] = (Boolean)(obj);
             if (this.ownerModule.isToggled()) {
@@ -112,37 +102,25 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    @Override
    public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
       customFontUtil = FontManager.consolas30MultiMode;
-      AbstractSubMode.getControlFlowState();
       super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
       if (flag) {
          String str = this.getDisplayName() + ": ";
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
-         byte b2 = 0;
-         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b2);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
          double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
-         boolean flag2 = this.labelWidth == -1;
-         boolean flag3 = flag2;
-         if (this.consumeLabelDirty(flag3)) {
+         customFontUtil.drawString(str, d, (double)n4, colorInt);
+         if (this.consumeLabelDirty(this.labelWidth == -1)) {
             this.labelWidth = (int)customFontUtil.getStringWidth(str);
             this.modeWidthCache.clear();
 
             for (AbstractSubMode subMode : (Iterable<AbstractSubMode>)(this.subModes)) {
-               ConcurrentHashMap modeWidthCache2 = this.modeWidthCache;
-               String name = subMode.getName();
-               String name2 = subMode.getName();
-               String str2 = name2;
-               modeWidthCache2.put(name, (int)customFontUtil.getStringWidth(str2));
+               this.modeWidthCache.put(subMode.getName(), (int)customFontUtil.getStringWidth(subMode.getName()));
             }
          }
 
@@ -150,8 +128,7 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
          int n8 = n4;
 
          for (int i = 0; i < this.subModes.size(); i++) {
-            AbstractSubMode subMode2 = (AbstractSubMode)this.subModes.get(i);
-            String name3 = subMode2.getName();
+            String name3 = ((AbstractSubMode)this.subModes.get(i)).getName();
             if (!name3.isEmpty()) {
                Integer num = (Integer)this.modeWidthCache.get(name3);
                if (num != null) {
@@ -164,16 +141,13 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
                      ? RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F))
                      : RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F));
                   d = (double)n7;
-                  double d4 = (double)n8;
-                  double d5 = d;
-                  customFontUtil.drawString(name3, d5, d4, n9);
+                  customFontUtil.drawString(name3, d, (double)n8, n9);
                   n7 += num;
                   if (i < this.subModes.size() - 1) {
                      d = (double)n7;
                      double d6 = (double)n8;
                      double d7 = d;
-                     String str3 = ", ";
-                     customFontUtil.drawString(str3, d7, d6, colorInt);
+                     customFontUtil.drawString(", ", d7, d6, colorInt);
                      n7 += SEPARATOR_WIDTH;
                   }
 
@@ -188,15 +162,13 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
       }
    }
 
-   private boolean isNestedSubModeGroupVisible(int n, DoubleValue doubleValue) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
+   private boolean isNestedSubModeGroupVisible(int n, SettingGroup doubleValue) {
       return this.enabledStates[n] && doubleValue.hasVisibleChildren();
    }
 
    @Override
    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       super.mouseClicked(mouseX, mouseY, mouseButton);
-      AbstractSubMode.getControlFlowState();
       boolean flag = false;
       if (mouseButton == 0 || mouseButton == 1) {
          String str = this.getDisplayName() + ": ";
@@ -218,8 +190,7 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
                   str2 = "";
                }
 
-               String str3 = str2;
-               if (renderX2 + renderFont2.getStringWidth(str3) > (float)this.boundsWidth) {
+               if (renderX2 + renderFont2.getStringWidth(str2) > (float)this.boundsWidth) {
                   renderY2 += (int)this.renderFont.getFontHeight() + 1;
                   renderX2 = (float)this.renderX;
                   n = (int)(renderX2 + this.renderFont.getStringWidth(str));
@@ -258,7 +229,6 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
 
    @Override
    public void onModuleToggled(boolean flag) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
 
       for (int i = 0; i < this.subModes.size(); i++) {
          if (this.enabledStates[i]) {
@@ -278,7 +248,6 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
 
    @Override
    public void resetToDefault() {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
 
       for (BooleanProperty booleanProperty : (Iterable<BooleanProperty>)(this.modeProperties)) {
          booleanProperty.resetToDefault();
@@ -290,8 +259,7 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
       SEPARATOR_WIDTH = (int)FontManager.consolas30.getStringWidth(str);
    }
 
-   private boolean isSubModeGroupVisible(int n, DoubleValue doubleValue) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
+   private boolean isSubModeGroupVisible(int n, SettingGroup doubleValue) {
       return this.enabledStates[n] && doubleValue.hasVisibleChildren();
    }
 
@@ -306,7 +274,6 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
 
    @Override
    public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-      int[] controlFlowState = AbstractSubMode.getControlFlowState();
       if (this.dragToggleState != 0) {
          if (clickedMouseButton == 0 || clickedMouseButton == 1) {
             String str = this.getDisplayName() + ": ";
@@ -328,8 +295,7 @@ public class MultiModeSetting extends Setting implements ModuleToggleListener {
                      str2 = "";
                   }
 
-                  String str3 = str2;
-                  if (renderX2 + renderFont2.getStringWidth(str3) > (float)this.boundsWidth) {
+                  if (renderX2 + renderFont2.getStringWidth(str2) > (float)this.boundsWidth) {
                      renderY2 += (int)this.renderFont.getFontHeight() + 1;
                      renderX2 = (float)this.renderX;
                      n = (int)(renderX2 + this.renderFont.getStringWidth(str));

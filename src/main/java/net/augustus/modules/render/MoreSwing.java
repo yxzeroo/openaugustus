@@ -29,9 +29,7 @@ public class MoreSwing extends Module implements ClickListener {
    }
 
    public void updateEventSubscriptions() {
-      int n = 1000000;
-      byte b = 7;
-      this.toggleEventSubscription(b, n);
+      this.toggleEventSubscription((byte)7, 1000000);
    }
 
    public void onClick(EventClick event) {

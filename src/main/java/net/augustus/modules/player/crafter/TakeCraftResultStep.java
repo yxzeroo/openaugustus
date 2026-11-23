@@ -11,7 +11,6 @@ public class TakeCraftResultStep implements CraftingStep {
 
    @Override
    public boolean execute(CraftingInventoryActions craftingInventoryActions, GuiCrafting guiCrafting) {
-      int resultSlot2 = this.resultSlot;
-      return craftingInventoryActions.takeResultSlot(guiCrafting, resultSlot2);
+      return craftingInventoryActions.takeResultSlot(guiCrafting, this.resultSlot);
    }
 }

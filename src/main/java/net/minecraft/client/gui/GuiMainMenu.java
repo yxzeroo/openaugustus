@@ -74,27 +74,19 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.id == 0) {
-         Minecraft mc2 = this.mc;
-         GuiOptions guiOptions = new GuiOptions(this, this.mc.gameSettings);
-         mc2.displayGuiScreen(guiOptions);
+         this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
       }
 
       if (button.id == 5) {
-         Minecraft mc3 = this.mc;
-         GuiLanguage guiLanguage = new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager());
-         mc3.displayGuiScreen(guiLanguage);
+         this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
       }
 
       if (button.id == 1) {
-         Minecraft mc4 = this.mc;
-         GuiSelectWorld guiSelectWorld = new GuiSelectWorld(this);
-         mc4.displayGuiScreen(guiSelectWorld);
+         this.mc.displayGuiScreen(new GuiSelectWorld(this));
       }
 
       if (button.id == 2) {
-         Minecraft mc5 = this.mc;
-         GuiMultiplayer guiMultiplayer = new GuiMultiplayer(this);
-         mc5.displayGuiScreen(guiMultiplayer);
+         this.mc.displayGuiScreen(new GuiMultiplayer(this));
       }
 
       if (button.id == 4) {
@@ -109,8 +101,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
       }
 
       if (button.id == 12) {
-         ISaveFormat saveLoader = this.mc.getSaveLoader();
-         WorldInfo worldInfo = saveLoader.getWorldInfo("Demo_World");
+         WorldInfo worldInfo = this.mc.getSaveLoader().getWorldInfo("Demo_World");
          if (worldInfo != null) {
             GuiYesNo guiYesNo = GuiSelectWorld.makeDeleteWorldYesNo(this, worldInfo.getWorldName(), 12);
             this.mc.displayGuiScreen(guiYesNo);
@@ -123,10 +114,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
       GlStateManager.disableAlpha();
       this.renderSkybox(mouseX, mouseY, partialTicks);
       GlStateManager.enableAlpha();
-      Tessellator instance = Tessellator.getInstance();
-      WorldRenderer worldRenderer = instance.getWorldRenderer();
-      short s = 274;
-      int n = this.width / 2 - s / 2;
+      WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
+      int n = this.width / 2 - ((short)274) / 2;
       byte b = 30;
       int n2 = -2130706433;
       int n3 = 16777215;
@@ -215,7 +204,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
       WorldRenderer worldRenderer = instance.getWorldRenderer();
       worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
       GlStateManager.disableAlpha();
-      byte b = 3;
       int n = 3;
       CustomPanoramaProperties customPanoramaProperties = CustomPanorama.getCustomPanoramaProperties();
       if (customPanoramaProperties != null) {
@@ -226,7 +214,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
          float f2 = 1.0F / (float)(i + 1);
          int width2 = this.width;
          int height2 = this.height;
-         float f3 = (float)(i - b / 2) / 256.0F;
+         float f3 = (float)(i - ((byte)3) / 2) / 256.0F;
          worldRenderer.pos((double)width2, (double)height2, (double)this.zLevel).tex((double)(0.0F + f3), 1.0).color(1.0F, 1.0F, 1.0F, f2).endVertex();
          worldRenderer.pos((double)width2, 0.0, (double)this.zLevel).tex((double)(1.0F + f3), 1.0).color(1.0F, 1.0F, 1.0F, f2).endVertex();
          worldRenderer.pos(0.0, 0.0, (double)this.zLevel).tex((double)(1.0F + f3), 0.0).color(1.0F, 1.0F, 1.0F, f2).endVertex();
@@ -246,9 +234,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
    @Override
    public void initGui() {
       if (!((Module)ClientManagers.moduleManager.invisMode).isToggled() || !ClientManagers.moduleManager.invisMode.shouldDisableCustomMainMenu()) {
-         Minecraft minecraft = Minecraft.getMinecraft();
-         GuiScreen screen = AbstractMainMenuScreen.createMainMenuScreen();
-         minecraft.displayGuiScreen(screen);
+         Minecraft.getMinecraft().displayGuiScreen(AbstractMainMenuScreen.createMainMenuScreen());
       }
 
       this.viewportTexture = new DynamicTexture(256, 256);
@@ -283,8 +269,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
          this.openGLWarningY2 = this.openGLWarningY1 + 24;
       }
 
-      boolean flag = false;
-      this.mc.setConnectedToRealms(flag);
+      this.mc.setConnectedToRealms(false);
    }
 
    private void addSingleplayerMultiplayerButtons(int n, int n2) {
@@ -419,10 +404,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 
       for (int i = 0; i < n3; i++) {
          GlStateManager.pushMatrix();
-         float f2 = ((float)(i % b) / (float)b - 0.5F) / 64.0F;
-         float f3 = ((float)(i / b) / (float)b - 0.5F) / 64.0F;
-         float f4 = 0.0F;
-         GlStateManager.translate(f2, f3, f4);
+         GlStateManager.translate(((float)(i % b) / (float)b - 0.5F) / 64.0F, ((float)(i / b) / (float)b - 0.5F) / 64.0F, 0.0F);
          GlStateManager.rotate(MathHelper.sin(((float)this.panoramaTimer + f) / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
          GlStateManager.rotate(-((float)this.panoramaTimer + f) * 0.1F, 0.0F, 1.0F, 0.0F);
 
@@ -483,9 +465,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
    private void addDemoButtons(int n, int n2) {
       this.buttonList.add(new GuiButton(11, this.width / 2 - 100, n, I18n.format("menu.playdemo", new Object[0])));
       this.buttonList.add(this.buttonResetDemo = new GuiButton(12, this.width / 2 - 100, n + n2 * 1, I18n.format("menu.resetdemo", new Object[0])));
-      ISaveFormat saveLoader = this.mc.getSaveLoader();
-      WorldInfo worldInfo = saveLoader.getWorldInfo("Demo_World");
-      if (worldInfo == null) {
+      if (this.mc.getSaveLoader().getWorldInfo("Demo_World") == null) {
          this.buttonResetDemo.enabled = false;
       }
    }

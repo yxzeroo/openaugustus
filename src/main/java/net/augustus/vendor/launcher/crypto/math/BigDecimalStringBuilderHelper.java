@@ -222,7 +222,6 @@ public class BigDecimalStringBuilderHelper {
    }
 
    public int putIntCompact(long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!assertionsDisabled && l < 0L) {
          throw new AssertionError();
       } else {

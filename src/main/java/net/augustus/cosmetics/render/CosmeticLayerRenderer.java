@@ -19,8 +19,7 @@ public class CosmeticLayerRenderer implements LayerRenderer {
 
    @Override
    public void doRenderLayer(EntityLivingBase entity, float f, float f2, float f3, float f4, float f5, float f6, float f7) {
-      AbstractClientPlayer clientPlayer = (AbstractClientPlayer)entity;
-      this.renderPlayerCosmetics(clientPlayer, f, f2, f3, f4, f5, f6, f7);
+      this.renderPlayerCosmetics((AbstractClientPlayer)entity, f, f2, f3, f4, f5, f6, f7);
    }
 
    @Override
@@ -29,10 +28,6 @@ public class CosmeticLayerRenderer implements LayerRenderer {
    }
 
    public void renderPlayerCosmetics(AbstractClientPlayer clientPlayer, float f, float f2, float f3, float f4, float f5, float f6, float f7) {
-      PlayerCosmeticRenderer cosmeticRenderer2 = this.cosmeticRenderer;
-      ModelPlayer playerModel = this.playerRenderer.getPlayerModel();
-      boolean slimArms2 = this.slimArms;
-      ModelPlayer modelPlayer = playerModel;
-      cosmeticRenderer2.renderCosmetics(clientPlayer, f, f2, f4, modelPlayer, slimArms2, f3);
+      this.cosmeticRenderer.renderCosmetics(clientPlayer, f, f2, f4, this.playerRenderer.getPlayerModel(), this.slimArms, f3);
    }
 }

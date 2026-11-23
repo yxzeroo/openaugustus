@@ -14,8 +14,7 @@ import java.util.Arrays;
 public class VandermondeLicenseSolver {
    public static void eliminateBelowPivot(FractionMatrix fractionMatrix, FractionMatrixRow fractionMatrixRow, int n) {
       for (int i = n + 1; i < fractionMatrix.rows.length; i++) {
-         FractionMatrixRow row = fractionMatrix.rows[i];
-         FractionMatrixRow eliminated = eliminateRow(row, fractionMatrixRow, 24938, 15492359, (byte)113, n);
+         FractionMatrixRow eliminated = eliminateRow(fractionMatrix.rows[i], fractionMatrixRow, 24938, 15492359, (byte)113, n);
          if (eliminated != null) {
             fractionMatrix.rows[i] = eliminated;
          }
@@ -24,8 +23,7 @@ public class VandermondeLicenseSolver {
 
    @SuppressWarnings("unchecked")
    public static ArrayList interpolatePolynomial(ArrayList list) {
-      Sha256Digest hasher = new Sha256Digest();
-      byte[] hash = hasher.digest(
+      byte[] hash = new Sha256Digest().digest(
          ElectricLauncherController.getInstance().generateLicenseKey().getBytes(StandardCharsets.UTF_8)
       );
       if (!Arrays.equals(ElectricLauncherController.yeets, hash)) {

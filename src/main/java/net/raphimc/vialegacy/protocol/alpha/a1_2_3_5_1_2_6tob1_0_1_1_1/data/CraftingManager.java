@@ -98,9 +98,8 @@ public class CraftingManager {
       int width = 0;
       int height = 0;
       if (objects[pos] instanceof String[]) {
-         String[] strings = (String[])objects[pos++];
 
-         for (String str : strings) {
+         for (String str : (String[])objects[pos++]) {
             height++;
             width = str.length();
             sb.append(str);

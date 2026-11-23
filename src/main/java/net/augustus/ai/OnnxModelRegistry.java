@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public final class OnnxModelRegistry {
    private volatile File modelsDir;
-   private final BooleansSetting modelSetting;
+   private final StringValue modelSetting;
    private final Set watchedDirectories;
    private final List modelNames = new CopyOnWriteArrayList();
 
-   public OnnxModelRegistry(BooleansSetting booleansSetting) {
+   public OnnxModelRegistry(StringValue booleansSetting) {
       this.watchedDirectories = new HashSet();
       this.modelSetting = booleansSetting;
    }
@@ -95,12 +95,9 @@ public final class OnnxModelRegistry {
 
             try {
                DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(absolutePath);
-               Consumer consumer = obj -> this.onFileChanged((Path)obj);
-               directoryWatcher = directoryWatcher.onCreate(consumer);
-               Consumer consumer2 = obj2 -> this.onFileChanged((Path)obj2);
-               directoryWatcher = directoryWatcher.onModify(consumer2);
-               Consumer consumer3 = obj3 -> this.onFileChanged((Path)obj3);
-               directoryWatcher.onDelete(consumer3).register();
+               directoryWatcher = directoryWatcher.onCreate(obj -> this.onFileChanged((Path)obj));
+               directoryWatcher = directoryWatcher.onModify(obj2 -> this.onFileChanged((Path)obj2));
+               directoryWatcher.onDelete(obj3 -> this.onFileChanged((Path)obj3)).register();
             } catch (Exception e) {
             }
          }

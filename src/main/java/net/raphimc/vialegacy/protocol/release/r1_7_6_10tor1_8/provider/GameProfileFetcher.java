@@ -85,8 +85,7 @@ public abstract class GameProfileFetcher implements Provider {
          Level warning = Level.WARNING;
          String str = String.valueOf(uuid);
          String name = e.getClass().getName();
-         String str2 = str;
-         logger.log(warning, "Failed to load game profile for uuid '" + str2 + "' (" + name + ")");
+         logger.log(warning, "Failed to load game profile for uuid '" + str + "' (" + name + ")");
          this.gameProfileCache.put(uuid, NULL_GAME_PROFILE);
          return null;
       }

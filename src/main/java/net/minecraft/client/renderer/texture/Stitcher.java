@@ -72,8 +72,7 @@ public class Stitcher {
          }
 
          boolean flag5 = n2 != n4;
-         boolean flag6 = n3 != n5;
-         if (flag5 ^ flag6) {
+         if (flag5 ^ (n3 != n5)) {
             flag2 = !flag5;
          } else {
             flag2 = flag3 && n2 <= n3;
@@ -214,9 +213,7 @@ public class Stitcher {
                      int n = this.width - width2;
                      int n2 = this.height - height2;
                      if (n2 > 0 && n > 0) {
-                        int n3 = Math.max(this.height, n);
-                        int n4 = Math.max(this.width, n2);
-                        if (n3 >= n4) {
+                        if (Math.max(this.height, n) >= Math.max(this.width, n2)) {
                            this.subSlots.add(new Slot(this.originX, this.originY + height2, width2, n2));
                            this.subSlots.add(new Slot(this.originX + width2, this.originY, n, this.height));
                         } else {

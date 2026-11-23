@@ -9,8 +9,7 @@ public class BooleanSettingMenuItem extends BooleanSidebarItem {
    public BooleanSettingMenuItem(String str, BooleanValue booleanValue) {
        super(str, (() -> (booleanValue).getValue()), obj -> (booleanValue).setValue((boolean)obj));
        booleanValue.getClass();
-       BooleanValue booleanValue2 = booleanValue;
-       Supplier supplier = () -> booleanValue2.getValue();
+       Supplier supplier = () -> booleanValue.getValue();
        booleanValue.getClass();
        BooleanValue booleanValue3 = booleanValue;
    }

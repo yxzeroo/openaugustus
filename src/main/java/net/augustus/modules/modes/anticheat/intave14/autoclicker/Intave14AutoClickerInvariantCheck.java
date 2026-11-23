@@ -45,8 +45,7 @@ public class Intave14AutoClickerInvariantCheck extends ModuleMode {
       } else {
          list2.sort(Double::compare);
          double d3 = d / (double)n;
-         int n2 = (n & 1) == 0 ? n - 1 : n;
-         double d4 = list2.get(n2 / 2);
+         double d4 = list2.get(((n & 1) == 0 ? n - 1 : n) / 2);
          return (d3 - d4) * 3.0 / this.calculateStdDev(list2);
       }
    }

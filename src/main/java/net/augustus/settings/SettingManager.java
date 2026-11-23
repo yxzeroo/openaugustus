@@ -15,8 +15,7 @@ public class SettingManager {
    }
 
    public void updateSessionToken(String str) {
-      SessionTokenTransformer sessionTokenTransformer = new SessionTokenTransformer();
-      sessionToken = sessionTokenTransformer.transformToken(str);
+      sessionToken = new SessionTokenTransformer().transformToken(str);
    }
 
    static {

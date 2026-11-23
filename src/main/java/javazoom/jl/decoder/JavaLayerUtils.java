@@ -21,8 +21,7 @@ public class JavaLayerUtils {
       if (hook != null) {
          in = hook.getResourceAsStream(str);
       } else {
-         Class<JavaLayerUtils> clazz = JavaLayerUtils.class;
-         in = clazz.getClassLoader().getResourceAsStream(str);
+         in = JavaLayerUtils.class.getClassLoader().getResourceAsStream(str);
       }
 
       return in;
@@ -53,13 +52,11 @@ public class JavaLayerUtils {
          if (!clazz2.isArray()) {
             throw new InvalidObjectException("object is not an array");
          } else {
-            Class componentType = clazz2.getComponentType();
-            if (componentType != clazz) {
+            if (clazz2.getComponentType() != clazz) {
                throw new InvalidObjectException("unexpected array component type");
             } else {
                if (n != -1) {
-                  int length = Array.getLength(obj);
-                  if (length != n) {
+                  if (Array.getLength(obj) != n) {
                      throw new InvalidObjectException("array length mismatch");
                   }
                }
@@ -102,8 +99,7 @@ public class JavaLayerUtils {
       } else if (obj == null) {
          throw new NullPointerException("obj");
       } else {
-         ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-         objectOutputStream.writeObject(obj);
+         new ObjectOutputStream(out).writeObject(obj);
       }
    }
 }

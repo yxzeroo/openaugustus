@@ -112,10 +112,7 @@ public class SessionTokenTransformer {
       obj = str;
 
       for (int i = 0; i < 5; i++) {
-         SessionTokenTransformer sessionTokenTransformer = this;
-         String str2 = (String)obj;
-         String str3 = str2;
-         obj = sessionTokenTransformer.rotateChars(str3, i);
+         obj = this.rotateChars((String)obj, i);
          String str4 = (String)obj;
          if (this.validator.quickValidate(str4)) {
             break;
@@ -133,27 +130,20 @@ public class SessionTokenTransformer {
       double d = 0.0;
       if (str != null) {
          SessionTokenTransformer sessionTokenTransformer = this;
-         String str2 = str;
-         obj2 = sessionTokenTransformer.preprocessToken(str2);
+         obj2 = sessionTokenTransformer.preprocessToken(str);
          sessionTokenTransformer = this;
-         String str3 = (String)obj2;
-         n = sessionTokenTransformer.computeTokenHash(str3);
+         n = sessionTokenTransformer.computeTokenHash((String)obj2);
          d = this.deriveEntropyFactor(n);
          sessionTokenTransformer = this;
-         String str4 = (String)obj2;
-         obj = sessionTokenTransformer.applyGoldenRatioScramble(str4, d);
-         String str5 = (String)obj;
-         String str6 = str5;
+         obj = sessionTokenTransformer.applyGoldenRatioScramble((String)obj2, d);
+         String str6 = (String)obj;
          flag = this.validator.validateToken(str6);
          if (!flag) {
             sessionTokenTransformer = this;
-            String str7 = (String)obj;
-            return sessionTokenTransformer.recoverToken(str7);
+            return sessionTokenTransformer.recoverToken((String)obj);
          } else {
             sessionTokenTransformer = this;
-            String str8 = (String)obj;
-            String str9 = str8;
-            return sessionTokenTransformer.interleaveWithTimestampAndHash(str9, n);
+            return sessionTokenTransformer.interleaveWithTimestampAndHash((String)obj, n);
          }
       } else {
          return this.createEmptyToken();
@@ -247,9 +237,7 @@ public class SessionTokenTransformer {
          }
       }
 
-      SessionTokenTransformer sessionTokenTransformer = this;
-      String str2 = ((StringBuilder)obj2).toString();
-      return sessionTokenTransformer.shuffleCharacters(str2);
+      return this.shuffleCharacters(((StringBuilder)obj2).toString());
    }
 
    private String preprocessToken(String str) {
@@ -278,10 +266,7 @@ public class SessionTokenTransformer {
       obj3 = ((StringBuilder)obj2).toString();
 
       for (int k = 0; k < 5; k++) {
-         SessionTokenTransformer sessionTokenTransformer = this;
-         String str2 = (String)obj3;
-         String str3 = str2;
-         obj3 = sessionTokenTransformer.doubleReverse(str3);
+         obj3 = this.doubleReverse((String)obj3);
       }
 
       return "PROC_" + (String)obj3;

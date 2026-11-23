@@ -10,19 +10,13 @@ public class KeccakPermutation {
 
    public void permute(long[][] longsArr) {
       boolean flag = false;
-      int[] squeezeTrace = KeccakSqueezer.getSqueezeTrace();
 
       for (int i = 0; i < (int)e; i++) {
-         long[][] longsArr2 = longsArr;
-         this.theta.applyTheta(longsArr2);
-         long[][] longsArr3 = longsArr;
-         this.rho.applyRho(longsArr3);
-         long[][] longsArr4 = longsArr;
-         this.pi.applyPi(longsArr4);
-         long[][] longsArr5 = longsArr;
-         this.chi.applyChi(longsArr5);
-         long[][] longsArr6 = longsArr;
-         this.iota.applyIota(longsArr6, i);
+         this.theta.applyTheta(longsArr);
+         this.rho.applyRho(longsArr);
+         this.pi.applyPi(longsArr);
+         this.chi.applyChi(longsArr);
+         this.iota.applyIota(longsArr, i);
       }
    }
 

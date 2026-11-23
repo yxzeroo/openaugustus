@@ -187,8 +187,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
          }
       }
 
-      EventChat event = ChatListener.onChat2(str);
-      if (!event.isCancelled()) {
+      if (!ChatListener.onChat2(str).isCancelled()) {
          this.sendQueue.addToSendQueue(new C01PacketChatMessage(str));
       }
    }
@@ -231,9 +230,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
    @Override
    public void displayVillagerTradeGui(IMerchant merchant) {
-      Minecraft mc2 = this.mc;
-      GuiMerchant guiMerchant = new GuiMerchant(this.inventory, merchant, this.entityWorld);
-      mc2.displayGuiScreen(guiMerchant);
+      this.mc.displayGuiScreen(new GuiMerchant(this.inventory, merchant, this.entityWorld));
    }
 
    @Override
@@ -256,12 +253,10 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
                if (!ClientManagers.moduleManager.portalScreens.inventories.getValue() && (this.mc.currentScreen instanceof GuiInventory || this.mc.currentScreen instanceof GuiContainer)
                   )
                 {
-                  Object obj = null;
-                  this.mc.displayGuiScreen((GuiScreen)obj);
+                  this.mc.displayGuiScreen((GuiScreen)null);
                }
             } else {
-               Object obj2 = null;
-               this.mc.displayGuiScreen((GuiScreen)obj2);
+               this.mc.displayGuiScreen((GuiScreen)null);
             }
          }
 
@@ -462,22 +457,17 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
          this.sendPlayerAbilities();
       }
 
-      BoundedHistoryList extraSnapshotHistory2 = this.extraSnapshotHistory;
-      PlayerTickSnapshot playerTickSnapshot = new PlayerTickSnapshot(this);
-      extraSnapshotHistory2.add(playerTickSnapshot);
+      this.extraSnapshotHistory.add(new PlayerTickSnapshot(this));
    }
 
    @Override
    public float getAIMoveSpeed() {
       Float attributeValue = (float)this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue();
-      EventSprint event = SprintListener.onSprint4(SprintEventType.MOTION_SPRINT);
-      if (event.isMotionSprint()) {
-         double baseMoveSpeed = this.getBaseMoveSpeed();
-         attributeValue = (float)baseMoveSpeed;
+      if (SprintListener.onSprint4(SprintEventType.MOTION_SPRINT).isMotionSprint()) {
+         attributeValue = (float)this.getBaseMoveSpeed();
       }
 
-      EventAIMoveSpeed event2 = AIMoveSpeedListener.onAIMoveSpeed2(attributeValue);
-      attributeValue = event2.getMoveSpeed();
+      attributeValue = AIMoveSpeedListener.onAIMoveSpeed2(attributeValue).getMoveSpeed();
       return attributeValue;
    }
 
@@ -505,8 +495,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
             this.smoothedServerPos = new Vec3(this.posX, this.posY, this.posZ);
          }
 
-         EventUpdate event = UpdateListener.onUpdate3(StateTypes.PRE);
-         if (!event.isCancelled()) {
+         if (!UpdateListener.onUpdate3(StateTypes.PRE).isCancelled()) {
             super.onUpdate();
             if (Augustus.getInstance().getModuleManager().baritone.isToggled()) {
                IBaritone baritoneForPlayer = BaritoneAPI.getProvider().getBaritoneForPlayer(this);
@@ -525,8 +514,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
             this.onGroundTicks = 0;
          }
 
-         EventUpdate event2 = UpdateListener.onUpdate3(StateTypes.POST);
-         if (event2.isCancelled()) {
+         if (UpdateListener.onUpdate3(StateTypes.POST).isCancelled()) {
             return;
          }
 
@@ -647,9 +635,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
    private Vec3 getLookCustom(float f, float f2, float f3) {
       if (f != 1.0F && f != 2.0F) {
-         float f4 = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f;
-         float f5 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f;
-         return this.getVectorForRotation(f4, f5);
+         return this.getVectorForRotation(this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f, this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f);
       } else {
          return this.getVectorForRotation(f3, f2);
       }
@@ -685,8 +671,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
    @Override
    public boolean isSneaking() {
-      boolean flag = this.movementInput != null ? this.movementInput.sneak : false;
-      return flag && !this.sleeping;
+      return (this.movementInput != null ? this.movementInput.sneak : false) && !this.sleeping;
    }
 
    public float getLastReportedYaw() {
@@ -697,9 +682,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
       if (f == 1.0F) {
          return this.getVectorForRotation(f3, f2);
       } else {
-         float f4 = flag ? this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f : f3;
-         float f5 = flag ? this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f : f2;
-         return this.getVectorForRotation(f4, f5);
+         return this.getVectorForRotation(flag ? this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * f : f3, flag ? this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * f : f2);
       }
    }
 
@@ -813,9 +796,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
       if (f == 1.0F) {
          return this.getVectorForRotation(f3, f2);
       } else {
-         float f6 = f5 + (f3 - f5) * f;
-         float f7 = f4 + (f2 - f4) * f;
-         return this.getVectorForRotation(f6, f7);
+         return this.getVectorForRotation(f5 + (f3 - f5) * f, f4 + (f2 - f4) * f);
       }
    }
 
@@ -969,17 +950,13 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
          return this.getVectorForRotation(rotationPitch2, f2);
       } else {
-         float f4 = this.prevRotationPitch + (rotationPitch2 - this.prevRotationPitch) * f;
-         float f5 = f3 + (f2 - f3) * f;
-         return this.getVectorForRotation(f4, f5);
+         return this.getVectorForRotation(this.prevRotationPitch + (rotationPitch2 - this.prevRotationPitch) * f, f3 + (f2 - f3) * f);
       }
    }
 
    @Override
    public void displayGUIHorse(EntityHorse entityHorse, IInventory inventory2) {
-      Minecraft mc2 = this.mc;
-      GuiScreenHorseInventory guiScreenHorseInventory = new GuiScreenHorseInventory(this.inventory, inventory2, entityHorse);
-      mc2.displayGuiScreen(guiScreenHorseInventory);
+      this.mc.displayGuiScreen(new GuiScreenHorseInventory(this.inventory, inventory2, entityHorse));
    }
 
    public void setServerSneakState(boolean flag) {
@@ -1073,33 +1050,19 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
    public void displayGUIChest(IInventory inventory2) {
       String str = inventory2 instanceof IInteractionObject ? ((IInteractionObject)inventory2).getGuiID() : "minecraft:container";
       if ("minecraft:chest".equals(str)) {
-         Minecraft mc2 = this.mc;
-         GuiChest guiChest = new GuiChest(this.inventory, inventory2);
-         mc2.displayGuiScreen(guiChest);
+         this.mc.displayGuiScreen(new GuiChest(this.inventory, inventory2));
       } else if ("minecraft:hopper".equals(str)) {
-         Minecraft mc3 = this.mc;
-         GuiHopper guiHopper = new GuiHopper(this.inventory, inventory2);
-         mc3.displayGuiScreen(guiHopper);
+         this.mc.displayGuiScreen(new GuiHopper(this.inventory, inventory2));
       } else if ("minecraft:furnace".equals(str)) {
-         Minecraft mc4 = this.mc;
-         GuiFurnace guiFurnace = new GuiFurnace(this.inventory, inventory2);
-         mc4.displayGuiScreen(guiFurnace);
+         this.mc.displayGuiScreen(new GuiFurnace(this.inventory, inventory2));
       } else if ("minecraft:brewing_stand".equals(str)) {
-         Minecraft mc5 = this.mc;
-         GuiBrewingStand guiBrewingStand = new GuiBrewingStand(this.inventory, inventory2);
-         mc5.displayGuiScreen(guiBrewingStand);
+         this.mc.displayGuiScreen(new GuiBrewingStand(this.inventory, inventory2));
       } else if ("minecraft:beacon".equals(str)) {
-         Minecraft mc6 = this.mc;
-         GuiBeacon guiBeacon = new GuiBeacon(this.inventory, inventory2);
-         mc6.displayGuiScreen(guiBeacon);
+         this.mc.displayGuiScreen(new GuiBeacon(this.inventory, inventory2));
       } else if (!"minecraft:dispenser".equals(str) && !"minecraft:dropper".equals(str)) {
-         Minecraft mc7 = this.mc;
-         GuiChest guiChest2 = new GuiChest(this.inventory, inventory2);
-         mc7.displayGuiScreen(guiChest2);
+         this.mc.displayGuiScreen(new GuiChest(this.inventory, inventory2));
       } else {
-         Minecraft mc8 = this.mc;
-         GuiDispenser guiDispenser = new GuiDispenser(this.inventory, inventory2);
-         mc8.displayGuiScreen(guiDispenser);
+         this.mc.displayGuiScreen(new GuiDispenser(this.inventory, inventory2));
       }
    }
 
@@ -1165,8 +1128,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
             float f6 = (float)MathHelper.fastInverseSqrt((double)f3);
             Vec3 vec4 = vec3.scale((double)f6);
             Vec3 vectorForRotation = this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-            float f7 = (float)(vectorForRotation.xCoord * vec4.xCoord + vectorForRotation.zCoord * vec4.zCoord);
-            if (f7 >= -0.15F) {
+            if (((float)(vectorForRotation.xCoord * vec4.xCoord + vectorForRotation.zCoord * vec4.zCoord)) >= -0.15F) {
                BlockPos pos = new BlockPos(this.posX, this.getEntityBoundingBox().maxY, this.posZ);
                IBlockState blockState = this.entityWorld.getBlockState(pos);
                if (blockState.getBlock().getCollisionBoundingBox(this.entityWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) == null) {
@@ -1179,15 +1141,13 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
                         f9 += (float)(this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.75F;
                      }
 
-                     float f10 = Math.max(aiMoveSpeed2 * 7.0F, 1.0F / f6);
-                     Vec3 vec5 = vec2.add(vec4.scale((double)f10));
+                     Vec3 vec5 = vec2.add(vec4.scale((double)Math.max(aiMoveSpeed2 * 7.0F, 1.0F / f6)));
                      float width2 = this.width;
                      float height2 = this.height;
                      AxisAlignedBB box = new AxisAlignedBB(vec, vec5.addVector(0.0, (double)height2, 0.0)).expand((double)width2, 0.0, (double)width2);
                      Vec3 vec6 = vec.addVector(0.0, 0.51F, 0.0);
                      vec5 = vec5.addVector(0.0, 0.51F, 0.0);
-                     Vec3 vec7 = vec4.crossProduct(new Vec3(0.0, 1.0, 0.0));
-                     Vec3 vec8 = vec7.scale((double)(width2 * 0.5F));
+                     Vec3 vec8 = vec4.crossProduct(new Vec3(0.0, 1.0, 0.0)).scale((double)(width2 * 0.5F));
                      Vec3 vec9 = vec6.subtract(vec8);
                      Vec3 vec10 = vec5.subtract(vec8);
                      Vec3 vec11 = vec6.add(vec8);
@@ -1255,9 +1215,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
    @Override
    public void openEditSign(TileEntitySign tileEntitySign) {
-      Minecraft mc2 = this.mc;
-      GuiEditSign guiEditSign = new GuiEditSign(tileEntitySign);
-      mc2.displayGuiScreen(guiEditSign);
+      this.mc.displayGuiScreen(new GuiEditSign(tileEntitySign));
    }
 
    public void setSpoofedScreen(GuiScreen screen) {
@@ -1355,17 +1313,14 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
          if ((this.isSprinting() || event2.isOmniJumpSprint()) && event2.isApplyJumpBoost()) {
             if (event2.isOmniJumpSprint()) {
                if (this.mc.thePlayer.moveForward < 0.0F) {
-                  float f = event.getYaw() - 180.0F;
-                  event.setYaw(f);
+                  event.setYaw(event.getYaw() - 180.0F);
                }
 
                if (this.mc.thePlayer.moveStrafing != 0.0F && this.mc.thePlayer.moveForward == 0.0F) {
                   if (this.mc.thePlayer.moveStrafing > 0.0F) {
-                     float f2 = event.getYaw() - 45.0F;
-                     event.setYaw(f2);
+                     event.setYaw(event.getYaw() - 45.0F);
                   } else if (this.mc.thePlayer.moveStrafing < 0.0F) {
-                     float f3 = event.getYaw() + 45.0F;
-                     event.setYaw(f3);
+                     event.setYaw(event.getYaw() + 45.0F);
                   }
                }
             }
@@ -1387,9 +1342,7 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
 
    @Override
    public void openEditCommandBlock(CommandBlockLogic commandBlockLogic) {
-      Minecraft mc2 = this.mc;
-      GuiCommandBlock guiCommandBlock = new GuiCommandBlock(commandBlockLogic);
-      mc2.displayGuiScreen(guiCommandBlock);
+      this.mc.displayGuiScreen(new GuiCommandBlock(commandBlockLogic));
    }
 
    @Override
@@ -1433,27 +1386,18 @@ public class EntityPlayerSP extends AbstractClientPlayer implements Serializable
    public void displayGui(IInteractionObject interactionObject) {
       String guiID = interactionObject.getGuiID();
       if ("minecraft:crafting_table".equals(guiID)) {
-         Minecraft mc2 = this.mc;
-         GuiCrafting guiCrafting = new GuiCrafting(this.inventory, this.entityWorld);
-         mc2.displayGuiScreen(guiCrafting);
+         this.mc.displayGuiScreen(new GuiCrafting(this.inventory, this.entityWorld));
       } else if ("minecraft:enchanting_table".equals(guiID)) {
-         Minecraft mc3 = this.mc;
-         GuiEnchantment guiEnchantment = new GuiEnchantment(this.inventory, this.entityWorld, interactionObject);
-         mc3.displayGuiScreen(guiEnchantment);
+         this.mc.displayGuiScreen(new GuiEnchantment(this.inventory, this.entityWorld, interactionObject));
       } else if ("minecraft:anvil".equals(guiID)) {
-         Minecraft mc4 = this.mc;
-         GuiRepair guiRepair = new GuiRepair(this.inventory, this.entityWorld);
-         mc4.displayGuiScreen(guiRepair);
+         this.mc.displayGuiScreen(new GuiRepair(this.inventory, this.entityWorld));
       }
    }
 
    @Override
    public void displayGUIBook(ItemStack stack) {
-      Item item = stack.getItem();
-      if (item == Items.writable_book) {
-         Minecraft mc2 = this.mc;
-         GuiScreenBook guiScreenBook = new GuiScreenBook(this, stack, true);
-         mc2.displayGuiScreen(guiScreenBook);
+      if (stack.getItem() == Items.writable_book) {
+         this.mc.displayGuiScreen(new GuiScreenBook(this, stack, true));
       }
    }
 }

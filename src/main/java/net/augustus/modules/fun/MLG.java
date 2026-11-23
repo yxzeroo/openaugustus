@@ -68,8 +68,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
          this.allGifSequences.add(new AnimatedGifSequence("gifs/mlg/" + str2, 60));
       }
 
-      boolean flag = false;
-      this.setLoadFromConfig(flag);
+      this.setLoadFromConfig(false);
    }
 
    @Override
@@ -87,15 +86,9 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 100;
-      byte b2 = 44;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 100;
-      byte b4 = 45;
-      this.toggleEventSubscription(b4, b3);
-      byte b5 = 100;
-      byte b6 = 32;
-      this.toggleEventSubscription(b6, b5);
+      this.toggleEventSubscription((byte)44, (byte)100);
+      this.toggleEventSubscription((byte)45, (byte)100);
+      this.toggleEventSubscription((byte)32, (byte)100);
       this.onAttackEntity();
       this.onAttackEntity();
       this.onAttackEntity();
@@ -104,12 +97,9 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
    @Override
    public void onWorldColor(EventWorldColor event) {
       int rainbowColor = ColorUtil.getRainbowColor(0, 1000, 1.0F, 1.0F);
-      float red = (float)ColorUtil.getRed(rainbowColor);
-      event.setRed(red);
-      float green = (float)ColorUtil.getGreen(rainbowColor);
-      event.setGreen(green);
-      float blue = (float)ColorUtil.getBlue(rainbowColor);
-      event.setBlue(blue);
+      event.setRed((float)ColorUtil.getRed(rainbowColor));
+      event.setGreen((float)ColorUtil.getGreen(rainbowColor));
+      event.setBlue((float)ColorUtil.getBlue(rainbowColor));
    }
 
    @Override
@@ -119,20 +109,14 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
       }
 
       int rainbowColor = ColorUtil.getRainbowColor(0, 1000, 1.0F, 1.0F);
-      float red = (float)ColorUtil.getRed(rainbowColor);
-      event.setRed(red);
-      float green = (float)ColorUtil.getGreen(rainbowColor);
-      event.setGreen(green);
-      float blue = (float)ColorUtil.getBlue(rainbowColor);
-      event.setBlue(blue);
+      event.setRed((float)ColorUtil.getRed(rainbowColor));
+      event.setGreen((float)ColorUtil.getGreen(rainbowColor));
+      event.setBlue((float)ColorUtil.getBlue(rainbowColor));
    }
 
    @Override
    public void onWorldTime(EventWorldTime event) {
-      byte b = 100;
-      byte b2 = 50;
-      long l = this.worldTimeCounter = this.worldTimeCounter + (long)DefaultRandomGenerator.instance.nextInt2(b2, b);
-      event.setWorldTime(l);
+      event.setWorldTime(this.worldTimeCounter = this.worldTimeCounter + (long)DefaultRandomGenerator.instance.nextInt2((byte)50, (byte)100));
    }
 
    @Override
@@ -151,9 +135,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
 
       try {
          String str = "sounds/mlg/music/MLG" + this.musicTrackIndex + ".mp3";
-         boolean flag = true;
-         String str2 = str;
-         this.musicPlayer.playResource(str2, flag);
+         this.musicPlayer.playResource(str, true);
       } catch (Exception e) {
       }
 
@@ -191,10 +173,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
    }
 
    private void playRandomSound() {
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      int n = this.randomSoundLocations.size() - 1;
-      byte b = 0;
-      int n2 = instance.nextInt2(b, n);
+      int n2 = DefaultRandomGenerator.instance.nextInt2((byte)0, this.randomSoundLocations.size() - 1);
       ClientSounds.playSound((ResourceLocation)this.randomSoundLocations.get(n2));
    }
 
@@ -207,9 +186,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
       ScaledResolution sr = new ScaledResolution(mc);
       double d = (double)(1.0F / (float)sr.getScaleFactor());
       RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      int n2 = this.unusedGifQueue.size() - 1;
-      byte b = 0;
-      int n3 = instance.nextInt2(b, n2);
+      int n3 = instance.nextInt2((byte)0, this.unusedGifQueue.size() - 1);
       AnimatedGifSequence animatedGifSequence = (AnimatedGifSequence)this.unusedGifQueue.get(n3);
       this.unusedGifQueue.remove(n3);
       double d2 = 1.2;
@@ -217,9 +194,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
       double d4 = DefaultRandomGenerator.instance.nextDouble(d3, d2);
       int n4;
       if (!animatedGifSequence.getResourceFolder().contains("sonic") && !animatedGifSequence.getResourceFolder().contains("yolo")) {
-         short s = 7000;
-         short s2 = 5000;
-         n4 = DefaultRandomGenerator.instance.nextInt2(s2, s);
+         n4 = DefaultRandomGenerator.instance.nextInt2((short)5000, (short)7000);
       } else {
          n4 = 2;
       }
@@ -233,12 +208,8 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
       int n6 = (int)((double)animatedGifSequence.getHeight() * d4);
       int n7 = (int)((double)animatedGifSequence.getWidth() * d4);
       instance = DefaultRandomGenerator.instance;
-      int n8 = mc.getFramebuffer().framebufferWidth - n7;
-      byte b2 = 0;
-      int n9 = instance.nextInt2(b2, n8);
-      long l = 120000L;
-      long l2 = 0L;
-      int n10 = (int)DefaultRandomGenerator.instance.nextLong2(l2, l) % 2 == 0
+      int n9 = instance.nextInt2((byte)0, mc.getFramebuffer().framebufferWidth - n7);
+      int n10 = (int)DefaultRandomGenerator.instance.nextLong2(0L, 120000L) % 2 == 0
          ? (int)((double)mc.getFramebuffer().framebufferHeight - (double)animatedGifSequence.getHeight() * d4)
          : 0;
       if (animatedGifSequence.getResourceFolder().contains("sonic")) {
@@ -249,9 +220,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
          activeOverlayTasks2.add(new TimedOverlayRenderTask(this, l3, n, () -> {
             GL11.glPushMatrix();
             GL11.glScaled(d, d, 1.0);
-            ResourceLocation currentFrame = animatedGifSequence.getCurrentFrame();
-            double d5 = 1.0;
-            UiIconResources.drawIcon(currentFrame, n9, n10, n7, n6, d5);
+            UiIconResources.drawIcon(animatedGifSequence.getCurrentFrame(), n9, n10, n7, n6, 1.0);
             GL11.glPopMatrix();
          }));
       }
@@ -260,9 +229,7 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
    private static void renderScaledGifFrame(double d, AnimatedGifSequence animatedGifSequence, int n, int n2, int n3, int n4) {
       GL11.glPushMatrix();
       GL11.glScaled(d, d, 1.0);
-      ResourceLocation currentFrame = animatedGifSequence.getCurrentFrame();
-      double d2 = 1.0;
-      UiIconResources.drawIcon(currentFrame, n, n2, n3, n4, d2);
+      UiIconResources.drawIcon(animatedGifSequence.getCurrentFrame(), n, n2, n3, n4, 1.0);
       GL11.glPopMatrix();
    }
 

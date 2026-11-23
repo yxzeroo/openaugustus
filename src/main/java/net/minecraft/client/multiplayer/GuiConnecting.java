@@ -51,8 +51,7 @@ public class GuiConnecting extends GuiScreen {
    public GuiConnecting(GuiScreen screen, Minecraft mc2, String str, int n) {
       this.mc = mc2;
       this.previousGuiScreen = screen;
-      WorldClient world = (WorldClient)null;
-      mc2.loadWorld(world);
+      mc2.loadWorld((WorldClient)null);
       this.connect(str, n);
    }
 
@@ -175,8 +174,7 @@ public class GuiConnecting extends GuiScreen {
       addConnectionStatus(ConnectionStatus.RESOLVING_SRV);
       lastRawServerIp = serverData.serverIP;
       ServerAddress serverAddress = ServerAddress.fromString(serverData.serverIP);
-      WorldClient world = (WorldClient)null;
-      mc2.loadWorld(world);
+      mc2.loadWorld((WorldClient)null);
       mc2.setServerData(serverData);
       this.connect(serverAddress.getIP(), serverAddress.getPort());
    }
@@ -243,13 +241,10 @@ public class GuiConnecting extends GuiScreen {
             }
 
             GuiConnecting.accessNetworkManager(this.guiConnecting).sendPacket(new C00PacketLoginStart(GuiConnecting.getMcForUnknownHost(this.guiConnecting).getSession().getProfile()));
-            String username = Minecraft.getMinecraft().session.getUsername();
-            String str = this.ip + (this.port == 25565 ? "" : ":" + this.port);
-            AccountAuthenticator.recordServerConnection(username, str);
+            AccountAuthenticator.recordServerConnection(Minecraft.getMinecraft().session.getUsername(), this.ip + (this.port == 25565 ? "" : ":" + this.port));
             DiscordRpcManager discordRpcManager = Augustus.getInstance().getDiscordRpcManager();
             String str2 = "Cheating";
-            String str3 = "Maybe cheating on ReifenHD.net";
-            discordRpcManager.updatePresence(str3, str2);
+            discordRpcManager.updatePresence("Maybe cheating on ReifenHD.net", str2);
             GuiConnecting.addConnectionStatus(ConnectionStatus.WAITING_FOR_RESPONSE);
          } catch (UnknownHostException e) {
             if (GuiConnecting.accessCancel(this.guiConnecting)) {
@@ -269,8 +264,7 @@ public class GuiConnecting extends GuiScreen {
             GuiConnecting.accessLogger().error("Couldn't connect to server", e2);
             String str4 = e2.toString();
             if (inetAddress != null) {
-               String str5 = inetAddress + ":" + this.port;
-               str4 = str4.replaceAll(str5, "");
+               str4 = str4.replaceAll(inetAddress + ":" + this.port, "");
             }
 
             GuiDisconnected guiDisconnected2 = new GuiDisconnected(

@@ -36,8 +36,7 @@ public class ServerQuest {
    }
 
    public boolean isExpired() {
-      long l = System.currentTimeMillis();
-      return l > this.expiresAtMillis;
+      return System.currentTimeMillis() > this.expiresAtMillis;
    }
 
    public int getRewardExperience() {
@@ -53,9 +52,7 @@ public class ServerQuest {
       this.pendingTasks = new CopyOnWriteArrayList<>();
       this.serverFilter = questServerFilter;
       this.objective = questObjective;
-      QuestObjective objective2 = this.objective;
-      Consumer consumer = obj -> this.onProgressUpdated((Double)obj);
-      objective2.setProgressListener(consumer);
+      this.objective.setProgressListener(obj -> this.onProgressUpdated((Double)obj));
 
       try {
          double d = (double)n2;

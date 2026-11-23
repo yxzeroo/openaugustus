@@ -37,10 +37,7 @@ public abstract class AbstractFeatureConfigFile extends JsonConfigFile {
    }
 
    public void deserializeObject(JsonObject json) {
-      FeatureListJsonCodec codec2 = this.codec;
-      UnaryFunction loadFilter = this.getLoadFilter();
-      boolean flag = false;
-      codec2.deserializeFromObject(json, flag, loadFilter);
+      this.codec.deserializeFromObject(json, false, this.getLoadFilter());
    }
 
    public UnaryFunction getLoadFilter() {
@@ -49,13 +46,10 @@ public abstract class AbstractFeatureConfigFile extends JsonConfigFile {
 
    @Override
    public void deserialize(JsonElement elem) {
-      JsonObject json = (JsonObject)elem;
-      this.deserializeObject(json);
+      this.deserializeObject((JsonObject)elem);
    }
 
    public JsonObject serializeObject() {
-      FeatureListJsonCodec codec2 = this.codec;
-      UnaryFunction saveFilter = this.getSaveFilter();
-      return codec2.serializeToObject(saveFilter);
+      return this.codec.serializeToObject(this.getSaveFilter());
    }
 }

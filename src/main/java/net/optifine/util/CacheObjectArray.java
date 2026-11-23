@@ -16,8 +16,7 @@ public class CacheObjectArray {
          IBlockState[] states = new IBlockState[n];
       }
 
-      long l2 = System.currentTimeMillis();
-      return l2 - l;
+      return System.currentTimeMillis() - l;
    }
 
    private static long testClone(int n, int n2) {
@@ -28,8 +27,7 @@ public class CacheObjectArray {
          int[] ints2 = (int[])ints.clone();
       }
 
-      long l2 = System.currentTimeMillis();
-      return l2 - l;
+      return System.currentTimeMillis() - l;
    }
 
    public static void main(String[] args) throws Exception {
@@ -59,8 +57,7 @@ public class CacheObjectArray {
          Object[] array = (Object[])Array.newInstance(clazz, n);
       }
 
-      long l2 = System.currentTimeMillis();
-      return l2 - l;
+      return System.currentTimeMillis() - l;
    }
 
    public static synchronized void freeArray(int[] ints) {
@@ -76,8 +73,7 @@ public class CacheObjectArray {
          int[] ints = (int[])Array.newInstance(int.class, n);
       }
 
-      long l2 = System.currentTimeMillis();
-      return l2 - l;
+      return System.currentTimeMillis() - l;
    }
 
    private static long testCloneObj(int n, int n2) {
@@ -88,8 +84,7 @@ public class CacheObjectArray {
          IBlockState[] states2 = (IBlockState[])states.clone();
       }
 
-      long l2 = System.currentTimeMillis();
-      return l2 - l;
+      return System.currentTimeMillis() - l;
    }
 
    private static synchronized int[] allocateArray(int n) {

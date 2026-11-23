@@ -86,10 +86,7 @@ public abstract class Render implements IEntityRenderer {
             float f2 = (float)n;
             float f3 = (float)n2 - f * (float)n3;
             int rgb = Color.white.getRGB();
-            float f4 = f3;
-            float f5 = f2;
-            String str2 = str;
-            ((IFontRenderer)customFontRenderer).drawString2(str2, f5, f4, rgb);
+            ((IFontRenderer)customFontRenderer).drawString2(str, f2, f3, rgb);
             n3++;
          }
       }
@@ -341,12 +338,7 @@ public abstract class Render implements IEntityRenderer {
          GlStateManager.enableTexture2D();
          float f3 = -f2;
          float f4 = (float)b;
-         int n = ClientManagers.moduleManager.nameTags.throughWalls.getValue() ? -1 : 553648127;
-         boolean flag2 = false;
-         int n2 = n;
-         float f5 = f4;
-         float f6 = f3;
-         renderer.drawString(str, f6, f5, n2, flag2);
+         renderer.drawString(str, f3, f4, ClientManagers.moduleManager.nameTags.throughWalls.getValue() ? -1 : 553648127, false);
          if (flag) {
             this.renderNameTagInfo(entity);
          }
@@ -368,11 +360,7 @@ public abstract class Render implements IEntityRenderer {
          GlStateManager.depthMask(true);
          f3 = -f2;
          f4 = (float)b;
-         boolean flag3 = false;
-         byte b2 = -1;
-         float f7 = f4;
-         float f8 = f3;
-         renderer.drawString(str, f8, f7, b2, flag3);
+         renderer.drawString(str, f3, f4, (byte)-1, false);
          if (flag) {
             this.renderNameTagInfo(entity);
          }
@@ -436,11 +424,9 @@ public abstract class Render implements IEntityRenderer {
          double d = 0.75;
          int n3 = -50;
          int n4 = (int)((double)(n * -10) / d - (double)(ClientManagers.moduleManager.nameTags.armor.getValue() ? 58 : 30));
-         byte b = 25;
          GlStateManager.scale(d, d, 1.0);
-         EntityPlayer player2 = (EntityPlayer)entity;
 
-         for (PotionEffect potionEffect : (Iterable<PotionEffect>)(player2.getActivePotionEffects())) {
+         for (PotionEffect potionEffect : (Iterable<PotionEffect>)(((EntityPlayer)entity).getActivePotionEffects())) {
             if (potionEffect.getDuration() > 0) {
                Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -453,8 +439,7 @@ public abstract class Render implements IEntityRenderer {
                   str = str + " " + I18n.format("enchantment.level.4", new Object[0]);
                }
 
-               int n5 = (MC.mc.fontRendererObj.getStringWidth(str) + 23) / 2;
-               n3 = -n5;
+               n3 = -((MC.mc.fontRendererObj.getStringWidth(str) + 23) / 2);
                if (potion.hasStatusIcon()) {
                   MC.mc.getTextureManager().bindTexture(GuiInventory.inventoryBackground);
                   int statusIconIndex = potion.getStatusIconIndex();
@@ -464,7 +449,7 @@ public abstract class Render implements IEntityRenderer {
                MC.mc.fontRendererObj.drawStringWithShadow(str, (float)(n3 + 10 + 12), (float)(n4 + 6), 16777215);
                String durationString = Potion.getDurationString(potionEffect);
                MC.mc.fontRendererObj.drawStringWithShadow(durationString, (float)(n3 + 10 + 12), (float)(n4 + 6 + 10), 8355711);
-               n4 -= b;
+               n4 -= (byte)25;
             }
          }
 
@@ -477,8 +462,7 @@ public abstract class Render implements IEntityRenderer {
    }
 
    public void renderLivingLabel(Entity entity, String str, double d, double d2, double d3, int n) {
-      double distanceSqToEntity = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
-      if (distanceSqToEntity <= (double)(n * n)) {
+      if (entity.getDistanceSqToEntity(this.renderManager.livingPlayer) <= (double)(n * n)) {
          FontRenderer fontRenderer = this.getFontRendererFromRenderManager();
          float f = 1.6F;
          float f2 = 0.016666668F * f;
@@ -537,42 +521,27 @@ public abstract class Render implements IEntityRenderer {
          EntityPlayer player = (EntityPlayer)entity;
          boolean value = ClientManagers.moduleManager.nameTags.armorDurability.getValue();
          if (player.getCurrentEquippedItem() != null) {
-            ItemStack currentEquippedItem = player.getCurrentEquippedItem();
-            byte b = -20;
-            byte b2 = -45;
-            RenderUtil.renderItemIntoGui(currentEquippedItem, b2, b, value);
+            RenderUtil.renderItemIntoGui(player.getCurrentEquippedItem(), (byte)-45, (byte)-20, value);
          }
 
          BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.nameTags.shadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
          if (player.getCurrentArmor(3) != null) {
-            ItemStack currentArmor = player.getCurrentArmor(3);
-            byte b3 = -20;
-            byte b4 = -27;
-            RenderUtil.renderItemIntoGui(currentArmor, b4, b3, value);
+            RenderUtil.renderItemIntoGui(player.getCurrentArmor(3), (byte)-27, (byte)-20, value);
          }
 
          BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.nameTags.shadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
          if (player.getCurrentArmor(2) != null) {
-            ItemStack currentArmor2 = player.getCurrentArmor(2);
-            byte b5 = -20;
-            byte b6 = -9;
-            RenderUtil.renderItemIntoGui(currentArmor2, b6, b5, value);
+            RenderUtil.renderItemIntoGui(player.getCurrentArmor(2), (byte)-9, (byte)-20, value);
          }
 
          BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.nameTags.shadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
          if (player.getCurrentArmor(1) != null) {
-            ItemStack currentArmor3 = player.getCurrentArmor(1);
-            byte b7 = -20;
-            byte b8 = 9;
-            RenderUtil.renderItemIntoGui(currentArmor3, b8, b7, value);
+            RenderUtil.renderItemIntoGui(player.getCurrentArmor(1), (byte)9, (byte)-20, value);
          }
 
          BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.nameTags.shadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
          if (player.getCurrentArmor(0) != null) {
-            ItemStack currentArmor4 = player.getCurrentArmor(0);
-            byte b9 = -20;
-            byte b10 = 27;
-            RenderUtil.renderItemIntoGui(currentArmor4, b10, b9, value);
+            RenderUtil.renderItemIntoGui(player.getCurrentArmor(0), (byte)27, (byte)-20, value);
          }
 
          BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.nameTags.shadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
@@ -624,8 +593,7 @@ public abstract class Render implements IEntityRenderer {
             }
          }
 
-         String selectedValue = ClientManagers.moduleManager.nameTags.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (ClientManagers.moduleManager.nameTags.mode.getSelectedValue()) {
             case "Vanilla":
                this.renderVanillaNameTag(entity, str, d, d2, d3, (int)ClientManagers.moduleManager.nameTags.maximumRenderDistance.getValue(), flag);
                break;
@@ -674,8 +642,7 @@ public abstract class Render implements IEntityRenderer {
          double d8 = d2 - d5;
          double d9 = d3 - d6;
          Tessellator instance = Tessellator.getInstance();
-         WorldRenderer worldRenderer = instance.getWorldRenderer();
-         worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+         instance.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
          for (BlockPos pos : (Iterable<BlockPos>)(BlockPos.getAllInBoxMutable(new BlockPos(n, n3, n5), new BlockPos(n2, n4, n6)))) {
             Block block = worldFromRenderManager.getBlockState2(pos.getX(), pos.getY() - 1, pos.getZ()).getBlock();
@@ -717,8 +684,7 @@ public abstract class Render implements IEntityRenderer {
    }
 
    public void renderVanillaNameTagPass(Entity entity, String str, double d, double d2, double d3, int n, ShaderRenderPass shaderRenderPass, boolean flag) {
-      double distanceSqToEntity = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
-      if (distanceSqToEntity <= (double)(n * n)) {
+      if (entity.getDistanceSqToEntity(this.renderManager.livingPlayer) <= (double)(n * n)) {
          FontRenderer fontRenderer = this.getFontRendererFromRenderManager();
          float value = (float)ClientManagers.moduleManager.nameTags.scale.getValue();
          float f = 0.016666668F * value;
@@ -790,8 +756,7 @@ public abstract class Render implements IEntityRenderer {
 
    private void renderShadowSingle(Block block, double d, double d2, double d3, BlockPos pos, float f, float f2, double d4, double d5, double d6) {
       if (block.isFullCube()) {
-         Tessellator instance = Tessellator.getInstance();
-         WorldRenderer worldRenderer = instance.getWorldRenderer();
+         WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
          double d7 = ((double)f - (d2 - ((double)pos.getY() + d5)) / 2.0)
             * 0.5
             * (double)this.getWorldFromRenderManager().getLightBrightness(pos.getX(), pos.getY(), pos.getZ());
@@ -882,14 +847,7 @@ public abstract class Render implements IEntityRenderer {
 
          GlStateManager.enableTexture2D();
          if (n == 2) {
-            float f3 = -f2;
-            float f4 = (float)b;
-            int n2 = ClientManagers.moduleManager.nameTags.throughWalls.getValue() ? -1 : 553648127;
-            boolean flag2 = false;
-            int n3 = n2;
-            float f5 = f4;
-            float f6 = f3;
-            renderer.drawString(str, f6, f5, n3, flag2);
+            renderer.drawString(str, -f2, (float)b, ClientManagers.moduleManager.nameTags.throughWalls.getValue() ? -1 : 553648127, false);
             if (flag) {
                this.renderNameTagInfo(entity);
             }
@@ -911,13 +869,7 @@ public abstract class Render implements IEntityRenderer {
          GlStateManager.enableDepth();
          GlStateManager.depthMask(true);
          if (n == 2) {
-            float f7 = -f2;
-            float f8 = (float)b;
-            boolean flag3 = false;
-            byte b2 = -1;
-            float f9 = f8;
-            float f10 = f7;
-            renderer.drawString(str, f10, f9, b2, flag3);
+            renderer.drawString(str, -f2, (float)b, (byte)-1, false);
             if (flag) {
                this.renderNameTagInfo(entity);
             }

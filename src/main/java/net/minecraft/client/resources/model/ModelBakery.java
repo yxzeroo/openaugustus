@@ -132,9 +132,8 @@ public class ModelBakery {
       Collections.sort(list, new ModelBakery.EntryComparator(this));
 
       for (ModelResourceLocation modelResourceLocation : (Iterable<ModelResourceLocation>)(list)) {
-         ModelBlockDefinition.Variants variants2 = (ModelBlockDefinition.Variants)this.variants.get(modelResourceLocation);
 
-         for (ModelBlockDefinition.Variant variant : (Iterable<ModelBlockDefinition.Variant>)(variants2.getVariants())) {
+         for (ModelBlockDefinition.Variant variant : (Iterable<ModelBlockDefinition.Variant>)(((ModelBlockDefinition.Variants)this.variants.get(modelResourceLocation)).getVariants())) {
             ModelBlock modelBlock = (ModelBlock)this.models.get(variant.getModelLocation());
             if (modelBlock == null) {
                LOGGER.warn("Missing model for: " + modelResourceLocation);
@@ -581,8 +580,7 @@ public class ModelBakery {
       if (modelBlock == null) {
          return false;
       } else {
-         ModelBlock rootModel = modelBlock.getRootModel();
-         return rootModel == MODEL_ENTITY;
+         return modelBlock.getRootModel() == MODEL_ENTITY;
       }
    }
 
@@ -605,8 +603,7 @@ public class ModelBakery {
 
       for (BlockPart blockPart : (Iterable<BlockPart>)(modelBlock.getElements())) {
          for (BlockPartFace blockPartFace : (Iterable<BlockPartFace>)(blockPart.mapFaces.values())) {
-            ResourceLocation location = new ResourceLocation(modelBlock.resolveTextureName(blockPartFace.texture));
-            set.add(location);
+            set.add(new ResourceLocation(modelBlock.resolveTextureName(blockPartFace.texture)));
          }
       }
 
@@ -746,8 +743,7 @@ public class ModelBakery {
          for (EnumFacing facing : (Iterable<EnumFacing>)(blockPart.mapFaces.keySet())) {
             BlockPartFace blockPartFace = (BlockPartFace)blockPart.mapFaces.get(facing);
             TextureAtlasSprite textureAtlasSprite2 = (TextureAtlasSprite)this.sprites.get(new ResourceLocation(modelBlock.resolveTextureName(blockPartFace.texture)));
-            boolean flag2 = true;
-            if (blockPartFace.cullFace != null && flag2) {
+            if (blockPartFace.cullFace != null && true) {
                builder.addFaceQuad(modelRotation.rotate(blockPartFace.cullFace), this.makeBakedQuad(blockPart, blockPartFace, textureAtlasSprite2, facing, modelRotation, flag));
             } else {
                builder.addGeneralQuad(this.makeBakedQuad(blockPart, blockPartFace, textureAtlasSprite2, facing, modelRotation, flag));
@@ -789,8 +785,7 @@ public class ModelBakery {
             ModelBlock modelBlock2 = ModelBlock.deserialize((Reader)obj);
             modelBlock2.name = location.toString();
             modelBlock = modelBlock2;
-            String basePath = TextureUtils.getBasePath(location.getResourcePath());
-            fixModelLocations(modelBlock2, basePath);
+            fixModelLocations(modelBlock2, TextureUtils.getBasePath(location.getResourcePath()));
          } finally {
             ((Reader)obj).close();
          }
@@ -820,8 +815,7 @@ public class ModelBakery {
             } else if (!this.isCustomRenderer(modelBlock)) {
                for (BlockPart blockPart : (Iterable<BlockPart>)(modelBlock.getElements())) {
                   for (BlockPartFace blockPartFace : (Iterable<BlockPartFace>)(blockPart.mapFaces.values())) {
-                     ResourceLocation location3 = new ResourceLocation(modelBlock.resolveTextureName(blockPartFace.texture));
-                     set.add(location3);
+                     set.add(new ResourceLocation(modelBlock.resolveTextureName(blockPartFace.texture)));
                   }
                }
             }
@@ -843,8 +837,7 @@ public class ModelBakery {
 
                try {
                   in = resource.getInputStream();
-                  ModelBlockDefinition modelBlockDefinition2 = ModelBlockDefinition.parseFromReader(new InputStreamReader(in, Charsets.UTF_8));
-                  list.add(modelBlockDefinition2);
+                  list.add(ModelBlockDefinition.parseFromReader(new InputStreamReader(in, Charsets.UTF_8)));
                } catch (Exception e) {
                   throw new RuntimeException(
                      "Encountered an exception when loading model definition of '"

@@ -49,7 +49,6 @@ public class MatrixSpeedMode extends SpeedMode {
 
    @Override
    public void onPreMoveInput(EventMoveInput event) {
-      boolean flag = false;
-      event.setJump(flag);
+      event.setJump(false);
    }
 }

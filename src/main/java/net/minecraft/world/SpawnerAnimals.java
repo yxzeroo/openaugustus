@@ -40,13 +40,11 @@ public final class SpawnerAnimals {
                && world.getBlockState(pos.down()).getBlock().getMaterial().isLiquid()
                && !world.getBlockState(pos.up()).getBlock().isNormalCube();
          } else {
-            boolean flag = World.doesBlockHaveSolidTopSurface(world, pos.getX(), pos.getY() - 1, pos.getZ());
-            if (!flag) {
+            if (!World.doesBlockHaveSolidTopSurface(world, pos.getX(), pos.getY() - 1, pos.getZ())) {
                return false;
             } else {
                Block block2 = world.getBlockState2(pos.getX(), pos.getY() - 1, pos.getZ()).getBlock();
-               boolean flag2 = block2 != Blocks.bedrock && block2 != Blocks.barrier;
-               return flag2 && !block.isNormalCube() && !block.getMaterial().isLiquid() && !world.getBlockState(pos.up()).getBlock().isNormalCube();
+               return (block2 != Blocks.bedrock && block2 != Blocks.barrier) && !block.isNormalCube() && !block.getMaterial().isLiquid() && !world.getBlockState(pos.up()).getBlock().isNormalCube();
             }
          }
       }
@@ -57,8 +55,7 @@ public final class SpawnerAnimals {
       int n3 = n * 16 + world.rand.nextInt(16);
       int n4 = n2 * 16 + world.rand.nextInt(16);
       int n5 = MathHelper.roundUp(chunkFromChunkCoords.getHeightValue(n3 & 15, n4 & 15) + 1, 16);
-      int n6 = world.rand.nextInt(n5 > 0 ? n5 : chunkFromChunkCoords.getTopFilledSegment() + 16 - 1);
-      blockPosM.setXyz(n3, n6, n4);
+      blockPosM.setXyz(n3, world.rand.nextInt(n5 > 0 ? n5 : chunkFromChunkCoords.getTopFilledSegment() + 16 - 1), n4);
       return blockPosM;
    }
 
@@ -114,17 +111,14 @@ public final class SpawnerAnimals {
 
          for (EnumCreatureType enumCreatureType : EnumCreatureType.values()) {
             if ((!enumCreatureType.getPeacefulCreature() || flag2) && (enumCreatureType.getPeacefulCreature() || flag) && (!enumCreatureType.getAnimal() || flag3)) {
-               int n5 = world.countEntities(enumCreatureType.getCreatureClass());
-               int n6 = enumCreatureType.getMaxNumberOfCreature() * this.countChunkPos / MOB_COUNT_DIV;
-               if (n5 <= n6) {
+               if (world.countEntities(enumCreatureType.getCreatureClass()) <= (enumCreatureType.getMaxNumberOfCreature() * this.countChunkPos / MOB_COUNT_DIV)) {
                   outerLoop:
                   for (ChunkCoordIntPair chunkCoordIntPair2 : (Iterable<ChunkCoordIntPair>)(this.eligibleChunksForSpawning)) {
                      BlockPosM randomChunkPosition = getRandomChunkPosition(world, chunkCoordIntPair2.chunkXPos, chunkCoordIntPair2.chunkZPos, blockPosM);
                      int x = randomChunkPosition.getX();
                      int y = randomChunkPosition.getY();
                      int z = randomChunkPosition.getZ();
-                     Block block = world.getBlockState(randomChunkPosition).getBlock();
-                     if (!block.isNormalCube()) {
+                     if (!world.getBlockState(randomChunkPosition).getBlock().isNormalCube()) {
                         int n7 = 0;
 
                         for (int k = 0; k < 3; k++) {
@@ -166,8 +160,7 @@ public final class SpawnerAnimals {
                                     }
 
                                     entityLiving.setLocationAndAngles((double)f, (double)n9, (double)f2, world.rand.nextFloat() * 360.0F, 0.0F);
-                                    boolean flag6 = entityLiving.getCanSpawnHere() && entityLiving.isNotColliding();
-                                    if (flag6) {
+                                    if (entityLiving.getCanSpawnHere() && entityLiving.isNotColliding()) {
                                        this.mapSampleEntitiesByClass.remove(spawnListEntry.entityClass);
                                        entityLivingData = entityLiving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityLiving)), entityLivingData);
                                        if (entityLiving.isNotColliding()) {
@@ -175,8 +168,7 @@ public final class SpawnerAnimals {
                                           world.spawnEntityInWorld(entityLiving);
                                        }
 
-                                       int maxSpawnedInChunk = entityLiving.getMaxSpawnedInChunk();
-                                       if (n7 >= maxSpawnedInChunk) {
+                                       if (n7 >= entityLiving.getMaxSpawnedInChunk()) {
                                           continue outerLoop;
                                        }
                                     }

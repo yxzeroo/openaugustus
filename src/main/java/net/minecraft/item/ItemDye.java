@@ -119,8 +119,7 @@ public class ItemDye extends Item {
             }
          } else if (enumDyeColor == EnumDyeColor.BROWN) {
             IBlockState blockState = world.getBlockState(pos);
-            Block block = blockState.getBlock();
-            if (block == Blocks.log && blockState.getValue(BlockPlanks.VARIANT) == BlockPlanks.EnumType.JUNGLE) {
+            if (blockState.getBlock() == Blocks.log && blockState.getValue(BlockPlanks.VARIANT) == BlockPlanks.EnumType.JUNGLE) {
                if (facing == EnumFacing.DOWN) {
                   return false;
                }
@@ -131,8 +130,7 @@ public class ItemDye extends Item {
 
                pos = pos.offset(facing);
                if (world.isAirBlock(pos)) {
-                  IBlockState state = Blocks.cocoa.onBlockPlaced(world, pos, facing, f, f2, f3, 0, player);
-                  world.setBlockState(pos, state, 2);
+                  world.setBlockState(pos, Blocks.cocoa.onBlockPlaced(world, pos, facing, f, f2, f3, 0, player), 2);
                   if (!player.capabilities.isCreativeMode) {
                      stack.stackSize--;
                   }

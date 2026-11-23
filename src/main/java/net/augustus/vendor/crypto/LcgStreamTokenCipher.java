@@ -18,20 +18,14 @@ public class LcgStreamTokenCipher {
             }
          } else if (14 <= b) {
             if (14 >= b) {
-               LcgStreamTokenCipher lcgStreamTokenCipher = this;
-               byte[] bytes3 = bytes2;
-               byte b2 = (byte)(this.lcgState & 0xFF);
-               byte[] bytes4 = bytes3;
-               bytes2 = lcgStreamTokenCipher.applyReverseCascade(bytes4, b2);
+               bytes2 = this.applyReverseCascade(bytes2, (byte)(this.lcgState & 0xFF));
             } else {
                if (17 <= b) {
                   if (17 >= b) {
                      this.lcgState = this.lcgState * 1103515245 + 12345 & 2147483647;
                   } else {
                      if (b > 18) {
-                        LcgStreamTokenCipher lcgStreamTokenCipher2 = this;
-                        byte[] bytes5 = bytes2;
-                        return lcgStreamTokenCipher2.wrapWithHeader(bytes5);
+                        return this.wrapWithHeader(bytes2);
                      }
 
                      n2++;
@@ -65,11 +59,7 @@ public class LcgStreamTokenCipher {
          while (true) {
             while (b < 4) {
                if (b < 1) {
-                  LcgStreamTokenCipher lcgStreamTokenCipher3 = this;
-                  byte[] bytes6 = bytes2;
-                  byte b3 = (byte)(this.mixByte ^ n2 * 19);
-                  byte[] bytes7 = bytes6;
-                  bytes2 = lcgStreamTokenCipher3.applyNeighborXor(bytes7, b3);
+                  bytes2 = this.applyNeighborXor(bytes2, (byte)(this.mixByte ^ n2 * 19));
                   continue outerLoop;
                }
 
@@ -96,20 +86,14 @@ public class LcgStreamTokenCipher {
             }
 
             if (6 >= b) {
-               LcgStreamTokenCipher lcgStreamTokenCipher4 = this;
-               byte[] bytes8 = bytes2;
-               bytes2 = lcgStreamTokenCipher4.permuteAndMask(bytes8, n);
+               bytes2 = this.permuteAndMask(bytes2, n);
             } else {
                if (7 >= b) {
                   n2 = 0;
                   break;
                }
 
-               LcgStreamTokenCipher lcgStreamTokenCipher5 = this;
-               byte[] bytes9 = bytes2;
-               byte b4 = (byte)(n >> n2 * 4 & 0xFF);
-               byte[] bytes10 = bytes9;
-               bytes2 = lcgStreamTokenCipher5.applyKeyXor(bytes10, b4);
+               bytes2 = this.applyKeyXor(bytes2, (byte)(n >> n2 * 4 & 0xFF));
             }
          }
       }

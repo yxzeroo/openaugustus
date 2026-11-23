@@ -33,8 +33,7 @@ public class OnlineConfigManager {
 
    public static byte[] computeSha256(byte[] bytes) {
       try {
-         MessageDigest instance = MessageDigest.getInstance("SHA-256");
-         return instance.digest(bytes);
+         return MessageDigest.getInstance("SHA-256").digest(bytes);
       } catch (NoSuchAlgorithmException e) {
          throw new RuntimeException("SHA-256 algorithm not available", e);
       }
@@ -66,8 +65,7 @@ public class OnlineConfigManager {
       List list = (List)configListsByCategory.get(n);
       if (list != null) {
          for (int i = list.size() - 1; i >= 0; i--) {
-            OnlineConfigMetadata onlineConfigMetadata = (OnlineConfigMetadata)list.get(i);
-            if (onlineConfigMetadata.getName().equals(str)) {
+            if (((OnlineConfigMetadata)list.get(i)).getName().equals(str)) {
                list.remove(i);
             }
          }
@@ -76,9 +74,7 @@ public class OnlineConfigManager {
 
    public static void requestConfigLists() {
       if (AugustusServerHandler.isConnectedAndReady()) {
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         OnlineConfigListRequestPacket packet = new OnlineConfigListRequestPacket(VendorSessionTicker.sessionToken);
-         activeHandler.sendPacket(packet);
+         AugustusServerHandler.getActiveHandler().sendPacket(new OnlineConfigListRequestPacket(VendorSessionTicker.sessionToken));
       }
    }
 
@@ -93,9 +89,7 @@ public class OnlineConfigManager {
    }
 
    private static void showConfigError(String str) {
-      String str2 = "§cConfig system error: §7" + str;
-      NotificationLevel error = NotificationLevel.ERROR;
-      ConfigSystemPanel.notifyConfigStatus(str2, error);
+      ConfigSystemPanel.notifyConfigStatus("§cConfig system error: §7" + str, NotificationLevel.ERROR);
    }
 
    public static void cacheEncryptedConfig(int n, String str, byte[] bytes, byte[] bytes2) {
@@ -109,12 +103,8 @@ public class OnlineConfigManager {
 
    private static byte[] decryptConfigPayload(byte[] bytes, String str) {
       ConfigAesCipher configAesCipher = new ConfigAesCipher();
-      byte[] bytes2 = (byte[])configAesKeys.get(str);
-      boolean flag = false;
-      configAesCipher.initKey(flag, bytes2);
-      int length = bytes.length;
-      byte b = 0;
-      return configAesCipher.decrypt(bytes, b, length);
+      configAesCipher.initKey(false, (byte[])configAesKeys.get(str));
+      return configAesCipher.decrypt(bytes, (byte)0, bytes.length);
    }
 
    public static void setConfigList(int n, List list) {
@@ -128,9 +118,7 @@ public class OnlineConfigManager {
          bytes = new byte[1];
       }
 
-      AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-      OnlineConfigDownloadRequestPacket packet = new OnlineConfigDownloadRequestPacket(VendorSessionTicker.sessionToken, bytes, str, onlineConfigMetadata.getAuthor(), n);
-      activeHandler.sendPacket(packet);
+      AugustusServerHandler.getActiveHandler().sendPacket(new OnlineConfigDownloadRequestPacket(VendorSessionTicker.sessionToken, bytes, str, onlineConfigMetadata.getAuthor(), n));
    }
 
    public static void clearActionCooldown(String str) {
@@ -161,9 +149,7 @@ public class OnlineConfigManager {
       }
 
       if (AugustusServerHandler.isConnectedAndReady()) {
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         OnlineConfigUploadPacket packet = new OnlineConfigUploadPacket(VendorSessionTicker.sessionToken, str, bytes, flag);
-         activeHandler.sendPacket(packet);
+         AugustusServerHandler.getActiveHandler().sendPacket(new OnlineConfigUploadPacket(VendorSessionTicker.sessionToken, str, bytes, flag));
          sendConfigAction(0, str);
       }
    }
@@ -178,8 +164,7 @@ public class OnlineConfigManager {
 
    public static void requestConfigDownload(int n, String str) {
       if (AugustusServerHandler.isConnectedAndReady()) {
-         List configsByCategory = getConfigsByCategory(n);
-         ((List<OnlineConfigMetadata>)configsByCategory).stream().filter((OnlineConfigMetadata onlineConfigMetadata) -> onlineConfigMetadata.getName().equals(str)).findFirst().ifPresent((OnlineConfigMetadata onlineConfigMetadata2) -> sendDownloadRequest(n, str, onlineConfigMetadata2));
+         ((List<OnlineConfigMetadata>)getConfigsByCategory(n)).stream().filter((OnlineConfigMetadata onlineConfigMetadata) -> onlineConfigMetadata.getName().equals(str)).findFirst().ifPresent((OnlineConfigMetadata onlineConfigMetadata2) -> sendDownloadRequest(n, str, onlineConfigMetadata2));
       }
    }
 
@@ -188,9 +173,7 @@ public class OnlineConfigManager {
       byte[] bytes = GSON.toJson((JsonElement)json).getBytes(StandardCharsets.UTF_8);
       pendingUploads.put(str, new TuplePair(bytes, flag));
       byte[] bytes2 = computeSha256(bytes);
-      AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-      OnlineConfigHashCheckPacket packet = new OnlineConfigHashCheckPacket(VendorSessionTicker.sessionToken, bytes2, str);
-      activeHandler.sendPacket(packet);
+      AugustusServerHandler.getActiveHandler().sendPacket(new OnlineConfigHashCheckPacket(VendorSessionTicker.sessionToken, bytes2, str));
    }
 
    public static void loadOrDownloadConfig(int n, String str) {
@@ -209,9 +192,7 @@ public class OnlineConfigManager {
 
    public static void sendConfigAction(int n, String str) {
       if (AugustusServerHandler.isConnectedAndReady()) {
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         OnlineConfigActionPacket packet = new OnlineConfigActionPacket(VendorSessionTicker.sessionToken, str, n);
-         activeHandler.sendPacket(packet);
+         AugustusServerHandler.getActiveHandler().sendPacket(new OnlineConfigActionPacket(VendorSessionTicker.sessionToken, str, n));
       }
    }
 
@@ -221,11 +202,9 @@ public class OnlineConfigManager {
          bytes = (byte[])cachedConfigPayloads.get(str2);
       }
 
-      byte[] bytes2 = decryptConfigPayload(bytes, str2);
-      JsonObject json = parseConfigJson(bytes2);
+      JsonObject json = parseConfigJson(decryptConfigPayload(bytes, str2));
       if (json != null) {
-         boolean flag = true;
-         Augustus.getInstance().getConfigManager().moduleConfigStorage.applyConfigJson(json, str, flag);
+         Augustus.getInstance().getConfigManager().moduleConfigStorage.applyConfigJson(json, str, true);
       } else {
          showConfigError("Failed to load config.");
       }

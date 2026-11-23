@@ -4,10 +4,10 @@ import java.awt.Color;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public class LegacyAnimations extends Module {
-   private final BooleansSetting heartAnimationMode;
+   private final StringValue heartAnimationMode;
    private final BooleanValue damageAnimation;
    private final BooleanValue itemHeld;
    private final BooleanValue swing;
@@ -16,7 +16,7 @@ public class LegacyAnimations extends Module {
 
    public LegacyAnimations() {
        super("LegacyAnimations", "AlteAnimationen", new Color(50, 168, 104), Categorys.RENDER);
-      this.heartAnimationMode = new BooleansSetting(this, "HeartAnimationMode", "Default", new String[]{"Default", "Legacy", "Minimal"});
+      this.heartAnimationMode = new StringValue(this, "HeartAnimationMode", "Default", new String[]{"Default", "Legacy", "Minimal"});
       this.damageAnimation = new BooleanValue(this, "DamageAnimation", true);
       this.itemHeld = new BooleanValue(this, "ItemHeld", false);
       this.swing = new BooleanValue(this, "Swing", true);

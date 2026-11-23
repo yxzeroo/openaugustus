@@ -61,8 +61,7 @@ public class PeriodicXorByteMixer {
                }
 
                if ((((byte[])obj)[j] & 255) <= 128 || i != 0) {
-                  int n2 = ((byte[])obj)[j] & 255;
-                  if (n2 >= 64 || i != 1) {
+                  if ((((byte[])obj)[j] & 255) >= 64 || i != 1) {
                      continue;
                   }
                }
@@ -189,18 +188,13 @@ public class PeriodicXorByteMixer {
          }
 
          PeriodicXorByteMixer periodicXorByteMixer = this;
-         byte[] bytes2 = (byte[])obj;
-         obj = periodicXorByteMixer.applyPeriodicMaskRound(bytes2);
+         obj = periodicXorByteMixer.applyPeriodicMaskRound((byte[])obj);
          periodicXorByteMixer = this;
-         byte[] bytes3 = (byte[])obj;
-         obj = periodicXorByteMixer.applyRotateQuarterReverseRound(bytes3);
+         obj = periodicXorByteMixer.applyRotateQuarterReverseRound((byte[])obj);
          periodicXorByteMixer = this;
-         byte[] bytes4 = (byte[])obj;
-         obj = periodicXorByteMixer.applyBranchingShiftRound(bytes4);
+         obj = periodicXorByteMixer.applyBranchingShiftRound((byte[])obj);
          periodicXorByteMixer = this;
-         byte[] bytes5 = (byte[])obj;
-         byte[] bytes6 = bytes5;
-         obj = periodicXorByteMixer.applyDoublePassFeedbackRound(bytes6);
+         obj = periodicXorByteMixer.applyDoublePassFeedbackRound((byte[])obj);
          return (byte[])obj;
       }
    }

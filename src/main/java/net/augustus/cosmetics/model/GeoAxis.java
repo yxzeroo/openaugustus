@@ -19,7 +19,6 @@ private final String name;
    }
 
    public static GeoAxis byName(long l, String str) {
-      int[] flowState = GeoVector3f.getFlowState();
       return str == null ? null : (GeoAxis)NAME_LOOKUP.get(str.toLowerCase());
    }
 
@@ -29,8 +28,7 @@ private final String name;
    }
 
    public boolean apply(Object obj) {
-      GeoDirection geoDirection = (GeoDirection)obj;
-      return this.apply2(geoDirection);
+      return this.apply2((GeoDirection)obj);
    }
 
    public String getName2() {
@@ -52,7 +50,6 @@ private final String name;
    }
 
    public boolean apply2(GeoDirection geoDirection) {
-      int[] flowState = GeoVector3f.getFlowState();
       return geoDirection != null && geoDirection.getAxis() == this;
    }
 

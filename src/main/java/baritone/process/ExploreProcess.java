@@ -109,8 +109,7 @@ public final class ExploreProcess extends BaritoneProcessHelper implements IExpl
 
             while (n5 < 2) {
                int n6 = (n5 * 2 - 1) * n4;
-               int n7 = Math.abs(j) + Math.abs(n6);
-               if (n7 != distanceCompleted2) {
+               if ((Math.abs(j) + Math.abs(n6)) != distanceCompleted2) {
                   throw new IllegalStateException();
                }
 

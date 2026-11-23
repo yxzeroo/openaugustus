@@ -12,7 +12,7 @@ public class ActionSetting extends Setting {
    private int prefixWidth;
    private final Runnable action;
 
-   public ActionSetting(Module module, String str, Runnable runnable, DoubleValue doubleValue) {
+   public ActionSetting(Module module, String str, Runnable runnable, SettingGroup doubleValue) {
        this(str, module, doubleValue, runnable);
    }
 
@@ -20,32 +20,23 @@ public class ActionSetting extends Setting {
    public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
       super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
       if (this.prefixWidth == -1) {
-         String str = "Action: ";
-         this.prefixWidth = (int)customFontUtil.getStringWidth(str);
+         this.prefixWidth = (int)customFontUtil.getStringWidth("Action: ");
       }
 
       String displayName2 = this.getDisplayName();
-      boolean flag2 = this.labelWidth == -1;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
          this.labelWidth = (int)customFontUtil.getStringWidth(displayName2);
       }
 
       this.contentWidth = this.labelWidth + 20;
       if (flag) {
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          double d = (double)n3;
          double d2 = (double)n4;
          double d3 = d;
-         String str2 = "Action: ";
-         customFontUtil.drawString(str2, d3, d2, colorInt);
+         customFontUtil.drawString("Action: ", d3, d2, colorInt);
          d = (double)(n3 + this.prefixWidth);
-         double d4 = (double)n4;
-         int hoveredColor = RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n3 + this.prefixWidth - 8, n4 - 4, this.labelWidth + 16, (int)(customFontUtil.getFontHeight() + 5.0F));
-         double d5 = d4;
-         double d6 = d;
-         customFontUtil.drawString(displayName2, d6, d5, hoveredColor);
+         customFontUtil.drawString(displayName2, d, (double)n4, RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n3 + this.prefixWidth - 8, n4 - 4, this.labelWidth + 16, (int)(customFontUtil.getFontHeight() + 5.0F)));
       }
    }
 
@@ -78,15 +69,14 @@ public class ActionSetting extends Setting {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    public ActionSetting(Module module, String str, Runnable runnable) {
        this(str, module, null, runnable);
    }
 
-   private ActionSetting(String str, Module module, DoubleValue doubleValue, Runnable runnable) {
+   private ActionSetting(String str, Module module, SettingGroup doubleValue, Runnable runnable) {
        super(module, doubleValue, str);
       this.labelWidth = -1;
       this.prefixWidth = -1;

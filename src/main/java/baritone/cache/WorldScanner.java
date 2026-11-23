@@ -66,8 +66,7 @@ public enum WorldScanner implements IWorldScanner {
 
             for (int i = -n8; i <= n8; i++) {
                for (int j = -n8; j <= n8; j++) {
-                  int n9 = i * i + j * j;
-                  if (n9 == n8) {
+                  if ((i * i + j * j) == n8) {
                      flag3 = true;
                      int n10 = i + n5;
                      int n11 = j + n6;
@@ -93,7 +92,6 @@ public enum WorldScanner implements IWorldScanner {
 
    private boolean scanChunk(int n, int n2, Chunk chunk, BlockOptionalMetaLookup blockOptionalMetaLookup, Collection items, int n3, int n4, int n5, int[] ints) {
       ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
-      boolean flag = false;
 
       for (int i = 0; i < 16; i++) {
          ExtendedBlockStorage extendedBlockStorage = blockStorageArray[i];
@@ -103,8 +101,7 @@ public enum WorldScanner implements IWorldScanner {
             for (int j = 0; j < 16; j++) {
                for (int k = 0; k < 16; k++) {
                   for (int m = 0; m < 16; m++) {
-                     IBlockState state = extendedBlockStorage.get(m, j, k);
-                     if (blockOptionalMetaLookup.has2(state.getBlock())) {
+                     if (blockOptionalMetaLookup.has2(extendedBlockStorage.get(m, j, k).getBlock())) {
                         items.add(new BlockPos(n | m, n6 | j, n2 | k));
                      }
                   }
@@ -113,7 +110,7 @@ public enum WorldScanner implements IWorldScanner {
          }
       }
 
-      return flag;
+      return false;
    }
 
    @Override

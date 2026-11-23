@@ -122,8 +122,7 @@ public class ChunkRenderDispatcher {
 
       for (int i = 0; i < n3; i++) {
          ChunkRenderWorker chunkRenderWorker = new ChunkRenderWorker(this);
-         Thread thread = threadFactory.newThread(chunkRenderWorker);
-         thread.start();
+         threadFactory.newThread(chunkRenderWorker).start();
          this.listThreadedWorkers.add(chunkRenderWorker);
       }
 
@@ -156,8 +155,7 @@ public class ChunkRenderDispatcher {
          }
 
          generator.addFinishRunnable(new ChunkRenderDispatcher.WorkerTask2(this, generator));
-         boolean flag2 = this.queueChunkUpdates.offer(generator);
-         flag = flag2;
+         flag = this.queueChunkUpdates.offer(generator);
       } finally {
          renderChunk.getLockCompileTask().unlock();
       }

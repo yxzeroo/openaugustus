@@ -66,8 +66,7 @@ public class TileEntityRendererDispatcher {
             this.tileEntityRendered = null;
          } catch (Throwable e) {
             CrashReport crashReport = CrashReport.makeCrashReport(e, "Rendering Block Entity");
-            CrashReportCategory crashReportCategory = crashReport.makeCategory("Block Entity Details");
-            tileEntity.addInfoToCrashReport(crashReportCategory);
+            tileEntity.addInfoToCrashReport(crashReport.makeCategory("Block Entity Details"));
             throw new ReportedException(crashReport);
          }
       }
@@ -126,8 +125,7 @@ public class TileEntityRendererDispatcher {
          if (XRay.enabled) {
             Block blockType = tileEntity.getBlockType();
             BlockPos pos = tileEntity.getPos();
-            Object obj = null;
-            if (XRay.getBlockRenderMode(blockType, (IBlockState)obj, pos) == XRayRenderMode.HIDE) {
+            if (XRay.getBlockRenderMode(blockType, (IBlockState)null, pos) == XRayRenderMode.HIDE) {
                return;
             }
          }

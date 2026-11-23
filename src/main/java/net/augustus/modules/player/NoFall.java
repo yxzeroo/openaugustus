@@ -31,9 +31,9 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -48,17 +48,17 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class NoFall extends Module implements ClickListener, TickListener, PacketListener, SilentSlotListener, BlockBoundingBoxListener, MoveEntityListener, UpdateListener, PacketDelayListener, MoveInputListener {
-   public BooleansSetting mode;
-   private final StringValue collisionFallDistance;
-   public final StringValue minFallDist;
-   public final StringValue minLegitFallDist;
-   private final DoubleValue rotations;
-   public final StringValue delay;
+   public StringValue mode;
+   private final DoubleValue collisionFallDistance;
+   public final DoubleValue minFallDist;
+   public final DoubleValue minLegitFallDist;
+   private final SettingGroup rotations;
+   public final DoubleValue delay;
    private final BooleanValue useWebs;
    private final BooleanValue sneakWhileItemPlace;
    private final BooleanValue silentSlotSwitching;
-   private final BooleansSetting blinkMode;
-   private final StringValue blinkStartFallDistance;
+   private final StringValue blinkMode;
+   private final DoubleValue blinkStartFallDistance;
    private RotationEngine rotationEngine;
    private BlockPos lastAimedBlockPos;
    private int ticksSinceLastPlace;
@@ -70,45 +70,31 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
 
    public NoFall() {
        super("NoFall", "KeinFallen", new Color(222, 80, 95, 255), Categorys.PLAYER);
-      this.mode = new BooleansSetting(
+      this.mode = new StringValue(
          this, "Mode", "OnGround", new String[]{"OnGround1", "OnGround2", "NoGround", "Stop", "Legit", "Verus", "AAC3", "Collision", "Vulcan"}
       );
-      StringValue stringValue = new StringValue(this, "CollisionFallDistance", 2.0, 0.0, 6.0, 2);
-      String str = "FallDistance";
-      StringValue stringValue2 = stringValue.named(str);
+      DoubleValue stringValue2 = new DoubleValue(this, "CollisionFallDistance", 2.0, 0.0, 6.0, 2).named("FallDistance");
       SettingVisibilityCondition condition = () -> {
          return this.mode.getSelectedValue().equals("Collision");
       };
       this.collisionFallDistance = stringValue2.visibleWhen(condition);
-      StringValue stringValue3 = new StringValue(this, "MinFallDist", 2.0, 1.0, 24.0, 0);
-      SettingVisibilityCondition condition2 = () -> this.isMinFallDistVisible();
-      this.minFallDist = stringValue3.visibleWhen(condition2);
-      StringValue stringValue4 = new StringValue(this, "MinLegitFallDist", 6.0, 2.0, 24.0, 1);
-      String str2 = "MinFallDist";
-      StringValue stringValue5 = stringValue4.named(str2);
-      SettingVisibilityCondition condition3 = () -> this.isMinLegitFallDistVisible();
-      this.minLegitFallDist = stringValue5.visibleWhen(condition3);
-      DoubleValue doubleValue = new DoubleValue(this, "Rotations", true);
-      SettingVisibilityCondition condition4 = () -> this.isRotationsVisible();
-      this.rotations = doubleValue.visibleWhen(condition4);
-      StringValue stringValue6 = new StringValue(this, "Delay", 110.0, 0.0, 2000.0, 0);
+      this.minFallDist = new DoubleValue(this, "MinFallDist", 2.0, 1.0, 24.0, 0).visibleWhen(() -> this.isMinFallDistVisible());
+      this.minLegitFallDist = new DoubleValue(this, "MinLegitFallDist", 6.0, 2.0, 24.0, 1).named("MinFallDist").visibleWhen(() -> this.isMinLegitFallDistVisible());
+      this.rotations = new SettingGroup(this, "Rotations", true).visibleWhen(() -> this.isRotationsVisible());
+      DoubleValue stringValue6 = new DoubleValue(this, "Delay", 110.0, 0.0, 2000.0, 0);
       SettingVisibilityCondition condition5 = () -> {
          return this.mode.getSelectedValue().equals("Legit");
       };
       this.delay = stringValue6.visibleWhen(condition5);
-      BooleanValue booleanValue = new BooleanValue(this, "UseWebs", true);
-      SettingVisibilityCondition condition6 = () -> this.isUseWebsVisible();
-      this.useWebs = (BooleanValue)booleanValue.withVisibility(condition6);
-      BooleanValue booleanValue2 = new BooleanValue(this, "SneakWhileItemPlace", true);
-      SettingVisibilityCondition condition7 = () -> this.isSneakWhileItemPlaceVisible();
-      this.sneakWhileItemPlace = (BooleanValue)booleanValue2.withVisibility(condition7);
+      this.useWebs = (BooleanValue)new BooleanValue(this, "UseWebs", true).withVisibility(() -> this.isUseWebsVisible());
+      this.sneakWhileItemPlace = (BooleanValue)new BooleanValue(this, "SneakWhileItemPlace", true).withVisibility(() -> this.isSneakWhileItemPlaceVisible());
       BooleanValue booleanValue3 = new BooleanValue(this, "SilentSlotSwitching", true);
       SettingVisibilityCondition condition8 = () -> {
          return this.mode.getSelectedValue().equals("Legit");
       };
       this.silentSlotSwitching = (BooleanValue)booleanValue3.withVisibility(condition8);
-      this.blinkMode = new BooleansSetting(this, "BlinkMode", "None", new String[]{"None", "OnlyIncoming", "OnlyOutgoing", "Both"});
-      StringValue stringValue7 = new StringValue(this, "BlinkStartFallDistance", 3.0, 1.0, 6.0, 2);
+      this.blinkMode = new StringValue(this, "BlinkMode", "None", new String[]{"None", "OnlyIncoming", "OnlyOutgoing", "Both"});
+      DoubleValue stringValue7 = new DoubleValue(this, "BlinkStartFallDistance", 3.0, 1.0, 6.0, 2);
       SettingVisibilityCondition condition9 = () -> {
          return !this.blinkMode.getSelectedValue().equals("None");
       };
@@ -128,8 +114,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
    public void onEnable() {
       if (mc.thePlayer != null) {
          this.bucketHotbarSlot = mc.thePlayer.inventory.currentItem;
-         String selectedValue = this.mode.getSelectedValue();
-         this.setSuffix(selectedValue);
+         this.setSuffix(this.mode.getSelectedValue());
       }
    }
 
@@ -139,24 +124,15 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 34;
-      this.toggleEventSubscription(b4);
-      byte b5 = 3;
-      this.toggleEventSubscription(b5);
-      byte b6 = 20;
-      this.toggleEventSubscription(b6);
-      byte b7 = 43;
-      this.toggleEventSubscription(b7);
-      byte b8 = 25;
-      this.toggleEventSubscription(b8);
-      byte b9 = 21;
-      this.toggleEventSubscription(b9);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)3);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -164,8 +140,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
       EntityPlayerSP thePlayer = mc.thePlayer;
       if (mc.theWorld != null && thePlayer != null && thePlayer.ticksExisted >= 100) {
          if ((double)thePlayer.clientFallDistance > this.blinkStartFallDistance.getValue() && (this.blinkMode.getSelectedValue().equals("OnlyIncoming") || this.blinkMode.getSelectedValue().equals("Both"))) {
-            boolean flag = true;
-            event.setDelayed(flag);
+            event.setDelayed(true);
          }
       }
    }
@@ -175,8 +150,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
       EntityPlayerSP thePlayer = mc.thePlayer;
       if (mc.theWorld != null && thePlayer != null && thePlayer.ticksExisted >= 100) {
          if ((double)thePlayer.clientFallDistance > this.blinkStartFallDistance.getValue() && (this.blinkMode.getSelectedValue().equals("OnlyOutgoing") || this.blinkMode.getSelectedValue().equals("Both"))) {
-            boolean flag = true;
-            event.setDelayed(flag);
+            event.setDelayed(true);
          }
       }
    }
@@ -184,8 +158,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.mode.getSelectedValue().equals("Legit") && this.sneakWhileItemPlace.getValue() && mc.isNotInGui() && this.bucketHotbarSlot != -1) {
-         boolean flag = true;
-         event.setSneak(flag);
+         event.setSneak(true);
       }
    }
 
@@ -193,20 +166,17 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
    public void onPacket2(EventPacket event) {
       Packet packet = event.getPacket();
       if (mc.thePlayer != null && mc.theWorld != null) {
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "NoGround":
                if (packet instanceof C03PacketPlayer) {
-                  C03PacketPlayer packet2 = (C03PacketPlayer)packet;
-                  packet2.setOnGround(false);
+                  ((C03PacketPlayer)packet).setOnGround(false);
                   mc.thePlayer.fallDistance = -1.0F;
                }
                break;
             case "Verus":
                if (packet instanceof C03PacketPlayer && mc.thePlayer.fallDistance > 2.0F) {
                   if (!(packet instanceof C03PacketPlayer.C06PacketPlayerPosLook) && !(packet instanceof C03PacketPlayer.C05PacketPlayerLook) && !(packet instanceof C03PacketPlayer.C04PacketPlayerPosition)) {
-                     C03PacketPlayer packet3 = (C03PacketPlayer)packet;
-                     packet3.setOnGround(true);
+                     ((C03PacketPlayer)packet).setOnGround(true);
                      mc.thePlayer.fallDistance = 0.0F;
                   } else {
                      event.cancel();
@@ -217,8 +187,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
                break;
             case "OnGround2":
                if (mc.thePlayer.fallDistance > 3.0F && packet instanceof C03PacketPlayer) {
-                  C03PacketPlayer packet4 = (C03PacketPlayer)packet;
-                  packet4.setOnGround(true);
+                  ((C03PacketPlayer)packet).setOnGround(true);
                }
                break;
             case "Vulcan":
@@ -270,8 +239,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
    @Override
    public void onTick2() {
       if (mc.thePlayer != null) {
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "OnGround1":
                if ((double)mc.thePlayer.fallDistance > this.minFallDist.getValue()) {
                   mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
@@ -296,13 +264,11 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
 
    @Override
    public void onTick() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (mc.thePlayer != null && this.mode.getSelectedValue().equals("Legit")) {
          boolean flag = false;
          IBlockState blockState = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
-         Block block = blockState.getBlock();
-         if (block instanceof BlockLiquid) {
+         if (blockState.getBlock() instanceof BlockLiquid) {
             flag = (Integer)blockState.getValue(BlockLiquid.LEVEL) == 0;
          }
 
@@ -312,8 +278,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
                return;
             }
 
-            long l = 7000L;
-            if (this.timeHelper.reached2(l)) {
+            if (this.timeHelper.reached2(7000L)) {
                return;
             }
          }
@@ -322,11 +287,8 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
             RotationEngine rotationEngine2 = this.rotationEngine;
             float rotationYaw = mc.thePlayer.rotationYaw;
             Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            float f = 90.0F;
-            float f2 = rotationYaw;
-            Rotation rotation = rotationEngine2.rotateTowards(f2, f, previousRotation);
-            byte b = 4;
-            ClientManagers.rotationController.requestRotation(rotation, b, this);
+            Rotation rotation = rotationEngine2.rotateTowards(rotationYaw, 90.0F, previousRotation);
+            ClientManagers.rotationController.requestRotation(rotation, (byte)4, this);
          }
       }
    }
@@ -337,8 +299,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
       if (mc.thePlayer != null && this.mode.getSelectedValue().equals("Legit")) {
          boolean flag = false;
          IBlockState blockState = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
-         Block block = blockState.getBlock();
-         if (block instanceof BlockLiquid) {
+         if (blockState.getBlock() instanceof BlockLiquid) {
             flag = (Integer)blockState.getValue(BlockLiquid.LEVEL) == 0;
          }
 
@@ -348,8 +309,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
                   break exitBlock;
                }
 
-               long l = 7000L;
-               if (this.timeHelper.reached2(l)) {
+               if (this.timeHelper.reached2(7000L)) {
                   break exitBlock;
                }
             }
@@ -372,11 +332,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
          }
 
          if (this.bucketHotbarSlot != -1) {
-            int bucketHotbarSlot2 = this.bucketHotbarSlot;
-            boolean value = this.silentSlotSwitching.getValue();
-            int n = bucketHotbarSlot2;
-            byte b = 1;
-            SilentSlotManager.requestSlot(this, b, n, value);
+            SilentSlotManager.requestSlot(this, (byte)1, this.bucketHotbarSlot, this.silentSlotSwitching.getValue());
          }
       }
 
@@ -388,8 +344,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
       this.ticksSinceLastPlace++;
       if (this.mode.getSelectedValue().equals("Legit") && this.predictedLandingBlockPos != null && ClientManagers.rotationController.isOwnedBy(this) && mc.objectMouseOver != null) {
          if (this.bucketHotbarSlot != -1 && this.ticksSinceLastPlace > 2 && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             if (mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() == Items.water_bucket) {
                this.timeHelper.reset();
             }
@@ -418,8 +373,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
          motionY = doubles[4];
          motionZ = doubles[5];
          BlockPos pos = new BlockPos(posX, posY, posZ);
-         Block block = mc.theWorld.getBlockState(pos).getBlock();
-         if (block instanceof BlockLiquid) {
+         if (mc.theWorld.getBlockState(pos).getBlock() instanceof BlockLiquid) {
             return null;
          }
 
@@ -433,14 +387,12 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
 
    private static boolean hasSolidCollisionBox(BlockPos pos) {
       IBlockState blockState = mc.theWorld.getBlockState(pos);
-      Block block = blockState.getBlock();
-      return block.getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
+      return blockState.getBlock().getCollisionBoundingBox(mc.theWorld, blockState, pos.getX(), pos.getY(), pos.getZ()) != null;
    }
 
    private int findSaveItemHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
       Predicate predicate = obj -> {
          return obj != null
             && (
@@ -454,8 +406,7 @@ public class NoFall extends Module implements ClickListener, TickListener, Packe
       } else {
          if (this.useWebs.getValue()) {
             containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-            byte b2 = 36;
-            containerSlotQuery = containerSlotQuery.fromSlot(b2);
+            containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
             Predicate predicate2 = obj2 -> {
                return obj2 != null && obj2.equals(Item.getItemById(30)) && !mc.thePlayer.isInWater();
             };

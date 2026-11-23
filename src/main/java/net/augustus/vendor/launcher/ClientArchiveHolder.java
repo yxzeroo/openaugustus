@@ -32,7 +32,6 @@ public class ClientArchiveHolder extends Thread {
    public static byte[] archiveBytes;
    public static String clientName;
    public static long lastEntryTimestamp;
-   private static int[] controlFlowMarker;
 
    public static Object[] concatArrays(Object[] array, long l, Object[] array2) {
       Object[] result = Arrays.copyOf(array, array.length + array2.length);
@@ -78,16 +77,13 @@ public class ClientArchiveHolder extends Thread {
          new Sha3Hash(Sha3Type.SHA3_256)
             .digest(new Sha256Digest().digest(hwidFull.getBytes(StandardCharsets.UTF_8)))
       );
-      byte[] finalKey = AesCipherUtil.encrypt(
+      EncryptedClassLoader.setClassDecryptionKey(AesCipherUtil.encrypt(
          key1,
          new Sha3Hash(Sha3Type.SHA3_256).digest(LauncherClientHandler.getInstance().sessionToken)
-      );
-      EncryptedClassLoader.setClassDecryptionKey(finalKey);
+      ));
       EncryptedClassLoader.setSessionAuthToken(LauncherClientHandler.getInstance().sessionToken);
-      EncryptedClassLoader loader = new EncryptedClassLoader();
-      Class<?> mainClass = loader.findClass("StartMinecraftDirectory");
-      Method mainMethod = mainClass.getMethod("main", String[].class);
-      mainMethod.invoke(null, (Object)new String[0]);
+      Class<?> mainClass = new EncryptedClassLoader().findClass("StartMinecraftDirectory");
+      mainClass.getMethod("main", String[].class).invoke(null, (Object)new String[0]);
    }
 
    public HashMap getResourceEntries() {
@@ -166,15 +162,6 @@ public class ClientArchiveHolder extends Thread {
       return capacity == nread ? buf : Arrays.copyOf(buf, nread);
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(new int[2]);
-   }
 }

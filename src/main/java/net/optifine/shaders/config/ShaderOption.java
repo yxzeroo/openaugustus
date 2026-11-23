@@ -24,8 +24,7 @@ public abstract class ShaderOption {
    }
 
    public boolean setValue(String str) {
-      int index = getIndex(str, this.values);
-      if (index < 0) {
+      if (getIndex(str, this.values) < 0) {
          return false;
       } else {
          this.value = str;
@@ -121,8 +120,7 @@ public abstract class ShaderOption {
 
    private static int getIndex(String str, String[] strings) {
       for (int i = 0; i < strings.length; i++) {
-         String str2 = strings[i];
-         if (str2.equals(str)) {
+         if (strings[i].equals(str)) {
             return i;
          }
       }

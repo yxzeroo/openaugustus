@@ -83,13 +83,9 @@ public class DynamicAimController implements MC {
       }
 
       if (Math.random() < this.superCorrectionProbability) {
-         int baseReactionTick2 = this.baseReactionTick;
-         byte b = 0;
-         Vec3 vec3 = this.predictEntityPositionNow(entity, b, baseReactionTick2);
+         Vec3 vec3 = this.predictEntityPositionNow(entity, (byte)0, this.baseReactionTick);
          int n = player.ticksExisted - this.baseReactionTick;
-         byte b2 = 0;
-         int n2 = n;
-         Vec3 vec4 = vec3.subtract(this.predictEntityPositionNow((EntityLivingBase)player, n2, b2));
+         Vec3 vec4 = vec3.subtract(this.predictEntityPositionNow((EntityLivingBase)player, n, (byte)0));
          Vec3 vec5 = entity.getInterpolatedPos(1.0F).subtract(player.getInterpolatedPos(1.0F));
          double d3 = Math.abs(
             EntityBoundsUtil.getShortestSignedAngleDelta(
@@ -113,8 +109,7 @@ public class DynamicAimController implements MC {
       } else {
          double d5 = (double)f;
          double d6 = (double)f2;
-         double d7 = d5;
-         this.currentState.setAngles(d7, d6);
+         this.currentState.setAngles(d5, d6);
       }
 
       if (this.lastPlayerTick != player.ticksExisted - 1) {
@@ -128,22 +123,18 @@ public class DynamicAimController implements MC {
          currentState2.setAngularVelocity(vec2d);
       }
 
-      boolean flag2 = false;
-      this.updatePredictedYawBounds(player, entity, flag, flag2);
+      this.updatePredictedYawBounds(player, entity, flag, false);
       this.lastPlayerTick = player.ticksExisted;
-      double d8 = (double)f2;
-      this.computeOverlapPitchRange(player, entity, d8);
+      this.computeOverlapPitchRange(player, entity, (double)f2);
       Vec3 positionEyes = player.getPositionEyes(1.0F);
       Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
       this.yawNoisePhase = this.yawNoisePhase + this.yawNoiseStep;
       double[] currentYawBounds2 = this.currentYawBounds;
       double[] previousYawBounds2 = this.previousYawBounds;
-      DynamicAimState currentState3 = this.currentState;
-      DynamicAimState dynamicAimState = this.stepAimState(currentState3, player, entity, positionEyes, interpolatedPos, previousYawBounds2, currentYawBounds2);
+      DynamicAimState dynamicAimState = this.stepAimState(this.currentState, player, entity, positionEyes, interpolatedPos, previousYawBounds2, currentYawBounds2);
       int ticksExisted = player.ticksExisted;
       double[] currentYawBounds3 = this.currentYawBounds;
-      DynamicAimState currentState4 = this.currentState;
-      this.applyMicroDriftAdjustment(currentState4, dynamicAimState, entity, vec, interpolatedPos, positionEyes, currentYawBounds3, ticksExisted);
+      this.applyMicroDriftAdjustment(this.currentState, dynamicAimState, entity, vec, interpolatedPos, positionEyes, currentYawBounds3, ticksExisted);
       this.currentState = dynamicAimState;
       this.lastTarget = entity;
       this.updateCount++;
@@ -154,18 +145,10 @@ public class DynamicAimController implements MC {
    }
 
    private void computeOverlapPitchRange(EntityPlayerSP player, EntityLivingBase entity, double d) {
-      double posX = player.posX;
-      double posY = player.posY;
-      double posZ = player.posZ;
-      EventMoveInput event = new EventMoveInput(
+      ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player, player.posX, player.posY, player.posZ, new EventMoveInput(
          player.movementInput.moveStrafe, player.movementInput.moveForward, player.movementInput.jump, player.movementInput.sneak, MoveInputStage.PRE
-      );
-      double d2 = posZ;
-      double d3 = posY;
-      double d4 = posX;
-      ArrayList list = PlayerUtil.predictPlayerTrajectory(5, player, d4, d3, d2, event);
-      int size = list.size();
-      ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, size);
+      ));
+      ArrayList list2 = EntityMovementPredictor.predictTrajectoryFromServerPos(entity, list.size());
       list.add(player.getInterpolatedPos(1.0F));
       list2.add(entity.getInterpolatedPos(1.0F));
       int n = Math.min(list.size(), list2.size());
@@ -173,12 +156,8 @@ public class DynamicAimController implements MC {
       ArrayList list3 = new ArrayList();
 
       for (int i = 0; i < n; i++) {
-         Vec3 vec = (Vec3)list2.get(i);
-         boolean flag = false;
-         Vec3 vec2 = vec;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
-         Vec3 vec3 = ((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0);
-         double[] pitchRange = HitboxAngleUtil.getPitchRange(vec3, entityBoundingBoxAt);
+         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, (Vec3)list2.get(i), false);
+         double[] pitchRange = HitboxAngleUtil.getPitchRange(((Vec3)list.get(i)).addVector(0.0, (double)player.getEyeHeight(), 0.0), entityBoundingBoxAt);
          doublesArr[i] = pitchRange;
          list3.add(pitchRange[0]);
          list3.add(pitchRange[1]);
@@ -239,8 +218,7 @@ public class DynamicAimController implements MC {
 
    private DynamicAimState selectCloserYawState(DynamicAimState dynamicAimState, DynamicAimState dynamicAimState2, DynamicAimState dynamicAimState3) {
       double d = Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState.getYaw(), dynamicAimState2.getYaw()));
-      double d2 = Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState.getYaw(), dynamicAimState3.getYaw()));
-      return d2 > d ? dynamicAimState2 : dynamicAimState3;
+      return Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState.getYaw(), dynamicAimState3.getYaw())) > d ? dynamicAimState2 : dynamicAimState3;
    }
 
    private DynamicAimState stepAimState(
@@ -250,10 +228,8 @@ public class DynamicAimController implements MC {
       double yaw = dynamicAimState.getYaw();
       double pitch = dynamicAimState.getPitch();
       double d = 1.0;
-      double d2 = this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase, 1.1F)), 0.5) : 0.5;
-      double d3 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, d2));
-      double d4 = this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase - this.yawNoiseStep, 1.1F)), 0.5) : 0.5;
-      double d5 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, d4));
+      double d3 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase, 1.1F)), 0.5) : 0.5));
+      double d5 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase - this.yawNoiseStep, 1.1F)), 0.5) : 0.5));
       double d6 = EntityBoundsUtil.getShortestSignedAngleDelta(d5, d3) + this.yawTrackingResidual;
       double d7 = Math.abs(Math.sin((double)this.speedWavePhase / 3.141592653589793 * 2.0 / 0.1));
       double d8 = MathStatisticsUtil.lerp(this.trackingSpeedPercent, 100.0 + (100.0 - this.trackingSpeedPercent), d7) / 100.0;
@@ -261,8 +237,7 @@ public class DynamicAimController implements MC {
       boolean isTrackingLocked = dynamicAimState.isTrackingLocked();
       double lastYawError = dynamicAimState.getLastYawError();
       double normalizedYawPosition = HitboxAngleUtil.getNormalizedYawPosition(doubles2[0], doubles2[1], yaw);
-      double targetYawLerpFactor2 = this.targetYawLerpFactor;
-      double d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, targetYawLerpFactor2));
+      double d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, this.targetYawLerpFactor));
       double clampedOverlapPitch2 = this.clampedOverlapPitch;
       double d10 = EntityBoundsUtil.getShortestSignedAngleDelta(yaw, d9);
       if (normalizedYawPosition < 0.0 || normalizedYawPosition > 1.0) {
@@ -281,8 +256,7 @@ public class DynamicAimController implements MC {
       this.speedWavePhase = this.speedWavePhase + this.speedWaveFrequency;
 
       for (int i = 0; i < 3; i++) {
-         double targetYawLerpFactor3 = this.targetYawLerpFactor;
-         d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, targetYawLerpFactor3));
+         d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, this.targetYawLerpFactor));
          clampedOverlapPitch2 = this.clampedOverlapPitch;
          d10 = EntityBoundsUtil.getShortestSignedAngleDelta(yaw, d9);
          lastYawError = d10;
@@ -301,17 +275,13 @@ public class DynamicAimController implements MC {
 
          double d11 = clampedOverlapPitch2 - pitch;
          if (this.overshootSnapbackEnabled) {
-            double d12 = angularVelocity.x;
-            if (this.checkAndResetOnDivergence(player, entity, vec, vec2, yaw, d10, d12)) {
+            if (this.checkAndResetOnDivergence(player, entity, vec, vec2, yaw, d10, angularVelocity.x)) {
                doubles2 = this.currentYawBounds;
                doubles = this.previousYawBounds;
-               double d13 = this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase, 1.1F)), 0.5) : 0.5;
-               d3 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, d13));
-               double d14 = this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase - this.yawNoiseStep, 1.1F)), 0.5) : 0.5;
-               d5 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, d14));
+               d3 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase, 1.1F)), 0.5) : 0.5));
+               d5 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles, this.yawNoiseStep > 0.0F ? MathStatisticsUtil.lerp(0.5, (double)Math.abs(SimplexNoise.noise(this.yawNoisePhase - this.yawNoiseStep, 1.1F)), 0.5) : 0.5));
                d6 = EntityBoundsUtil.getShortestSignedAngleDelta(d5, d3) + this.yawTrackingResidual;
-               double targetYawLerpFactor4 = this.targetYawLerpFactor;
-               d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, targetYawLerpFactor4));
+               d9 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(doubles2, this.targetYawLerpFactor));
                d10 = EntityBoundsUtil.getShortestSignedAngleDelta(yaw, d9);
                angularVelocity.x = angularVelocity.x / (Math.random() + 4.0);
                isTrackingLocked = false;
@@ -340,22 +310,18 @@ public class DynamicAimController implements MC {
             }
          }
 
-         Vec2d vec2d2 = new Vec2d(d10 / 0.15 / d20, d11 / 0.15 / d19);
-         double length2 = vec2d2.length();
+         double length2 = new Vec2d(d10 / 0.15 / d20, d11 / 0.15 / d19).length();
          Vec2d vec2d3 = new Vec2d(
             (vec2d.x - angularVelocity.x) * Math.min(length2, this.aimSpeed) / length2, (vec2d.y - angularVelocity.y) * Math.min(length, this.aimSpeed) / length / d19
          );
          if (Double.isNaN(vec2d3.x) || Double.isNaN(vec2d3.y)) {
-            Vec2d vec2d4 = new Vec2d(Math.random(), Math.random());
-            double d21 = 0.01;
-            vec2d3 = vec2d4.scale(d21);
+            vec2d3 = new Vec2d(Math.random(), Math.random()).scale(0.01);
          }
 
          if (Math.signum(angularVelocity.x) == Math.signum(vec2d3.x)) {
             d19 = Math.abs(angularVelocity.x);
             d20 = Math.abs(vec2d3.x);
-            double d22 = -0.5 * (d19 * d19 / (d20 * d20)) + d19 * d19 / d20;
-            if (d22 > Math.abs(vec2d.x)) {
+            if ((-0.5 * (d19 * d19 / (d20 * d20)) + d19 * d19 / d20) > Math.abs(vec2d.x)) {
                vec2d3.x *= -1.0;
             }
          }
@@ -363,25 +329,19 @@ public class DynamicAimController implements MC {
          if (Math.signum(angularVelocity.y) == Math.signum(vec2d3.y)) {
             d19 = Math.abs(angularVelocity.y);
             d20 = Math.abs(vec2d3.y);
-            double d23 = -0.5 * (d19 * d19 / (d20 * d20)) + d19 * d19 / d20;
-            if (d23 > Math.abs(vec2d.y)) {
+            if ((-0.5 * (d19 * d19 / (d20 * d20)) + d19 * d19 / d20) > Math.abs(vec2d.y)) {
                vec2d3.y *= -1.0;
             }
          }
 
-         Vec2d vec2d5 = new Vec2d(angularVelocity.x, angularVelocity.y);
-         Vec2d vec2d6 = vec2d5.add(vec2d3);
-         double d24 = 1.0 - d;
-         Vec2d vec2d7 = angularVelocity.scale(d24);
-         Vec2d vec2d8 = vec2d6.scale(d);
-         angularVelocity = vec2d7.add(vec2d8);
+         Vec2d vec2d6 = new Vec2d(angularVelocity.x, angularVelocity.y).add(vec2d3);
+         angularVelocity = angularVelocity.scale(1.0 - d).add(vec2d6.scale(d));
          yaw = MathHelper.wrapAngleTo180_double(yaw + angularVelocity.x * 0.15 * d);
          pitch = MathHelper.clamp_double(pitch + angularVelocity.y * 0.15 * d, -90.0, 90.0);
       }
 
       DynamicAimState dynamicAimState2 = new DynamicAimState(vec, vec2, this.currentState.getAngularVelocity(), angularVelocity, yaw, pitch);
-      boolean flag2 = false;
-      dynamicAimState2.setInRecovery(flag2);
+      dynamicAimState2.setInRecovery(false);
       dynamicAimState2.setTrackingLocked(isTrackingLocked);
       dynamicAimState2.setLastYawError(lastYawError);
       this.yawTrackingResidual = 0.0;
@@ -396,22 +356,13 @@ public class DynamicAimController implements MC {
       if (!flag2 && player.tickSnapshotHistory.size() >= this.maxReactionTime + this.attentionWindow + 1 && entity.positionHistory.size() >= this.maxReactionTime + this.attentionWindow + 1) {
          this.previousYawBounds = this.currentYawBounds;
          int n = player.ticksExisted - this.reactionTick;
-         byte b = 0;
-         int n2 = n;
-         Vec3 vec = this.predictEntityPositionNow((EntityLivingBase)player, n2, b);
-         int reactionTick2 = this.reactionTick;
-         byte b2 = 0;
-         Vec3 vec2 = this.predictEntityPositionNow(entity, b2, reactionTick2);
-         byte b3 = 0;
-         double[] doubles = this.regressYawEdgeTrend(player, entity, b3);
-         byte b4 = 1;
-         double[] doubles2 = this.regressYawEdgeTrend(player, entity, b4);
-         boolean flag3 = true;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag3);
+         Vec3 vec = this.predictEntityPositionNow((EntityLivingBase)player, n, (byte)0);
+         Vec3 vec2 = this.predictEntityPositionNow(entity, (byte)0, this.reactionTick);
+         double[] doubles = this.regressYawEdgeTrend(player, entity, (byte)0);
+         double[] doubles2 = this.regressYawEdgeTrend(player, entity, (byte)1);
+         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, true);
          double d = 0.0 / 0.0;
-         double additionalInaccuracy2 = this.additionalInaccuracy;
-         AxisAlignedBB box = entityBoundingBoxAt;
-         double[] expandedYawRange = HitboxAngleUtil.getExpandedYawRange(vec, box, additionalInaccuracy2, d);
+         double[] expandedYawRange = HitboxAngleUtil.getExpandedYawRange(vec, entityBoundingBoxAt, this.additionalInaccuracy, d);
          double d2 = doubles[3] + doubles[4];
          double d3 = -doubles[3] + doubles[4];
          double d4 = doubles2[3] + doubles2[4];
@@ -439,8 +390,7 @@ public class DynamicAimController implements MC {
             for (double[] doubles6 : (Iterable<double[]>)(list2)) {
                d11 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(new double[]{doubles5[0], doubles6[0]}, d9));
                d12 = this.previousYawBounds == null ? this.currentState.getYaw() : MathHelper.wrapAngleTo180_double(HitboxAngleUtil.lerpRange(this.previousYawBounds, d10));
-               double d14 = EntityBoundsUtil.getShortestSignedAngleDelta(d12, d11);
-               double d15 = Math.abs(d14 - d13);
+               double d15 = Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta(d12, d11) - d13);
                if (d8 > d15 || doubles4 == null) {
                   d8 = d15;
                   doubles3 = doubles5;
@@ -457,25 +407,17 @@ public class DynamicAimController implements MC {
       } else {
          Vec3 positionEyes = player.getPositionEyes(1.0F);
          Vec3 interpolatedPos = entity.getInterpolatedPos(1.0F);
-         boolean flag4 = true;
-         Vec3 vec3 = interpolatedPos;
-         AxisAlignedBB entityBoundingBoxAt2 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec3, flag4);
-         this.currentYawBounds = HitboxAngleUtil.getYawRange(positionEyes, entityBoundingBoxAt2);
+         this.currentYawBounds = HitboxAngleUtil.getYawRange(positionEyes, EntityBoundsUtil.getEntityBoundingBoxAt(entity, interpolatedPos, true));
          positionEyes = player.getPositionEyes(0.0F);
          interpolatedPos = entity.getInterpolatedPos(0.0F);
-         boolean flag5 = true;
-         Vec3 vec4 = interpolatedPos;
-         AxisAlignedBB entityBoundingBoxAt3 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec4, flag5);
+         AxisAlignedBB entityBoundingBoxAt3 = EntityBoundsUtil.getEntityBoundingBoxAt(entity, interpolatedPos, true);
          double d16 = 0.0 / 0.0;
-         double additionalInaccuracy3 = this.additionalInaccuracy;
-         AxisAlignedBB box2 = entityBoundingBoxAt3;
-         this.previousYawBounds = HitboxAngleUtil.getExpandedYawRange(positionEyes, box2, additionalInaccuracy3, d16);
+         this.previousYawBounds = HitboxAngleUtil.getExpandedYawRange(positionEyes, entityBoundingBoxAt3, this.additionalInaccuracy, d16);
       }
    }
 
    private Vec3 getDelayedEntityPosition(EntityLivingBase entity, float f, int n, boolean flag) {
-      int reactionTick2 = this.reactionTick;
-      Vec3 vec = this.predictEntityPositionNow(entity, n, reactionTick2);
+      Vec3 vec = this.predictEntityPositionNow(entity, n, this.reactionTick);
       Vec3 vec2 = new Vec3(entity.posX, entity.posY, entity.posZ);
       if (vec == null) {
          vec = vec2;
@@ -501,25 +443,17 @@ public class DynamicAimController implements MC {
          if (this.superCorrectionActive && this.baseReactionTick < fromEnd.ticksExisted) {
             int n6 = player.ticksExisted - this.baseReactionTick;
             int n7 = fromEnd.ticksExisted - 1;
-            byte b = 0;
-            int n8 = n6;
-            position = this.predictEntityPositionAtTick((EntityLivingBase)player, n8, b, n7);
+            position = this.predictEntityPositionAtTick((EntityLivingBase)player, n6, (byte)0, n7);
             int ticksExisted = fromEnd.ticksExisted;
-            int baseReactionTick2 = this.baseReactionTick;
-            byte b2 = 0;
-            fromEnd2 = this.predictEntityPositionAtTick(entity, b2, baseReactionTick2, ticksExisted);
+            fromEnd2 = this.predictEntityPositionAtTick(entity, (byte)0, this.baseReactionTick, ticksExisted);
          }
 
-         boolean flag = true;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, fromEnd2, flag);
-         double[] yawRange = HitboxAngleUtil.getYawRange(position, entityBoundingBoxAt);
+         double[] yawRange = HitboxAngleUtil.getYawRange(position, EntityBoundsUtil.getEntityBoundingBoxAt(entity, fromEnd2, true));
          if (Double.isNaN(d)) {
             d = yawRange[n];
-            double d4 = 0.0;
-            doubleSampleWindow.add(d4);
+            doubleSampleWindow.add(0.0);
             d2 = d;
-            byte b3 = 0;
-            n3 = ((PlayerTickSnapshot)player.tickSnapshotHistory.getFromEnd(b3)).ticksExisted - fromEnd.ticksExisted;
+            n3 = ((PlayerTickSnapshot)player.tickSnapshotHistory.getFromEnd((byte)0)).ticksExisted - fromEnd.ticksExisted;
          } else {
             double d5 = EntityBoundsUtil.getShortestSignedAngleDelta(MathHelper.wrapAngleTo180_double(d2), MathHelper.wrapAngleTo180_double(yawRange[n])) + d3;
             doubleSampleWindow.add(d5);
@@ -546,11 +480,7 @@ public class DynamicAimController implements MC {
                   list.add(entity.tickSnapshotHistory.get(i));
                }
 
-               EntityPlayerSP player = (EntityPlayerSP)entity;
-               int n5 = n3 - ((PlayerTickSnapshot)list.get(0)).ticksExisted;
-               boolean flag = false;
-               int n6 = n5;
-               double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal(player, list, n6, flag);
+               double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal((EntityPlayerSP)entity, list, n3 - ((PlayerTickSnapshot)list.get(0)).ticksExisted, false);
                return new Vec3(doubles[0], doubles[1], doubles[2]);
             } else {
                return entity.getInterpolatedPos(1.0F);
@@ -569,12 +499,10 @@ public class DynamicAimController implements MC {
                if (!motionSnapshotHistory.isFull()) {
                   entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.getEntries().get(motionSnapshotHistory.getEntries().size() - 1);
                } else {
-                  int n7 = 13 - n - 1;
-                  entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.get(n7);
+                  entityMotionSnapshot = (EntityMotionSnapshot)motionSnapshotHistory.get(13 - n - 1);
                }
 
-               int n8 = n3 - n2;
-               return EntityMovementPredictor.predictPositionFromSnapshot(entity, entityMotionSnapshot, n8);
+               return EntityMovementPredictor.predictPositionFromSnapshot(entity, entityMotionSnapshot, n3 - n2);
             }
          }
       }
@@ -614,10 +542,8 @@ public class DynamicAimController implements MC {
       double d = Math.abs(EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState.getYaw(), dynamicAimState2.getYaw()));
       double d2 = Math.abs(dynamicAimState.getPitch() - dynamicAimState2.getPitch());
       if ((d2 > 0.075 || d > 0.075) && (d < 0.075 || d2 < 0.075 || d / d2 < 0.1 || d2 / d < 0.1)) {
-         double d3 = vec.lengthSquared();
-         if (d3 > 0.0) {
-            boolean flag = true;
-            AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
+         if (vec.lengthSquared() > 0.0) {
+            AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, true);
             double[] overlapPitchRange2 = this.overlapPitchRange;
             double[] pitchRange = HitboxAngleUtil.getPitchRange(mc.thePlayer.getPositionEyes(1.0F), entityBoundingBoxAt);
             if (Math.abs(overlapPitchRange2[0] - overlapPitchRange2[1]) < 4.0 && Math.abs(pitchRange[0] - pitchRange[1]) > Math.abs(overlapPitchRange2[0] - overlapPitchRange2[1])) {
@@ -647,10 +573,8 @@ public class DynamicAimController implements MC {
             }
 
             double d5 = (double)(Math.abs(SimplexNoise.noise((float)mc.thePlayer.ticksExisted / 20.0F, 1.0F)) + 2.0F);
-            double d6 = EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState2.getYaw(), yaw);
-            double d7 = MathHelper.clamp_double(d6, -d5, d5);
-            double d8 = dynamicAimState2.getYaw() + d7;
-            dynamicAimState2.setAngles(d8, pitch);
+            double d7 = MathHelper.clamp_double(EntityBoundsUtil.getShortestSignedAngleDelta(dynamicAimState2.getYaw(), yaw), -d5, d5);
+            dynamicAimState2.setAngles(dynamicAimState2.getYaw() + d7, pitch);
          }
       }
    }
@@ -673,21 +597,16 @@ public class DynamicAimController implements MC {
    private Vec3 simulatePlayerSnapshotPosition(EntityLivingBase entity, PlayerTickSnapshot playerTickSnapshot) {
       ArrayList list = new ArrayList();
       list.add(playerTickSnapshot);
-      EntityPlayerSP player = (EntityPlayerSP)entity;
-      boolean flag = false;
-      byte b = 0;
-      double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal(player, list, b, flag);
+      double[] doubles = PlayerUtil.simulatePlayerSnapshotsFinal((EntityPlayerSP)entity, list, (byte)0, false);
       return new Vec3(doubles[0], doubles[1], doubles[2]);
    }
 
    public Vec3 predictEntityPositionNow(EntityLivingBase entity, int n, int n2) {
-      int ticksExisted = mc.thePlayer.ticksExisted;
-      return this.predictEntityPositionAtTick(entity, n, n2, ticksExisted);
+      return this.predictEntityPositionAtTick(entity, n, n2, mc.thePlayer.ticksExisted);
    }
 
    private boolean checkAndResetOnDivergence(EntityPlayerSP player, EntityLivingBase entity, Vec3 vec, Vec3 vec2, double d, double d2, double d3) {
-      boolean flag = true;
-      AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
+      AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, true);
       double[] yawRange = HitboxAngleUtil.getYawRange(vec, entityBoundingBoxAt);
       yawRange[0] = MathHelper.wrapAngleTo180_double(yawRange[0]);
       yawRange[1] = MathHelper.wrapAngleTo180_double(yawRange[1]);
@@ -712,9 +631,7 @@ public class DynamicAimController implements MC {
       } else {
          this.reactionTick = mc.thePlayer.ticksExisted;
          this.baseReactionTick = mc.thePlayer.ticksExisted;
-         boolean flag2 = false;
-         boolean flag3 = false;
-         this.updatePredictedYawBounds(player, entity, flag3, flag2);
+         this.updatePredictedYawBounds(player, entity, false, false);
          return true;
       }
    }

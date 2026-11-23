@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.augustus.modules.movement.MovementRecorder;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -24,22 +24,16 @@ import net.minecraft.util.Vec3;
 
 public class MovementRecordMode extends AbstractMovementRecorderMode implements TickListener, PacketListener, UpdateListener {
    private final BooleanValue recordDebug;
-   private final StringValue minTeleportDistanceToResetRecording;
+   private final DoubleValue minTeleportDistanceToResetRecording;
    private final ArrayList recordedInputs;
    private RecordedMovementInput recordedMovementInput;
    private boolean recordingStarted;
    private JsonObject recordingJson;
 
-   public MovementRecordMode(MovementRecorder movementRecorder, DoubleValue doubleValue) {
+   public MovementRecordMode(MovementRecorder movementRecorder, SettingGroup doubleValue) {
        super(movementRecorder, doubleValue, "Record");
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "RecordDebug", true, this.modeSetting);
-      String str = "Debug";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.recordDebug = (BooleanValue)((BooleanValue)booleanValue2.withVisibility(condition)).markVisualOnly();
-      StringValue stringValue = new StringValue(this.parentModule, "Min teleport distance to reset recording", 0.0, 0.0, 1.0, 2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.minTeleportDistanceToResetRecording = (StringValue)stringValue.visibleWhen(condition2).markVisualOnly();
+      this.recordDebug = (BooleanValue)((BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "RecordDebug", true, this.modeSetting).withDisplayName("Debug")).withVisibility(() -> this.isSelected())).markVisualOnly();
+      this.minTeleportDistanceToResetRecording = (DoubleValue)new DoubleValue(this.parentModule, "Min teleport distance to reset recording", 0.0, 0.0, 1.0, 2).visibleWhen(() -> this.isSelected()).markVisualOnly();
       this.recordedInputs = new ArrayList();
       this.recordedMovementInput = null;
       this.recordingStarted = false;
@@ -49,12 +43,9 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 43;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -71,9 +62,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
 
    private void saveRecording() {
       if (this.recordingJson == null) {
-         MovementRecorder parentModule2 = (MovementRecorder)this.parentModule;
-         String str = "Failed to save";
-         parentModule2.sendChatMessage2(str);
+         ((MovementRecorder)this.parentModule).sendChatMessage2("Failed to save");
       } else {
          JsonArray array = new JsonArray();
 
@@ -82,11 +71,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
          }
 
          this.recordingJson.add("InputObjects", array);
-         String recordingsdir = MovementRecorder.RECORDINGS_DIR;
-         String str2 = System.currentTimeMillis() + ".json";
-         JsonObject recordingJson2 = this.recordingJson;
-         String str3 = str2;
-         ClientFileUtil.writeJsonObject(recordingsdir, str3, recordingJson2);
+         ClientFileUtil.writeJsonObject(MovementRecorder.RECORDINGS_DIR, System.currentTimeMillis() + ".json", this.recordingJson);
          this.resetRecording();
       }
    }
@@ -103,9 +88,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
          this.recordedMovementInput.setSneaking(sneak);
          boolean jump = movementInput.jump;
          this.recordedMovementInput.setJumping(jump);
-         RecordedMovementInput recordedMovementInput2 = this.recordedMovementInput;
-         boolean isSprinting = mc.thePlayer.isSprinting();
-         recordedMovementInput2.setSprinting(isSprinting);
+         this.recordedMovementInput.setSprinting(mc.thePlayer.isSprinting());
          if (this.recordingStarted || movementInput.moveForward != 0.0F || movementInput.moveStrafe != 0.0F || movementInput.jump || movementInput.sneak) {
             if (this.recordingJson == null) {
                this.recordingJson = this.createRecordingHeader();
@@ -114,9 +97,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
             this.recordingStarted = true;
             this.recordedInputs.add(this.recordedMovementInput.copy());
             if (this.recordDebug.getValue()) {
-               MovementRecorder parentModule2 = (MovementRecorder)this.parentModule;
-               String str = this.recordedMovementInput.toString();
-               parentModule2.sendChatMessage2(str);
+               ((MovementRecorder)this.parentModule).sendChatMessage2(this.recordedMovementInput.toString());
             }
          }
       }
@@ -129,9 +110,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
          this.resetRecording();
       } else if (packet instanceof S08PacketPlayerPosLook) {
          S08PacketPlayerPosLook packet2 = (S08PacketPlayerPosLook)packet;
-         Vec3 vec = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-         Vec3 vec2 = new Vec3(packet2.getX(), packet2.getY(), packet2.getZ());
-         if (vec.distanceTo(vec2) >= this.minTeleportDistanceToResetRecording.getValue()) {
+         if (new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ).distanceTo(new Vec3(packet2.getX(), packet2.getY(), packet2.getZ())) >= this.minTeleportDistanceToResetRecording.getValue()) {
             this.resetRecording();
          }
       }
@@ -159,9 +138,7 @@ public class MovementRecordMode extends AbstractMovementRecorderMode implements 
    private JsonObject createRecordingHeader() {
       List list = this.captureSurroundingBlocks();
       JsonObject json = new JsonObject();
-      JsonListPropertyCodec booleanListCodec = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanListCodec();
-      String str = "Blocks";
-      booleanListCodec.writeList(str, list, json);
+      JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER.getBooleanListCodec().writeList("Blocks", list, json);
       return json;
    }
 

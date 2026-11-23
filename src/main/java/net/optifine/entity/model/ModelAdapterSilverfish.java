@@ -39,8 +39,7 @@ public class ModelAdapterSilverfish extends ModelAdapter {
          String str2 = "body";
          if (str.startsWith(str2)) {
             ModelRenderer[] silverfishBodyParts = modelSilverfish.silverfishBodyParts;
-            String str3 = str.substring(str2.length());
-            int n = Config.parseInt(str3, -1);
+            int n = Config.parseInt(str.substring(str2.length()), -1);
             n--;
             return n >= 0 && n < silverfishBodyParts.length ? silverfishBodyParts[n] : null;
          } else {
@@ -49,8 +48,7 @@ public class ModelAdapterSilverfish extends ModelAdapter {
                return null;
             } else {
                ModelRenderer[] silverfishWings = modelSilverfish.silverfishWings;
-               String str5 = str.substring(str4.length());
-               int n2 = Config.parseInt(str5, -1);
+               int n2 = Config.parseInt(str.substring(str4.length()), -1);
                n2--;
                return n2 >= 0 && n2 < silverfishWings.length ? silverfishWings[n2] : null;
             }

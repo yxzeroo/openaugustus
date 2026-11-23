@@ -32,16 +32,14 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
    }
 
    public byte[] getBitString() throws IOException {
-      int n = this.available();
-      return this.getBitString(n);
+      return this.getBitString(this.available());
    }
 
    @Override
    public boolean equals(Object obj) {
       boolean flag;
       if (obj instanceof Asn1DerInputBuffer) {
-         Asn1DerInputBuffer asn1DerInputBuffer = (Asn1DerInputBuffer)obj;
-         flag = this.equals2(asn1DerInputBuffer);
+         flag = this.equals2((Asn1DerInputBuffer)obj);
       } else {
          flag = false;
       }
@@ -189,16 +187,13 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
    }
 
    public int getInteger(int n) throws IOException {
-      boolean flag = false;
-      ShadedBigInteger bigInteger = this.getBigInteger(n, flag);
+      ShadedBigInteger bigInteger = this.getBigInteger(n, false);
       ShadedBigInteger shadedBigInteger = ShadedBigInteger.valueOf(-2147483648L);
-      ShadedBigInteger shadedBigInteger2 = shadedBigInteger;
-      if (bigInteger.compareTo2(shadedBigInteger2) < 0) {
+      if (bigInteger.compareTo2(shadedBigInteger) < 0) {
          throw new IOException("Integer below minimum valid value");
       } else {
          shadedBigInteger = ShadedBigInteger.valueOf(2147483647L);
-         ShadedBigInteger shadedBigInteger3 = shadedBigInteger;
-         if (bigInteger.compareTo2(shadedBigInteger3) > 0) {
+         if (bigInteger.compareTo2(shadedBigInteger) > 0) {
             throw new IOException("Integer exceeds maximum valid value");
          } else {
             return bigInteger.intValue();
@@ -233,8 +228,7 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
 
    public Asn1DerInputBuffer(byte[] bytes, int n, int n2, boolean flag) {
       super(bytes, n, n2);
-      boolean flag2 = true;
-      this.allowBER = flag2;
+      this.allowBER = true;
       this.allowBER = flag;
    }
 
@@ -242,8 +236,7 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
       if (n > this.available()) {
          throw new IOException("short read of DER Generalized Time");
       } else if (n >= 13 && n <= 23) {
-         boolean flag = true;
-         return this.getTime(n, flag);
+         return this.getTime(n, true);
       } else {
          throw new IOException("DER Generalized Time length error");
       }
@@ -267,8 +260,7 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
       if (n > this.available()) {
          throw new IOException("short read of DER UTC Time");
       } else if (n >= 11 && n <= 17) {
-         boolean flag = false;
-         return this.getTime(n, flag);
+         return this.getTime(n, false);
       } else {
          throw new IOException("DER UTC Time length error");
       }
@@ -322,8 +314,7 @@ public class Asn1DerInputBuffer extends ByteArrayInputStream implements Cloneabl
 
    public Asn1DerInputBuffer(byte[] bytes, boolean flag) {
       super(bytes);
-      boolean flag2 = true;
-      this.allowBER = flag2;
+      this.allowBER = true;
       this.allowBER = flag;
    }
 

@@ -37,8 +37,7 @@ public enum ClientboundPacketsb1_7 implements ClientboundPacketType, PreNettyPac
    TAKE_ITEM_ENTITY(22, (user, buf) -> buf.skipBytes(8)),
    ADD_ENTITY(23, (user, buf) -> {
       buf.skipBytes(17);
-      int i = buf.readInt();
-      if (i > 0) {
+      if (buf.readInt() > 0) {
          buf.skipBytes(6);
       }
    }),

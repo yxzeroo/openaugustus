@@ -29,7 +29,6 @@ public class EventLadder extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      LadderListener listener = (LadderListener)obj;
-      this.call2(listener);
+      this.call2((LadderListener)obj);
    }
 }

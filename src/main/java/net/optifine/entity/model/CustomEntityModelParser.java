@@ -65,8 +65,7 @@ public class CustomEntityModelParser {
       } else {
          String str = Config.readInputStream(resourceStream, "ASCII");
          resourceStream.close();
-         JsonParser jsonParser = new JsonParser();
-         return (JsonObject)jsonParser.parse(str);
+         return (JsonObject)new JsonParser().parse(str);
       }
    }
 
@@ -188,13 +187,11 @@ public class CustomEntityModelParser {
          ArrayList list = new ArrayList();
 
          for (int i = 0; i < array.size(); i++) {
-            JsonObject json2 = (JsonObject)array.get(i);
 
-            for (Entry entry : json2.entrySet()) {
+            for (Entry entry : ((JsonObject)array.get(i)).entrySet()) {
                String key = (String)entry.getKey();
                String asString = ((JsonElement)entry.getValue()).getAsString();
-               ModelVariableUpdater modelVariableUpdater = new ModelVariableUpdater(key, asString);
-               list.add(modelVariableUpdater);
+               list.add(new ModelVariableUpdater(key, asString));
             }
          }
 

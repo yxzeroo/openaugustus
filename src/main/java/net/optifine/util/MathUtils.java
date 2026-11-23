@@ -43,8 +43,7 @@ public class MathUtils {
       if (ints.length <= 0) {
          return 0;
       } else {
-         int sum = getSum(ints);
-         return sum / ints.length;
+         return getSum(ints) / ints.length;
       }
    }
 

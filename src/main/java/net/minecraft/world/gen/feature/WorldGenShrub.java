@@ -31,8 +31,7 @@ public class WorldGenShrub extends WorldGenTrees {
          this.setBlockAndNotifyAdequately(world, pos, this.woodMetadata);
 
          for (int i = pos.getY(); i <= pos.getY() + 2; i++) {
-            int n = i - pos.getY();
-            int n2 = 2 - n;
+            int n2 = 2 - (i - pos.getY());
 
             for (int j = pos.getX() - n2; j <= pos.getX() + n2; j++) {
                int n3 = j - pos.getX();

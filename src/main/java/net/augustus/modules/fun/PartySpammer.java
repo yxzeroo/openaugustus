@@ -11,19 +11,19 @@ import net.augustus.ClientManagers;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 
 public class PartySpammer extends Module implements PacketListener, TickListener {
-   private final StringValue inviteDelay;
+   private final DoubleValue inviteDelay;
    private final BooleanValue hidePartyMessage;
    private Collection pendingPlayerInfos;
 
    public PartySpammer() {
        super("PartySpammer", "FeierNachrichtenÜberschütter", new Color(204, 230, 122), Categorys.FUN);
-      this.inviteDelay = new StringValue(this, "InviteDelay", 1000.0, 0.0, 4000.0, 0);
+      this.inviteDelay = new DoubleValue(this, "InviteDelay", 1000.0, 0.0, 4000.0, 0);
       this.hidePartyMessage = new BooleanValue(this, "HidePartyMessage", true);
       this.pendingPlayerInfos = new LinkedList();
    }
@@ -39,10 +39,8 @@ public class PartySpammer extends Module implements PacketListener, TickListener
    }
 
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {

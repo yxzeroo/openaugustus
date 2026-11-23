@@ -22,8 +22,7 @@ public class WorldGenCanopyTree extends WorldGenAbstractTree {
 
    private void placeLeafAt(World world, int n, int n2, int n3) {
       BlockPos pos = new BlockPos(n, n2, n3);
-      Block block = world.getBlockState(pos).getBlock();
-      if (block.getMaterial() == Material.air) {
+      if (world.getBlockState(pos).getBlock().getMaterial() == Material.air) {
          this.setBlockAndNotifyAdequately(world, pos, DARK_OAK_LEAVES);
       }
    }

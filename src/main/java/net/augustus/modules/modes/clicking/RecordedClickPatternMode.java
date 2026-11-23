@@ -15,15 +15,15 @@ import java.util.function.Consumer;
 import net.augustus.modules.Module;
 import net.augustus.modules.combat.KillAura;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 
 public class RecordedClickPatternMode extends AbstractClickPatternMode implements MouseMoveListener, TickListener {
-   private final BooleansSetting recordedClickPattern;
-   private final BooleansSetting recordedMode;
-   private final StringValue multiplier;
-   private final StringValue recordedAirMultiplier;
+   private final StringValue recordedClickPattern;
+   private final StringValue recordedMode;
+   private final DoubleValue multiplier;
+   private final DoubleValue recordedAirMultiplier;
    private final BooleanValue playRecordedMouseMovements;
    private final ClickPatternManager clickPatternManager;
    private long nextClickTimeMs;
@@ -37,7 +37,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
    private int[] appliedMouseDelta;
    private int tickDurationMs;
 
-   public RecordedClickPatternMode(Module module, DoubleValue doubleValue) {
+   public RecordedClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "Recorded");
       this.nextClickTimeMs = 0L;
       this.releaseTimeMs = 0L;
@@ -49,45 +49,24 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
       this.accumulatedMouseDelta = new double[2];
       this.appliedMouseDelta = new int[2];
       this.tickDurationMs = 0;
-      BooleansSetting booleansSetting = new BooleansSetting(module, "RecordedClickPattern", "", new String[0], doubleValue);
-      String str = "ClickPattern";
-      BooleansSetting booleansSetting2 = (BooleansSetting)booleansSetting.withDisplayName(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.recordedClickPattern = (BooleansSetting)booleansSetting2.withVisibility(condition);
-      BooleansSetting booleansSetting3 = new BooleansSetting(module, "RecordedMode", "TimeMillis", new String[]{"TimeMillis", "Ticks"}, doubleValue);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.recordedMode = (BooleansSetting)booleansSetting3.withVisibility(condition2);
-      StringValue stringValue = new StringValue(module, "Multiplier", 1.0, 0.0, 5.0, 2, doubleValue);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.multiplier = stringValue.visibleWhen(condition3);
-      StringValue stringValue2 = new StringValue(module, "RecordedAirMultiplier", 0.4, 0.0, 1.0, 2, doubleValue);
-      String str2 = "AirMultiplier";
-      StringValue stringValue3 = stringValue2.named(str2);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.recordedAirMultiplier = stringValue3.visibleWhen(condition4);
+      this.recordedClickPattern = (StringValue)((StringValue)new StringValue(module, "RecordedClickPattern", "", new String[0], doubleValue).withDisplayName("ClickPattern")).withVisibility(() -> this.isSelected());
+      this.recordedMode = (StringValue)new StringValue(module, "RecordedMode", "TimeMillis", new String[]{"TimeMillis", "Ticks"}, doubleValue).withVisibility(() -> this.isSelected());
+      this.multiplier = new DoubleValue(module, "Multiplier", 1.0, 0.0, 5.0, 2, doubleValue).visibleWhen(() -> this.isSelected());
+      this.recordedAirMultiplier = new DoubleValue(module, "RecordedAirMultiplier", 0.4, 0.0, 1.0, 2, doubleValue).named("AirMultiplier").visibleWhen(() -> this.isSelected());
       BooleanValue booleanValue = new BooleanValue(module, "PlayRecordedMouseMovements", false, doubleValue);
       SettingVisibilityCondition condition5 = () -> {
          return this.isSelected() && !(this.getParentModule() instanceof KillAura);
       };
       this.playRecordedMouseMovements = (BooleanValue)booleanValue.withVisibility(condition5);
-      ClickPatternManagerBuilder builder = ClickPatternManager.builder();
-      BooleansSetting recordedClickPattern2 = this.recordedClickPattern;
-      Consumer consumer = obj -> this.activePattern = (ClickPattern)obj;
-      BooleansSetting booleansSetting4 = recordedClickPattern2;
-      this.clickPatternManager = builder.withSelectorAndCallback(booleansSetting4, consumer).build();
-      BooleansSetting recordedClickPattern3 = this.recordedClickPattern;
-      SettingChangeListener listener = () -> this.updateActivePattern();
-      SettingChangeListener listener2 = listener;
-      recordedClickPattern3.withChangeListener(listener2);
+      this.clickPatternManager = ClickPatternManager.builder().withSelectorAndCallback(this.recordedClickPattern, obj -> this.activePattern = (ClickPattern)obj).build();
+      this.recordedClickPattern.withChangeListener(() -> this.updateActivePattern());
       this.clickPatternManager.startWatchingAndLoad();
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 19;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -99,9 +78,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
 
    @Override
    public void onDisable() {
-      ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-      boolean flag = false;
-      parentModule2.setHoldingAttack(flag);
+      ((ClickModuleContext)this.parentModule).setHoldingAttack(false);
    }
 
    @Override
@@ -122,9 +99,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
                this.nextClickTimeMs += (long)first;
             }
 
-            ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-            boolean flag = this.releaseTimeMs > l;
-            parentModule2.setHoldingAttack(flag);
+            ((ClickModuleContext)this.parentModule).setHoldingAttack(this.releaseTimeMs > l);
          } else {
             while (this.virtualTickTimeMs >= this.nextClickTimeMs) {
                n++;
@@ -135,9 +110,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
                this.nextClickTimeMs += (long)first2;
             }
 
-            ClickModuleContext parentModule3 = (ClickModuleContext)this.parentModule;
-            boolean flag2 = this.releaseTimeMs > this.virtualTickTimeMs;
-            parentModule3.setHoldingAttack(flag2);
+            ((ClickModuleContext)this.parentModule).setHoldingAttack(this.releaseTimeMs > this.virtualTickTimeMs);
             this.virtualTickTimeMs += 50L;
          }
 
@@ -149,9 +122,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
          n = ((ClickModuleContext)this.parentModule).applyHitReduction(n);
          if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks() || n != n) {
             n = 0;
-            ClickModuleContext parentModule4 = (ClickModuleContext)this.parentModule;
-            boolean flag3 = false;
-            parentModule4.setHoldingAttack(flag3);
+            ((ClickModuleContext)this.parentModule).setHoldingAttack(false);
          }
 
          return n;
@@ -181,10 +152,8 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
          int n3 = (int)Math.round(this.accumulatedMouseDelta[1] - (double)this.appliedMouseDelta[1]);
          this.appliedMouseDelta[0] = this.appliedMouseDelta[0] + n2;
          this.appliedMouseDelta[1] = this.appliedMouseDelta[1] + n3;
-         int n4 = event.getDeltaX() + n2;
-         event.setDeltaX(n4);
-         int n5 = event.getDeltaY() + n3;
-         event.setDeltaY(n5);
+         event.setDeltaX(event.getDeltaX() + n2);
+         event.setDeltaY(event.getDeltaY() + n3);
          this.lastMouseMoveTimeMs = System.currentTimeMillis();
       }
    }
@@ -204,9 +173,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
 
    public void resetTiming() {
       long l = System.currentTimeMillis();
-      byte b = 45;
-      byte b2 = 0;
-      this.nextClickTimeMs = l - (long)DefaultRandomGenerator.instance.nextInt2(b2, b);
+      this.nextClickTimeMs = l - (long)DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)45);
       this.virtualTickTimeMs = l;
    }
 
@@ -224,9 +191,7 @@ public class RecordedClickPatternMode extends AbstractClickPatternMode implement
    }
 
    private void updateActivePattern() {
-      ClickPatternManager clickPatternManager2 = this.clickPatternManager;
-      String selectedValue = this.recordedClickPattern.getSelectedValue();
-      this.activePattern = clickPatternManager2.getPattern(selectedValue);
+      this.activePattern = this.clickPatternManager.getPattern(this.recordedClickPattern.getSelectedValue());
    }
 
 }

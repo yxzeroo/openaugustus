@@ -18,7 +18,7 @@ import net.augustus.utils.simulation.ProjectileSimulator;
 import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -27,7 +27,7 @@ import net.minecraft.util.Vec3;
 
 public class ArrowDodger extends Module implements MoveInputListener, ClickListener, SilentSlotListener {
    private final BooleanValue doge;
-   private final StringValue arrowHitboxExpand;
+   private final DoubleValue arrowHitboxExpand;
    private final BooleanValue releaseItemAtCollisionIncoming;
    private final BooleanValue notWhileEating;
    private final BooleanValue inInv;
@@ -38,12 +38,10 @@ public class ArrowDodger extends Module implements MoveInputListener, ClickListe
    public ArrowDodger() {
        super("ArrowDodger", "PfeilAusweicher", new Color(49, 234, 247), Categorys.MOVEMENT);
       this.doge = (BooleanValue)(new BooleanValue(this, "Doge", true)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "Arrow hitbox expand", 0.2, 0.0, 2.0, 2);
+      DoubleValue stringValue = new DoubleValue(this, "Arrow hitbox expand", 0.2, 0.0, 2.0, 2);
       BooleanValue doge2 = this.doge;
       this.doge.getClass();
-      BooleanValue booleanValue = doge2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.arrowHitboxExpand = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
+      this.arrowHitboxExpand = (DoubleValue)stringValue.visibleWhen(() -> doge2.getValue()).markVisualOnly();
       this.releaseItemAtCollisionIncoming = (BooleanValue)(new BooleanValue(this, "Release item at collision incoming", true)).markVisualOnly();
       this.notWhileEating = (BooleanValue)(new BooleanValue(this, "NotWhileEating", false)).markVisualOnly();
       this.inInv = (BooleanValue)(new BooleanValue(this, "InInv", false)).markVisualOnly();
@@ -63,39 +61,29 @@ public class ArrowDodger extends Module implements MoveInputListener, ClickListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.dodgeForward != -2 && this.doge.getValue()) {
-         float dodgeStrafe2 = (float)this.dodgeStrafe;
-         event.setMoveStrafe(dodgeStrafe2);
-         float dodgeForward2 = (float)this.dodgeForward;
-         event.setMoveForward(dodgeForward2);
+         event.setMoveStrafe((float)this.dodgeStrafe);
+         event.setMoveForward((float)this.dodgeForward);
       }
    }
 
    @Override
    public void onClick(EventClick event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.releaseItemAtCollisionIncoming.getValue() && this.arrowIncoming && mc.thePlayer.getCurrentEquippedItem() != null && !SilentSlotManager.isOwnedBy(this)) {
-         boolean flag = false;
-         event.setAllowRightClick(flag);
-         boolean flag2 = false;
-         event.setRightMouseDown(flag2);
+         event.setAllowRightClick(false);
+         event.setRightMouseDown(false);
       }
    }
 
    @Override
    public void onSilentSlot() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if ((!this.notWhileEating.getValue() || !mc.thePlayer.isEating()) && (this.inInv.getValue() || mc.isNotInGui())) {
          this.dodgeForward = -2;
          this.dodgeStrafe = -2;
@@ -105,12 +93,8 @@ public class ArrowDodger extends Module implements MoveInputListener, ClickListe
          for (Entity entity : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
             if (entity instanceof EntityArrow && entity.ticksExisted >= 1) {
                ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-               EntityArrow entityArrow = (EntityArrow)entity;
-               projectileSimulator.initFromArrow(entityArrow);
-               float value = (float)this.arrowHitboxExpand.getValue();
-               float f = value;
-               short s = 200;
-               ArrayList list2 = projectileSimulator.simulateArrowTrajectoryWithExpand(s, f);
+               projectileSimulator.initFromArrow((EntityArrow)entity);
+               ArrayList list2 = projectileSimulator.simulateArrowTrajectoryWithExpand((short)200, (float)this.arrowHitboxExpand.getValue());
                if (projectileSimulator.getHitResult() != null && projectileSimulator.getHitResult().entityHit instanceof EntityPlayerSP) {
                   list.add(list2);
                   if (projectileSimulator.hitTick < maxvalue) {
@@ -126,19 +110,9 @@ public class ArrowDodger extends Module implements MoveInputListener, ClickListe
 
             for (int i = -1; i < 2; i++) {
                for (int j = -1; j < 2; j++) {
-                  EntityPlayerSP thePlayer = mc.thePlayer;
-                  double posX = mc.thePlayer.posX;
-                  double posY = mc.thePlayer.posY;
-                  double posZ = mc.thePlayer.posZ;
-                  float rotationYaw = mc.thePlayer.rotationYaw;
-                  EventMoveInput event = new EventMoveInput(
+                  double[] doubles = PlayerUtil.predictPlayerPosition(maxvalue, mc.thePlayer, mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, new EventMoveInput(
                      (float)j, (float)i, mc.thePlayer.movementInput.jump, mc.thePlayer.movementInput.sneak, MoveInputStage.PRE
-                  );
-                  float f2 = rotationYaw;
-                  double d = posZ;
-                  double d2 = posY;
-                  double d3 = posX;
-                  double[] doubles = PlayerUtil.predictPlayerPosition(maxvalue, thePlayer, d3, d2, d, f2, event);
+                  ));
                   float f3 = mc.thePlayer.width / 2.0F + 0.1F;
                   AxisAlignedBB box = new AxisAlignedBB(
                      doubles[0] - (double)f3,
@@ -168,9 +142,7 @@ public class ArrowDodger extends Module implements MoveInputListener, ClickListe
 
          this.arrowIncoming = !list.isEmpty();
          if (this.releaseItemAtCollisionIncoming.getValue() && this.arrowIncoming && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getItemInUseCount() > 0) {
-            int n = mc.thePlayer.inventory.currentItem == 8 ? mc.thePlayer.inventory.currentItem - 1 : mc.thePlayer.inventory.currentItem + 1;
-            byte b = 6;
-            SilentSlotManager.requestSlot(this, b, n);
+            SilentSlotManager.requestSlot(this, (byte)6, mc.thePlayer.inventory.currentItem == 8 ? mc.thePlayer.inventory.currentItem - 1 : mc.thePlayer.inventory.currentItem + 1);
          }
       } else {
          this.arrowIncoming = false;

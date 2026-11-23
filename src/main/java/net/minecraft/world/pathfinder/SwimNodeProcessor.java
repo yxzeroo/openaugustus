@@ -50,8 +50,7 @@ public class SwimNodeProcessor extends NodeProcessor {
    }
 
    private PathPoint getSafePoint(Entity entity, int n, int n2, int n3) {
-      int isFree = this.isFree(entity, n, n2, n3);
-      return isFree == -1 ? this.openPoint(n, n2, n3) : null;
+      return this.isFree(entity, n, n2, n3) == -1 ? this.openPoint(n, n2, n3) : null;
    }
 
    @Override
@@ -65,8 +64,7 @@ public class SwimNodeProcessor extends NodeProcessor {
       for (int i = n; i < n + this.entitySizeX; i++) {
          for (int j = n2; j < n2 + this.entitySizeY; j++) {
             for (int k = n3; k < n3 + this.entitySizeZ; k++) {
-               Block block = this.blockaccess.getBlockState(pos.set(i, j, k)).getBlock();
-               if (block.getMaterial() != Material.water) {
+               if (this.blockaccess.getBlockState(pos.set(i, j, k)).getBlock().getMaterial() != Material.water) {
                   return 0;
                }
             }

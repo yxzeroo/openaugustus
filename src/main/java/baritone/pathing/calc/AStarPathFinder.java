@@ -44,13 +44,12 @@ public final class AStarPathFinder extends AbstractNodeCostSearch {
       int n2 = 0;
       int n3 = 0;
       boolean flag2 = !this.favoring.isEmpty();
-      byte b = 64;
       int value2 = (Integer)Baritone.settings().pathingMaxChunkBorderFetch.value;
       double d = (Boolean)Baritone.settings().minimumImprovementRepropagation.value ? 0.01 : 0.0;
       Moves[] values = Moves.values();
 
       while (!binaryHeapOpenSet.isEmpty() && n3 < value2 && !this.cancelRequested) {
-         if ((n & b - 1) == 0) {
+         if ((n & ((byte)64) - 1) == 0) {
             long l6 = System.currentTimeMillis();
             if (l6 - l5 >= 0L || !flag && l6 - l4 >= 0L) {
                break;

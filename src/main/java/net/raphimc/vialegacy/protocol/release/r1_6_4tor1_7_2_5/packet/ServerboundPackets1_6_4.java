@@ -81,8 +81,7 @@ public enum ServerboundPackets1_6_4 implements ServerboundPacketType, PreNettyPa
       buf.skipBytes(2);
       PreNettyTypes.readString(buf);
       buf.skipBytes(2);
-      byte x = buf.readByte();
-      if (x >= 73) {
+      if (buf.readByte() >= 73) {
          PreNettyTypes.readString(buf);
          buf.skipBytes(4);
       }

@@ -21,8 +21,7 @@ public class BlockRail extends BlockRailBase {
    }
 
    static {
-      String str = "shape";
-      SHAPE = PropertyEnum.create(str, BlockRailBase.EnumRailDirection.class);
+      SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class);
    }
 
    @Override

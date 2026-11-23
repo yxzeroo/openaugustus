@@ -13,8 +13,7 @@ public class MutableBigInt {
    public void addLower(MutableBigInt mutableBigInt, int n) {
       MutableBigInt mutableBigInt2 = new MutableBigInt(mutableBigInt);
       if (mutableBigInt2.offset + mutableBigInt2.intLen >= n) {
-         int n2 = mutableBigInt2.offset + mutableBigInt2.intLen - n;
-         mutableBigInt2.offset = n2;
+         mutableBigInt2.offset = mutableBigInt2.offset + mutableBigInt2.intLen - n;
          mutableBigInt2.intLen = n;
       }
 
@@ -24,7 +23,6 @@ public class MutableBigInt {
 
    public int[] toIntArray() {
       int[] ints = new int[this.intLen];
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < this.intLen; i++) {
          ints[i] = this.value[this.offset + i];
@@ -35,7 +33,6 @@ public class MutableBigInt {
 
    public static long inverseMod64(long l) {
       long l2 = l * (2L - l * l);
-      ShadedNumber.getFlowState();
       l2 *= 2L - l * l2;
       l2 *= 2L - l * l2;
       l2 *= 2L - l * l2;
@@ -50,8 +47,7 @@ public class MutableBigInt {
       if (this.isZero()) {
          return ShadedBigInteger.ZERO;
       } else if (this.intLen < n) {
-         byte b = 1;
-         return this.toBigInteger(b);
+         return this.toBigInteger((byte)1);
       } else {
          int n2 = n;
 
@@ -65,7 +61,6 @@ public class MutableBigInt {
    }
 
    public boolean isNormal(long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intLen + this.offset > this.value.length) {
          return false;
       } else {
@@ -75,19 +70,16 @@ public class MutableBigInt {
 
    private void ones(int n) {
       if (n > this.value.length) {
-         int[] ints = new int[n];
-         this.value = ints;
+         this.value = new int[n];
       }
 
       Arrays.fill(this.value, -1);
-      byte b = 0;
-      this.offset = b;
+      this.offset = (byte)0;
       this.intLen = n;
    }
 
    private int difference(MutableBigInt mutableBigInt) {
       MutableBigInt mutableBigInt2 = this;
-      ShadedNumber.getFlowState();
       int n = this.compare(mutableBigInt);
       if (n == 0) {
          return 0;
@@ -119,8 +111,7 @@ public class MutableBigInt {
 
    public final void normalize() {
       if (this.intLen == 0) {
-         byte b = 0;
-         this.offset = b;
+         this.offset = (byte)0;
       } else {
          int offset2 = this.offset;
          if (this.value[offset2] == 0) {
@@ -131,10 +122,8 @@ public class MutableBigInt {
             } while (offset2 < n && this.value[offset2] == 0);
 
             int n2 = offset2 - this.offset;
-            int n3 = this.intLen - n2;
-            this.intLen = n3;
-            int n4 = this.intLen == 0 ? 0 : this.offset + n2;
-            this.offset = n4;
+            this.intLen = this.intLen - n2;
+            this.offset = this.intLen == 0 ? 0 : this.offset + n2;
          }
       }
    }
@@ -144,14 +133,10 @@ public class MutableBigInt {
    }
 
    public static MutableBigInt modInverseBP2(MutableBigInt mutableBigInt, int n) {
-      MutableBigInt mutableBigInt2 = new MutableBigInt(1);
-      MutableBigInt mutableBigInt3 = new MutableBigInt(mutableBigInt);
-      MutableBigInt mutableBigInt4 = mutableBigInt2;
-      return fixup(mutableBigInt4, mutableBigInt3, n);
+      return fixup(new MutableBigInt(1), new MutableBigInt(mutableBigInt), n);
    }
 
    public void mul(int n, MutableBigInt mutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n == 1) {
          mutableBigInt.copyValue(this);
       } else if (n == 0) {
@@ -168,15 +153,11 @@ public class MutableBigInt {
          }
 
          if (l2 == 0L) {
-            byte b = 1;
-            mutableBigInt.offset = b;
-            int intLen2 = this.intLen;
-            mutableBigInt.intLen = intLen2;
+            mutableBigInt.offset = (byte)1;
+            mutableBigInt.intLen = this.intLen;
          } else {
-            byte b2 = 0;
-            mutableBigInt.offset = b2;
-            int n2 = this.intLen + 1;
-            mutableBigInt.intLen = n2;
+            mutableBigInt.offset = (byte)0;
+            mutableBigInt.intLen = this.intLen + 1;
             ints[0] = (int)l2;
          }
 
@@ -185,12 +166,9 @@ public class MutableBigInt {
    }
 
    public MutableBigInt(int n) {
-      byte b = 0;
-      this.offset = b;
-      int[] ints = new int[1];
-      this.value = ints;
-      byte b2 = 1;
-      this.intLen = b2;
+      this.offset = (byte)0;
+      this.value = new int[1];
+      this.intLen = (byte)1;
       this.value[0] = n;
    }
 
@@ -203,7 +181,6 @@ public class MutableBigInt {
 
    public MutableBigInt hybridGCD(MutableBigInt mutableBigInt) {
       MutableBigInt mutableBigInt2 = this;
-      ShadedNumber.getFlowState();
       MutableBigInt mutableBigInt3 = new MutableBigInt();
 
       while (mutableBigInt.intLen != 0) {
@@ -223,8 +200,7 @@ public class MutableBigInt {
       byte b;
       byte b2 = b = 0;
       this.intLen = b;
-      byte b3 = b2;
-      this.offset = b3;
+      this.offset = b2;
       int n = 0;
 
       for (int i = this.value.length; n < i; n++) {
@@ -257,11 +233,9 @@ public class MutableBigInt {
    }
 
    public MutableBigInt(int[] ints) {
-      byte b = 0;
-      this.offset = b;
+      this.offset = (byte)0;
       this.value = ints;
-      int length = ints.length;
-      this.intLen = length;
+      this.intLen = ints.length;
    }
 
    public boolean isOdd() {
@@ -275,8 +249,7 @@ public class MutableBigInt {
          byte b;
          byte b2 = b = 0;
          mutableBigInt2.offset = b;
-         byte b3 = b2;
-         mutableBigInt2.intLen = b3;
+         mutableBigInt2.intLen = b2;
          return flag ? new MutableBigInt() : null;
       } else {
          int n = this.compare(mutableBigInt);
@@ -284,8 +257,7 @@ public class MutableBigInt {
             byte b4;
             byte b5 = b4 = 0;
             mutableBigInt2.offset = b4;
-            byte b6 = b5;
-            mutableBigInt2.intLen = b6;
+            mutableBigInt2.intLen = b5;
             return flag ? new MutableBigInt(this) : null;
          } else if (n == 0) {
             int[] value2 = mutableBigInt2.value;
@@ -293,14 +265,12 @@ public class MutableBigInt {
             byte b8 = b7 = 1;
             mutableBigInt2.intLen = b7;
             value2[0] = b8;
-            byte b9 = 0;
-            mutableBigInt2.offset = b9;
+            mutableBigInt2.offset = (byte)0;
             return flag ? new MutableBigInt() : null;
          } else {
             mutableBigInt2.clear();
             if (mutableBigInt.intLen == 1) {
-               int n2 = mutableBigInt.value[mutableBigInt.offset];
-               int n3 = this.divideOneWord(n2, mutableBigInt2);
+               int n3 = this.divideOneWord(mutableBigInt.value[mutableBigInt.offset], mutableBigInt2);
                if (flag) {
                   return n3 == 0 ? new MutableBigInt() : new MutableBigInt(n3);
                } else {
@@ -332,9 +302,7 @@ public class MutableBigInt {
 
    @Override
    public String toString() {
-      byte b = 1;
-      ShadedBigInteger shadedBigInteger = this.toBigInteger(b);
-      return shadedBigInteger.toString();
+      return this.toBigInteger((byte)1).toString();
    }
 
    private final long getLong(int n, int n2, short s, char ch) {
@@ -342,12 +310,9 @@ public class MutableBigInt {
    }
 
    public MutableBigInt(ShadedBigInteger shadedBigInteger) {
-      byte b = 0;
-      this.offset = b;
-      int length = shadedBigInteger.mag.length;
-      this.intLen = length;
-      int[] ints = Arrays.copyOf(shadedBigInteger.mag, this.intLen);
-      this.value = ints;
+      this.offset = (byte)0;
+      this.intLen = shadedBigInteger.mag.length;
+      this.value = Arrays.copyOf(shadedBigInteger.mag, this.intLen);
    }
 
    private MutableBigInt modInverse(MutableBigInt mutableBigInt) {
@@ -356,7 +321,6 @@ public class MutableBigInt {
       MutableBigInt mutableBigInt4 = new MutableBigInt(mutableBigInt2);
       SignedMutableBigInt signedMutableBigInt = new SignedMutableBigInt(1);
       SignedMutableBigInt signedMutableBigInt2 = new SignedMutableBigInt();
-      ShadedNumber.getFlowState();
       Object obj = null;
       Object obj2 = null;
       int n = 0;
@@ -370,9 +334,7 @@ public class MutableBigInt {
       while (true) {
          if (mutableBigInt3.isOne()) {
             if (signedMutableBigInt.compare(mutableBigInt2) >= 0) {
-               MutableBigInt mutableBigInt5 = new MutableBigInt();
-               MutableBigInt mutableBigInt6 = signedMutableBigInt.divide2(mutableBigInt2, mutableBigInt5);
-               signedMutableBigInt.copyValue(mutableBigInt6);
+               signedMutableBigInt.copyValue(signedMutableBigInt.divide2(mutableBigInt2, new MutableBigInt()));
             }
 
             if (signedMutableBigInt.sign < 0) {
@@ -411,17 +373,14 @@ public class MutableBigInt {
    }
 
    public void copyValue(int[] ints, long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       int length = ints.length;
       if (this.value.length < length) {
-         int[] ints2 = new int[length];
-         this.value = ints2;
+         this.value = new int[length];
       }
 
       System.arraycopy(ints, 0, this.value, 0, length);
       this.intLen = length;
-      byte b = 0;
-      this.offset = b;
+      this.offset = (byte)0;
    }
 
    public MutableBigInt divideAndRemainderBurnikelZiegler(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2) {
@@ -430,14 +389,12 @@ public class MutableBigInt {
       byte b;
       byte b2 = b = 0;
       mutableBigInt2.intLen = b;
-      byte b3 = b2;
-      mutableBigInt2.offset = b3;
+      mutableBigInt2.offset = b2;
       if (intLen2 < intLen3) {
          return this;
       } else {
          int n = 1 << 32 - Integer.numberOfLeadingZeros(intLen3 / 80);
-         int n2 = (intLen3 + n - 1) / n;
-         int n3 = n2 * n;
+         int n3 = ((intLen3 + n - 1) / n) * n;
          long l = 32L * (long)n3;
          int n4 = (int)Math.max(0L, l - mutableBigInt.bitLength());
          MutableBigInt mutableBigInt3 = new MutableBigInt(mutableBigInt);
@@ -449,20 +406,16 @@ public class MutableBigInt {
             n5 = 2;
          }
 
-         int n6 = n5 - 1;
-         MutableBigInt block = mutableBigInt4.getBlock(n6, n5, n3);
-         int n7 = n5 - 2;
-         MutableBigInt block2 = mutableBigInt4.getBlock(n7, n5, n3);
+         MutableBigInt block = mutableBigInt4.getBlock(n5 - 1, n5, n3);
+         MutableBigInt block2 = mutableBigInt4.getBlock(n5 - 2, n5, n3);
          block2.addDisjoint(block, n3);
          MutableBigInt mutableBigInt5 = new MutableBigInt();
 
          for (int i = n5 - 2; i > 0; i--) {
             MutableBigInt mutableBigInt6 = block2.divide2n1n(mutableBigInt3, mutableBigInt5);
-            int n8 = i - 1;
-            block2 = mutableBigInt4.getBlock(n8, n5, n3);
+            block2 = mutableBigInt4.getBlock(i - 1, n5, n3);
             block2.addDisjoint(mutableBigInt6, n3);
-            int n9 = i * n3;
-            mutableBigInt2.addShifted(mutableBigInt5, n9);
+            mutableBigInt2.addShifted(mutableBigInt5, i * n3);
          }
 
          MutableBigInt mutableBigInt7 = block2.divide2n1n(mutableBigInt3, mutableBigInt5);
@@ -510,8 +463,7 @@ public class MutableBigInt {
 
          while (n2 > 0) {
             n2--;
-            int n6 = n2 + mutableBigInt.offset < mutableBigInt.value.length ? mutableBigInt.value[n2 + mutableBigInt.offset] : 0;
-            long l4 = ((long)n6 & 4294967295L) + l;
+            long l4 = ((long)(n2 + mutableBigInt.offset < mutableBigInt.value.length ? mutableBigInt.value[n2 + mutableBigInt.offset] : 0) & 4294967295L) + l;
             ints2[n4--] = (int)l4;
             l = l4 >>> 32;
          }
@@ -529,8 +481,7 @@ public class MutableBigInt {
 
          this.value = ints2;
          this.intLen = n3;
-         int n7 = ints2.length - n3;
-         this.offset = n7;
+         this.offset = ints2.length - n3;
       }
    }
 
@@ -541,21 +492,16 @@ public class MutableBigInt {
          int n2 = (int)(l2 / l);
          int n3 = (int)(l2 - (long)n2 * l);
          mutableBigInt.value[0] = n2;
-         int n4 = n2 == 0 ? 0 : 1;
-         mutableBigInt.intLen = n4;
-         byte b = 0;
-         mutableBigInt.offset = b;
+         mutableBigInt.intLen = n2 == 0 ? 0 : 1;
+         mutableBigInt.offset = (byte)0;
          return n3;
       } else {
          if (mutableBigInt.value.length < this.intLen) {
-            int[] ints = new int[this.intLen];
-            mutableBigInt.value = ints;
+            mutableBigInt.value = new int[this.intLen];
          }
 
-         byte b2 = 0;
-         mutableBigInt.offset = b2;
-         int intLen2 = this.intLen;
-         mutableBigInt.intLen = intLen2;
+         mutableBigInt.offset = (byte)0;
+         mutableBigInt.intLen = this.intLen;
          int n5 = Integer.numberOfLeadingZeros(n);
          int n6 = this.value[this.offset];
          long l3 = (long)n6 & 4294967295L;
@@ -588,12 +534,9 @@ public class MutableBigInt {
    }
 
    public MutableBigInt(MutableBigInt mutableBigInt) {
-      byte b = 0;
-      this.offset = b;
-      int intLen2 = mutableBigInt.intLen;
-      this.intLen = intLen2;
-      int[] ints = Arrays.copyOfRange(mutableBigInt.value, mutableBigInt.offset, mutableBigInt.offset + this.intLen);
-      this.value = ints;
+      this.offset = (byte)0;
+      this.intLen = mutableBigInt.intLen;
+      this.value = Arrays.copyOfRange(mutableBigInt.value, mutableBigInt.offset, mutableBigInt.offset + this.intLen);
    }
 
    private MutableBigInt divideMagnitude(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2, boolean flag) {
@@ -603,27 +546,21 @@ public class MutableBigInt {
       MutableBigInt mutableBigInt3;
       if (n > 0) {
          ints = new int[intLen2];
-         byte b = 0;
          int offset2 = mutableBigInt.offset;
-         copyAndShift(mutableBigInt.value, offset2, intLen2, ints, b, n);
+         copyAndShift(mutableBigInt.value, offset2, intLen2, ints, (byte)0, n);
          if (Integer.numberOfLeadingZeros(this.value[this.offset]) >= n) {
             int[] ints2 = new int[this.intLen + 1];
             mutableBigInt3 = new MutableBigInt(ints2);
-            int intLen3 = this.intLen;
-            mutableBigInt3.intLen = intLen3;
-            byte b2 = 1;
-            mutableBigInt3.offset = b2;
-            byte b3 = 1;
+            mutableBigInt3.intLen = this.intLen;
+            mutableBigInt3.offset = (byte)1;
             int intLen4 = this.intLen;
             int offset3 = this.offset;
-            copyAndShift(this.value, offset3, intLen4, ints2, b3, n);
+            copyAndShift(this.value, offset3, intLen4, ints2, (byte)1, n);
          } else {
             int[] ints3 = new int[this.intLen + 2];
             mutableBigInt3 = new MutableBigInt(ints3);
-            int n2 = this.intLen + 1;
-            mutableBigInt3.intLen = n2;
-            byte b4 = 1;
-            mutableBigInt3.offset = b4;
+            mutableBigInt3.intLen = this.intLen + 1;
+            mutableBigInt3.offset = (byte)1;
             int offset4 = this.offset;
             int n3 = 0;
             int n4 = 32 - n;
@@ -641,29 +578,23 @@ public class MutableBigInt {
          ints = Arrays.copyOfRange(mutableBigInt.value, mutableBigInt.offset, mutableBigInt.offset + mutableBigInt.intLen);
          mutableBigInt3 = new MutableBigInt(new int[this.intLen + 1]);
          System.arraycopy(this.value, this.offset, mutableBigInt3.value, 1, this.intLen);
-         int intLen5 = this.intLen;
-         mutableBigInt3.intLen = intLen5;
-         byte b5 = 1;
-         mutableBigInt3.offset = b5;
+         mutableBigInt3.intLen = this.intLen;
+         mutableBigInt3.offset = (byte)1;
       }
 
       int intLen6 = mutableBigInt3.intLen;
       int n6 = intLen6 - intLen2 + 1;
       if (mutableBigInt2.value.length < n6) {
-         int[] ints4 = new int[n6];
-         mutableBigInt2.value = ints4;
-         byte b6 = 0;
-         mutableBigInt2.offset = b6;
+         mutableBigInt2.value = new int[n6];
+         mutableBigInt2.offset = (byte)0;
       }
 
       mutableBigInt2.intLen = n6;
       int[] value2 = mutableBigInt2.value;
       if (mutableBigInt3.intLen == intLen6) {
-         byte b7 = 0;
-         mutableBigInt3.offset = b7;
+         mutableBigInt3.offset = (byte)0;
          mutableBigInt3.value[0] = 0;
-         int n7 = mutableBigInt3.intLen + 1;
-         mutableBigInt3.intLen = n7;
+         mutableBigInt3.intLen = mutableBigInt3.intLen + 1;
       }
 
       int n8 = ints[0];
@@ -713,12 +644,9 @@ public class MutableBigInt {
 
             mutableBigInt3.value[j + mutableBigInt3.offset] = 0;
             int n15 = j + mutableBigInt3.offset;
-            int[] value3 = mutableBigInt3.value;
-            int n16 = this.mulsub(value3, ints, n10, intLen2, n15);
-            if (n16 + -2147483648 > n13) {
+            if (this.mulsub(mutableBigInt3.value, ints, n10, intLen2, n15) + -2147483648 > n13) {
                int n17 = j + 1 + mutableBigInt3.offset;
-               int[] value4 = mutableBigInt3.value;
-               this.divadd(ints, value4, n17);
+               this.divadd(ints, mutableBigInt3.value, n17);
                n10--;
             }
 
@@ -770,19 +698,16 @@ public class MutableBigInt {
          int n23;
          if (flag) {
             int n24 = n6 - 1 + mutableBigInt3.offset;
-            int[] value5 = mutableBigInt3.value;
-            n23 = this.mulsub(value5, ints, n18, intLen2, n24);
+            n23 = this.mulsub(mutableBigInt3.value, ints, n18, intLen2, n24);
          } else {
             int n25 = n6 - 1 + mutableBigInt3.offset;
-            int[] value6 = mutableBigInt3.value;
-            n23 = this.mulsubBorrow(value6, ints, n18, intLen2, n25);
+            n23 = this.mulsubBorrow(mutableBigInt3.value, ints, n18, intLen2, n25);
          }
 
          if (n23 + -2147483648 > n21) {
             if (flag) {
                int n26 = n6 - 1 + 1 + mutableBigInt3.offset;
-               int[] value7 = mutableBigInt3.value;
-               this.divadd(ints, value7, n26);
+               this.divadd(ints, mutableBigInt3.value, n26);
             }
 
             n18--;
@@ -804,7 +729,6 @@ public class MutableBigInt {
    }
 
    public boolean isEven() {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.intLen == 0 || (this.value[this.offset + this.intLen - 1] & 1) == 0;
    }
 
@@ -844,7 +768,6 @@ public class MutableBigInt {
    public MutableBigInt euclidModInverse(int n) {
       MutableBigInt mutableBigInt = new MutableBigInt(1);
       mutableBigInt.leftShift(n);
-      ShadedNumber.getFlowState();
       MutableBigInt mutableBigInt2 = new MutableBigInt(mutableBigInt);
       MutableBigInt mutableBigInt3 = new MutableBigInt(this);
       MutableBigInt mutableBigInt4 = new MutableBigInt();
@@ -867,8 +790,7 @@ public class MutableBigInt {
 
          mutableBigInt3 = mutableBigInt5;
          if (mutableBigInt4.intLen == 1) {
-            int n2 = mutableBigInt4.value[mutableBigInt4.offset];
-            mutableBigInt6.mul(n2, mutableBigInt8);
+            mutableBigInt6.mul(mutableBigInt4.value[mutableBigInt4.offset], mutableBigInt8);
          } else {
             mutableBigInt4.multiply(mutableBigInt6, mutableBigInt8);
          }
@@ -885,8 +807,7 @@ public class MutableBigInt {
 
          mutableBigInt = mutableBigInt5;
          if (mutableBigInt8.intLen == 1) {
-            int n3 = mutableBigInt8.value[mutableBigInt8.offset];
-            mutableBigInt7.mul(n3, mutableBigInt4);
+            mutableBigInt7.mul(mutableBigInt8.value[mutableBigInt8.offset], mutableBigInt4);
          } else {
             mutableBigInt8.multiply(mutableBigInt7, mutableBigInt4);
          }
@@ -902,12 +823,9 @@ public class MutableBigInt {
    }
 
    private final void ensureCapacity(int n, long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.value.length < n) {
-         int[] ints = new int[n];
-         this.value = ints;
-         byte b = 0;
-         this.offset = b;
+         this.value = new int[n];
+         this.offset = (byte)0;
          this.intLen = n;
       }
    }
@@ -915,15 +833,12 @@ public class MutableBigInt {
    public void multiply(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2) {
       int intLen2 = this.intLen;
       int intLen3 = mutableBigInt.intLen;
-      ShadedNumber.getFlowState();
       int n = intLen2 + intLen3;
       if (mutableBigInt2.value.length < n) {
-         int[] ints = new int[n];
-         mutableBigInt2.value = ints;
+         mutableBigInt2.value = new int[n];
       }
 
-      byte b = 0;
-      mutableBigInt2.offset = b;
+      mutableBigInt2.offset = (byte)0;
       mutableBigInt2.intLen = n;
       long l = 0L;
       int n2 = intLen3 - 1;
@@ -959,15 +874,12 @@ public class MutableBigInt {
    public static MutableBigInt fixup(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2, int n) {
       MutableBigInt mutableBigInt3 = new MutableBigInt();
       int n2 = -inverseMod32(mutableBigInt2.value[mutableBigInt2.offset + mutableBigInt2.intLen - 1]);
-      ShadedNumber.getFlowState();
       int n3 = 0;
 
       for (int i = n >> 5; n3 < i; n3++) {
-         int n4 = n2 * mutableBigInt.value[mutableBigInt.offset + mutableBigInt.intLen - 1];
-         mutableBigInt2.mul(n4, mutableBigInt3);
+         mutableBigInt2.mul(n2 * mutableBigInt.value[mutableBigInt.offset + mutableBigInt.intLen - 1], mutableBigInt3);
          mutableBigInt.add(mutableBigInt3);
-         int n5 = mutableBigInt.intLen - 1;
-         mutableBigInt.intLen = n5;
+         mutableBigInt.intLen = mutableBigInt.intLen - 1;
       }
 
       n3 = n & 31;
@@ -980,15 +892,13 @@ public class MutableBigInt {
       }
 
       if (mutableBigInt.compare(mutableBigInt2) >= 0) {
-         MutableBigInt mutableBigInt4 = new MutableBigInt();
-         mutableBigInt = mutableBigInt.divide2(mutableBigInt2, mutableBigInt4);
+         mutableBigInt = mutableBigInt.divide2(mutableBigInt2, new MutableBigInt());
       }
 
       return mutableBigInt;
    }
 
    public ShadedBigDecimal toBigDecimal(int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intLen != 0 && n != 0) {
          int[] magnitudeArray = this.getMagnitudeArray();
          int length = magnitudeArray.length;
@@ -998,10 +908,7 @@ public class MutableBigInt {
             return ShadedBigDecimal.valueOf(n == -1 ? -l : l, n2);
          } else {
             ShadedBigInteger shadedBigInteger = new ShadedBigInteger(magnitudeArray, n);
-            byte b = 0;
-            long l2 = -9223372036854775808L;
-            ShadedBigInteger shadedBigInteger2 = shadedBigInteger;
-            return new ShadedBigDecimal(shadedBigInteger2, l2, n2, b);
+            return new ShadedBigDecimal(shadedBigInteger, -9223372036854775808L, n2, (byte)0);
          }
       } else {
          return ShadedBigDecimal.zeroValueOf(n2);
@@ -1019,17 +926,13 @@ public class MutableBigInt {
    private MutableBigInt divideLongMagnitude(long l, MutableBigInt mutableBigInt) {
       MutableBigInt mutableBigInt2 = new MutableBigInt(new int[this.intLen + 1]);
       System.arraycopy(this.value, this.offset, mutableBigInt2.value, 1, this.intLen);
-      int intLen2 = this.intLen;
-      mutableBigInt2.intLen = intLen2;
-      byte b = 1;
-      mutableBigInt2.offset = b;
+      mutableBigInt2.intLen = this.intLen;
+      mutableBigInt2.offset = (byte)1;
       int intLen3 = mutableBigInt2.intLen;
       int n = intLen3 - 2 + 1;
       if (mutableBigInt.value.length < n) {
-         int[] ints = new int[n];
-         mutableBigInt.value = ints;
-         byte b2 = 0;
-         mutableBigInt.offset = b2;
+         mutableBigInt.value = new int[n];
+         mutableBigInt.offset = (byte)0;
       }
 
       mutableBigInt.intLen = n;
@@ -1041,11 +944,9 @@ public class MutableBigInt {
       }
 
       if (mutableBigInt2.intLen == intLen3) {
-         byte b3 = 0;
-         mutableBigInt2.offset = b3;
+         mutableBigInt2.offset = (byte)0;
          mutableBigInt2.value[0] = 0;
-         int n2 = mutableBigInt2.intLen + 1;
-         mutableBigInt2.intLen = n2;
+         mutableBigInt2.intLen = mutableBigInt2.intLen + 1;
       }
 
       int n3 = (int)(l >>> 32);
@@ -1095,12 +996,9 @@ public class MutableBigInt {
 
             mutableBigInt2.value[i + mutableBigInt2.offset] = 0;
             int n10 = i + mutableBigInt2.offset;
-            int[] value3 = mutableBigInt2.value;
-            int n11 = this.mulsubLong(value3, n3, n4, n5, n10);
-            if (n11 + -2147483648 > n8) {
+            if (this.mulsubLong(mutableBigInt2.value, n3, n4, n5, n10) + -2147483648 > n8) {
                int n12 = i + 1 + mutableBigInt2.offset;
-               int[] value4 = mutableBigInt2.value;
-               this.divaddLong(n3, n4, value4, n12);
+               this.divaddLong(n3, n4, mutableBigInt2.value, n12);
                n5--;
             }
 
@@ -1146,7 +1044,6 @@ public class MutableBigInt {
    }
 
    public long toCompactValue(int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intLen != 0 && n != 0) {
          int[] magnitudeArray = this.getMagnitudeArray();
          int length = magnitudeArray.length;
@@ -1165,13 +1062,9 @@ public class MutableBigInt {
    private MutableBigInt divide3n2n(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2) {
       int n = mutableBigInt.intLen / 2;
       MutableBigInt mutableBigInt3 = new MutableBigInt(this);
-      int n2 = 32 * n;
-      int n3 = n2;
-      mutableBigInt3.safeRightShift(n3);
+      mutableBigInt3.safeRightShift(32 * n);
       MutableBigInt mutableBigInt4 = new MutableBigInt(mutableBigInt);
-      int n4 = n * 32;
-      int n5 = n4;
-      mutableBigInt4.safeRightShift(n5);
+      mutableBigInt4.safeRightShift(n * 32);
       ShadedBigInteger lower = mutableBigInt.getLower(n);
       MutableBigInt mutableBigInt5;
       MutableBigInt mutableBigInt6;
@@ -1182,21 +1075,16 @@ public class MutableBigInt {
          mutableBigInt2.ones(n);
          mutableBigInt3.add(mutableBigInt4);
          int n6 = 32 * n;
-         int n7 = n6;
-         mutableBigInt4.leftShift(n7);
+         mutableBigInt4.leftShift(n6);
          mutableBigInt3.subtract(mutableBigInt4);
          mutableBigInt5 = mutableBigInt3;
          mutableBigInt6 = new MutableBigInt(lower);
          n6 = 32 * n;
-         int n8 = n6;
-         mutableBigInt6.leftShift(n8);
-         MutableBigInt mutableBigInt7 = new MutableBigInt(lower);
-         mutableBigInt6.subtract(mutableBigInt7);
+         mutableBigInt6.leftShift(n6);
+         mutableBigInt6.subtract(new MutableBigInt(lower));
       }
 
-      int n9 = 32 * n;
-      int n10 = n9;
-      mutableBigInt5.leftShift(n10);
+      mutableBigInt5.leftShift(32 * n);
       mutableBigInt5.addLower(this, n);
 
       while (true) {
@@ -1206,8 +1094,7 @@ public class MutableBigInt {
          }
 
          mutableBigInt5.add(mutableBigInt);
-         MutableBigInt mutableBigInt8 = ONE;
-         mutableBigInt2.subtract(mutableBigInt8);
+         mutableBigInt2.subtract(ONE);
       }
    }
 
@@ -1233,7 +1120,6 @@ public class MutableBigInt {
    }
 
    public static int binaryGcd(int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n2 == 0) {
          return n;
       } else if (n == 0) {
@@ -1312,8 +1198,7 @@ public class MutableBigInt {
                   this.value[m] = 0;
                }
 
-               byte b = 0;
-               this.offset = b;
+               this.offset = (byte)0;
             }
 
             this.intLen = n5;
@@ -1321,8 +1206,7 @@ public class MutableBigInt {
                if (n3 <= 32 - n4) {
                   this.primitiveLeftShift(n3);
                } else {
-                  int n6 = 32 - n3;
-                  this.primitiveRightShift(n6);
+                  this.primitiveRightShift(32 - n3);
                }
             }
          }
@@ -1366,8 +1250,7 @@ public class MutableBigInt {
 
          this.value = value2;
          this.intLen = intLen2;
-         int n3 = this.value.length - intLen2;
-         this.offset = n3;
+         this.offset = this.value.length - intLen2;
          this.normalize();
          return n;
       }
@@ -1391,7 +1274,6 @@ public class MutableBigInt {
    private MutableBigInt binaryGCD(MutableBigInt mutableBigInt) {
       MutableBigInt mutableBigInt2 = this;
       MutableBigInt mutableBigInt3 = new MutableBigInt();
-      ShadedNumber.getFlowState();
       int lowestSetBit = this.getLowestSetBit();
       int lowestSetBit2 = mutableBigInt.getLowestSetBit();
       int n = lowestSetBit < lowestSetBit2 ? lowestSetBit : lowestSetBit2;
@@ -1414,13 +1296,10 @@ public class MutableBigInt {
 
          if (mutableBigInt2.intLen < 2 && mutableBigInt.intLen < 2) {
             int n3 = mutableBigInt2.value[mutableBigInt2.offset];
-            int n4 = mutableBigInt.value[mutableBigInt.offset];
-            n3 = binaryGcd(n3, n4);
+            n3 = binaryGcd(n3, mutableBigInt.value[mutableBigInt.offset]);
             mutableBigInt3.value[0] = n3;
-            byte b = 1;
-            mutableBigInt3.intLen = b;
-            byte b2 = 0;
-            mutableBigInt3.offset = b2;
+            mutableBigInt3.intLen = (byte)1;
+            mutableBigInt3.offset = (byte)0;
             if (n > 0) {
                mutableBigInt3.leftShift(n);
             }
@@ -1486,8 +1365,7 @@ public class MutableBigInt {
 
    private void keepLower(int n) {
       if (this.intLen >= n) {
-         int n2 = this.offset + (this.intLen - n);
-         this.offset = n2;
+         this.offset = this.offset + (this.intLen - n);
          this.intLen = n;
       }
    }
@@ -1496,8 +1374,7 @@ public class MutableBigInt {
       byte b;
       byte b2 = b = 0;
       this.intLen = b;
-      byte b3 = b2;
-      this.offset = b3;
+      this.offset = b2;
    }
 
    private int divaddLong(int n, int n2, int[] ints, int n3) {
@@ -1536,8 +1413,7 @@ public class MutableBigInt {
 
          this.value = ints;
          this.intLen = n3;
-         int n6 = ints.length - n3;
-         this.offset = n6;
+         this.offset = ints.length - n3;
       }
    }
 
@@ -1546,7 +1422,6 @@ public class MutableBigInt {
    }
 
    public MutableBigInt mutableModInverse(MutableBigInt mutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (mutableBigInt.isOdd()) {
          return this.modInverse(mutableBigInt);
       } else if (this.isEven()) {
@@ -1576,8 +1451,7 @@ public class MutableBigInt {
    }
 
    public MutableBigInt divideKnuth(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2) {
-      boolean flag = true;
-      return this.divideKnuth(mutableBigInt, mutableBigInt2, flag);
+      return this.divideKnuth(mutableBigInt, mutableBigInt2, true);
    }
 
    private static void copyAndShift(int[] ints, int n, int n2, int[] ints2, int n3, int n4) {
@@ -1594,27 +1468,20 @@ public class MutableBigInt {
    }
 
    public MutableBigInt() {
-      byte b = 0;
-      this.offset = b;
-      int[] ints = new int[1];
-      this.value = ints;
-      byte b2 = 0;
-      this.intLen = b2;
+      this.offset = (byte)0;
+      this.value = new int[1];
+      this.intLen = (byte)0;
    }
 
    public void rightShift(int n) {
       if (this.intLen != 0) {
          int n2 = n >>> 5;
          int n3 = n & 31;
-         int n4 = this.intLen - n2;
-         this.intLen = n4;
+         this.intLen = this.intLen - n2;
          if (n3 != 0) {
-            int n5 = ShadedBigInteger.bitLengthForInt(this.value[this.offset]);
-            if (n3 >= n5) {
-               int n6 = 32 - n3;
-               this.primitiveLeftShift(n6);
-               int n7 = this.intLen - 1;
-               this.intLen = n7;
+            if (n3 >= ShadedBigInteger.bitLengthForInt(this.value[this.offset])) {
+               this.primitiveLeftShift(32 - n3);
+               this.intLen = this.intLen - 1;
             } else {
                this.primitiveRightShift(n3);
             }
@@ -1626,18 +1493,12 @@ public class MutableBigInt {
       int intLen2 = mutableBigInt.intLen;
       if (intLen2 % 2 == 0 && intLen2 >= 80) {
          MutableBigInt mutableBigInt3 = new MutableBigInt(this);
-         int n = 32 * (intLen2 / 2);
-         int n2 = n;
-         mutableBigInt3.safeRightShift(n2);
-         int n3 = intLen2 / 2;
-         this.keepLower(n3);
+         mutableBigInt3.safeRightShift(32 * (intLen2 / 2));
+         this.keepLower(intLen2 / 2);
          MutableBigInt mutableBigInt4 = new MutableBigInt();
-         MutableBigInt mutableBigInt5 = mutableBigInt3.divide3n2n(mutableBigInt, mutableBigInt4);
-         int n4 = intLen2 / 2;
-         this.addDisjoint(mutableBigInt5, n4);
+         this.addDisjoint(mutableBigInt3.divide3n2n(mutableBigInt, mutableBigInt4), intLen2 / 2);
          MutableBigInt mutableBigInt6 = this.divide3n2n(mutableBigInt, mutableBigInt2);
-         int n5 = intLen2 / 2;
-         mutableBigInt2.addDisjoint(mutableBigInt4, n5);
+         mutableBigInt2.addDisjoint(mutableBigInt4, intLen2 / 2);
          return mutableBigInt6;
       } else {
          return this.divideKnuth(mutableBigInt, mutableBigInt2);
@@ -1647,9 +1508,7 @@ public class MutableBigInt {
    public static long divWord(long l, int n) {
       long l2 = (long)n & 4294967295L;
       if (l2 == 1L) {
-         long l3 = (long)((int)l);
-         long l4 = 0L;
-         return l4 << 32 | l3 & 4294967295L;
+         return 0L << 32 | ((long)((int)l)) & 4294967295L;
       } else {
          long l5 = (l >>> 1) / (l2 >>> 1);
 
@@ -1668,17 +1527,14 @@ public class MutableBigInt {
    }
 
    public void copyValue(MutableBigInt mutableBigInt) {
-      int[] flowState = ShadedNumber.getFlowState();
       int intLen2 = mutableBigInt.intLen;
       if (this.value.length < intLen2) {
-         int[] ints = new int[intLen2];
-         this.value = ints;
+         this.value = new int[intLen2];
       }
 
       System.arraycopy(mutableBigInt.value, mutableBigInt.offset, this.value, 0, intLen2);
       this.intLen = intLen2;
-      byte b = 0;
-      this.offset = b;
+      this.offset = (byte)0;
    }
 
    public final int compareHalf(MutableBigInt mutableBigInt) {
@@ -1723,7 +1579,6 @@ public class MutableBigInt {
    }
 
    public boolean isOne() {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.intLen == 1 && this.value[this.offset] == 1;
    }
 
@@ -1741,8 +1596,7 @@ public class MutableBigInt {
 
    public ShadedBigInteger toBigInteger() {
       this.normalize();
-      int n = this.isZero() ? 0 : 1;
-      return this.toBigInteger(n);
+      return this.toBigInteger(this.isZero() ? 0 : 1);
    }
 
    public void add(MutableBigInt mutableBigInt) {
@@ -1796,8 +1650,7 @@ public class MutableBigInt {
 
       this.value = ints2;
       this.intLen = n;
-      int n3 = ints2.length - n;
-      this.offset = n3;
+      this.offset = ints2.length - n;
    }
 
    public long divide(long l, MutableBigInt mutableBigInt) {
@@ -1807,8 +1660,7 @@ public class MutableBigInt {
          byte b;
          byte b2 = b = 0;
          mutableBigInt.offset = b;
-         byte b3 = b2;
-         mutableBigInt.intLen = b3;
+         mutableBigInt.intLen = b2;
          return 0L;
       } else {
          if (l < 0L) {
@@ -1818,8 +1670,7 @@ public class MutableBigInt {
          int n = (int)(l >>> 32);
          mutableBigInt.clear();
          if (n == 0) {
-            int n2 = (int)l;
-            return (long)this.divideOneWord(n2, mutableBigInt) & 4294967295L;
+            return (long)this.divideOneWord((int)l, mutableBigInt) & 4294967295L;
          } else {
             return this.divideLongMagnitude(l, mutableBigInt).toLong();
          }
@@ -1831,7 +1682,6 @@ public class MutableBigInt {
    }
 
    public MutableBigInt modInverseMP2(int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.isEven()) {
          throw new ArithmeticException("Non-invertible. (GCD != 1)");
       } else if (n > 64) {
@@ -1853,8 +1703,7 @@ public class MutableBigInt {
             MutableBigInt mutableBigInt = new MutableBigInt(new int[2]);
             mutableBigInt.value[0] = (int)(l2 >>> 32);
             mutableBigInt.value[1] = (int)l2;
-            byte b = 2;
-            mutableBigInt.intLen = b;
+            mutableBigInt.intLen = (byte)2;
             mutableBigInt.normalize();
             return mutableBigInt;
          }
@@ -1862,8 +1711,7 @@ public class MutableBigInt {
    }
 
    public MutableBigInt divide2(MutableBigInt mutableBigInt, MutableBigInt mutableBigInt2) {
-      boolean flag = true;
-      return this.divide(mutableBigInt, mutableBigInt2, flag);
+      return this.divide(mutableBigInt, mutableBigInt2, true);
    }
 
    private int mulsubBorrow(int[] ints, int[] ints2, int n, int n2, int n3) {
@@ -1873,8 +1721,7 @@ public class MutableBigInt {
 
       for (int i = n2 - 1; i >= 0; i--) {
          long l3 = ((long)ints2[i] & 4294967295L) * l + l2;
-         long l4 = (long)ints[n3--] - l3;
-         l2 = (l3 >>> 32) + (long)((l4 & 4294967295L) > ((long)(~((int)l3)) & 4294967295L) ? 1 : 0);
+         l2 = (l3 >>> 32) + (long)((((long)ints[n3--] - l3) & 4294967295L) > ((long)(~((int)l3)) & 4294967295L) ? 1 : 0);
       }
 
       return (int)l2;
@@ -1883,8 +1730,7 @@ public class MutableBigInt {
    public void setValue(int[] ints, int n) {
       this.value = ints;
       this.intLen = n;
-      byte b = 0;
-      this.offset = b;
+      this.offset = (byte)0;
    }
 
 }

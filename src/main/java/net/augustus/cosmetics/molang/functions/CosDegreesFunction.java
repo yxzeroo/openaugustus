@@ -11,8 +11,7 @@ public class CosDegreesFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.cos(this.getArg(b) / 180.0 * Math.PI);
+      return Math.cos(this.getArg((byte)0) / 180.0 * Math.PI);
    }
 
    public CosDegreesFunction(MolangValue[] molangValues, String str) throws Exception {

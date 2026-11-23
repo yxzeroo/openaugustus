@@ -67,8 +67,7 @@ public class ClickSpeedMonitor implements MC {
    }
 
    public void onPacketReceive(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S07PacketRespawn) {
+      if (event.getPacket() instanceof S07PacketRespawn) {
          this.zeroDelaySwingCount = 0;
       }
    }
@@ -94,8 +93,7 @@ public class ClickSpeedMonitor implements MC {
                   this.recentSwingDelays.remove(0);
                }
 
-               ArrayList recentSwingDelays2 = this.recentSwingDelays;
-               this.exceedsCpsLimit = this.calculateCps(recentSwingDelays2) > 14.75;
+               this.exceedsCpsLimit = this.calculateCps(this.recentSwingDelays) > 14.75;
             }
          }
 
@@ -106,10 +104,9 @@ public class ClickSpeedMonitor implements MC {
       }
 
       if (packet instanceof C0APacketAnimation && !this.digging && !this.placedBlockThisTick) {
-         boolean flag = true;
          this.getClass();
          boolean flag2 = this.ticksSinceLastSwing > 0;
-         if (this.ticksSinceLastSwing <= 15 && this.previousSwingDelay <= 15 && flag && flag2) {
+         if (this.ticksSinceLastSwing <= 15 && this.previousSwingDelay <= 15 && true && flag2) {
             SwingDelayPair swingDelayPair2 = new SwingDelayPair(this.ticksSinceLastSwing, this.previousSwingDelay);
             this.pendingSwingPairs.add(swingDelayPair2);
          }
@@ -119,8 +116,7 @@ public class ClickSpeedMonitor implements MC {
       }
 
       if (packet instanceof C02PacketUseEntity) {
-         C02PacketUseEntity packet2 = (C02PacketUseEntity)packet;
-         if (packet2.getAction() == C02PacketUseEntity.Action.ATTACK) {
+         if (((C02PacketUseEntity)packet).getAction() == C02PacketUseEntity.Action.ATTACK) {
             this.ticksSinceAttack = 0;
          }
       }

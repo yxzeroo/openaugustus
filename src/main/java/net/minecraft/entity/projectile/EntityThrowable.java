@@ -105,8 +105,7 @@ public abstract class EntityThrowable extends Entity implements IProjectile {
             Entity entity2 = (Entity)list.get(i);
             if (entity2.canBeCollidedWith() && (entity2 != thrower2 || this.ticksInAir >= 5)) {
                float f = 0.3F;
-               AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-               MovingObjectPosition hit2 = box.calculateIntercept(vec, vec2);
+               MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec, vec2);
                if (hit2 != null) {
                   double d2 = vec.squareDistanceTo(hit2.hitVec);
                   if (d2 < d || d == 0.0) {

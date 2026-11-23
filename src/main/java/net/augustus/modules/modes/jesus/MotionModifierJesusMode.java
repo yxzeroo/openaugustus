@@ -13,13 +13,13 @@ import net.augustus.modules.modes.motion.MotionModifierEngine;
 import net.augustus.modules.movement.helper.MotionModifierProvider;
 import net.augustus.modules.misc.Dummy;
 import net.augustus.modules.movement.Jesus;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class MotionModifierJesusMode extends AbstractJesusMode implements MotionModifierProvider, UpdateListener, MoveEntityListener, MoveInputListener, PacketListener, PacketDelayListener {
    private final Dummy dummy;
    private final MotionModifierEngine motionModifierEngine;
 
-   public MotionModifierJesusMode(Jesus jesus, DoubleValue doubleValue, String str) {
+   public MotionModifierJesusMode(Jesus jesus, SettingGroup doubleValue, String str) {
        super(jesus, doubleValue, str);
       this.dummy = new Dummy();
       this.motionModifierEngine = new MotionModifierEngine(this.dummy);
@@ -28,16 +28,11 @@ public class MotionModifierJesusMode extends AbstractJesusMode implements Motion
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 25;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override

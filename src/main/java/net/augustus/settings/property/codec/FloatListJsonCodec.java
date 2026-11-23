@@ -7,8 +7,7 @@ import java.util.List;
 public final class FloatListJsonCodec implements JsonListPropertyCodec {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Float f = (Float)obj;
-      this.writeFloatElement(array, f);
+      this.writeFloatElement(array, (Float)obj);
    }
 
    public void writeFloatElement(JsonArray array, Float f) {

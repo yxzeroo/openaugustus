@@ -154,19 +154,11 @@ public class VendorBase64Encoder {
    public int encode(byte[] bytes, byte[] bytes2) {
       int n = 0;
       byte b = 1;
-      int guardFlag = VendorAesHelper.getGuardFlag();
 
       while (true) {
          while (1 < b) {
             if (2 >= b) {
-               VendorBase64Encoder vendorBase64Encoder = this;
-               byte[] bytes3 = bytes;
-               int length = bytes.length;
-               byte[] bytes4 = bytes2;
-               int n2 = length;
-               byte b2 = 0;
-               byte[] bytes5 = bytes3;
-               return vendorBase64Encoder.encode0(bytes5, b2, n2, bytes4);
+               return this.encode0(bytes, (byte)0, bytes.length, bytes2);
             }
 
             if (bytes2.length < n) {
@@ -174,9 +166,7 @@ public class VendorBase64Encoder {
             }
          }
 
-         VendorBase64Encoder vendorBase64Encoder2 = this;
-         int length2 = bytes.length;
-         n = vendorBase64Encoder2.outLength(length2);
+         n = this.outLength(bytes.length);
       }
    }
 
@@ -197,12 +187,10 @@ public class VendorBase64Encoder {
    }
 
    public VendorBase64Encoder withoutPadding(long l) {
-      int guardFlag = VendorAesHelper.getGuardFlag();
       return this.doPadding ? new VendorBase64Encoder(this.isURL, this.newline, this.linemax, false) : this;
    }
 
    private int encode0(byte[] bytes, int n, int n2, byte[] bytes2) {
-      int invertedGuardFlag = VendorAesHelper.getInvertedGuardFlag();
       char[] chars = this.isURL ? toBase64URL : toBase64;
       int n3 = n;
       int n4 = (n2 - n) / 3 * 3;
@@ -269,7 +257,6 @@ public class VendorBase64Encoder {
    private final int outLength(int n) {
       int n2 = 0;
       int n3 = 0;
-      VendorAesHelper.getInvertedGuardFlag();
       byte b = 4;
       n3 = 0;
       if (this.doPadding) {
@@ -305,12 +292,10 @@ public class VendorBase64Encoder {
    public byte[] encode(byte[] bytes) {
       byte[] bytes2 = null;
       int n = 0;
-      VendorAesHelper.getGuardFlag();
       int n2 = 0;
       byte b = 2;
       VendorBase64Encoder vendorBase64Encoder = this;
-      int length = bytes.length;
-      n = vendorBase64Encoder.outLength(length);
+      n = vendorBase64Encoder.outLength(bytes.length);
 
       while (true) {
          while (2 < b) {
@@ -329,19 +314,12 @@ public class VendorBase64Encoder {
 
          bytes2 = new byte[n];
          vendorBase64Encoder = this;
-         byte[] bytes3 = bytes;
-         int length2 = bytes.length;
-         byte[] bytes4 = bytes2;
-         int n3 = length2;
-         byte b2 = 0;
-         byte[] bytes5 = bytes3;
-         n2 = vendorBase64Encoder.encode0(bytes5, b2, n3, bytes4);
+         n2 = vendorBase64Encoder.encode0(bytes, (byte)0, bytes.length, bytes2);
       }
    }
 
    public ByteBuffer encode2(ByteBuffer buf) {
       byte[] bytes = null;
-      VendorAesHelper.getInvertedGuardFlag();
       int n = 0;
       int n2 = 0;
       byte[] bytes2 = null;
@@ -361,21 +339,11 @@ public class VendorBase64Encoder {
             }
 
             if (b <= 4) {
-               VendorBase64Encoder vendorBase64Encoder = this;
-               int n3 = buf.remaining();
-               n = vendorBase64Encoder.outLength(n3);
+               n = this.outLength(buf.remaining());
                continue;
             }
 
-            VendorBase64Encoder vendorBase64Encoder2 = this;
-            byte[] bytes3 = buf.array();
-            int n4 = buf.arrayOffset() + buf.position();
-            int n5 = buf.arrayOffset() + buf.limit();
-            byte[] bytes4 = bytes;
-            int n6 = n5;
-            int n7 = n4;
-            byte[] bytes5 = bytes3;
-            n2 = vendorBase64Encoder2.encode0(bytes5, n7, n6, bytes4);
+            n2 = this.encode0(buf.array(), buf.arrayOffset() + buf.position(), buf.arrayOffset() + buf.limit(), bytes);
          } else if (b <= 0) {
             bytes = Arrays.copyOf(bytes, n2);
          } else if (buf.hasArray()) {
@@ -392,14 +360,7 @@ public class VendorBase64Encoder {
                         return ByteBuffer.wrap(bytes);
                      }
 
-                     VendorBase64Encoder vendorBase64Encoder3 = this;
-                     byte[] bytes6 = bytes2;
-                     int length = bytes2.length;
-                     byte[] bytes7 = bytes;
-                     int n8 = length;
-                     byte b2 = 0;
-                     byte[] bytes8 = bytes6;
-                     n2 = vendorBase64Encoder3.encode0(bytes8, b2, n8, bytes7);
+                     n2 = this.encode0(bytes2, (byte)0, bytes2.length, bytes);
                   } else if (n2 != bytes.length) {
                      continue outerLoop;
                   }

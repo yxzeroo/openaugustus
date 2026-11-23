@@ -59,10 +59,7 @@ public class MapColor {
          s = 180;
       }
 
-      int n2 = (this.colorValue >> 16 & 0xFF) * s / 255;
-      int n3 = (this.colorValue >> 8 & 0xFF) * s / 255;
-      int n4 = (this.colorValue & 0xFF) * s / 255;
-      return 0xFF000000 | n2 << 16 | n3 << 8 | n4;
+      return 0xFF000000 | ((this.colorValue >> 16 & 0xFF) * s / 255) << 16 | ((this.colorValue >> 8 & 0xFF) * s / 255) << 8 | ((this.colorValue & 0xFF) * s / 255);
    }
 
    private MapColor(int n, int n2) {

@@ -84,9 +84,7 @@ public class GuiYesNo extends GuiScreen {
             Futures.addCallback(Minecraft.getMinecraft().getResourcePackRepository().pingResourcePackUrl(this.resourcePackUrl), new GuiYesNo.DefaultFutureCallback(this), MoreExecutors.directExecutor());
          }
 
-         Minecraft minecraft = Minecraft.getMinecraft();
-         Object obj = null;
-         minecraft.displayGuiScreen((GuiScreen)obj);
+         Minecraft.getMinecraft().displayGuiScreen((GuiScreen)null);
       } else {
          this.parentScreen.confirmClicked(button.id == 0, this.parentButtonClickedId);
       }

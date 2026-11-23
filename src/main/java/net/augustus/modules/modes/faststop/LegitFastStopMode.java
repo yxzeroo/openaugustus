@@ -5,7 +5,7 @@ import net.augustus.events.EventSafeWalk;
 import net.augustus.events.MoveInputStage;
 import net.augustus.utils.player.PlayerUtil;
 import net.augustus.modules.movement.FastStop;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class LegitFastStopMode extends FastStopMode {
    private double initialMotionX;
@@ -15,7 +15,7 @@ public class LegitFastStopMode extends FastStopMode {
    private boolean stopCompleted = false;
    private boolean initialOnGround = false;
 
-   public LegitFastStopMode(FastStop fastStop, DoubleValue doubleValue) {
+   public LegitFastStopMode(FastStop fastStop, SettingGroup doubleValue) {
       super(fastStop, doubleValue, "Legit");
    }
 
@@ -63,8 +63,7 @@ public class LegitFastStopMode extends FastStopMode {
 
          for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-               EventMoveInput event2 = new EventMoveInput((float)j, (float)i, event.isJump(), event.isSneak(), MoveInputStage.PRE);
-               double[] doubles = this.predictNextPosition(event2);
+               double[] doubles = this.predictNextPosition(new EventMoveInput((float)j, (float)i, event.isJump(), event.isSneak(), MoveInputStage.PRE));
                double d4 = doubles[0];
                double d5 = doubles[2];
                double d6 = this.stopOriginX - d4;
@@ -89,12 +88,10 @@ public class LegitFastStopMode extends FastStopMode {
             exitBlock: {
                double posX = mc.thePlayer.posX;
                double stopOriginX2 = this.stopOriginX;
-               double initialMotionX2 = this.initialMotionX;
-               if (!this.wouldOvershootOrigin(initialMotionX2, d, stopOriginX2, posX)) {
+               if (!this.wouldOvershootOrigin(this.initialMotionX, d, stopOriginX2, posX)) {
                   double posZ = mc.thePlayer.posZ;
                   double stopOriginZ2 = this.stopOriginZ;
-                  double initialMotionZ2 = this.initialMotionZ;
-                  if (!this.wouldOvershootOrigin(initialMotionZ2, d2, stopOriginZ2, posZ)) {
+                  if (!this.wouldOvershootOrigin(this.initialMotionZ, d2, stopOriginZ2, posZ)) {
                      flag = false;
                      break exitBlock;
                   }
@@ -103,12 +100,9 @@ public class LegitFastStopMode extends FastStopMode {
                flag = true;
             }
 
-            boolean flag2 = flag;
-            if (!flag2) {
-               float f = (float)n;
-               event.setMoveForward(f);
-               float f2 = (float)n2;
-               event.setMoveStrafe(f2);
+            if (!flag) {
+               event.setMoveForward((float)n);
+               event.setMoveStrafe((float)n2);
             }
 
             double d9 = d - mc.thePlayer.posX;
@@ -123,12 +117,11 @@ public class LegitFastStopMode extends FastStopMode {
    }
 
    private double[] predictNextPosition(EventMoveInput event) {
-      boolean flag = false;
       float rotationYaw = mc.thePlayer.rotationYaw;
       double posZ = mc.thePlayer.posZ;
       double posY = mc.thePlayer.posY;
       double posX = mc.thePlayer.posX;
-      return PlayerUtil.predictPlayerPosition(0, mc.thePlayer, posX, posY, posZ, rotationYaw, event, flag);
+      return PlayerUtil.predictPlayerPosition(0, mc.thePlayer, posX, posY, posZ, rotationYaw, event, false);
    }
 
    private boolean wouldOvershootOrigin(double d, double d2, double d3, double d4) {

@@ -52,8 +52,7 @@ public class Programs {
       Program[] programs2 = new Program[n];
 
       for (int i = 0; i < n; i++) {
-         String str2 = i == 0 ? str : str + i;
-         programs2[i] = this.makeComposite(str2);
+         programs2[i] = this.makeComposite(i == 0 ? str : str + i);
       }
 
       return programs2;
@@ -71,8 +70,7 @@ public class Programs {
       Program[] programs2 = new Program[n];
 
       for (int i = 0; i < n; i++) {
-         String str2 = i == 0 ? str : str + i;
-         programs2[i] = this.makeDeferred(str2);
+         programs2[i] = this.makeDeferred(i == 0 ? str : str + i);
       }
 
       return programs2;
@@ -92,8 +90,7 @@ public class Programs {
       } else {
          for (int i = 0; i < this.programs.size(); i++) {
             Program program = (Program)this.programs.get(i);
-            String name = program.getName();
-            if (name.equals(str)) {
+            if (program.getName().equals(str)) {
                return program;
             }
          }

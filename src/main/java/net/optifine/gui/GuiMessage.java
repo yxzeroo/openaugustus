@@ -37,9 +37,7 @@ public class GuiMessage extends GuiScreen {
 
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
-      Minecraft mc2 = Config.getMc();
-      GuiScreen parentScreen22 = this.parentScreen2;
-      mc2.displayGuiScreen(parentScreen22);
+      Config.getMc().displayGuiScreen(this.parentScreen2);
    }
 
    @Override

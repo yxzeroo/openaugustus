@@ -39,19 +39,15 @@ public class TestLatencyModule extends Module implements PacketDelayListener, Ti
    }
 
    public void updateEventSubscriptions() {
-      byte b = 25;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 7;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
    }
 
    public void onPacketDelay(EventPacketDelay event) {
       Packet packet = event.getPacket();
       if (this.delayingOutgoing) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
 
       if (packet instanceof C02PacketUseEntity) {
@@ -71,8 +67,7 @@ public class TestLatencyModule extends Module implements PacketDelayListener, Ti
    }
 
    public void onTick() {
-      long l = 2000L;
-      if (this.timeHelper.reached2(l)) {
+      if (this.timeHelper.reached2(2000L)) {
          this.targetEntity = null;
       }
 
@@ -96,12 +91,9 @@ public class TestLatencyModule extends Module implements PacketDelayListener, Ti
          if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY || !mc.objectMouseOver.entityHit.equals(this.targetEntity)) {
             this.delayingOutgoing = true;
          } else if (this.pendingExtraClick && !this.delayingOutgoing) {
-            byte b = 1;
-            event.addLeftClicks(b);
-            boolean flag = true;
-            event.setBreakingBlock(flag);
-            boolean flag2 = true;
-            event.setCriticalHit(flag2);
+            event.addLeftClicks((byte)1);
+            event.setBreakingBlock(true);
+            event.setCriticalHit(true);
             this.delayingOutgoing = true;
          }
       }

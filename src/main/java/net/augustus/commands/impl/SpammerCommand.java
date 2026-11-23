@@ -8,8 +8,7 @@ import net.augustus.settings.TextInputSetting;
 public class SpammerCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Sets your spam message)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Sets your spam message)");
    }
 
    public SpammerCommand() {
@@ -27,19 +26,13 @@ public class SpammerCommand extends Command {
          }
 
          if (ClientManagers.moduleManager.spammer.messages.getEntryCount() > 0) {
-            byte b = 0;
-            TextInputSetting entry = (TextInputSetting)ClientManagers.moduleManager.spammer.messages.getEntry(b);
-            entry.setValue(str2);
-            String str3 = "Set your first spam message to: §c§l" + str2;
-            String str4 = str3;
-            this.sendChat(str4);
+            ((TextInputSetting)ClientManagers.moduleManager.spammer.messages.getEntry((byte)0)).setValue(str2);
+            this.sendChat("Set your first spam message to: §c§l" + str2);
          } else {
-            String str5 = "§cNo messages available. Add one in the ClickGUI first.";
-            this.sendChat(str5);
+            this.sendChat("§cNo messages available. Add one in the ClickGUI first.");
          }
       } else {
-         String str6 = "§7" + this.getCommand() + " [§2Custom message§7]";
-         this.sendChat(str6);
+         this.sendChat("§7" + this.getCommand() + " [§2Custom message§7]");
       }
    }
 

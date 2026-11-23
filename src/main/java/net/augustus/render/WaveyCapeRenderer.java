@@ -33,17 +33,13 @@ public class WaveyCapeRenderer {
       capePoseStack.pushPose();
       double d = 0.125;
       double d2 = 0.0;
-      double d3 = 0.0;
-      capePoseStack.translate(d3, d2, d);
+      capePoseStack.translate(0.0, d2, d);
       float f2 = ((StickPoint)orCreateSimulation.points.get(n)).getLerpX(f) - ((StickPoint)orCreateSimulation.points.get(0)).getLerpX(f);
       if (f2 > 0.0F) {
          f2 = 0.0F;
       }
 
-      StickPoint stickPoint = (StickPoint)orCreateSimulation.points.get(0);
-      float f3 = stickPoint.getLerpY(f) - (float)n;
-      StickPoint stickPoint2 = (StickPoint)orCreateSimulation.points.get(n);
-      float f4 = f3 - stickPoint2.getLerpY(f);
+      float f4 = (((StickPoint)orCreateSimulation.points.get(0)).getLerpY(f) - (float)n) - ((StickPoint)orCreateSimulation.points.get(n)).getLerpY(f);
       float f5 = 0.0F;
       float f6 = (float)(-Math.atan2((double)f4, (double)f2));
       f6 = Math.max(f6, 0.0F);
@@ -58,46 +54,36 @@ public class WaveyCapeRenderer {
          f7 += 25.0F;
          double d4 = 0.0;
          double d5 = 0.15000000596046448;
-         double d6 = 0.0;
-         capePoseStack.translate(d6, d5, d4);
+         capePoseStack.translate(0.0, d5, d4);
       }
 
       float windOffset = this.getWindOffset(n, waveyCapeConfig);
       float f8 = 6.0F + f7 + windOffset;
-      CapeQuaternion capeQuaternion = CapeVector3f.XP.rotationDegrees(f8);
-      capePoseStack.mulPose(capeQuaternion);
+      capePoseStack.mulPose(CapeVector3f.XP.rotationDegrees(f8));
       float f9 = f5 / 2.0F;
-      CapeQuaternion capeQuaternion2 = CapeVector3f.ZP.rotationDegrees(f9);
-      capePoseStack.mulPose(capeQuaternion2);
+      capePoseStack.mulPose(CapeVector3f.ZP.rotationDegrees(f9));
       float f10 = 180.0F - f5 / 2.0F;
-      CapeQuaternion capeQuaternion3 = CapeVector3f.YP.rotationDegrees(f10);
-      capePoseStack.mulPose(capeQuaternion3);
+      capePoseStack.mulPose(CapeVector3f.YP.rotationDegrees(f10));
       double d7 = (double)(f4 / 16.0F);
       double d8 = (double)(f2 / 16.0F);
       double d9 = d7;
-      double d10 = 0.0;
-      capePoseStack.translate(d10, d9, d8);
+      capePoseStack.translate(0.0, d9, d8);
       double d11 = -0.03;
       double d12 = 0.03;
-      double d13 = 0.0;
-      capePoseStack.translate(d13, d12, d11);
+      capePoseStack.translate(0.0, d12, d11);
       d7 = (double)((float)n * 1.0F / 16.0F);
       double d14 = (double)(n * 0 / 16);
       double d15 = d7;
-      double d16 = 0.0;
-      capePoseStack.translate(d16, d15, d14);
+      capePoseStack.translate(0.0, d15, d14);
       float f11 = -f6;
-      CapeQuaternion capeQuaternion4 = CapeVector3f.XP.rotationDegrees(f11);
-      capePoseStack.mulPose(capeQuaternion4);
+      capePoseStack.mulPose(CapeVector3f.XP.rotationDegrees(f11));
       d7 = (double)((float)(-n) * 1.0F / 16.0F);
       double d17 = (double)(-n * 0 / 16);
       double d18 = d7;
-      double d19 = 0.0;
-      capePoseStack.translate(d19, d18, d17);
+      capePoseStack.translate(0.0, d18, d17);
       double d20 = 0.03;
       double d21 = -0.03;
-      double d22 = 0.0;
-      capePoseStack.translate(d22, d21, d20);
+      capePoseStack.translate(0.0, d21, d20);
    }
 
    private void modifyPoseVanillaGl(AbstractClientPlayer clientPlayer, float f, int n, WaveyCapeConfig waveyCapeConfig) {
@@ -154,8 +140,7 @@ public class WaveyCapeRenderer {
       float f10 = 0.171875F;
       float f11 = 0.03125F;
       float f12 = 0.53125F;
-      float f13 = f12 - f11;
-      float f14 = f13 / 16.0F;
+      float f14 = (f12 - f11) / 16.0F;
       f12 = f11 + f14 * (float)(n + 1);
       f11 += f14 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f2, f, f5, f3).tex((double)f10, (double)f11).normal(1.0F, 0.0F, 0.0F).endVertex();
@@ -190,8 +175,7 @@ public class WaveyCapeRenderer {
       float f9 = 0.1875F;
       float f10 = 0.03125F;
       float f11 = 0.53125F;
-      float f12 = f11 - f10;
-      float f13 = f12 / 16.0F;
+      float f13 = (f11 - f10) / 16.0F;
       f11 = f10 + f13 * (float)(n + 1);
       f10 += f13 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f, f4, f2, f6).tex((double)f8, (double)f11).normal(1.0F, 0.0F, 0.0F).endVertex();
@@ -219,8 +203,7 @@ public class WaveyCapeRenderer {
       float f10 = 0.171875F;
       float f11 = 0.0F;
       float f12 = 0.03125F;
-      float f13 = f12 - f11;
-      float f14 = f13 / 16.0F;
+      float f14 = (f12 - f11) / 16.0F;
       f12 = f11 + f14 * (float)(n + 1);
       f11 += f14 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f2, f, f5, f3).tex((double)f10, (double)f12).normal(0.0F, 1.0F, 0.0F).endVertex();
@@ -248,8 +231,7 @@ public class WaveyCapeRenderer {
       float f10 = 0.328125F;
       float f11 = 0.0F;
       float f12 = 0.03125F;
-      float f13 = f12 - f11;
-      float f14 = f13 / 16.0F;
+      float f14 = (f12 - f11) / 16.0F;
       f12 = f11 + f14 * (float)(n + 1);
       f11 += f14 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f2, f, f5, f6).tex((double)f10, (double)f11).normal(1.0F, 0.0F, 0.0F).endVertex();
@@ -265,8 +247,7 @@ public class WaveyCapeRenderer {
    public void renderCape(AbstractClientPlayer clientPlayer, float f, WaveyCapeConfig waveyCapeConfig) {
       WaveyCapeSimulationManager manager = WaveyCapeSimulationManager.getWaveyCapeSimulationManager();
       if (waveyCapeConfig.capeMovement == CapeMovementMode.BASIC_SIMULATION) {
-         byte b = 16;
-         manager.updateSimulation(clientPlayer, b);
+         manager.updateSimulation(clientPlayer, (byte)16);
       }
 
       if (waveyCapeConfig.capeStyle == CapeStyle.SMOOTH) {
@@ -303,10 +284,7 @@ public class WaveyCapeRenderer {
          f2 = 0.0F;
       }
 
-      StickPoint stickPoint = (StickPoint)orCreateSimulation.points.get(0);
-      float f3 = stickPoint.getLerpY(f) - (float)n;
-      StickPoint stickPoint2 = (StickPoint)orCreateSimulation.points.get(n);
-      float f4 = f3 - stickPoint2.getLerpY(f);
+      float f4 = (((StickPoint)orCreateSimulation.points.get(0)).getLerpY(f) - (float)n) - ((StickPoint)orCreateSimulation.points.get(n)).getLerpY(f);
       float f5 = 0.0F;
       if (clientPlayer.isSneaking()) {
          f5 += 25.0F;
@@ -348,9 +326,7 @@ public class WaveyCapeRenderer {
             float f4 = -0.3F;
             float f5 = 0.0F;
             float f6 = 0.0F;
-            float f7 = 0.3F;
-            CapeMatrix4f capeMatrix4f2 = pose;
-            addTopVertex(worldRenderer, capeMatrix4f2, capeMatrix4f, f7, f6, f5, f4, f3, f2, i);
+            addTopVertex(worldRenderer, pose, capeMatrix4f, 0.3F, f6, f5, f4, f3, f2, i);
          }
 
          if (i == 15) {
@@ -359,14 +335,9 @@ public class WaveyCapeRenderer {
             float f8 = (float)(i + 1) * 0.06F;
             float f9 = (float)(i + 1) * 0.06F;
             float f10 = -0.06F;
-            float f11 = f9;
             float f12 = -0.3F;
             float f13 = 0.0F;
-            float f14 = f8;
-            float f15 = 0.3F;
-            CapeMatrix4f capeMatrix4f3 = pose3;
-            CapeMatrix4f capeMatrix4f4 = pose2;
-            addBottomVertex(worldRenderer, capeMatrix4f4, capeMatrix4f3, f15, f14, f13, f12, f11, f10, i);
+            addBottomVertex(worldRenderer, pose2, pose3, 0.3F, f8, f13, f12, f9, f10, i);
          }
 
          CapeMatrix4f pose4 = capePoseStack.last().getPose();
@@ -377,20 +348,15 @@ public class WaveyCapeRenderer {
          float f20 = -0.3F;
          float f21 = 0.0F;
          float f22 = f16;
-         float f23 = -0.3F;
-         CapeMatrix4f capeMatrix4f5 = pose4;
-         addLeftVertex(worldRenderer, capeMatrix4f5, capeMatrix4f, f23, f22, f21, f20, f19, f18, i);
+         addLeftVertex(worldRenderer, pose4, capeMatrix4f, -0.3F, f22, f21, f20, f19, f18, i);
          CapeMatrix4f pose5 = capePoseStack.last().getPose();
          f16 = (float)(i + 1) * 0.06F;
          float f24 = (float)i * 0.06F;
          float f25 = -0.06F;
-         float f26 = f24;
          float f27 = 0.3F;
          float f28 = 0.0F;
          float f29 = f16;
-         float f30 = 0.3F;
-         CapeMatrix4f capeMatrix4f6 = pose5;
-         addRightVertex(worldRenderer, capeMatrix4f6, capeMatrix4f, f30, f29, f28, f27, f26, f25, i);
+         addRightVertex(worldRenderer, pose5, capeMatrix4f, 0.3F, f29, f28, f27, f24, f25, i);
          CapeMatrix4f pose6 = capePoseStack.last().getPose();
          f16 = (float)(i + 1) * 0.06F;
          f17 = (float)i * 0.06F;
@@ -399,20 +365,14 @@ public class WaveyCapeRenderer {
          float f33 = -0.3F;
          float f34 = -0.06F;
          float f35 = f16;
-         float f36 = 0.3F;
-         CapeMatrix4f capeMatrix4f7 = pose6;
-         addBackVertex(worldRenderer, capeMatrix4f7, capeMatrix4f, f36, f35, f34, f33, f32, f31, i);
+         addBackVertex(worldRenderer, pose6, capeMatrix4f, 0.3F, f35, f34, f33, f32, f31, i);
          CapeMatrix4f pose7 = capePoseStack.last().getPose();
          float f37 = (float)(i + 1) * 0.06F;
          float f38 = (float)i * 0.06F;
          float f39 = 0.0F;
-         float f40 = f38;
          float f41 = -0.3F;
          float f42 = 0.0F;
-         float f43 = f37;
-         float f44 = 0.3F;
-         CapeMatrix4f capeMatrix4f8 = pose7;
-         addFrontVertex(worldRenderer, capeMatrix4f, capeMatrix4f8, f44, f43, f42, f41, f40, f39, i);
+         addFrontVertex(worldRenderer, capeMatrix4f, pose7, 0.3F, f37, f42, f41, f38, f39, i);
          capeMatrix4f = capePoseStack.last().getPose();
          capePoseStack.popPose();
       }
@@ -452,8 +412,7 @@ public class WaveyCapeRenderer {
       float f10 = 0.34375F;
       float f11 = 0.03125F;
       float f12 = 0.53125F;
-      float f13 = f12 - f11;
-      float f14 = f13 / 16.0F;
+      float f14 = (f12 - f11) / 16.0F;
       f12 = f11 + f14 * (float)(n + 1);
       f11 += f14 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f2, f, f2, f3).tex((double)f10, (double)f12).normal(1.0F, 0.0F, 0.0F).endVertex();
@@ -493,8 +452,7 @@ public class WaveyCapeRenderer {
       float f9 = 0.015625F;
       float f10 = 0.03125F;
       float f11 = 0.53125F;
-      float f12 = f11 - f10;
-      float f13 = f12 / 16.0F;
+      float f13 = (f11 - f10) / 16.0F;
       f11 = f10 + f13 * (float)(n + 1);
       f10 += f13 * (float)n;
       emitVertex(worldRenderer, capeMatrix4f, f4, f2, f3).tex((double)f9, (double)f11).normal(1.0F, 0.0F, 0.0F).endVertex();
@@ -514,8 +472,7 @@ public class WaveyCapeRenderer {
       capePoseStack.pushPose();
       double d = 0.125;
       double d2 = 0.0;
-      double d3 = 0.0;
-      capePoseStack.translate(d3, d2, d);
+      capePoseStack.translate(0.0, d2, d);
       double d4 = lerp((double)f, clientPlayer.prevChasingPosX, clientPlayer.chasingPosX) - lerp((double)f, clientPlayer.prevPosX, clientPlayer.posX);
       double d5 = lerp((double)f, clientPlayer.prevChasingPosY, clientPlayer.chasingPosY) - lerp((double)f, clientPlayer.prevPosY, clientPlayer.posY);
       double d6 = lerp((double)f, clientPlayer.prevChasingPosZ, clientPlayer.chasingPosZ) - lerp((double)f, clientPlayer.prevPosZ, clientPlayer.posZ);
@@ -534,27 +491,22 @@ public class WaveyCapeRenderer {
          f3 += 25.0F;
          double d9 = 0.0;
          double d10 = 0.15000000596046448;
-         double d11 = 0.0;
-         capePoseStack.translate(d11, d10, d9);
+         capePoseStack.translate(0.0, d10, d9);
       }
 
       float windOffset = this.getWindOffset(n, waveyCapeConfig);
       float f7 = 6.0F + f4 / 2.0F + f3 + windOffset;
-      CapeQuaternion capeQuaternion = CapeVector3f.XP.rotationDegrees(f7);
-      capePoseStack.mulPose(capeQuaternion);
+      capePoseStack.mulPose(CapeVector3f.XP.rotationDegrees(f7));
       float f8 = f5 / 2.0F;
-      CapeQuaternion capeQuaternion2 = CapeVector3f.ZP.rotationDegrees(f8);
-      capePoseStack.mulPose(capeQuaternion2);
+      capePoseStack.mulPose(CapeVector3f.ZP.rotationDegrees(f8));
       float f9 = 180.0F - f5 / 2.0F;
-      CapeQuaternion capeQuaternion3 = CapeVector3f.YP.rotationDegrees(f9);
-      capePoseStack.mulPose(capeQuaternion3);
+      capePoseStack.mulPose(CapeVector3f.YP.rotationDegrees(f9));
    }
 
    private float getWindOffset(int n, WaveyCapeConfig waveyCapeConfig) {
       if (waveyCapeConfig.windMode == CapeWindMode.WAVES) {
          long l = System.currentTimeMillis() / 3L % 360L;
-         float f = (float)(n + 1) / 16.0F;
-         return (float)(Math.sin(Math.toRadians((double)(f * 360.0F - (float)l))) * 3.0);
+         return (float)(Math.sin(Math.toRadians((double)(((float)(n + 1) / 16.0F) * 360.0F - (float)l))) * 3.0);
       } else {
          return 0.0F;
       }
@@ -568,10 +520,7 @@ public class WaveyCapeRenderer {
          f2 = 0.0F;
       }
 
-      StickPoint stickPoint = (StickPoint)orCreateSimulation.points.get(0);
-      float f3 = stickPoint.getLerpY(f) - (float)n;
-      StickPoint stickPoint2 = (StickPoint)orCreateSimulation.points.get(n);
-      float f4 = f3 - stickPoint2.getLerpY(f);
+      float f4 = (((StickPoint)orCreateSimulation.points.get(0)).getLerpY(f) - (float)n) - ((StickPoint)orCreateSimulation.points.get(n)).getLerpY(f);
       float f5 = (float)(-Math.atan2((double)f4, (double)f2));
       f5 = Math.max(f5, 0.0F);
       if (f5 != 0.0F) {

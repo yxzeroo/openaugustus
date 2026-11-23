@@ -10,10 +10,7 @@ public class MaxFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      double arg = this.getArg(b);
-      byte b2 = 1;
-      return Math.max(arg, this.getArg(b2));
+      return Math.max(this.getArg((byte)0), this.getArg((byte)1));
    }
 
    @Override

@@ -23,8 +23,7 @@ public class LinearEquation {
    }
 
    public LinearEquation(RationalFraction rationalFraction, long l) {
-      ArrayList list = new ArrayList();
-      this.coefficients = list;
+      this.coefficients = new ArrayList();
       this.constantTerm = rationalFraction;
    }
 }

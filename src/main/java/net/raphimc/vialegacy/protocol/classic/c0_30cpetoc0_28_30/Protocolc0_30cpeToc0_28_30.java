@@ -256,8 +256,7 @@ public class Protocolc0_30cpeToc0_28_30
                   boolean placeBlock = packetWrapper9.get(Types.BOOLEAN, 0);
                   int blockId = packetWrapper9.get(Types.BYTE, 0);
                   int block = level.getBlock(position);
-                  boolean disallow = placeBlock && blockPermissions.isPlacingDenied(blockId) || !placeBlock && blockPermissions.isBreakingDenied(block);
-                  if (disallow) {
+                  if (placeBlock && blockPermissions.isPlacingDenied(blockId) || !placeBlock && blockPermissions.isBreakingDenied(block)) {
                      packetWrapper9.cancel();
                      PacketWrapper chatMessage = PacketWrapper.create(ClientboundPacketsc0_30cpe.CHAT, packetWrapper9.user());
                      chatMessage.write(Types.BYTE, (byte)0);

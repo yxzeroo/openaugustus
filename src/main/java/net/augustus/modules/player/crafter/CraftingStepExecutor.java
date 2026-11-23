@@ -21,8 +21,7 @@ public class CraftingStepExecutor {
       if (this.isFinished()) {
          return false;
       } else {
-         CraftingStep craftingStep = (CraftingStep)this.steps.get(this.currentStepIndex);
-         boolean flag = craftingStep.execute(craftingInventoryActions, guiCrafting);
+         boolean flag = ((CraftingStep)this.steps.get(this.currentStepIndex)).execute(craftingInventoryActions, guiCrafting);
          if (flag) {
             this.currentStepIndex++;
          }

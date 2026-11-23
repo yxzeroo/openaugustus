@@ -40,8 +40,8 @@ import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -62,10 +62,10 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class BugUp extends Module implements MoveEntityListener, UpdateListener, PacketListener, TickListener, BlockBoundingBoxListener, MoveInputListener, PacketDelayListener, ClickListener, SilentSlotListener {
-   public BooleansSetting mode;
-   public final StringValue maxDistance;
+   public StringValue mode;
+   public final DoubleValue maxDistance;
    public final BooleanValue bugUpOnlyIfFallingIntoVoid;
-   private final StringValue fallDistance;
+   private final DoubleValue fallDistance;
    public final RangeSetting backFlagDist;
    public final RangeSetting blinkPackets;
    private final TimeHelper actionCooldownTimer;
@@ -87,7 +87,7 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    public BugUp() {
        super("BugUp", "Zurücksetzten", Color.DARK_GRAY, Categorys.MOVEMENT);
-      this.mode = new BooleansSetting(
+      this.mode = new StringValue(
          this,
          "Mode",
          "OnGround",
@@ -106,25 +106,15 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
             "NCP"
          }
       );
-      StringValue stringValue = new StringValue(this, "MaxDistance", 15.0, 3.0, 30.0, 0);
-      String str = "MaxFallDistanceWithoutBugUp";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isMaxDistanceSettingVisible();
-      this.maxDistance = stringValue2.visibleWhen(condition);
-      BooleanValue booleanValue = new BooleanValue(this, "BugUpOnlyIfFallingIntoVoid", false);
-      SettingVisibilityCondition condition2 = () -> this.isOnlyVoidSettingVisible();
-      this.bugUpOnlyIfFallingIntoVoid = (BooleanValue)booleanValue.withVisibility(condition2);
-      StringValue stringValue3 = new StringValue(this, "FallDistance", 4.0, 3.0, 15.0, 0);
+      this.maxDistance = new DoubleValue(this, "MaxDistance", 15.0, 3.0, 30.0, 0).named("MaxFallDistanceWithoutBugUp").visibleWhen(() -> this.isMaxDistanceSettingVisible());
+      this.bugUpOnlyIfFallingIntoVoid = (BooleanValue)new BooleanValue(this, "BugUpOnlyIfFallingIntoVoid", false).withVisibility(() -> this.isOnlyVoidSettingVisible());
+      DoubleValue stringValue3 = new DoubleValue(this, "FallDistance", 4.0, 3.0, 15.0, 0);
       SettingVisibilityCondition condition3 = () -> {
          return this.mode.getSelectedValue().equals("NCP");
       };
       this.fallDistance = stringValue3.visibleWhen(condition3);
-      RangeSetting rangeSetting = new RangeSetting(this, "BackFlagDist", 2.0, 3.0, 0.0, 10.0, 0);
-      SettingVisibilityCondition condition4 = () -> this.isBackFlagDistVisible();
-      this.backFlagDist = rangeSetting.visibleWhen(condition4);
-      RangeSetting rangeSetting2 = new RangeSetting(this, "BlinkPackets", 16.0, 16.0, 1.0, 20.0, 0);
-      SettingVisibilityCondition condition5 = () -> this.isBlinkPacketsVisible();
-      this.blinkPackets = rangeSetting2.visibleWhen(condition5);
+      this.backFlagDist = new RangeSetting(this, "BackFlagDist", 2.0, 3.0, 0.0, 10.0, 0).visibleWhen(() -> this.isBackFlagDistVisible());
+      this.blinkPackets = new RangeSetting(this, "BlinkPackets", 16.0, 16.0, 1.0, 20.0, 0).visibleWhen(() -> this.isBlinkPacketsVisible());
       this.actionCooldownTimer = new TimeHelper();
       this.lastGroundPos = new double[3];
       this.buggingUp = false;
@@ -154,42 +144,29 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 3;
-      this.toggleEventSubscription(b5);
-      byte b6 = 21;
-      this.toggleEventSubscription(b6);
-      byte b7 = 25;
-      this.toggleEventSubscription(b7);
-      byte b8 = 7;
-      this.toggleEventSubscription(b8);
-      byte b9 = 34;
-      this.toggleEventSubscription(b9);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)3);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
    }
 
    @Override
    public void onTick2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (mc.thePlayer.onGround) {
          this.lastGroundPos = new double[]{mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ};
       }
 
       if (this.shouldBugUp()) {
          this.buggingUp = true;
-         String selectedValue2 = this.mode.getSelectedValue();
-         switch (selectedValue2) {
+         switch (this.mode.getSelectedValue()) {
             case "Teleport":
-               long l = 200L;
-               if (this.actionCooldownTimer.reached2(l)) {
+               if (this.actionCooldownTimer.reached2(200L)) {
                   mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(this.lastGroundPos[0], this.lastGroundPos[1], this.lastGroundPos[2], true));
                   this.actionCooldownTimer.reset();
                }
@@ -219,19 +196,14 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void onMoveEntity(EventMoveEntity event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (!this.shouldBugUp()) {
          this.collisionFloorY = mc.thePlayer.posY + event.getY();
       } else {
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "AirStuck":
-               double d = 0.0;
-               event.setX(d);
-               double d2 = 0.0;
-               event.setY(d2);
-               double d3 = 0.0;
-               event.setZ(d3);
+               event.setX(0.0);
+               event.setY(0.0);
+               event.setZ(0.0);
             case "Collision":
          }
       }
@@ -239,7 +211,6 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void onUpdate2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.shouldBugUp() && this.mode.getSelectedValue().equals("AirStuck")) {
          mc.thePlayer.motionY = 0.0;
          mc.thePlayer.motionX = 0.0;
@@ -249,23 +220,16 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void onUpdate() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if ((this.mode.getSelectedValue().equals("BlinkOutgoing") || this.mode.getSelectedValue().equals("BlinkBoth"))
          && mc.thePlayer.ticksExisted > 50
          && mc.playerController.gameIsSurvivalOrAdventure()) {
          if (this.wasOnGround) {
-            long l = 2000L;
-            if ((this.actionCooldownTimer.reached2(l) || this.receivedPosLook) && !BlockUtil.isScaffoldActiveAndValid()) {
+            if ((this.actionCooldownTimer.reached2(2000L) || this.receivedPosLook) && !BlockUtil.isScaffoldActiveAndValid()) {
                this.blinking = this.predictWillFallIntoVoid();
                this.blinkedPacketCount = 0;
                if (this.blinking) {
                   this.receivedPosLook = false;
-                  RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-                  double minValue = this.blinkPackets.getMinValue();
-                  double maxValue = this.blinkPackets.getMaxValue();
-                  double d = maxValue;
-                  double d2 = minValue;
-                  this.maxBlinkPackets = Math.max(instance.nextInt(d2, d), 1);
+                  this.maxBlinkPackets = Math.max(DefaultRandomGenerator.instance.nextInt(this.blinkPackets.getMinValue(), this.blinkPackets.getMaxValue()), 1);
                }
             }
          }
@@ -287,12 +251,10 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void onPacket2(EventPacket event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       Packet packet = event.getPacket();
       if (mc.thePlayer != null && mc.theWorld != null) {
          if (this.shouldBugUp()) {
-            String selectedValue = this.mode.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.mode.getSelectedValue()) {
                case "AirStuck":
                   if (packet instanceof C03PacketPlayer) {
                      event.cancel();
@@ -300,8 +262,7 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
                   break;
                case "OnGroundSpoof":
                   if (packet instanceof C03PacketPlayer) {
-                     C03PacketPlayer packet2 = (C03PacketPlayer)packet;
-                     packet2.setOnGround(true);
+                     ((C03PacketPlayer)packet).setOnGround(true);
                   }
             }
          }
@@ -344,53 +305,42 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
 
    @Override
    public void onBlockBoundingBox(EventBlockBoundingBox event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.buggingUp && this.mode.getSelectedValue().equals("Collision") && event.getBlock() instanceof BlockAir && (double)(event.getBlockPos().getY() + 1) < this.collisionFloorY) {
          BlockPos blockPos = event.getBlockPos();
-         AxisAlignedBB box = new AxisAlignedBB(
+         event.setBoundingBox(new AxisAlignedBB(
             (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-         );
-         event.setBoundingBox(box);
+         ));
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if ((this.mode.getSelectedValue().equals("BlinkOutgoing") || this.mode.getSelectedValue().equals("BlinkBoth")) && this.blinking) {
-         float f = 1.0F;
-         event.setMoveForward(f);
+         event.setMoveForward(1.0F);
       }
    }
 
    @Override
    public void onPacketDelay(EventPacketDelay event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if ((this.mode.getSelectedValue().equals("BlinkOutgoing") || this.mode.getSelectedValue().equals("BlinkBoth")) && this.blinking) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    @Override
    public void onPacketDelay2(EventPacketDelay event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.mode.getSelectedValue().equals("BlinkBoth") && this.blinking) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    @Override
    public void onClick(EventClick event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.mode.getSelectedValue().equalsIgnoreCase("AutoPlatform") && this.blazeRodSlot >= 0) {
          int platformSwitchDelay2 = this.platformSwitchDelay;
          if (this.tickCounter.hasReached2(platformSwitchDelay2)) {
-            long l = 1000L;
-            if (this.platformClickTimer.reached2(l)) {
-               byte b = 1;
-               event.addRightClicks(b);
+            if (this.platformClickTimer.reached2(1000L)) {
+               event.addRightClicks((byte)1);
                this.platformClickTimer.reset();
             }
          }
@@ -400,7 +350,6 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
    @Override
    public void onSilentSlot() {
       this.tickCounter.increment();
-      Fly.getCachedSettings();
       this.blazeRodSlot = -1;
       if (this.mode.getSelectedValue().equalsIgnoreCase("AutoPlatform") && this.shouldBugUp()) {
          for (int i = 0; i < 9; i++) {
@@ -413,22 +362,17 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
          }
 
          if (mc.thePlayer.inventory.currentItem != this.blazeRodSlot) {
-            byte b = 3;
-            byte b2 = 1;
-            this.platformSwitchDelay = DefaultRandomGenerator.instance.nextInt2(b2, b);
+            this.platformSwitchDelay = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
             this.tickCounter.reset();
          }
 
          if (this.blazeRodSlot >= 0) {
-            int blazeRodSlot2 = this.blazeRodSlot;
-            byte b3 = -3;
-            SilentSlotManager.requestSlot(this, b3, blazeRodSlot2);
+            SilentSlotManager.requestSlot(this, (byte)-3, this.blazeRodSlot);
          }
       }
    }
 
    private boolean isBlockBelow() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer.posY < 0.0) {
          return false;
       } else {
@@ -444,17 +388,11 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
    }
 
    private boolean shouldBugUp() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer == null) {
          return false;
       } else {
          if (!ClientManagers.moduleManager.longJump.isToggled() && !ClientManagers.moduleManager.fly.isToggled()) {
-            float fallDistance2 = mc.thePlayer.fallDistance;
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.backFlagDist.getMinValue();
-            double maxValue = this.backFlagDist.getMaxValue();
-            double d = minValue;
-            if (!(fallDistance2 < instance.nextFloat2(d, maxValue)) || this.buggingUp) {
+            if (!(mc.thePlayer.fallDistance < DefaultRandomGenerator.instance.nextFloat2(this.backFlagDist.getMinValue(), this.backFlagDist.getMaxValue())) || this.buggingUp) {
                if (this.buggingUp && this.mode.getSelectedValue().equals("Collision")) {
                   return true;
                }
@@ -472,7 +410,6 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
       double posX = thePlayer.posX;
       double posY = thePlayer.posY;
       double posZ = thePlayer.posZ;
-      Fly.getCachedSettings();
       double motionX = thePlayer.motionX;
       double motionY = thePlayer.motionY;
       double motionZ = thePlayer.motionZ;
@@ -582,8 +519,7 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
          double d4 = motionX;
          double d5 = motionZ;
          boolean isSneaking = thePlayer.isSneaking();
-         boolean flag = thePlayer.onGround && isSneaking;
-         if (flag) {
+         if (thePlayer.onGround && isSneaking) {
             double d6;
             for (d6 = 0.05; d != 0.0 && mc.theWorld.getCollidingBoundingBoxesCapped(thePlayer, box.offset(d, -1.0, 0.0)).isEmpty(); d4 = d) {
                if (d < d6 && d >= -d6) {
@@ -698,9 +634,7 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
             }
 
             box12 = box12.offset(0.0, 0.0, d15);
-            double d16 = d11 * d11 + d12 * d12;
-            double d17 = d14 * d14 + d15 * d15;
-            if (d16 > d17) {
+            if ((d11 * d11 + d12 * d12) > (d14 * d14 + d15 * d15)) {
                d = d11;
                d3 = d12;
                d2 = -d10;
@@ -793,22 +727,18 @@ public class BugUp extends Module implements MoveEntityListener, UpdateListener,
    }
 
    private boolean isBlinkPacketsVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.mode.getSelectedValue().equals("BlinkOutgoing") || this.mode.getSelectedValue().equals("BlinkBoth");
    }
 
    private boolean isBackFlagDistVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.mode.getSelectedValue().equals("BlinkOutgoing") && !this.mode.getSelectedValue().equals("BlinkBoth");
    }
 
    private boolean isOnlyVoidSettingVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.mode.getSelectedValue().equals("NCP");
    }
 
    private boolean isMaxDistanceSettingVisible() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return !this.mode.getSelectedValue().equals("NCP");
    }
 

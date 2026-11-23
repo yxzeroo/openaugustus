@@ -330,8 +330,7 @@ public class ConnectedProperties {
          if (n == length) {
             return null;
          } else {
-            String str = this.name.substring(length, n);
-            int n2 = Config.parseInt(str, -1);
+            int n2 = Config.parseInt(this.name.substring(length, n), -1);
             return n2 < 0 ? null : new int[]{n2};
          }
       }
@@ -422,9 +421,7 @@ public class ConnectedProperties {
             } else if (flag2 && str2.endsWith("<default>.png")) {
                list.add(ConnectedTextures.SPRITE_DEFAULT);
             } else {
-               ResourceLocation location2 = new ResourceLocation(resourceDomain, str2);
-               boolean flag3 = Config.hasResource(location2);
-               if (!flag3) {
+               if (!Config.hasResource(new ResourceLocation(resourceDomain, str2))) {
                   Config.warn("File not found: " + str2);
                }
 
@@ -434,9 +431,7 @@ public class ConnectedProperties {
                   str4 = resourcePath.substring(str3.length());
                }
 
-               ResourceLocation location3 = new ResourceLocation(resourceDomain, str4);
-               TextureAtlasSprite textureAtlasSprite = textureMap.registerSprite(location3);
-               list.add(textureAtlasSprite);
+               list.add(textureMap.registerSprite(new ResourceLocation(resourceDomain, str4)));
             }
          }
 
@@ -635,8 +630,7 @@ public class ConnectedProperties {
    }
 
    private String[] detectMatchTiles() {
-      TextureAtlasSprite icon = getIcon(this.name);
-      return icon == null ? null : new String[]{this.name};
+      return getIcon(this.name) == null ? null : new String[]{this.name};
    }
 
    private int[] parseCtmTileIndexes(Properties properties) {
@@ -729,8 +723,7 @@ public class ConnectedProperties {
       n = this.getMax(this.metadatas, n);
       if (this.matchBlocks != null) {
          for (int i = 0; i < this.matchBlocks.length; i++) {
-            MatchBlock matchBlock = this.matchBlocks[i];
-            n = this.getMax(matchBlock.getMetadatas(), n);
+            n = this.getMax(this.matchBlocks[i].getMetadatas(), n);
          }
       }
 
@@ -774,8 +767,7 @@ public class ConnectedProperties {
          int n = 0;
 
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            int n2 = parseFace(str2);
+            int n2 = parseFace(strings[i]);
             n |= n2;
          }
 

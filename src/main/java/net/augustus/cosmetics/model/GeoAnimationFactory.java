@@ -11,7 +11,6 @@ public class GeoAnimationFactory {
    }
 
    public GeoAnimationData getOrCreateAnimationData(Integer num) {
-      int[] flowState = GeoAnimationData.getFlowState();
       if (!this.animationDataMap.containsKey(num)) {
          GeoAnimationData geoAnimationData = new GeoAnimationData();
          this.animatable.registerControllers(geoAnimationData);

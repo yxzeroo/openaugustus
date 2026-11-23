@@ -12,7 +12,6 @@ public class EventRayCast extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      RayCastListener listener = (RayCastListener)obj;
-      this.call2(listener);
+      this.call2((RayCastListener)obj);
    }
 }

@@ -8,8 +8,7 @@ import net.augustus.settings.TextInputSetting;
 public class ClientSpooferCommand extends Command {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (set a custom string for clientspoofing)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (set a custom string for clientspoofing)");
    }
 
    public ClientSpooferCommand() {
@@ -18,15 +17,10 @@ public class ClientSpooferCommand extends Command {
 
    public void commandAction(String[] strings, String str) {
       if (strings.length > 1) {
-         TextInputSetting customSpoofString = ClientManagers.moduleManager.clientSpoofer.customSpoofString;
-         String str2 = str.substring(this.getCommand().length() + 1);
-         String str3 = str2;
-         customSpoofString.setValue(str3);
-         String str4 = "Set spoofer string to: §c§l\"" + ClientManagers.moduleManager.clientSpoofer.customSpoofString.getValue() + "\"";
-         this.sendChat(str4);
+         ClientManagers.moduleManager.clientSpoofer.customSpoofString.setValue(str.substring(this.getCommand().length() + 1));
+         this.sendChat("Set spoofer string to: §c§l\"" + ClientManagers.moduleManager.clientSpoofer.customSpoofString.getValue() + "\"");
       } else {
-         String str5 = "§7" + this.getCommand() + " [§2Custom string§7]";
-         this.sendChat(str5);
+         this.sendChat("§7" + this.getCommand() + " [§2Custom string§7]");
       }
    }
 

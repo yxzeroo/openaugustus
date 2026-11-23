@@ -11,11 +11,7 @@ public class StringListProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonListPropertyCodec stringListCodec = configSerializerProvider.getStringListCodec();
-      String name2 = this.getName();
-      List value2 = (List)this.getValue();
-      String str = name2;
-      stringListCodec.writeList(str, value2, json);
+      configSerializerProvider.getStringListCodec().writeList(this.getName(), (List)this.getValue(), json);
       return json;
    }
 
@@ -24,13 +20,7 @@ public class StringListProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonListPropertyCodec stringListCodec = configSerializerProvider.getStringListCodec();
-      String name2 = this.getName();
-      List list = flag ? (List)this.getDefaultValue() : (List)this.getValue();
-      String str = name2;
-      List list2 = stringListCodec.readList(str, list, json);
-      List list3 = list2;
-      this.applyValue(list3);
+      this.applyValue(configSerializerProvider.getStringListCodec().readList(this.getName(), flag ? (List)this.getDefaultValue() : (List)this.getValue(), json));
    }
 
    public StringListProperty(FeatureBase featureBase2, String str, List list) {

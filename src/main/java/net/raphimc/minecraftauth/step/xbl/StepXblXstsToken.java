@@ -71,8 +71,7 @@ public class StepXblXstsToken extends AbstractStep<StepFullXblSession.FullXblSes
    }
 
    public StepXblXstsToken.XblXstsToken fromJson(JsonObject json) {
-      StepFullXblSession.FullXblSession fullXblSession = this.prevStep != null ? this.prevStep.fromJson(json.getAsJsonObject(this.prevStep.name)) : null;
-      return StepXblXstsToken.XblXstsToken.fromJson(json, fullXblSession);
+      return StepXblXstsToken.XblXstsToken.fromJson(json, this.prevStep != null ? this.prevStep.fromJson(json.getAsJsonObject(this.prevStep.name)) : null);
    }
 
    public JsonObject toJson(StepXblXstsToken.XblXstsToken xblXstsToken) {

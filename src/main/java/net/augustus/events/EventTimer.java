@@ -26,9 +26,7 @@ public class EventTimer extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      TimerListener listener = (TimerListener)obj;
-      TimerListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((TimerListener)obj);
    }
 
    public void setExtraTicks(int n) {

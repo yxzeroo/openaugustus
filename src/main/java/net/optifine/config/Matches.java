@@ -10,8 +10,7 @@ public class Matches {
          return true;
       } else {
          for (int i = 0; i < matchBlocks.length; i++) {
-            MatchBlock matchBlock = matchBlocks[i];
-            if (matchBlock.matches(blockStateBase)) {
+            if (matchBlocks[i].matches(blockStateBase)) {
                return true;
             }
          }
@@ -25,8 +24,7 @@ public class Matches {
          return true;
       } else {
          for (int i = 0; i < matchBlocks.length; i++) {
-            MatchBlock matchBlock = matchBlocks[i];
-            if (matchBlock.matches(n, n2)) {
+            if (matchBlocks[i].matches(n, n2)) {
                return true;
             }
          }
@@ -68,8 +66,7 @@ public class Matches {
          return true;
       } else {
          for (int i = 0; i < matchBlocks.length; i++) {
-            MatchBlock matchBlock = matchBlocks[i];
-            if (matchBlock.getBlockId() == n) {
+            if (matchBlocks[i].getBlockId() == n) {
                return true;
             }
          }

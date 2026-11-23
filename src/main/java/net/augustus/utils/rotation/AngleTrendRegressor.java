@@ -20,15 +20,12 @@ public class AngleTrendRegressor {
 
       for (int i = n5; i <= n; i++) {
          Vec3 vec = predictor.getPredictedEntityPosition((EntityLivingBase)player, n, i);
-         Vec3 vec2 = predictor.getPredictedEntityPosition(entity, n, i);
-         boolean flag = true;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, vec2, flag);
+         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entity, predictor.getPredictedEntityPosition(entity, n, i), true);
          double d5 = MathHelper.wrapAngleTo180_double(HitboxAngleUtil.getYawRange(vec, entityBoundingBoxAt)[n4]);
          if (i == n5) {
             d3 = d5;
             d4 = d5;
-            double d6 = 0.0;
-            doubleSampleWindow.add(d6);
+            doubleSampleWindow.add(0.0);
          } else {
             double d7 = EntityBoundsUtil.getShortestSignedAngleDelta(d3, d5);
             if (entityBoundingBoxAt.isVecInside(vec.xCoord, (entityBoundingBoxAt.minY + entityBoundingBoxAt.maxY) / 2.0, vec.zCoord) || Math.abs(d7) > 90.0) {

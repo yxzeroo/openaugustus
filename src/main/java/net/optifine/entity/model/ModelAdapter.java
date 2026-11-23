@@ -46,8 +46,7 @@ public abstract class ModelAdapter {
       ArrayList list = new ArrayList();
 
       for (int i = 0; i < modelRendererNames.length; i++) {
-         String str = modelRendererNames[i];
-         ModelRenderer modelRenderer = this.getModelRenderer(modelBase, str);
+         ModelRenderer modelRenderer = this.getModelRenderer(modelBase, modelRendererNames[i]);
          if (modelRenderer != null) {
             list.add(modelRenderer);
          }

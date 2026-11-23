@@ -65,8 +65,7 @@ public class CommandManager implements ICommandManager {
    public Stream tabComplete2(String str) {
       Tuple tuple = expand(str, true);
       String first = (String)tuple.getFirst();
-      List second = (List)tuple.getSecond();
-      return second.isEmpty() ? new TabCompleteHelper().addCommands(this.baritone.getCommandManager2()).filterPrefix(first).getStream() : this.tabComplete(tuple);
+      return ((List)tuple.getSecond()).isEmpty() ? new TabCompleteHelper().addCommands(this.baritone.getCommandManager2()).filterPrefix(first).getStream() : this.tabComplete(tuple);
    }
 
    public static Tuple expand(String str) {

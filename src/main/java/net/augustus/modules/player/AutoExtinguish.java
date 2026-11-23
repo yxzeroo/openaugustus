@@ -70,16 +70,11 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 34;
-      this.toggleEventSubscription(b3);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
-      byte b5 = 21;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -90,17 +85,14 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
             if (this.bucketHotbarSlot == mc.thePlayer.inventory.currentItem) {
                if (ClientManagers.rotationController.getPreviousRotation().pitch > 88.0F && this.waterTargetPos == null) {
                   if (this.isBurningWithoutProtection()) {
-                     byte b = 1;
-                     event.addRightClicks(b);
-                     Runnable runnable = () -> this.placeWaterAndRecordTarget();
-                     event.setRightClickAction(runnable);
+                     event.addRightClicks((byte)1);
+                     event.setRightClickAction(() -> this.placeWaterAndRecordTarget());
                      return;
                   }
                }
 
                if (this.waterTargetPos != null) {
-                  int lastGroundY = (int)mc.thePlayer.lastGroundY;
-                  Vec3 vec = this.findNearbyWaterSourcePos(lastGroundY);
+                  Vec3 vec = this.findNearbyWaterSourcePos((int)mc.thePlayer.lastGroundY);
                   if (vec == null && this.ticksSinceWaterPlaced > 2) {
                      this.waterTargetPos = null;
                      return;
@@ -119,8 +111,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
                         && this.placedWaterBlockPos != null) {
                         BlockPos pos = new BlockPos(this.waterTargetPos.xCoord, this.waterTargetPos.yCoord, this.waterTargetPos.zCoord);
                         if (pos.equalsPos(mc.objectMouseOver.getBlockPos()) && pos.equalsPos(mc.previousObjectMouseOver.getBlockPos())) {
-                           byte b2 = 1;
-                           event.addRightClicks(b2);
+                           event.addRightClicks((byte)1);
                            this.waterTargetPos = null;
                            this.ticksSinceWaterPlaced = 0;
                         }
@@ -139,11 +130,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
          if (this.isBurningWithoutProtection() || this.waterTargetPos != null) {
             this.bucketHotbarSlot = this.findBucketHotbarSlot();
             if (this.bucketHotbarSlot >= 0) {
-               int bucketHotbarSlot2 = this.bucketHotbarSlot;
-               boolean value = this.silentSlotSwitching.getValue();
-               int n = bucketHotbarSlot2;
-               byte b = -2;
-               SilentSlotManager.requestSlot(this, b, n, value);
+               SilentSlotManager.requestSlot(this, (byte)-2, this.bucketHotbarSlot, this.silentSlotSwitching.getValue());
             }
          }
       }
@@ -164,26 +151,13 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
                      previousRotation.yaw = previousRotation.yaw + DefaultRandomGenerator.instance.nextFloat(f3, f2);
                   }
 
-                  Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-                  previousRotation = RotationUtil.applyGcdFix(previousRotation, previousRotation2);
-                  byte b = -2;
-                  ClientManagers.rotationController.requestRotation(previousRotation, b, this);
+                  previousRotation = RotationUtil.applyGcdFix(previousRotation, ClientManagers.rotationController.getPreviousRotation());
+                  ClientManagers.rotationController.requestRotation(previousRotation, (byte)-2, this);
                }
             } else {
-               double xCoord = this.waterTargetPos.xCoord;
-               double yCoord = this.waterTargetPos.yCoord;
-               double zCoord = this.waterTargetPos.zCoord;
-               Rotation previousRotation3 = ClientManagers.rotationController.getPreviousRotation();
-               float f4 = (float)this.verticalSpeed.nextValue();
-               float f5 = (float)this.verticalSpeed.nextValue();
-               boolean flag = true;
-               float f6 = f5;
-               float f7 = f4;
-               Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation3, f7, f6, flag);
-               Rotation previousRotation4 = ClientManagers.rotationController.getPreviousRotation();
-               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, previousRotation4);
-               byte b2 = -2;
-               ClientManagers.rotationController.requestRotation(rotationsToPos, b2, this);
+               Rotation rotationsToPos = RotationUtil.getRotationsToPos(this.waterTargetPos.xCoord, this.waterTargetPos.yCoord, this.waterTargetPos.zCoord, ClientManagers.rotationController.getPreviousRotation(), (float)this.verticalSpeed.nextValue(), (float)this.verticalSpeed.nextValue(), true);
+               rotationsToPos = RotationUtil.applyGcdFix(rotationsToPos, ClientManagers.rotationController.getPreviousRotation());
+               ClientManagers.rotationController.requestRotation(rotationsToPos, (byte)-2, this);
             }
          }
       }
@@ -220,15 +194,12 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
    private Vec3 getBlockFaceCenterFromPos(BlockPos pos, EnumFacing facing) {
       int x = pos.getX();
       int z = pos.getZ();
-      int y = pos.getY();
-      int n = x;
-      return this.getBlockFaceCenter(n, y, z, facing);
+      return this.getBlockFaceCenter(x, pos.getY(), z, facing);
    }
 
    private Vec3 getHitFaceCenter(MovingObjectPosition hit) {
       EnumFacing sideHit = hit.sideHit;
-      BlockPos blockPos = hit.getBlockPos();
-      return this.getBlockFaceCenterFromPos(blockPos, sideHit);
+      return this.getBlockFaceCenterFromPos(hit.getBlockPos(), sideHit);
    }
 
    private Vec3 findNearbyWaterSourcePos(int n) {
@@ -239,10 +210,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
                .getBlockState2(MathHelper.floor_double(mc.thePlayer.posX + (double)i), n, MathHelper.floor_double(mc.thePlayer.posZ + (double)j));
             Block block = blockState2.getBlock();
             if (block instanceof BlockLiquid && (Integer)blockState2.getValue(BlockLiquid.LEVEL) == 0 && block.getMaterial() == Material.water) {
-               int n2 = MathHelper.floor_double(mc.thePlayer.posX + (double)i);
-               int n3 = MathHelper.floor_double(mc.thePlayer.posZ + (double)j);
-               int n4 = n2;
-               return this.findAdjacentSolidFace(n4, n, n3);
+               return this.findAdjacentSolidFace(MathHelper.floor_double(mc.thePlayer.posX + (double)i), n, MathHelper.floor_double(mc.thePlayer.posZ + (double)j));
             }
          }
       }
@@ -256,8 +224,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
 
       for (int i = 0; i < length; i++) {
          EnumFacing facing = values[i];
-         IBlockState blockState2 = mc.theWorld.getBlockState2(n + facing.getFrontOffsetX(), n2 + facing.getFrontOffsetY(), n3 + facing.getFrontOffsetZ());
-         if (blockState2.getBlock().getMaterial() != Material.air) {
+         if (mc.theWorld.getBlockState2(n + facing.getFrontOffsetX(), n2 + facing.getFrontOffsetY(), n3 + facing.getFrontOffsetZ()).getBlock().getMaterial() != Material.air) {
             return this.getBlockFaceCenter(n, n2, n3, facing);
          }
       }
@@ -275,8 +242,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (ClientManagers.rotationController.isOwnedBy(this)) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 
@@ -287,8 +253,7 @@ public class AutoExtinguish extends Module implements TickListener, ClickListene
          && mc.previousObjectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
          && mc.objectMouseOver.getBlockPos().equalsPos(mc.previousObjectMouseOver.getBlockPos())) {
          mc.rightClickMouse();
-         MovingObjectPosition objectMouseOver = mc.objectMouseOver;
-         this.waterTargetPos = this.getHitFaceCenter(objectMouseOver);
+         this.waterTargetPos = this.getHitFaceCenter(mc.objectMouseOver);
          this.placedWaterBlockPos = mc.objectMouseOver.getBlockPos();
          this.ticksSinceWaterPlaced = 0;
       }

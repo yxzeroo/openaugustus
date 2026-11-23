@@ -50,14 +50,12 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
       BooleanValue serverside2 = this.serverside;
       this.serverside.getClass();
       BooleanValue booleanValue2 = serverside2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.moveFix = (BooleanValue)booleanValue.withVisibility(condition);
+      this.moveFix = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
       MultiOptionSetting multiOptionSetting = new MultiOptionSetting(this, "StopSpinningOn", SpinBotStopConditionOption.values());
       serverside2 = this.serverside;
       this.serverside.getClass();
       BooleanValue booleanValue3 = serverside2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.stopSpinningOn = multiOptionSetting.visibleWhen(condition2);
+      this.stopSpinningOn = multiOptionSetting.visibleWhen(() -> booleanValue3.getValue());
       this.unusedTimer = new TimeHelper();
       this.resumeSpinTimer = new TimeHelper();
       this.spinRotation = new Rotation();
@@ -78,16 +76,11 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 21;
-      this.toggleEventSubscription(b4);
-      byte b5 = 18;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
@@ -149,8 +142,7 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
    public void onMoveInput3(EventMoveInput event) {
       if (this.spinning) {
          if (this.isMoveFixEnabled() && this.serverside.getValue()) {
-            MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-            event.setMoveFixMode(moveFixMode);
+            event.setMoveFixMode(MoveFixMode.DEFAULT);
          }
       }
    }
@@ -159,8 +151,7 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
    public void onMove(EventMove event) {
       if (this.spinning) {
          if (!this.isMoveFixEnabled() && this.serverside.getValue()) {
-            float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-            event.setYaw(realYaw);
+            event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
          }
       }
    }
@@ -169,8 +160,7 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
    public void onMove2(EventMove event) {
       if (this.spinning) {
          if (!this.isMoveFixEnabled() && this.serverside.getValue()) {
-            float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-            event.setYaw(realYaw);
+            event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
          }
       }
    }
@@ -190,21 +180,18 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
    }
 
    private void applySpinRotation() {
-      long l = 1000L;
-      if (this.resumeSpinTimer.reached2(l)) {
+      if (this.resumeSpinTimer.reached2(1000L)) {
          Rotation lastRotation2 = this.lastRotation;
          this.spinRotation = RotationUtil.applyGcdFix(this.spinRotation, lastRotation2);
          if (this.isMoveFixEnabled() && this.serverside.getValue()) {
-            byte b = 8;
             Rotation spinRotation2 = this.spinRotation;
-            ClientManagers.rotationController.requestRotation(spinRotation2, b, this);
+            ClientManagers.rotationController.requestRotation(spinRotation2, (byte)8, this);
          }
       }
    }
 
    private void stepSpinAngles() {
-      long l = 1000L;
-      if (this.resumeSpinTimer.reached2(l)) {
+      if (this.resumeSpinTimer.reached2(1000L)) {
          this.spinRotation.yaw = this.spinRotation.yaw + (float)this.yawSpeed.nextValue();
          this.spinRotation.pitch = (float)this.pitchValue.nextValue();
       }
@@ -212,10 +199,8 @@ public class SpinBot extends Module implements MoveListener, ClickListener, Tick
 
    private void applyMotionRotations(EventMotion event) {
       if (this.serverside.getValue()) {
-         float yaw = this.spinRotation.yaw;
-         event.setYaw(yaw);
-         float pitch = this.spinRotation.pitch;
-         event.setPitch(pitch);
+         event.setYaw(this.spinRotation.yaw);
+         event.setPitch(this.spinRotation.pitch);
       }
 
       mc.thePlayer.rotationYawHead = this.spinRotation.yaw;

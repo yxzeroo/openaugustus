@@ -49,8 +49,7 @@ public final class BaritoneProvider implements IBaritoneProvider {
    }
 
    public BaritoneProvider() {
-      Baritone baritone = (Baritone)this.createBaritone(Minecraft.getMinecraft());
-      baritone.registerBehavior2(ExampleBaritoneControl::new);
+      ((Baritone)this.createBaritone(Minecraft.getMinecraft())).registerBehavior2(ExampleBaritoneControl::new);
    }
 
    @Override

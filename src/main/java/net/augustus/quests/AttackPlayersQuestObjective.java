@@ -28,8 +28,7 @@ public class AttackPlayersQuestObjective extends QuestObjective implements Attac
    public void onAttackEntity(EventAttackEntity event) {
       if (event.getTarget() instanceof EntityLivingBase) {
          if (this.canCountHit) {
-            double d = 1.0;
-            this.addProgress(d);
+            this.addProgress(1.0);
             this.canCountHit = false;
          }
 

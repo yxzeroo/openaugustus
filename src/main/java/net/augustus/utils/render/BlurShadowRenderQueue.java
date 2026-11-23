@@ -16,8 +16,7 @@ public class BlurShadowRenderQueue {
          glStateSnapshot.capture(renderPassTask);
          this.snapshots.add(glStateSnapshot);
       } else {
-         GlStateSnapshot glStateSnapshot2 = (GlStateSnapshot)this.snapshots.get(this.queuedCount);
-         glStateSnapshot2.capture(renderPassTask);
+         ((GlStateSnapshot)this.snapshots.get(this.queuedCount)).capture(renderPassTask);
       }
 
       this.queuedCount++;
@@ -31,8 +30,7 @@ public class BlurShadowRenderQueue {
 
       try {
          for (int i = 0; i < this.queuedCount; i++) {
-            GlStateSnapshot glStateSnapshot = (GlStateSnapshot)this.snapshots.get(i);
-            glStateSnapshot.restore(shaderRenderPass);
+            ((GlStateSnapshot)this.snapshots.get(i)).restore(shaderRenderPass);
          }
 
          this.queuedCount = 0;

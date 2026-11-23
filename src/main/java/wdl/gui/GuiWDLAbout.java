@@ -83,9 +83,7 @@ public class GuiWDLAbout extends GuiScreen {
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.id == 0) {
-         Minecraft mc2 = this.mc;
-         GuiWDLExtensions guiWDLExtensions = new GuiWDLExtensions(this);
-         mc2.displayGuiScreen(guiWDLExtensions);
+         this.mc.displayGuiScreen(new GuiWDLExtensions(this));
       } else if (button.id == 1) {
          setClipboardString(WDL.getDebugInfo());
          button.displayString = I18n.format("wdl.gui.about.debugInfo.copied", new Object[0]);

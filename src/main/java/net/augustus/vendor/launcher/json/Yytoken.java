@@ -20,7 +20,6 @@ public class Yytoken {
 
    @Override
    public String toString() {
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       StringBuffer sb = new StringBuffer();
       switch (this.type) {
          case -1:

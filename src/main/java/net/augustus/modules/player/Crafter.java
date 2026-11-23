@@ -18,8 +18,8 @@ import net.augustus.modules.player.crafter.CraftingStepExecutor;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.modules.player.crafter.CraftingRecipePlanner;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.init.Items;
@@ -31,11 +31,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
 public class Crafter extends Module implements TickListener, RenderListener, CraftingInventoryActions {
-   public final StringValue startDelay;
+   public final DoubleValue startDelay;
    public final RangeSetting delay;
    public final BooleanValue smartDelay;
-   public final BooleansSetting eventToClick;
-   public final BooleansSetting clickMode;
+   public final StringValue eventToClick;
+   public final StringValue clickMode;
    private final TimeHelper clickTimer;
    private final TimeHelper openTimer;
    private int nextClickDelayMs;
@@ -46,11 +46,11 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
 
    public Crafter() {
        super("Crafter", "Handwerker", new Color(123, 230, 10), Categorys.PLAYER);
-      this.startDelay = new StringValue(this, "StartDelay", 100.0, 0.0, 1000.0, 0);
+      this.startDelay = new DoubleValue(this, "StartDelay", 100.0, 0.0, 1000.0, 0);
       this.delay = new RangeSetting(this, "Delay", 70.0, 120.0, 0.0, 400.0, 0);
       this.smartDelay = new BooleanValue(this, "SmartDelay", true);
-      this.eventToClick = new BooleansSetting(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
-      this.clickMode = new BooleansSetting(this, "ClickMode", "Basic", new String[]{"Basic"});
+      this.eventToClick = new StringValue(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
+      this.clickMode = new StringValue(this, "ClickMode", "Basic", new String[]{"Basic"});
       this.clickTimer = new TimeHelper();
       this.openTimer = new TimeHelper();
       this.nextClickDelayMs = 0;
@@ -78,8 +78,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
          obj10 -> CraftingItemScorer.scoreSword((ItemStack)obj10),
          new Item[]{Items.diamond_sword, Items.iron_sword, Items.golden_sword, Items.stone_sword, Items.wooden_sword}
       );
-      CraftingUpgradeCategory craftingUpgradeCategory6 = new CraftingUpgradeCategory(obj11 -> ((ItemStack)obj11).getItem() instanceof ItemFishingRod, obj12 -> 1.0, new Item[]{Items.fishing_rod});
-      return Arrays.asList(craftingUpgradeCategory5, craftingUpgradeCategory, craftingUpgradeCategory2, craftingUpgradeCategory3, craftingUpgradeCategory4, craftingUpgradeCategory6);
+      return Arrays.asList(craftingUpgradeCategory5, craftingUpgradeCategory, craftingUpgradeCategory2, craftingUpgradeCategory3, craftingUpgradeCategory4, new CraftingUpgradeCategory(obj11 -> ((ItemStack)obj11).getItem() instanceof ItemFishingRod, obj12 -> 1.0, new Item[]{Items.fishing_rod}));
    }
 
    @Override
@@ -92,10 +91,8 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -117,9 +114,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
          this.resetCraftingState();
       } else if (!this.completed) {
          GuiCrafting currentScreen = (GuiCrafting)mc.currentScreen;
-         TimeHelper openTimer2 = this.openTimer;
-         double value = this.startDelay.getValue();
-         if (openTimer2.reached(value)) {
+         if (this.openTimer.reached(this.startDelay.getValue())) {
             long nextClickDelayMs2 = (long)this.nextClickDelayMs;
             if (this.clickTimer.reached2(nextClickDelayMs2)) {
                boolean flag;
@@ -132,12 +127,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
 
                if (flag) {
                   this.clickTimer.reset();
-                  RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-                  double minValue = this.delay.getMinValue();
-                  double maxValue = this.delay.getMaxValue();
-                  double d = maxValue;
-                  double d2 = minValue;
-                  this.nextClickDelayMs = instance.nextInt(d2, d);
+                  this.nextClickDelayMs = DefaultRandomGenerator.instance.nextInt(this.delay.getMinValue(), this.delay.getMaxValue());
                }
 
                return;
@@ -148,9 +138,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
 
    private void planNextUpgrade(GuiCrafting guiCrafting) {
       if (this.hasHeldCursorStack()) {
-         byte b = 0;
-         Object obj = null;
-         int n = this.findInventorySlot(guiCrafting, (Item)obj, b);
+         int n = this.findInventorySlot(guiCrafting, (Item)null, (byte)0);
          if (n >= 0) {
             this.performPickupClick(guiCrafting, n);
          }
@@ -165,8 +153,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
             List list = null;
 
             for (Item item : (Iterable<Item>)(craftingUpgradeCategory.getCandidateItems())) {
-               ItemStack stack = new ItemStack(item, 1, 0);
-               double d2 = craftingUpgradeCategory.score(stack);
+               double d2 = craftingUpgradeCategory.score(new ItemStack(item, 1, 0));
                if (!(d2 <= bestCurrentScore) && !(d2 <= d)) {
                   List list2 = CraftingRecipePlanner.planCraftingSteps(item, snapshot);
                   if (list2 != null && !list2.isEmpty()) {
@@ -249,8 +236,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
          return false;
       } else {
          guiCrafting.centerPos = this.getSlotCenterPosition(guiCrafting, slot);
-         String selectedValue = this.clickMode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.clickMode.getSelectedValue()) {
             case "Basic":
                mc.playerController.windowClick(guiCrafting.inventorySlots.windowId, n, 0, 0, mc.thePlayer);
                break;
@@ -276,8 +262,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
             return false;
          } else {
             guiCrafting.centerPos = this.getSlotCenterPosition(guiCrafting, slot);
-            String selectedValue = this.clickMode.getSelectedValue();
-            switch (selectedValue) {
+            switch (this.clickMode.getSelectedValue()) {
                case "Basic":
                   mc.playerController.windowClick(guiCrafting.inventorySlots.windowId, n, stackSize == 1 ? 0 : 1, 0, mc.thePlayer);
                   break;
@@ -300,8 +285,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
          return false;
       } else {
          guiCrafting.centerPos = this.getSlotCenterPosition(guiCrafting, slot);
-         String selectedValue = this.clickMode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.clickMode.getSelectedValue()) {
             case "Exploit":
                Augustus.getInstance().getClass();
                break;
@@ -323,10 +307,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
          double d2 = Math.abs((double)(slot.yDisplayPosition + 2 + guiCrafting.guiTop) - guiCrafting.centerPos[1]);
          double d3 = Math.sqrt(d * d + d2 * d2);
          if (d3 > 36.0) {
-            double minValue = this.delay.getMinValue();
-            double d4 = (minValue + this.delay.getMaxValue()) / 2.0;
-            double d5 = d3 / 30.0;
-            long l = (long)(d4 * d5);
+            long l = (long)(((this.delay.getMinValue() + this.delay.getMaxValue()) / 2.0) * (d3 / 30.0));
             return this.clickTimer.reached2(l);
          } else {
             return true;
@@ -340,12 +321,7 @@ public class Crafter extends Module implements TickListener, RenderListener, Cra
 
    private void scheduleNextClickDelay() {
       this.clickTimer.reset();
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      double minValue = this.delay.getMinValue();
-      double maxValue = this.delay.getMaxValue();
-      double d = maxValue;
-      double d2 = minValue;
-      this.nextClickDelayMs = instance.nextInt(d2, d);
+      this.nextClickDelayMs = DefaultRandomGenerator.instance.nextInt(this.delay.getMinValue(), this.delay.getMaxValue());
    }
 
 }

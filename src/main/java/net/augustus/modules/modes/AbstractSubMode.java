@@ -4,7 +4,7 @@ import net.augustus.config.NamedConfigComponent;
 import net.augustus.events.EventManager;
 import java.util.function.Supplier;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.interfaces.MC;
 
 public abstract class AbstractSubMode implements MC, NamedConfigComponent {
@@ -12,11 +12,9 @@ public abstract class AbstractSubMode implements MC, NamedConfigComponent {
    private Supplier visibilitySupplier;
    private final String name;
    public final Module parentModule;
-   public final DoubleValue modeSetting;
-   private static int[] controlFlowState;
+   public final SettingGroup modeSetting;
 
    public void setEnabled(boolean flag) {
-      int[] controlFlowState2 = getControlFlowState();
       if (this.enabled != flag) {
          this.updateEventSubscriptions();
          if (this.isEnabled()) {
@@ -34,7 +32,6 @@ public abstract class AbstractSubMode implements MC, NamedConfigComponent {
    }
 
    public void toggleEventSubscription(int n, int n2) {
-      int[] controlFlowState2 = getControlFlowState();
       if (this.isEnabled()) {
          EventManager.getEventBus().unsubscribe(n, this);
       } else {
@@ -48,7 +45,7 @@ public abstract class AbstractSubMode implements MC, NamedConfigComponent {
 
    public abstract void updateEventSubscriptions();
 
-   public AbstractSubMode(Module module, DoubleValue doubleValue, String str) {
+   public AbstractSubMode(Module module, SettingGroup doubleValue, String str) {
       this.modeSetting = doubleValue;
       this.name = str;
       this.parentModule = module;
@@ -59,8 +56,7 @@ public abstract class AbstractSubMode implements MC, NamedConfigComponent {
    }
 
    public void toggleEventSubscription(int n) {
-      byte b = 0;
-      this.toggleEventSubscription(n, b);
+      this.toggleEventSubscription(n, (byte)0);
    }
 
    public abstract void onDisable();
@@ -68,21 +64,9 @@ public abstract class AbstractSubMode implements MC, NamedConfigComponent {
    public abstract void onEnable();
 
    public boolean isSelected() {
-      int[] controlFlowState2 = getControlFlowState();
       return this.visibilitySupplier != null && (Boolean)this.visibilitySupplier.get();
    }
 
-   public static void setControlFlowState(int[] ints) {
-      controlFlowState = ints;
-   }
 
-   public static int[] getControlFlowState() {
-      return controlFlowState;
-   }
 
-   static {
-      if (getControlFlowState() == null) {
-         setControlFlowState(new int[4]);
-      }
-   }
 }

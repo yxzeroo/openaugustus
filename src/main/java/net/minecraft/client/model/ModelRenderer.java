@@ -77,8 +77,7 @@ public class ModelRenderer {
          } else {
             if (this.childModels != null) {
                for (int i = 0; i < this.childModels.size(); i++) {
-                  ModelRenderer modelRenderer = (ModelRenderer)this.childModels.get(i);
-                  ModelRenderer childDeep = modelRenderer.getChildDeep(str);
+                  ModelRenderer childDeep = ((ModelRenderer)this.childModels.get(i)).getChildDeep(str);
                   if (childDeep != null) {
                      return childDeep;
                   }
@@ -318,8 +317,7 @@ public class ModelRenderer {
       }
 
       for (int j = 0; j < this.spriteList.size(); j++) {
-         ModelSprite modelSprite = (ModelSprite)this.spriteList.get(j);
-         modelSprite.render(Tessellator.getInstance(), f);
+         ((ModelSprite)this.spriteList.get(j)).render(Tessellator.getInstance(), f);
       }
 
       Tessellator.getInstance().draw();

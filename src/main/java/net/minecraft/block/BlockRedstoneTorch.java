@@ -163,8 +163,7 @@ public class BlockRedstoneTorch extends BlockTorch {
       int n = 0;
 
       for (int i = 0; i < list.size(); i++) {
-         BlockRedstoneTorch.Toggle toggle = (BlockRedstoneTorch.Toggle)list.get(i);
-         if (toggle.pos.equals(pos)) {
+         if (((BlockRedstoneTorch.Toggle)list.get(i)).pos.equals(pos)) {
             if (++n >= 8) {
                return true;
             }

@@ -35,8 +35,7 @@ public class EntityAIOwnerHurtTarget extends EntityAITarget {
             return false;
          } else {
             this.theTarget = ownerEntity.getLastAttacker();
-            int lastAttackerTime = ownerEntity.getLastAttackerTime();
-            return lastAttackerTime != this.timestamp && this.isSuitableTarget(this.theTarget, false) && this.theEntityTameable.shouldAttackEntity(this.theTarget, ownerEntity);
+            return ownerEntity.getLastAttackerTime() != this.timestamp && this.isSuitableTarget(this.theTarget, false) && this.theEntityTameable.shouldAttackEntity(this.theTarget, ownerEntity);
          }
       }
    }

@@ -11,9 +11,8 @@ import net.minecraft.world.World;
 
 public class WorldGenMegaJungle extends WorldGenHugeTrees {
    private void createCrown(World world, BlockPos pos, int n) {
-      byte b = 2;
 
-      for (int i = -b; i <= 0; i++) {
+      for (int i = -((byte)2); i <= 0; i++) {
          this.growLeavesLayerStrict(world, pos.up(i), n + 1 - i);
       }
    }

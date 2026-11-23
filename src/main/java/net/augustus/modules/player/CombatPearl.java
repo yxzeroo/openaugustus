@@ -21,7 +21,7 @@ import net.augustus.utils.player.ContainerSlotQuery;
 import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,8 +35,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class CombatPearl extends Module implements TickListener, AttackEntityListener, LoadWorldListener, SilentSlotListener, ClickListener {
-   private final StringValue minDistance;
-   private final StringValue minHealth;
+   private final DoubleValue minDistance;
+   private final DoubleValue minHealth;
    private final BooleanValue silentSlotSwitching;
    private EntityLivingBase lastAttackedTarget;
    private Rotation throwRotation;
@@ -46,8 +46,8 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
 
    public CombatPearl() {
        super("CombatPearl", "CombatPearl", new Color(238, 255, 194), Categorys.PLAYER);
-      this.minDistance = new StringValue(this, "MinDistance", 10.0, 0.0, 20.0, 0);
-      this.minHealth = new StringValue(this, "MinHealth", 4.0, 0.0, 20.0, 0);
+      this.minDistance = new DoubleValue(this, "MinDistance", 10.0, 0.0, 20.0, 0);
+      this.minHealth = new DoubleValue(this, "MinHealth", 4.0, 0.0, 20.0, 0);
       this.silentSlotSwitching = new BooleanValue(this, "SilentSlotSwitching", true);
       this.throwRotation = null;
       this.aimTicks = 0;
@@ -81,9 +81,8 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
       } else if (mc.isNotInGui()) {
          if (!((double)mc.thePlayer.getCurrentHealth() < this.minHealth.getValue())) {
             if (this.throwRotation != null) {
-               byte b = 0;
                Rotation throwRotation2 = this.throwRotation;
-               ClientManagers.rotationController.requestRotation(throwRotation2, b, this);
+               ClientManagers.rotationController.requestRotation(throwRotation2, (byte)0, this);
                this.aimTicks++;
             } else {
                EntityEnderPearl entityEnderPearl = this.findEnemyThrownPearl();
@@ -93,9 +92,7 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
 
                if (this.trackedEnemyPearl != null) {
                   if (this.trackedEnemyPearl.ticksExisted == 0) {
-                     double distanceToEntityBox = (double)mc.thePlayer.getDistanceToEntityBox(this.trackedEnemyPearl);
-                     double distanceToEntityBox2 = (double)this.lastAttackedTarget.getDistanceToEntityBox(this.trackedEnemyPearl);
-                     if (distanceToEntityBox < distanceToEntityBox2) {
+                     if (((double)mc.thePlayer.getDistanceToEntityBox(this.trackedEnemyPearl)) < ((double)this.lastAttackedTarget.getDistanceToEntityBox(this.trackedEnemyPearl))) {
                         this.resetPearlState();
                         return;
                      }
@@ -103,10 +100,8 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
 
                   if (this.trackedEnemyPearl.ticksExisted == 3) {
                      ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-                     EntityEnderPearl trackedEnemyPearl2 = this.trackedEnemyPearl;
-                     projectileSimulator.initFromThrowable(trackedEnemyPearl2);
-                     short s = 300;
-                     projectileSimulator.simulateThrowableTrajectory(s);
+                     projectileSimulator.initFromThrowable(this.trackedEnemyPearl);
+                     projectileSimulator.simulateThrowableTrajectory((short)300);
                      MovingObjectPosition hitResult = projectileSimulator.getHitResult();
                      if (hitResult == null || hitResult.hitVec == null) {
                         this.resetPearlState();
@@ -119,21 +114,18 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
                         return;
                      }
 
-                     Vec3 hitVec2 = hitResult.hitVec;
-                     Rotation rotation = this.calculateInterceptRotation(hitVec2);
+                     Rotation rotation = this.calculateInterceptRotation(hitResult.hitVec);
                      if (rotation.yaw == 0.0F && rotation.pitch == 0.0F) {
                         this.resetPearlState();
                         return;
                      }
 
-                     Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-                     this.throwRotation = RotationUtil.applyGcdFix(rotation, previousRotation);
+                     this.throwRotation = RotationUtil.applyGcdFix(rotation, ClientManagers.rotationController.getPreviousRotation());
                   }
 
                   if (this.throwRotation != null) {
-                     byte b2 = 0;
                      Rotation throwRotation3 = this.throwRotation;
-                     ClientManagers.rotationController.requestRotation(throwRotation3, b2, this);
+                     ClientManagers.rotationController.requestRotation(throwRotation3, (byte)0, this);
                      this.aimTicks++;
                   }
                }
@@ -146,11 +138,7 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
    public void onSilentSlot() {
       if (mc.isNotInGui()) {
          if (this.throwRotation != null) {
-            int pearlHotbarSlot2 = this.pearlHotbarSlot;
-            boolean value = this.silentSlotSwitching.getValue();
-            int n = pearlHotbarSlot2;
-            byte b = 0;
-            SilentSlotManager.requestSlot(this, b, n, value);
+            SilentSlotManager.requestSlot(this, (byte)0, this.pearlHotbarSlot, this.silentSlotSwitching.getValue());
          }
       }
    }
@@ -159,8 +147,7 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
    public void onClick(EventClick event) {
       if (mc.isNotInGui()) {
          if (this.throwRotation != null && this.aimTicks > 2) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             this.resetPearlState();
          }
       }
@@ -187,10 +174,8 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
 
    private int findPearlHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      Item enderPearl = Items.ender_pearl;
-      OptionalInt optionalInt = containerSlotQuery.filterItemExact(enderPearl).findFirstSlotIndex();
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      OptionalInt optionalInt = containerSlotQuery.filterItemExact(Items.ender_pearl).findFirstSlotIndex();
       return !optionalInt.isPresent() ? -1 : optionalInt.getAsInt() - 36;
    }
 
@@ -217,23 +202,10 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
          for (int j = -1; j < 2; j += 2) {
             float f6 = RotationUtil.updateAngle(ClientManagers.rotationController.getPreviousRotation().pitch, f4 + i * (float)j, 180.0F);
             ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-            EntityPlayerSP thePlayer = mc.thePlayer;
-            ItemStack stack = new ItemStack(Items.ender_pearl);
-            double d4 = doubles[0];
-            double d5 = doubles[1];
-            double d6 = doubles[2];
-            double d7 = d5;
-            double d8 = d4;
-            ItemStack stack2 = stack;
-            EntityPlayerSP player = thePlayer;
-            projectileSimulator.initFromPosAndAngles(player, stack2, f5, f6, d8, d7, d6);
-            EntityLivingBase lastAttackedTarget2 = this.lastAttackedTarget;
-            AxisAlignedBB box = new AxisAlignedBB(
+            projectileSimulator.initFromPosAndAngles(mc.thePlayer, new ItemStack(Items.ender_pearl), f5, f6, doubles[0], doubles[1], doubles[2]);
+            int n = projectileSimulator.simulateThrowableHitTick((short)200, this.lastAttackedTarget, new AxisAlignedBB(
                vec.xCoord - 0.5, vec.yCoord - 1.0, vec.zCoord - 0.5, vec.xCoord + 0.5, vec.yCoord + 1.0, vec.zCoord + 0.5
-            );
-            EntityLivingBase entity = lastAttackedTarget2;
-            short s = 200;
-            int n = projectileSimulator.simulateThrowableHitTick(s, entity, box);
+            ));
             if (n != Integer.MAX_VALUE) {
                flag = true;
                f = f5;

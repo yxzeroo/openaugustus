@@ -169,8 +169,7 @@ public class HttpUtil {
 
          try {
             byte[] bytes = new byte[4096];
-            URL url = new URL(this.packUrl);
-            conn = (HttpURLConnection)url.openConnection(this.proxy);
+            conn = (HttpURLConnection)new URL(this.packUrl).openConnection(this.proxy);
             float f = 0.0F;
             float size = (float)this.requestHeaders.entrySet().size();
 

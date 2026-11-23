@@ -4,10 +4,10 @@ import net.augustus.events.EventMoveInput;
 import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.events.listeners.UpdateListener;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class IntaveNoWebMode extends AbstractNoWebMode implements UpdateListener, MoveInputListener {
-   public IntaveNoWebMode(NoWeb noWeb, DoubleValue doubleValue) {
+   public IntaveNoWebMode(NoWeb noWeb, SettingGroup doubleValue) {
       super(noWeb, doubleValue, "Intave");
    }
 
@@ -18,14 +18,12 @@ public class IntaveNoWebMode extends AbstractNoWebMode implements UpdateListener
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 21;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)21);
    }
 
    public void onUpdate2() {
       if (mc.thePlayer.isInWeb()) {
-         long l = 600L;
-         if (((NoWeb)this.parentModule).blockPlaceTimer.reached2(l)) {
+         if (((NoWeb)this.parentModule).blockPlaceTimer.reached2(600L)) {
             mc.thePlayer.onGround = false;
             if (mc.thePlayer.movementInput.moveStrafe == 0.0F) {
                if (mc.gameSettings.keyBindForward.isKeyDown()) {
@@ -40,10 +38,8 @@ public class IntaveNoWebMode extends AbstractNoWebMode implements UpdateListener
    }
 
    public void onMoveInput3(EventMoveInput event) {
-      long l = 600L;
-      if (((NoWeb)this.parentModule).blockPlaceTimer.reached2(l) && mc.thePlayer.isInWeb() && event.getMoveStrafe() == 0.0F && mc.gameSettings.keyBindForward.isKeyDown()) {
-         float f = mc.thePlayer.ticksExisted % 5 == 0 ? 0.0F : 1.0F;
-         event.setMoveForward(f);
+      if (((NoWeb)this.parentModule).blockPlaceTimer.reached2(600L) && mc.thePlayer.isInWeb() && event.getMoveStrafe() == 0.0F && mc.gameSettings.keyBindForward.isKeyDown()) {
+         event.setMoveForward(mc.thePlayer.ticksExisted % 5 == 0 ? 0.0F : 1.0F);
       }
    }
 

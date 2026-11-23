@@ -119,8 +119,7 @@ public class BlockCocoa extends BlockDirectional implements IGrowable {
    }
 
    static {
-      String str = "age";
-      AGE = PropertyInteger.create(str, 0, 2);
+      AGE = PropertyInteger.create("age", 0, 2);
    }
 
    @Override

@@ -23,7 +23,6 @@ public enum MolangInterpolation {
    QUAD_INOUT("quad_inout") {
       @Override
       public float interpolate(float f, byte b, float f2, float f3, long l) {
-         int[] flowState = MolangInterpolations.getFlowState();
          f3 *= 2.0F;
          if (f3 < 1.0F) {
             return f + (f2 - f) / 2.0F * f3 * f3;
@@ -49,7 +48,6 @@ public enum MolangInterpolation {
    CUBIC_INOUT("cubic_inout") {
       @Override
       public float interpolate(float f, byte b, float f2, float f3, long l) {
-         int[] flowState = MolangInterpolations.getFlowState();
          f3 *= 2.0F;
          if (f3 < 1.0F) {
             return f + (f2 - f) / 2.0F * f3 * f3 * f3;
@@ -74,7 +72,6 @@ public enum MolangInterpolation {
    EXP_INOUT("exp_inout") {
       @Override
       public float interpolate(float f, byte b, float f2, float f3, long l) {
-         int[] flowState = MolangInterpolations.getFlowState();
          if (f3 == 0.0F) {
             return f;
          } else if (f3 == 1.0F) {

@@ -120,9 +120,7 @@ public class WorldBorder {
    public double getClosestDistance(double d, double d2) {
       double d3 = d2 - this.minZ();
       double d4 = this.maxZ() - d2;
-      double d5 = d - this.minX();
-      double d6 = this.maxX() - d;
-      double d7 = Math.min(d5, d6);
+      double d7 = Math.min(d - this.minX(), this.maxX() - d);
       d7 = Math.min(d7, d3);
       return Math.min(d7, d4);
    }

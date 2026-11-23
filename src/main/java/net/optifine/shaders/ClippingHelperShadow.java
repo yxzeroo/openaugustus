@@ -249,13 +249,9 @@ public class ClippingHelperShadow extends ClippingHelper {
       this.normalize3(floats);
       float f = (float)this.dot3(floats2, floats3);
       float f2 = (float)this.dot3(floats, floats3);
-      float f3 = this.distance(floats[0], floats[1], floats[2], floats3[0] * f2, floats3[1] * f2, floats3[2] * f2);
-      float f4 = this.distance(floats2[0], floats2[1], floats2[2], floats3[0] * f, floats3[1] * f, floats3[2] * f);
-      float f5 = f3 / f4;
+      float f5 = this.distance(floats[0], floats[1], floats[2], floats3[0] * f2, floats3[1] * f2, floats3[2] * f2) / this.distance(floats2[0], floats2[1], floats2[2], floats3[0] * f, floats3[1] * f, floats3[2] * f);
       float f6 = (float)this.dot3(floats, floats2);
-      float f7 = this.distance(floats[0], floats[1], floats[2], floats2[0] * f6, floats2[1] * f6, floats2[2] * f6);
-      float f8 = this.distance(floats3[0], floats3[1], floats3[2], floats2[0] * f, floats2[1] * f, floats2[2] * f);
-      float f9 = f7 / f8;
+      float f9 = this.distance(floats[0], floats[1], floats[2], floats2[0] * f6, floats2[1] * f6, floats2[2] * f6) / this.distance(floats3[0], floats3[1], floats3[2], floats2[0] * f, floats2[1] * f, floats2[2] * f);
       floats[3] = floats2[3] * f5 + floats3[3] * f9;
    }
 }

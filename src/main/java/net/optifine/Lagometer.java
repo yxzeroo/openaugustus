@@ -156,10 +156,7 @@ public class Lagometer {
          GlStateManager.enableTexture2D();
          float f2 = 1.0F - (float)((double)(System.currentTimeMillis() - MemoryMonitor.getStartTimeMs()) / 1000.0);
          f2 = Config.limit3(f2, 0.0F, 1.0F);
-         int n4 = (int)(170.0F + f2 * 85.0F);
-         int n5 = (int)(100.0F + f2 * 55.0F);
-         int n6 = (int)(10.0F + f2 * 10.0F);
-         int n7 = n4 << 16 | n5 << 8 | n6;
+         int n7 = ((int)(170.0F + f2 * 85.0F)) << 16 | ((int)(100.0F + f2 * 55.0F)) << 8 | ((int)(10.0F + f2 * 10.0F));
          int n8 = 512 / sr.getScaleFactor() + 2;
          int n9 = mc.displayHeight / sr.getScaleFactor() - 8;
          GuiIngameHook ingameGUI = mc.ingameGUI;

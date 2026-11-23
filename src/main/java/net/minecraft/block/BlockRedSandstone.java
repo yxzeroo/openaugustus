@@ -15,8 +15,7 @@ public class BlockRedSandstone extends Block {
    public static final PropertyEnum TYPE;
 
    static {
-      String str = "type";
-      TYPE = PropertyEnum.create(str, BlockRedSandstone.EnumType.class);
+      TYPE = PropertyEnum.create("type", BlockRedSandstone.EnumType.class);
    }
 
    @Override

@@ -80,8 +80,7 @@ public class TileEntityBannerRenderer extends TileEntitySpecialRenderer {
       float f2 = 0.6666667F;
       if (flag2) {
          GlStateManager.translate((float)d + 0.5F, (float)d2 + 0.75F * f2, (float)d3 + 0.5F);
-         float f3 = (float)(n2 * 360) / 16.0F;
-         GlStateManager.rotate(-f3, 0.0F, 1.0F, 0.0F);
+         GlStateManager.rotate(-((float)(n2 * 360) / 16.0F), 0.0F, 1.0F, 0.0F);
          this.bannerModel.bannerStand.showModel = true;
       } else {
          float f4 = 0.0F;

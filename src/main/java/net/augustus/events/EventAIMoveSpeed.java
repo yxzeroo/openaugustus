@@ -25,9 +25,7 @@ public class EventAIMoveSpeed extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      AIMoveSpeedListener listener = (AIMoveSpeedListener)obj;
-      AIMoveSpeedListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((AIMoveSpeedListener)obj);
    }
 
    public void setMoveSpeed(float f) {

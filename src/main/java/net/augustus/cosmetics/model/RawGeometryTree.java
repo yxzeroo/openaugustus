@@ -39,8 +39,7 @@ public class RawGeometryTree {
             list.remove(bone);
             n2 = 0;
          } else {
-            String parent = bone.getParent();
-            RawBoneGroup groupFromName = getGroupFromName(rawGeometryTree, parent);
+            RawBoneGroup groupFromName = getGroupFromName(rawGeometryTree, bone.getParent());
             if (groupFromName != null) {
                groupFromName.children.put(bone.getName(), new RawBoneGroup(bone));
                list.remove(bone);

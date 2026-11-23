@@ -72,8 +72,7 @@ public class CosmeticsMenuGui {
    }
 
    public void setPopupOpen(boolean flag) {
-      CosmeticsMenuElement cosmeticsMenuElement = (CosmeticsMenuElement)null;
-      this.setPopupOpen(flag, cosmeticsMenuElement);
+      this.setPopupOpen(flag, (CosmeticsMenuElement)null);
    }
 
    public int getHeaderHeight() {
@@ -115,8 +114,7 @@ public class CosmeticsMenuGui {
       for (int i = 0; i < ((CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex)).getElements().size(); i++) {
          CosmeticsMenuElement cosmeticsMenuElement = (CosmeticsMenuElement)((CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex)).getElements().get(i);
          if (i < this.gridScrollRow * this.gridColumns || i > (this.gridScrollRow + this.visibleGridRows) * this.gridColumns) {
-            boolean flag = false;
-            cosmeticsMenuElement.setHovered(flag);
+            cosmeticsMenuElement.setHovered(false);
          }
       }
 
@@ -128,12 +126,9 @@ public class CosmeticsMenuGui {
          }
 
          CosmeticsWidgetList popupWidgetList2 = this.popupWidgetList;
-         int contentRightX = this.getContentRightX();
-         int n2 = contentRightX + (this.isScrollable() ? 5 : 0);
+         int n2 = this.getContentRightX() + (this.isScrollable() ? 5 : 0);
          int selectedRowIndex2 = this.selectedRowIndex;
-         int height2 = this.height;
-         int n3 = n2;
-         popupWidgetList2.layout(n3, height2, selectedRowIndex2);
+         popupWidgetList2.layout(n2, this.height, selectedRowIndex2);
       } else {
          this.popupOpen = false;
       }
@@ -199,13 +194,7 @@ public class CosmeticsMenuGui {
             this.selectedTabIndex = n3;
             if (cosmeticsMenuTab.isListLayout()) {
                this.mainWidgetList.recalculateScroll();
-               CosmeticsWidgetList mainWidgetList2 = this.mainWidgetList;
-               int contentLeftX = this.getContentLeftX();
-               int height2 = this.getHeight();
-               byte b = 0;
-               int n4 = height2;
-               int n5 = contentLeftX;
-               mainWidgetList2.layout(n5, n4, b);
+               this.mainWidgetList.layout(this.getContentLeftX(), this.getHeight(), (byte)0);
             }
 
             this.selectedElement = null;
@@ -218,9 +207,7 @@ public class CosmeticsMenuGui {
 
    public void setPopupOpen(boolean flag, CosmeticsMenuElement cosmeticsMenuElement) {
       if (cosmeticsMenuElement != null) {
-         CosmeticsWidgetList popupWidgetList2 = this.popupWidgetList;
-         ArrayList children = cosmeticsMenuElement.getChildren();
-         popupWidgetList2.setEntries(children);
+         this.popupWidgetList.setEntries(cosmeticsMenuElement.getChildren());
          if (cosmeticsMenuElement instanceof CosmeticsMenuEntry) {
             this.selectedRowIndex = cosmeticsMenuElement.getIndex() - this.mainWidgetList.getScrollOffset();
             if (cosmeticsMenuElement.hasChildren()) {
@@ -236,28 +223,21 @@ public class CosmeticsMenuGui {
       this.popupOpen = flag;
 
       for (CosmeticsMenuElement cosmeticsMenuElement2 : (Iterable<CosmeticsMenuElement>)(((CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex)).getElements())) {
-         boolean flag2 = !this.popupOpen;
-         cosmeticsMenuElement2.setInteractable(flag2);
+         cosmeticsMenuElement2.setInteractable(!this.popupOpen);
          if (!flag && cosmeticsMenuElement2 instanceof CosmeticsMenuEntry) {
-            CosmeticsMenuEntry cosmeticsMenuEntry = (CosmeticsMenuEntry)cosmeticsMenuElement2;
-            boolean flag3 = false;
-            cosmeticsMenuEntry.withPopupActive(flag3);
+            ((CosmeticsMenuEntry)cosmeticsMenuElement2).withPopupActive(false);
          }
       }
 
       if (this.popupOpen) {
          if (this.selectedElement != null) {
-            boolean flag4 = true;
-            this.selectedElement.setInteractable(flag4);
+            this.selectedElement.setInteractable(true);
          }
 
          CosmeticsWidgetList popupWidgetList3 = this.popupWidgetList;
-         int contentRightX = this.getContentRightX();
-         int n = contentRightX + (this.isScrollable() ? 5 : 0);
+         int n = this.getContentRightX() + (this.isScrollable() ? 5 : 0);
          int selectedRowIndex2 = this.selectedRowIndex;
-         int height2 = this.height;
-         int n2 = n;
-         popupWidgetList3.layout(n2, height2, selectedRowIndex2);
+         popupWidgetList3.layout(n, this.height, selectedRowIndex2);
       }
    }
 
@@ -273,29 +253,20 @@ public class CosmeticsMenuGui {
       this.refreshLayout();
       if (this.popupOpen) {
          this.selectedRowIndex = this.selectedElement.getIndex() / this.gridColumns - this.gridScrollRow;
-         CosmeticsWidgetList popupWidgetList2 = this.popupWidgetList;
-         int contentRightX = this.getContentRightX();
-         int n3 = contentRightX + (this.isScrollable() ? 5 : 0);
-         int height2 = this.getHeight();
-         int selectedRowIndex2 = this.selectedRowIndex;
-         int n4 = height2;
-         int n5 = n3;
-         popupWidgetList2.layout(n5, n4, selectedRowIndex2);
+         this.popupWidgetList.layout(this.getContentRightX() + (this.isScrollable() ? 5 : 0), this.getHeight(), this.selectedRowIndex);
       }
 
       if (this.tabs.size() > this.selectedTabIndex && ((CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex)).isListLayout()) {
          CosmeticsWidgetList mainWidgetList2 = this.mainWidgetList;
          int height3 = this.getHeight();
-         int contentLeftX = this.getContentLeftX();
-         mainWidgetList2.layout(contentLeftX, height3);
+         mainWidgetList2.layout(this.getContentLeftX(), height3);
       }
    }
 
    public String getSelectedTabTitle() {
       String str;
       if (this.tabs.size() > this.selectedTabIndex) {
-         CosmeticsMenuTab cosmeticsMenuTab = (CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex);
-         str = cosmeticsMenuTab.getEffectiveTitle();
+         str = ((CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex)).getEffectiveTitle();
       } else {
          str = "";
       }
@@ -305,17 +276,14 @@ public class CosmeticsMenuGui {
 
    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
       if (this.popupOpen && mouseX < this.getContentRightX()) {
-         CosmeticsMenuElement cosmeticsMenuElement = (CosmeticsMenuElement)null;
-         boolean flag = false;
-         this.setPopupOpen(flag, cosmeticsMenuElement);
+         this.setPopupOpen(false, (CosmeticsMenuElement)null);
       }
 
       this.handleTabClick(mouseX, mouseY);
       if (this.tabs.size() > this.selectedTabIndex) {
          CosmeticsMenuTab cosmeticsMenuTab = (CosmeticsMenuTab)this.tabs.get(this.selectedTabIndex);
          if (!cosmeticsMenuTab.isListLayout()) {
-            ArrayList elements = cosmeticsMenuTab.getElements();
-            elements.forEach(obj -> {
+            cosmeticsMenuTab.getElements().forEach(obj -> {
                ((CosmeticsMenuElement)obj).mouseClicked(mouseX, mouseY, mouseButton);
             });
          }
@@ -400,14 +368,12 @@ public class CosmeticsMenuGui {
                if (cosmeticsMenuTab != DIVIDER_TAB) {
                   boolean flag2 = this.selectedTabIndex == j;
                   boolean flag3 = j == 0;
-                  boolean flag4 = flag2;
-                  this.renderer.drawTab(n3, flag4, flag3, cosmeticsMenuTab);
+                  this.renderer.drawTab(n3, flag2, flag3, cosmeticsMenuTab);
                }
 
                if (this.selectedTabIndex == j) {
                   if (cosmeticsMenuTab.isListLayout()) {
-                     short s = 219;
-                     this.mainWidgetList.draw(obj, n, n2, s);
+                     this.mainWidgetList.draw(obj, n, n2, (short)219);
                   } else {
                      if (this.gridScrollable) {
                         float f = (float)this.gridScrollRow / (float)this.totalGridRows;
@@ -431,9 +397,7 @@ public class CosmeticsMenuGui {
                            flag5 = false;
                         }
 
-                        byte b2 = 51;
-                        byte b3 = 72;
-                        cosmeticsMenuElement.draw(obj, n4, n5, b3, b2, n, n2);
+                        cosmeticsMenuElement.draw(obj, n4, n5, (byte)72, (byte)51, n, n2);
                         n4 += 75;
                         if (n4 + 32 + 40 >= this.getContentRightX()) {
                            n5 += 54;
@@ -457,13 +421,10 @@ public class CosmeticsMenuGui {
 
             if (this.popupOpen) {
                float f3 = 180.0F;
-               boolean flag6 = true;
-               this.renderer.setPopupOverlay(flag6, f3);
-               short s2 = 150;
-               this.popupWidgetList.draw(obj, n, n2, s2);
+               this.renderer.setPopupOverlay(true, f3);
+               this.popupWidgetList.draw(obj, n, n2, (short)150);
                float f4 = 0.0F;
-               boolean flag7 = false;
-               this.renderer.setPopupOverlay(flag7, f4);
+               this.renderer.setPopupOverlay(false, f4);
             }
          }
       }

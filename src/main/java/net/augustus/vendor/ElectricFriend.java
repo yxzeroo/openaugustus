@@ -23,7 +23,6 @@ public class ElectricFriend {
 
    public ElectricFriend(String str, int n, int n2) {
       this.username = str;
-      ElectricFriendManager.getOpaqueStateFlag();
       this.status = n;
       this.userId = n2;
    }

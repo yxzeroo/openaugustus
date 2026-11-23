@@ -87,8 +87,7 @@ public class ContainerRepair extends Container {
 
                int n4;
                for (n4 = 0; n3 > 0 && n4 < stackInSlot2.stackSize; n4++) {
-                  int n5 = stack.getItemDamage() - n3;
-                  stack.setItemDamage(n5);
+                  stack.setItemDamage(stack.getItemDamage() - n3);
                   n++;
                   n3 = Math.min(stack.getItemDamage(), stack.getMaxDamage() / 4);
                }
@@ -102,10 +101,7 @@ public class ContainerRepair extends Container {
                }
 
                if (stack.isItemStackDamageable() && !flag) {
-                  int n6 = stackInSlot.getMaxDamage() - stackInSlot.getItemDamage();
-                  int n7 = stackInSlot2.getMaxDamage() - stackInSlot2.getItemDamage();
-                  int n8 = n7 + stack.getMaxDamage() * 12 / 100;
-                  int n9 = n6 + n8;
+                  int n9 = (stackInSlot.getMaxDamage() - stackInSlot.getItemDamage()) + ((stackInSlot2.getMaxDamage() - stackInSlot2.getItemDamage()) + stack.getMaxDamage() * 12 / 100);
                   int n10 = stack.getMaxDamage() - n9;
                   if (n10 < 0) {
                      n10 = 0;

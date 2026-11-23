@@ -71,8 +71,7 @@ public class TileEntityEnchantmentTable extends TileEntity implements ITickable,
          .getClosestPlayer((double)((float)this.pos.getX() + 0.5F), (double)((float)this.pos.getY() + 0.5F), (double)((float)this.pos.getZ() + 0.5F), 3.0);
       if (closestPlayer != null) {
          double d = closestPlayer.posX - (double)((float)this.pos.getX() + 0.5F);
-         double d2 = closestPlayer.posZ - (double)((float)this.pos.getZ() + 0.5F);
-         this.tRot = (float)MathHelper.atan2(d2, d);
+         this.tRot = (float)MathHelper.atan2(closestPlayer.posZ - (double)((float)this.pos.getZ() + 0.5F), d);
          this.bookSpread += 0.1F;
          if (this.bookSpread < 0.5F || rand.nextInt(40) == 0) {
             float flipT2 = this.flipT;

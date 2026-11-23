@@ -20,13 +20,11 @@ public class FuckerCommand extends Command {
             if (n != -1) {
                double d = (double)n;
                ClientManagers.moduleManager.fucker.customID.setValue(d);
-               String str2 = "Set Fucker ID to §2" + (int)ClientManagers.moduleManager.fucker.customID.getValue();
-               this.sendChat(str2);
+               this.sendChat("Set Fucker ID to §2" + (int)ClientManagers.moduleManager.fucker.customID.getValue());
                return;
             }
          } else if (strings[1].equalsIgnoreCase("get")) {
-            String str3 = "BlockID: §2" + (int)ClientManagers.moduleManager.fucker.customID.getValue();
-            this.sendChat(str3);
+            this.sendChat("BlockID: §2" + (int)ClientManagers.moduleManager.fucker.customID.getValue());
             return;
          }
       }
@@ -39,13 +37,11 @@ public class FuckerCommand extends Command {
    }
 
    public void sendUsageMessage() {
-      String str = "§7" + this.getCommand() + " [§cset/get§7] [§2BlockID§7]";
-      this.sendChat(str);
+      this.sendChat("§7" + this.getCommand() + " [§cset/get§7] [§2BlockID§7]");
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Get or set the blockID for custom mode)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Get or set the blockID for custom mode)");
    }
 
 }

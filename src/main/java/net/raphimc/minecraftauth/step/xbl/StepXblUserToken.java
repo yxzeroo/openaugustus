@@ -50,10 +50,9 @@ public class StepXblUserToken extends AbstractStep<StepInitialXblSession.Initial
    }
 
    public StepXblUserToken.XblUserToken fromJson(JsonObject json) {
-      StepInitialXblSession.InitialXblSession initialXblSession = this.prevStep != null
+      return StepXblUserToken.XblUserToken.fromJson(json, this.prevStep != null
          ? this.prevStep.fromJson(json.getAsJsonObject(this.prevStep.name))
-         : null;
-      return StepXblUserToken.XblUserToken.fromJson(json, initialXblSession);
+         : null);
    }
 
    public JsonObject toJson(StepXblUserToken.XblUserToken xblUserToken) {

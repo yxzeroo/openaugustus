@@ -90,16 +90,14 @@ public class MacroProcessor {
       if (!macroHeader.isEmpty()) {
          str2 = macroHeader + str2;
          if (Shaders.saveFinalShaders) {
-            String str3 = str.replace(':', '/') + ".pre";
-            Shaders.saveShader(str3, str2);
+            Shaders.saveShader(str.replace(':', '/') + ".pre", str2);
          }
 
          str2 = process(str2);
       }
 
       if (Shaders.saveFinalShaders) {
-         String str4 = str.replace(':', '/');
-         Shaders.saveShader(str4, str2);
+         Shaders.saveShader(str.replace(':', '/'), str2);
       }
 
       byte[] bytes = str2.getBytes("ASCII");

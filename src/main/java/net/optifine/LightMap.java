@@ -63,10 +63,7 @@ public class LightMap {
                         floats[k] = f6;
                      }
 
-                     int n2 = (int)(floats[0] * 255.0F);
-                     int n3 = (int)(floats[1] * 255.0F);
-                     int n4 = (int)(floats[2] * 255.0F);
-                     ints[i * 16 + j] = 0xFF000000 | n2 << 16 | n3 << 8 | n4;
+                     ints[i * 16 + j] = 0xFF000000 | ((int)(floats[0] * 255.0F)) << 16 | ((int)(floats[1] * 255.0F)) << 8 | ((int)(floats[2] * 255.0F));
                   }
                }
 

@@ -105,8 +105,7 @@ public class RecipesArmorDyes implements IRecipe {
          ItemStack stackInSlot = inventoryCrafting.getStackInSlot(i);
          if (stackInSlot != null) {
             if (stackInSlot.getItem() instanceof ItemArmor) {
-               ItemArmor item = (ItemArmor)stackInSlot.getItem();
-               if (item.getArmorMaterial() != ItemArmor.ArmorMaterial.LEATHER || stack != null) {
+               if (((ItemArmor)stackInSlot.getItem()).getArmorMaterial() != ItemArmor.ArmorMaterial.LEATHER || stack != null) {
                   return false;
                }
 

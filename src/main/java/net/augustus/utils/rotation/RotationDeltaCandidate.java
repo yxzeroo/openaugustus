@@ -53,8 +53,7 @@ public class RotationDeltaCandidate {
    }
 
    public float computeDistanceToSegment(Rotation rotation, Rotation rotation2, Rotation rotation3) {
-      Rotation rotation4 = new Rotation(rotation3.yaw + this.getYawDelta(), rotation3.pitch + this.getPitchDelta());
-      return (float)RotationUtil.computeAngleBetweenRotations(rotation4, rotation, rotation2);
+      return (float)RotationUtil.computeAngleBetweenRotations(new Rotation(rotation3.yaw + this.getYawDelta(), rotation3.pitch + this.getPitchDelta()), rotation, rotation2);
    }
 
    public double computeHitScore(float f, float f2) {

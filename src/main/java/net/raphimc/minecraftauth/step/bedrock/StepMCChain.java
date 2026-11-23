@@ -50,10 +50,8 @@ public class StepMCChain extends AbstractStep<StepXblXstsToken.XblXsts<?>, StepM
       if (chain.size() != 2) {
          throw new IllegalStateException("Invalid chain size");
       } else {
-         JwtUtil.Jwt mojangJwt = JwtUtil.parseSignedJwt(chain.get(0).getAsString(), MOJANG_PUBLIC_KEY);
-         ECPublicKey mojangJwtPublicKey = CryptUtil.publicKeyEcFromBase64(mojangJwt.getClaim("identityPublicKey", String.class));
-         JwtUtil.Jwt identityJwt = JwtUtil.parseSignedJwt(chain.get(1).getAsString(), mojangJwtPublicKey);
-         Map<String, Object> extraData = identityJwt.getClaim("extraData", Map.class);
+         ECPublicKey mojangJwtPublicKey = CryptUtil.publicKeyEcFromBase64(JwtUtil.parseSignedJwt(chain.get(0).getAsString(), MOJANG_PUBLIC_KEY).getClaim("identityPublicKey", String.class));
+         Map<String, Object> extraData = JwtUtil.parseSignedJwt(chain.get(1).getAsString(), mojangJwtPublicKey).getClaim("extraData", Map.class);
          String xuid = (String)extraData.get("XUID");
          UUID id = UUID.fromString((String)extraData.get("identity"));
          String displayName = (String)extraData.get("displayName");
@@ -127,8 +125,7 @@ public class StepMCChain extends AbstractStep<StepXblXstsToken.XblXsts<?>, StepM
             this.lastExpireCheckTimeMs = System.currentTimeMillis();
 
             try {
-               JwtUtil.Jwt mojangJwt = JwtUtil.parseSignedJwt(this.mojangJwt, StepMCChain.MOJANG_PUBLIC_KEY);
-               ECPublicKey mojangJwtPublicKey = CryptUtil.publicKeyEcFromBase64(mojangJwt.getClaim("identityPublicKey", String.class));
+               ECPublicKey mojangJwtPublicKey = CryptUtil.publicKeyEcFromBase64(JwtUtil.parseSignedJwt(this.mojangJwt, StepMCChain.MOJANG_PUBLIC_KEY).getClaim("identityPublicKey", String.class));
                JwtUtil.parseSignedJwt(this.identityJwt, mojangJwtPublicKey);
                this.lastExpireCheckResult = false;
             } catch (Throwable e) {

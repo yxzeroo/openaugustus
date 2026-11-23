@@ -190,8 +190,7 @@ public class BlockBanner extends BlockContainer {
 
       @Override
       public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-         EnumFacing value = (EnumFacing)state.getValue(FACING);
-         if (!world.getBlockState(pos.offset(value.getOpposite())).getBlock().getMaterial().isSolid()) {
+         if (!world.getBlockState(pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite())).getBlock().getMaterial().isSolid()) {
             this.dropBlockAsItem(world, pos, state, 0);
             world.setBlockToAir(pos);
          }

@@ -7,7 +7,7 @@ import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.movement.HighJump;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public abstract class HighJumpMode extends AbstractSubMode implements UpdateListener, MoveInputListener {
    public BooleanValue autoDisable;
@@ -16,20 +16,16 @@ public abstract class HighJumpMode extends AbstractSubMode implements UpdateList
    public int groundTicks;
    private boolean triggeredByJumpKey;
 
-   public HighJumpMode(HighJump highJump, DoubleValue doubleValue, String str) {
+   public HighJumpMode(HighJump highJump, SettingGroup doubleValue, String str) {
        super(highJump, doubleValue, str);
       this.jumpActive = false;
       this.groundTicks = 0;
       BooleanValue booleanValue = new BooleanValue(highJump, "AutoDisable" + str, true, doubleValue);
-      String str2 = "AutoDisable";
-      booleanValue = (BooleanValue)booleanValue.withDisplayName(str2);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.autoDisable = (BooleanValue)booleanValue.withVisibility(condition);
+      booleanValue = (BooleanValue)booleanValue.withDisplayName("AutoDisable");
+      this.autoDisable = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
       booleanValue = new BooleanValue(highJump, "ActivateWhileJumpKeyPressed" + str, false, doubleValue);
-      String str3 = "ActivateWhileJumpKeyPressed";
-      booleanValue = (BooleanValue)booleanValue.withDisplayName(str3);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.activateWhileJumpKeyPressed = (BooleanValue)booleanValue.withVisibility(condition2);
+      booleanValue = (BooleanValue)booleanValue.withDisplayName("ActivateWhileJumpKeyPressed");
+      this.activateWhileJumpKeyPressed = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
    }
 
    @Override
@@ -39,10 +35,8 @@ public abstract class HighJumpMode extends AbstractSubMode implements UpdateList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
@@ -50,9 +44,7 @@ public abstract class HighJumpMode extends AbstractSubMode implements UpdateList
       this.jumpActive = true;
       if (mc.thePlayer.onGround) {
          if (this.groundTicks > 0 && this.autoDisable.getValue()) {
-            HighJump parentModule2 = (HighJump)this.parentModule;
-            boolean flag = false;
-            parentModule2.setToggled(flag);
+            ((HighJump)this.parentModule).setToggled(false);
             this.jumpActive = false;
             return;
          }
@@ -69,8 +61,7 @@ public abstract class HighJumpMode extends AbstractSubMode implements UpdateList
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (event.isJump() && this.activateWhileJumpKeyPressed.getValue() && !this.triggeredByJumpKey) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
          this.onEnable();
          this.triggeredByJumpKey = true;
       }

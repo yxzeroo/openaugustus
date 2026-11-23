@@ -13,7 +13,7 @@ import net.augustus.utils.audio.ClientSounds;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ import net.minecraft.item.ItemDye;
 
 public class MurdererFinder extends Module implements TickListener, LoadWorldListener {
    private final BooleanValue acousticWarning;
-   private final StringValue volume;
+   private final DoubleValue volume;
    public final HashSet detectedMurderers;
    private boolean shouldPlayWarningSound;
    public static final ArrayList MURDERER_WEAPONS = new ArrayList<>(
@@ -72,12 +72,10 @@ public class MurdererFinder extends Module implements TickListener, LoadWorldLis
    public MurdererFinder() {
        super("MurdererFinder", "MörderFinder", new Color(252, 186, 3), Categorys.MISC);
       this.acousticWarning = (BooleanValue)(new BooleanValue(this, "AcousticWarning", true)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "Volume", 93.0, 0.0, 100.0, 0);
+      DoubleValue stringValue = new DoubleValue(this, "Volume", 93.0, 0.0, 100.0, 0);
       BooleanValue acousticWarning2 = this.acousticWarning;
       this.acousticWarning.getClass();
-      BooleanValue booleanValue = acousticWarning2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.volume = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
+      this.volume = (DoubleValue)stringValue.visibleWhen(() -> acousticWarning2.getValue()).markVisualOnly();
       this.detectedMurderers = new HashSet();
       this.shouldPlayWarningSound = true;
    }
@@ -96,10 +94,8 @@ public class MurdererFinder extends Module implements TickListener, LoadWorldLis
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 17;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

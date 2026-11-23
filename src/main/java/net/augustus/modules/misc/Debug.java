@@ -55,9 +55,9 @@ import net.augustus.events.EventSound;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
@@ -120,8 +120,8 @@ import net.minecraft.util.MovingObjectPosition;
 public class Debug extends Module implements AttackEntityListener, PacketListener, TickListener, RenderListener, SoundListener, MoveInputListener, PacketDelayListener, EntityHurtListener {
    public final BooleanValue rangeDebug;
    public final BooleanValue ignoreBackTrack;
-   public final StringValue minRange;
-   public final StringValue decimalPlaces;
+   public final DoubleValue minRange;
+   public final DoubleValue decimalPlaces;
    public final BooleanValue timerRangeDebug;
    public final BooleanValue lagRangeDebug;
    public final BooleanValue timeManipulation;
@@ -137,7 +137,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
    public final BooleanValue sneakDebug;
    public final BooleanValue lostHitDebug;
    public final BooleanValue motionDebug;
-   public final DoubleValue combatDebug;
+   public final SettingGroup combatDebug;
    public final BooleanValue combatDebug2;
    public final BooleanValue combatDebugOnlyWhenKillaura;
    public BooleanValue devToggleA;
@@ -156,7 +156,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
    public BooleanValue devToggleF;
    public BooleanValue devToggleG;
    public BooleanValue sprintResetDebug;
-   public BooleansSetting packetLoggerMode;
+   public StringValue packetLoggerMode;
    public BooleanValue entityPredictionDebug;
    public BooleanValue devToggleH;
    public BooleanValue devToggleI;
@@ -238,20 +238,17 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       BooleanValue rangeDebug2 = this.rangeDebug;
       this.rangeDebug.getClass();
       BooleanValue booleanValue2 = rangeDebug2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.ignoreBackTrack = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "MinRange", 3.0, 0.0, 6.0, 2);
+      this.ignoreBackTrack = (BooleanValue)((BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue())).markVisualOnly();
+      DoubleValue stringValue = new DoubleValue(this, "MinRange", 3.0, 0.0, 6.0, 2);
       rangeDebug2 = this.rangeDebug;
       this.rangeDebug.getClass();
       BooleanValue booleanValue3 = rangeDebug2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.minRange = (StringValue)stringValue.visibleWhen(condition2).markVisualOnly();
-      StringValue stringValue2 = new StringValue(this, "DecimalPlaces", 4.0, 1.0, 10.0, 0);
+      this.minRange = (DoubleValue)stringValue.visibleWhen(() -> booleanValue3.getValue()).markVisualOnly();
+      DoubleValue stringValue2 = new DoubleValue(this, "DecimalPlaces", 4.0, 1.0, 10.0, 0);
       rangeDebug2 = this.rangeDebug;
       this.rangeDebug.getClass();
       BooleanValue booleanValue4 = rangeDebug2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.decimalPlaces = (StringValue)stringValue2.visibleWhen(condition3).markVisualOnly();
+      this.decimalPlaces = (DoubleValue)stringValue2.visibleWhen(() -> booleanValue4.getValue()).markVisualOnly();
       this.timerRangeDebug = (BooleanValue)(new BooleanValue(this, "TimerRangeDebug", false)).markVisualOnly();
       this.lagRangeDebug = (BooleanValue)(new BooleanValue(this, "LagRangeDebug", false)).markVisualOnly();
       this.timeManipulation = (BooleanValue)(new BooleanValue(this, "TimeManipulation", false)).markVisualOnly();
@@ -267,14 +264,13 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       this.sneakDebug = (BooleanValue)(new BooleanValue(this, "SneakDebug", false)).markVisualOnly();
       this.lostHitDebug = (BooleanValue)(new BooleanValue(this, "LostHitDebug", false)).markVisualOnly();
       this.motionDebug = (BooleanValue)(new BooleanValue(this, "Motion Debug", false)).markVisualOnly();
-      this.combatDebug = new DoubleValue(this, "Combat Debug");
+      this.combatDebug = new SettingGroup(this, "Combat Debug");
       this.combatDebug2 = (BooleanValue)(new BooleanValue(this, "CombatDebug", false, this.combatDebug)).markVisualOnly();
       BooleanValue booleanValue5 = new BooleanValue(this, "Combat debug only when killaura", false, this.combatDebug);
       rangeDebug2 = this.combatDebug2;
       this.combatDebug2.getClass();
       BooleanValue booleanValue6 = rangeDebug2;
-      SettingVisibilityCondition condition4 = () -> booleanValue6.getValue();
-      this.combatDebugOnlyWhenKillaura = (BooleanValue)((BooleanValue)booleanValue5.withVisibility(condition4)).markVisualOnly();
+      this.combatDebugOnlyWhenKillaura = (BooleanValue)((BooleanValue)booleanValue5.withVisibility(() -> booleanValue6.getValue())).markVisualOnly();
       this.devToggleA = null;
       this.devToggleB = null;
       this.devToggleC = null;
@@ -383,9 +379,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       this.onAttackEntity();
       this.onAttackEntity();
       this.onAttackEntity();
-      short s = 2000;
-      byte b = 21;
-      this.toggleEventSubscription(b, s);
+      this.toggleEventSubscription((byte)21, (short)2000);
       this.onAttackEntity();
       this.onAttackEntity();
    }
@@ -407,14 +401,12 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
                || this.lastMotionY != -0.0784000015258789
                || mc.thePlayer.ticksExisted % 20 == 0
          )) {
-         String str = "motion=(x=" + mc.thePlayer.motionX + ", y=" + mc.thePlayer.motionY + ", z=" + mc.thePlayer.motionZ + ")";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("motion=(x=" + mc.thePlayer.motionX + ", y=" + mc.thePlayer.motionY + ", z=" + mc.thePlayer.motionZ + ")");
          this.lastMotionY = mc.thePlayer.motionY;
       }
 
       this.nearestPlayer = this.findNearestPlayer();
-      long l = 2000L;
-      if (this.sprintResetTargetTimer.reached2(l)) {
+      if (this.sprintResetTargetTimer.reached2(2000L)) {
          this.sprintResetTarget = null;
          this.sprintResetDurationTicks = -1;
       }
@@ -427,8 +419,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
          if (this.sprintResetTarget.hurtTime == 9) {
             if (this.sprintResetTimestamps.isEmpty()) {
-               String str2 = "No Sprint Reset";
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2("No Sprint Reset");
             } else {
                String str3 = "MoreKBTimes: "
                   + Arrays.toString(this.sprintResetTimestamps.toArray())
@@ -446,8 +437,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       }
 
       this.tickCounter.increment();
-      byte b = 20;
-      if (this.tickCounter.hasReached2(b)) {
+      if (this.tickCounter.hasReached2((byte)20)) {
          this.tickCounter.reset();
          this.transactionsPerSecond = this.transactionsThisSecond;
          this.transactionsThisSecond = 0;
@@ -491,13 +481,11 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
             }
 
             if (mc.objectMouseOver.entityHit != null && mc.objectMouseOver.entityHit != player) {
-               String str3 = "Other entity (" + mc.objectMouseOver.entityHit.getName() + ") in raytrace (tE=" + thePlayer.ticksExisted + ")";
-               this.sendChatMessage2(str3);
+               this.sendChatMessage2("Other entity (" + mc.objectMouseOver.entityHit.getName() + ") in raytrace (tE=" + thePlayer.ticksExisted + ")");
             }
 
             if (killAura.isToggled() && killAura.target == null) {
-               String str4 = player.getName() + " in reach (" + MathStatisticsUtil.roundToDecimalPlaces(d2, 3) + ") but isn't a killaura target (tE=" + thePlayer.ticksExisted + ")";
-               this.sendChatMessage2(str4);
+               this.sendChatMessage2(player.getName() + " in reach (" + MathStatisticsUtil.roundToDecimalPlaces(d2, 3) + ") but isn't a killaura target (tE=" + thePlayer.ticksExisted + ")");
                return;
             }
 
@@ -539,51 +527,41 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
          if (player != null) {
             if (!EntityMovementPredictor.hasInvalidPositionHistory(player)) {
-               String str = player.getName() + " " + Arrays.toString(EntityMovementPredictor.estimateStrafeForwardFromServerPos(player));
-               this.sendChatMessage2(str);
+               this.sendChatMessage2(player.getName() + " " + Arrays.toString(EntityMovementPredictor.estimateStrafeForwardFromServerPos(player)));
             }
          }
       }
 
-      long l = 3000L;
-      if (this.lastAttackedPlayerTimer.reached2(l)) {
+      if (this.lastAttackedPlayerTimer.reached2(3000L)) {
          this.lastAttackedPlayer = null;
       }
 
-      long l2 = 4000L;
-      if (this.lastAttackedEntityTimer.reached2(l2)) {
+      if (this.lastAttackedEntityTimer.reached2(4000L)) {
          this.lastAttackedEntity = null;
       }
    }
 
    public List getInputAudioDevices() {
-      Class<TargetDataLine> clazz = TargetDataLine.class;
-      return this.getSupportedMixerNames(clazz);
+      return this.getSupportedMixerNames(TargetDataLine.class);
    }
 
    public List getOutputAudioDevices() {
-      Class<SourceDataLine> clazz = SourceDataLine.class;
-      return this.getSupportedMixerNames(clazz);
+      return this.getSupportedMixerNames(SourceDataLine.class);
    }
 
    public TargetDataLine getTargetDataLine(String str) {
-      Class<TargetDataLine> clazz = TargetDataLine.class;
-      return (TargetDataLine)this.getAudioLine(clazz, str);
+      return (TargetDataLine)this.getAudioLine(TargetDataLine.class, str);
    }
 
    public SourceDataLine getSourceDataLine(String str) {
-      Class<SourceDataLine> clazz = SourceDataLine.class;
-      return (SourceDataLine)this.getAudioLine(clazz, str);
+      return (SourceDataLine)this.getAudioLine(SourceDataLine.class, str);
    }
 
    public List getSupportedMixerNames(Class clazz) {
       ArrayList list = new ArrayList();
-      Info[] mixerInfo = AudioSystem.getMixerInfo();
 
-      for (Info info : mixerInfo) {
-         Mixer mixer = AudioSystem.getMixer(info);
-         javax.sound.sampled.Line.Info info2 = new javax.sound.sampled.Line.Info(clazz);
-         if (mixer.isLineSupported(info2)) {
+      for (Info info : AudioSystem.getMixerInfo()) {
+         if (AudioSystem.getMixer(info).isLineSupported(new javax.sound.sampled.Line.Info(clazz))) {
             list.add(info.getName());
          }
       }
@@ -592,9 +570,8 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
    }
 
    public Object getAudioLine(Class clazz, String str) {
-      Info[] mixerInfo = AudioSystem.getMixerInfo();
 
-      for (Info info : mixerInfo) {
+      for (Info info : AudioSystem.getMixerInfo()) {
          Mixer mixer = AudioSystem.getMixer(info);
          javax.sound.sampled.Line.Info info2 = new javax.sound.sampled.Line.Info(clazz);
          if (mixer.isLineSupported(info2) && info.getName().equals(str)) {
@@ -615,8 +592,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
             this.sneakTicks++;
          } else {
             if (this.sneakTicks > 0) {
-               String str = "Sneak ticks: " + this.sneakTicks + "; Sneak delay: " + this.ticksSinceLastSneak;
-               this.sendChatMessage2(str);
+               this.sendChatMessage2("Sneak ticks: " + this.sneakTicks + "; Sneak delay: " + this.ticksSinceLastSneak);
                this.ticksSinceLastSneak = 0;
             }
 
@@ -677,19 +653,13 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          EntityPlayer player = this.findNearestPlayer();
          double x = event.getX();
          double d2 = 0.01;
-         double posX = mc.thePlayer.posX;
-         double d3 = x;
-         if (this.isWithinEpsilon(d3, posX, d2)) {
+         if (this.isWithinEpsilon(x, mc.thePlayer.posX, d2)) {
             double y = event.getY();
             double d4 = 0.01;
-            double posY = mc.thePlayer.posY;
-            double d5 = y;
-            if (this.isWithinEpsilon(d5, posY, d4)) {
+            if (this.isWithinEpsilon(y, mc.thePlayer.posY, d4)) {
                double z = event.getZ();
                double d6 = 0.01;
-               double posZ = mc.thePlayer.posZ;
-               double d7 = z;
-               if (this.isWithinEpsilon(d7, posZ, d6)) {
+               if (this.isWithinEpsilon(z, mc.thePlayer.posZ, d6)) {
                   this.opponentHitCount++;
                   return;
                }
@@ -776,8 +746,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          }
 
          if (d2 >= this.minRange.getValue()) {
-            String str = "Attack distance: " + MathStatisticsUtil.formatRounded(d2, (int)this.decimalPlaces.getValue());
-            this.outputDebugMessage(str);
+            this.outputDebugMessage("Attack distance: " + MathStatisticsUtil.formatRounded(d2, (int)this.decimalPlaces.getValue()));
          }
       }
 
@@ -790,10 +759,8 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
    @Override
    public void onPacketDelay2(EventPacketDelay event) {
-      long l = 500L;
-      if (!this.boatDestroyDelayTimer.reached2(l)) {
-         boolean flag = true;
-         event.setDelayed(flag);
+      if (!this.boatDestroyDelayTimer.reached2(500L)) {
+         event.setDelayed(true);
       }
    }
 
@@ -810,8 +777,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
    public void onPacket5(EventPacket event) {
       Packet packet = event.getPacket();
       if (this.packetLoggerMode != null && (this.packetLoggerMode.getSelectedValue().equals("Outgoing") || this.packetLoggerMode.getSelectedValue().equals("All"))) {
-         String str = "Outgoing: ";
-         this.logPacketToFile(packet, str);
+         this.logPacketToFile(packet, "Outgoing: ");
       }
 
       if (packet instanceof C02PacketUseEntity) {
@@ -827,14 +793,12 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       packet = event.getPacket();
       exitBlock:
       if (this.autoClickerDebug.getValue()) {
-         long l = 500L;
-         if (this.clickSampleTimer.reached2(l)) {
+         if (this.clickSampleTimer.reached2(500L)) {
             this.clicksPerTickHistory.clear();
          }
 
          if (packet instanceof C03PacketPlayer) {
-            long l2 = 250L;
-            if (!this.clickSampleTimer.reached2(l2)) {
+            if (!this.clickSampleTimer.reached2(250L)) {
                this.clicksPerTickHistory.add(this.clicksThisTick);
 
                while (this.clicksPerTickHistory.size() > 20) {
@@ -842,19 +806,14 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
                }
 
                if (this.clicksPerTickHistory.size() > 19) {
-                  StringBuilder sb = new StringBuilder().append("Clicks: ");
-                  int clicksThisTick2 = this.clicksThisTick;
-                  String str = sb.append(this.getClickCountColorCode(clicksThisTick2))
+                  String str = new StringBuilder().append("Clicks: ").append(this.getClickCountColorCode(this.clicksThisTick))
                      .append(this.clicksThisTick)
                      .append("§r CPS: ")
                      .append(NumberFormatUtil.formatDecimal(MathStatisticsUtil.averageInt(this.clicksPerTickHistory) * 20.0, 0))
                      .toString();
                   this.sendChatMessage2(str);
                } else {
-                  StringBuilder sb2 = new StringBuilder().append("Clicks: ");
-                  int clicksThisTick3 = this.clicksThisTick;
-                  String str2 = sb2.append(this.getClickCountColorCode(clicksThisTick3)).append(this.clicksThisTick).toString();
-                  this.sendChatMessage2(str2);
+                  this.sendChatMessage2(new StringBuilder().append("Clicks: ").append(this.getClickCountColorCode(this.clicksThisTick)).append(this.clicksThisTick).toString());
                }
 
                this.clicksThisTick = 0;
@@ -884,11 +843,9 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       if (packet instanceof C08PacketPlayerBlockPlacement && this.placeDebug.getValue()) {
          C08PacketPlayerBlockPlacement packet2 = (C08PacketPlayerBlockPlacement)packet;
          if (this.placeRateBuffer.isFull()) {
-            String str3 = "Delay: " + this.ticksSinceLastPlace + "  AVG: " + this.placeRateBuffer.mean() * 20.0;
-            this.sendChatMessage2(str3);
+            this.sendChatMessage2("Delay: " + this.ticksSinceLastPlace + "  AVG: " + this.placeRateBuffer.mean() * 20.0);
          } else {
-            String str4 = "Delay: " + this.ticksSinceLastPlace;
-            this.sendChatMessage2(str4);
+            this.sendChatMessage2("Delay: " + this.ticksSinceLastPlace);
          }
 
          this.ticksSinceLastPlace = 0;
@@ -901,16 +858,14 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       Packet packet = event.getPacket();
       Augustus.getInstance().getClass();
       if (this.healthRoundingDebug != null && this.healthRoundingDebug.getValue() && mc.thePlayer != null && packet instanceof S06PacketUpdateHealth) {
-         S06PacketUpdateHealth packet2 = (S06PacketUpdateHealth)packet;
-         float health = packet2.getHealth();
+         float health = ((S06PacketUpdateHealth)packet).getHealth();
          float f = this.lastHealthValue - health;
          this.lastHealthValue = health;
          if (f > 0.0F) {
             double d2 = MathStatisticsUtil.roundToDecimalPlaces((double)f, 2);
             double d3 = MathStatisticsUtil.roundToDecimalPlaces((double)f, 3);
             if (d2 != d3) {
-               String str = "Damage: " + f + "; R2: " + d2 + "; R3: " + d3;
-               this.sendChatMessage2(str);
+               this.sendChatMessage2("Damage: " + f + "; R2: " + d2 + "; R3: " + d3);
             }
          }
       }
@@ -949,43 +904,27 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
             }
 
             float f4 = f2 + f3;
-            boolean flag = false;
-            boolean flag2 = true;
             float f5 = f4;
-            DamageSource anvil = DamageSource.anvil;
-            float f6 = this.calculatePostDefenseDamage(anvil, f5, nearestPlayer2, flag2, flag);
+            float f6 = this.calculatePostDefenseDamage(DamageSource.anvil, f5, nearestPlayer2, true, false);
             f4 = f2 * 1.5F + f3;
-            boolean flag3 = false;
-            boolean flag4 = true;
             float f7 = f4;
-            DamageSource anvil2 = DamageSource.anvil;
-            float f8 = this.calculatePostDefenseDamage(anvil2, f7, nearestPlayer2, flag4, flag3);
+            float f8 = this.calculatePostDefenseDamage(DamageSource.anvil, f7, nearestPlayer2, true, false);
             f4 = f2 * 0.5F;
-            boolean flag5 = false;
-            boolean flag6 = true;
             float f9 = f4;
-            DamageSource anvil3 = DamageSource.anvil;
-            float f10 = this.calculatePostDefenseDamage(anvil3, f9, nearestPlayer2, flag6, flag5);
+            float f10 = this.calculatePostDefenseDamage(DamageSource.anvil, f9, nearestPlayer2, true, false);
             if (this.pendingDamageAmount > 0.0) {
                double d4 = (double)f8;
                double d5 = 0.01F;
-               double pendingDamageAmount2 = this.pendingDamageAmount;
-               double d6 = d4;
-               boolean isWithinEpsilon = this.isWithinEpsilon(d6, pendingDamageAmount2, d5);
+               boolean isWithinEpsilon = this.isWithinEpsilon(d4, this.pendingDamageAmount, d5);
                double d7 = (double)f6;
                double d8 = 0.01F;
-               double pendingDamageAmount3 = this.pendingDamageAmount;
-               double d9 = d7;
-               boolean isWithinEpsilon2 = this.isWithinEpsilon(d9, pendingDamageAmount3, d8);
+               boolean isWithinEpsilon2 = this.isWithinEpsilon(d7, this.pendingDamageAmount, d8);
                if (!isWithinEpsilon && !isWithinEpsilon2) {
-                  String str2 = "Maybe no legit Damage " + NumberFormatUtil.formatDecimal(this.pendingDamageAmount, 2) + " " + NumberFormatUtil.formatDecimal((double)f6, 2);
-                  this.sendChatMessage2(str2);
+                  this.sendChatMessage2("Maybe no legit Damage " + NumberFormatUtil.formatDecimal(this.pendingDamageAmount, 2) + " " + NumberFormatUtil.formatDecimal((double)f6, 2));
                } else if (isWithinEpsilon) {
-                  String str3 = "Crit";
-                  this.sendChatMessage2(str3);
+                  this.sendChatMessage2("Crit");
                } else {
-                  String str4 = "Nocrit";
-                  this.sendChatMessage2(str4);
+                  this.sendChatMessage2("Nocrit");
                }
             }
          }
@@ -1014,25 +953,22 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          if (packet instanceof S12PacketEntityVelocity && mc.thePlayer != null) {
             S12PacketEntityVelocity packet4 = (S12PacketEntityVelocity)packet;
             if (packet4.getEntityID() == mc.thePlayer.getEntityId()) {
-               String str5 = "Velocity "
-                  + 1.25E-4 * Math.sqrt((double)(packet4.getMotionX() * packet4.getMotionX() + packet4.getMotionZ() * packet4.getMotionZ()));
-               this.sendChatMessage2(str5);
+               this.sendChatMessage2("Velocity "
+                  + 1.25E-4 * Math.sqrt((double)(packet4.getMotionX() * packet4.getMotionX() + packet4.getMotionZ() * packet4.getMotionZ())));
             }
          }
 
          if (packet instanceof S27PacketExplosion && mc.thePlayer != null) {
             S27PacketExplosion packet5 = (S27PacketExplosion)packet;
             if (Math.abs(packet5.getMotionX()) > 0.0F || Math.abs(packet5.getMotionY()) > 0.0F || Math.abs(packet5.getMotionZ()) > 0.0F) {
-               String str6 = "Velocity (S27) " + Math.sqrt((double)(packet5.getMotionX() * packet5.getMotionX() + packet5.getMotionZ() * packet5.getMotionZ()));
-               this.sendChatMessage2(str6);
+               this.sendChatMessage2("Velocity (S27) " + Math.sqrt((double)(packet5.getMotionX() * packet5.getMotionX() + packet5.getMotionZ() * packet5.getMotionZ())));
             }
          }
       }
 
       if (packet instanceof S13PacketDestroyEntities && mc.theWorld != null) {
-         S13PacketDestroyEntities packet6 = (S13PacketDestroyEntities)packet;
 
-         for (int n : packet6.getEntityIDs()) {
+         for (int n : ((S13PacketDestroyEntities)packet).getEntityIDs()) {
             if (mc.theWorld.getEntityByID(n) instanceof EntityBoat) {
                this.boatDestroyDelayTimer.reset();
             }
@@ -1078,8 +1014,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          if (packet9.getOpCode() == 2) {
             Entity entityByID3 = mc.theWorld.getEntityByID(packet9.getEntityId());
             if (entityByID3 != null && this.lastAttackedEntity != null && entityByID3.getEntityId() == this.lastAttackedEntity.getEntityId() && this.lastAttackedEntity.hurtTime == 0) {
-               long l2 = System.currentTimeMillis() - this.lastAttackedEntity.lastDamageAttackTime;
-               if (l2 < 400L && !this.transactionIntervals.isEmpty()) {
+               if ((System.currentTimeMillis() - this.lastAttackedEntity.lastDamageAttackTime) < 400L && !this.transactionIntervals.isEmpty()) {
                   long l3 = MathStatisticsUtil.maxLong(this.transactionIntervals);
                }
             }
@@ -1091,8 +1026,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          if (packet10.getAnimationType() == 1) {
             Entity entityByID4 = mc.theWorld.getEntityByID(packet10.getEntityID());
             if (entityByID4 != null && this.lastAttackedEntity != null && entityByID4.getEntityId() == this.lastAttackedEntity.getEntityId() && this.lastAttackedEntity.hurtTime == 0) {
-               long l4 = System.currentTimeMillis() - this.lastAttackedEntity.lastDamageAttackTime;
-               if (l4 < 400L && !this.transactionIntervals.isEmpty()) {
+               if ((System.currentTimeMillis() - this.lastAttackedEntity.lastDamageAttackTime) < 400L && !this.transactionIntervals.isEmpty()) {
                   long l5 = MathStatisticsUtil.maxLong(this.transactionIntervals);
                }
             }
@@ -1167,10 +1101,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       }
 
       if (packet instanceof S06PacketUpdateHealth && this.reducedDamageCheck != null && this.reducedDamageCheck.getValue()) {
-         double health2 = (double)((S06PacketUpdateHealth)packet).getHealth();
-         double lastRecordedAbsorption2 = this.lastRecordedAbsorption;
-         double d10 = health2;
-         this.analyzeIncomingDamage(d10, lastRecordedAbsorption2);
+         this.analyzeIncomingDamage((double)((S06PacketUpdateHealth)packet).getHealth(), this.lastRecordedAbsorption);
       }
 
       if (packet instanceof S1CPacketEntityMetadata && this.reducedDamageCheck != null && this.reducedDamageCheck.getValue() && mc.thePlayer != null) {
@@ -1178,18 +1109,14 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          if (packet13.getEntityId() == mc.thePlayer.getEntityId()) {
             for (DataWatcher.WatchableObject watchableObject : (Iterable<DataWatcher.WatchableObject>)(packet13.getDataManagerEntries())) {
                if (watchableObject.getDataValueId() == 17) {
-                  double lastRecordedHealth2 = this.lastRecordedHealth;
-                  double d11 = (double)((Float)watchableObject.getObject()).floatValue();
-                  double d12 = lastRecordedHealth2;
-                  this.analyzeIncomingDamage(d12, d11);
+                  this.analyzeIncomingDamage(this.lastRecordedHealth, (double)((Float)watchableObject.getObject()).floatValue());
                }
             }
          }
       }
 
       if (this.packetLoggerMode != null && (this.packetLoggerMode.getSelectedValue().equals("Incoming") || this.packetLoggerMode.getSelectedValue().equals("All"))) {
-         String str10 = "Incoming: ";
-         this.logPacketToFile(packet, str10);
+         this.logPacketToFile(packet, "Incoming: ");
       }
 
       if (!(packet instanceof S32PacketConfirmTransaction)
@@ -1229,23 +1156,19 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       }
 
       if (this.kit1V1Damage.getValue() && packet instanceof S06PacketUpdateHealth && mc.thePlayer != null) {
-         S06PacketUpdateHealth packet14 = (S06PacketUpdateHealth)packet;
-         float f12 = packet14.getHealth() - mc.thePlayer.getCurrentHealth();
+         float f12 = ((S06PacketUpdateHealth)packet).getHealth() - mc.thePlayer.getCurrentHealth();
          if ((double)f12 > -2.58 && f12 < 0.0F) {
-            String str11 = "HealthDiff: " + NumberFormatUtil.formatDecimal((double)f12, 2);
-            this.outputDebugMessage(str11);
+            this.outputDebugMessage("HealthDiff: " + NumberFormatUtil.formatDecimal((double)f12, 2));
          }
       }
 
       if (packet instanceof S29PacketSoundEffect && this.soundName.getValue()) {
          S29PacketSoundEffect packet15 = (S29PacketSoundEffect)packet;
-         String str12 = "SoundName: " + packet15.getSoundName();
-         this.outputDebugMessage(str12);
+         this.outputDebugMessage("SoundName: " + packet15.getSoundName());
       }
 
       if (packet instanceof S02PacketChat && this.onlyDebugChat.getValue()) {
-         S02PacketChat packet16 = (S02PacketChat)packet;
-         if (!packet16.getChatComponent().getUnformattedText().contains("Augustus")) {
+         if (!((S02PacketChat)packet).getChatComponent().getUnformattedText().contains("Augustus")) {
             event.cancel();
          }
       }
@@ -1253,10 +1176,8 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       if (packet instanceof S19PacketEntityStatus && this.hitBug.getValue() && mc.thePlayer != null) {
          S19PacketEntityStatus packet17 = (S19PacketEntityStatus)packet;
          if (packet17.getEntityId() == mc.thePlayer.getEntityId() && packet17.getOpCode() == 2) {
-            long l6 = 450L;
-            if (!this.hitBugTimer.reached2(l6)) {
-               String str13 = "Hitbug! " + this.hitBugTimer.getTime();
-               this.outputDebugMessage(str13);
+            if (!this.hitBugTimer.reached2(450L)) {
+               this.outputDebugMessage("Hitbug! " + this.hitBugTimer.getTime());
             }
 
             this.hitBugTimer.reset();
@@ -1295,64 +1216,34 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          }
 
          float f3 = f + f2;
-         boolean flag = false;
-         boolean flag2 = true;
          float f4 = f3;
-         DamageSource anvil = DamageSource.anvil;
-         float f5 = this.calculatePostDefenseDamage(anvil, f4, nearestPlayer2, flag2, flag);
+         float f5 = this.calculatePostDefenseDamage(DamageSource.anvil, f4, nearestPlayer2, true, false);
          f3 = f * 1.5F + f2;
-         boolean flag3 = false;
-         boolean flag4 = true;
          float f6 = f3;
-         DamageSource anvil2 = DamageSource.anvil;
-         float f7 = this.calculatePostDefenseDamage(anvil2, f6, nearestPlayer2, flag4, flag3);
+         float f7 = this.calculatePostDefenseDamage(DamageSource.anvil, f6, nearestPlayer2, true, false);
          f3 = f * 0.5F;
-         boolean flag5 = false;
-         boolean flag6 = true;
          float f8 = f3;
-         DamageSource anvil3 = DamageSource.anvil;
-         float f9 = this.calculatePostDefenseDamage(anvil3, f8, nearestPlayer2, flag6, flag5);
+         float f9 = this.calculatePostDefenseDamage(DamageSource.anvil, f8, nearestPlayer2, true, false);
          f3 = f + f2;
-         boolean flag7 = false;
-         boolean flag8 = false;
          float f10 = f3;
-         DamageSource anvil4 = DamageSource.anvil;
-         float f11 = this.calculatePostDefenseDamage(anvil4, f10, nearestPlayer2, flag8, flag7);
+         float f11 = this.calculatePostDefenseDamage(DamageSource.anvil, f10, nearestPlayer2, false, false);
          f3 = f * 1.5F + f2;
-         boolean flag9 = false;
-         boolean flag10 = false;
          float f12 = f3;
-         DamageSource anvil5 = DamageSource.anvil;
-         float f13 = this.calculatePostDefenseDamage(anvil5, f12, nearestPlayer2, flag10, flag9);
+         float f13 = this.calculatePostDefenseDamage(DamageSource.anvil, f12, nearestPlayer2, false, false);
          f3 = f * 0.5F;
-         boolean flag11 = false;
-         boolean flag12 = false;
          float f14 = f3;
-         DamageSource anvil6 = DamageSource.anvil;
-         float f15 = this.calculatePostDefenseDamage(anvil6, f14, nearestPlayer2, flag12, flag11);
+         float f15 = this.calculatePostDefenseDamage(DamageSource.anvil, f14, nearestPlayer2, false, false);
          if (this.printRawDamageValues != null && this.printRawDamageValues.getValue()) {
-            String str = d4 + " " + f11 + " " + f13;
-            this.outputDebugMessage(str);
+            this.outputDebugMessage(d4 + " " + f11 + " " + f13);
          }
 
          if (this.hasProtectionArmor()) {
             if (this.reducedDamageAlert != null && this.reducedDamageAlert.getValue()) {
-               float f16 = (float)d4;
-               float[] floats = new float[]{f11, f13};
-               float[] floats2 = floats;
-               float f17 = f16;
-               float f18 = this.findClosestExpectedDamage(f17, floats2);
-               double d5 = (double)f18;
-               double d6 = (double)Math.abs(f11 - f5);
-               double d7 = d5;
-               if (!this.isWithinEpsilon(d4, d7, d6) && d4 < (double)f18) {
-                  double d8 = (double)f9;
-                  double d9 = 0.01F;
-                  double d10 = d8;
-                  if (!this.isWithinEpsilon(d4, d10, d9)) {
+               float f18 = this.findClosestExpectedDamage((float)d4, new float[]{f11, f13});
+               if (!this.isWithinEpsilon(d4, (double)f18, (double)Math.abs(f11 - f5)) && d4 < (double)f18) {
+                  if (!this.isWithinEpsilon(d4, (double)f9, 0.01F)) {
                      if (this.reducedDamageViolations > 8) {
-                        String str2 = "Your enemy makes reduced Damage (unsafe) (single)!";
-                        this.outputDebugMessage(str2);
+                        this.outputDebugMessage("Your enemy makes reduced Damage (unsafe) (single)!");
                      }
 
                      this.reducedDamageViolations += 2;
@@ -1360,26 +1251,13 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
                }
             }
          } else {
-            double d11 = (double)f5;
-            double d12 = 0.01F;
-            double d13 = d11;
-            if (this.isWithinEpsilon(d4, d13, d12)) {
+            if (this.isWithinEpsilon(d4, (double)f5, 0.01F)) {
             }
 
-            double d14 = (double)f5;
-            double d15 = 0.01F;
-            double d16 = d14;
-            if (!this.isWithinEpsilon(d4, d16, d15)) {
-               double d17 = (double)f7;
-               double d18 = 0.01F;
-               double d19 = d17;
-               if (!this.isWithinEpsilon(d4, d19, d18)) {
-                  double d20 = (double)f9;
-                  double d21 = 0.01F;
-                  double d22 = d20;
-                  if (!this.isWithinEpsilon(d4, d22, d21)) {
-                     String str3 = "Your enemy makes reduced Damage (single)! " + d4 + " " + f11 + " " + f7;
-                     this.outputDebugMessage(str3);
+            if (!this.isWithinEpsilon(d4, (double)f5, 0.01F)) {
+               if (!this.isWithinEpsilon(d4, (double)f7, 0.01F)) {
+                  if (!this.isWithinEpsilon(d4, (double)f9, 0.01F)) {
+                     this.outputDebugMessage("Your enemy makes reduced Damage (single)! " + d4 + " " + f11 + " " + f7);
                   }
                }
             }
@@ -1387,8 +1265,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
          this.reducedDamageViolations--;
          f3 = (float)d4;
-         float[] floats3 = new float[]{f11, f13, f15};
-         float[] floats4 = floats3;
+         float[] floats4 = new float[]{f11, f13, f15};
          float f19 = f3;
          this.expectedDamageHistory.add(this.findClosestExpectedDamage(f19, floats4));
          this.actualDamageHistory.add((float)d4);
@@ -1403,13 +1280,9 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
          if (this.expectedDamageHistory.size() >= 10 && this.reducedDamageAlert.getValue()) {
             double d23 = this.expectedDamageHistory.stream().mapToDouble(obj -> ((Float)obj).doubleValue()).average().orElse(0.0);
-            double d24 = this.actualDamageHistory.stream().mapToDouble(obj2 -> ((Float)obj2).doubleValue()).average().orElse(0.0);
-            double d25 = 0.09;
-            if (!this.isWithinEpsilon(d24, d23, d25)) {
-               String str4 = "Your enemy makes reduced Damage (unsafe) (avg)!";
-               this.outputDebugMessage(str4);
-               String str5 = d4 + " " + f11;
-               this.outputDebugMessage(str5);
+            if (!this.isWithinEpsilon(this.actualDamageHistory.stream().mapToDouble(obj2 -> ((Float)obj2).doubleValue()).average().orElse(0.0), d23, 0.09)) {
+               this.outputDebugMessage("Your enemy makes reduced Damage (unsafe) (avg)!");
+               this.outputDebugMessage(d4 + " " + f11);
             }
          }
       }
@@ -1451,8 +1324,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       int n = 0;
 
       for (int i = 0; i < floats.length; i++) {
-         float f2 = floats[i];
-         float f3 = Math.abs(f2 - f);
+         float f3 = Math.abs(floats[i] - f);
          if (f3 < maxvalue) {
             maxvalue = f3;
             n = i;
@@ -1492,10 +1364,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
          return f;
       } else {
          if (mc.thePlayer.isPotionActive(Potion.resistance) && damageSource != DamageSource.outOfWorld) {
-            int n = (mc.thePlayer.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5;
-            int n2 = 25 - n;
-            float f2 = f * (float)n2;
-            f = f2 / 25.0F;
+            f = (f * (float)(25 - ((mc.thePlayer.getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5))) / 25.0F;
          }
 
          if (f <= 0.0F) {
@@ -1524,9 +1393,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
             }
 
             if (n3 > 0) {
-               int n4 = 25 - n3;
-               float f4 = f * (float)n4;
-               f = f4 / 25.0F;
+               f = (f * (float)(25 - n3)) / 25.0F;
             }
 
             return f;
@@ -1536,9 +1403,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
    private float applyArmorReduction(DamageSource damageSource, float f, EntityPlayer player) {
       if (!damageSource.isUnblockable()) {
-         float f2 = 25.0F - this.getTotalArmorPoints();
-         float f3 = f * f2;
-         f = f3 / 25.0F;
+         f = (f * (25.0F - this.getTotalArmorPoints())) / 25.0F;
       }
 
       return f;
@@ -1550,8 +1415,7 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
       for (int i = 0; i < mc.thePlayer.inventory.armorInventory.length; i++) {
          ItemStack stack = mc.thePlayer.inventory.armorInventory[i];
          if (stack != null && stack.getItem() instanceof ItemArmor) {
-            ItemArmor item = (ItemArmor)stack.getItem();
-            float damageReduceAmount = (float)item.damageReduceAmount;
+            float damageReduceAmount = (float)((ItemArmor)stack.getItem()).damageReduceAmount;
             f += damageReduceAmount;
          }
       }

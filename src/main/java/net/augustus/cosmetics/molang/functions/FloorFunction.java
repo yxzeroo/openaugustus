@@ -15,7 +15,6 @@ public class FloorFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.floor(this.getArg(b));
+      return Math.floor(this.getArg((byte)0));
    }
 }

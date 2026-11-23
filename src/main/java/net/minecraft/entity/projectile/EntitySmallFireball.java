@@ -18,8 +18,7 @@ public class EntitySmallFireball extends EntityFireball {
    public void onImpact(MovingObjectPosition hit) {
       if (!this.entityWorld.isRemote) {
          if (hit.entityHit != null) {
-            boolean flag = hit.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 5.0F);
-            if (flag) {
+            if (hit.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 5.0F)) {
                this.applyEnchantments(this.shootingEntity, hit.entityHit);
                if (!hit.entityHit.isImmuneToFire()) {
                   hit.entityHit.setFire(5);

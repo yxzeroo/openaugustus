@@ -42,8 +42,7 @@ public class URLConnectionExecutor extends RequestExecutor {
             proxySelector.set();
          }
 
-         HttpURLConnection connection = this.openConnection(request, cookieManager);
-         httpResponse = this.executeRequest(connection, cookieManager, request);
+         httpResponse = this.executeRequest(this.openConnection(request, cookieManager), cookieManager, request);
       } finally {
          if (proxySelector != null) {
             proxySelector.reset();
@@ -54,11 +53,9 @@ public class URLConnectionExecutor extends RequestExecutor {
    }
 
    private HttpURLConnection openConnection(HttpRequest request, CookieManager cookieManager) throws IOException {
-      URL url = request.getURL();
-      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+      HttpURLConnection connection = (HttpURLConnection)request.getURL().openConnection();
       if (this.isIgnoreInvalidSSL(request) && connection instanceof HttpsURLConnection) {
-         HttpsURLConnection httpsConnection = (HttpsURLConnection)connection;
-         httpsConnection.setSSLSocketFactory(IgnoringTrustManager.makeIgnoringSSLContext().getSocketFactory());
+         ((HttpsURLConnection)connection).setSSLSocketFactory(IgnoringTrustManager.makeIgnoringSSLContext().getSocketFactory());
       }
 
       this.setupConnection(connection, cookieManager, request);

@@ -18,12 +18,8 @@ public class Sha3Hash {
    private final int capacityBits;
 
    private byte[] resizeToBlockMultiple(byte[] bytes, int n, int n2) {
-      int rate = KeccakParameters.getRate(this.type);
-      int n3 = this.ceilDiv(n2, rate);
-      byte[] bytes2 = new byte[n3 * KeccakParameters.getRate(this.type) / 8];
-      byte b = 8;
-      int n4 = this.ceilDiv(n, b);
-      System.arraycopy(bytes, 0, bytes2, 0, n4);
+      byte[] bytes2 = new byte[this.ceilDiv(n2, KeccakParameters.getRate(this.type)) * KeccakParameters.getRate(this.type) / 8];
+      System.arraycopy(bytes, 0, bytes2, 0, this.ceilDiv(n, (byte)8));
       return bytes2;
    }
 
@@ -49,8 +45,7 @@ public class Sha3Hash {
          return null;
       } else {
          this.resetState();
-         int rate = KeccakParameters.getRate(this.type);
-         byte[] bytes = this.allocateBitBuffer(rate);
+         byte[] bytes = this.allocateBitBuffer(KeccakParameters.getRate(this.type));
          long[][] state2 = this.state;
          int n = this.absorber.absorbStream(in, state2, bytes);
          byte[] bytes2 = this.prepareFinalBlock(bytes, n);
@@ -58,8 +53,7 @@ public class Sha3Hash {
          this.padder.pad(bytes2, n);
          long[][] state3 = this.state;
          this.absorber.absorb(bytes2, state3);
-         int digestBitLength = this.type.getDigestBitLength();
-         byte[] bytes3 = this.allocateBitBuffer(digestBitLength);
+         byte[] bytes3 = this.allocateBitBuffer(this.type.getDigestBitLength());
          long[][] state4 = this.state;
          return this.squeezer.squeeze(state4, bytes3);
       }
@@ -104,15 +98,13 @@ public class Sha3Hash {
       } else {
          this.resetState();
          int n = bytes.length << 3;
-         int n2 = this.computePaddedBitLength(n);
-         byte[] bytes2 = this.allocateBitBuffer(n2);
+         byte[] bytes2 = this.allocateBitBuffer(this.computePaddedBitLength(n));
          this.copyInputBytes(bytes, bytes2);
          this.appendDomainSuffix(bytes2, n);
          this.padder.pad(bytes2, n);
          long[][] state2 = this.state;
          this.absorber.absorb(bytes2, state2);
-         int digestBitLength = this.type.getDigestBitLength();
-         byte[] bytes3 = this.allocateBitBuffer(digestBitLength);
+         byte[] bytes3 = this.allocateBitBuffer(this.type.getDigestBitLength());
          long[][] state3 = this.state;
          return this.squeezer.squeeze(state3, bytes3);
       }

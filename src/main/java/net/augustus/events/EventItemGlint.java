@@ -32,8 +32,7 @@ public class EventItemGlint extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      ItemGlintListener listener = (ItemGlintListener)obj;
-      this.call2(listener);
+      this.call2((ItemGlintListener)obj);
    }
 
    public void setColor(int n) {

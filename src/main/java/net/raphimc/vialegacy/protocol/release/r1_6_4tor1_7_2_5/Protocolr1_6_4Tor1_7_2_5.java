@@ -404,9 +404,8 @@ public class Protocolr1_6_4Tor1_7_2_5
             this.handler(wrapper -> {
                int chunkX = (Integer)wrapper.get(Types.INT, 0);
                int chunkZ = (Integer)wrapper.get(Types.INT, 1);
-               BlockChangeRecord[] blockChangeRecords = (BlockChangeRecord[])wrapper.get(Types1_7_6.BLOCK_CHANGE_RECORD_ARRAY, 0);
 
-               for (BlockChangeRecord record : blockChangeRecords) {
+               for (BlockChangeRecord record : (BlockChangeRecord[])wrapper.get(Types1_7_6.BLOCK_CHANGE_RECORD_ARRAY, 0)) {
                   int targetX = record.getSectionX() + (chunkX << 4);
                   int targetY = record.getY(-1);
                   int targetZ = record.getSectionZ() + (chunkZ << 4);
@@ -450,9 +449,8 @@ public class Protocolr1_6_4Tor1_7_2_5
          }
       });
       this.registerClientbound(ClientboundPackets1_6_4.MAP_BULK_CHUNK, wrapper -> {
-         Chunk[] chunks = (Chunk[])wrapper.passthrough(Types1_7_6.CHUNK_BULK);
 
-         for (Chunk chunk : chunks) {
+         for (Chunk chunk : (Chunk[])wrapper.passthrough(Types1_7_6.CHUNK_BULK)) {
             ((ChunkTracker)wrapper.user().get(ChunkTracker.class)).trackAndRemap(chunk);
          }
       });
@@ -474,10 +472,9 @@ public class Protocolr1_6_4Tor1_7_2_5
                      ChunkTracker chunkTracker = (ChunkTracker)wrapper.user().get(ChunkTracker.class);
 
                      for (int i = 0; i < recordCount; i++) {
-                        BlockPosition pos = new BlockPosition(
+                        chunkTracker.trackAndRemap(new BlockPosition(
                            x + (Byte)wrapper.passthrough(Types.BYTE), y + (Byte)wrapper.passthrough(Types.BYTE), z + (Byte)wrapper.passthrough(Types.BYTE)
-                        );
-                        chunkTracker.trackAndRemap(pos, new IdAndData(0, 0));
+                        ), new IdAndData(0, 0));
                      }
                   }
                );
@@ -628,9 +625,8 @@ public class Protocolr1_6_4Tor1_7_2_5
          public void register() {
             this.map(Types.BYTE, Types.UNSIGNED_BYTE);
             this.handler(wrapper -> {
-               Item[] items = (Item[])wrapper.passthrough(Types1_7_6.ITEM_ARRAY);
 
-               for (Item item : items) {
+               for (Item item : (Item[])wrapper.passthrough(Types1_7_6.ITEM_ARRAY)) {
                   Protocolr1_6_4Tor1_7_2_5.this.itemRewriter.handleItemToClient(wrapper.user(), item);
                }
             });
@@ -680,8 +676,7 @@ public class Protocolr1_6_4Tor1_7_2_5
          }
       });
       this.registerClientbound(ClientboundPackets1_6_4.COMMAND_SUGGESTIONS, wrapper -> {
-         String completions = (String)wrapper.read(Types1_6_4.STRING);
-         String[] completionsArray = completions.split("\u0000");
+         String[] completionsArray = ((String)wrapper.read(Types1_6_4.STRING)).split("\u0000");
          wrapper.write(Types.VAR_INT, completionsArray.length);
 
          for (String s : completionsArray) {
@@ -795,9 +790,7 @@ public class Protocolr1_6_4Tor1_7_2_5
             this.map(Types.SHORT_BYTE_ARRAY);
             this.map(Types.SHORT_BYTE_ARRAY);
             this.handler(wrapper -> {
-               ProtocolMetadataStorage protocolMetadata = (ProtocolMetadataStorage)wrapper.user().get(ProtocolMetadataStorage.class);
-               String serverHash = (String)wrapper.get(Types.STRING, 0);
-               protocolMetadata.authenticate = !serverHash.equals("-");
+               ((ProtocolMetadataStorage)wrapper.user().get(ProtocolMetadataStorage.class)).authenticate = !((String)wrapper.get(Types.STRING, 0)).equals("-");
             });
          }
       }});

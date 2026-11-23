@@ -15,46 +15,40 @@ import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.animation.AnimationUtil;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class BreakIndicator extends Module implements RenderListener {
-   private final StringValue decimalPlaces;
-   private final StringValue scale;
-   private final StringValue posX;
-   private final StringValue posY;
+   private final DoubleValue decimalPlaces;
+   private final DoubleValue scale;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
    private final ColorSetting color2;
    private final BooleanValue backGround;
    private final ColorSetting backgroundColor;
    private final BlurShadowSettings blurShadowSettings;
-   private final BooleansSetting toggleAnimation2;
-   private final StringValue animationTime;
+   private final StringValue toggleAnimation2;
+   private final DoubleValue animationTime;
    private final AnimationUtil toggleAnimation3;
    private float lastBlockDamage;
 
    public BreakIndicator() {
        super("BreakIndicator", "BlockBrechAnzeige", new Color(50, 168, 123), Categorys.RENDER);
-      this.decimalPlaces = new StringValue(this, "DecimalPlaces", 1.0, 0.0, 4.0, 0);
-      this.scale = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
-      this.posX = new StringValue(this, "PosX", 52.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 50.0, 0.0, 100.0, 2);
+      this.decimalPlaces = new DoubleValue(this, "DecimalPlaces", 1.0, 0.0, 4.0, 0);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2);
+      this.posX = new DoubleValue(this, "PosX", 52.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 50.0, 0.0, 100.0, 2);
       this.color2 = new ColorSetting(this, "Color", Color.white);
       this.backGround = new BooleanValue(this, "BackGround", true);
       ColorSetting colorSetting = new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100));
       BooleanValue backGround2 = this.backGround;
       this.backGround.getClass();
-      BooleanValue booleanValue = backGround2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(condition);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
-      this.toggleAnimation2 = new BooleansSetting(this, "ToggleAnimation", "easeInOutCubic", AnimationUtil.getEasingNames(true));
-      StringValue stringValue = new StringValue(this, "AnimationTime", 500.0, 0.0, 1000.0, 0);
-      SettingVisibilityCondition condition2 = () -> this.isAnimationTimeVisible();
-      this.animationTime = stringValue.visibleWhen(condition2);
+      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(() -> backGround2.getValue());
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
+      this.toggleAnimation2 = new StringValue(this, "ToggleAnimation", "easeInOutCubic", AnimationUtil.getEasingNames(true));
+      this.animationTime = new DoubleValue(this, "AnimationTime", 500.0, 0.0, 1000.0, 0).visibleWhen(() -> this.isAnimationTimeVisible());
       this.toggleAnimation3 = new AnimationUtil(0.0F, 0.0F, 0.0F, 0.0F);
    }
 
@@ -68,8 +62,7 @@ public class BreakIndicator extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -103,17 +96,14 @@ public class BreakIndicator extends Module implements RenderListener {
 
          int n;
          if (this.backGround.getValue()) {
-            byte b = 0;
-            n = this.backgroundColor.getColorInt(b);
+            n = this.backgroundColor.getColorInt((byte)0);
          } else {
             n = 0;
          }
 
          int n2 = n;
-         byte b2 = 0;
-         int colorInt = this.color2.getColorInt(b2);
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         int colorInt = this.color2.getColorInt((byte)0);
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
             if (this.backGround.getValue()) {
                double d = (double)(-f3);

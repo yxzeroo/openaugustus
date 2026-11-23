@@ -16,11 +16,9 @@ import net.minecraft.client.entity.EntityPlayerSP;
 public class CosmeticDataManager implements CosmeticTickListener {
    private HashMap modelDataCache = new HashMap();
    private static long lastHintTimestamp;
-   private static int[] flowState;
 
    private SettingOverlay[] createSettingOverlays(int n) {
       SettingOverlay[] settingOverlays = new SettingOverlay[n];
-      getFlowState();
 
       for (int i = 0; i < settingOverlays.length; i++) {
          settingOverlays[i] = new SettingOverlay();
@@ -41,7 +39,6 @@ public class CosmeticDataManager implements CosmeticTickListener {
    }
 
    private ModelData buildModelData(CosmeticModel cosmeticModel, boolean flag) {
-      int[] flowState2 = getFlowState();
       ModelData modelData = null;
       if (flag) {
          int id = cosmeticModel.getId();
@@ -53,16 +50,13 @@ public class CosmeticDataManager implements CosmeticTickListener {
 
       modelData = new ModelData();
       modelData.setVersion(cosmeticModel.getVersion());
-      int length = cosmeticModel.getSubModels().length;
-      modelData.setSubModels(this.createSettingOverlays(length));
+      modelData.setSubModels(this.createSettingOverlays(cosmeticModel.getSubModels().length));
       if (cosmeticModel.hasTextureModels()) {
-         int size = cosmeticModel.getTextureModels().size();
-         modelData.setTextureModels(this.createSettingOverlays(size));
+         modelData.setTextureModels(this.createSettingOverlays(cosmeticModel.getTextureModels().size()));
       }
 
       if (cosmeticModel.hasItemModels()) {
-         int size2 = cosmeticModel.getItemModels().size();
-         modelData.setItemModels(this.createSettingOverlays(size2));
+         modelData.setItemModels(this.createSettingOverlays(cosmeticModel.getItemModels().size()));
       }
 
       if (cosmeticModel.hasConfigs()) {
@@ -82,7 +76,6 @@ public class CosmeticDataManager implements CosmeticTickListener {
    }
 
    public void applyCosmeticToPlayer(boolean flag, CosmeticModel cosmeticModel, AbstractClientPlayer clientPlayer, float f, float f2, ColorSetting[] colorSettings) {
-      int[] flowState2 = getFlowState();
       ModelData modelData = (ModelData)clientPlayer.getCosmetics().get(cosmeticModel.getId());
       if (flag
          && !(clientPlayer instanceof EntityPlayerSP)
@@ -102,9 +95,7 @@ public class CosmeticDataManager implements CosmeticTickListener {
                modelData.scale = f;
                settingOverlay.y = f2;
                modelData.y = f2;
-               ColorSetting colorSetting = colorSettings[i];
-               byte b = 0;
-               settingOverlay.color = colorSetting.getColorInt(b);
+               settingOverlay.color = colorSettings[i].getColorInt((byte)0);
             }
          }
 
@@ -112,8 +103,7 @@ public class CosmeticDataManager implements CosmeticTickListener {
             modelData.setActive(flag);
          }
       } else {
-         boolean flag2 = true;
-         modelData = this.getOrCreateModelData(cosmeticModel, flag2);
+         modelData = this.getOrCreateModelData(cosmeticModel, true);
          modelData.setActive(flag);
          clientPlayer.getCosmetics().put(cosmeticModel.getId(), modelData.clone_m1());
       }
@@ -128,19 +118,10 @@ public class CosmeticDataManager implements CosmeticTickListener {
    }
 
    static {
-      if (getFlowState() != null) {
-         setFlowState(new int[2]);
-      }
 
       lastHintTimestamp = 0L;
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 
 }

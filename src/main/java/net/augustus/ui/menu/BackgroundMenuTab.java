@@ -29,22 +29,16 @@ public class BackgroundMenuTab extends ClientMenuTab {
 
    public void initContent() {
       super.initContent();
-      ScrollBar scrollBar2 = this.scrollBar;
-      int size = this.getBackgroundShaders().size();
-      scrollBar2.setItemCount(size);
+      this.scrollBar.setItemCount(this.getBackgroundShaders().size());
       float f = (float)(this.width + 102) / 2.0F;
       int n = (int)(f + 152.0F);
       int n2 = (int)(f + 155.0F);
       int height2 = this.height;
-      int n3 = n2;
-      byte b = 52;
-      int n4 = n;
-      this.scrollBar.setBounds(n4, b, n3, height2);
+      this.scrollBar.setBounds(n, (byte)52, n2, height2);
    }
 
    public void drawContent(int n, int n2, float f) {
       super.drawContent(n, n2, f);
-      CreditsSection.getControlFlowGuard();
       this.scrollBar.updateAndDraw();
       GL11.glPushMatrix();
       GL11.glTranslatef(0.0F, 52.0F, 0.0F);
@@ -74,10 +68,7 @@ public class BackgroundMenuTab extends ClientMenuTab {
          float f4 = f2 / 1.5F;
          float f5 = f3 / 1.5F + 2.0F;
          float f6 = 1.5F;
-         float f7 = f5;
-         float f8 = f4;
-         String str2 = str;
-         ((AugustusGuiScreen)this).drawCenteredScaledString(str2, f8, f7, f6);
+         ((AugustusGuiScreen)this).drawCenteredScaledString(str, f4, f5, f6);
          n3++;
       }
 
@@ -92,7 +83,6 @@ public class BackgroundMenuTab extends ClientMenuTab {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       mouseY -= 52;
       int n = 0;
-      CreditsSection.getControlFlowGuard();
 
       for (BackgroundShader backgroundShader : (Iterable<BackgroundShader>)(this.getBackgroundShaders())) {
          float f = (float)(this.width + 102) / 2.0F;
@@ -105,10 +95,7 @@ public class BackgroundMenuTab extends ClientMenuTab {
             (double)(f + 150.0F),
             (double)((float)((double)((float)(this.scrollBar.itemHeight + ((double)n * this.scrollBar.itemHeight - 2.0))) + this.scrollBar.getClampedScrollOffset()))
          )) {
-            BackgroundShaderManager backgroundShaderManager = Augustus.getInstance().getBackgroundShaderManager();
-            String str = backgroundShader.getName().toLowerCase();
-            String str2 = str;
-            backgroundShaderManager.selectShader(str2);
+            Augustus.getInstance().getBackgroundShaderManager().selectShader(backgroundShader.getName().toLowerCase());
             AugustusServer.playButtonClickSound();
          }
 
@@ -116,10 +103,8 @@ public class BackgroundMenuTab extends ClientMenuTab {
       }
 
       double d = (double)mouseX;
-      double d2 = (double)mouseY;
-      double d3 = d2;
-      double d4 = d;
-      this.scrollBar.handleMouseClick(d4, d3);
+      double d3 = (double)mouseY;
+      this.scrollBar.handleMouseClick(d, d3);
    }
 
    public BackgroundMenuTab() {

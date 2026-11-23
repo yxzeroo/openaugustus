@@ -20,16 +20,12 @@ public class SettingDescriptionManager {
       return this.descriptionYamlManager;
    }
 
-   private static void reloadSelectedDescriptionFile(BooleansSetting booleansSetting) {
-      SettingDescriptionManager manager = Augustus.getInstance().getSettingDescriptionManager();
-      String selectedValue = booleansSetting.getSelectedValue();
-      String str = selectedValue;
-      manager.loadDescriptions(str);
+   private static void reloadSelectedDescriptionFile(StringValue booleansSetting) {
+      Augustus.getInstance().getSettingDescriptionManager().loadDescriptions(booleansSetting.getSelectedValue());
    }
 
    public void writePresetDescriptions() {
       ClientFileUtil.ensureDirectory(DESCRIPTIONS_DIR);
-      DescriptionYamlManager.getParseFlags();
       String str = DESCRIPTIONS_DIR + "Preset.yml";
       File file = new File(str);
       if (file.exists()) {
@@ -44,15 +40,9 @@ public class SettingDescriptionManager {
       }
    }
 
-   private static void onDescriptionFileDeleted(BooleansSetting booleansSetting, Path path) {
-      String[] strings = Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles();
-      booleansSetting.setOptions(strings);
-      SettingDescriptionManager manager = Augustus.getInstance().getSettingDescriptionManager();
-      String selectedValue = booleansSetting.getSelectedValue();
-      String[] options = booleansSetting.getOptions();
-      String str = selectedValue;
-      String str2 = manager.resolveValidOption(str, options);
-      booleansSetting.setSelectedValue(str2);
+   private static void onDescriptionFileDeleted(StringValue booleansSetting, Path path) {
+      booleansSetting.setOptions(Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles());
+      booleansSetting.setSelectedValue(Augustus.getInstance().getSettingDescriptionManager().resolveValidOption(booleansSetting.getSelectedValue(), booleansSetting.getOptions()));
    }
 
    public synchronized void loadDescriptions(String str) {
@@ -69,7 +59,6 @@ public class SettingDescriptionManager {
 
    public String[] listDescriptionFiles() {
       ArrayList list = new ArrayList();
-      DescriptionYamlManager.getParseFlags();
       File file = new File(DESCRIPTIONS_DIR);
       ClientFileUtil.ensureDirectory(DESCRIPTIONS_DIR);
       File[] files = file.listFiles();
@@ -78,8 +67,7 @@ public class SettingDescriptionManager {
             String name = file2.getName();
             if (name.endsWith(".yml")) {
                if (!name.equals("Preset.yml")) {
-                  String str = name.substring(0, Math.max(0, name.length() - 4));
-                  list.add(str);
+                  list.add(name.substring(0, Math.max(0, name.length() - 4)));
                }
             }
          }
@@ -89,7 +77,6 @@ public class SettingDescriptionManager {
    }
 
    public String resolveValidOption(String str, String[] strings) {
-      int[] parseFlags = DescriptionYamlManager.getParseFlags();
       if (strings.length < 1) {
          return "";
       } else {
@@ -105,45 +92,29 @@ public class SettingDescriptionManager {
 
    public void initialize() {
       String str = Augustus.getInstance().getName().toLowerCase() + "/settings/descriptions";
-      boolean flag = true;
       String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/Default.yml", str2, flag);
-      DescriptionYamlManager.getParseFlags();
-      String str3 = "Default";
-      this.loadDescriptions(str3);
+      ClientFileUtil.extractResource("assets/augustus/Default.yml", str2, true);
+      this.loadDescriptions("Default");
       this.writePresetDescriptions();
-      BooleansSetting descriptions = Augustus.getInstance().getModuleManager().clickGui.descriptions;
-      String[] strings = Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles();
-      descriptions.setOptions(strings);
+      StringValue descriptions = Augustus.getInstance().getModuleManager().clickGui.descriptions;
+      descriptions.setOptions(Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles());
       SettingDescriptionManager manager = Augustus.getInstance().getSettingDescriptionManager();
       str = descriptions.getSelectedValue();
-      String[] options = descriptions.getOptions();
-      String str4 = str;
-      String str5 = manager.resolveValidOption(str4, options);
-      descriptions.setSelectedValue(str5);
+      descriptions.setSelectedValue(manager.resolveValidOption(str, descriptions.getOptions()));
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(DESCRIPTIONS_DIR);
       Consumer consumer = obj -> {
-         String[] strings2 = Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles();
-         descriptions.setOptions(strings2);
-         SettingDescriptionManager manager2 = Augustus.getInstance().getSettingDescriptionManager();
-         String selectedValue = descriptions.getSelectedValue();
-         String[] options2 = descriptions.getOptions();
-         String str6 = selectedValue;
-         String str7 = manager2.resolveValidOption(str6, options2);
-         descriptions.setSelectedValue(str7);
+         descriptions.setOptions(Augustus.getInstance().getSettingDescriptionManager().listDescriptionFiles());
+         descriptions.setSelectedValue(Augustus.getInstance().getSettingDescriptionManager().resolveValidOption(descriptions.getSelectedValue(), descriptions.getOptions()));
       };
       directoryWatcher = directoryWatcher.onCreate(consumer);
       Consumer consumer2 = obj2 -> {
-         File file = ((Path)obj2).toFile();
-         String name = file.getName();
-         String str8 = name.substring(0, name.lastIndexOf(46));
-         if (str8.equals(descriptions.getSelectedValue())) {
+         String name = ((Path)obj2).toFile().getName();
+         if (name.substring(0, name.lastIndexOf(46)).equals(descriptions.getSelectedValue())) {
             CompletableFuture.runAsync(() -> reloadSelectedDescriptionFile(descriptions));
          }
       };
       directoryWatcher = directoryWatcher.onModify(consumer2);
-      Consumer consumer3 = obj3 -> onDescriptionFileDeleted(descriptions, (Path)obj3);
-      directoryWatcher.onDelete(consumer3).register();
+      directoryWatcher.onDelete(obj3 -> onDescriptionFileDeleted(descriptions, (Path)obj3)).register();
    }
 
 }

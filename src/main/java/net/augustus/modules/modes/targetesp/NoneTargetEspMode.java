@@ -1,11 +1,11 @@
 package net.augustus.modules.modes.targetesp;
 
 import net.augustus.modules.render.TargetESP;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.EntityLivingBase;
 
 public class NoneTargetEspMode extends AbstractTargetEspMode {
-   public NoneTargetEspMode(TargetESP targetESP, DoubleValue doubleValue) {
+   public NoneTargetEspMode(TargetESP targetESP, SettingGroup doubleValue) {
       super(targetESP, doubleValue, "None");
    }
 

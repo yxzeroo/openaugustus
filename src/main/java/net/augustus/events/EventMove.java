@@ -50,8 +50,7 @@ public class EventMove extends CancellableEvent {
    }
 
    public void call(Object obj) {
-      MoveListener listener = (MoveListener)obj;
-      this.call2(listener);
+      this.call2((MoveListener)obj);
    }
 
    public float getStrafe() {

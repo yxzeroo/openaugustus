@@ -21,8 +21,7 @@ public class ResourceShaderProgram {
       int n2 = GL20.glCreateShader(n);
       GL20.glShaderSource(n2, loadShaderSource(str));
       GL20.glCompileShader(n2);
-      boolean flag = GL20.glGetShaderi(n2, 35713) == 1;
-      if (!flag) {
+      if (!(GL20.glGetShaderi(n2, 35713) == 1)) {
          String str2 = GL20.glGetShaderInfoLog(n2, 2048);
          System.out.printf("Failed to compile shader %s (stage: %s); Message\n%s%n", str, GL11.glGetString(n), str2);
          return -1;

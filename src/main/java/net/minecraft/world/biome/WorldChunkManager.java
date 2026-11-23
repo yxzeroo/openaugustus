@@ -38,8 +38,7 @@ public class WorldChunkManager {
       for (int i = 0; i < n8 * n9; i++) {
          int n11 = n4 + i % n8 << 2;
          int n12 = n5 + i / n8 << 2;
-         BiomeGenBase biome = BiomeGenBase.getBiome(ints[i]);
-         if (list.contains(biome) && (pos == null || rand.nextInt(n10 + 1) == 0)) {
+         if (list.contains(BiomeGenBase.getBiome(ints[i])) && (pos == null || rand.nextInt(n10 + 1) == 0)) {
             pos = new BlockPos(n11, 0, n12);
             n10++;
          }
@@ -101,8 +100,7 @@ public class WorldChunkManager {
       }
 
       if (flag && n3 == 16 && n4 == 16 && (n & 15) == 0 && (n2 & 15) == 0) {
-         BiomeGenBase[] cachedBiomes = this.biomeCache.getCachedBiomes(n, n2);
-         System.arraycopy(cachedBiomes, 0, biomeGenBases, 0, n3 * n4);
+         System.arraycopy(this.biomeCache.getCachedBiomes(n, n2), 0, biomeGenBases, 0, n3 * n4);
          return biomeGenBases;
       } else {
          int[] ints = this.biomeIndexLayer.getInts(n, n2, n3, n4);
@@ -131,8 +129,7 @@ public class WorldChunkManager {
 
       try {
          for (int i = 0; i < n8 * n9; i++) {
-            BiomeGenBase biome = BiomeGenBase.getBiome(ints[i]);
-            if (!list.contains(biome)) {
+            if (!list.contains(BiomeGenBase.getBiome(ints[i]))) {
                return false;
             }
          }

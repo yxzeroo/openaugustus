@@ -21,11 +21,7 @@ public class ColorUtil {
          f = Math.abs(f - 2.0F);
       }
 
-      int n3 = interpolateChannel((double)f, color.getRed(), color2.getRed());
-      int n4 = interpolateChannel((double)f, color.getGreen(), color2.getGreen());
-      int n5 = interpolateChannel((double)f, color.getBlue(), color2.getBlue());
-      int n6 = interpolateChannel((double)f, color.getAlpha(), color2.getAlpha());
-      return packRgba(n3, n4, n5, n6);
+      return packRgba(interpolateChannel((double)f, color.getRed(), color2.getRed()), interpolateChannel((double)f, color.getGreen(), color2.getGreen()), interpolateChannel((double)f, color.getBlue(), color2.getBlue()), interpolateChannel((double)f, color.getAlpha(), color2.getAlpha()));
    }
 
    private static void validateRgbaChannels(int n, int n2, int n3, int n4) {
@@ -107,10 +103,7 @@ public class ColorUtil {
       int n6 = n2 >> 16 & 0xFF;
       int n7 = n2 >> 8 & 0xFF;
       int n8 = n2 & 0xFF;
-      int n9 = (int)((float)n3 + f * (float)(n6 - n3));
-      int n10 = (int)((float)n4 + f * (float)(n7 - n4));
-      int n11 = (int)((float)n5 + f * (float)(n8 - n5));
-      return 0xFF000000 | n9 << 16 | n10 << 8 | n11;
+      return 0xFF000000 | ((int)((float)n3 + f * (float)(n6 - n3))) << 16 | ((int)((float)n4 + f * (float)(n7 - n4))) << 8 | ((int)((float)n5 + f * (float)(n8 - n5)));
    }
 
    public static int withAlpha(int n, int n2) {
@@ -122,11 +115,7 @@ public class ColorUtil {
    }
 
    public static int lerpRgba(int n, int n2, float f) {
-      int n3 = interpolateChannel((double)f, getRed(n), getRed(n2));
-      int n4 = interpolateChannel((double)f, getGreen(n), getGreen(n2));
-      int n5 = interpolateChannel((double)f, getBlue(n), getBlue(n2));
-      int n6 = interpolateChannel((double)f, getAlpha(n), getAlpha(n2));
-      return packRgba(n3, n4, n5, n6);
+      return packRgba(interpolateChannel((double)f, getRed(n), getRed(n2)), interpolateChannel((double)f, getGreen(n), getGreen(n2)), interpolateChannel((double)f, getBlue(n), getBlue(n2)), interpolateChannel((double)f, getAlpha(n), getAlpha(n2)));
    }
 
    public static int getRed(int n) {
@@ -139,11 +128,7 @@ public class ColorUtil {
 
    public static int blendColors(Color color, Color color2, double d) {
       float f = (float)(1.0 - d);
-      int n = (int)((double)((float)color.getRed() * f) + (double)color2.getRed() * d);
-      int n2 = (int)((double)((float)color.getGreen() * f) + (double)color2.getGreen() * d);
-      int n3 = (int)((double)((float)color.getBlue() * f) + (double)color2.getBlue() * d);
-      int n4 = (int)((double)((float)color.getAlpha() * f) + (double)color2.getAlpha() * d);
-      return packRgba(n, n2, n3, n4);
+      return packRgba((int)((double)((float)color.getRed() * f) + (double)color2.getRed() * d), (int)((double)((float)color.getGreen() * f) + (double)color2.getGreen() * d), (int)((double)((float)color.getBlue() * f) + (double)color2.getBlue() * d), (int)((double)((float)color.getAlpha() * f) + (double)color2.getAlpha() * d));
    }
 
    public static float getRedFloat(int n) {

@@ -262,8 +262,7 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO {
       chunk.setLightPopulated(tag.getBoolean("LightPopulated"));
       chunk.setInhabitedTime(tag.getLong("InhabitedTime"));
       NBTTagList tagList = tag.getTagList("Sections", 10);
-      byte b = 16;
-      ExtendedBlockStorage[] extendedBlockStorages = new ExtendedBlockStorage[b];
+      ExtendedBlockStorage[] extendedBlockStorages = new ExtendedBlockStorage[(byte)16];
       boolean flag = !world.provider.getHasNoSky();
 
       for (int i = 0; i < tagList.tagCount(); i++) {
@@ -279,8 +278,7 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO {
             int n = j & 15;
             int n2 = j >> 8 & 15;
             int n3 = j >> 4 & 15;
-            int n4 = nibbleArray2 != null ? nibbleArray2.get(n, n2, n3) : 0;
-            chars[j] = (char)(n4 << 12 | (byteArray[j] & 255) << 4 | nibbleArray.get(n, n2, n3));
+            chars[j] = (char)((nibbleArray2 != null ? nibbleArray2.get(n, n2, n3) : 0) << 12 | (byteArray[j] & 255) << 4 | nibbleArray.get(n, n2, n3));
          }
 
          extendedBlockStorage.setData(chars);
@@ -324,8 +322,7 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO {
       NBTTagList tagList3 = tag.getTagList("TileEntities", 10);
       if (tagList3 != null) {
          for (int idx = 0; idx < tagList3.tagCount(); idx++) {
-            NBTTagCompound compoundTagAt3 = tagList3.getCompoundTagAt(idx);
-            TileEntity tileEntity = TileEntity.createAndLoadEntity(compoundTagAt3);
+            TileEntity tileEntity = TileEntity.createAndLoadEntity(tagList3.getCompoundTagAt(idx));
             if (tileEntity != null) {
                chunk.addTileEntity(tileEntity);
             }

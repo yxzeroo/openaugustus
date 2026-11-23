@@ -11,8 +11,7 @@ public final class FloatSetPropertySerializer implements SetPropertySerializer {
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Float f = (Float)obj;
-      this.writeFloatElement(array, f);
+      this.writeFloatElement(array, (Float)obj);
    }
 
    @Override

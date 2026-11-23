@@ -10,9 +10,7 @@ public class ChunkCoordIntPair {
    @Override
    public int hashCode() {
       if (this.cachedHashCode == 0) {
-         int n = 1664525 * this.chunkXPos + 1013904223;
-         int n2 = 1664525 * (this.chunkZPos ^ -559038737) + 1013904223;
-         this.cachedHashCode = n ^ n2;
+         this.cachedHashCode = (1664525 * this.chunkXPos + 1013904223) ^ (1664525 * (this.chunkZPos ^ -559038737) + 1013904223);
       }
 
       return this.cachedHashCode;

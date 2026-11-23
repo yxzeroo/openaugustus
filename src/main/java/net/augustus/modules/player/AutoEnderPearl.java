@@ -28,7 +28,7 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemEnderPearl;
@@ -48,7 +48,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
    private final BooleanValue unstuckIfCombatPearlDidnTLand;
    private final BooleanValue onlyIfPlayerIsFallingIntoTheVoid;
    private final BooleanValue avoidLandingNearOtherPlayers;
-   private final StringValue minFallDistanceIntoVoid;
+   private final DoubleValue minFallDistanceIntoVoid;
    private final BooleanValue silentSlotSwitching;
    private int pearlHotbarSlot;
    private boolean readyToThrow;
@@ -68,8 +68,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
       BooleanValue pearlOnKeyPressed2 = this.pearlOnKeyPressed;
       this.pearlOnKeyPressed.getClass();
       BooleanValue booleanValue = pearlOnKeyPressed2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.keyToThrowPearl = keybindSetting.visibleWhen(condition);
+      this.keyToThrowPearl = keybindSetting.visibleWhen(() -> booleanValue.getValue());
       BooleanValue booleanValue2 = new BooleanValue(this, "Auto disable", true);
       SettingVisibilityCondition condition2 = () -> {
          return !this.pearlOnKeyPressed.getValue();
@@ -80,16 +79,14 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
       pearlOnKeyPressed2 = this.autoAirstuck;
       this.autoAirstuck.getClass();
       BooleanValue booleanValue4 = pearlOnKeyPressed2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.unstuckIfCombatPearlDidnTLand = (BooleanValue)booleanValue3.withVisibility(condition3);
+      this.unstuckIfCombatPearlDidnTLand = (BooleanValue)booleanValue3.withVisibility(() -> booleanValue4.getValue());
       this.onlyIfPlayerIsFallingIntoTheVoid = new BooleanValue(this, "Only if player is falling into the void", true);
       this.avoidLandingNearOtherPlayers = new BooleanValue(this, "Avoid landing near other players", true);
-      StringValue stringValue = new StringValue(this, "Min fall distance into void", 3.0, 0.0, 10.0, 1);
+      DoubleValue stringValue = new DoubleValue(this, "Min fall distance into void", 3.0, 0.0, 10.0, 1);
       pearlOnKeyPressed2 = this.onlyIfPlayerIsFallingIntoTheVoid;
       this.onlyIfPlayerIsFallingIntoTheVoid.getClass();
       BooleanValue booleanValue5 = pearlOnKeyPressed2;
-      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
-      this.minFallDistanceIntoVoid = stringValue.visibleWhen(condition4);
+      this.minFallDistanceIntoVoid = stringValue.visibleWhen(() -> booleanValue5.getValue());
       this.silentSlotSwitching = new BooleanValue(this, "Silent slot switching", true);
       this.pearlHotbarSlot = -1;
       this.readyToThrow = false;
@@ -110,8 +107,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
    @Override
    public void onDisable() {
       if (this.autoAirstuck.getValue() && ClientManagers.moduleManager != null) {
-         boolean flag = false;
-         ClientManagers.moduleManager.airStuck.setToggled(flag);
+         ClientManagers.moduleManager.airStuck.setToggled(false);
       }
 
       this.recentSafePositions.clear();
@@ -119,18 +115,12 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 26;
-      this.toggleEventSubscription(b3);
-      byte b4 = 34;
-      this.toggleEventSubscription(b4);
-      byte b5 = 14;
-      this.toggleEventSubscription(b5);
-      byte b6 = 17;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)14);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -138,18 +128,14 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
       this.recordSafeGroundPosition();
       this.activatePendingAirStuck();
       if (this.autoAirstuck.getValue() && this.unstuckIfCombatPearlDidnTLand.getValue()) {
-         long l = 12000L;
-         if (this.throwTimer.reached2(l) && !this.hasPearlInInventory()) {
-            boolean flag = false;
-            ClientManagers.moduleManager.airStuck.setToggled(flag);
+         if (this.throwTimer.reached2(12000L) && !this.hasPearlInInventory()) {
+            ClientManagers.moduleManager.airStuck.setToggled(false);
          }
       }
 
       if (this.autoAirstuck.getValue() && ClientManagers.moduleManager != null && ClientManagers.moduleManager.airStuck.mode.getSelectedValue().equals("Intave")) {
-         String str = "AutoAirstuck doesn't work with Airstuck Mode Intave!";
-         this.sendChatMessage2(str);
-         boolean flag2 = false;
-         this.setToggled(flag2);
+         this.sendChatMessage2("AutoAirstuck doesn't work with Airstuck Mode Intave!");
+         this.setToggled(false);
       }
 
       if (this.pearlThrown) {
@@ -162,13 +148,11 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
 
       if (!this.shouldThrowPearl()) {
          if (this.shouldAutoDisable()) {
-            boolean flag3 = false;
-            this.setToggled(flag3);
+            this.setToggled(false);
          }
       } else {
          if (this.pearlOnKeyPressed.getValue()) {
-            long l2 = 2000L;
-            if (this.keyPressTimer.reached2(l2)) {
+            if (this.keyPressTimer.reached2(2000L)) {
                this.pearlHotbarSlot = -1;
                return;
             }
@@ -187,13 +171,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
 
             for (int i = this.recentSafePositions.size() - 1; i >= 0; i--) {
                BlockPos pos = (BlockPos)this.recentSafePositions.get(i);
-               int x = pos.getX();
-               int y = pos.getY();
-               int z = pos.getZ();
-               int n = z;
-               int n2 = y;
-               int n3 = x;
-               if (this.isSafeLandingPlatform(n3, n2, n)) {
+               if (this.isSafeLandingPlatform(pos.getX(), pos.getY(), pos.getZ())) {
                   if (this.avoidLandingNearOtherPlayers.getValue()) {
                      Stream stream = mc.theWorld.playerEntities.stream();
                      BlockPos pos2 = pos;
@@ -205,27 +183,20 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
                   }
 
                   double d4 = (double)pos.getX() + 0.5 - d;
-                  double d5 = (double)pos.getZ() + 0.5 - d3;
-                  float f = (float)(MathHelper.atan2(d5, d4) * 180.0 / Math.PI - 90.0);
+                  float f = (float)(MathHelper.atan2((double)pos.getZ() + 0.5 - d3, d4) * 180.0 / Math.PI - 90.0);
 
                   for (int j = -90; j < 90; j++) {
                      ProjectileSimulator projectileSimulator = new ProjectileSimulator();
                      float f2 = (float)j;
-                     EntityPlayerSP thePlayer = mc.thePlayer;
-                     projectileSimulator.initFromPosAndAngles(thePlayer, stack, f, f2, d, d2, d3);
-                     short s = 200;
-                     projectileSimulator.stepThrowableTicks(s);
+                     projectileSimulator.initFromPosAndAngles(mc.thePlayer, stack, f, f2, d, d2, d3);
+                     projectileSimulator.stepThrowableTicks((short)200);
                      MovingObjectPosition hitResult = projectileSimulator.getHitResult();
                      if (hitResult != null && hitResult.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && hitResult.sideHit == EnumFacing.UP) {
-                        int x2 = hitResult.getBlockPos().getX();
-                        int y2 = hitResult.getBlockPos().getY();
-                        int z2 = hitResult.getBlockPos().getZ();
-                        if (this.isSafeLandingPlatform(x2, y2, z2)) {
+                        if (this.isSafeLandingPlatform(hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ())) {
                            Rotation rotation = RotationUtil.applyGcdFix(
                               RotationUtil.updateAngle(ClientManagers.rotationController.getPreviousRotation().yaw, f, 180.0F), (float)j, ClientManagers.rotationController.getPreviousRotation()
                            );
-                           byte b = 11;
-                           ClientManagers.rotationController.requestRotation(rotation, b, this);
+                           ClientManagers.rotationController.requestRotation(rotation, (byte)11, this);
                            this.readyToThrow = false;
                            this.lastSearchTimeMs = System.currentTimeMillis();
                            return;
@@ -240,22 +211,15 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
                   ProjectileSimulator projectileSimulator2 = new ProjectileSimulator();
                   float f3 = (float)k;
                   float f4 = (float)m;
-                  float f5 = f3;
-                  EntityPlayerSP thePlayer2 = mc.thePlayer;
-                  projectileSimulator2.initFromPosAndAngles(thePlayer2, stack, f5, f4, d, d2, d3);
-                  short s2 = 200;
-                  projectileSimulator2.stepThrowableTicks(s2);
+                  projectileSimulator2.initFromPosAndAngles(mc.thePlayer, stack, f3, f4, d, d2, d3);
+                  projectileSimulator2.stepThrowableTicks((short)200);
                   MovingObjectPosition hitResult2 = projectileSimulator2.getHitResult();
                   if (hitResult2 != null && hitResult2.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && hitResult2.sideHit == EnumFacing.UP) {
-                     int x3 = hitResult2.getBlockPos().getX();
-                     int y3 = hitResult2.getBlockPos().getY();
-                     int z3 = hitResult2.getBlockPos().getZ();
-                     if (this.isSafeLandingPlatform(x3, y3, z3)) {
+                     if (this.isSafeLandingPlatform(hitResult2.getBlockPos().getX(), hitResult2.getBlockPos().getY(), hitResult2.getBlockPos().getZ())) {
                         Rotation rotation2 = RotationUtil.applyGcdFix(
                            RotationUtil.updateAngle(ClientManagers.rotationController.getPreviousRotation().yaw, (float)k, 180.0F), (float)m, ClientManagers.rotationController.getPreviousRotation()
                         );
-                        byte b2 = 11;
-                        ClientManagers.rotationController.requestRotation(rotation2, b2, this);
+                        ClientManagers.rotationController.requestRotation(rotation2, (byte)11, this);
                         this.readyToThrow = false;
                         this.lastSearchTimeMs = System.currentTimeMillis();
                         return;
@@ -267,26 +231,19 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
             this.lastSearchTimeMs = System.currentTimeMillis();
             this.readyToThrow = false;
          } else if (this.readyToThrow) {
-            RotationController rotationController = ClientManagers.rotationController;
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            byte b3 = 11;
-            Rotation rotation3 = previousRotation;
-            rotationController.requestRotation(rotation3, b3, this);
+            ClientManagers.rotationController.requestRotation(ClientManagers.rotationController.getPreviousRotation(), (byte)11, this);
          }
       }
    }
 
    @Override
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S08PacketPlayerPosLook && this.autoAirstuck.getValue()) {
+      if (event.getPacket() instanceof S08PacketPlayerPosLook && this.autoAirstuck.getValue()) {
          if (this.shouldAutoDisable()) {
-            boolean flag = false;
-            this.setToggled(flag);
+            this.setToggled(false);
          }
 
-         boolean flag2 = false;
-         ClientManagers.moduleManager.airStuck.setToggled(flag2);
+         ClientManagers.moduleManager.airStuck.setToggled(false);
          this.receivedTeleportPacket = true;
       }
    }
@@ -298,14 +255,12 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
             && mc.thePlayer.getCurrentEquippedItem() != null
             && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemEnderPearl
             && !this.airStuckEnabled) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             this.throwTimer.reset();
             if (this.autoAirstuck.getValue()) {
                this.pendingAirStuck = true;
             } else if (this.shouldAutoDisable()) {
-               boolean flag = false;
-               this.setToggled(flag);
+               this.setToggled(false);
             }
 
             this.pearlHotbarSlot = -1;
@@ -326,11 +281,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
    @Override
    public void onSilentSlot() {
       if (this.pearlHotbarSlot != -1) {
-         int pearlHotbarSlot2 = this.pearlHotbarSlot;
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = pearlHotbarSlot2;
-         byte b = -2;
-         SilentSlotManager.requestSlot(this, b, n, value);
+         SilentSlotManager.requestSlot(this, (byte)-2, this.pearlHotbarSlot, this.silentSlotSwitching.getValue());
       }
    }
 
@@ -390,8 +341,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
                break exitBlock;
             }
 
-            byte b = 50;
-            if (PlayerUtil.willEntityLandOnGround(mc.thePlayer, b)) {
+            if (PlayerUtil.willEntityLandOnGround(mc.thePlayer, (byte)50)) {
                break exitBlock;
             }
          }
@@ -411,13 +361,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
 
          BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ);
          if (!this.recentSafePositions.contains(pos)) {
-            int x = pos.getX();
-            int y = pos.getY();
-            int z = pos.getZ();
-            int n = z;
-            int n2 = y;
-            int n3 = x;
-            if (this.isSafeLandingPlatform(n3, n2, n)) {
+            if (this.isSafeLandingPlatform(pos.getX(), pos.getY(), pos.getZ())) {
                this.recentSafePositions.add(pos);
             }
          }
@@ -428,8 +372,7 @@ public class AutoEnderPearl extends Module implements ClickListener, TickListene
       if (this.pendingAirStuck) {
          this.airStuckEnabled = true;
          this.pendingAirStuck = false;
-         boolean flag = true;
-         ClientManagers.moduleManager.airStuck.setToggled(flag);
+         ClientManagers.moduleManager.airStuck.setToggled(true);
       }
    }
 

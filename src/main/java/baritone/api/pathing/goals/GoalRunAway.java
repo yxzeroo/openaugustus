@@ -62,8 +62,7 @@ public class GoalRunAway implements Goal {
          for (BlockPos pos : this.from) {
             int n4 = n - pos.getX();
             int n5 = n3 - pos.getZ();
-            int n6 = n4 * n4 + n5 * n5;
-            if (n6 < this.distanceSq) {
+            if ((n4 * n4 + n5 * n5) < this.distanceSq) {
                return false;
             }
          }

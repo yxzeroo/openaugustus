@@ -41,8 +41,7 @@ public class EventSlowDown extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      SlowDownListener listener = (SlowDownListener)obj;
-      this.call2(listener);
+      this.call2((SlowDownListener)obj);
    }
 
    public static void reset(EventSlowDown event, float f, float f2) {

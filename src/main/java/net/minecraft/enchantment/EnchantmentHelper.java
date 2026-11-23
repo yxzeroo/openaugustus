@@ -29,8 +29,7 @@ public class EnchantmentHelper {
    private static final EnchantmentHelper.DamageIterator ENCHANTMENT_ITERATOR_DAMAGE = new EnchantmentHelper.DamageIterator(null);
 
    public static List buildEnchantmentList(Random rand, ItemStack stack, int n) {
-      Item item = stack.getItem();
-      int itemEnchantability = item.getItemEnchantability();
+      int itemEnchantability = stack.getItem().getItemEnchantability();
       if (itemEnchantability <= 0) {
          return null;
       } else {
@@ -71,8 +70,7 @@ public class EnchantmentHelper {
                   }
 
                   if (!map.isEmpty()) {
-                     EnchantmentData randomItem2 = (EnchantmentData)WeightedRandom.getRandomItem(rand, map.values());
-                     list.add(randomItem2);
+                     list.add((EnchantmentData)WeightedRandom.getRandomItem(rand, map.values()));
                   }
                }
             }
@@ -186,9 +184,7 @@ public class EnchantmentHelper {
    }
 
    public static int calcItemStackEnchantability(Random rand, int n, int n2, ItemStack stack) {
-      Item item = stack.getItem();
-      int itemEnchantability = item.getItemEnchantability();
-      if (itemEnchantability <= 0) {
+      if (stack.getItem().getItemEnchantability() <= 0) {
          return 0;
       } else {
          if (n2 > 15) {
@@ -315,8 +311,7 @@ public class EnchantmentHelper {
          NBTTagList enchantmentTagList = stack.getEnchantmentTagList();
          if (enchantmentTagList != null) {
             for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
-               short s = enchantmentTagList.getCompoundTagAt(i).getShort("id");
-               if (s == n) {
+               if (enchantmentTagList.getCompoundTagAt(i).getShort("id") == n) {
                   return enchantmentTagList.getCompoundTagAt(i).getShort("lvl");
                }
             }

@@ -286,9 +286,7 @@ public class GameSettings {
          }
 
          DisplayMode largestDisplayMode = Config.getLargestDisplayMode();
-         int n2 = largestDisplayMode.getWidth() / 320;
-         int n3 = largestDisplayMode.getHeight() / 240;
-         int n4 = Math.min(n2, n3);
+         int n4 = Math.min(largestDisplayMode.getWidth() / 320, largestDisplayMode.getHeight() / 240);
          if (this.guiScale < 0) {
             this.guiScale = n4 - 1;
          }
@@ -985,8 +983,7 @@ public class GameSettings {
          String str = I18n.format(options.getEnumString(), new Object[0]) + ": ";
          if (!options.getEnumFloat()) {
             if (options.getEnumBoolean()) {
-               boolean optionOrdinalValue = this.getOptionOrdinalValue(options);
-               return optionOrdinalValue ? str + I18n.format("options.on", new Object[0]) : str + I18n.format("options.off", new Object[0]);
+               return this.getOptionOrdinalValue(options) ? str + I18n.format("options.on", new Object[0]) : str + I18n.format("options.off", new Object[0]);
             } else if (options == GameSettings.Options.GUI_SCALE) {
                return this.guiScale >= GUISCALES.length ? str + this.guiScale + "x" : str + getTranslation(GUISCALES, this.guiScale);
             } else if (options == GameSettings.Options.CHAT_VISIBILITY) {
@@ -1588,8 +1585,7 @@ public class GameSettings {
       }
 
       if (options == GameSettings.Options.MIPMAP_TYPE) {
-         int n3 = (int)f;
-         this.ofMipmapType = Config.limit(n3, 0, 3);
+         this.ofMipmapType = Config.limit((int)f, 0, 3);
          this.mc.refreshResources();
       }
 
@@ -1698,8 +1694,7 @@ public class GameSettings {
    }
 
    private static int limit(int n, int[] ints) {
-      int n2 = indexOf(n, ints);
-      return n2 < 0 ? ints[0] : n;
+      return indexOf(n, ints) < 0 ? ints[0] : n;
    }
 
    private float getOptionFloatValueOF(GameSettings.Options options) {

@@ -20,7 +20,7 @@ import net.augustus.utils.rotation.Rotation;
 import java.util.function.BiFunction;
 import net.augustus.modules.legit.AutoEagle;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -55,58 +55,34 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
    private int sneakStartDelayTicks;
    private int remainingSneakTicks;
 
-   public MoonWalkAutoEagleMode(AutoEagle autoEagle, DoubleValue doubleValue) {
+   public MoonWalkAutoEagleMode(AutoEagle autoEagle, SettingGroup doubleValue) {
        super(autoEagle, doubleValue, "MoonWalk");
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this.parentModule, "MoonWalkWideness", 0.08, 0.15, 0.0, 0.3, 2, this.modeSetting)).withoutNotInARow();
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.moonWalkWideness = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
-      RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this.parentModule, "StartDistToBlock", 0.05, 0.2, -0.2, 0.5, 2, this.modeSetting)).withoutNotInARow();
-      String str = "StartDistToBlock";
-      RandomizedRangeSettings randomizedRangeSettings3 = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix(str);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.startDistToBlock = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition2);
+      this.moonWalkWideness = (RandomizedRangeSettings)(new RandomizedRangeSettings(this.parentModule, "MoonWalkWideness", 0.08, 0.15, 0.0, 0.3, 2, this.modeSetting)).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.startDistToBlock = (RandomizedRangeSettings)((RandomizedRangeSettings)(new RandomizedRangeSettings(this.parentModule, "StartDistToBlock", 0.05, 0.2, -0.2, 0.5, 2, this.modeSetting)).withoutNotInARow().withDisplayNamePrefix("StartDistToBlock")).withVisibility(() -> this.isSelected());
       RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this.parentModule, "PostPlacementStrafeTicks", 0.0, 1.0, 0.0, 8.0, 0, this.modeSetting)).withMaxInARow();
-      boolean flag = false;
       double d = 15.0;
       double d2 = 0.0;
       double d3 = 8.0;
       double d4 = 0.0;
       double d5 = 8.0;
-      double d6 = 5.0;
-      RandomizedRangeSettings randomizedRangeSettings5 = randomizedRangeSettings4.withOutliers(d6, d5, d4, d3, d2, d, flag);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.postPlacementStrafeTicks = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(condition3);
+      this.postPlacementStrafeTicks = (RandomizedRangeSettings)randomizedRangeSettings4.withOutliers(5.0, d5, d4, d3, d2, d, false).withVisibility(() -> this.isSelected());
       RandomizedRangeSettings randomizedRangeSettings6 = (new RandomizedRangeSettings(this.parentModule, "MinMoonwalkTicks", 3.0, 4.0, 0.0, 10.0, 0, this.modeSetting)).withMaxInARow();
-      boolean flag2 = false;
       double d7 = 15.0;
       double d8 = 0.0;
       double d9 = 10.0;
       double d10 = 0.0;
       double d11 = 12.0;
-      double d12 = 8.0;
-      RandomizedRangeSettings randomizedRangeSettings7 = randomizedRangeSettings6.withOutliers(d12, d11, d10, d9, d8, d7, flag2);
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.minMoonwalkTicks = (RandomizedRangeSettings)randomizedRangeSettings7.withVisibility(condition4);
-      RandomizedRangeSettings randomizedRangeSettings8 = (new RandomizedRangeSettings(this.parentModule, "DirectionChangeDelay", 0.0, 1.0, 0.0, 3.0, 0, this.modeSetting)).withMaxInARow();
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.directionChangeDelay = (RandomizedRangeSettings)randomizedRangeSettings8.withVisibility(condition5);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "LockMouse", false, this.modeSetting);
-      SettingVisibilityCondition condition6 = () -> this.isSelected();
-      this.lockMouse = (BooleanValue)booleanValue.withVisibility(condition6);
-      BooleanValue booleanValue2 = new BooleanValue(this.parentModule, "MinimalMouseMovement", false, this.modeSetting);
-      SettingVisibilityCondition condition7 = () -> this.isSelected();
-      this.minimalMouseMovement = (BooleanValue)booleanValue2.withVisibility(condition7);
-      BooleanValue booleanValue3 = new BooleanValue(this.parentModule, "SneakEveryXBlocks", false, this.modeSetting);
-      SettingVisibilityCondition condition8 = () -> this.isSelected();
-      this.sneakEveryXBlocks = (BooleanValue)booleanValue3.withVisibility(condition8);
+      this.minMoonwalkTicks = (RandomizedRangeSettings)randomizedRangeSettings6.withOutliers(8.0, d11, d10, d9, d8, d7, false).withVisibility(() -> this.isSelected());
+      this.directionChangeDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this.parentModule, "DirectionChangeDelay", 0.0, 1.0, 0.0, 3.0, 0, this.modeSetting)).withMaxInARow().withVisibility(() -> this.isSelected());
+      this.lockMouse = (BooleanValue)new BooleanValue(this.parentModule, "LockMouse", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.minimalMouseMovement = (BooleanValue)new BooleanValue(this.parentModule, "MinimalMouseMovement", false, this.modeSetting).withVisibility(() -> this.isSelected());
+      this.sneakEveryXBlocks = (BooleanValue)new BooleanValue(this.parentModule, "SneakEveryXBlocks", false, this.modeSetting).withVisibility(() -> this.isSelected());
       RandomizedRangeSettings randomizedRangeSettings9 = (new RandomizedRangeSettings(this.parentModule, "BlocksBetweenSneaks", 30.0, 32.0, 0.0, 128.0, 0, this.modeSetting)).withMaxInARow();
       SettingVisibilityCondition condition9 = () -> {
          return this.sneakEveryXBlocks.getValue() && this.isSelected();
       };
       this.blocksBetweenSneaks = (RandomizedRangeSettings)randomizedRangeSettings9.withVisibility(condition9);
-      RandomizedRangeSettings randomizedRangeSettings10 = (new RandomizedRangeSettings(this.parentModule, "SneakDuration", 11.0, 15.0, 0.0, 20.0, 0, this.modeSetting)).withMaxInARow();
-      SettingVisibilityCondition condition10 = () -> this.isSneakDurationVisible();
-      this.sneakDuration = (RandomizedRangeSettings)randomizedRangeSettings10.withVisibility(condition10);
+      this.sneakDuration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this.parentModule, "SneakDuration", 11.0, 15.0, 0.0, 20.0, 0, this.modeSetting)).withMaxInARow().withVisibility(() -> this.isSneakDurationVisible());
       this.strafeDirection = 1;
       this.wasOverFullBlock = false;
       this.wasNearEdge = false;
@@ -120,25 +96,17 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
       this.nextMicroMoveDelayMs = 0;
       this.microMoveDurationTicks = 0;
       this.blocksPlacedSinceSneak = 0;
-      byte b = 3;
-      byte b2 = 1;
-      this.sneakStartDelayTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+      this.sneakStartDelayTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)3);
       this.remainingSneakTicks = 0;
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 21;
-      this.toggleEventSubscription(b);
-      byte b2 = 60;
-      this.toggleEventSubscription(b2);
-      byte b3 = 19;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
-      byte b5 = 10;
-      byte b6 = 7;
-      this.toggleEventSubscription(b6, b5);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)60);
+      this.toggleEventSubscription((byte)19);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)7, (byte)10);
    }
 
    @Override
@@ -176,12 +144,8 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
             this.tickCounter.increment();
             int microMoveDurationTicks2 = this.microMoveDurationTicks;
             if (this.tickCounter.hasReached2(microMoveDurationTicks2)) {
-               short s = 1500;
-               short s2 = 750;
-               this.nextMicroMoveDelayMs = DefaultRandomGenerator.instance.nextInt2(s2, s);
-               byte b = 2;
-               byte b2 = 1;
-               this.microMoveDurationTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+               this.nextMicroMoveDelayMs = DefaultRandomGenerator.instance.nextInt2((short)750, (short)1500);
+               this.microMoveDurationTicks = DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)2);
                this.tickCounter.reset();
                this.timeHelper.reset();
             }
@@ -200,11 +164,7 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
                f4 = mc.thePlayer.rotationPitch - f2;
             }
 
-            MouseDeltaInterpolator mouseDeltaInterpolator2 = this.mouseDeltaInterpolator;
-            Rotation rotation = new Rotation(mc.thePlayer.rotationYaw - 10.0F, 80.0F);
-            Rotation rotation2 = new Rotation(mc.thePlayer.rotationYaw + 10.0F, 80.4F);
-            Rotation rotation3 = rotation;
-            mouseDeltaInterpolator2.setTargetRotationBounded(f3, f4, rotation3, rotation2);
+            this.mouseDeltaInterpolator.setTargetRotationBounded(f3, f4, new Rotation(mc.thePlayer.rotationYaw - 10.0F, 80.0F), new Rotation(mc.thePlayer.rotationYaw + 10.0F, 80.4F));
          }
       }
    }
@@ -212,10 +172,8 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
    @Override
    public void onMouseMove(EventMouseMove event) {
       if (this.isInMoonWalkPitchRange() && MoveUtil.isMoving() && mc.gameSettings.keyBindUseItem.isKeyDown() && this.lockMouse.getValue()) {
-         byte b = 0;
-         event.setDeltaY(b);
-         byte b2 = 0;
-         event.setDeltaX(b2);
+         event.setDeltaY((byte)0);
+         event.setDeltaX((byte)0);
       }
 
       if (this.minimalMouseMovement.getValue()) {
@@ -231,10 +189,8 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
    @Override
    public void onClick(EventClick event) {
       if (this.remainingSneakTicks > 0 && this.sneakStartDelayTicks == 0 && ((AutoEagle)this.parentModule).isPitchAboveMinimum()) {
-         boolean flag = true;
-         event.setBlockAllClicks(flag);
-         boolean flag2 = true;
-         event.setIgnoreVanillaClicks(flag2);
+         event.setBlockAllClicks(true);
+         event.setIgnoreVanillaClicks(true);
       }
    }
 
@@ -246,8 +202,7 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
          this.remainingSneakTicks = 0;
       } else {
          if (!((AutoEagle)this.parentModule).onlyWhileSneak.getValue()) {
-            boolean flag = true;
-            event.setSneak(flag);
+            event.setSneak(true);
          }
 
          ((AutoEagle)this.parentModule).eagling = ((AutoEagle)this.parentModule).fastPlace.getValue() && (event.isSneak() || this.isInMoonWalkPitchRange()) && ((AutoEagle)this.parentModule).isPitchAboveMinimum();
@@ -263,8 +218,7 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
    private void updateMoonWalkMovement(EventMoveInput event) {
       if (this.isInMoonWalkPitchRange() && MoveUtil.isMoving()) {
          if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
-            boolean flag = false;
-            event.setSneak(flag);
+            event.setSneak(false);
          }
 
          if (this.sneakEveryXBlocks.getValue()) {
@@ -334,9 +288,7 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
       if (this.blocksPlacedSinceSneak >= this.blocksBetweenSneaks.getLastIntValue()) {
          this.blocksPlacedSinceSneak = 0;
          this.remainingSneakTicks = (int)this.sneakDuration.nextValue();
-         byte b = 4;
-         byte b2 = 3;
-         this.sneakStartDelayTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+         this.sneakStartDelayTicks = DefaultRandomGenerator.instance.nextInt2((byte)3, (byte)4);
       }
 
       if (this.sneakStartDelayTicks > 0) {
@@ -345,32 +297,23 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
 
       if (this.remainingSneakTicks > 0 && this.sneakStartDelayTicks == 0) {
          this.remainingSneakTicks--;
-         boolean flag = true;
-         event.setSneak(flag);
+         event.setSneak(true);
       }
    }
 
    private void updateStrafeForFacing(EventMoveInput event, BlockPos pos) {
       switch (MoonWalkFacingSwitchMap.ORDINAL_MAP[mc.thePlayer.getHorizontalFacing().ordinal()]) {
          case 1:
-            boolean flag = true;
-            double posZ = mc.thePlayer.posZ;
-            this.computeStrafeAlongZ(event, pos, posZ, flag);
+            this.computeStrafeAlongZ(event, pos, mc.thePlayer.posZ, true);
             break;
          case 2:
-            boolean flag2 = false;
-            double posZ2 = mc.thePlayer.posZ;
-            this.computeStrafeAlongZ(event, pos, posZ2, flag2);
+            this.computeStrafeAlongZ(event, pos, mc.thePlayer.posZ, false);
             break;
          case 3:
-            boolean flag3 = true;
-            double posX = mc.thePlayer.posX;
-            this.computeStrafeAlongX(event, pos, posX, flag3);
+            this.computeStrafeAlongX(event, pos, mc.thePlayer.posX, true);
             break;
          case 4:
-            boolean flag4 = false;
-            double posX2 = mc.thePlayer.posX;
-            this.computeStrafeAlongX(event, pos, posX2, flag4);
+            this.computeStrafeAlongX(event, pos, mc.thePlayer.posX, false);
       }
    }
 
@@ -421,8 +364,7 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
          int n2 = this.directionChangeDelay.nextInt();
          this.strafeDirection = 0;
          if (n2 > 0) {
-            Block block = mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock();
-            if (block.getMaterial() == Material.air && mc.thePlayer.onGround) {
+            if (mc.theWorld.getBlockState(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ).getBlock().getMaterial() == Material.air && mc.thePlayer.onGround) {
                this.ticksSinceDirectionChange = 100;
             }
          }
@@ -433,13 +375,12 @@ public class MoonWalkAutoEagleMode extends AutoEagleMode implements MoveInputLis
             this.strafeDirection = n;
          }
 
-         float strafeDirection2 = (float)this.strafeDirection;
-         event.setMoveStrafe(strafeDirection2);
+         event.setMoveStrafe((float)this.strafeDirection);
       }
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new MoonWalkAutoEagleMode((AutoEagle)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new MoonWalkAutoEagleMode((AutoEagle)obj, (SettingGroup)obj2);
    }
 
    private boolean isSneakDurationVisible() {

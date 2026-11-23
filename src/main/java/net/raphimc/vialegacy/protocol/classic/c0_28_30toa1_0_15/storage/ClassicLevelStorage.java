@@ -188,8 +188,7 @@ public class ClassicLevelStorage extends StoredObject {
       if (!this.hasReceivedLevel()) {
          return false;
       } else {
-         boolean isInBounds = coord.chunkX >= 0 && coord.chunkX < this.chunkXCount && coord.chunkZ >= 0 && coord.chunkZ < this.chunkZCount;
-         return isInBounds && !this.isChunkLoaded(coord);
+         return (coord.chunkX >= 0 && coord.chunkX < this.chunkXCount && coord.chunkZ >= 0 && coord.chunkZ < this.chunkZCount) && !this.isChunkLoaded(coord);
       }
    }
 

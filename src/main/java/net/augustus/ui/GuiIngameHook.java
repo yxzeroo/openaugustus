@@ -12,7 +12,6 @@ import net.augustus.utils.render.ShaderRenderPass;
 import java.awt.Color;
 import java.text.DateFormat;
 import java.util.GregorianCalendar;
-import net.augustus.modules.legit.SmartClicking;
 import net.augustus.utils.interfaces.MC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -38,7 +37,6 @@ public class GuiIngameHook extends GuiIngame implements MC {
    @Override
    public void renderGameOverlay(float f) {
       ScaledResolution sr = new ScaledResolution(MC.mc);
-      SmartClicking.getInternalStateTable();
       MC.mc.entityRenderer.setupOverlayRendering(sr);
       GlStateManager.enableBlend();
       if (Config.isVignetteEnabled()) {
@@ -70,31 +68,22 @@ public class GuiIngameHook extends GuiIngame implements MC {
          }
 
          if (ClientManagers.moduleManager.fovArrows.isToggled()) {
-            boolean isBlurActive = ClientManagers.moduleManager.fovArrows.blurShadowSettings.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, ClientManagers.moduleManager.fovArrows.blurShadowSettings.isShadowActive());
-            RenderPassTask renderPassTask = shaderRenderPass -> renderNotificationsPass(shaderRenderPass);
-            boolean flag = false;
-            BlurShadowManager.submitRenderTask(flag, renderPassTask);
+            BlurShadowManager.enableOneShotPass(ClientManagers.moduleManager.fovArrows.blurShadowSettings.isBlurActive(), ClientManagers.moduleManager.fovArrows.blurShadowSettings.isShadowActive());
+            BlurShadowManager.submitRenderTask(false, shaderRenderPass -> renderNotificationsPass(shaderRenderPass));
          }
       } catch (Exception e) {
       }
 
-      Runnable runnable = () -> this.renderVanillaCrosshair(sr);
-      boolean flag2 = false;
-      HudBlurCompositor.compositeHud(sr, flag2, runnable);
+      HudBlurCompositor.compositeHud(sr, false, () -> this.renderVanillaCrosshair(sr));
    }
 
    private static void renderHelmetSlot(int n, int n2, boolean flag, ShaderRenderPass shaderRenderPass) {
-      int[] internalStateTable = SmartClicking.getInternalStateTable();
       if (MC.mc.thePlayer.getCurrentArmor(3) != null) {
-         ItemStack currentArmor = MC.mc.thePlayer.getCurrentArmor(3);
-         int n3 = n - 81;
-         RenderUtil.renderItemIntoGuiElevated(currentArmor, n3, n2, flag);
+         RenderUtil.renderItemIntoGuiElevated(MC.mc.thePlayer.getCurrentArmor(3), n - 81, n2, flag);
       }
    }
 
    public static void drawHudStats(int n, int n2) {
-      int[] internalStateTable = SmartClicking.getInternalStateTable();
       if (ClientManagers.moduleManager.hotbar.debugInformation.getValue()) {
          FontRenderer fontRendererObj = MC.mc.fontRendererObj;
          int n3 = ClientManagers.moduleManager.hotbar.otherPingCalculation.getValue()
@@ -128,10 +117,8 @@ public class GuiIngameHook extends GuiIngame implements MC {
 
          if (!ClientManagers.moduleManager.protector.isToggled() || !ClientManagers.moduleManager.protector.time.getValue()) {
             GregorianCalendar gregorianCalendar = new GregorianCalendar();
-            DateFormat dateInstance = DateFormat.getDateInstance(2);
-            String str3 = dateInstance.format(gregorianCalendar.getTime());
-            DateFormat timeInstance = DateFormat.getTimeInstance(3);
-            String str4 = timeInstance.format(gregorianCalendar.getTime());
+            String str3 = DateFormat.getDateInstance(2).format(gregorianCalendar.getTime());
+            String str4 = DateFormat.getTimeInstance(3).format(gregorianCalendar.getTime());
             float stringWidth = (float)fontRendererObj.getStringWidth(str3);
             fontRendererObj.drawStringWithShadowOffset(str3, (float)(n - 10) - stringWidth, (float)(n2 - 1 - fontRendererObj.FONT_HEIGHT), -570425345, true, 0.5F);
             fontRendererObj.drawStringWithShadowOffset(
@@ -148,7 +135,6 @@ public class GuiIngameHook extends GuiIngame implements MC {
 
    private void renderVanillaCrosshair(ScaledResolution sr) {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-      SmartClicking.getInternalStateTable();
       MC.mc.getTextureManager().bindTexture(icons);
       GlStateManager.enableBlend();
       if (this.showCrosshair() && (MC.mc.gameSettings.thirdPersonView < 1 || ClientManagers.moduleManager.crosshair.isToggled() && ClientManagers.moduleManager.crosshair.thirdPerson.getValue())) {
@@ -180,14 +166,12 @@ public class GuiIngameHook extends GuiIngame implements MC {
 
    public static void drawCustomCrosshair(ScaledResolution sr) {
       GL11.glScaled(1.0 / (double)sr.getScaleFactor(), 1.0 / (double)sr.getScaleFactor(), 1.0);
-      SmartClicking.getInternalStateTable();
       double d = (double)MC.mc.getFramebuffer().framebufferWidth / 2.0;
       double d2 = (double)MC.mc.getFramebuffer().framebufferHeight / 2.0;
       int value = (int)ClientManagers.moduleManager.crosshair.width.getValue();
       int value2 = (int)ClientManagers.moduleManager.crosshair.length.getValue();
       int value3 = (int)ClientManagers.moduleManager.crosshair.margin.getValue();
-      byte b = 0;
-      int colorInt = ClientManagers.moduleManager.crosshair.color2.getColorInt(b);
+      int colorInt = ClientManagers.moduleManager.crosshair.color2.getColorInt((byte)0);
       if (value % 2 == 0) {
          value /= 2;
          RenderUtil.drawRect(
@@ -252,18 +236,14 @@ public class GuiIngameHook extends GuiIngame implements MC {
    }
 
    private static void renderLeggingsSlot(int n, int n2, boolean flag, ShaderRenderPass shaderRenderPass) {
-      int[] internalStateTable = SmartClicking.getInternalStateTable();
       if (MC.mc.thePlayer.getCurrentArmor(1) != null) {
-         ItemStack currentArmor = MC.mc.thePlayer.getCurrentArmor(1);
-         int n3 = n - 41;
-         RenderUtil.renderItemIntoGuiElevated(currentArmor, n3, n2, flag);
+         RenderUtil.renderItemIntoGuiElevated(MC.mc.thePlayer.getCurrentArmor(1), n - 41, n2, flag);
       }
    }
 
    private void drawArmorHud(ScaledResolution sr) {
       GlStateManager.enableTexture2D();
       int n = sr.getScaledHeight() - 56;
-      SmartClicking.getInternalStateTable();
       int n2 = sr.getScaledWidth() / 2 + 91;
       boolean value = ClientManagers.moduleManager.hotbar.armorDurability.getValue();
       BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.hotbar.armorShadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
@@ -274,11 +254,8 @@ public class GuiIngameHook extends GuiIngame implements MC {
       BlurShadowManager.submitRenderTask(false, shaderRenderPass3 -> renderLeggingsSlot(n2, n, value, shaderRenderPass3));
       BlurShadowManager.enableOneShotPass(false, ClientManagers.moduleManager.hotbar.armorShadow.getValue() && ClientManagers.moduleManager.shadow.isToggled());
       BlurShadowManager.submitRenderTask(false, shaderRenderPass4 -> {
-         int[] internalStateTable = SmartClicking.getInternalStateTable();
          if (MC.mc.thePlayer.getCurrentArmor(0) != null) {
-            ItemStack currentArmor = MC.mc.thePlayer.getCurrentArmor(0);
-            int n3 = n2 - 21;
-            RenderUtil.renderItemIntoGuiElevated(currentArmor, n3, n, value);
+            RenderUtil.renderItemIntoGuiElevated(MC.mc.thePlayer.getCurrentArmor(0), n2 - 21, n, value);
          }
       });
    }
@@ -286,7 +263,6 @@ public class GuiIngameHook extends GuiIngame implements MC {
 
    @Override
    public void updateTick() {
-      int[] internalStateTable = SmartClicking.getInternalStateTable();
       super.updateTick();
 
       try {
@@ -299,7 +275,6 @@ public class GuiIngameHook extends GuiIngame implements MC {
 
    public GuiIngameHook(Minecraft mc2) {
        super(mc2);
-      SmartClicking.getInternalStateTable();
       this.overlayFadeActive = false;
       this.overlayCounter = 0;
       this.colorUtil = new ColorUtil();
@@ -315,11 +290,8 @@ public class GuiIngameHook extends GuiIngame implements MC {
    }
 
    private static void renderChestplateSlot(int n, int n2, boolean flag, ShaderRenderPass shaderRenderPass) {
-      int[] internalStateTable = SmartClicking.getInternalStateTable();
       if (MC.mc.thePlayer.getCurrentArmor(2) != null) {
-         ItemStack currentArmor = MC.mc.thePlayer.getCurrentArmor(2);
-         int n3 = n - 61;
-         RenderUtil.renderItemIntoGuiElevated(currentArmor, n3, n2, flag);
+         RenderUtil.renderItemIntoGuiElevated(MC.mc.thePlayer.getCurrentArmor(2), n - 61, n2, flag);
       }
    }
 

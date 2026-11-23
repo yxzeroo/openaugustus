@@ -30,9 +30,7 @@ public class LayerWitherAura implements LayerRenderer {
          GlStateManager.matrixMode(5890);
          GlStateManager.loadIdentity();
          float f8 = (float)entityWither.ticksExisted + f3;
-         float f9 = MathHelper.cos(f8 * 0.02F) * 3.0F;
-         float f10 = f8 * 0.01F;
-         GlStateManager.translate(f9, f10, 0.0F);
+         GlStateManager.translate(MathHelper.cos(f8 * 0.02F) * 3.0F, f8 * 0.01F, 0.0F);
          GlStateManager.matrixMode(5888);
          GlStateManager.enableBlend();
          float f11 = 0.5F;

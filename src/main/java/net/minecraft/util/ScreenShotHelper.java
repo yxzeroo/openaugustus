@@ -49,8 +49,7 @@ public class ScreenShotHelper {
          file2.mkdir();
          Minecraft minecraft = Minecraft.getMinecraft();
          int particleSetting = Config.getGameSettings().particleSetting;
-         ScaledResolution sr = new ScaledResolution(minecraft);
-         int scaleFactor = sr.getScaleFactor();
+         int scaleFactor = new ScaledResolution(minecraft).getScaleFactor();
          int screenshotSize = Config.getScreenshotSize();
          boolean flag = OpenGlHelper.isFramebufferEnabled() && screenshotSize > 1;
          if (flag) {

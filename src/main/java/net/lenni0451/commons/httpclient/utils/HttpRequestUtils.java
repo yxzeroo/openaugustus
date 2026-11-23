@@ -117,12 +117,10 @@ public final class HttpRequestUtils {
    @Nullable
    public static Long parseSecondsOrHttpDate(String value) {
       try {
-         Instant date = parseHttpDate(value);
-         return date.toEpochMilli() - Instant.now().toEpochMilli();
+         return parseHttpDate(value).toEpochMilli() - Instant.now().toEpochMilli();
       } catch (DateTimeParseException e) {
          try {
-            int seconds = Integer.parseInt(value);
-            return (long)seconds * 1000L;
+            return (long)Integer.parseInt(value) * 1000L;
          } catch (NumberFormatException e2) {
             return null;
          }

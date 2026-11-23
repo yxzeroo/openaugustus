@@ -110,11 +110,7 @@ public class WorldRenderer {
    }
 
    public void putColorRGB_F(float f, float f2, float f3, int n) {
-      int colorIndex = this.getColorIndex(n);
-      int n2 = MathHelper.clamp_int((int)(f * 255.0F), 0, 255);
-      int n3 = MathHelper.clamp_int((int)(f2 * 255.0F), 0, 255);
-      int n4 = MathHelper.clamp_int((int)(f3 * 255.0F), 0, 255);
-      this.putColorRGBA(colorIndex, n2, n3, n4, 255);
+      this.putColorRGBA(this.getColorIndex(n), MathHelper.clamp_int((int)(f * 255.0F), 0, 255), MathHelper.clamp_int((int)(f2 * 255.0F), 0, 255), MathHelper.clamp_int((int)(f3 * 255.0F), 0, 255), 255);
    }
 
    public void noColor() {
@@ -323,8 +319,7 @@ public class WorldRenderer {
          ((Buffer)this.rawShortBuffer).position(n5 << 1);
          if (this.quadSprites != null) {
             TextureAtlasSprite[] quadSprites2 = this.quadSprites;
-            int bufferQuadSize = this.getBufferQuadSize();
-            this.quadSprites = new TextureAtlasSprite[bufferQuadSize];
+            this.quadSprites = new TextureAtlasSprite[this.getBufferQuadSize()];
             System.arraycopy(quadSprites2, 0, this.quadSprites, 0, Math.min(quadSprites2.length, this.quadSprites.length));
             this.quadSpritesPrev = null;
          }
@@ -407,14 +402,9 @@ public class WorldRenderer {
             int n3 = (int)((float)(n2 & 0xFF) * f);
             int n4 = (int)((float)(n2 >> 8 & 0xFF) * f2);
             int n5 = (int)((float)(n2 >> 16 & 0xFF) * f3);
-            int n6 = (int)((float)(n2 >> 24 & 0xFF) * f4);
-            n2 = n6 << 24 | n5 << 16 | n4 << 8 | n3;
+            n2 = ((int)((float)(n2 >> 24 & 0xFF) * f4)) << 24 | n5 << 16 | n4 << 8 | n3;
          } else {
-            int n7 = (int)((float)(n2 >> 24 & 0xFF) * f);
-            int n8 = (int)((float)(n2 >> 16 & 0xFF) * f2);
-            int n9 = (int)((float)(n2 >> 8 & 0xFF) * f3);
-            int n10 = (int)((float)(n2 & 0xFF) * f4);
-            n2 = n7 << 24 | n8 << 16 | n9 << 8 | n10;
+            n2 = ((int)((float)(n2 >> 24 & 0xFF) * f)) << 24 | ((int)((float)(n2 >> 16 & 0xFF) * f2)) << 16 | ((int)((float)(n2 >> 8 & 0xFF) * f3)) << 8 | ((int)((float)(n2 & 0xFF) * f4));
          }
       }
 
@@ -618,10 +608,7 @@ public class WorldRenderer {
    }
 
    public void putNormal(float f, float f2, float f3) {
-      int n = (byte)((int)(f * 127.0F)) & 255;
-      int n2 = (byte)((int)(f2 * 127.0F)) & 255;
-      int n3 = (byte)((int)(f3 * 127.0F)) & 255;
-      int n4 = n | n2 << 8 | n3 << 16;
+      int n4 = ((byte)((int)(f * 127.0F)) & 255) | ((byte)((int)(f2 * 127.0F)) & 255) << 8 | ((byte)((int)(f3 * 127.0F)) & 255) << 16;
       int n5 = this.vertexFormat.getNextOffset() >> 2;
       int n6 = (this.vertexCount - 4) * n5 + this.vertexFormat.getNormalOffset() / 4;
       this.rawIntBuffer.put(n6, n4);
@@ -668,8 +655,7 @@ public class WorldRenderer {
       int n4 = this.vertexCount / 4;
 
       for (int i = n; i < n4; i++) {
-         TextureAtlasSprite textureAtlasSprite2 = this.quadSprites[i];
-         if (textureAtlasSprite2 == textureAtlasSprite) {
+         if (this.quadSprites[i] == textureAtlasSprite) {
             if (n3 < 0) {
                n3 = i;
             }
@@ -823,12 +809,7 @@ public class WorldRenderer {
    }
 
    private void putColor(int n, int n2) {
-      int colorIndex = this.getColorIndex(n2);
-      int n3 = n >> 16 & 0xFF;
-      int n4 = n >> 8 & 0xFF;
-      int n5 = n & 0xFF;
-      int n6 = n >> 24 & 0xFF;
-      this.putColorRGBA(colorIndex, n3, n4, n5, n6);
+      this.putColorRGBA(this.getColorIndex(n2), n >> 16 & 0xFF, n >> 8 & 0xFF, n & 0xFF, n >> 24 & 0xFF);
    }
 
    public VertexFormat getVertexFormat() {

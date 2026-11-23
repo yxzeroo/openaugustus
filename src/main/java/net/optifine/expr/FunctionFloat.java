@@ -17,8 +17,7 @@ public class FunctionFloat implements IExpressionFloat {
       IExpression[] arguments2 = this.arguments;
       switch (FunctionFloat.FunctionTypeSwitchMap.ORDINAL_MAP[this.type.ordinal()]) {
          case 1:
-            IExpression expression = arguments2[0];
-            if (!(expression instanceof ConstantFloat)) {
+            if (!(arguments2[0] instanceof ConstantFloat)) {
                float f = evalFloat(arguments2, 0);
                float f2 = arguments2.length > 1 ? evalFloat(arguments2, 1) : 1.0F;
                float f3 = arguments2.length > 2 ? evalFloat(arguments2, 2) : f2;
@@ -39,8 +38,7 @@ public class FunctionFloat implements IExpressionFloat {
    }
 
    private static float evalFloat(IExpression[] expressions, int n) {
-      IExpressionFloat expressionFloat = (IExpressionFloat)expressions[n];
-      return expressionFloat.eval();
+      return ((IExpressionFloat)expressions[n]).eval();
    }
 
    @Override

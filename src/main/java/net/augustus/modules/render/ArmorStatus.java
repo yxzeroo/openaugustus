@@ -17,18 +17,18 @@ import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 public class ArmorStatus extends Module implements RenderListener {
-   private final StringValue posX;
-   private final StringValue posY;
-   private final StringValue scale;
-   private final BooleansSetting durabilityMode;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
+   private final DoubleValue scale;
+   private final StringValue durabilityMode;
    private final ColorSetting durabilityColor;
    private final BooleanValue backGround;
    private final ColorSetting backgroundColor;
@@ -38,20 +38,16 @@ public class ArmorStatus extends Module implements RenderListener {
 
    public ArmorStatus() {
        super("ArmorStatus", "Rüstungszustand", new Color(125, 255, 203), Categorys.RENDER);
-      this.posX = new StringValue(this, "PosX", 0.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 0.0, 0.0, 100.0, 2);
-      this.scale = new StringValue(this, "Scale", 2.0, 0.5, 4.0, 2);
-      this.durabilityMode = new BooleansSetting(this, "DurabilityMode", "Percentage", new String[]{"None", "Percentage", "Absolute"});
-      ColorSetting colorSetting = new ColorSetting(this, "DurabilityColor", Color.white);
-      SettingVisibilityCondition condition = () -> this.isDurabilityColorVisible();
-      this.durabilityColor = (ColorSetting)colorSetting.withVisibility(condition);
+      this.posX = new DoubleValue(this, "PosX", 0.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 0.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 0.5, 4.0, 2);
+      this.durabilityMode = new StringValue(this, "DurabilityMode", "Percentage", new String[]{"None", "Percentage", "Absolute"});
+      this.durabilityColor = (ColorSetting)new ColorSetting(this, "DurabilityColor", Color.white).withVisibility(() -> this.isDurabilityColorVisible());
       this.backGround = new BooleanValue(this, "BackGround", false);
       ColorSetting colorSetting2 = new ColorSetting(this, "BackgroundColor", new Color(0, 0, 0, 120));
       BooleanValue backGround2 = this.backGround;
       this.backGround.getClass();
-      BooleanValue booleanValue = backGround2;
-      SettingVisibilityCondition condition2 = () -> booleanValue.getValue();
-      this.backgroundColor = (ColorSetting)colorSetting2.withVisibility(condition2);
+      this.backgroundColor = (ColorSetting)colorSetting2.withVisibility(() -> backGround2.getValue());
       this.blurShadowSettings = new BlurShadowSettings(this);
       this.dynamicArmorRendering = new BooleanValue(this, "DynamicArmorRendering", true);
       this.armorPartsToShowStatus = new MultiOptionSetting(this, "ArmorPartsToShowStatus", (SelectableOption[])ArmorStatusPartOption.OPTIONS.toArray(new ArmorStatusPartOption[0]));
@@ -67,8 +63,7 @@ public class ArmorStatus extends Module implements RenderListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -91,10 +86,8 @@ public class ArmorStatus extends Module implements RenderListener {
    }
 
    private void renderArmorList(String[] strings, int n, int n2) {
-      boolean value = this.backGround.getValue();
-      if (value) {
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+      if (this.backGround.getValue()) {
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderBackgroundRect(n, n2, shaderRenderPass));
       }
 
@@ -128,13 +121,11 @@ public class ArmorStatus extends Module implements RenderListener {
          if (this.backGround.getValue()) {
             this.renderArmorPieceAndDurability(strings, n, n2);
          } else {
-            boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-            BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+            BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
             RenderPassTask renderPassTask = shaderRenderPass -> {
                this.renderArmorPieceAndDurability(strings, n, n2);
             };
-            boolean flag = true;
-            BlurShadowManager.submitRenderTask(flag, renderPassTask);
+            BlurShadowManager.submitRenderTask(true, renderPassTask);
          }
       }
    }
@@ -143,15 +134,8 @@ public class ArmorStatus extends Module implements RenderListener {
       if (mc.thePlayer != null) {
          ItemStack currentArmor = mc.thePlayer.getCurrentArmor(n);
          if (currentArmor != null) {
-            int n3 = n2 + 2;
-            boolean flag = false;
-            int n4 = n3;
-            byte b = 3;
-            RenderUtil.renderItemIntoGuiElevated(currentArmor, b, n4, flag);
-            String str = strings[n];
-            int n5 = n2 + 6;
-            String str2 = str;
-            this.drawDurabilityText(str2, n5);
+            RenderUtil.renderItemIntoGuiElevated(currentArmor, (byte)3, n2 + 2, false);
+            this.drawDurabilityText(strings[n], n2 + 6);
          }
       }
    }
@@ -162,8 +146,7 @@ public class ArmorStatus extends Module implements RenderListener {
 
    private void drawDurabilityText(String str, int n) {
       if (str != null && !str.isEmpty()) {
-         byte b = 0;
-         mc.fontRendererObj.drawString(str, 21, n, this.durabilityColor.getColorInt(b));
+         mc.fontRendererObj.drawString(str, 21, n, this.durabilityColor.getColorInt((byte)0));
       }
    }
 
@@ -182,8 +165,7 @@ public class ArmorStatus extends Module implements RenderListener {
    }
 
    private String formatDurability(ItemStack stack) {
-      String selectedValue = this.durabilityMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.durabilityMode.getSelectedValue()) {
          case "Percentage":
             return MathStatisticsUtil.formatRounded(100.0 - (double)stack.getItemDamage() / (double)stack.getMaxDamage() * 100.0, 1) + "%";
          case "Absolute":
@@ -211,10 +193,7 @@ public class ArmorStatus extends Module implements RenderListener {
    }
 
    private void renderBackgroundRect(int n, int n2, ShaderRenderPass shaderRenderPass) {
-      int n3 = 22 + n;
-      byte b = 0;
-      int colorInt = this.backgroundColor.getColorInt(b);
-      RenderUtil.drawRect3(0, 0, n3, n2, ColorUtil.resolvePassColor(shaderRenderPass, colorInt));
+      RenderUtil.drawRect3(0, 0, 22 + n, n2, ColorUtil.resolvePassColor(shaderRenderPass, this.backgroundColor.getColorInt((byte)0)));
    }
 
    private boolean isDurabilityColorVisible() {

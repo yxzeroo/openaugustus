@@ -67,10 +67,7 @@ public class WorldProvider implements IWorldProvider {
       Path path2;
       if (this.ctx.getMc().isSingleplayer()) {
          int dimensionId = world.provider.getDimensionId();
-         WorldServer world2 = this.ctx.getMc().getIntegratedServer().worldServerForDimension(dimensionId);
-         ChunkProviderServer chunkProvider = (ChunkProviderServer)world2.getChunkProvider();
-         AnvilChunkLoader chunkLoader = (AnvilChunkLoader)chunkProvider.chunkLoader;
-         path2 = chunkLoader.chunkSaveLocation.toPath();
+         path2 = ((AnvilChunkLoader)((ChunkProviderServer)this.ctx.getMc().getIntegratedServer().worldServerForDimension(dimensionId).getChunkProvider()).chunkLoader).chunkSaveLocation.toPath();
          if (path2.relativize(this.ctx.getMc().mcDataDir.toPath()).getNameCount() != 2) {
             path2 = path2.getParent();
          }

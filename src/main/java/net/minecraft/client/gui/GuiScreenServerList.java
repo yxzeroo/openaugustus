@@ -42,9 +42,7 @@ public class GuiScreenServerList extends GuiScreen {
    public void updateScreen() {
       this.ipEdit.updateCursorCounter();
       if (this.getServerPingerModule().isToggled()) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         double value = this.getServerPingerModule().pingDelay.getValue();
-         if (timeHelper2.reached(value)) {
+         if (this.timeHelper.reached(this.getServerPingerModule().pingDelay.getValue())) {
             String text = this.ipEdit.getText();
             boolean flag = this.lastQueriedIp == null || !this.lastQueriedIp.equals(text);
             if (this.getServerPingerModule().playerGraphEnabled.getValue() || flag) {
@@ -82,8 +80,7 @@ public class GuiScreenServerList extends GuiScreen {
             return ipLookupProvider2.getDisplayName().equals(this.getServerPingerModule().backend.getSelectedValue());
          }).findFirst().orElse(IpLookupProvider.INCOLUMITAS);
          CompletableFuture.<String>supplyAsync(() -> this.resolveServerHost(str)).thenAccept(str3 -> {
-            String str4 = str3 != null ? ServerAddress.fromString(str3).getIP() : str;
-            ipLookupProvider.lookupAsync(str4).whenComplete((obj3, obj4) -> {
+            ipLookupProvider.lookupAsync(str3 != null ? ServerAddress.fromString(str3).getIP() : str).whenComplete((obj3, obj4) -> {
                if (obj4 != null) {
                   this.ipLookupLines = null;
                } else {
@@ -125,9 +122,7 @@ public class GuiScreenServerList extends GuiScreen {
 
          List orDefault = (List)(this.getServerPingerModule().playerCountHistory.getOrDefault(str, new ArrayList()));
          PLAYER_COUNT_GRAPH.setSamples(orDefault);
-         LineGraphWidget lineGraphWidget = PLAYER_COUNT_GRAPH;
-         int value = (int)this.getServerPingerModule().maxEntries.getValue();
-         lineGraphWidget.setMaxSamples(value);
+         PLAYER_COUNT_GRAPH.setMaxSamples((int)this.getServerPingerModule().maxEntries.getValue());
       }
    }
 
@@ -184,11 +179,8 @@ public class GuiScreenServerList extends GuiScreen {
       this.ipEdit.setText(this.mc.gameSettings.lastServer);
       ((GuiButton)this.buttonList.get(0)).enabled = !this.ipEdit.getText().isEmpty() && this.ipEdit.getText().split(":").length > 0;
       int n = this.height - 80 - 5;
-      byte b = 15;
-      PLAYER_COUNT_GRAPH.setPosition(b, n);
-      LineGraphWidget lineGraphWidget = PLAYER_COUNT_GRAPH;
-      int value = (int)this.getServerPingerModule().maxEntries.getValue();
-      lineGraphWidget.setMaxSamples(value);
+      PLAYER_COUNT_GRAPH.setPosition((byte)15, n);
+      PLAYER_COUNT_GRAPH.setMaxSamples((int)this.getServerPingerModule().maxEntries.getValue());
       this.queryServerAndIp(this.ipEdit.getText(), true);
    }
 
@@ -206,13 +198,9 @@ public class GuiScreenServerList extends GuiScreen {
             this.serverListHost.setHoveringText(null);
             GL11.glPushMatrix();
             GL11.glTranslated((double)n, 30.0, 0.0);
-            byte b2 = 0;
-            RenderUtil.drawRect3(0, 0, 305, 34, this.getServerPingerModule().widgetBackgroundColor.getColorInt(b2));
+            RenderUtil.drawRect3(0, 0, 305, 34, this.getServerPingerModule().widgetBackgroundColor.getColorInt((byte)0));
             this.previewEntry.drawEntry(0, 0, 0, 309, 34, mouseX - n, mouseY - 30, false);
-            double d = (double)this.timeHelper.getTime() / this.getServerPingerModule().pingDelay.getValue() * 305.0;
-            int n2 = (int)d;
-            byte b3 = 0;
-            RenderUtil.drawRect3(0, 32, n2, 34, this.getServerPingerModule().widgetColor.getColorInt(b3));
+            RenderUtil.drawRect3(0, 32, (int)((double)this.timeHelper.getTime() / this.getServerPingerModule().pingDelay.getValue() * 305.0), 34, this.getServerPingerModule().widgetColor.getColorInt((byte)0));
             GL11.glPopMatrix();
          }
 
@@ -220,9 +208,7 @@ public class GuiScreenServerList extends GuiScreen {
             int yPosition = this.ipEdit.yPosition;
             int n3 = this.width / 4;
             int n4 = 15 + n3;
-            int n5 = yPosition + 220;
-            byte b4 = 0;
-            RenderUtil.drawRect3(15, yPosition, n4, n5, this.getServerPingerModule().ipInfoBoxColor.getColorInt(b4));
+            RenderUtil.drawRect3(15, yPosition, n4, yPosition + 220, this.getServerPingerModule().ipInfoBoxColor.getColorInt((byte)0));
             GL11.glEnable(3089);
             RenderUtil.scissorRect(15.0F, (float)yPosition, (float)(15 + n3), (float)(yPosition + 220));
 
@@ -232,8 +218,7 @@ public class GuiScreenServerList extends GuiScreen {
                   FontRenderer fontRendererObj2 = this.fontRendererObj;
                   int n6 = yPosition + 5 + i * 10;
                   if (str.endsWith(":")) {
-                     byte b5 = 0;
-                     n4 = this.getServerPingerModule().ipInfoTextColor.getColorInt(b5);
+                     n4 = this.getServerPingerModule().ipInfoTextColor.getColorInt((byte)0);
                   } else {
                      n4 = -1;
                   }

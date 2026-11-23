@@ -535,11 +535,9 @@ public class AesGcmCipher {
    private byte[] cachedKey;
 
    private byte[] computeGcmTag(byte[] bytes, byte[] bytes2, byte[] bytes3, int[] ints, byte[] bytes4) {
-      int[] flowState = Sha256Digest.getFlowState();
       int n = bytes3 != null ? bytes3.length : 0;
       if (this.ghashTable == null || !this.ghashTable.matchesHashSubkey(bytes4)) {
-         GhashLookupTable ghashLookupTable = new GhashLookupTable(bytes4);
-         this.ghashTable = ghashLookupTable;
+         this.ghashTable = new GhashLookupTable(bytes4);
       }
 
       byte[] bytes5 = new byte[16];
@@ -595,8 +593,7 @@ public class AesGcmCipher {
          this.tagCounterState[i2] = bytes7[i2] & 255;
       }
 
-      int[] tagCounterState2 = this.tagCounterState;
-      this.encryptBlock(tagCounterState2, ints);
+      this.encryptBlock(this.tagCounterState, ints);
 
       for (int i3 = 0; i3 < 16; i3++) {
          this.encryptedCounterBlock[i3] = (byte)this.tagCounterState[i3];
@@ -613,7 +610,6 @@ public class AesGcmCipher {
 
    private void ghashMultiply(byte[] bytes) {
       long l = 0L;
-      Sha256Digest.getFlowState();
       long l2 = 0L;
 
       for (int i = 0; i < 16; i++) {
@@ -632,26 +628,19 @@ public class AesGcmCipher {
    }
 
    private static String toHexString(byte[] bytes) {
-      int length = bytes.length;
-      int n = length;
-      byte b = 0;
-      return toHexString(bytes, b, n);
+      return toHexString(bytes, (byte)0, bytes.length);
    }
 
    public AesGcmCipher(long l) {
       this.tagCounterState = new int[16];
       this.hashSubkeyBuffer = new byte[16];
       this.encryptedCounterBlock = new byte[16];
-      Object obj = null;
-      this.cachedKey = (byte[])obj;
-      Object obj2 = null;
-      this.cachedRoundKeys = (int[])obj2;
-      Object obj3 = null;
-      this.cachedHashSubkey = (byte[])obj3;
+      this.cachedKey = (byte[])null;
+      this.cachedRoundKeys = (int[])null;
+      this.cachedHashSubkey = (byte[])null;
    }
 
    private byte[] computeHashSubkey(byte[] bytes, int[] ints) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.cachedKey != null && this.cachedHashSubkey != null) {
          boolean flag = true;
 
@@ -671,16 +660,14 @@ public class AesGcmCipher {
          this.hashSubkeyState[j] = 0;
       }
 
-      int[] hashSubkeyState2 = this.hashSubkeyState;
-      this.encryptBlock(hashSubkeyState2, ints);
+      this.encryptBlock(this.hashSubkeyState, ints);
 
       for (int k = 0; k < 16; k++) {
          this.hashSubkeyBuffer[k] = (byte)this.hashSubkeyState[k];
       }
 
       if (this.cachedHashSubkey == null) {
-         byte[] bytes2 = new byte[16];
-         this.cachedHashSubkey = bytes2;
+         this.cachedHashSubkey = new byte[16];
       }
 
       System.arraycopy(this.hashSubkeyBuffer, 0, this.cachedHashSubkey, 0, 16);
@@ -688,7 +675,6 @@ public class AesGcmCipher {
    }
 
    private int[] expandKey(byte[] bytes) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.cachedKey != null && bytes.length == this.cachedKey.length) {
          boolean flag = true;
 
@@ -743,15 +729,13 @@ public class AesGcmCipher {
          ints2[4 * m + 3] = ints[m] & 0xFF;
       }
 
-      byte[] bytes2 = new byte[bytes.length];
-      this.cachedKey = bytes2;
+      this.cachedKey = new byte[bytes.length];
       System.arraycopy(bytes, 0, this.cachedKey, 0, bytes.length);
       this.cachedRoundKeys = ints2;
       return ints2;
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2, byte[] bytes3) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes2.length != 16 && bytes2.length != 24 && bytes2.length != 32) {
          throw new IllegalArgumentException("Invalid key size. Must be 16, 24, or 32 bytes");
       } else if (bytes.length < 28) {
@@ -765,8 +749,7 @@ public class AesGcmCipher {
          byte[] bytes6 = new byte[16];
          System.arraycopy(bytes, bytes4.length + n, bytes6, 0, 16);
          int[] ints = this.expandKey(bytes2);
-         byte[] bytes7 = this.computeHashSubkey(bytes2, ints);
-         byte[] bytes8 = this.computeGcmTag(bytes4, bytes5, bytes3, ints, bytes7);
+         byte[] bytes8 = this.computeGcmTag(bytes4, bytes5, bytes3, ints, this.computeHashSubkey(bytes2, ints));
          int n2 = 0;
 
          for (int i = 0; i < 16; i++) {
@@ -807,28 +790,22 @@ public class AesGcmCipher {
    }
 
    public byte[] decrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.decrypt(bytes, bytes2, (byte[])obj);
+      return this.decrypt(bytes, bytes2, (byte[])null);
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2) {
-      Object obj = null;
-      return this.encrypt(bytes, bytes2, (byte[])obj);
+      return this.encrypt(bytes, bytes2, (byte[])null);
    }
 
    public byte[] encrypt(byte[] bytes, byte[] bytes2, byte[] bytes3) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes2.length != 16 && bytes2.length != 24 && bytes2.length != 32) {
          throw new IllegalArgumentException("Invalid key size. Must be 16, 24, or 32 bytes");
       } else {
          byte[] bytes4 = new byte[12];
          long l = System.nanoTime();
-         long l2 = 25214903917L;
-         long l3 = 11L;
-         long l4 = 281474976710655L;
 
          for (int i = 0; i < bytes4.length; i++) {
-            l = l * l2 + l3 & l4;
+            l = l * 25214903917L + 11L & 281474976710655L;
             bytes4[i] = (byte)((int)(l >> 16 & 255L));
          }
 
@@ -870,7 +847,6 @@ public class AesGcmCipher {
 
    private void encryptBlock(int[] ints, int[] ints2) {
       int n = ints2.length / 16 - 1;
-      Sha256Digest.getFlowState();
 
       for (int i = 0; i < 16; i++) {
          ints[i] ^= ints2[i];
@@ -945,7 +921,6 @@ public class AesGcmCipher {
 
    private static String toHexString(byte[] bytes, int n, int n2) {
       StringBuilder sb = new StringBuilder();
-      Sha256Digest.getFlowState();
 
       for (int i = n; i < n + n2; i++) {
          sb.append(String.format("%02X", bytes[i]));

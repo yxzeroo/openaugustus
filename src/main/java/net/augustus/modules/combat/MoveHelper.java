@@ -22,7 +22,7 @@ import net.augustus.events.listeners.AttackEntityListener;
 import net.augustus.events.EventSound;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
@@ -31,7 +31,7 @@ import net.minecraft.util.Vec3;
 public class MoveHelper extends Module implements LoadWorldListener, MoveInputListener, AttackEntityListener, TickListener, SoundListener {
    private boolean shouldHitSelect;
    public final MultiOptionSetting modes;
-   public final StringValue combos;
+   public final DoubleValue combos;
    private final BooleanValue doNotBreakCombosWhilePlayerHasJumpboost;
    private int incomingComboHits;
    private int hitSelectTicks;
@@ -46,12 +46,8 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
        super("MoveHelper", "BewegungsHelfer", new Color(50, 168, 82), Categorys.COMBAT);
       this.shouldHitSelect = false;
       this.modes = (MultiOptionSetting)(new MultiOptionSetting(this, "Modes", MoveHelperModeOption.values())).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "Combos", 1.0, 0.0, 4.0, 0);
-      SettingVisibilityCondition condition = () -> MoveHelperModeOption.isOptionSelected(MoveHelperModeOption.COMBO_BREAKER);
-      this.combos = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
-      BooleanValue booleanValue = new BooleanValue(this, "Do not break combos while player has jumpboost", true);
-      SettingVisibilityCondition condition2 = () -> MoveHelperModeOption.isOptionSelected(MoveHelperModeOption.COMBO_BREAKER);
-      this.doNotBreakCombosWhilePlayerHasJumpboost = (BooleanValue)((BooleanValue)booleanValue.withVisibility(condition2)).markVisualOnly();
+      this.combos = (DoubleValue)new DoubleValue(this, "Combos", 1.0, 0.0, 4.0, 0).visibleWhen(() -> MoveHelperModeOption.isOptionSelected(MoveHelperModeOption.COMBO_BREAKER)).markVisualOnly();
+      this.doNotBreakCombosWhilePlayerHasJumpboost = (BooleanValue)((BooleanValue)new BooleanValue(this, "Do not break combos while player has jumpboost", true).withVisibility(() -> MoveHelperModeOption.isOptionSelected(MoveHelperModeOption.COMBO_BREAKER))).markVisualOnly();
       this.incomingComboHits = 0;
       this.hitSelectTicks = 0;
       this.tickCounter = new TickCounter();
@@ -76,9 +72,7 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
 
    @Override
    public void updateEventSubscriptions() {
-      short s = 1000;
-      byte b = 21;
-      this.toggleEventSubscription(b, s);
+      this.toggleEventSubscription((byte)21, (short)1000);
       this.onAttackEntity();
       this.onAttackEntity();
       this.onAttackEntity();
@@ -111,8 +105,7 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
          }
 
          if (event.getSoundName().equals("game.player.hurt")) {
-            long l = 100L;
-            if (this.playerFallHurtTimer.reached2(l)) {
+            if (this.playerFallHurtTimer.reached2(100L)) {
                this.incomingComboHits++;
             }
          }
@@ -125,8 +118,7 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
          }
 
          if (event.getSoundName().equals("game.player.hurt")) {
-            long l2 = 100L;
-            if (this.targetFallHurtTimer.reached2(l2)) {
+            if (this.targetFallHurtTimer.reached2(100L)) {
                this.incomingComboHits = 0;
             }
          }
@@ -170,18 +162,14 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
          double d4 = doubles2[2];
          double d5 = d3;
          double d6 = d2;
-         EntityLivingBase currentTarget2 = this.currentTarget;
-         Vec3 nearestPointOnEntityAt = RotationUtil.getNearestPointOnEntityAt(vec, currentTarget2, d6, d5, d4);
-         double d7 = vec.distanceTo(nearestPointOnEntityAt);
+         double d7 = vec.distanceTo(RotationUtil.getNearestPointOnEntityAt(vec, this.currentTarget, d6, d5, d4));
          Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
          d2 = doubles2[0];
          d3 = doubles2[1];
          double d8 = doubles2[2];
          double d9 = d3;
          double d10 = d2;
-         EntityLivingBase currentTarget3 = this.currentTarget;
-         Vec3 nearestPointOnEntityAt2 = RotationUtil.getNearestPointOnEntityAt(positionEyes, currentTarget3, d10, d9, d8);
-         double d11 = nearestPointOnEntityAt2.distanceToXZ(mc.thePlayer.getPositionEyes(1.0F));
+         double d11 = RotationUtil.getNearestPointOnEntityAt(positionEyes, this.currentTarget, d10, d9, d8).distanceToXZ(mc.thePlayer.getPositionEyes(1.0F));
          double d12 = mc.thePlayer.getPositionEyes(1.0F).distanceToXZ(nearestPointOnEntity);
          this.hitSelectTicks = this.currentTarget.hurtTime != this.currentTarget.prevHurtTime || mc.thePlayer.hurtTime != mc.thePlayer.prevHurtTime && (!(d7 < 2.9) || !(d < 3.0) || mc.thePlayer.hurtTime <= 8)
             ? 0
@@ -199,8 +187,7 @@ public class MoveHelper extends Module implements LoadWorldListener, MoveInputLi
             return;
          }
 
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
          this.incomingComboHits = 0;
       }
    }

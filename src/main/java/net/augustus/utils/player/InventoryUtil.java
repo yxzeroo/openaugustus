@@ -196,10 +196,8 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemSpade) {
-               boolean flag = true;
-               list2.add(new TuplePair(getItemScore(stack, flag), i));
+            if (stack.getItem() instanceof ItemSpade) {
+               list2.add(new TuplePair(getItemScore(stack, true), i));
             }
          }
       }
@@ -211,26 +209,22 @@ public class InventoryUtil implements MC {
    private static float getTotalArmorDefense(ItemStack stack, ItemStack stack2, ItemStack stack3, ItemStack stack4) {
       float f = 0.0F;
       if (stack != null && stack.getItem() instanceof ItemArmor) {
-         ItemArmor item = (ItemArmor)stack.getItem();
-         float damageReduceAmount = (float)item.damageReduceAmount;
+         float damageReduceAmount = (float)((ItemArmor)stack.getItem()).damageReduceAmount;
          f += damageReduceAmount;
       }
 
       if (stack2 != null && stack2.getItem() instanceof ItemArmor) {
-         ItemArmor item2 = (ItemArmor)stack2.getItem();
-         float damageReduceAmount2 = (float)item2.damageReduceAmount;
+         float damageReduceAmount2 = (float)((ItemArmor)stack2.getItem()).damageReduceAmount;
          f += damageReduceAmount2;
       }
 
       if (stack3 != null && stack3.getItem() instanceof ItemArmor) {
-         ItemArmor item3 = (ItemArmor)stack3.getItem();
-         float damageReduceAmount3 = (float)item3.damageReduceAmount;
+         float damageReduceAmount3 = (float)((ItemArmor)stack3.getItem()).damageReduceAmount;
          f += damageReduceAmount3;
       }
 
       if (stack4 != null && stack4.getItem() instanceof ItemArmor) {
-         ItemArmor item4 = (ItemArmor)stack4.getItem();
-         float damageReduceAmount4 = (float)item4.damageReduceAmount;
+         float damageReduceAmount4 = (float)((ItemArmor)stack4.getItem()).damageReduceAmount;
          f += damageReduceAmount4;
       }
 
@@ -238,9 +232,7 @@ public class InventoryUtil implements MC {
    }
 
    private static float applyArmorDamageReduction(float f, ArrayList list) {
-      float f2 = 25.0F - getTotalArmorDefense(list);
-      float f3 = f * f2;
-      return f3 / 25.0F;
+      return (f * (25.0F - getTotalArmorDefense(list))) / 25.0F;
    }
 
    public static ArrayList getSortedBlocks(Container container, int n, int n2) {
@@ -249,10 +241,8 @@ public class InventoryUtil implements MC {
       for (int i = n; i < n2; i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemBlock) {
-               boolean flag = true;
-               if (BlockUtil.isValidScaffoldBlock(stack, flag)) {
+            if (stack.getItem() instanceof ItemBlock) {
+               if (BlockUtil.isValidScaffoldBlock(stack, true)) {
                   list.add(new TuplePair(getItemScore(stack), i));
                }
             }
@@ -265,8 +255,7 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedShears(Container container, int n) {
-      Object obj = null;
-      return getSortedShears(container, n, (ArrayList)obj);
+      return getSortedShears(container, n, (ArrayList)null);
    }
 
    public static boolean isNotSoupCraftIngredient(Item item) {
@@ -276,8 +265,7 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedWeapons(Container container, int n) {
-      Object obj = null;
-      return getSortedWeapons(container, n, (ArrayList)obj);
+      return getSortedWeapons(container, n, (ArrayList)null);
    }
 
    public static ArrayList getSortedFishingRods(Container container, int n, ArrayList list) {
@@ -357,8 +345,7 @@ public class InventoryUtil implements MC {
             NBTTagList enchantmentTagList = stack.getEnchantmentTagList();
             if (enchantmentTagList != null) {
                for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
-                  short s = enchantmentTagList.getCompoundTagAt(i).getShort("id");
-                  if (s == n) {
+                  if (enchantmentTagList.getCompoundTagAt(i).getShort("id") == n) {
                      short s2 = enchantmentTagList.getCompoundTagAt(i).getShort("lvl");
                      int2IntOpenHashMap.put(n, s2);
                      return s2;
@@ -397,14 +384,11 @@ public class InventoryUtil implements MC {
    }
 
    private static float applyArmorSetDamageReduction(float f, ItemStack stack, ItemStack stack2, ItemStack stack3, ItemStack stack4) {
-      float f2 = 25.0F - getTotalArmorDefense(stack, stack2, stack3, stack4);
-      float f3 = f * f2;
-      return f3 / 25.0F;
+      return (f * (25.0F - getTotalArmorDefense(stack, stack2, stack3, stack4))) / 25.0F;
    }
 
    public static ArrayList getSortedShovels(Container container, int n) {
-      Object obj = null;
-      return getSortedShovels(container, n, (ArrayList)obj);
+      return getSortedShovels(container, n, (ArrayList)null);
    }
 
    public static ArrayList findBestArmorSet(Container container, int n, int n2, boolean flag, boolean flag2) {
@@ -431,8 +415,7 @@ public class InventoryUtil implements MC {
    }
 
    public static List sortSlotsByMode(Container container, List list, String str) {
-      short s = 166;
-      return sortSlotsByMode(container, list, str, s);
+      return sortSlotsByMode(container, list, str, (short)166);
    }
 
 
@@ -449,8 +432,7 @@ public class InventoryUtil implements MC {
             if (stack != null) {
                Item item = stack.getItem();
                if (item instanceof ItemArmor) {
-                  ItemArmor itemArmor = (ItemArmor)item;
-                  ((ArrayList)list.get(itemArmor.armorType)).add(stack);
+                  ((ArrayList)list.get(((ItemArmor)item).armorType)).add(stack);
                }
             }
          }
@@ -463,8 +445,7 @@ public class InventoryUtil implements MC {
                if (stack2 != null) {
                   Item item2 = stack2.getItem();
                   if (item2 instanceof ItemArmor) {
-                     ItemArmor itemArmor2 = (ItemArmor)item2;
-                     ((ArrayList)list.get(itemArmor2.armorType)).add(stack2);
+                     ((ArrayList)list.get(((ItemArmor)item2).armorType)).add(stack2);
                   }
                }
             }
@@ -536,16 +517,13 @@ public class InventoryUtil implements MC {
                for (ItemStack stack7 : (Iterable<ItemStack>)(list8)) {
                   boolean flag3 = false;
                   if (flag && stack7 != null && stack7.getItem() instanceof ItemArmor) {
-                     ItemArmor item3 = (ItemArmor)stack7.getItem();
-                     ItemStack stack8 = (ItemStack)list6.get(item3.armorType);
-                     if (stack8 != null) {
+                     if (((ItemStack)list6.get(((ItemArmor)stack7.getItem()).armorType)) != null) {
                         flag3 = true;
                      }
                   }
 
                   Int2IntOpenHashMap int2IntOpenHashMap = (Int2IntOpenHashMap)(map.computeIfAbsent(stack7, obj -> new Int2IntOpenHashMap()));
-                  boolean flag4 = false;
-                  f3 += getArmorExtraScore(int2IntOpenHashMap, stack7, flag3, flag4);
+                  f3 += getArmorExtraScore(int2IntOpenHashMap, stack7, flag3, false);
                }
 
                if (f3 > f2) {
@@ -573,10 +551,7 @@ public class InventoryUtil implements MC {
                                  && (item5.getArmorMaterial().equals(ItemArmor.ArmorMaterial.GOLD) || item5.getArmorMaterial().equals(ItemArmor.ArmorMaterial.IRON))
                         )) {
                         Int2IntOpenHashMap int2IntOpenHashMap3 = (Int2IntOpenHashMap)(map.computeIfAbsent(stack10, obj3 -> new Int2IntOpenHashMap()));
-                        boolean flag5 = true;
-                        float armorExtraScore = getArmorExtraScore(int2IntOpenHashMap2, stack9, flag, flag5);
-                        boolean flag6 = true;
-                        if (armorExtraScore == getArmorExtraScore(int2IntOpenHashMap3, stack10, flag, flag6)) {
+                        if (getArmorExtraScore(int2IntOpenHashMap2, stack9, flag, true) == getArmorExtraScore(int2IntOpenHashMap3, stack10, flag, true)) {
                            list9.add(stack10);
                         }
                      }
@@ -593,8 +568,7 @@ public class InventoryUtil implements MC {
          for (int k = n; k < n2; k++) {
             ItemStack stack11 = container.getSlot(k).getStack();
             if (stack11 != null) {
-               Item item6 = stack11.getItem();
-               if (item6 instanceof ItemArmor && list7.contains(stack11)) {
+               if (stack11.getItem() instanceof ItemArmor && list7.contains(stack11)) {
                   list10.add(k);
                }
             }
@@ -610,8 +584,7 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item.equals(Items.mushroom_stew)) {
+            if (stack.getItem().equals(Items.mushroom_stew)) {
                list.add(new TuplePair(getItemScore(stack), i));
             }
          }
@@ -626,9 +599,7 @@ public class InventoryUtil implements MC {
       ArrayList list = new ArrayList();
       List list2 = ContainerSlotQuery.of(container).fromSlot(n).filterItemExact(item).toSlotIndexList();
       if (list2.isEmpty()) {
-         ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(container).fromSlot(n);
-         Item bucket = Items.bucket;
-         list2 = containerSlotQuery.filterItemExact(bucket).toSlotIndexList();
+         list2 = ContainerSlotQuery.of(container).fromSlot(n).filterItemExact(Items.bucket).toSlotIndexList();
       }
 
       for (int n2 : (Iterable<Integer>)(list2)) {
@@ -665,8 +636,7 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedAxes(Container container, int n) {
-      Object obj = null;
-      return getSortedAxes(container, n, (ArrayList)obj);
+      return getSortedAxes(container, n, (ArrayList)null);
    }
 
    public static ArrayList findBestArmorSetFromList(List list, boolean flag) {
@@ -680,8 +650,7 @@ public class InventoryUtil implements MC {
          if (stack != null) {
             Item item = stack.getItem();
             if (item instanceof ItemArmor) {
-               ItemArmor itemArmor = (ItemArmor)item;
-               ((ArrayList)list2.get(itemArmor.armorType)).add(stack);
+               ((ArrayList)list2.get(((ItemArmor)item).armorType)).add(stack);
             }
          }
       }
@@ -752,16 +721,13 @@ public class InventoryUtil implements MC {
                for (ItemStack stack6 : (Iterable<ItemStack>)(list9)) {
                   boolean flag2 = false;
                   if (flag && stack6 != null && stack6.getItem() instanceof ItemArmor) {
-                     ItemArmor item2 = (ItemArmor)stack6.getItem();
-                     ItemStack stack7 = (ItemStack)list7.get(item2.armorType);
-                     if (stack7 != null) {
+                     if (((ItemStack)list7.get(((ItemArmor)stack6.getItem()).armorType)) != null) {
                         flag2 = true;
                      }
                   }
 
                   Int2IntOpenHashMap int2IntOpenHashMap = (Int2IntOpenHashMap)(map.computeIfAbsent(stack6, obj -> new Int2IntOpenHashMap()));
-                  boolean flag3 = false;
-                  f3 += getArmorExtraScore(int2IntOpenHashMap, stack6, flag2, flag3);
+                  f3 += getArmorExtraScore(int2IntOpenHashMap, stack6, flag2, false);
                }
 
                if (f3 > f2) {
@@ -789,10 +755,7 @@ public class InventoryUtil implements MC {
                                  && (item4.getArmorMaterial().equals(ItemArmor.ArmorMaterial.GOLD) || item4.getArmorMaterial().equals(ItemArmor.ArmorMaterial.IRON))
                         )) {
                         Int2IntOpenHashMap int2IntOpenHashMap3 = (Int2IntOpenHashMap)(map.computeIfAbsent(stack9, obj3 -> new Int2IntOpenHashMap()));
-                        boolean flag4 = true;
-                        float armorExtraScore = getArmorExtraScore(int2IntOpenHashMap2, stack8, flag, flag4);
-                        boolean flag5 = true;
-                        if (armorExtraScore == getArmorExtraScore(int2IntOpenHashMap3, stack9, flag, flag5)) {
+                        if (getArmorExtraScore(int2IntOpenHashMap2, stack8, flag, true) == getArmorExtraScore(int2IntOpenHashMap3, stack9, flag, true)) {
                            list10.add(stack9);
                         }
                      }
@@ -814,10 +777,8 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemPickaxe) {
-               boolean flag = true;
-               list2.add(new TuplePair(getItemScore(stack, flag), i));
+            if (stack.getItem() instanceof ItemPickaxe) {
+               list2.add(new TuplePair(getItemScore(stack, true), i));
             }
          }
       }
@@ -827,13 +788,11 @@ public class InventoryUtil implements MC {
    }
 
    public static List getSortedLavaBuckets(Container container, int n) {
-      Item lavaBucket = Items.lava_bucket;
-      return getSortedBuckets(container, n, lavaBucket);
+      return getSortedBuckets(container, n, Items.lava_bucket);
    }
 
    public static List getSortedWaterBuckets(Container container, int n) {
-      Item waterBucket = Items.water_bucket;
-      return getSortedBuckets(container, n, waterBucket);
+      return getSortedBuckets(container, n, Items.water_bucket);
    }
 
    public static ArrayList getBestToolSlots(Container container, int n) {
@@ -854,10 +813,7 @@ public class InventoryUtil implements MC {
             exitBlock:
             if (item instanceof ItemHoe) {
                if (stack4 != null) {
-                  boolean flag = true;
-                  double itemScore = getItemScore(stack5, flag);
-                  boolean flag2 = true;
-                  if (!(itemScore > getItemScore(stack4, flag2))) {
+                  if (!(getItemScore(stack5, true) > getItemScore(stack4, true))) {
                      break exitBlock;
                   }
                }
@@ -869,10 +825,7 @@ public class InventoryUtil implements MC {
             if (item instanceof ItemTool) {
                if (item instanceof ItemAxe) {
                   if (stack != null) {
-                     boolean flag3 = true;
-                     double itemScore2 = getItemScore(stack5, flag3);
-                     boolean flag4 = true;
-                     if (!(itemScore2 > getItemScore(stack, flag4))) {
+                     if (!(getItemScore(stack5, true) > getItemScore(stack, true))) {
                         continue;
                      }
                   }
@@ -881,10 +834,7 @@ public class InventoryUtil implements MC {
                   n2 = i;
                } else if (item instanceof ItemPickaxe) {
                   if (stack2 != null) {
-                     boolean flag5 = true;
-                     double itemScore3 = getItemScore(stack5, flag5);
-                     boolean flag6 = true;
-                     if (!(itemScore3 > getItemScore(stack2, flag6))) {
+                     if (!(getItemScore(stack5, true) > getItemScore(stack2, true))) {
                         continue;
                      }
                   }
@@ -893,10 +843,7 @@ public class InventoryUtil implements MC {
                   n3 = i;
                } else if (item instanceof ItemSpade) {
                   if (stack3 != null) {
-                     boolean flag7 = true;
-                     double itemScore4 = getItemScore(stack5, flag7);
-                     boolean flag8 = true;
-                     if (!(itemScore4 > getItemScore(stack3, flag8))) {
+                     if (!(getItemScore(stack5, true) > getItemScore(stack3, true))) {
                         continue;
                      }
                   }
@@ -926,9 +873,7 @@ public class InventoryUtil implements MC {
       for (ItemStack stack : (Iterable<ItemStack>)(list)) {
          if (stack != null && stack.getItem() instanceof ItemArmor) {
             float f2 = 0.0F;
-            int effectId = Enchantment.protection.effectId;
-            Int2IntOpenHashMap int2IntOpenHashMap = (Int2IntOpenHashMap)(map.computeIfAbsent(stack, obj -> new Int2IntOpenHashMap()));
-            int cachedEnchantmentLevel = getCachedEnchantmentLevel(effectId, stack, int2IntOpenHashMap);
+            int cachedEnchantmentLevel = getCachedEnchantmentLevel(Enchantment.protection.effectId, stack, (Int2IntOpenHashMap)(map.computeIfAbsent(stack, obj -> new Int2IntOpenHashMap())));
             if (cachedEnchantmentLevel > 0) {
                int damageModifier = EnchantmentHelper.enchantmentModifierDamage.getDamageModifier(Enchantment.protection, cachedEnchantmentLevel);
                f2 = (float)(damageModifier + 1 >> 1) + (float)((damageModifier >> 1) + 1) / 2.0F;
@@ -943,9 +888,7 @@ public class InventoryUtil implements MC {
       }
 
       if (n > 0) {
-         int n2 = 25 - n;
-         float f3 = f * (float)n2;
-         f = f3 / 25.0F;
+         f = (f * (float)(25 - n)) / 25.0F;
       }
 
       return f;
@@ -1024,10 +967,8 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemAxe) {
-               boolean flag = true;
-               list2.add(new TuplePair(getItemScore(stack, flag), i));
+            if (stack.getItem() instanceof ItemAxe) {
+               list2.add(new TuplePair(getItemScore(stack, true), i));
             }
          }
       }
@@ -1037,15 +978,12 @@ public class InventoryUtil implements MC {
    }
 
    public static double getItemScore(ItemStack stack) {
-      boolean flag = false;
-      return getItemScore(stack, flag);
+      return getItemScore(stack, false);
    }
 
    private static int getProtectionModifier(HashMap map, ItemStack stack) {
       EnchantmentHelper.enchantmentModifierDamage.source = DamageSource.anvil;
-      int effectId = Enchantment.protection.effectId;
-      Int2IntOpenHashMap int2IntOpenHashMap = (Int2IntOpenHashMap)(map.computeIfAbsent(stack, obj -> new Int2IntOpenHashMap()));
-      int cachedEnchantmentLevel = getCachedEnchantmentLevel(effectId, stack, int2IntOpenHashMap);
+      int cachedEnchantmentLevel = getCachedEnchantmentLevel(Enchantment.protection.effectId, stack, (Int2IntOpenHashMap)(map.computeIfAbsent(stack, obj -> new Int2IntOpenHashMap())));
       if (cachedEnchantmentLevel > 0) {
          int damageModifier = EnchantmentHelper.enchantmentModifierDamage.getDamageModifier(Enchantment.protection, cachedEnchantmentLevel);
          return (int)((float)(damageModifier + 1 >> 1) + (float)((damageModifier >> 1) + 1) / 2.0F);
@@ -1073,17 +1011,11 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList findBestArmorSetExcludingEquipped(Container container, int n, boolean flag) {
-      int size = container.inventorySlots.size();
-      boolean flag2 = false;
-      int n2 = size;
-      return findBestArmorSet(container, n, n2, flag, flag2);
+      return findBestArmorSet(container, n, container.inventorySlots.size(), flag, false);
    }
 
    public static ArrayList findBestArmorSetIncludingEquipped(Container container, int n, boolean flag) {
-      int size = container.inventorySlots.size();
-      boolean flag2 = true;
-      int n2 = size;
-      return findBestArmorSet(container, n, n2, flag, flag2);
+      return findBestArmorSet(container, n, container.inventorySlots.size(), flag, true);
    }
 
    public static double getItemScore(ItemStack stack, boolean flag) {
@@ -1111,8 +1043,7 @@ public class InventoryUtil implements MC {
                }
 
                d += (double)(d > 1.0 ? EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack) : 0);
-               ItemTool itemTool = (ItemTool)item;
-               if (itemTool.getToolMaterial() == Item.ToolMaterial.GOLD) {
+               if (((ItemTool)item).getToolMaterial() == Item.ToolMaterial.GOLD) {
                   d -= 7.0;
                }
 
@@ -1165,8 +1096,7 @@ public class InventoryUtil implements MC {
             }
 
             if (item instanceof ItemBlock) {
-               boolean flag2 = true;
-               if (BlockUtil.isValidScaffoldBlock(stack, flag2)) {
+               if (BlockUtil.isValidScaffoldBlock(stack, true)) {
                   return d + (double)stack.stackSize;
                }
             }
@@ -1208,13 +1138,11 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedPickaxes(Container container, int n) {
-      Object obj = null;
-      return getSortedPickaxes(container, n, (ArrayList)obj);
+      return getSortedPickaxes(container, n, (ArrayList)null);
    }
 
    public static ArrayList getSortedBlocks(Container container, int n) {
-      int size = container.inventorySlots.size();
-      return getSortedBlocks(container, n, size);
+      return getSortedBlocks(container, n, container.inventorySlots.size());
    }
 
    public static String getItemCategoryName(ItemStack stack) {
@@ -1238,8 +1166,7 @@ public class InventoryUtil implements MC {
             return "Food";
          } else {
             if (item instanceof ItemBlock) {
-               boolean flag = true;
-               if (BlockUtil.isValidScaffoldBlock(stack, flag)) {
+               if (BlockUtil.isValidScaffoldBlock(stack, true)) {
                   return "Blocks";
                }
             }
@@ -1255,8 +1182,7 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemEnderPearl) {
+            if (stack.getItem() instanceof ItemEnderPearl) {
                list.add(new TuplePair(getItemScore(stack), i));
             }
          }
@@ -1275,12 +1201,10 @@ public class InventoryUtil implements MC {
          if (stack != null) {
             Item item = stack.getItem();
             if (item instanceof ItemPotion) {
-               ItemPotion itemPotion = (ItemPotion)item;
-               List effects = itemPotion.getEffects(stack);
+               List effects = ((ItemPotion)item).getEffects(stack);
                if (effects != null && !effects.isEmpty()) {
                   PotionEffect potionEffect = (PotionEffect)effects.get(0);
-                  Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
-                  if (!potion.isBadEffect()) {
+                  if (!Potion.potionTypes[potionEffect.getPotionID()].isBadEffect()) {
                      list.add(i);
                   }
                }
@@ -1309,8 +1233,7 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedBows(Container container, int n) {
-      Object obj = null;
-      return getSortedBows(container, n, (ArrayList)obj);
+      return getSortedBows(container, n, (ArrayList)null);
    }
 
    private static float getTotalArmorDefense(ArrayList list) {
@@ -1318,8 +1241,7 @@ public class InventoryUtil implements MC {
 
       for (ItemStack stack : (Iterable<ItemStack>)(list)) {
          if (stack != null && stack.getItem() instanceof ItemArmor) {
-            ItemArmor item = (ItemArmor)stack.getItem();
-            float damageReduceAmount = (float)item.damageReduceAmount;
+            float damageReduceAmount = (float)((ItemArmor)stack.getItem()).damageReduceAmount;
             f += damageReduceAmount;
          }
       }
@@ -1382,8 +1304,7 @@ public class InventoryUtil implements MC {
             } else if (item instanceof ItemSnowball || item instanceof ItemEgg) {
                return 7;
             } else if (item instanceof ItemArmor) {
-               ItemArmor itemArmor = (ItemArmor)item;
-               return itemArmor.armorType + 8;
+               return ((ItemArmor)item).armorType + 8;
             } else if (item instanceof ItemFood) {
                return item.equals(Items.golden_apple) ? 12 : 13;
             } else if (item instanceof ItemEnderPearl) {
@@ -1398,8 +1319,7 @@ public class InventoryUtil implements MC {
    }
 
    public static ArrayList getSortedFishingRods(Container container, int n) {
-      Object obj = null;
-      return getSortedFishingRods(container, n, (ArrayList)obj);
+      return getSortedFishingRods(container, n, (ArrayList)null);
    }
 
    public static List shuffleSlots(List list) {
@@ -1413,10 +1333,8 @@ public class InventoryUtil implements MC {
       for (int i = n; i < container.inventorySlots.size(); i++) {
          ItemStack stack = container.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item instanceof ItemShears) {
-               boolean flag = true;
-               list2.add(new TuplePair(getItemScore(stack, flag), i));
+            if (stack.getItem() instanceof ItemShears) {
+               list2.add(new TuplePair(getItemScore(stack, true), i));
             }
          }
       }
@@ -1453,9 +1371,7 @@ public class InventoryUtil implements MC {
       }
 
       if (n > 0) {
-         int n2 = 25 - n;
-         float f2 = f * (float)n2;
-         f = f2 / 25.0F;
+         f = (f * (float)(25 - n)) / 25.0F;
       }
 
       return f;

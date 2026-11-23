@@ -39,8 +39,7 @@ public class EventLiquidJump extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      LiquidJumpListener listener = (LiquidJumpListener)obj;
-      this.call2(listener);
+      this.call2((LiquidJumpListener)obj);
    }
 
    public void setWaterMotionY(double d) {

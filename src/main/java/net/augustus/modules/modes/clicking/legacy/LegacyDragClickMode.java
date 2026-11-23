@@ -8,8 +8,8 @@ import net.augustus.utils.combat.CombatOptimizationUtil;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 import net.augustus.modules.Module;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MovingObjectPosition;
 
@@ -18,29 +18,22 @@ public class LegacyDragClickMode extends AbstractLegacyClickMode {
    private final RandomizedRangeSettings dragCPSInAirRecalculateTickDelay;
    private final RandomizedRangeSettings dragMaxCPS;
    private final RandomizedRangeSettings dragMaxCPSRecalculateTickDelay;
-   private final StringValue dragMinStandardDeviation;
+   private final DoubleValue dragMinStandardDeviation;
    private final ActionRateAccumulator actionRateAccumulator;
    private final ArrayList recentClickCounts;
    private final TickCounter maxCpsRecalcCounter;
    private final TickCounter airCpsRecalcCounter;
 
-   public LegacyDragClickMode(Module module, DoubleValue doubleValue) {
+   public LegacyDragClickMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "DragClick");
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(this.parentModule, "DragCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, this.modeSetting);
-      String str = "CPSInAir";
-      this.dragCPSInAir = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
+      this.dragCPSInAir = (RandomizedRangeSettings)new RandomizedRangeSettings(this.parentModule, "DragCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, this.modeSetting).withDisplayNamePrefix("CPSInAir");
       RandomizedRangeSettings randomizedRangeSettings2 = new RandomizedRangeSettings(this.parentModule, "DragCPSInAirRecalculateTickDelay", 10.0, 30.0, 0.0, 60.0, 0, this.modeSetting);
-      String str2 = "CPSInAirRecalculateTickDelay";
-      this.dragCPSInAirRecalculateTickDelay = ((RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix(str2)).withoutNotInARow();
+      this.dragCPSInAirRecalculateTickDelay = ((RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix("CPSInAirRecalculateTickDelay")).withoutNotInARow();
       randomizedRangeSettings2 = new RandomizedRangeSettings(this.parentModule, "DragMaxCPS", 18.0, 20.0, 1.0, 40.0, 0, this.modeSetting);
-      String str3 = "MaxCPS";
-      this.dragMaxCPS = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix(str3);
+      this.dragMaxCPS = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix("MaxCPS");
       randomizedRangeSettings2 = (new RandomizedRangeSettings(this.parentModule, "DragMaxCPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, this.modeSetting)).withoutNotInARow();
-      String str4 = "MaxCPSRecalculateTickDelay";
-      this.dragMaxCPSRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix(str4);
-      StringValue stringValue = new StringValue(this.parentModule, "DragMinStandardDeviation", 0.5, 0.0, 1.0, 2, this.modeSetting);
-      String str5 = "MinStandardDeviation";
-      this.dragMinStandardDeviation = stringValue.named(str5);
+      this.dragMaxCPSRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withDisplayNamePrefix("MaxCPSRecalculateTickDelay");
+      this.dragMinStandardDeviation = new DoubleValue(this.parentModule, "DragMinStandardDeviation", 0.5, 0.0, 1.0, 2, this.modeSetting).named("MinStandardDeviation");
       this.actionRateAccumulator = new ActionRateAccumulator(20, 0.0);
       this.recentClickCounts = new ArrayList();
       this.maxCpsRecalcCounter = new TickCounter();
@@ -54,20 +47,13 @@ public class LegacyDragClickMode extends AbstractLegacyClickMode {
       if (this.recentClickCounts.size() < 5) {
          n = 1;
       } else {
-         TickCounter maxCpsRecalcCounter2 = this.maxCpsRecalcCounter;
-         int lastIntValue = this.dragMaxCPSRecalculateTickDelay.getLastIntValue();
-         if (maxCpsRecalcCounter2.hasReached2(lastIntValue)) {
+         if (this.maxCpsRecalcCounter.hasReached2(this.dragMaxCPSRecalculateTickDelay.getLastIntValue())) {
             this.maxCpsRecalcCounter.reset();
             this.dragMaxCPSRecalculateTickDelay.nextSecureValue();
             this.dragMaxCPS.nextSecureValue();
          }
 
-         ArrayList recentClickCounts2 = this.recentClickCounts;
-         double value = this.dragMinStandardDeviation.getValue();
-         double lastIntValue2 = (double)this.dragMaxCPS.getLastIntValue();
-         double d = value;
-         byte b = 21;
-         n = CombatOptimizationUtil.chooseOptimalClickCount(recentClickCounts2, b, d, lastIntValue2);
+         n = CombatOptimizationUtil.chooseOptimalClickCount(this.recentClickCounts, (byte)21, this.dragMinStandardDeviation.getValue(), (double)this.dragMaxCPS.getLastIntValue());
       }
 
       if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks()) {
@@ -75,17 +61,13 @@ public class LegacyDragClickMode extends AbstractLegacyClickMode {
       }
 
       if (objectMouseOver == null || objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
-         TickCounter airCpsRecalcCounter2 = this.airCpsRecalcCounter;
-         int lastIntValue3 = this.dragCPSInAirRecalculateTickDelay.getLastIntValue();
-         if (airCpsRecalcCounter2.hasReached2(lastIntValue3)) {
+         if (this.airCpsRecalcCounter.hasReached2(this.dragCPSInAirRecalculateTickDelay.getLastIntValue())) {
             this.airCpsRecalcCounter.reset();
             this.dragCPSInAirRecalculateTickDelay.nextSecureValue();
             this.dragCPSInAir.nextSecureValue();
          }
 
-         ActionRateAccumulator actionRateAccumulator2 = this.actionRateAccumulator;
-         int lastIntValue4 = this.dragCPSInAir.getLastIntValue();
-         n = actionRateAccumulator2.accumulate(lastIntValue4);
+         n = this.actionRateAccumulator.accumulate(this.dragCPSInAir.getLastIntValue());
       }
 
       this.recentClickCounts.add(n);
@@ -118,7 +100,7 @@ public class LegacyDragClickMode extends AbstractLegacyClickMode {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new LegacyDragClickMode((Module)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new LegacyDragClickMode((Module)obj, (SettingGroup)obj2);
    }
 
 }

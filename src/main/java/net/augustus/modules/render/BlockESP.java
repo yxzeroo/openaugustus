@@ -34,8 +34,8 @@ import net.augustus.events.listeners.RenderBlockListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.listeners.BlockChangeListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -46,10 +46,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.ChunkCoordIntPair;
 
 public class BlockESP extends Module implements RenderListener, RenderBlockListener, TickListener, LoadWorldListener, ChunkUnloadListener, BlockChangeListener {
-   private final BooleansSetting mode;
+   private final StringValue mode;
    private final BooleanValue oneColor;
    public final ColorSetting color2;
-   public final StringValue lineWidth;
+   public final DoubleValue lineWidth;
    public final BlurShadowSettings blurShadowSettings;
    private static final HashMap BLOCK_OPTIONS = new HashMap();
    private static final Map TRACKED_BLOCK_CUBES = Maps.newConcurrentMap();
@@ -61,25 +61,18 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
 
    public BlockESP() {
        super("BlockESP", "BlockDurchWandSehen", new Color(171, 9, 41), Categorys.RENDER);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Mode", "Old", new String[]{"Old", "New"});
-      SettingChangeListener listener = () -> this.onRenderModeChanged();
-      SettingChangeListener listener2 = listener;
-      this.mode = (BooleansSetting)booleansSetting.withChangeListener(listener2);
+      this.mode = (StringValue)new StringValue(this, "Mode", "Old", new String[]{"Old", "New"}).withChangeListener(() -> this.onRenderModeChanged());
       this.oneColor = new BooleanValue(this, "OneColor", true);
       ColorSetting colorSetting = new ColorSetting(this, "Color", new Color(21, 121, 230, 65));
       BooleanValue oneColor2 = this.oneColor;
       this.oneColor.getClass();
-      BooleanValue booleanValue = oneColor2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.color2 = (ColorSetting)colorSetting.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "LineWidth", 6.0, 0.0, 15.0, 0);
+      this.color2 = (ColorSetting)colorSetting.withVisibility(() -> oneColor2.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "LineWidth", 6.0, 0.0, 15.0, 0);
       SettingVisibilityCondition condition2 = () -> {
          return this.mode.getSelectedValue().equals("Old");
       };
       this.lineWidth = stringValue.visibleWhen(condition2);
-      BlurShadowSettings blurShadowSettings2 = (new BlurShadowSettings(this)).disableBlurByDefault();
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.blurShadowSettings = (new BlurShadowSettings(this)).disableBlurByDefault().withCustomShadowColor(Color.black);
       this.lastColorUpdateMs = 0L;
       this.cubeVboBatchRenderer = new CubeVboBatchRenderer(200);
       this.needsRendererReload = false;
@@ -112,18 +105,12 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 30;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
-      byte b5 = 64;
-      this.toggleEventSubscription(b5);
-      byte b6 = 55;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)30);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)64);
+      this.toggleEventSubscription((byte)55);
    }
 
    @Override
@@ -139,8 +126,7 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
       BlockPos blockPos = event.getBlockPos();
       if (TRACKED_BLOCK_CUBES.containsKey(blockPos)) {
          IBlockState blockState = event.getBlockState();
-         boolean flag = blockState != null && !((BlockEspBlockOption)BLOCK_OPTIONS.get(blockState.getBlock())).selected;
-         if (flag) {
+         if (blockState != null && !((BlockEspBlockOption)BLOCK_OPTIONS.get(blockState.getBlock())).selected) {
             PacketThreadUtil.runOnMainThreadImmediate(() -> this.handleBlockRemoved(blockPos));
          }
       }
@@ -186,11 +172,8 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
             this.lastColorUpdateMs = l;
          }
 
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
-         RenderPassTask renderPassTask = shaderRenderPass -> this.renderTrackedBlocksPass(flag, flag2, shaderRenderPass);
-         boolean flag3 = true;
-         BlurShadowManager.submitRenderTask(flag3, renderPassTask);
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.submitRenderTask(true, shaderRenderPass -> this.renderTrackedBlocksPass(flag, flag2, shaderRenderPass));
          RenderUtil.end3DRender();
       }
    }
@@ -200,8 +183,7 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
       HashSet set = (HashSet)BLOCKS_BY_CHUNK.get(l);
       if (set != null) {
          for (BlockPos pos : (Iterable<BlockPos>)(set)) {
-            boolean flag = false;
-            this.removeTrackedBlockEntry(pos, flag);
+            this.removeTrackedBlockEntry(pos, false);
          }
 
          BLOCKS_BY_CHUNK.remove(l);
@@ -215,8 +197,7 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
    }
 
    private void removeTrackedBlock(BlockPos pos) {
-      boolean flag = true;
-      this.removeTrackedBlockEntry(pos, flag);
+      this.removeTrackedBlockEntry(pos, true);
    }
 
    private void removeTrackedBlockEntry(BlockPos pos, boolean flag) {
@@ -268,12 +249,7 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
                   f *= (float)d;
                }
 
-               BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-               int n3 = ColorUtil.resolvePassColor(shaderRenderPass, n2);
-               int n4 = blurShadowSettings2.resolvePassColor(shaderRenderPass, n3, n);
-               float f2 = 1.0F;
-               int n5 = n4;
-               RenderUtil.drawBlockEspBox(pos, n5, f2, f);
+               RenderUtil.drawBlockEspBox(pos, this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n2), n), 1.0F, f);
                n++;
             }
          }
@@ -285,8 +261,7 @@ public class BlockESP extends Module implements RenderListener, RenderBlockListe
             BlockPos key = (BlockPos)entry.getKey();
             if (value != null) {
                if (flag2) {
-                  int n6 = this.oneColor.getValue() ? this.color2.getColorInt(n) : ((BlockEspBlockOption)TRACKED_BLOCK_OPTIONS.get(key)).colorSetting.getColorInt(n);
-                  value.setColor(n6).flushIfDirty();
+                  value.setColor(this.oneColor.getValue() ? this.color2.getColorInt(n) : ((BlockEspBlockOption)TRACKED_BLOCK_OPTIONS.get(key)).colorSetting.getColorInt(n)).flushIfDirty();
                }
 
                n++;

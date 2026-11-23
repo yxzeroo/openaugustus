@@ -85,8 +85,7 @@ public class UnicodeFont implements Font {
 
    public UnicodeFont(String ttfFileRef, HieroSettings settings) throws SlickException {
       this.ttfFileRef = ttfFileRef;
-      java.awt.Font font = createFont(ttfFileRef);
-      this.initializeFont(font, settings.getFontSize(), settings.isBold(), settings.isItalic());
+      this.initializeFont(createFont(ttfFileRef), settings.getFontSize(), settings.isBold(), settings.isItalic());
       this.loadSettings(settings);
    }
 
@@ -129,8 +128,7 @@ public class UnicodeFont implements Font {
       this.descent = metrics.getDescent();
       this.leading = metrics.getLeading();
       char[] chars = " ".toCharArray();
-      GlyphVector vector = this.font.layoutGlyphVector(GlyphPage.renderContext, chars, 0, chars.length, 0);
-      this.spaceWidth = vector.getGlyphLogicalBounds(0).getBounds().width;
+      this.spaceWidth = this.font.layoutGlyphVector(GlyphPage.renderContext, chars, 0, chars.length, 0).getGlyphLogicalBounds(0).getBounds().width;
    }
 
    private void loadSettings(HieroSettings settings) {
@@ -475,8 +473,7 @@ public class UnicodeFont implements Font {
          int glyphIndex = 0;
 
          for (int n = vector.getNumGlyphs(); glyphIndex < n; glyphIndex++) {
-            int charIndex = vector.getGlyphCharIndex(glyphIndex);
-            int codePoint = text.codePointAt(charIndex);
+            int codePoint = text.codePointAt(vector.getGlyphCharIndex(glyphIndex));
             Rectangle bounds = this.getGlyphBounds(vector, glyphIndex, codePoint);
             if (startNewLine && codePoint != 10) {
                extraX = -bounds.x;
@@ -516,8 +513,7 @@ public class UnicodeFont implements Font {
          int i = 0;
 
          for (int n = vector.getNumGlyphs(); i < n; i++) {
-            int charIndex = vector.getGlyphCharIndex(i);
-            int codePoint = text.codePointAt(charIndex);
+            int codePoint = text.codePointAt(vector.getGlyphCharIndex(i));
             if (codePoint != 32) {
                Rectangle bounds = this.getGlyphBounds(vector, i, codePoint);
                height = Math.max(height, this.ascent + bounds.y + bounds.height);

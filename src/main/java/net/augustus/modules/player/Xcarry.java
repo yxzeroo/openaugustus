@@ -23,15 +23,13 @@ public class Xcarry extends Module implements PacketListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onPacket2(EventPacket event) {
       if (event.getPacket() instanceof C0DPacketCloseWindow) {
-         C0DPacketCloseWindow packet = (C0DPacketCloseWindow)event.getPacket();
-         if (packet.getWindowId() == mc.thePlayer.openContainer.windowId) {
+         if (((C0DPacketCloseWindow)event.getPacket()).getWindowId() == mc.thePlayer.openContainer.windowId) {
             event.cancel();
          }
       }

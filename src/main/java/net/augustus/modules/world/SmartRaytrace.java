@@ -52,12 +52,7 @@ public class SmartRaytrace extends Module {
             }
 
             if (flag) {
-               Minecraft mc2 = mc;
-               RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-               int n = list.size() - 1;
-               byte b = 0;
-               MovingObjectPosition hit2 = (MovingObjectPosition)list.get(instance.nextInt2(b, n));
-               mc2.objectMouseOver = hit2;
+               mc.objectMouseOver = (MovingObjectPosition)list.get(DefaultRandomGenerator.instance.nextInt2((byte)0, list.size() - 1));
             }
 
             if (hit != null && !flag) {

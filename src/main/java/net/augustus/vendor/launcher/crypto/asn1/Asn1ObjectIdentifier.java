@@ -72,8 +72,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
       byte[] bytes = new byte[n * 5 + 1];
       int n2;
       if (ints[1] < 2147483647 - ints[0] * 40) {
-         int n3 = ints[0] * 40 + ints[1];
-         n2 = b + pack7Oid2(n3, bytes, b);
+         n2 = b + pack7Oid2(ints[0] * 40 + ints[1], bytes, b);
       } else {
          BigInteger bigInt = BigInteger.valueOf((long)ints[1]);
          bigInt = bigInt.add(BigInteger.valueOf((long)(ints[0] * 40)));
@@ -85,8 +84,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
          n2 += pack7Oid2(n4, bytes, n2);
       }
 
-      byte[] bytes2 = new byte[n2];
-      this.encoding = bytes2;
+      this.encoding = new byte[n2];
       System.arraycopy(bytes, 0, this.encoding, 0, n2);
    }
 
@@ -98,19 +96,13 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
    public Asn1ObjectIdentifier(Asn1DerInputBuffer asn1DerInputBuffer) throws IOException {
        super();
-      Object obj = null;
-      this.encoding = (byte[])obj;
-      Object obj2 = null;
-      this.components = obj2;
-      byte b = -1;
-      this.componentLen = b;
-      boolean flag = false;
-      this.componentsCalculated = flag;
+      this.encoding = (byte[])null;
+      this.components = null;
+      this.componentLen = (byte)-1;
+      this.componentsCalculated = false;
       Asn1DerInputStream asn1DerInputStream = new Asn1DerInputStream(asn1DerInputBuffer);
-      byte[] bytes = new byte[asn1DerInputStream.available()];
-      this.encoding = bytes;
-      byte[] encoding2 = this.encoding;
-      asn1DerInputStream.getBytes(encoding2);
+      this.encoding = new byte[asn1DerInputStream.available()];
+      asn1DerInputStream.getBytes(this.encoding);
       check(this.encoding);
    }
 
@@ -130,10 +122,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
          if ((this.encoding[i] & 128) == 0) {
             if (i - n2 + 1 > 4) {
                int n3 = i - n2 + 1;
-               byte b = 8;
-               byte b2 = 7;
-               int n4 = n3;
-               BigInteger bigInt = new BigInteger(pack(this.encoding, n2, n4, b2, b));
+               BigInteger bigInt = new BigInteger(pack(this.encoding, n2, n3, (byte)7, (byte)8));
                if (n2 == 0) {
                   ints[n++] = 2;
                   BigInteger bigInt2 = bigInt.subtract(BigInteger.valueOf(80L));
@@ -190,9 +179,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
    }
 
    private static int pack8(byte[] bytes, int n, int n2, byte[] bytes2, int n3) {
-      byte b = 8;
-      byte b2 = 7;
-      byte[] bytes3 = pack(bytes, n, n2, b2, b);
+      byte[] bytes3 = pack(bytes, n, n2, (byte)7, (byte)8);
       int n4 = bytes3.length - 1;
 
       for (int i = bytes3.length - 2; i >= 0; i--) {
@@ -207,14 +194,10 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
    public Asn1ObjectIdentifier(int[] ints) throws IOException {
        super();
-      Object obj = null;
-      this.encoding = (byte[])obj;
-      Object obj2 = null;
-      this.components = obj2;
-      byte b = -1;
-      this.componentLen = b;
-      boolean flag = false;
-      this.componentsCalculated = flag;
+      this.encoding = (byte[])null;
+      this.components = null;
+      this.componentLen = (byte)-1;
+      this.componentsCalculated = false;
       checkCount(ints.length);
       checkFirstComponent2(ints[0]);
       checkSecondComponent2(ints[0], ints[1]);
@@ -223,14 +206,11 @@ public final class Asn1ObjectIdentifier implements Serializable {
          checkOtherComponent(i, ints[i]);
       }
 
-      int length = ints.length;
-      this.init(ints, length);
+      this.init(ints, ints.length);
    }
 
    private static int pack7Oid(byte[] bytes, int n, int n2, byte[] bytes2, int n3) {
-      byte b = 7;
-      byte b2 = 8;
-      byte[] bytes3 = pack(bytes, n, n2, b2, b);
+      byte[] bytes3 = pack(bytes, n, n2, (byte)8, (byte)7);
       int n4 = bytes3.length - 1;
 
       for (int i = bytes3.length - 2; i >= 0; i--) {
@@ -250,12 +230,10 @@ public final class Asn1ObjectIdentifier implements Serializable {
       if (this.encoding == null) {
          int[] components2 = (int[])this.components;
          if (this.componentLen > components2.length) {
-            int length = components2.length;
-            this.componentLen = length;
+            this.componentLen = components2.length;
          }
 
-         int componentLen2 = this.componentLen;
-         this.init(components2, componentLen2);
+         this.init(components2, this.componentLen);
       }
    }
 
@@ -311,10 +289,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
                if (i - n + 1 > 4) {
                   int n2 = i - n + 1;
-                  byte b = 8;
-                  byte b2 = 7;
-                  int n3 = n2;
-                  BigInteger bigInt = new BigInteger(pack(this.encoding, n, n3, b2, b));
+                  BigInteger bigInt = new BigInteger(pack(this.encoding, n, n2, (byte)7, (byte)8));
                   if (n == 0) {
                      sb.append("2.");
                      sb.append(bigInt.subtract(BigInteger.valueOf(80L)));
@@ -357,14 +332,10 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
    public Asn1ObjectIdentifier(Asn1DerInputStream asn1DerInputStream) throws IOException {
        super();
-      Object obj = null;
-      this.encoding = (byte[])obj;
-      Object obj2 = null;
-      this.components = obj2;
-      byte b = -1;
-      this.componentLen = b;
-      boolean flag = false;
-      this.componentsCalculated = flag;
+      this.encoding = (byte[])null;
+      this.components = null;
+      this.componentLen = (byte)-1;
+      this.componentsCalculated = false;
       byte b2 = (byte)asn1DerInputStream.getByte();
       if (b2 != 6) {
          throw new IOException("ObjectIdentifier() -- data isn't an object ID (tag = " + b2 + ")");
@@ -373,27 +344,20 @@ public final class Asn1ObjectIdentifier implements Serializable {
          if (length > asn1DerInputStream.available()) {
             throw new IOException("ObjectIdentifier() -- length exceedsdata available.  Length: " + length + ", Available: " + asn1DerInputStream.available());
          } else {
-            byte[] bytes = new byte[length];
-            this.encoding = bytes;
-            byte[] encoding2 = this.encoding;
-            asn1DerInputStream.getBytes(encoding2);
+            this.encoding = new byte[length];
+            asn1DerInputStream.getBytes(this.encoding);
             check(this.encoding);
          }
       }
    }
 
    public void encode(Asn1DerOutputStream asn1DerOutputStream) throws IOException {
-      byte[] encoding2 = this.encoding;
-      byte b = 6;
-      asn1DerOutputStream.write(b, encoding2);
+      asn1DerOutputStream.write((byte)6, this.encoding);
    }
 
    private static int pack7Oid(BigInteger bigInt, byte[] bytes, int n) {
       byte[] bytes2 = bigInt.toByteArray();
-      int length = bytes2.length;
-      int n2 = length;
-      byte b = 0;
-      return pack7Oid(bytes2, b, n2, bytes, n);
+      return pack7Oid(bytes2, (byte)0, bytes2.length, bytes, n);
    }
 
    private static void checkFirstComponent(BigInteger bigInt) throws IOException {
@@ -404,15 +368,10 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
    public Asn1ObjectIdentifier(String str) throws IOException {
        super();
-      Object obj = null;
-      this.encoding = (byte[])obj;
-      Object obj2 = null;
-      this.components = obj2;
-      byte b = -1;
-      this.componentLen = b;
-      boolean flag = false;
-      this.componentsCalculated = flag;
-      byte b2 = 46;
+      this.encoding = (byte[])null;
+      this.components = null;
+      this.componentLen = (byte)-1;
+      this.componentsCalculated = false;
       int n = 0;
       int n2 = 0;
       byte[] bytes = new byte[str.length()];
@@ -424,7 +383,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
 
          int n5;
          do {
-            n5 = str.indexOf(b2, n);
+            n5 = str.indexOf((byte)46, n);
             int n6;
             if (n5 == -1) {
                obj3 = str.substring(n);
@@ -471,8 +430,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
          } while (n5 != -1);
 
          checkCount(n4);
-         byte[] bytes2 = new byte[n2];
-         this.encoding = bytes2;
+         this.encoding = new byte[n2];
          System.arraycopy(bytes, 0, this.encoding, 0, n2);
          this.stringForm = str;
       } catch (IOException e) {
@@ -492,10 +450,7 @@ public final class Asn1ObjectIdentifier implements Serializable {
    }
 
    private static int pack7Oid2(int n, byte[] bytes, int n2) {
-      byte[] bytes2 = new byte[]{(byte)(n >> 24), (byte)(n >> 16), (byte)(n >> 8), (byte)n};
-      byte b = 4;
-      byte b2 = 0;
-      return pack7Oid(bytes2, b2, b, bytes, n2);
+      return pack7Oid(new byte[]{(byte)(n >> 24), (byte)(n >> 16), (byte)(n >> 8), (byte)n}, (byte)0, (byte)4, bytes, n2);
    }
 
    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
@@ -503,15 +458,12 @@ public final class Asn1ObjectIdentifier implements Serializable {
          int[] ints = this.toIntArray();
          if (ints != null) {
             this.components = ints;
-            int length = ints.length;
-            this.componentLen = length;
+            this.componentLen = ints.length;
          } else {
-            HugeOidNotSupportedMarker theOne = HugeOidNotSupportedMarker.theOne;
-            this.components = theOne;
+            this.components = HugeOidNotSupportedMarker.theOne;
          }
 
-         boolean flag = true;
-         this.componentsCalculated = flag;
+         this.componentsCalculated = true;
       }
 
       objectOutputStream.defaultWriteObject();

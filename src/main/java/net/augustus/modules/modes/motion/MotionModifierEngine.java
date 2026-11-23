@@ -12,7 +12,7 @@ import net.augustus.utils.player.PlayerUtil;
 import java.util.HashMap;
 import net.augustus.modules.Module;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.augustus.utils.interfaces.MC;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -54,8 +54,7 @@ public class MotionModifierEngine {
       if (this.motionModifierRuleSettings.selfDamageMode.getSelectedValue().equals("3Jump") && this.threeJumpCounter < 4) {
          Packet packet = event.getPacket();
          if (packet instanceof C03PacketPlayer) {
-            C03PacketPlayer packet2 = (C03PacketPlayer)packet;
-            packet2.setOnGround(false);
+            ((C03PacketPlayer)packet).setOnGround(false);
          }
       }
    }
@@ -69,56 +68,42 @@ public class MotionModifierEngine {
          && this.damageConditionMet) {
          HashMap map = (HashMap)this.rulesByPhase.get("MoveEntity");
          if (event.getY() < 0.0) {
-            HashMap map2 = (HashMap)map.get("MotionYLessZero");
-            MotionModifierRuleSettings settings = (MotionModifierRuleSettings)map2.get("MotionYLessZero");
-            MotionModifierRuleSettings settings2 = settings;
-            this.applyMoveEntityRule(settings2, event);
+            this.applyMoveEntityRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYLessZero")).get("MotionYLessZero"), event);
          } else {
-            HashMap map3 = (HashMap)map.get("MotionYHigherZero");
-            MotionModifierRuleSettings settings3 = (MotionModifierRuleSettings)map3.get("MotionYHigherZero");
-            MotionModifierRuleSettings settings4 = settings3;
-            this.applyMoveEntityRule(settings4, event);
+            this.applyMoveEntityRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYHigherZero")).get("MotionYHigherZero"), event);
          }
 
          HashMap map4 = (HashMap)map.get("TicksOnGround");
          HashMap map5 = (HashMap)map.get("TicksInAir");
          if (MC.mc.thePlayer.onGround) {
             this.moveEntityGroundTicks++;
-            MotionModifierRuleSettings settings5 = (MotionModifierRuleSettings)map5.get(-1);
-            if (settings5.resetAtOppositeState.getValue()) {
+            if (((MotionModifierRuleSettings)map5.get(-1)).resetAtOppositeState.getValue()) {
                this.moveEntityAirTicks = -1;
             }
 
             if (this.moveEntityGroundTicks >= 0) {
                MotionModifierRuleSettings settings6 = (MotionModifierRuleSettings)map4.get(-1);
-               double moveEntityGroundTicks2 = (double)this.moveEntityGroundTicks;
-               if (moveEntityGroundTicks2 > settings6.resetTicksAt.getMaxValue() || (double)this.moveEntityGroundTicks < settings6.resetTicksAt.getMinValue() && this.moveEntityGroundLooped) {
+               if (((double)this.moveEntityGroundTicks) > settings6.resetTicksAt.getMaxValue() || (double)this.moveEntityGroundTicks < settings6.resetTicksAt.getMinValue() && this.moveEntityGroundLooped) {
                   this.moveEntityGroundTicks = (int)Math.max(0.0, settings6.resetTicksAt.getMinValue());
                   this.moveEntityGroundLooped = true;
                }
 
-               MotionModifierRuleSettings settings7 = (MotionModifierRuleSettings)map4.get(this.moveEntityGroundTicks);
-               MotionModifierRuleSettings settings8 = settings7;
-               this.applyMoveEntityRule(settings8, event);
+               this.applyMoveEntityRule((MotionModifierRuleSettings)map4.get(this.moveEntityGroundTicks), event);
             }
          } else {
             this.moveEntityAirTicks++;
-            MotionModifierRuleSettings settings9 = (MotionModifierRuleSettings)map4.get(-1);
-            if (settings9.resetAtOppositeState.getValue()) {
+            if (((MotionModifierRuleSettings)map4.get(-1)).resetAtOppositeState.getValue()) {
                this.moveEntityGroundTicks = -1;
             }
 
             if (this.moveEntityAirTicks >= 0) {
                MotionModifierRuleSettings settings10 = (MotionModifierRuleSettings)map5.get(-1);
-               double moveEntityAirTicks2 = (double)this.moveEntityAirTicks;
-               if (moveEntityAirTicks2 > settings10.resetTicksAt.getMaxValue() || (double)this.moveEntityAirTicks < settings10.resetTicksAt.getMinValue() && this.moveEntityAirLooped) {
+               if (((double)this.moveEntityAirTicks) > settings10.resetTicksAt.getMaxValue() || (double)this.moveEntityAirTicks < settings10.resetTicksAt.getMinValue() && this.moveEntityAirLooped) {
                   this.moveEntityAirTicks = (int)Math.max(0.0, settings10.resetTicksAt.getMinValue());
                   this.moveEntityAirLooped = true;
                }
 
-               MotionModifierRuleSettings settings11 = (MotionModifierRuleSettings)map5.get(this.moveEntityAirTicks);
-               MotionModifierRuleSettings settings12 = settings11;
-               this.applyMoveEntityRule(settings12, event);
+               this.applyMoveEntityRule((MotionModifierRuleSettings)map5.get(this.moveEntityAirTicks), event);
             }
          }
       }
@@ -152,7 +137,7 @@ public class MotionModifierEngine {
       this.onlyInWeb = new BooleanValue(this.ownerModule, "OnlyInWeb", false);
       this.onlyAtLadder = new BooleanValue(this.ownerModule, "OnlyAtLadder", false);
       this.waitForDamage = new BooleanValue(this.ownerModule, "WaitForDamage", false);
-      this.motionModifierRuleSettings = new MotionModifierRuleSettings(this.ownerModule, "SelfDamageSavings", new DoubleValue(module, "SelfDamageStart"), 0.0);
+      this.motionModifierRuleSettings = new MotionModifierRuleSettings(this.ownerModule, "SelfDamageSavings", new SettingGroup(module, "SelfDamageStart"), 0.0);
    }
 
    public void onEnable() {
@@ -173,8 +158,7 @@ public class MotionModifierEngine {
       this.selfDamageStep = 0;
       this.selfDamageTicks = 0;
       this.threeJumpCounter = 0;
-      String str = "OnEnable";
-      this.applyLifecyclePhaseRule(str);
+      this.applyLifecyclePhaseRule("OnEnable");
    }
 
    private void applyMoveEntityRule(MotionModifierRuleSettings settings, EventMoveEntity event) {
@@ -185,12 +169,7 @@ public class MotionModifierEngine {
             && (!settings.onlyAtLadder.getValue() || this.isOnLadder())) {
             float f = MathHelper.clamp_float(0.0F, (float)settings.strafePercentage.getValue(), 100.0F);
             if (settings.editStaticY.getValue()) {
-               RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-               double minValue = settings.staticY.getMinValue();
-               double maxValue = settings.staticY.getMaxValue();
-               double d = minValue;
-               double d2 = (double)instance.nextFloat2(d, maxValue);
-               event.setY(d2);
+               event.setY((double)DefaultRandomGenerator.instance.nextFloat2(settings.staticY.getMinValue(), settings.staticY.getMaxValue()));
             }
 
             if (settings.jump.getValue()) {
@@ -203,12 +182,7 @@ public class MotionModifierEngine {
             }
 
             if (settings.editStaticXZ.getValue()) {
-               RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
-               double minValue2 = settings.staticXZ.getMinValue();
-               double maxValue2 = settings.staticXZ.getMaxValue();
-               double d3 = maxValue2;
-               double d4 = minValue2;
-               double d5 = instance2.nextDouble(d4, d3);
+               double d5 = DefaultRandomGenerator.instance.nextDouble(settings.staticXZ.getMinValue(), settings.staticXZ.getMaxValue());
                if (f == 0.0F) {
                   MoveUtil.setEventSpeed(d5, false, event);
                } else {
@@ -217,46 +191,21 @@ public class MotionModifierEngine {
             }
 
             if (settings.editAddY.getValue()) {
-               double y = event.getY();
-               RandomNumberGenerator instance3 = DefaultRandomGenerator.instance;
-               double minValue3 = settings.addY.getMinValue();
-               double maxValue3 = settings.addY.getMaxValue();
-               double d6 = minValue3;
-               double d7 = y + (double)instance3.nextFloat2(d6, maxValue3);
-               event.setY(d7);
+               event.setY(event.getY() + (double)DefaultRandomGenerator.instance.nextFloat2(settings.addY.getMinValue(), settings.addY.getMaxValue()));
             }
 
             if (settings.editAddXZ.getValue()) {
-               RandomNumberGenerator instance4 = DefaultRandomGenerator.instance;
-               double minValue4 = settings.addXZ.getMinValue();
-               double maxValue4 = settings.addXZ.getMaxValue();
-               double d8 = maxValue4;
-               double d9 = minValue4;
-               double d10 = instance4.nextDouble(d9, d8);
-               MoveUtil.addEventMotion(d10, false, event);
+               MoveUtil.addEventMotion(DefaultRandomGenerator.instance.nextDouble(settings.addXZ.getMinValue(), settings.addXZ.getMaxValue()), false, event);
             }
 
             if (settings.editMultiplyY.getValue()) {
-               double y2 = event.getY();
-               RandomNumberGenerator instance5 = DefaultRandomGenerator.instance;
-               double minValue5 = settings.multiplyY.getMinValue();
-               double maxValue5 = settings.multiplyY.getMaxValue();
-               double d11 = minValue5;
-               double d12 = y2 * (double)instance5.nextFloat2(d11, maxValue5);
-               event.setY(d12);
+               event.setY(event.getY() * (double)DefaultRandomGenerator.instance.nextFloat2(settings.multiplyY.getMinValue(), settings.multiplyY.getMaxValue()));
             }
 
             if (settings.editMultiplyXZ.getValue()) {
-               RandomNumberGenerator instance6 = DefaultRandomGenerator.instance;
-               double minValue6 = settings.multiplyXZ.getMinValue();
-               double maxValue6 = settings.multiplyXZ.getMaxValue();
-               double d13 = maxValue6;
-               double d14 = minValue6;
-               double d15 = instance6.nextDouble(d14, d13);
-               double d16 = event.getX() * d15;
-               event.setX(d16);
-               double d17 = event.getZ() * d15;
-               event.setZ(d17);
+               double d15 = DefaultRandomGenerator.instance.nextDouble(settings.multiplyXZ.getMinValue(), settings.multiplyXZ.getMaxValue());
+               event.setX(event.getX() * d15);
+               event.setZ(event.getZ() * d15);
             }
 
             if (settings.editTimerSpeed.getValue()) {
@@ -264,8 +213,7 @@ public class MotionModifierEngine {
                RandomNumberGenerator instance7 = DefaultRandomGenerator.instance;
                double minValue7 = settings.timerSpeed.getMinValue();
                double maxValue7 = settings.timerSpeed.getMaxValue();
-               double d18 = minValue7;
-               timer.timerSpeed = Math.max(0.01F, instance7.nextFloat2(d18, maxValue7));
+               timer.timerSpeed = Math.max(0.01F, instance7.nextFloat2(minValue7, maxValue7));
             }
 
             if (f > 0.0F) {
@@ -277,8 +225,7 @@ public class MotionModifierEngine {
 
    public void onOutgoingPacketDelay(EventPacketDelay event) {
       if (this.motionModifierRuleSettings.selfDamageMode.getSelectedValue().equals("3Jump") && this.threeJumpCounter < 4) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
@@ -289,26 +236,26 @@ public class MotionModifierEngine {
       String[] strings4 = new String[]{"OnEnable", "OnDisable"};
 
       for (String str : strings) {
-         DoubleValue doubleValue = new DoubleValue(this.ownerModule, str);
+         SettingGroup doubleValue = new SettingGroup(this.ownerModule, str);
          HashMap map = new HashMap();
          this.rulesByPhase.put(str, map);
 
          for (String str2 : strings3) {
             HashMap map2 = new HashMap();
             map.put(str2, map2);
-            DoubleValue doubleValue2 = (DoubleValue)(new DoubleValue(this.ownerModule, str2 + str, doubleValue)).withDisplayName(str2);
+            SettingGroup doubleValue2 = (SettingGroup)(new SettingGroup(this.ownerModule, str2 + str, doubleValue)).withDisplayName(str2);
             map2.put(str2, new MotionModifierRuleSettings(this.ownerModule, str2 + str, doubleValue2, str.equals("PreUpdate")));
          }
 
          for (String str3 : strings2) {
             HashMap map3 = new HashMap();
             map.put(str3, map3);
-            DoubleValue doubleValue3 = (DoubleValue)(new DoubleValue(this.ownerModule, str3 + str, doubleValue)).withDisplayName(str3);
+            SettingGroup doubleValue3 = (SettingGroup)(new SettingGroup(this.ownerModule, str3 + str, doubleValue)).withDisplayName(str3);
             map3.put(-1, new MotionModifierRuleSettings(this.ownerModule, str3 + str, doubleValue3));
 
             for (int i = 0; i < 60; i++) {
                String str4 = "Tick" + i;
-               DoubleValue doubleValue4 = (DoubleValue)(new DoubleValue(this.ownerModule, str4 + str3 + str, doubleValue3)).withDisplayName(str4);
+               SettingGroup doubleValue4 = (SettingGroup)(new SettingGroup(this.ownerModule, str4 + str3 + str, doubleValue3)).withDisplayName(str4);
                Integer num = i;
                Module ownerModule2 = this.ownerModule;
                String str5 = str4 + str3 + str;
@@ -323,7 +270,7 @@ public class MotionModifierEngine {
          this.rulesByPhase.put(str6, map4);
          HashMap map5 = new HashMap();
          map4.put(str6, map5);
-         DoubleValue doubleValue5 = new DoubleValue(this.ownerModule, str6);
+         SettingGroup doubleValue5 = new SettingGroup(this.ownerModule, str6);
          map5.put(str6, new MotionModifierRuleSettings(this.ownerModule, str6, doubleValue5, str6.equals("OnEnable")));
       }
    }
@@ -334,8 +281,7 @@ public class MotionModifierEngine {
          MC.mc.thePlayer.setSpeedInAir(0.02F);
       }
 
-      String str = "OnDisable";
-      this.applyLifecyclePhaseRule(str);
+      this.applyLifecyclePhaseRule("OnDisable");
    }
 
    public void onPostUpdate() {
@@ -360,52 +306,42 @@ public class MotionModifierEngine {
          && this.damageConditionMet) {
          HashMap map = (HashMap)this.rulesByPhase.get("PostUpdate");
          if (MC.mc.thePlayer.motionY < 0.0) {
-            HashMap map2 = (HashMap)map.get("MotionYLessZero");
-            MotionModifierRuleSettings settings = (MotionModifierRuleSettings)map2.get("MotionYLessZero");
-            this.applyUpdateRule(settings);
+            this.applyUpdateRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYLessZero")).get("MotionYLessZero"));
          } else {
-            HashMap map3 = (HashMap)map.get("MotionYHigherZero");
-            MotionModifierRuleSettings settings2 = (MotionModifierRuleSettings)map3.get("MotionYHigherZero");
-            this.applyUpdateRule(settings2);
+            this.applyUpdateRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYHigherZero")).get("MotionYHigherZero"));
          }
 
          HashMap map4 = (HashMap)map.get("TicksOnGround");
          HashMap map5 = (HashMap)map.get("TicksInAir");
          if (MC.mc.thePlayer.onGround) {
             this.postUpdateGroundTicks++;
-            MotionModifierRuleSettings settings3 = (MotionModifierRuleSettings)map5.get(-1);
-            if (settings3.resetAtOppositeState.getValue()) {
+            if (((MotionModifierRuleSettings)map5.get(-1)).resetAtOppositeState.getValue()) {
                this.postUpdateAirTicks = -1;
             }
 
             if (this.postUpdateGroundTicks >= 0) {
                MotionModifierRuleSettings settings4 = (MotionModifierRuleSettings)map4.get(-1);
-               double postUpdateGroundTicks2 = (double)this.postUpdateGroundTicks;
-               if (postUpdateGroundTicks2 > settings4.resetTicksAt.getMaxValue() || (double)this.postUpdateGroundTicks < settings4.resetTicksAt.getMinValue() && this.postUpdateGroundLooped) {
+               if (((double)this.postUpdateGroundTicks) > settings4.resetTicksAt.getMaxValue() || (double)this.postUpdateGroundTicks < settings4.resetTicksAt.getMinValue() && this.postUpdateGroundLooped) {
                   this.postUpdateGroundTicks = (int)Math.max(0.0, settings4.resetTicksAt.getMinValue());
                   this.postUpdateGroundLooped = true;
                }
 
-               MotionModifierRuleSettings settings5 = (MotionModifierRuleSettings)map4.get(this.postUpdateGroundTicks);
-               this.applyUpdateRule(settings5);
+               this.applyUpdateRule((MotionModifierRuleSettings)map4.get(this.postUpdateGroundTicks));
             }
          } else {
             this.postUpdateAirTicks++;
-            MotionModifierRuleSettings settings6 = (MotionModifierRuleSettings)map4.get(-1);
-            if (settings6.resetAtOppositeState.getValue()) {
+            if (((MotionModifierRuleSettings)map4.get(-1)).resetAtOppositeState.getValue()) {
                this.postUpdateGroundTicks = -1;
             }
 
             if (this.postUpdateAirTicks >= 0) {
                MotionModifierRuleSettings settings7 = (MotionModifierRuleSettings)map5.get(-1);
-               double postUpdateAirTicks2 = (double)this.postUpdateAirTicks;
-               if (postUpdateAirTicks2 > settings7.resetTicksAt.getMaxValue() || (double)this.postUpdateAirTicks < settings7.resetTicksAt.getMinValue() && this.postUpdateAirLooped) {
+               if (((double)this.postUpdateAirTicks) > settings7.resetTicksAt.getMaxValue() || (double)this.postUpdateAirTicks < settings7.resetTicksAt.getMinValue() && this.postUpdateAirLooped) {
                   this.postUpdateAirTicks = (int)Math.max(0.0, settings7.resetTicksAt.getMinValue());
                   this.postUpdateAirLooped = true;
                }
 
-               MotionModifierRuleSettings settings8 = (MotionModifierRuleSettings)map5.get(this.postUpdateAirTicks);
-               this.applyUpdateRule(settings8);
+               this.applyUpdateRule((MotionModifierRuleSettings)map5.get(this.postUpdateAirTicks));
             }
          }
       }
@@ -413,8 +349,7 @@ public class MotionModifierEngine {
 
    public void onPreUpdate() {
       if (!this.initialSelfDamageApplied && (MC.mc.thePlayer.onGround || !this.motionModifierRuleSettings.onlyOnGround.getValue()) && !this.motionModifierRuleSettings.selfDamageMode.getSelectedValue().equals("3Jump")) {
-         MotionModifierRuleSettings settings = this.motionModifierRuleSettings;
-         this.applySelfDamage(settings);
+         this.applySelfDamage(this.motionModifierRuleSettings);
          this.initialSelfDamageApplied = true;
       }
 
@@ -430,13 +365,9 @@ public class MotionModifierEngine {
          && this.damageConditionMet) {
          HashMap map = (HashMap)this.rulesByPhase.get("PreUpdate");
          if (MC.mc.thePlayer.motionY < 0.0) {
-            HashMap map2 = (HashMap)map.get("MotionYLessZero");
-            MotionModifierRuleSettings settings2 = (MotionModifierRuleSettings)map2.get("MotionYLessZero");
-            this.applyUpdateRule(settings2);
+            this.applyUpdateRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYLessZero")).get("MotionYLessZero"));
          } else {
-            HashMap map3 = (HashMap)map.get("MotionYHigherZero");
-            MotionModifierRuleSettings settings3 = (MotionModifierRuleSettings)map3.get("MotionYHigherZero");
-            this.applyUpdateRule(settings3);
+            this.applyUpdateRule((MotionModifierRuleSettings)((HashMap)map.get("MotionYHigherZero")).get("MotionYHigherZero"));
          }
 
          HashMap map4 = (HashMap)map.get("TicksOnGround");
@@ -450,32 +381,27 @@ public class MotionModifierEngine {
 
             if (this.preUpdateGroundTicks >= 0) {
                MotionModifierRuleSettings settings5 = (MotionModifierRuleSettings)map4.get(-1);
-               double preUpdateGroundTicks2 = (double)this.preUpdateGroundTicks;
-               if (preUpdateGroundTicks2 > settings5.resetTicksAt.getMaxValue() || (double)this.preUpdateGroundTicks < settings5.resetTicksAt.getMinValue() && this.preUpdateGroundLooped) {
+               if (((double)this.preUpdateGroundTicks) > settings5.resetTicksAt.getMaxValue() || (double)this.preUpdateGroundTicks < settings5.resetTicksAt.getMinValue() && this.preUpdateGroundLooped) {
                   this.preUpdateGroundTicks = (int)Math.max(0.0, settings5.resetTicksAt.getMinValue());
                   this.preUpdateGroundLooped = true;
                }
 
-               MotionModifierRuleSettings settings6 = (MotionModifierRuleSettings)map4.get(this.preUpdateGroundTicks);
-               this.applyUpdateRule(settings6);
+               this.applyUpdateRule((MotionModifierRuleSettings)map4.get(this.preUpdateGroundTicks));
             }
          } else {
             this.preUpdateAirTicks++;
-            MotionModifierRuleSettings settings7 = (MotionModifierRuleSettings)map4.get(-1);
-            if (settings7.resetAtOppositeState.getValue()) {
+            if (((MotionModifierRuleSettings)map4.get(-1)).resetAtOppositeState.getValue()) {
                this.preUpdateGroundTicks = -1;
             }
 
             if (this.preUpdateAirTicks >= 0) {
                MotionModifierRuleSettings settings8 = (MotionModifierRuleSettings)map5.get(-1);
-               double preUpdateAirTicks2 = (double)this.preUpdateAirTicks;
-               if (preUpdateAirTicks2 > settings8.resetTicksAt.getMaxValue() || (double)this.preUpdateAirTicks < settings8.resetTicksAt.getMinValue() && this.preUpdateAirLooped) {
+               if (((double)this.preUpdateAirTicks) > settings8.resetTicksAt.getMaxValue() || (double)this.preUpdateAirTicks < settings8.resetTicksAt.getMinValue() && this.preUpdateAirLooped) {
                   this.preUpdateAirTicks = (int)Math.max(0.0, settings8.resetTicksAt.getMinValue());
                   this.preUpdateAirLooped = true;
                }
 
-               MotionModifierRuleSettings settings9 = (MotionModifierRuleSettings)map5.get(this.preUpdateAirTicks);
-               this.applyUpdateRule(settings9);
+               this.applyUpdateRule((MotionModifierRuleSettings)map5.get(this.preUpdateAirTicks));
             }
          }
       }
@@ -498,12 +424,7 @@ public class MotionModifierEngine {
 
             this.applySelfDamage(settings);
             if (settings.editSpeedInAir != null && settings.editSpeedInAir.getValue()) {
-               EntityPlayerSP thePlayer = MC.mc.thePlayer;
-               RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-               double minValue = settings.speedInAir.getMinValue();
-               double maxValue = settings.speedInAir.getMaxValue();
-               double d = minValue;
-               thePlayer.setSpeedInAir(instance.nextFloat2(d, maxValue));
+               MC.mc.thePlayer.setSpeedInAir(DefaultRandomGenerator.instance.nextFloat2(settings.speedInAir.getMinValue(), settings.speedInAir.getMaxValue()));
             } else {
                MC.mc.thePlayer.setSpeedInAir(0.02F);
             }
@@ -513,20 +434,11 @@ public class MotionModifierEngine {
             }
 
             if (settings.editStaticY != null && settings.editStaticY.getValue()) {
-               EntityPlayerSP thePlayer2 = MC.mc.thePlayer;
-               RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
-               double minValue2 = settings.staticY.getMinValue();
-               double maxValue2 = settings.staticY.getMaxValue();
-               double d2 = minValue2;
-               thePlayer2.motionY = (double)instance2.nextFloat2(d2, maxValue2);
+               MC.mc.thePlayer.motionY = (double)DefaultRandomGenerator.instance.nextFloat2(settings.staticY.getMinValue(), settings.staticY.getMaxValue());
             }
 
             if (settings.editStaticXZ != null && settings.editStaticXZ.getValue()) {
-               RandomNumberGenerator instance3 = DefaultRandomGenerator.instance;
-               double minValue3 = settings.staticXZ.getMinValue();
-               double maxValue3 = settings.staticXZ.getMaxValue();
-               double d3 = minValue3;
-               float f2 = instance3.nextFloat2(d3, maxValue3);
+               float f2 = DefaultRandomGenerator.instance.nextFloat2(settings.staticXZ.getMinValue(), settings.staticXZ.getMaxValue());
                if (f == 0.0F) {
                   MoveUtil.setSpeed(f2, false);
                } else {
@@ -535,41 +447,19 @@ public class MotionModifierEngine {
             }
 
             if (settings.editAddY != null && settings.editAddY.getValue()) {
-               EntityPlayerSP thePlayer3 = MC.mc.thePlayer;
-               double motionY = MC.mc.thePlayer.motionY;
-               RandomNumberGenerator instance4 = DefaultRandomGenerator.instance;
-               double minValue4 = settings.addY.getMinValue();
-               double maxValue4 = settings.addY.getMaxValue();
-               double d4 = minValue4;
-               thePlayer3.motionY = motionY + (double)instance4.nextFloat2(d4, maxValue4);
+               MC.mc.thePlayer.motionY = MC.mc.thePlayer.motionY + (double)DefaultRandomGenerator.instance.nextFloat2(settings.addY.getMinValue(), settings.addY.getMaxValue());
             }
 
             if (settings.editAddXZ != null && settings.editAddXZ.getValue()) {
-               RandomNumberGenerator instance5 = DefaultRandomGenerator.instance;
-               double minValue5 = settings.addXZ.getMinValue();
-               double maxValue5 = settings.addXZ.getMaxValue();
-               double d5 = maxValue5;
-               double d6 = minValue5;
-               double d7 = instance5.nextDouble(d6, d5);
-               MoveUtil.addMotion(d7, false);
+               MoveUtil.addMotion(DefaultRandomGenerator.instance.nextDouble(settings.addXZ.getMinValue(), settings.addXZ.getMaxValue()), false);
             }
 
             if (settings.editMultiplyY != null && settings.editMultiplyY.getValue()) {
-               EntityPlayerSP thePlayer4 = MC.mc.thePlayer;
-               double motionY2 = MC.mc.thePlayer.motionY;
-               RandomNumberGenerator instance6 = DefaultRandomGenerator.instance;
-               double minValue6 = settings.multiplyY.getMinValue();
-               double maxValue6 = settings.multiplyY.getMaxValue();
-               double d8 = minValue6;
-               thePlayer4.motionY = motionY2 * (double)instance6.nextFloat2(d8, maxValue6);
+               MC.mc.thePlayer.motionY = MC.mc.thePlayer.motionY * (double)DefaultRandomGenerator.instance.nextFloat2(settings.multiplyY.getMinValue(), settings.multiplyY.getMaxValue());
             }
 
             if (settings.editMultiplyXZ != null && settings.editMultiplyXZ.getValue()) {
-               RandomNumberGenerator instance7 = DefaultRandomGenerator.instance;
-               double minValue7 = settings.multiplyXZ.getMinValue();
-               double maxValue7 = settings.multiplyXZ.getMaxValue();
-               double d9 = minValue7;
-               double d10 = (double)instance7.nextFloat2(d9, maxValue7);
+               double d10 = (double)DefaultRandomGenerator.instance.nextFloat2(settings.multiplyXZ.getMinValue(), settings.multiplyXZ.getMaxValue());
                MC.mc.thePlayer.motionX *= d10;
                MC.mc.thePlayer.motionZ *= d10;
             }
@@ -579,8 +469,7 @@ public class MotionModifierEngine {
                RandomNumberGenerator instance8 = DefaultRandomGenerator.instance;
                double minValue8 = settings.timerSpeed.getMinValue();
                double maxValue8 = settings.timerSpeed.getMaxValue();
-               double d11 = minValue8;
-               timer.timerSpeed = Math.max(0.01F, instance8.nextFloat2(d11, maxValue8));
+               timer.timerSpeed = Math.max(0.01F, instance8.nextFloat2(minValue8, maxValue8));
             }
 
             if (f > 0.0F) {
@@ -593,10 +482,7 @@ public class MotionModifierEngine {
    private void applyLifecyclePhaseRule(String str) {
 
       try {
-         HashMap map = (HashMap)this.rulesByPhase.get(str);
-         HashMap map2 = (HashMap)map.get(str);
-         MotionModifierRuleSettings settings = (MotionModifierRuleSettings)map2.get(str);
-         this.applyUpdateRule(settings);
+         this.applyUpdateRule((MotionModifierRuleSettings)((HashMap)((HashMap)this.rulesByPhase.get(str)).get(str)).get(str));
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -604,24 +490,19 @@ public class MotionModifierEngine {
 
    public void onMoveInput(EventMoveInput event) {
       if (this.blockJumpInput.getValue()) {
-         boolean flag = false;
-         event.setJump(flag);
+         event.setJump(false);
       }
 
       if (!this.damageConditionMet && this.motionModifierRuleSettings.blockMovementInput.getValue() && this.motionModifierRuleSettings.selfDamageMode.getSelectedValue().equals("3Jump")) {
-         float f = 0.0F;
-         event.setMoveStrafe(f);
-         boolean flag2 = false;
-         event.setJump(flag2);
-         float f2 = 0.0F;
-         event.setMoveForward(f2);
+         event.setMoveStrafe(0.0F);
+         event.setJump(false);
+         event.setMoveForward(0.0F);
       }
    }
 
    private void applySelfDamage(MotionModifierRuleSettings settings) {
       if (!settings.selfDamageMode.getSelectedValue().equals("None")) {
-         String selectedValue = settings.selfDamageMode.getSelectedValue();
-         switch (selectedValue) {
+         switch (settings.selfDamageMode.getSelectedValue()) {
             case "Motion":
                MC.mc.thePlayer.motionY = (double)((float)settings.motion.getValue());
                break;

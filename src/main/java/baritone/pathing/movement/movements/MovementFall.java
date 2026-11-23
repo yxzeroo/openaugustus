@@ -33,8 +33,7 @@ public class MovementFall extends Movement {
    private static BetterBlockPos[] buildPositionsToBreak(BetterBlockPos betterBlockPos, BetterBlockPos betterBlockPos2) {
       int n = betterBlockPos.getX() - betterBlockPos2.getX();
       int n2 = betterBlockPos.getZ() - betterBlockPos2.getZ();
-      int n3 = betterBlockPos.getY() - betterBlockPos2.getY();
-      BetterBlockPos[] betterBlockPosArr = new BetterBlockPos[n3 + 2];
+      BetterBlockPos[] betterBlockPosArr = new BetterBlockPos[(betterBlockPos.getY() - betterBlockPos2.getY()) + 2];
 
       for (int j = 0; j < betterBlockPosArr.length; j++) {
          betterBlockPosArr[j] = new BetterBlockPos(betterBlockPos.getX() - n, betterBlockPos.getY() + 1 - j, betterBlockPos.getZ() - n2);

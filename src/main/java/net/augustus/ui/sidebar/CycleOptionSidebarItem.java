@@ -1,7 +1,6 @@
 package net.augustus.ui.sidebar;
 
 import net.augustus.ui.menu.ContextMenuItem;
-import net.augustus.ui.widgets.ScrollBar;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -26,7 +25,6 @@ public class CycleOptionSidebarItem implements ContextMenuItem {
 
    @Override
    public void onClick(String str) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       int n = (Integer)this.indexGetter.get();
       if (++n >= this.options.size()) {
          n = 0;

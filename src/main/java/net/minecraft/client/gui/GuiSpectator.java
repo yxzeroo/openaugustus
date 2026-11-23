@@ -58,9 +58,7 @@ public class GuiSpectator extends Gui implements ISpectatorMenuRecipient {
             int n = sr.getScaledWidth() / 2;
             float zLevel2 = this.zLevel;
             this.zLevel = -90.0F;
-            float f2 = (float)sr.getScaledHeight() - 22.0F * hotbarAlpha;
-            SpectatorDetails currentPage = this.menu.getCurrentPage();
-            this.renderPage(sr, hotbarAlpha, n, f2, currentPage);
+            this.renderPage(sr, hotbarAlpha, n, (float)sr.getScaledHeight() - 22.0F * hotbarAlpha, this.menu.getCurrentPage());
             this.zLevel = zLevel2;
          }
       }
@@ -101,8 +99,7 @@ public class GuiSpectator extends Gui implements ISpectatorMenuRecipient {
    }
 
    private float getHotbarAlpha() {
-      long l = this.lastSelectionTime - Minecraft.getSystemTime() + 5000L;
-      return MathHelper.clamp_float((float)l / 2000.0F, 0.0F, 1.0F);
+      return MathHelper.clamp_float((float)(this.lastSelectionTime - Minecraft.getSystemTime() + 5000L) / 2000.0F, 0.0F, 1.0F);
    }
 
    public void onHotbarSelected(int n) {

@@ -21,15 +21,12 @@ public class TrustedHostWhitelist {
    }
 
    public static boolean isOfficialHost(String str) {
-      Set set = officialHosts;
-      return matchesAnyPrefix(str, set);
+      return matchesAnyPrefix(str, officialHosts);
    }
 
    public static boolean isTrustedHost(String str) {
-      Set set = thirdPartyHosts;
-      if (!matchesAnyPrefix(str, set)) {
-         Set set2 = officialHosts;
-         if (!matchesAnyPrefix(str, set2)) {
+      if (!matchesAnyPrefix(str, thirdPartyHosts)) {
+         if (!matchesAnyPrefix(str, officialHosts)) {
             return false;
          }
       }

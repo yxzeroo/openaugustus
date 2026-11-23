@@ -12,14 +12,14 @@ import net.augustus.events.listeners.MoveInputListener;
 import net.augustus.events.EventMoveInput;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.utils.rotation.Rotation;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 
 public class AutoJumpAndRun extends Module implements TickListener, MoveInputListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    private final TimeHelper timeHelper;
    private BlockPos nextWoolBlock;
    private BlockPos currentStandingBlock;
@@ -27,7 +27,7 @@ public class AutoJumpAndRun extends Module implements TickListener, MoveInputLis
 
    public AutoJumpAndRun() {
        super("AutoJumpAndRun", "AutoSpringenUndLaufen", new Color(119, 148, 61), Categorys.FUN);
-      this.mode = new BooleansSetting(this, "Mode", "Gomme", new String[]{"Gomme"});
+      this.mode = new StringValue(this, "Mode", "Gomme", new String[]{"Gomme"});
       this.timeHelper = new TimeHelper();
       this.nextWoolBlock = null;
       this.currentStandingBlock = null;
@@ -41,17 +41,14 @@ public class AutoJumpAndRun extends Module implements TickListener, MoveInputLis
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
    }
 
    public void onTick() {
       if (mc.thePlayer.onGround) {
          BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ);
-         Block block = mc.theWorld.getBlockState(pos).getBlock();
-         this.currentStandingBlock = block.isFullBlock() ? pos : this.currentStandingBlock;
+         this.currentStandingBlock = mc.theWorld.getBlockState(pos).getBlock().isFullBlock() ? pos : this.currentStandingBlock;
          if (this.currentStandingBlock == null) {
             return;
          }
@@ -60,54 +57,40 @@ public class AutoJumpAndRun extends Module implements TickListener, MoveInputLis
             this.timeHelper.reset();
          }
 
-         BlockPos pos2 = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ);
-         this.nextWoolBlock = this.findNearbyWoolBlock(pos2);
+         this.nextWoolBlock = this.findNearbyWoolBlock(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.5, mc.thePlayer.posZ));
          if (this.nextWoolBlock != null) {
-            long l = 1000L;
             float f;
-            if (this.timeHelper.reached2(l)) {
+            if (this.timeHelper.reached2(1000L)) {
                double d = (double)this.nextWoolBlock.getX() + 0.5;
                double d2 = (double)this.nextWoolBlock.getY() + 0.5;
                double d3 = (double)this.nextWoolBlock.getZ() + 0.5;
                Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag = false;
                float f2 = 180.0F;
-               float f3 = 180.0F;
-               f = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation, f3, f2, flag).yaw;
+               f = RotationUtil.getRotationsToPos(d, d2, d3, previousRotation, 180.0F, f2, false).yaw;
             } else {
                double d4 = (double)this.currentStandingBlock.getX() + 0.5;
                double d5 = (double)this.currentStandingBlock.getY() + 0.5;
                double d6 = (double)this.currentStandingBlock.getZ() + 0.5;
                Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-               boolean flag2 = false;
                float f4 = 180.0F;
-               float f5 = 180.0F;
-               f = RotationUtil.getRotationsToPos(d4, d5, d6, previousRotation2, f5, f4, flag2).yaw;
+               f = RotationUtil.getRotationsToPos(d4, d5, d6, previousRotation2, 180.0F, f4, false).yaw;
             }
 
-            byte b = 10;
-            ClientManagers.rotationController.requestYaw(f, b, this);
+            ClientManagers.rotationController.requestYaw(f, (byte)10, this);
          } else {
-            RotationController rotationController = ClientManagers.rotationController;
-            byte b2 = 10;
-            float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
-            rotationController.requestYaw(yaw, b2, this);
+            ClientManagers.rotationController.requestYaw(ClientManagers.rotationController.getPreviousRotation().yaw, (byte)10, this);
          }
 
          this.wasAirborne = false;
       } else {
          this.wasAirborne = true;
-         RotationController rotationController2 = ClientManagers.rotationController;
-         byte b3 = 10;
-         float yaw2 = ClientManagers.rotationController.getPreviousRotation().yaw;
-         rotationController2.requestYaw(yaw2, b3, this);
+         ClientManagers.rotationController.requestYaw(ClientManagers.rotationController.getPreviousRotation().yaw, (byte)10, this);
       }
    }
 
    public void onMoveInput3(EventMoveInput event) {
       if (mc.isNotInGui() && mc.thePlayer != null && this.nextWoolBlock != null && this.currentStandingBlock != null) {
-         long l = 2000L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(2000L)) {
             Block block = mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ)).getBlock();
             double d = 1.29;
             double d2 = 0.29;
@@ -121,35 +104,27 @@ public class AutoJumpAndRun extends Module implements TickListener, MoveInputLis
             double d6 = (double)this.currentStandingBlock.getZ() - d2;
             if (mc.thePlayer.getDistance((double)this.nextWoolBlock.getX(), (double)this.nextWoolBlock.getY(), (double)this.nextWoolBlock.getZ()) > 2.6 && this.isLicenseTimestampValid()) {
                if (posX > d3 || posX < d4 || posZ > d5 || posZ < d6) {
-                  boolean flag = true;
-                  event.setJump(flag);
+                  event.setJump(true);
                }
             } else if (!block.isFullBlock()) {
-               boolean flag2 = true;
-               event.setJump(flag2);
+               event.setJump(true);
             }
 
-            float f = 1.0F;
-            event.setMoveForward(f);
+            event.setMoveForward(1.0F);
 
             for (int i = 1; i < 4; i++) {
                BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - (double)i, mc.thePlayer.posZ);
                if (BlockUtil.isSolidBlock(pos) && pos.equalsPos(this.nextWoolBlock)) {
-                  float f2 = -1.0F;
-                  event.setMoveForward(f2);
+                  event.setMoveForward(-1.0F);
                   if (mc.thePlayer.onGround) {
-                     boolean flag3 = true;
-                     event.setSneak(flag3);
+                     event.setSneak(true);
                   }
                }
             }
          } else {
-            long l2 = 1000L;
-            if (!this.timeHelper.reached2(l2)) {
-               float f3 = 1.0F;
-               event.setMoveForward(f3);
-               boolean flag4 = true;
-               event.setSneak(flag4);
+            if (!this.timeHelper.reached2(1000L)) {
+               event.setMoveForward(1.0F);
+               event.setSneak(true);
             }
          }
       }

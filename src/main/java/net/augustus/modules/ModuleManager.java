@@ -783,8 +783,7 @@ public class ModuleManager {
          java.util.ArrayList list = new java.util.ArrayList();
 
          for (Object obj : module.getSettings()) {
-            Setting setting = (Setting)obj;
-            String name = setting.getName();
+            String name = ((Setting)obj).getName();
             if (!list.contains(name)) {
                list.add(name);
             } else {
@@ -794,15 +793,13 @@ public class ModuleManager {
          }
       }
 
-      CopyOnWriteArrayList copyOnWriteArrayList = new CopyOnWriteArrayList(this.getModules());
-      this.setSortedModules(copyOnWriteArrayList);
+      this.setSortedModules(new CopyOnWriteArrayList(this.getModules()));
    }
 
    public void initModules() {
 
       for (Object obj : this.getModules()) {
-         Module module = (Module)obj;
-         module.onClientInit();
+         ((Module)obj).onClientInit();
       }
    }
 
@@ -844,8 +841,7 @@ public class ModuleManager {
       } else {
 
          for (Object obj : ClientManagers.moduleRegistry.getSortedModules()) {
-            Module module = (Module)obj;
-            module.updateDisplayDimensions();
+            ((Module)obj).updateDisplayDimensions();
          }
 
          ClientManagers.moduleRegistry.getSortedModules().sort((obj2, obj3) -> ((Module)obj2).compareDisplayOrder((Module)obj3));
@@ -856,8 +852,7 @@ public class ModuleManager {
       Iterator it = ClientManagers.moduleRegistry.getSortedModules().iterator();
 
       while (it.hasNext()) {
-         Module module = (Module)it.next();
-         module.updateDisplayDimensions();
+         ((Module)it.next()).updateDisplayDimensions();
       }
 
       ClientManagers.moduleRegistry.getSortedModules().sort((obj, obj2) -> ((Module)obj).compareDisplayOrder((Module)obj2));

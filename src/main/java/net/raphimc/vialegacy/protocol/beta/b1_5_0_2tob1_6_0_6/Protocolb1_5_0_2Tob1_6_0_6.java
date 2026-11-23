@@ -73,8 +73,7 @@ public class Protocolb1_5_0_2Tob1_6_0_6
                      Item item = (Item)wrapper.get(Types1_4_2.NBTLESS_ITEM, 0);
                      if (block.getId() == BlockList1_6.bed.blockId()) {
                         byte[][] headBlockToFootBlock = new byte[][]{{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
-                        boolean isFoot = (block.getData() & 8) != 0;
-                        if (!isFoot) {
+                        if (!((block.getData() & 8) != 0)) {
                            int bedDirection = block.getData() & 3;
                            pos = new BlockPosition(pos.x() + headBlockToFootBlock[bedDirection][0], pos.y(), pos.z() + headBlockToFootBlock[bedDirection][1]);
                            block = ((ChunkTracker)wrapper.user().get(ChunkTracker.class)).getBlockNotNull(pos);
@@ -83,16 +82,14 @@ public class Protocolb1_5_0_2Tob1_6_0_6
                            }
                         }
 
-                        boolean isOccupied = (block.getData() & 4) != 0;
-                        if (isOccupied) {
+                        if ((block.getData() & 4) != 0) {
                            PacketWrapper chat = PacketWrapper.create(ClientboundPacketsb1_7.CHAT, wrapper.user());
                            chat.write(Types1_6_4.STRING, "This bed is occupied");
                            chat.send(Protocolb1_5_0_2Tob1_6_0_6.class);
                            return;
                         }
 
-                        int dayTime = (int)(((WorldTimeStorage)wrapper.user().get(WorldTimeStorage.class)).time % 24000L);
-                        float dayPercent = ((float)dayTime + 1.0F) / 24000.0F - 0.25F;
+                        float dayPercent = ((float)((int)(((WorldTimeStorage)wrapper.user().get(WorldTimeStorage.class)).time % 24000L)) + 1.0F) / 24000.0F - 0.25F;
                         if (dayPercent < 0.0F) {
                            dayPercent++;
                         }
@@ -112,8 +109,7 @@ public class Protocolb1_5_0_2Tob1_6_0_6
                            skyRotation = 1.0F;
                         }
 
-                        boolean isDayTime = (int)(skyRotation * 11.0F) < 4;
-                        if (isDayTime) {
+                        if ((int)(skyRotation * 11.0F) < 4) {
                            PacketWrapper chat = PacketWrapper.create(ClientboundPacketsb1_7.CHAT, wrapper.user());
                            chat.write(Types1_6_4.STRING, "You can only sleep at night");
                            chat.send(Protocolb1_5_0_2Tob1_6_0_6.class);

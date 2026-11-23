@@ -1,6 +1,5 @@
 package net.augustus.render;
 
-import net.augustus.modules.render.EmojiRegistry;
 import net.minecraft.util.ResourceLocation;
 
 public class EmojiSprite {
@@ -29,7 +28,6 @@ public class EmojiSprite {
 
    public EmojiSprite(String str, int n, int n2) {
       this.textureName = str;
-      EmojiRegistry.getFlowStateMarker();
       this.offsetX = 0;
       this.offsetY = n;
       this.halfSize = n2;

@@ -55,7 +55,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
       int n2 = 0;
       int n3 = this.guiLeft + 28 * tabColumn;
       int guiTop2 = this.guiTop;
-      byte b = 32;
       if (flag) {
          n2 += 32;
       }
@@ -74,7 +73,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
       }
 
       GlStateManager.disableLighting();
-      this.drawTexturedModalRect(n3, guiTop2, n, n2, 28, b);
+      this.drawTexturedModalRect(n3, guiTop2, n, n2, 28, (byte)32);
       this.zLevel = 100.0F;
       this.itemRender.zLevel = 100.0F;
       n3 += 6;
@@ -332,9 +331,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
          this.listener = new CreativeCrafting(this.mc);
          this.mc.thePlayer.inventoryContainer.onCraftGuiOpened(this.listener);
       } else {
-         Minecraft mc2 = this.mc;
-         GuiInventory guiInventory = new GuiInventory(this.mc.thePlayer);
-         mc2.displayGuiScreen(guiInventory);
+         this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
       }
    }
 
@@ -443,15 +440,11 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.id == 0) {
-         Minecraft mc2 = this.mc;
-         GuiAchievements guiAchievements = new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter());
-         mc2.displayGuiScreen(guiAchievements);
+         this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
       }
 
       if (button.id == 1) {
-         Minecraft mc3 = this.mc;
-         GuiStats guiStats = new GuiStats(this, this.mc.thePlayer.getStatFileWriter());
-         mc3.displayGuiScreen(guiStats);
+         this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
       }
    }
 
@@ -608,9 +601,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
    @Override
    public void updateScreen() {
       if (!this.mc.playerController.isInCreativeMode()) {
-         Minecraft mc2 = this.mc;
-         GuiInventory guiInventory = new GuiInventory(this.mc.thePlayer);
-         mc2.displayGuiScreen(guiInventory);
+         this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
       }
 
       this.updateActivePotionEffects();
@@ -729,8 +720,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
       }
 
       public void scrollTo(float f) {
-         int n = (this.itemList.size() + 9 - 1) / 9 - 5;
-         int n2 = (int)((double)(f * (float)n) + 0.5);
+         int n2 = (int)((double)(f * (float)((this.itemList.size() + 9 - 1) / 9 - 5)) + 0.5);
          if (n2 < 0) {
             n2 = 0;
          }

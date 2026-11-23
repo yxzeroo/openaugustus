@@ -37,8 +37,7 @@ public class HudNotification implements MC {
       );
       RenderUtil.drawRect3(0, 0, this.width, 25, -2147483648);
       if (this.stackCount <= 0) {
-         String selectedValue = notifications.progressColorMode.getSelectedValue();
-         int n2 = notifications.resolveNotificationColor(this, selectedValue);
+         int n2 = notifications.resolveNotificationColor(this, notifications.progressColorMode.getSelectedValue());
          RenderUtil.drawRect(
             0.0, 23.0, (double)((float)this.width / 100.0F * (float)this.elapsedTimer.getTime() * (100.0F / (float)this.getTotalDuration())), 25.0, n2
          );
@@ -65,9 +64,7 @@ public class HudNotification implements MC {
    }
 
    public boolean isExpired() {
-      TimeHelper elapsedTimer2 = this.elapsedTimer;
-      long totalDuration = (long)this.getTotalDuration();
-      return elapsedTimer2.reached2(totalDuration);
+      return this.elapsedTimer.reached2((long)this.getTotalDuration());
    }
 
    public NotificationLevel getLevel() {
@@ -79,9 +76,7 @@ public class HudNotification implements MC {
       this.title = str;
       this.description = str2;
       this.level = notificationLevel;
-      int stringWidth = mc.fontRendererObj.getStringWidth(str);
-      int stringWidth2 = mc.fontRendererObj.getStringWidth(str2);
-      this.width = Math.max(stringWidth, stringWidth2) + 3;
+      this.width = Math.max(mc.fontRendererObj.getStringWidth(str), mc.fontRendererObj.getStringWidth(str2)) + 3;
       this.slideOutStartMillis = 750 + (int)(Augustus.getInstance().getModuleManager().notifications.showDuration.getValue() * 1000.0);
       this.elapsedTimer = new TimeHelper();
    }

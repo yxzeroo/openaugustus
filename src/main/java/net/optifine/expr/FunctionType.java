@@ -87,8 +87,7 @@ public int getParameterCount(IExpression[] expressions) {
    }
 
    private static float evalFloat(IExpression[] expressions, int n) {
-      IExpressionFloat expressionFloat = (IExpressionFloat)expressions[n];
-      return expressionFloat.eval();
+      return ((IExpressionFloat)expressions[n]).eval();
    }
 
    private float getMax(IExpression[] expressions) {
@@ -220,8 +219,7 @@ public int getParameterCount(IExpression[] expressions) {
             float f4 = evalFloat(expressions, 1);
             return f3 - f4 * (float)MathHelper.floor_float(f3 / f4);
          case 32:
-            Minecraft minecraft = Minecraft.getMinecraft();
-            WorldClient theWorld = minecraft.theWorld;
+            WorldClient theWorld = Minecraft.getMinecraft().theWorld;
             if (theWorld == null) {
                return 0.0F;
             }
@@ -242,8 +240,7 @@ public int getParameterCount(IExpression[] expressions) {
             int n3 = (int)evalFloat(expressions, 0);
             float f5 = evalFloat(expressions, 1);
             float f6 = expressions.length > 2 ? evalFloat(expressions, 2) : 1.0F;
-            float f7 = expressions.length > 3 ? evalFloat(expressions, 3) : f6;
-            return Smoother.getSmoothValue(n3, f5, f6, f7);
+            return Smoother.getSmoothValue(n3, f5, f6, expressions.length > 3 ? evalFloat(expressions, 3) : f6);
          default:
             Config.warn("Unknown function type: " + this);
             return 0.0F;
@@ -311,8 +308,7 @@ public int getParameterCount(IExpression[] expressions) {
             float f4 = evalFloat(expressions, 0);
 
             for (int i = 1; i < expressions.length; i++) {
-               float f5 = evalFloat(expressions, i);
-               if (f4 == f5) {
+               if (f4 == evalFloat(expressions, i)) {
                   return true;
                }
             }
@@ -329,8 +325,7 @@ public int getParameterCount(IExpression[] expressions) {
    }
 
    private static boolean evalBool(IExpression[] expressions, int n) {
-      IExpressionBool expressionBool = (IExpressionBool)expressions[n];
-      return expressionBool.eval();
+      return ((IExpressionBool)expressions[n]).eval();
    }
 
 

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.block.BlockAir;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S02PacketChat;
@@ -30,20 +30,16 @@ public class IntavePolarFlagVelocityMode extends VelocityMode implements PacketL
    private double hurtStartY;
    private int transactionCounter;
 
-   public IntavePolarFlagVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public IntavePolarFlagVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "Intave/PolarFlag");
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "Polar", false);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.polar = (BooleanValue)booleanValue.withVisibility(condition);
+      this.polar = (BooleanValue)new BooleanValue(this.parentModule, "Polar", false).withVisibility(() -> this.isSelected());
       this.queuedPackets = new ConcurrentLinkedQueue();
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 43;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -70,7 +66,7 @@ public class IntavePolarFlagVelocityMode extends VelocityMode implements PacketL
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new IntavePolarFlagVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new IntavePolarFlagVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
@@ -149,8 +145,7 @@ public class IntavePolarFlagVelocityMode extends VelocityMode implements PacketL
    @Override
    public void onPacket2(EventPacket event) {
       if (event.getPacket() instanceof C03PacketPlayer) {
-         C03PacketPlayer packet = (C03PacketPlayer)event.getPacket();
-         if (packet.isMoving()) {
+         if (((C03PacketPlayer)event.getPacket()).isMoving()) {
             mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
          }
       }

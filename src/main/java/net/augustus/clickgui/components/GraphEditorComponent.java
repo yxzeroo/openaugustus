@@ -42,14 +42,11 @@ public class GraphEditorComponent extends GuiComponent {
          double x2 = graphPoint.getX();
          double y2 = graphPoint.getY();
          if (graphPoint.isDraggableX()) {
-            double d = clamp(this.screenXToValueX(graphSetting, n), graphSetting.getMinX(), graphSetting.getMaxX());
-            double d2 = d;
-            graphPoint.setXAndNotify(d2);
+            graphPoint.setXAndNotify(clamp(this.screenXToValueX(graphSetting, n), graphSetting.getMinX(), graphSetting.getMaxX()));
          }
 
          if (graphPoint.isDraggableY()) {
-            double d3 = clamp(this.screenYToValueY(graphSetting, n2), graphSetting.getMinY(), graphSetting.getMaxY());
-            graphPoint.setYAndNotify(d3);
+            graphPoint.setYAndNotify(clamp(this.screenYToValueY(graphSetting, n2), graphSetting.getMinY(), graphSetting.getMaxY()));
          }
 
          return x2 != graphPoint.getX() || y2 != graphPoint.getY();
@@ -74,8 +71,7 @@ public class GraphEditorComponent extends GuiComponent {
       if (d3 > 0.0 && n > 0) {
          int n3 = (int)Math.round((double)n / (double)Math.max(1, n2));
          n3 = (int)clamp((double)n3, 2.0, 10.0);
-         double d4 = d3 / ((double)n3 - 1.0);
-         return niceStepNumber(d4);
+         return niceStepNumber(d3 / ((double)n3 - 1.0));
       } else {
          return 1.0;
       }
@@ -118,8 +114,7 @@ public class GraphEditorComponent extends GuiComponent {
 
    private int valueXToScreenX(GraphSetting graphSetting, double d) {
       double minX = graphSetting.getMinX();
-      double maxX = graphSetting.getMaxX();
-      double d2 = maxX - minX;
+      double d2 = graphSetting.getMaxX() - minX;
       if (d2 == 0.0) {
          return this.canvasX;
       } else {
@@ -135,9 +130,7 @@ public class GraphEditorComponent extends GuiComponent {
       if (!(maxY > minY)) {
          return 0;
       } else {
-         byte b = 22;
-         short s = 200;
-         double d = computeTickStep(minY, maxY, s, b);
+         double d = computeTickStep(minY, maxY, (short)200, (byte)22);
          if (!(d > 0.0)) {
             return 0;
          } else {
@@ -151,16 +144,10 @@ public class GraphEditorComponent extends GuiComponent {
                int n4 = this.valueYToScreenY(graphSetting, d3);
                if (Double.isNaN(d2) || !(Math.abs((double)n4 - d2) < (double)(fontHeight + 2.0F))) {
                   String str = formatAxisValue(d3, d);
-                  float stringWidth = customFontUtil.getStringWidth(str);
-                  n3 = Math.max(n3, (int)Math.ceil((double)stringWidth));
+                  n3 = Math.max(n3, (int)Math.ceil((double)customFontUtil.getStringWidth(str)));
                   float f = (float)n4 - fontHeight / 2.0F;
-                  float f2 = (float)(this.canvasY + 1);
-                  float f3 = (float)(this.canvasY + 200 - 1) - fontHeight;
-                  f = (float)clamp((double)f, (double)f2, (double)f3);
-                  double d4 = (double)n2;
-                  double d5 = (double)((int)f);
-                  double d6 = d4;
-                  customFontUtil.drawString(str, d6, d5, n);
+                  f = (float)clamp((double)f, (double)((float)(this.canvasY + 1)), (double)((float)(this.canvasY + 200 - 1) - fontHeight));
+                  customFontUtil.drawString(str, (double)n2, (double)((int)f), n);
                   d2 = (double)n4;
                }
             }
@@ -179,21 +166,15 @@ public class GraphEditorComponent extends GuiComponent {
 
    private void drawControlPoints(GraphSetting graphSetting, int n) {
       List points = graphSetting.getPoints();
-      byte b = 0;
-      int colorInt = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b);
+      int colorInt = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
 
       for (int i = 0; i < points.size(); i++) {
          GraphPoint graphPoint = (GraphPoint)points.get(i);
-         double x2 = graphPoint.getX();
-         double d = x2;
-         int n2 = this.valueXToScreenX(graphSetting, d);
-         double y2 = graphPoint.getY();
-         int n3 = this.valueYToScreenY(graphSetting, y2);
+         int n2 = this.valueXToScreenX(graphSetting, graphPoint.getX());
+         int n3 = this.valueYToScreenY(graphSetting, graphPoint.getY());
          int mouseY2 = this.mouseY;
-         int mouseX2 = this.mouseX;
-         boolean isNearPoint = this.isNearPoint(n2, n3, mouseX2, mouseY2);
-         boolean flag = this.draggedPointIndex == i;
-         int n4 = flag ? colorInt : (isNearPoint ? RenderUtil.adjustColorBrightness(n, 0.10000000149011612) : n);
+         boolean isNearPoint = this.isNearPoint(n2, n3, this.mouseX, mouseY2);
+         int n4 = (this.draggedPointIndex == i) ? colorInt : (isNearPoint ? RenderUtil.adjustColorBrightness(n, 0.10000000149011612) : n);
          if (graphPoint.getY() == 0.0 && graphPoint.isHighlightZeroY()) {
             n4 = Color.RED.getRGB();
          }
@@ -218,11 +199,8 @@ public class GraphEditorComponent extends GuiComponent {
 
          for (int i = 0; i < points.size(); i++) {
             GraphPoint graphPoint = (GraphPoint)points.get(i);
-            double x2 = graphPoint.getX();
-            double d2 = x2;
-            int n5 = this.valueXToScreenX(graphSetting, d2);
-            double y2 = graphPoint.getY();
-            int n6 = this.valueYToScreenY(graphSetting, y2);
+            int n5 = this.valueXToScreenX(graphSetting, graphPoint.getX());
+            int n6 = this.valueYToScreenY(graphSetting, graphPoint.getY());
             double d3 = (double)(n - n5);
             double d4 = (double)(n2 - n6);
             double d5 = d3 * d3 + d4 * d4;
@@ -263,21 +241,17 @@ public class GraphEditorComponent extends GuiComponent {
       double minY = graphSetting.getMinY();
       double maxY = graphSetting.getMaxY();
       if (maxX > minX && maxY > minY) {
-         byte b = 55;
-         short s = 800;
-         double d = computeTickStep(minX, maxX, s, b);
+         double d = computeTickStep(minX, maxX, (short)800, (byte)55);
          double d2 = computeTickStep(minY, maxY, 200, 22);
 
          for (double i = firstTickValue(minX, d); i <= maxX + d * 0.5; i += d) {
-            double d3 = snapNearZero(i, d);
-            int n3 = this.valueXToScreenX(graphSetting, d3);
+            int n3 = this.valueXToScreenX(graphSetting, snapNearZero(i, d));
             RenderUtil.drawRect3(n3, this.canvasY + 1, n3 + 1, this.canvasY + 200 - 1, n2);
             RenderUtil.drawRect3(n3, this.canvasY + 200 - 1 - 3, n3 + 1, this.canvasY + 200 - 1, n);
          }
 
          for (double j = firstTickValue(minY, d2); j <= maxY + d2 * 0.5; j += d2) {
-            double d4 = snapNearZero(j, d2);
-            int n4 = this.valueYToScreenY(graphSetting, d4);
+            int n4 = this.valueYToScreenY(graphSetting, snapNearZero(j, d2));
             RenderUtil.drawRect3(this.canvasX + 1, n4, this.canvasX + 800 - 1, n4 + 1, n2);
             RenderUtil.drawRect3(this.canvasX + 1, n4, this.canvasX + 1 + 3, n4 + 1, n);
          }
@@ -303,8 +277,7 @@ public class GraphEditorComponent extends GuiComponent {
 
    private int valueYToScreenY(GraphSetting graphSetting, double d) {
       double minY = graphSetting.getMinY();
-      double maxY = graphSetting.getMaxY();
-      double d2 = maxY - minY;
+      double d2 = graphSetting.getMaxY() - minY;
       if (d2 == 0.0) {
          return this.canvasY + 200;
       } else {
@@ -338,9 +311,7 @@ public class GraphEditorComponent extends GuiComponent {
       double minX = graphSetting.getMinX();
       double maxX = graphSetting.getMaxX();
       if (maxX > minX) {
-         byte b = 55;
-         short s = 800;
-         double d = computeTickStep(minX, maxX, s, b);
+         double d = computeTickStep(minX, maxX, (short)800, (byte)55);
          float fontHeight = customFontUtil.getFontHeight();
          int n2 = this.canvasY + 200 + 2;
          double d2 = 0.0 / 0.0;
@@ -352,13 +323,8 @@ public class GraphEditorComponent extends GuiComponent {
             float stringWidth = customFontUtil.getStringWidth(str);
             float f = (float)n3 - stringWidth / 2.0F;
             if (Double.isNaN(d2) || !(Math.abs((double)f - d2) < (double)(stringWidth + 6.0F))) {
-               float f2 = (float)(this.canvasX + 1);
-               float f3 = (float)(this.canvasX + 800 - 1) - stringWidth;
-               f = (float)clamp((double)f, (double)f2, (double)f3);
-               double d4 = (double)((int)f);
-               double d5 = (double)n2;
-               double d6 = d4;
-               customFontUtil.drawString(str, d6, d5, n);
+               f = (float)clamp((double)f, (double)((float)(this.canvasX + 1)), (double)((float)(this.canvasX + 800 - 1) - stringWidth));
+               customFontUtil.drawString(str, (double)((int)f), (double)n2, n);
                d2 = (double)f;
             }
          }
@@ -376,18 +342,13 @@ public class GraphEditorComponent extends GuiComponent {
    public GraphRenderResult drawGraph(int n, int n2, int n3, int n4, CustomFontUtil customFontUtil, GraphSetting graphSetting) {
       super.updateLayout(n, n2, n3, n4, customFontUtil);
       String str = graphSetting.getDisplayName() + ":";
-      byte b = 0;
-      int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
-      double d = (double)n;
-      double d2 = (double)n2;
-      double d3 = d;
-      customFontUtil.drawString(str, d3, d2, colorInt);
+      int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+      customFontUtil.drawString(str, (double)n, (double)n2, colorInt);
       int n5 = (int)((float)n2 + customFontUtil.getFontHeight() + 6.0F);
       this.canvasX = n;
       this.canvasY = n5;
       GL11.glEnable(2848);
-      byte b2 = 0;
-      int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt(b2);
+      int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt((byte)0);
       RenderUtil.drawRect3(this.canvasX, this.canvasY, this.canvasX + 800, this.canvasY + 200, colorInt2);
       RenderUtil.drawRect3(this.canvasX, this.canvasY, this.canvasX + 800, this.canvasY + 1, colorInt2);
       RenderUtil.drawRect3(this.canvasX, this.canvasY + 200 - 1, this.canvasX + 800, this.canvasY + 200, colorInt2);

@@ -99,14 +99,12 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 
          if (button.id == 2) {
             WDL.overrideLastModifiedCheck = true;
-            Object obj = null;
-            this.mc.displayGuiScreen((GuiScreen)obj);
+            this.mc.displayGuiScreen((GuiScreen)null);
             WDL.startDownload();
          }
 
          if (button.id == 3) {
-            Object obj2 = null;
-            this.mc.displayGuiScreen((GuiScreen)obj2);
+            this.mc.displayGuiScreen((GuiScreen)null);
          }
       }
    }

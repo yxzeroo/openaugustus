@@ -73,13 +73,9 @@ public class GuiWDL extends GuiScreen {
    @Override
    public void initGui() {
       if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-         Minecraft mc2 = this.mc;
-         GuiWDLMultiworldSelect guiWDLMultiworldSelect = new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.changeOptions", new Object[0]), new GuiWDLOptionsMultiworldSelectCallback(this));
-         mc2.displayGuiScreen((GuiScreen)guiWDLMultiworldSelect);
+         this.mc.displayGuiScreen((GuiScreen)new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.changeOptions", new Object[0]), new GuiWDLOptionsMultiworldSelectCallback(this)));
       } else if (!WDL.propsFound) {
-         Minecraft mc3 = this.mc;
-         GuiWDLMultiworld guiWDLMultiworld = new GuiWDLMultiworld(new GuiWDLOptionsMultiworldCallback(this));
-         mc3.displayGuiScreen((GuiScreen)guiWDLMultiworld);
+         this.mc.displayGuiScreen((GuiScreen)new GuiWDLMultiworld(new GuiWDLOptionsMultiworldCallback(this)));
       } else {
          this.buttonList.clear();
          this.title = I18n.format("wdl.gui.wdl.title", new Object[]{WDL.baseFolderName.replace('@', ':')});

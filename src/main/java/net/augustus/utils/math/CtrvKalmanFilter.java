@@ -59,10 +59,7 @@ public class CtrvKalmanFilter {
       doublesArr[4][4] = 1.0;
       this.state = doubles;
       double[][] doublesArr2 = DoubleMatrixMath.transpose(doublesArr);
-      double[][] doublesArr3 = DoubleMatrixMath.multiply(this.covariance, doublesArr2);
-      double[][] doublesArr4 = DoubleMatrixMath.multiply(doublesArr, doublesArr3);
-      double[][] processNoise2 = this.processNoise;
-      this.covariance = DoubleMatrixMath.add(doublesArr4, processNoise2);
+      this.covariance = DoubleMatrixMath.add(DoubleMatrixMath.multiply(doublesArr, DoubleMatrixMath.multiply(this.covariance, doublesArr2)), this.processNoise);
       return new double[]{this.state[0], this.state[1]};
    }
 
@@ -87,25 +84,14 @@ public class CtrvKalmanFilter {
 
    public void update(double[] doubles) {
       double[][] doublesArr = new double[][]{{1.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 1.0, 0.0, 0.0, 0.0}};
-      double[] doubles2 = new double[]{this.state[0], this.state[1]};
-      double[] doubles3 = DoubleMatrixMath.subtractVectors(doubles, doubles2);
+      double[] doubles3 = DoubleMatrixMath.subtractVectors(doubles, new double[]{this.state[0], this.state[1]});
       double[][] doublesArr2 = DoubleMatrixMath.transpose(doublesArr);
-      double[][] doublesArr3 = DoubleMatrixMath.multiply(this.covariance, doublesArr2);
-      double[][] doublesArr4 = DoubleMatrixMath.multiply(doublesArr, doublesArr3);
-      double[][] measurementNoise2 = this.measurementNoise;
-      double[][] doublesArr5 = DoubleMatrixMath.add(doublesArr4, measurementNoise2);
-      double[][] doublesArr6 = DoubleMatrixMath.invert2x2(doublesArr5);
+      double[][] doublesArr4 = DoubleMatrixMath.multiply(doublesArr, DoubleMatrixMath.multiply(this.covariance, doublesArr2));
+      double[][] doublesArr6 = DoubleMatrixMath.invert2x2(DoubleMatrixMath.add(doublesArr4, this.measurementNoise));
       doublesArr4 = this.covariance;
-      double[][] doublesArr7 = DoubleMatrixMath.multiply(doublesArr2, doublesArr6);
-      double[][] doublesArr8 = DoubleMatrixMath.multiply(doublesArr4, doublesArr7);
-      double[] state2 = this.state;
-      double[] doubles4 = DoubleMatrixMath.multiplyMatrixVector(doublesArr8, doubles3);
-      this.state = DoubleMatrixMath.addVectors(state2, doubles4);
-      double[][] doublesArr9 = DoubleMatrixMath.diagonal(5, 1.0);
-      double[][] doublesArr10 = DoubleMatrixMath.multiply(doublesArr8, doublesArr);
-      double[][] doublesArr11 = DoubleMatrixMath.subtract(doublesArr9, doublesArr10);
-      double[][] covariance2 = this.covariance;
-      this.covariance = DoubleMatrixMath.multiply(doublesArr11, covariance2);
+      double[][] doublesArr8 = DoubleMatrixMath.multiply(doublesArr4, DoubleMatrixMath.multiply(doublesArr2, doublesArr6));
+      this.state = DoubleMatrixMath.addVectors(this.state, DoubleMatrixMath.multiplyMatrixVector(doublesArr8, doubles3));
+      this.covariance = DoubleMatrixMath.multiply(DoubleMatrixMath.subtract(DoubleMatrixMath.diagonal(5, 1.0), DoubleMatrixMath.multiply(doublesArr8, doublesArr)), this.covariance);
    }
 
    public double[] getState() {

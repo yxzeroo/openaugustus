@@ -8,23 +8,18 @@ import net.augustus.events.EventNightVision;
 import net.augustus.settings.SettingChangeListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.minecraft.client.settings.GameSettings;
 
 public class FullBright extends Module implements NightVisionListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue other;
    private float savedGamma;
 
    public FullBright() {
        super("FullBright", "VolleHelligkeit", new Color(188, 213, 25), Categorys.RENDER);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Mode", "NightVision", new String[]{"NightVision", "Gamma"});
-      SettingChangeListener listener = () -> this.onModeChanged();
-      SettingChangeListener listener2 = listener;
-      this.mode = (BooleansSetting)booleansSetting.withChangeListener(listener2);
-      BooleanValue booleanValue = new BooleanValue(this, "Other", true);
-      SettingVisibilityCondition condition = () -> this.isOtherNightVisionVisible();
-      this.other = (BooleanValue)booleanValue.withVisibility(condition);
+      this.mode = (StringValue)new StringValue(this, "Mode", "NightVision", new String[]{"NightVision", "Gamma"}).withChangeListener(() -> this.onModeChanged());
+      this.other = (BooleanValue)new BooleanValue(this, "Other", true).withVisibility(() -> this.isOtherNightVisionVisible());
       this.savedGamma = 1.0F;
    }
 
@@ -43,23 +38,20 @@ public class FullBright extends Module implements NightVisionListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 22;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)22);
    }
 
    @Override
    public void onNightVision(EventNightVision event) {
       if (!this.mode.getSelectedValue().equals("Gamma")) {
-         boolean flag = true;
-         event.setEnabled(flag);
+         event.setEnabled(true);
       }
    }
 
    @Override
    public void onNightVision2(EventNightVision event) {
       if (!this.other.getValue()) {
-         boolean flag = true;
-         event.setEnabled(flag);
+         event.setEnabled(true);
       }
    }
 

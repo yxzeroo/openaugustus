@@ -30,8 +30,7 @@ public class CryptManager {
    public static PublicKey decodePublicKey(byte[] bytes) {
       try {
          X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(bytes);
-         KeyFactory instance = KeyFactory.getInstance("RSA");
-         return instance.generatePublic(x509EncodedKeySpec);
+         return KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
       } catch (NoSuchAlgorithmException e) {
       } catch (InvalidKeySpecException e2) {
       }

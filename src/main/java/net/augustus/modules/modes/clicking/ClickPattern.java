@@ -53,9 +53,8 @@ public class ClickPattern {
    }
 
    public void alignToEvenDelayIndex(int n, int n2, int n3) {
-      Object obj = null;
       ClickPattern clickPattern = this;
-      if (obj == null) {
+      if (null == null) {
          if (this.delayIndex % 2 == 0) {
             return;
          }

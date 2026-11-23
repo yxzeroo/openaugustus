@@ -12,8 +12,7 @@ public final class IntegerListJsonCodec implements JsonListPropertyCodec {
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Integer num = (Integer)obj;
-      this.writeIntegerElement(array, num);
+      this.writeIntegerElement(array, (Integer)obj);
    }
 
    public void writeIntegerElement(JsonArray array, Integer num) {

@@ -93,8 +93,7 @@ public interface MovementHelper extends Helper, ActionCosts {
                return false;
             }
 
-            Block block2 = calculationContext.getBlock(n, n2 + 1, n3);
-            if (block2 instanceof BlockLiquid) {
+            if (calculationContext.getBlock(n, n2 + 1, n3) instanceof BlockLiquid) {
                return false;
             }
          }

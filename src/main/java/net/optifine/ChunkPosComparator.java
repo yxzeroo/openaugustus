@@ -23,17 +23,14 @@ public class ChunkPosComparator implements Comparator {
    }
 
    public int compare2(ChunkCoordIntPair chunkCoordIntPair, ChunkCoordIntPair chunkCoordIntPair2) {
-      int distSq = this.getDistSq(chunkCoordIntPair);
-      int distSq2 = this.getDistSq(chunkCoordIntPair2);
-      return distSq - distSq2;
+      return this.getDistSq(chunkCoordIntPair) - this.getDistSq(chunkCoordIntPair2);
    }
 
    private int getDistSq(ChunkCoordIntPair chunkCoordIntPair) {
       int n = chunkCoordIntPair.chunkXPos - this.chunkPosX;
       int n2 = chunkCoordIntPair.chunkZPos - this.chunkPosZ;
       int n3 = n * n + n2 * n2;
-      double d = MathHelper.atan2((double)n2, (double)n);
-      double d2 = Math.abs(d - this.yawRad);
+      double d2 = Math.abs(MathHelper.atan2((double)n2, (double)n) - this.yawRad);
       if (d2 > Math.PI) {
          d2 = (Math.PI * 2) - d2;
       }

@@ -3,7 +3,6 @@ package net.augustus.config;
 import net.augustus.Augustus;
 import net.augustus.settings.Setting;
 import net.augustus.settings.property.ConfigProperty;
-import net.augustus.utils.TextFormatUtil;
 import net.augustus.utils.UnaryFunction;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,15 +10,13 @@ import java.util.Map.Entry;
 import net.augustus.modules.AbstractFeature;
 import net.augustus.modules.FeatureBase;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
    public static AbstractFeature abstractFeature = new AbstractFeature(null);
 
    private JsonObject serializeRestrictedProperties() {
-      FeatureListJsonCodec codec2 = this.getCodec();
-      UnaryFunction readOnlySaveFilter = this.getReadOnlySaveFilter();
-      return codec2.serializeToObject(readOnlySaveFilter);
+      return this.getCodec().serializeToObject(this.getReadOnlySaveFilter());
    }
 
    @Override
@@ -32,7 +29,6 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
    }
 
    private static Boolean isAllowedInReadOnlyConfig(ConfigProperty configProperty) {
-      String[] stateMarkers = TextFormatUtil.getStateMarkers();
       if (configProperty instanceof Module) {
          return true;
       } else if (configProperty instanceof Setting) {
@@ -43,13 +39,12 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
          } else if (setting.isVisualOnly()) {
             return true;
          } else {
-            return setting instanceof DoubleValue ? true : false;
+            return setting instanceof SettingGroup ? true : false;
          }
       } else {
          FeatureBase featureBase = configProperty.getFeatureBase();
          if (featureBase instanceof Module) {
-            Module module = (Module)featureBase;
-            return !module.isLoadFromConfig();
+            return !((Module)featureBase).isLoadFromConfig();
          } else if (featureBase instanceof Setting) {
             Setting setting2 = (Setting)featureBase;
             Module parentModule2 = setting2.getParentModule();
@@ -66,7 +61,6 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
 
    @Override
    public void captureSnapshot() {
-      String[] stateMarkers = TextFormatUtil.getStateMarkers();
       if (Augustus.getInstance().isConfigEditingEnabled()) {
          super.captureSnapshot();
       } else {
@@ -76,7 +70,6 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
 
    private void mergeRestrictedSnapshot() {
       JsonObject cachedJson2 = (JsonObject)this.getCachedJson();
-      TextFormatUtil.getStateMarkers();
       JsonObject json = this.serializeRestrictedProperties();
       if (json != null) {
          JsonObject json2;
@@ -97,7 +90,6 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
 
    private static JsonObject deepMergeJson(JsonObject json, JsonObject json2) {
       JsonObject json3 = new JsonObject();
-      TextFormatUtil.getStateMarkers();
 
       for (Entry entry : json.entrySet()) {
          json3.add((String)entry.getKey(), (JsonElement)entry.getValue());
@@ -107,9 +99,7 @@ public class ModuleSettingsConfigSection extends AbstractFeatureConfigFile {
          String key = (String)entry2.getKey();
          JsonElement value = (JsonElement)entry2.getValue();
          if (json3.has(key) && json3.get(key).isJsonObject() && value.isJsonObject()) {
-            JsonObject asJsonObject = json3.get(key).getAsJsonObject();
-            JsonObject asJsonObject2 = value.getAsJsonObject();
-            json3.add(key, deepMergeJson(asJsonObject, asJsonObject2));
+            json3.add(key, deepMergeJson(json3.get(key).getAsJsonObject(), value.getAsJsonObject()));
          } else {
             json3.add(key, value);
          }

@@ -4,22 +4,21 @@ import net.augustus.events.EventBlockBoundingBox;
 import net.augustus.events.EventUpdate;
 import net.augustus.events.listeners.BlockBoundingBoxListener;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWeb;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class SolidNoWebMode extends AbstractNoWebMode implements BlockBoundingBoxListener {
-   public SolidNoWebMode(NoWeb noWeb, DoubleValue doubleValue) {
+   public SolidNoWebMode(NoWeb noWeb, SettingGroup doubleValue) {
       super(noWeb, doubleValue, "Solid");
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 3;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)3);
    }
 
    @Override
@@ -32,13 +31,11 @@ public class SolidNoWebMode extends AbstractNoWebMode implements BlockBoundingBo
 
    @Override
    public void onBlockBoundingBox(EventBlockBoundingBox event) {
-      Block block = event.getBlock();
-      if (block instanceof BlockWeb) {
+      if (event.getBlock() instanceof BlockWeb) {
          BlockPos blockPos = event.getBlockPos();
-         AxisAlignedBB box = new AxisAlignedBB(
+         event.setBoundingBox(new AxisAlignedBB(
             (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-         );
-         event.setBoundingBox(box);
+         ));
       }
    }
 }

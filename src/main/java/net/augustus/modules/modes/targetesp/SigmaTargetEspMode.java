@@ -7,29 +7,23 @@ import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.ShaderRenderPass;
 import net.augustus.modules.render.TargetESP;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class SigmaTargetEspMode extends AbstractColoredTargetEspMode {
-   private final StringValue speed;
-   private final StringValue length;
-   private final StringValue additionalRadius;
+   private final DoubleValue speed;
+   private final DoubleValue length;
+   private final DoubleValue additionalRadius;
 
-   public SigmaTargetEspMode(TargetESP targetESP, DoubleValue doubleValue) {
+   public SigmaTargetEspMode(TargetESP targetESP, SettingGroup doubleValue) {
        super(targetESP, doubleValue, "Sigma");
-      StringValue stringValue = new StringValue(this.parentModule, "Speed", 1.0, 0.0, 2.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.speed = stringValue.visibleWhen(condition);
-      StringValue stringValue2 = new StringValue(this.parentModule, "Length", 1.0, 0.0, 2.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.length = stringValue2.visibleWhen(condition2);
-      StringValue stringValue3 = new StringValue(this.parentModule, "AdditionalRadius", 0.0, -1.0, 2.0, 2, this.modeSetting);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.additionalRadius = stringValue3.visibleWhen(condition3);
+      this.speed = new DoubleValue(this.parentModule, "Speed", 1.0, 0.0, 2.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.length = new DoubleValue(this.parentModule, "Length", 1.0, 0.0, 2.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
+      this.additionalRadius = new DoubleValue(this.parentModule, "AdditionalRadius", 0.0, -1.0, 2.0, 2, this.modeSetting).visibleWhen(() -> this.isSelected());
    }
 
    @Override
@@ -46,8 +40,7 @@ public class SigmaTargetEspMode extends AbstractColoredTargetEspMode {
 
    @Override
    public void renderTargetEsp(EntityLivingBase entity) {
-      boolean isBlurActive = ((TargetESP)this.parentModule).blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, ((TargetESP)this.parentModule).blurShadowSettings.isShadowActive());
+      BlurShadowManager.enableOneShotPass(((TargetESP)this.parentModule).blurShadowSettings.isBlurActive(), ((TargetESP)this.parentModule).blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(true, shaderRenderPass -> {
          this.renderSigmaRing(entity, shaderRenderPass);
       });
@@ -106,9 +99,7 @@ public class SigmaTargetEspMode extends AbstractColoredTargetEspMode {
 
    private void applyRingVertexColor(EntityLivingBase entity, int n, ShaderRenderPass shaderRenderPass) {
       int targetColor = this.getTargetColor(entity);
-      BlurShadowSettings blurShadowSettings = ((TargetESP)this.parentModule).blurShadowSettings;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, targetColor);
-      RenderUtil.setGlColor(blurShadowSettings.resolvePassColor(shaderRenderPass, n2));
+      RenderUtil.setGlColor(((TargetESP)this.parentModule).blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, targetColor)));
    }
 
 }

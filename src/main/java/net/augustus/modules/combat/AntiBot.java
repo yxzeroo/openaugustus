@@ -16,7 +16,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,9 +34,9 @@ public class AntiBot extends Module implements PacketListener, TickListener {
    private final List heldItemPlayers;
    private final List armoredPlayers;
    private final MultiOptionSetting mode;
-   private final StringValue ticksExisted;
+   private final DoubleValue ticksExisted;
    private final BooleanValue distanceCheck;
-   private final StringValue checkDistance;
+   private final DoubleValue checkDistance;
    private final BooleanValue blockHits;
    private final BooleanValue debug;
 
@@ -50,9 +50,7 @@ public class AntiBot extends Module implements PacketListener, TickListener {
       this.heldItemPlayers = new ArrayList();
       this.armoredPlayers = new ArrayList();
       this.mode = new MultiOptionSetting(this, "Mode", AntiBotCheckOption.values());
-      StringValue stringValue = new StringValue(this, "TicksExisted", 20.0, 1.0, 100.0, 0);
-      SettingVisibilityCondition condition = AntiBotCheckOption.TICKS_EXISTED::isSelected;
-      this.ticksExisted = stringValue.visibleWhen(condition);
+      this.ticksExisted = new DoubleValue(this, "TicksExisted", 20.0, 1.0, 100.0, 0).visibleWhen(AntiBotCheckOption.TICKS_EXISTED::isSelected);
       BooleanValue booleanValue = new BooleanValue(this, "DistanceCheck", true);
       SettingVisibilityCondition condition2 = () -> {
          return AntiBotCheckOption.isOptionSelected(AntiBotCheckOption.NEVER_ON_GROUND)
@@ -62,7 +60,7 @@ public class AntiBot extends Module implements PacketListener, TickListener {
             || AntiBotCheckOption.SOUND.isSelected();
       };
       this.distanceCheck = (BooleanValue)booleanValue.withVisibility(condition2);
-      StringValue stringValue2 = new StringValue(this, "CheckDistance", 10.0, 6.0, 40.0, 0);
+      DoubleValue stringValue2 = new DoubleValue(this, "CheckDistance", 10.0, 6.0, 40.0, 0);
       SettingVisibilityCondition condition3 = () -> {
          return this.distanceCheck.getValue() && this.distanceCheck.isVisible();
       };
@@ -83,10 +81,8 @@ public class AntiBot extends Module implements PacketListener, TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -95,8 +91,7 @@ public class AntiBot extends Module implements PacketListener, TickListener {
 
       for (Entity entity : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
          if (entity instanceof EntityPlayer && entity != mc.thePlayer && mc.thePlayer.ticksExisted > 5) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (this.checkPlayerIsBot(player)) {
+            if (this.checkPlayerIsBot((EntityPlayer)entity)) {
                this.bots.add(entity);
             } else if (this.temporaryBots.contains(entity)) {
                this.bots.remove(entity);
@@ -106,8 +101,7 @@ public class AntiBot extends Module implements PacketListener, TickListener {
       }
 
       if (this.bots.size() > size && this.debug.getValue()) {
-         String str = "Removed bot :)";
-         this.sendChatMessage2(str);
+         this.sendChatMessage2("Removed bot :)");
       }
 
       this.bots.removeIf(obj -> {
@@ -160,8 +154,7 @@ public class AntiBot extends Module implements PacketListener, TickListener {
             this.markTemporaryBot(player);
             return true;
          } else if (AntiBotCheckOption.INVALID_NAME.isSelected()) {
-            String name2 = player.getName();
-            return !TextFormatUtil.isValidMinecraftUsername(name2);
+            return !TextFormatUtil.isValidMinecraftUsername(player.getName());
          } else {
             if (AntiBotCheckOption.SWING.isSelected()) {
                if (player.isSwingInProgress && !this.swungPlayers.contains(player)) {

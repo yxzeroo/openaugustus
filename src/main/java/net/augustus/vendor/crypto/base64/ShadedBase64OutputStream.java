@@ -1,6 +1,5 @@
 package net.augustus.vendor.crypto.base64;
 
-import net.augustus.vendor.crypto.VendorAesHelper;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,7 +18,6 @@ public class ShadedBase64OutputStream extends FilterOutputStream {
 
    @Override
    public void close() throws IOException {
-      VendorAesHelper.getInvertedGuardFlag();
       if (!this.closed) {
          this.closed = true;
          if (this.leftover != 1) {
@@ -57,7 +55,6 @@ public class ShadedBase64OutputStream extends FilterOutputStream {
 
    private void checkNewline() throws IOException {
       byte b = 1;
-      int guardFlag = VendorAesHelper.getGuardFlag();
 
       while (true) {
          while (b > 1) {
@@ -77,22 +74,15 @@ public class ShadedBase64OutputStream extends FilterOutputStream {
    @Override
    public void write(int n) throws IOException {
       Object obj = null;
-      VendorAesHelper.getGuardFlag();
       obj = new byte[1];
       ((byte[])obj)[0] = (byte)(n & 0xFF);
-      ShadedBase64OutputStream shadedBase64OutputStream = this;
-      byte[] bytes = (byte[])obj;
-      byte b = 1;
-      byte b3 = 0;
-      byte[] bytes2 = bytes;
-      shadedBase64OutputStream.write(bytes2, b3, b);
+      this.write((byte[])obj, (byte)0, (byte)1);
    }
 
    @Override
    public void write(byte[] bytes, int n, int n2) throws IOException {
       int n3 = 0;
       int n4 = 0;
-      VendorAesHelper.getGuardFlag();
       if (this.closed) {
          throw new IOException("Stream is closed");
       } else if (n < 0 || n2 < 0 || n2 > bytes.length - n) {

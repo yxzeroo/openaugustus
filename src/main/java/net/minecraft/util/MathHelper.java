@@ -88,8 +88,7 @@ public class MathHelper {
          double d8 = COS_TAB[n];
          double d9 = d6 - FRAC_BIAS;
          double d10 = d * d8 - d2 * d9;
-         double d11 = (6.0 + d10 * d10) * d10 * 0.16666666666666666;
-         double d12 = d7 + d11;
+         double d12 = d7 + ((6.0 + d10 * d10) * d10 * 0.16666666666666666);
          if (flag3) {
             d12 = 1.5707963267948966 - d12;
          }
@@ -171,10 +170,7 @@ public class MathHelper {
             throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + f + ", " + f2 + ", " + f3);
       }
 
-      int n2 = clamp_int((int)(f8 * 255.0F), 0, 255);
-      int n3 = clamp_int((int)(f9 * 255.0F), 0, 255);
-      int n4 = clamp_int((int)(f10 * 255.0F), 0, 255);
-      return n2 << 16 | n3 << 8 | n4;
+      return clamp_int((int)(f8 * 255.0F), 0, 255) << 16 | clamp_int((int)(f9 * 255.0F), 0, 255) << 8 | clamp_int((int)(f10 * 255.0F), 0, 255);
    }
 
    public static int floor_float(float f) {
@@ -293,8 +289,7 @@ public class MathHelper {
       COS_TAB = new double[257];
 
       for (int idx = 0; idx < 257; idx++) {
-         double d = (double)idx / 256.0;
-         double d2 = Math.asin(d);
+         double d2 = Math.asin((double)idx / 256.0);
          COS_TAB[idx] = Math.cos(d2);
          ASINE_TAB[idx] = d2;
       }
@@ -394,8 +389,7 @@ public class MathHelper {
    }
 
    public static int rgb(int n, int n2, int n3) {
-      int n4 = (n << 8) + n2;
-      return (n4 << 8) + n3;
+      return (((n << 8) + n2) << 8) + n3;
    }
 
    public static double clamp_double(double d, double d2, double d3) {
@@ -430,10 +424,7 @@ public class MathHelper {
       int n6 = (n2 & 0xFF00) >> 8;
       int n7 = (n & 0xFF) >> 0;
       int n8 = (n2 & 0xFF) >> 0;
-      int n9 = (int)((float)n3 * (float)n4 / 255.0F);
-      int n10 = (int)((float)n5 * (float)n6 / 255.0F);
-      int n11 = (int)((float)n7 * (float)n8 / 255.0F);
-      return n & 0xFF000000 | n9 << 16 | n10 << 8 | n11;
+      return n & 0xFF000000 | ((int)((float)n3 * (float)n4 / 255.0F)) << 16 | ((int)((float)n5 * (float)n6 / 255.0F)) << 8 | ((int)((float)n7 * (float)n8 / 255.0F));
    }
 
 }

@@ -10,10 +10,8 @@ public class CosmeticsMenuTab {
    private Runnable action;
    private ArrayList elements;
    private boolean listLayout;
-   private static int[] flowState;
 
    public CosmeticsMenuTab(String str, byte b, String str2, long l, ArrayList list, int n) {
-      getFlowState();
       this.elements = new ArrayList();
       this.name = str;
       this.icon = str2;
@@ -61,7 +59,6 @@ public class CosmeticsMenuTab {
    }
 
    public String getEffectiveTitle() {
-      int[] flowState2 = getFlowState();
       return this.displayTitle == null ? this.name : this.displayTitle;
    }
 
@@ -71,17 +68,6 @@ public class CosmeticsMenuTab {
       this.icon = str2;
    }
 
-   public static void setFlowState(int[] ints) {
-      flowState = ints;
-   }
 
-   public static int[] getFlowState() {
-      return flowState;
-   }
 
-   static {
-      if (getFlowState() == null) {
-         setFlowState(new int[2]);
-      }
-   }
 }

@@ -11,14 +11,9 @@ public class CustomFontUtil implements GuiScaleListener, MC {
    public float fontHeight = 0.0F;
    private final String fontName;
    public int scaleOverride = 2147483647;
-   private static int[] fontStateFlags;
 
    public void drawCenteredStringInBox(String str, double d, double d2, double d3, double d4, int n) {
-      UnicodeFontRenderer unicodeFontRenderer2 = this.unicodeFontRenderer;
-      float f = (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F));
-      float f2 = (float)(d2 + d4 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F));
-      float f3 = f;
-      unicodeFontRenderer2.drawString(str, f3, f2, n);
+      this.unicodeFontRenderer.drawString(str, (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F)), (float)(d2 + d4 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F)), n);
    }
 
    public float getStringWidth(String str) {
@@ -61,9 +56,7 @@ public class CustomFontUtil implements GuiScaleListener, MC {
       float f = (float)d;
       double d4 = d2 + d3 / 2.0;
       String str2 = "Dj";
-      float f2 = (float)(d4 - (double)((float)this.unicodeFontRenderer.getStringHeight(str2) / 2.0F));
-      float f3 = f;
-      unicodeFontRenderer2.drawString(str, f3, f2, n);
+      unicodeFontRenderer2.drawString(str, f, (float)(d4 - (double)((float)this.unicodeFontRenderer.getStringHeight(str2) / 2.0F)), n);
    }
 
    public CustomFontUtil(String str, Font font) {
@@ -95,11 +88,7 @@ public class CustomFontUtil implements GuiScaleListener, MC {
    }
 
    public void drawCenteredStringInBoxWithShadow(String str, double d, double d2, double d3, double d4, int n) {
-      UnicodeFontRenderer unicodeFontRenderer2 = this.unicodeFontRenderer;
-      float f = (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F));
-      float f2 = (float)(d2 + d4 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F));
-      float f3 = f;
-      unicodeFontRenderer2.drawStringWithShadow(str, f3, f2, n);
+      this.unicodeFontRenderer.drawStringWithShadow(str, (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F)), (float)(d2 + d4 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F)), n);
    }
 
    public void onGuiScale() {
@@ -107,19 +96,11 @@ public class CustomFontUtil implements GuiScaleListener, MC {
    }
 
    public void drawHorizontallyCenteredString(String str, double d, double d2, double d3, int n) {
-      UnicodeFontRenderer unicodeFontRenderer2 = this.unicodeFontRenderer;
-      float f = (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F));
-      float f2 = (float)d2;
-      float f3 = f;
-      unicodeFontRenderer2.drawString(str, f3, f2, n);
+      this.unicodeFontRenderer.drawString(str, (float)(d + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringWidth(str) / 2.0F)), (float)d2, n);
    }
 
    public void drawVerticallyCenteredString(String str, double d, double d2, double d3, int n) {
-      UnicodeFontRenderer unicodeFontRenderer2 = this.unicodeFontRenderer;
-      float f = (float)d;
-      float f2 = (float)(d2 + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F));
-      float f3 = f;
-      unicodeFontRenderer2.drawString(str, f3, f2, n);
+      this.unicodeFontRenderer.drawString(str, (float)d, (float)(d2 + d3 / 2.0 - (double)((float)this.unicodeFontRenderer.getStringHeight(str) / 2.0F)), n);
    }
 
    public String getFontName() {
@@ -127,22 +108,18 @@ public class CustomFontUtil implements GuiScaleListener, MC {
    }
 
    public void drawString(String str, double d, double d2, int n, boolean flag) {
-      int[] fontStateFlags2 = getFontStateFlags();
       if (flag) {
          float f = (float)d;
          float f2 = (float)d2;
-         float f3 = f;
-         this.unicodeFontRenderer.drawStringWithShadow(str, f3, f2, n);
+         this.unicodeFontRenderer.drawStringWithShadow(str, f, f2, n);
       } else {
          float f4 = (float)d;
          float f5 = (float)d2;
-         float f6 = f4;
-         this.unicodeFontRenderer.drawString(str, f6, f5, n);
+         this.unicodeFontRenderer.drawString(str, f4, f5, n);
       }
    }
 
    private void reloadFont() {
-      int[] fontStateFlags2 = getFontStateFlags();
       if (this.scaleOverride == 2147483647) {
          this.unicodeFontRenderer = new UnicodeFontRenderer(this.awtFont);
          this.unicodeFontRenderer.loadGlyphs();
@@ -154,31 +131,20 @@ public class CustomFontUtil implements GuiScaleListener, MC {
    public void drawString(String str, double d, double d2, int n) {
       float f = (float)d;
       float f2 = (float)d2;
-      float f3 = f;
-      this.unicodeFontRenderer.drawString(str, f3, f2, n);
+      this.unicodeFontRenderer.drawString(str, f, f2, n);
    }
 
    public void drawStringWithShadow(String str, double d, double d2, int n) {
       float f = (float)d;
       float f2 = (float)d2;
-      float f3 = f;
-      this.unicodeFontRenderer.drawStringWithShadow(str, f3, f2, n);
+      this.unicodeFontRenderer.drawStringWithShadow(str, f, f2, n);
    }
 
    public CustomFontUtil() {
       this.fontName = "";
    }
 
-   public static void setFontStateFlags(int[] ints) {
-      fontStateFlags = ints;
-   }
 
-   public static int[] getFontStateFlags() {
-      return fontStateFlags;
-   }
 
-   static {
-      setFontStateFlags((int[])null);
-   }
 
 }

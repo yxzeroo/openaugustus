@@ -34,12 +34,10 @@ public final class RsaPaddingEngine {
    }
 
    public byte[] unpad(byte[] bytes, int n, int n2) throws BadPaddingException {
-      byte[] bytes2 = RsaPublicKeyCipher.convert(bytes, n, n2);
-      return this.unpad(bytes2);
+      return this.unpad(RsaPublicKeyCipher.convert(bytes, n, n2));
    }
 
    public byte[] pad(byte[] bytes) throws BadPaddingException {
-      int[] flowState = RsaPublicKeyCipher.getFlowState();
       if (bytes.length > this.maxDataSize) {
          throw new BadPaddingException("Data must be shorter than " + (this.maxDataSize + 1) + " bytes but received " + bytes.length + " bytes.");
       } else {
@@ -58,13 +56,11 @@ public final class RsaPaddingEngine {
    }
 
    public byte[] pad(byte[] bytes, int n, int n2) throws BadPaddingException {
-      byte[] bytes2 = RsaPublicKeyCipher.convert(bytes, n, n2);
-      return this.pad(bytes2);
+      return this.pad(RsaPublicKeyCipher.convert(bytes, n, n2));
    }
 
    private byte[] unpadOAEP(byte[] bytes) throws BadPaddingException {
       byte[] bytes2 = bytes;
-      RsaPublicKeyCipher.getFlowState();
       boolean flag = false;
       int length = this.lHash.length;
       if (bytes[0] != 0) {
@@ -128,7 +124,6 @@ public final class RsaPaddingEngine {
       byte[] bytes2 = new byte[this.paddedSize];
       System.arraycopy(bytes, 0, bytes2, this.paddedSize - bytes.length, bytes.length);
       int n = this.paddedSize - 3 - bytes.length;
-      RsaPublicKeyCipher.getFlowState();
       byte b = 0;
       int n2 = b + 1;
       bytes2[b] = 0;
@@ -139,8 +134,7 @@ public final class RsaPaddingEngine {
          }
       } else {
          if (this.secureRandom == null) {
-            SecureRandom secureRandom2 = JCAUtil.getSecureRandom();
-            this.secureRandom = secureRandom2;
+            this.secureRandom = JCAUtil.getSecureRandom();
          }
 
          byte[] bytes3 = new byte[64];
@@ -169,7 +163,6 @@ public final class RsaPaddingEngine {
    }
 
    public byte[] unpad(byte[] bytes) throws BadPaddingException {
-      int[] flowState = RsaPublicKeyCipher.getFlowState();
       if (bytes.length != this.paddedSize) {
          throw new BadPaddingException("Decryption error.The padded array length (" + bytes.length + ") is not the specified padded size (" + this.paddedSize + ")");
       } else {
@@ -190,7 +183,6 @@ public final class RsaPaddingEngine {
    private byte[] unpadV15(byte[] bytes) throws BadPaddingException {
       byte b = 0;
       boolean flag = false;
-      RsaPublicKeyCipher.getFlowState();
       int n = b + 1;
       if (bytes[b] != 0) {
          flag = true;
@@ -222,8 +214,7 @@ public final class RsaPaddingEngine {
          flag = true;
       }
 
-      byte[] bytes2 = new byte[n2];
-      System.arraycopy(bytes, 0, bytes2, 0, n2);
+      System.arraycopy(bytes, 0, new byte[n2], 0, n2);
       byte[] bytes3 = new byte[n4];
       System.arraycopy(bytes, n2, bytes3, 0, n4);
       BadPaddingException ex = new BadPaddingException("Decryption error");
@@ -237,7 +228,6 @@ public final class RsaPaddingEngine {
    private RsaPaddingEngine(int n, int n2, SecureRandom rand, OAEPParameterSpec oaepParameterSpec) throws InvalidKeyException, InvalidAlgorithmParameterException {
        super();
       this.type = n;
-      RsaPublicKeyCipher.getFlowState();
       this.paddedSize = n2;
       this.secureRandom = rand;
       if (n2 < 64) {
@@ -274,18 +264,14 @@ public final class RsaPaddingEngine {
                      bytes = ((PSpecified)pSource).getValue();
                   }
 
-                  MessageDigest instance = MessageDigest.getInstance(str);
-                  this.md = instance;
-                  Mgf1MaskGenerator mgf1MaskGenerator = new Mgf1MaskGenerator(str2);
-                  this.mgf = mgf1MaskGenerator;
+                  this.md = MessageDigest.getInstance(str);
+                  this.mgf = new Mgf1MaskGenerator(str2);
                } catch (NoSuchAlgorithmException e) {
                   throw new InvalidKeyException("Digest not available", e);
                }
 
-               byte[] initialHash = getInitialHash(this.md, bytes);
-               this.lHash = initialHash;
-               int length = this.lHash.length;
-               this.maxDataSize = n2 - 2 - 2 * length;
+               this.lHash = getInitialHash(this.md, bytes);
+               this.maxDataSize = n2 - 2 - 2 * this.lHash.length;
                if (this.maxDataSize <= 0) {
                   StringBuilder sb = new StringBuilder().append("Key is too short for encryption using OAEPPadding with ").append(str).append(" and ");
                   throw new InvalidKeyException(sb.append(this.mgf.getName()).toString());
@@ -298,10 +284,8 @@ public final class RsaPaddingEngine {
    }
 
    private byte[] padOAEP(byte[] bytes) throws BadPaddingException {
-      int[] flowState = RsaPublicKeyCipher.getFlowState();
       if (this.secureRandom == null) {
-         SecureRandom secureRandom2 = JCAUtil.getSecureRandom();
-         this.secureRandom = secureRandom2;
+         this.secureRandom = JCAUtil.getSecureRandom();
       }
 
       int length = this.lHash.length;
@@ -322,7 +306,6 @@ public final class RsaPaddingEngine {
    }
 
    private static byte[] getInitialHash(MessageDigest messageDigest, byte[] bytes) {
-      int[] flowState = RsaPublicKeyCipher.getFlowState();
       byte[] bytes2;
       if (bytes != null && bytes.length != 0) {
          bytes2 = messageDigest.digest(bytes);

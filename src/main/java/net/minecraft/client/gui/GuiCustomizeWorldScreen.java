@@ -404,9 +404,7 @@ public class GuiCustomizeWorldScreen extends GuiScreen implements GuiSlider.Form
                }
                break;
             case 305:
-               Minecraft mc2 = this.mc;
-               GuiScreenCustomizePresets presets2 = new GuiScreenCustomizePresets(this);
-               mc2.displayGuiScreen(presets2);
+               this.mc.displayGuiScreen(new GuiScreenCustomizePresets(this));
                break;
             case 306:
                this.confirmAction();

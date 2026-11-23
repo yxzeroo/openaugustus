@@ -1,6 +1,5 @@
 package net.augustus.vendor.crypto.math;
 
-import net.augustus.vendor.crypto.CustomBigInteger;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -21,7 +20,6 @@ public final class ShadedMathContext implements Serializable {
    private void readObject(long l, ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
       String str = null;
       byte b = 6;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       while (true) {
          outerLoop:
@@ -83,7 +81,6 @@ public final class ShadedMathContext implements Serializable {
    @Override
    public boolean equals(Object obj) {
       Object obj2 = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (!(obj instanceof ShadedMathContext)) {
          return false;
       } else {
@@ -112,7 +109,6 @@ public final class ShadedMathContext implements Serializable {
    }
 
    public ShadedMathContext(String str, int n, int n2, short s) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (str == null) {
          throw new NullPointerException("null String");
       } else {
@@ -130,8 +126,7 @@ public final class ShadedMathContext implements Serializable {
             }
 
             n5 = n4 + 1 + 13;
-            String str2 = str.substring(n5);
-            this.roundingMode = CustomRoundingMode.valueOf(str2);
+            this.roundingMode = CustomRoundingMode.valueOf(str.substring(n5));
          } catch (RuntimeException e) {
             throw new IllegalArgumentException("bad string format");
          }

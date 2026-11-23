@@ -17,16 +17,13 @@ public class BooleanValue extends Setting {
    private final BooleanProperty b;
    private static final int TRUE_LABEL_WIDTH = 32;
 
-   private BooleanValue(String str, Module module, DoubleValue doubleValue, boolean flag) {
+   private BooleanValue(String str, Module module, SettingGroup doubleValue, boolean flag) {
        super(module, doubleValue, str);
-      BooleanProperty booleanProperty = new BooleanProperty(this, "B", false);
-      Consumer consumer = obj -> this.setValue((boolean)obj);
-      this.b = (BooleanProperty)booleanProperty.withOnValueChanged(consumer);
+      this.b = (BooleanProperty)new BooleanProperty(this, "B", false).withOnValueChanged(obj -> this.setValue((boolean)obj));
       this.labelWidth = -1;
       BooleanProperty booleanProperty2 = this.b;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      booleanProperty2.setValue(bool2);
+      booleanProperty2.setValue(bool);
       booleanProperty2 = this.b;
       Boolean bool3 = flag;
       booleanProperty2.setDefaultValue(bool3);
@@ -37,19 +34,14 @@ public class BooleanValue extends Setting {
       customFontUtil = FontManager.consolas30BooleanValue;
       super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
       String str = this.getDisplayName() + ": ";
-      boolean flag2 = this.labelWidth == -1;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
          this.labelWidth = (int)customFontUtil.getStringWidth(str);
       }
 
       if (flag) {
-         byte b2 = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b2);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
+         customFontUtil.drawString(str, d, (double)n4, colorInt);
          String str2 = String.valueOf(this.getValue());
          float f = this.getValue() ? 32.0F : 40.0F;
          GlStateManager.enableBlend();
@@ -58,25 +50,19 @@ public class BooleanValue extends Setting {
          double d4 = (double)n4;
          int n7;
          if (this.getValue()) {
-            byte b3 = 0;
-            n7 = ClientManagers.moduleManager.clickGui.enabledColor.getColorInt(b3);
+            n7 = ClientManagers.moduleManager.clickGui.enabledColor.getColorInt((byte)0);
          } else {
-            byte b4 = 0;
-            n7 = ClientManagers.moduleManager.clickGui.disabledColor.getColorInt(b4);
+            n7 = ClientManagers.moduleManager.clickGui.disabledColor.getColorInt((byte)0);
          }
 
-         int hoveredColor = RenderUtil.getHoveredColor(n7, 0.16, n, n2, n3 + this.labelWidth - 8, n4 - 4, 60, (int)(customFontUtil.getFontHeight() + 5.0F));
-         double d5 = d4;
-         double d6 = d;
-         customFontUtil.drawString(str2, d6, d5, hoveredColor);
+         customFontUtil.drawString(str2, d, d4, RenderUtil.getHoveredColor(n7, 0.16, n, n2, n3 + this.labelWidth - 8, n4 - 4, 60, (int)(customFontUtil.getFontHeight() + 5.0F)));
          this.contentWidth = (int)((float)this.labelWidth + f + 20.0F);
       }
    }
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    public void setDefaultValue(boolean flag) {
@@ -89,7 +75,7 @@ public class BooleanValue extends Setting {
       return (Boolean)this.b.getValue();
    }
 
-   public BooleanValue(Module module, String str, boolean flag, DoubleValue doubleValue) {
+   public BooleanValue(Module module, String str, boolean flag, SettingGroup doubleValue) {
        this(str, module, doubleValue, flag);
    }
 
@@ -104,8 +90,7 @@ public class BooleanValue extends Setting {
    @Override
    public void resetToDefault() {
       boolean defaultValue = (Boolean)this.b.getDefaultValue();
-      boolean flag = defaultValue;
-      this.setValue(flag);
+      this.setValue(defaultValue);
    }
 
    @Override
@@ -113,8 +98,7 @@ public class BooleanValue extends Setting {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       if (mouseButton == 0
          && RenderUtil.isHovered((float)(this.renderX + this.labelWidth - 8), (float)(this.renderY - 4), 60.0F, (float)((int)this.renderFont.getFontHeight() + 5), mouseX, mouseY)) {
-         boolean flag = !this.getValue();
-         this.setValue(flag);
+         this.setValue(!this.getValue());
          return true;
       } else {
          return false;
@@ -128,8 +112,7 @@ public class BooleanValue extends Setting {
 
       BooleanProperty booleanProperty = this.b;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      booleanProperty.setValue(bool2);
+      booleanProperty.setValue(bool);
    }
 
    @Override
@@ -139,9 +122,7 @@ public class BooleanValue extends Setting {
 
    @Override
    public void randomize() {
-      boolean flag = ThreadLocalRandom.current().nextBoolean();
-      boolean flag2 = flag;
-      this.setValue(flag2);
+      this.setValue(ThreadLocalRandom.current().nextBoolean());
    }
 
 }

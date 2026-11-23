@@ -43,8 +43,7 @@ public class JsonChunkFilter implements IChunkFilter {
    private JsonChunkFilter(ExploreProcess exploreProcess2, Path path, boolean flag) throws Exception {
       this.exploreProcess = exploreProcess2;
       this.invert = flag;
-      Gson gson = new GsonBuilder().create();
-      this.myChunkPositions = (ExploreJsonChunk[])gson.fromJson(new InputStreamReader(Files.newInputStream(path)), ExploreJsonChunk[].class);
+      this.myChunkPositions = (ExploreJsonChunk[])new GsonBuilder().create().fromJson(new InputStreamReader(Files.newInputStream(path)), ExploreJsonChunk[].class);
       exploreProcess2.logDirect2("Loaded " + this.myChunkPositions.length + " positions");
       this.inFilter = new LongOpenHashSet();
 

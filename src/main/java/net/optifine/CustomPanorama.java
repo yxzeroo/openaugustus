@@ -21,8 +21,7 @@ public class CustomPanorama {
       for (int i = 0; i < 100; i++) {
          String str = "optifine/gui/background" + i;
          String str2 = str + "/panorama_0.png";
-         ResourceLocation location = new ResourceLocation(str2);
-         if (Config.hasResource(location)) {
+         if (Config.hasResource(new ResourceLocation(str2))) {
             list.add(str);
          }
       }
@@ -42,8 +41,7 @@ public class CustomPanorama {
          if (properties == null) {
             ints[i] = 1;
          } else {
-            String property = properties.getProperty("weight", (String)null);
-            ints[i] = Config.parseInt(property, 1);
+            ints[i] = Config.parseInt(properties.getProperty("weight", (String)null), 1);
          }
       }
 
@@ -59,8 +57,7 @@ public class CustomPanorama {
       String[] panoramaFolders = getPanoramaFolders();
       if (panoramaFolders.length > 1) {
          Properties[] panoramaProperties = getPanoramaProperties(panoramaFolders);
-         int[] weights = getWeights(panoramaProperties);
-         int randomIndex = getRandomIndex(weights);
+         int randomIndex = getRandomIndex(getWeights(panoramaProperties));
          String str = panoramaFolders[randomIndex];
          Object obj = panoramaProperties[randomIndex];
          if (obj == null) {
@@ -71,8 +68,7 @@ public class CustomPanorama {
             obj = new PropertiesOrdered();
          }
 
-         CustomPanoramaProperties customPanoramaProperties2 = new CustomPanoramaProperties(str, (Properties)obj);
-         customPanoramaProperties = customPanoramaProperties2;
+         customPanoramaProperties = new CustomPanoramaProperties(str, (Properties)obj);
       }
    }
 

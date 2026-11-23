@@ -98,9 +98,8 @@ public class Polar3FlyMode extends FlyMode {
 
       if (this.waterBucketSlot >= 0 && !this.flyingActive) {
          Fly fly2 = this.fly;
-         byte b = -90;
          float f = 90.0F;
-         ClientManagers.rotationController.requestPitch(f, b, fly2);
+         ClientManagers.rotationController.requestPitch(f, (byte)-90, fly2);
       }
    }
 
@@ -112,50 +111,38 @@ public class Polar3FlyMode extends FlyMode {
 
    public void onIncomingPacketDelay(EventPacketDelay event) {
       if (this.delayIncomingPackets) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
 
       Packet packet = event.getPacket();
       if (packet instanceof S23PacketBlockChange) {
          S23PacketBlockChange packet2 = (S23PacketBlockChange)packet;
          IBlockState blockState = packet2.getBlockState();
-         BlockPos blockPosition = packet2.getBlockPosition();
-         this.onBlockStateChange(blockPosition, blockState);
+         this.onBlockStateChange(packet2.getBlockPosition(), blockState);
       }
 
       if (packet instanceof S22PacketMultiBlockChange) {
-         S22PacketMultiBlockChange packet3 = (S22PacketMultiBlockChange)packet;
-         S22PacketMultiBlockChange.BlockUpdateData[] changedBlocks = packet3.getChangedBlocks();
 
-         for (S22PacketMultiBlockChange.BlockUpdateData blockUpdateData : changedBlocks) {
+         for (S22PacketMultiBlockChange.BlockUpdateData blockUpdateData : ((S22PacketMultiBlockChange)packet).getChangedBlocks()) {
             IBlockState blockState2 = blockUpdateData.getBlockState();
-            BlockPos pos = blockUpdateData.getPos();
-            this.onBlockStateChange(pos, blockState2);
+            this.onBlockStateChange(blockUpdateData.getPos(), blockState2);
          }
       }
    }
 
    public void onMoveInput(EventMoveInput event) {
       if (this.flyingActive) {
-         float f = 1.0F;
-         event.setMoveForward(f);
-         boolean flag = true;
-         event.setJump(flag);
+         event.setMoveForward(1.0F);
+         event.setJump(true);
       } else {
-         float f2 = 0.0F;
-         event.setMoveForward(f2);
-         float f3 = 0.0F;
-         event.setMoveStrafe(f3);
-         boolean flag2 = false;
-         event.setJump(flag2);
+         event.setMoveForward(0.0F);
+         event.setMoveStrafe(0.0F);
+         event.setJump(false);
       }
 
       if (this.pendingJumpPhase) {
-         long l = 500L;
-         if (this.initDelayTimer.reached2(l) && this.waterBucketSlot >= 0 && this.jumpCycleCount < 4) {
-            boolean flag3 = true;
-            event.setJump(flag3);
+         if (this.initDelayTimer.reached2(500L) && this.waterBucketSlot >= 0 && this.jumpCycleCount < 4) {
+            event.setJump(true);
             this.clickingWater = true;
          }
       }
@@ -167,14 +154,11 @@ public class Polar3FlyMode extends FlyMode {
       }
 
       if (this.clickingWater && (this.jumpCycleCount < 4 || this.bucketUseCount % 2 != 0)) {
-         byte b = 1;
-         event.addRightClicks(b);
-         boolean flag = true;
-         event.setRightMouseDown(flag);
+         event.addRightClicks((byte)1);
+         event.setRightMouseDown(true);
          this.bucketUseCount++;
          if (mc.thePlayer.ticksExisted % 4 == 0 && this.jumpCycleCount < 4) {
-            byte b2 = 1;
-            event.addRightClicks(b2);
+            event.addRightClicks((byte)1);
             this.bucketUseCount++;
          }
       }
@@ -185,8 +169,7 @@ public class Polar3FlyMode extends FlyMode {
          this.pendingBlinkStart = true;
       }
 
-      long l = 500L;
-      if (this.blinkDelayTimer.reached2(l) && this.pendingBlinkStart) {
+      if (this.blinkDelayTimer.reached2(500L) && this.pendingBlinkStart) {
          this.delayIncomingPackets = true;
          this.pendingBlinkStart = false;
       }
@@ -195,10 +178,8 @@ public class Polar3FlyMode extends FlyMode {
    public void onSilentSlot() {
       if (this.waterBucketSlot == -1 && this.initializedOnGround) {
          ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         byte b = 36;
-         containerSlotQuery = containerSlotQuery.fromSlot(b);
-         Item waterBucket = Items.water_bucket;
-         OptionalInt optionalInt = containerSlotQuery.filterItemExact(waterBucket).findFirstSlotIndex();
+         containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+         OptionalInt optionalInt = containerSlotQuery.filterItemExact(Items.water_bucket).findFirstSlotIndex();
          if (optionalInt.isPresent()) {
             this.waterBucketSlot = optionalInt.getAsInt() - 36;
             this.initDelayTimer.reset();
@@ -206,16 +187,13 @@ public class Polar3FlyMode extends FlyMode {
             String str = "§cYou need a water bucket in your hotbar. Fly disabled.";
             this.fly.sendChatMessage2(str);
             this.waterBucketSlot = -2;
-            boolean flag = false;
-            this.fly.setToggled(flag);
+            this.fly.setToggled(false);
          }
       }
 
       if (this.waterBucketSlot >= 0 && !this.flyingActive) {
-         boolean flag2 = true;
          int waterBucketSlot2 = this.waterBucketSlot;
-         byte b2 = -10;
-         SilentSlotManager.requestSlot(this.fly, b2, waterBucketSlot2, flag2);
+         SilentSlotManager.requestSlot(this.fly, (byte)-10, waterBucketSlot2, true);
       }
    }
 
@@ -224,10 +202,9 @@ public class Polar3FlyMode extends FlyMode {
          Block block = event.getBlock();
          if ((block instanceof BlockAir || block instanceof BlockLiquid || block instanceof BlockWeb) && (double)event.getBlockPos().getY() < this.startY) {
             BlockPos blockPos = event.getBlockPos();
-            AxisAlignedBB box = new AxisAlignedBB(
+            event.setBoundingBox(new AxisAlignedBB(
                (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-            );
-            event.setBoundingBox(box);
+            ));
          }
       }
    }

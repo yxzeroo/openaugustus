@@ -18,8 +18,7 @@ public class EventRenderBlock extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      RenderBlockListener listener = (RenderBlockListener)obj;
-      this.call2(listener);
+      this.call2((RenderBlockListener)obj);
    }
 
    public static BlockPosM setMutablePos(EventRenderBlock event, BlockPosM blockPosM) {

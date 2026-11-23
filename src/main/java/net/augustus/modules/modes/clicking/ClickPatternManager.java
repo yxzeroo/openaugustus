@@ -18,15 +18,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public class ClickPatternManager {
    private final Map patternsByName = new HashMap();
    private static final String PATTERNS_DIR = ClientPaths.CLIENT_DIR + File.separator + "clickpattern";
    private final Consumer onPatternChanged;
-   private final BooleansSetting patternSelectorSetting;
+   private final StringValue patternSelectorSetting;
 
-   private ClickPatternManager(BooleansSetting booleansSetting, Consumer consumer) {
+   private ClickPatternManager(StringValue booleansSetting, Consumer consumer) {
       this.patternSelectorSetting = booleansSetting;
       this.onPatternChanged = consumer;
    }
@@ -36,8 +36,7 @@ public class ClickPatternManager {
    }
 
    private void onPatternFileModified(Path path) {
-      File file = path.toFile();
-      ClickPattern clickPattern = this.loadPatternFile(file);
+      ClickPattern clickPattern = this.loadPatternFile(path.toFile());
       if (clickPattern != null) {
          this.patternsByName.put(clickPattern.name, clickPattern);
          this.refreshPatternSelector();
@@ -56,8 +55,7 @@ public class ClickPatternManager {
             return null;
          }
 
-         Object obj = null;
-         JsonObject json = ClientFileUtil.readJsonObject(PATTERNS_DIR, name, (Runnable)obj);
+         JsonObject json = ClientFileUtil.readJsonObject(PATTERNS_DIR, name, (Runnable)null);
          if (json == null) {
             return null;
          }
@@ -110,18 +108,15 @@ public class ClickPatternManager {
    public void startWatchingAndLoad() {
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(PATTERNS_DIR);
       Consumer consumer = obj -> {
-         File file = ((Path)obj).toFile();
-         ClickPattern clickPattern = this.loadPatternFile(file);
+         ClickPattern clickPattern = this.loadPatternFile(((Path)obj).toFile());
          if (clickPattern != null) {
             this.patternsByName.put(clickPattern.name, clickPattern);
             this.refreshPatternSelector();
          }
       };
       directoryWatcher = directoryWatcher.onCreate(consumer);
-      Consumer consumer2 = obj2 -> this.onPatternFileModified((Path)obj2);
-      directoryWatcher = directoryWatcher.onModify(consumer2);
-      Consumer consumer3 = obj3 -> this.onPatternFileDeleted((Path)obj3);
-      directoryWatcher.onDelete(consumer3).register();
+      directoryWatcher = directoryWatcher.onModify(obj2 -> this.onPatternFileModified((Path)obj2));
+      directoryWatcher.onDelete(obj3 -> this.onPatternFileDeleted((Path)obj3)).register();
       this.reloadAllPatterns();
       this.refreshPatternSelector();
    }
@@ -131,21 +126,14 @@ public class ClickPatternManager {
          String[] strings = (String[])this.patternsByName.keySet().toArray(new String[0]);
          strings = Arrays.stream(strings).sorted(Comparator.comparing(String::toLowerCase)).toArray(String[]::new);
          this.patternSelectorSetting.setOptions(strings);
-         BooleansSetting patternSelectorSetting2 = this.patternSelectorSetting;
-         String selectedValue = this.patternSelectorSetting.getSelectedValue();
-         String str = this.resolvePatternName(selectedValue);
-         patternSelectorSetting2.setSelectedValue(str);
-         Consumer onPatternChanged2 = this.onPatternChanged;
-         String selectedValue2 = this.patternSelectorSetting.getSelectedValue();
-         onPatternChanged2.accept(this.getPattern(selectedValue2));
+         this.patternSelectorSetting.setSelectedValue(this.resolvePatternName(this.patternSelectorSetting.getSelectedValue()));
+         this.onPatternChanged.accept(this.getPattern(this.patternSelectorSetting.getSelectedValue()));
       }
    }
 
    private void reloadAllPatterns() {
       String str = Augustus.getInstance().getName().toLowerCase() + "/clickpattern";
-      boolean flag = true;
-      String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/clicks/DefaultButterfly.json", str2, flag);
+      ClientFileUtil.extractResource("assets/augustus/clicks/DefaultButterfly.json", str, true);
       HashMap map = new HashMap();
       String str3 = PATTERNS_DIR;
       File file = new File(str3);
@@ -166,7 +154,7 @@ public class ClickPatternManager {
       this.patternsByName.putAll(map);
    }
 
-   public ClickPatternManager(BooleansSetting booleansSetting, Consumer consumer, ClickPatternManagerSyntheticMarker marker) {
+   public ClickPatternManager(StringValue booleansSetting, Consumer consumer, ClickPatternManagerSyntheticMarker marker) {
       this(booleansSetting, consumer);
    }
 

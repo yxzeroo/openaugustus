@@ -45,8 +45,7 @@ public abstract class WorldProvider {
    }
 
    public float calculateCelestialAngle(long l, float f) {
-      int n = (int)(l % 24000L);
-      float f2 = ((float)n + f) / 24000.0F - 0.25F;
+      float f2 = ((float)((int)(l % 24000L)) + f) / 24000.0F - 0.25F;
       if (f2 < 0.0F) {
          f2++;
       }

@@ -125,22 +125,12 @@ public class ProjectileSimulator implements MC {
       this.boundingBox = new AxisAlignedBB(
          this.posX - (double)f3, this.posY, this.posZ - (double)f3, this.posX + (double)f3, this.posY + (double)height2, this.posZ + (double)f3
       );
-      AxisAlignedBB boundingBox2 = this.boundingBox;
-      this.copyBoundingBoxBounds(boundingBox2);
+      this.copyBoundingBoxBounds(this.boundingBox);
       float f4 = item instanceof ItemBow ? 1.0F : 0.4F;
       this.motionX = (double)(-MathHelper.sin(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
       this.motionY = (double)(-MathHelper.sin((f2 + this.getPitchOffset(stack)) / 180.0F * 3.1415927F) * f4);
       this.motionZ = (double)(MathHelper.cos(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
-      double motionX2 = this.motionX;
-      double motionY2 = this.motionY;
-      double motionZ2 = this.motionZ;
-      float initialVelocity = this.getInitialVelocity(stack);
-      float f5 = 1.0F;
-      float f6 = initialVelocity;
-      double d = motionZ2;
-      double d2 = motionY2;
-      double d3 = motionX2;
-      this.setThrowableHeading(d3, d2, d, f6, f5);
+      this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.getInitialVelocity(stack), 1.0F);
    }
 
    public boolean willArrowHitTarget(int n, EntityLivingBase entity, AxisAlignedBB box, double d, double d2) {
@@ -190,8 +180,7 @@ public class ProjectileSimulator implements MC {
                Entity entity3 = (Entity)list.get(j);
                if (this.shooter != null && entity3.canBeCollidedWith() && entity3 != this.shooter) {
                   float f = 0.3F;
-                  AxisAlignedBB box2 = entity3.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-                  MovingObjectPosition hit2 = box2.calculateIntercept(vec2, vec);
+                  MovingObjectPosition hit2 = entity3.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec2, vec);
                   if (hit2 != null) {
                      double d4 = vec2.squareDistanceTo(hit2.hitVec);
                      if (d4 < d3 || d3 == 0.0) {
@@ -228,8 +217,7 @@ public class ProjectileSimulator implements MC {
          this.motionY -= (double)f3;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBox(posX2, posY2, posZ2);
+         this.updateBoundingBox(this.posX, posY2, posZ2);
          if (this.posY < 0.0) {
             i = n;
          }
@@ -270,8 +258,7 @@ public class ProjectileSimulator implements MC {
                Entity entity2 = (Entity)list2.get(j);
                if (this.shooter != null && entity2.canBeCollidedWith() && entity2 != this.shooter) {
                   float f = 0.3F;
-                  AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-                  MovingObjectPosition hit2 = box.calculateIntercept(vec2, vec);
+                  MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec2, vec);
                   if (hit2 != null) {
                      double d2 = vec2.squareDistanceTo(hit2.hitVec);
                      if (d2 < d || d == 0.0) {
@@ -318,8 +305,7 @@ public class ProjectileSimulator implements MC {
             this.motionZ *= (double)f2;
             double posZ2 = this.posZ;
             double posY2 = this.posY;
-            double posX2 = this.posX;
-            this.updateBoundingBox(posX2, posY2, posZ2);
+            this.updateBoundingBox(this.posX, posY2, posZ2);
             list.add(new Vec3(this.posX, this.posY, this.posZ));
             if (this.posY < 0.0) {
                i = n;
@@ -363,22 +349,12 @@ public class ProjectileSimulator implements MC {
       this.boundingBox = new AxisAlignedBB(
          this.posX - (double)f3, this.posY, this.posZ - (double)f3, this.posZ + (double)f3, this.posY + (double)height2, this.posZ + (double)f3
       );
-      AxisAlignedBB boundingBox2 = this.boundingBox;
-      this.copyBoundingBoxBounds(boundingBox2);
+      this.copyBoundingBoxBounds(this.boundingBox);
       float f4 = item instanceof ItemBow ? 1.0F : 0.4F;
       this.motionX = (double)(-MathHelper.sin(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
       this.motionY = (double)(-MathHelper.sin((f2 + this.getPitchOffset(stack)) / 180.0F * 3.1415927F) * f4);
       this.motionZ = (double)(MathHelper.cos(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
-      double motionX2 = this.motionX;
-      double motionY2 = this.motionY;
-      double motionZ2 = this.motionZ;
-      float initialVelocity = this.getInitialVelocity(stack);
-      float f5 = 1.0F;
-      float f6 = initialVelocity;
-      double d4 = motionZ2;
-      double d5 = motionY2;
-      double d6 = motionX2;
-      this.setThrowableHeading(d6, d5, d4, f6, f5);
+      this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.getInitialVelocity(stack), 1.0F);
    }
 
    public int simulateArrowHitTick(int n, EntityLivingBase entity, AxisAlignedBB box) {
@@ -443,8 +419,7 @@ public class ProjectileSimulator implements MC {
          this.motionY -= (double)f2;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBoxBounds(posX2, posY2, posZ2);
+         this.updateBoundingBoxBounds(this.posX, posY2, posZ2);
          if (this.posY < box.minY && this.motionY < 0.0) {
             return 2147483647;
          }
@@ -455,20 +430,7 @@ public class ProjectileSimulator implements MC {
 
    private boolean handleWaterMovement() {
       if (this.boundingBox != null) {
-         double d = this.boundingBox.minX + 0.001;
-         double d2 = this.boundingBox.minY + 0.4000000059604645 + 0.001;
-         double d3 = this.boundingBox.minZ + 0.001;
-         double d4 = this.boundingBox.maxX - 0.001;
-         double d5 = this.boundingBox.maxY - 0.4000000059604645 - 0.001;
-         double d6 = this.boundingBox.maxZ - 0.001;
-         Material water = Material.water;
-         double d7 = d6;
-         double d8 = d5;
-         double d9 = d4;
-         double d10 = d3;
-         double d11 = d2;
-         double d12 = d;
-         if (this.handleMaterialAcceleration(d12, d11, d10, d9, d8, d7, water)) {
+         if (this.handleMaterialAcceleration(this.boundingBox.minX + 0.001, this.boundingBox.minY + 0.4000000059604645 + 0.001, this.boundingBox.minZ + 0.001, this.boundingBox.maxX - 0.001, this.boundingBox.maxY - 0.4000000059604645 - 0.001, this.boundingBox.maxZ - 0.001, Material.water)) {
             this.fallDistance = 0.0F;
             this.inWater = true;
             return this.inWater;
@@ -522,11 +484,9 @@ public class ProjectileSimulator implements MC {
          double d = 0.0;
          if (this.shooter != null && entity.canBeCollidedWith() && entity != this.shooter) {
             float f = 0.3F;
-            AxisAlignedBB box2 = box.expand((double)f, (double)f, (double)f);
-            MovingObjectPosition hit2 = box2.calculateIntercept(vec2, vec);
+            MovingObjectPosition hit2 = box.expand((double)f, (double)f, (double)f).calculateIntercept(vec2, vec);
             if (hit2 != null) {
-               double d2 = vec2.squareDistanceTo(hit2.hitVec);
-               if (d2 < d || d == 0.0) {
+               if (vec2.squareDistanceTo(hit2.hitVec) < d || d == 0.0) {
                   entity2 = entity;
                }
             }
@@ -566,8 +526,7 @@ public class ProjectileSimulator implements MC {
          this.motionZ *= (double)f2;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBox(posX2, posY2, posZ2);
+         this.updateBoundingBox(this.posX, posY2, posZ2);
          if (this.posY < box.minY && this.motionY < 0.0) {
             return 2147483647;
          }
@@ -583,9 +542,7 @@ public class ProjectileSimulator implements MC {
       } else if (item.equals(Items.potionitem) && ItemPotion.isSplash(stack.getMetadata())) {
          return 0.5F;
       } else if (item instanceof ItemBow) {
-         ItemBow itemBow = (ItemBow)item;
-         int n = itemBow.getMaxItemUseDuration(stack) - mc.thePlayer.getItemInUseCount();
-         float f = (float)n / 20.0F;
+         float f = (float)(((ItemBow)item).getMaxItemUseDuration(stack) - mc.thePlayer.getItemInUseCount()) / 20.0F;
          f = (f * f + f * 2.0F) / 3.0F;
          if ((double)f < 0.1) {
             return 0.0F;
@@ -635,8 +592,7 @@ public class ProjectileSimulator implements MC {
                   IBlockState blockState = chunkFromChunkCoords.getBlockState(i, k, j);
                   Block block = blockState.getBlock();
                   if (block.getMaterial() == material) {
-                     double d10 = (double)((float)(k + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL)));
-                     if ((double)n4 >= d10) {
+                     if ((double)n4 >= ((double)((float)(k + 1) - BlockLiquid.getLiquidHeightPercent((Integer)blockState.getValue(BlockLiquid.LEVEL))))) {
                         flag = true;
                         if (block instanceof BlockLiquid) {
                            Vec3 flowVector = ((BlockLiquid)block).getFlowVector(mc.theWorld, blockState, chunkFromChunkCoords, i, k, j);
@@ -696,8 +652,7 @@ public class ProjectileSimulator implements MC {
          entityArrow.getEntityBoundingBox().maxY,
          entityArrow.getEntityBoundingBox().maxZ
       );
-      AxisAlignedBB boundingBox2 = this.boundingBox;
-      this.copyBoundingBoxBounds(boundingBox2);
+      this.copyBoundingBoxBounds(this.boundingBox);
       this.ticksInGround = entityArrow.getTicksInGround();
       this.inWater = entityArrow.isInWater();
       this.firstUpdate = entityArrow.firstUpdate;
@@ -712,20 +667,7 @@ public class ProjectileSimulator implements MC {
    }
 
    private boolean handleWaterMovementBounds() {
-      double d = this.bbMinX + 0.001;
-      double d2 = this.bbMinY + 0.4000000059604645 + 0.001;
-      double d3 = this.bbMinZ + 0.001;
-      double d4 = this.bbMaxX - 0.001;
-      double d5 = this.bbMaxY - 0.4000000059604645 - 0.001;
-      double d6 = this.bbMaxZ - 0.001;
-      Material water = Material.water;
-      double d7 = d6;
-      double d8 = d5;
-      double d9 = d4;
-      double d10 = d3;
-      double d11 = d2;
-      double d12 = d;
-      if (this.handleMaterialAcceleration(d12, d11, d10, d9, d8, d7, water)) {
+      if (this.handleMaterialAcceleration(this.bbMinX + 0.001, this.bbMinY + 0.4000000059604645 + 0.001, this.bbMinZ + 0.001, this.bbMaxX - 0.001, this.bbMaxY - 0.4000000059604645 - 0.001, this.bbMaxZ - 0.001, Material.water)) {
          this.fallDistance = 0.0F;
          this.inWater = true;
       } else {
@@ -783,8 +725,7 @@ public class ProjectileSimulator implements MC {
                   Entity entity2 = (Entity)list2.get(j);
                   if (this.shooter != null && entity2.canBeCollidedWith()) {
                      float f2 = 0.3F + (entity2 == this.shooter ? f : 0.1F);
-                     AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f2, (double)f2, (double)f2);
-                     MovingObjectPosition hit2 = box.calculateIntercept(vec2, vec);
+                     MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f2, (double)f2, (double)f2).calculateIntercept(vec2, vec);
                      if (hit2 != null) {
                         double d2 = vec2.squareDistanceTo(hit2.hitVec);
                         if (d2 < d || d == 0.0) {
@@ -816,8 +757,7 @@ public class ProjectileSimulator implements MC {
             this.motionY -= (double)f4;
             double posZ2 = this.posZ;
             double posY2 = this.posY;
-            double posX2 = this.posX;
-            this.updateBoundingBox(posX2, posY2, posZ2);
+            this.updateBoundingBox(this.posX, posY2, posZ2);
             list.add(new Vec3(this.posX, this.posY, this.posZ));
             if (this.posY < 0.0) {
                i = n;
@@ -881,8 +821,7 @@ public class ProjectileSimulator implements MC {
          float f = 0.99F;
          float f2;
          if (this.throwableEntity == null) {
-            ItemStack itemStack2 = this.itemStack;
-            f2 = this.getGravityVelocity(itemStack2);
+            f2 = this.getGravityVelocity(this.itemStack);
          } else {
             f2 = this.throwableEntity.getGravityVelocity();
          }
@@ -898,8 +837,7 @@ public class ProjectileSimulator implements MC {
          this.motionY -= (double)f3;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBoxBounds(posX2, posY2, posZ2);
+         this.updateBoundingBoxBounds(this.posX, posY2, posZ2);
          if (this.posY < 0.0) {
             i = n;
          }
@@ -926,8 +864,7 @@ public class ProjectileSimulator implements MC {
          entityThrowable.getEntityBoundingBox().maxY,
          entityThrowable.getEntityBoundingBox().maxZ
       );
-      AxisAlignedBB boundingBox2 = this.boundingBox;
-      this.copyBoundingBoxBounds(boundingBox2);
+      this.copyBoundingBoxBounds(this.boundingBox);
       this.ticksInGround = entityThrowable.getTicksInGround();
       this.inWater = entityThrowable.isInWater();
       this.firstUpdate = entityThrowable.firstUpdate;
@@ -984,22 +921,12 @@ public class ProjectileSimulator implements MC {
       this.boundingBox = new AxisAlignedBB(
          this.posX - (double)f3, this.posY, this.posZ - (double)f3, this.posX + (double)f3, this.posY + (double)height2, this.posZ + (double)f3
       );
-      AxisAlignedBB boundingBox2 = this.boundingBox;
-      this.copyBoundingBoxBounds(boundingBox2);
+      this.copyBoundingBoxBounds(this.boundingBox);
       float f4 = item instanceof ItemBow ? 1.0F : 0.4F;
       this.motionX = (double)(-MathHelper.sin(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
       this.motionY = (double)(-MathHelper.sin((f2 + this.getPitchOffset(stack)) / 180.0F * 3.1415927F) * f4);
       this.motionZ = (double)(MathHelper.cos(f / 180.0F * 3.1415927F) * MathHelper.cos(f2 / 180.0F * 3.1415927F) * f4);
-      double motionX2 = this.motionX;
-      double motionY2 = this.motionY;
-      double motionZ2 = this.motionZ;
-      float initialVelocity = this.getInitialVelocity(stack);
-      float f5 = 1.0F;
-      float f6 = initialVelocity;
-      double d4 = motionZ2;
-      double d5 = motionY2;
-      double d6 = motionX2;
-      this.setThrowableHeading(d6, d5, d4, f6, f5);
+      this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.getInitialVelocity(stack), 1.0F);
    }
 
    public ArrayList simulateArrowTrajectory(int n) {
@@ -1051,8 +978,7 @@ public class ProjectileSimulator implements MC {
                   Entity entity2 = (Entity)list2.get(j);
                   if (this.shooter != null && entity2.canBeCollidedWith() && entity2 != this.shooter) {
                      float f = 0.3F;
-                     AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-                     MovingObjectPosition hit2 = box.calculateIntercept(vec2, vec);
+                     MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec2, vec);
                      if (hit2 != null) {
                         double d2 = vec2.squareDistanceTo(hit2.hitVec);
                         if (d2 < d || d == 0.0) {
@@ -1100,8 +1026,7 @@ public class ProjectileSimulator implements MC {
             this.motionY -= (double)f4;
             double posZ2 = this.posZ;
             double posY2 = this.posY;
-            double posX2 = this.posX;
-            this.updateBoundingBox(posX2, posY2, posZ2);
+            this.updateBoundingBox(this.posX, posY2, posZ2);
             list.add(new Vec3(this.posX, this.posY, this.posZ));
             if (this.posY < 0.0) {
                i = n;
@@ -1117,8 +1042,7 @@ public class ProjectileSimulator implements MC {
    public void initFromShooterAngles(EntityLivingBase entity, ItemStack stack, float f, float f2) {
       double posZ2 = entity.posZ;
       double posY2 = entity.posY;
-      double posX2 = entity.posX;
-      this.initWithAngles(entity, stack, posX2, posY2, posZ2, f, f2);
+      this.initWithAngles(entity, stack, entity.posX, posY2, posZ2, f, f2);
    }
 
    public int simulateThrowableHitTick(int n, EntityLivingBase entity, AxisAlignedBB box) {
@@ -1147,8 +1071,7 @@ public class ProjectileSimulator implements MC {
          Vec3 vec2 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
          EntityLivingBase entity2 = null;
          if (this.shooter != null && entity.canBeCollidedWith() && entity != this.shooter) {
-            MovingObjectPosition hit2 = box.calculateIntercept(vec2, vec);
-            if (hit2 != null) {
+            if (box.calculateIntercept(vec2, vec) != null) {
                entity2 = entity;
             }
          }
@@ -1167,8 +1090,7 @@ public class ProjectileSimulator implements MC {
          float f = 0.99F;
          float f2;
          if (this.throwableEntity == null) {
-            ItemStack itemStack2 = this.itemStack;
-            f2 = this.getGravityVelocity(itemStack2);
+            f2 = this.getGravityVelocity(this.itemStack);
          } else {
             f2 = this.throwableEntity.getGravityVelocity();
          }
@@ -1184,8 +1106,7 @@ public class ProjectileSimulator implements MC {
          this.motionY -= (double)f3;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBox(posX2, posY2, posZ2);
+         this.updateBoundingBox(this.posX, posY2, posZ2);
          if (this.posY < box.minY && this.motionY < 0.0) {
             i = n;
          }
@@ -1217,8 +1138,7 @@ public class ProjectileSimulator implements MC {
             float f = 0.3F;
             MovingObjectPosition hit2 = box.calculateIntercept(vec2, vec);
             if (hit2 != null) {
-               double d2 = vec2.squareDistanceTo(hit2.hitVec);
-               if (d2 < d || d == 0.0) {
+               if (vec2.squareDistanceTo(hit2.hitVec) < d || d == 0.0) {
                   entity2 = entity;
                }
             }
@@ -1258,8 +1178,7 @@ public class ProjectileSimulator implements MC {
          this.motionZ *= (double)f2;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBox(posX2, posY2, posZ2);
+         this.updateBoundingBox(this.posX, posY2, posZ2);
          if (this.posY < box.minY && this.motionY < 0.0) {
             return false;
          }
@@ -1328,8 +1247,7 @@ public class ProjectileSimulator implements MC {
             for (Entity entity2 : (Iterable<Entity>)(list2)) {
                if (entity2.canBeCollidedWith() && (entity2 != obj || this.ticksInAir >= 5)) {
                   float f = 0.3F;
-                  AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-                  MovingObjectPosition hit2 = box.calculateIntercept(vec, vec2);
+                  MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec, vec2);
                   if (hit2 != null) {
                      double d2 = vec.squareDistanceTo(hit2.hitVec);
                      if (d2 < d || d == 0.0) {
@@ -1353,8 +1271,7 @@ public class ProjectileSimulator implements MC {
          float f2 = 0.99F;
          float f3;
          if (this.throwableEntity == null) {
-            ItemStack itemStack2 = this.itemStack;
-            f3 = this.getGravityVelocity(itemStack2);
+            f3 = this.getGravityVelocity(this.itemStack);
          } else {
             f3 = this.throwableEntity.getGravityVelocity();
          }
@@ -1370,8 +1287,7 @@ public class ProjectileSimulator implements MC {
          this.motionY -= (double)f4;
          double posZ2 = this.posZ;
          double posY2 = this.posY;
-         double posX2 = this.posX;
-         this.updateBoundingBox(posX2, posY2, posZ2);
+         this.updateBoundingBox(this.posX, posY2, posZ2);
          list.add(new Vec3(this.posX, this.posY, this.posZ));
          if (this.posY < 0.0) {
             i = n;

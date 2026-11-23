@@ -22,15 +22,10 @@ public class LinearGraphRenderer implements GraphCurveRenderer {
             GraphPoint graphPoint2 = (GraphPoint)list2.get(i + 1);
             double x = graphPoint.getX();
             int n;
-            double d = x;
-            int n2 = graphViewport.toScreenX(d);
-            double y = graphPoint.getY();
-            int n3 = graphViewport.toScreenY(y);
-            double x2 = graphPoint2.getX();
-            double d2 = x2;
-            n = graphViewport.toScreenX(d2);
-            double y2 = graphPoint2.getY();
-            RenderUtil.drawLine3(n2, n3, n, graphViewport.toScreenY(y2), this.lineWidth, Color.WHITE);
+            int n2 = graphViewport.toScreenX(x);
+            int n3 = graphViewport.toScreenY(graphPoint.getY());
+            n = graphViewport.toScreenX(graphPoint2.getX());
+            RenderUtil.drawLine3(n2, n3, n, graphViewport.toScreenY(graphPoint2.getY()), this.lineWidth, Color.WHITE);
          }
       }
    }

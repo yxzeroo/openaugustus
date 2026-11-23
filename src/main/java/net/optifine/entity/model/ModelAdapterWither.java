@@ -24,8 +24,7 @@ public class ModelAdapterWither extends ModelAdapter {
          String str2 = "body";
          if (str.startsWith(str2)) {
             ModelRenderer[] upperBodyParts = modelWither.upperBodyParts;
-            String str3 = str.substring(str2.length());
-            int n = Config.parseInt(str3, -1);
+            int n = Config.parseInt(str.substring(str2.length()), -1);
             n--;
             return n >= 0 && n < upperBodyParts.length ? upperBodyParts[n] : null;
          } else {
@@ -34,8 +33,7 @@ public class ModelAdapterWither extends ModelAdapter {
                return null;
             } else {
                ModelRenderer[] heads = modelWither.heads;
-               String str5 = str.substring(str4.length());
-               int n2 = Config.parseInt(str5, -1);
+               int n2 = Config.parseInt(str.substring(str4.length()), -1);
                n2--;
                return n2 >= 0 && n2 < heads.length ? heads[n2] : null;
             }

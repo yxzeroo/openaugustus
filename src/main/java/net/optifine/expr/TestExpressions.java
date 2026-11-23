@@ -10,22 +10,19 @@ public class TestExpressions {
       while (true) {
          try {
             InputStreamReader inputStreamReader = new InputStreamReader(System.in);
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-            String str = reader.readLine();
+            String str = new BufferedReader(inputStreamReader).readLine();
             if (str.length() <= 0) {
                return;
             }
 
             IExpression expression = expressionParser.parse(str);
             if (expression instanceof IExpressionFloat) {
-               IExpressionFloat expressionFloat = (IExpressionFloat)expression;
-               float f = expressionFloat.eval();
+               float f = ((IExpressionFloat)expression).eval();
                System.out.println("" + f);
             }
 
             if (expression instanceof IExpressionBool) {
-               IExpressionBool expressionBool = (IExpressionBool)expression;
-               boolean flag = expressionBool.eval();
+               boolean flag = ((IExpressionBool)expression).eval();
                System.out.println("" + flag);
             }
          } catch (Exception e) {

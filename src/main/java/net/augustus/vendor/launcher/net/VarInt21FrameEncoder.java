@@ -10,7 +10,6 @@ public class VarInt21FrameEncoder extends MessageToByteEncoder {
 
    public void encodeFrame(ChannelHandlerContext ctx, ByteBuf buf, ByteBuf buf2) throws Exception {
       int n = 0;
-      PacketCipherEncoder.getControlFlowMarker();
       int n2 = 0;
       Object obj = null;
       this.stageGuard.enterStage3();

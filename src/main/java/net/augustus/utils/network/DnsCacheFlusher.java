@@ -14,11 +14,9 @@ public class DnsCacheFlusher {
          Object obj = declaredField.get(null);
          synchronized (obj) {
             Class clazz = obj.getClass();
-            String str = "cache";
-            Field declaredField2 = clazz.getDeclaredField(str);
+            Field declaredField2 = clazz.getDeclaredField("cache");
             declaredField2.setAccessible(true);
-            Map map = (Map)declaredField2.get(obj);
-            map.clear();
+            ((Map)declaredField2.get(obj)).clear();
          }
       } catch (Exception e) {
          e.printStackTrace();

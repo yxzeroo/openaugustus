@@ -46,8 +46,7 @@ public class BlockRedstoneOre extends Block {
    public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float f, int n) {
       super.dropBlockAsItemWithChance(world, pos, state, f, n);
       if (this.getItemDropped(state, world.rand, n) != Item.getItemFromBlock(this)) {
-         int n2 = 1 + world.rand.nextInt(5);
-         this.dropXpOnBlockBreak(world, pos, n2);
+         this.dropXpOnBlockBreak(world, pos, 1 + world.rand.nextInt(5));
       }
    }
 

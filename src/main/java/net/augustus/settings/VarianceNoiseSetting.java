@@ -4,8 +4,8 @@ import net.augustus.modules.modes.killaura.unoise3.UNoise3SettingContext;
 import net.augustus.modules.Module;
 
 public class VarianceNoiseSetting extends AbstractNoiseSetting {
-   private StringValue varianceSetting;
-   private StringValue strengthSetting;
+   private DoubleValue varianceSetting;
+   private DoubleValue strengthSetting;
    private Exception creationTrace;
 
    @Override
@@ -23,7 +23,7 @@ public class VarianceNoiseSetting extends AbstractNoiseSetting {
       return this;
    }
 
-   public VarianceNoiseSetting(Module module, String str, DoubleValue doubleValue, boolean flag) {
+   public VarianceNoiseSetting(Module module, String str, SettingGroup doubleValue, boolean flag) {
        super(module, str, doubleValue, flag);
       this.creationTrace = new Exception();
    }
@@ -38,9 +38,7 @@ public class VarianceNoiseSetting extends AbstractNoiseSetting {
    }
 
    public VarianceNoiseSetting withVariance(double d, double d2, double d3) {
-      StringValue stringValue = new StringValue(this.getParentModule(), this.getName() + "_variance", d, d2, d3, 0, this.noisegroup);
-      String str = "Variance";
-      this.varianceSetting = stringValue.named(str);
+      this.varianceSetting = new DoubleValue(this.getParentModule(), this.getName() + "_variance", d, d2, d3, 0, this.noisegroup).named("Variance");
       return this;
    }
 
@@ -50,15 +48,12 @@ public class VarianceNoiseSetting extends AbstractNoiseSetting {
    }
 
    public VarianceNoiseSetting withStrength(double d, double d2, double d3, int n) {
-      StringValue stringValue = new StringValue(this.getParentModule(), this.getName() + "_strength", d, d2, d3, n, this.noisegroup);
-      String displayName2 = this.getDisplayName();
-      this.strengthSetting = stringValue.named(displayName2);
+      this.strengthSetting = new DoubleValue(this.getParentModule(), this.getName() + "_strength", d, d2, d3, n, this.noisegroup).named(this.getDisplayName());
       return this;
    }
 
    public double sampleCentered(double d, double d2) {
-      boolean flag = true;
-      return this.sample(flag) * d2 + d;
+      return this.sample(true) * d2 + d;
    }
 
    @Override
@@ -66,27 +61,21 @@ public class VarianceNoiseSetting extends AbstractNoiseSetting {
    }
 
    public double sampleUnitRange() {
-      boolean flag = true;
-      return this.sample(flag) * 0.5 + 0.5;
+      return this.sample(true) * 0.5 + 0.5;
    }
 
    @Override
    public double sample() {
       float f = 0.0F;
-      boolean normalized2 = this.normalized;
-      return this.sampleWithOffset(normalized2, f);
+      return this.sampleWithOffset(this.normalized, f);
    }
 
    public double sample(boolean flag) {
-      float f = 0.0F;
-      return this.sampleWithOffset(flag, f);
+      return this.sampleWithOffset(flag, 0.0F);
    }
 
    public double sampleWithVariance(double d, double d2) {
-      boolean flag = true;
-      double d3 = this.sample(flag) * d2;
-      boolean flag2 = true;
-      return d3 * this.varianceSetting.getValue(flag2) / this.varianceSetting.getMaxValue() + d;
+      return (this.sample(true) * d2) * this.varianceSetting.getValue(true) / this.varianceSetting.getMaxValue() + d;
    }
 
    public double sampleWithOffset(boolean flag, float f) {
@@ -112,8 +101,7 @@ public class VarianceNoiseSetting extends AbstractNoiseSetting {
 
          double d3 = d / d2;
          if (!flag) {
-            boolean flag2 = true;
-            d3 *= this.strengthSetting.getValue(flag2);
+            d3 *= this.strengthSetting.getValue(true);
          }
 
          return d3;

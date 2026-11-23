@@ -14,7 +14,7 @@ import java.util.Comparator;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.EntityRotationModule;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFireball;
@@ -22,11 +22,11 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 
 public class AntiFireBall extends EntityRotationModule implements ClickListener, TickListener {
    public final BooleanValue noRotate;
-   public final StringValue preAimRange;
-   public final StringValue delay;
-   public final StringValue range;
+   public final DoubleValue preAimRange;
+   public final DoubleValue delay;
+   public final DoubleValue range;
    public final BooleanValue slowDown;
-   public final StringValue ticksExisted;
+   public final DoubleValue ticksExisted;
    public final BooleanValue notWhileDigging;
    private final TimeHelper timeHelper;
    private Object[] sortedFireballs;
@@ -36,15 +36,11 @@ public class AntiFireBall extends EntityRotationModule implements ClickListener,
    public AntiFireBall() {
        super("AntiFireBall", "GegenFeuerbälle", new Color(232, 147, 0), Categorys.COMBAT);
       this.noRotate = new BooleanValue(this, "NoRotate", true);
-      StringValue stringValue = new StringValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1);
-      SettingVisibilityCondition condition = () -> isRotateEnabled();
-      this.preAimRange = stringValue.visibleWhen(condition);
-      this.delay = new StringValue(this, "Delay", 60.0, 0.0, 400.0, 0);
-      StringValue stringValue2 = new StringValue(this, "Range", 4.0, 0.0, 6.0, 2);
-      SettingVisibilityCondition condition2 = () -> isNoRotateEnabled();
-      this.range = stringValue2.visibleWhen(condition2);
+      this.preAimRange = new DoubleValue(this, "PreAimRange", 4.0, 0.0, 15.0, 1).visibleWhen(() -> isRotateEnabled());
+      this.delay = new DoubleValue(this, "Delay", 60.0, 0.0, 400.0, 0);
+      this.range = new DoubleValue(this, "Range", 4.0, 0.0, 6.0, 2).visibleWhen(() -> isNoRotateEnabled());
       this.slowDown = new BooleanValue(this, "SlowDown", true);
-      this.ticksExisted = new StringValue(this, "TicksExisted", 10.0, 0.0, 20.0, 0);
+      this.ticksExisted = new DoubleValue(this, "TicksExisted", 10.0, 0.0, 20.0, 0);
       this.notWhileDigging = new BooleanValue(this, "NotWhileDigging", false);
       this.timeHelper = new TimeHelper();
    }
@@ -64,10 +60,8 @@ public class AntiFireBall extends EntityRotationModule implements ClickListener,
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -89,26 +83,20 @@ public class AntiFireBall extends EntityRotationModule implements ClickListener,
 
       if (!this.noRotate.getValue()) {
          if (this.canTargetFireball() && !BlockUtil.isScaffoldActiveAndValid() && ClientManagers.moduleManager.killAura.target == null) {
-            Entity targetFireball2 = this.targetFireball;
-            Rotation rotation = this.calculateRotationToEntity(targetFireball2);
-            byte b2 = -1;
-            ClientManagers.rotationController.requestRotation(rotation, b2, this);
+            Rotation rotation = this.calculateRotationToEntity(this.targetFireball);
+            ClientManagers.rotationController.requestRotation(rotation, (byte)-1, this);
          }
       } else if (this.targetFireball != null && (!mc.playerController.isHittingBlock || !this.notWhileDigging.getValue()) && mc.isNotInGui()) {
          double d = mc.thePlayer.canEntityBeSeen(this.targetFireball) ? this.range.getValue() : Math.min(3.0, this.range.getValue());
          if ((double)mc.thePlayer.getDistanceToEntity(this.targetFireball) < d) {
             TimeHelper timeHelper2 = this.timeHelper;
             if (this.delay.getValue() != 0.0) {
-               double value = this.delay.getValue();
-               byte b3 = 60;
-               byte b4 = 0;
-               l2 = (long)(value + (double)DefaultRandomGenerator.instance.nextSecureInt(b4, b3));
+               l2 = (long)(this.delay.getValue() + (double)DefaultRandomGenerator.instance.nextSecureInt((byte)0, (byte)60));
             } else {
                l2 = 0L;
             }
 
-            long l3 = l2;
-            if (timeHelper2.reached2(l3)) {
+            if (timeHelper2.reached2(l2)) {
                mc.thePlayer.swingItem();
                mc.playerController.attackEntity(mc.thePlayer, this.targetFireball);
                this.timeHelper.reset();
@@ -127,22 +115,16 @@ public class AntiFireBall extends EntityRotationModule implements ClickListener,
       if (this.canTargetFireball() && !this.noRotate.getValue() && mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
          TimeHelper timeHelper2 = this.timeHelper;
          if (this.delay.getValue() != 0.0) {
-            double value = this.delay.getValue();
-            byte b2 = 60;
-            byte b3 = 0;
-            l2 = (long)(value + (double)DefaultRandomGenerator.instance.nextSecureInt(b3, b2));
+            l2 = (long)(this.delay.getValue() + (double)DefaultRandomGenerator.instance.nextSecureInt((byte)0, (byte)60));
          } else {
             l2 = 0L;
          }
 
-         long l3 = l2;
-         if (timeHelper2.reached2(l3)) {
+         if (timeHelper2.reached2(l2)) {
             if (this.slowDown.getValue()) {
-               byte b4 = 1;
-               event.addLeftClicks(b4);
+               event.addLeftClicks((byte)1);
             } else {
-               byte b5 = 1;
-               event.addLeftClicks(b5);
+               event.addLeftClicks((byte)1);
                char ch = (char)n;
                Runnable runnable = () -> {
                   mc.thePlayer.swingItem();

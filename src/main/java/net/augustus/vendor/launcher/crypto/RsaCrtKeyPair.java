@@ -39,14 +39,10 @@ public class RsaCrtKeyPair {
       this.privateExponent = shadedBigInteger3;
       this.primeP = shadedBigInteger4;
       this.primeQ = shadedBigInteger5;
-      ShadedBigInteger one = ShadedBigInteger.ONE;
-      ShadedBigInteger shadedBigInteger6 = shadedBigInteger4.subtract(one);
-      ShadedBigInteger shadedBigInteger7 = shadedBigInteger6;
-      this.primeExponentP = shadedBigInteger3.mod(shadedBigInteger7);
-      ShadedBigInteger one2 = ShadedBigInteger.ONE;
-      shadedBigInteger6 = shadedBigInteger5.subtract(one2);
-      ShadedBigInteger shadedBigInteger8 = shadedBigInteger6;
-      this.primeExponentQ = shadedBigInteger3.mod(shadedBigInteger8);
+      ShadedBigInteger shadedBigInteger6 = shadedBigInteger4.subtract(ShadedBigInteger.ONE);
+      this.primeExponentP = shadedBigInteger3.mod(shadedBigInteger6);
+      shadedBigInteger6 = shadedBigInteger5.subtract(ShadedBigInteger.ONE);
+      this.primeExponentQ = shadedBigInteger3.mod(shadedBigInteger6);
       this.crtCoefficient = shadedBigInteger5.modInverse(shadedBigInteger4);
    }
 

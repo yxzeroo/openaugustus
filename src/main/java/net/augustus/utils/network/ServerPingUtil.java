@@ -39,8 +39,7 @@ public class ServerPingUtil implements MC {
                   InetAddress byName = InetAddress.getByName(str);
                   long l2 = System.currentTimeMillis();
                   if (byName.isReachable(4000)) {
-                     long l3 = System.currentTimeMillis();
-                     setCachedPing((int)(l3 - l2) + n);
+                     setCachedPing((int)(System.currentTimeMillis() - l2) + n);
                   }
                } catch (Exception e) {
                   setCachedPing(

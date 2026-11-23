@@ -34,8 +34,7 @@ public class Vec2d {
    }
 
    public Vec2d normalize() {
-      double d = 1.0 / this.length();
-      return this.scale(d);
+      return this.scale(1.0 / this.length());
    }
 
    public Vec2d scale(double d) {

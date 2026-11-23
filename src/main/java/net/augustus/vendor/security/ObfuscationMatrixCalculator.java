@@ -57,8 +57,7 @@ public class ObfuscationMatrixCalculator {
       double d2 = 0.0;
       boolean flag3 = false;
       d = 0.0;
-      ObfuscationMatrixCalculator calculator = this;
-      d += calculator.checkPiTolerance();
+      d += this.checkPiTolerance();
       d += this.checkEulerTolerance();
       d += this.checkGoldenRatioTolerance();
       flag3 = this.hasValidTrigTable();
@@ -269,9 +268,7 @@ public class ObfuscationMatrixCalculator {
             }
          }
 
-         ObfuscationMatrixCalculator calculator = this;
-         int[] ints = (int[])obj;
-         n3 = calculator.sumFactors(ints, n4);
+         n3 = this.sumFactors((int[])obj, n4);
          n2 = this.ensurePositive(n3);
          this.finalizeFactorMetric(n2);
          return ((int[])obj)[0];
@@ -363,27 +360,20 @@ public class ObfuscationMatrixCalculator {
          for (int i = 0; i < ((double[])doubles).length; i++) {
             double[] doubles2 = (double[])obj3;
             ObfuscationMatrixCalculator calculator = this;
-            double d = doubles[i];
-            doubles2[i] = calculator.evaluateValue(d);
+            doubles2[i] = calculator.evaluateValue(doubles[i]);
             String[] strings = (String[])obj5;
             calculator = this;
-            double d2 = ((double[])obj3)[i];
-            strings[i] = calculator.formatIndexedValue(d2, i);
+            strings[i] = calculator.formatIndexedValue(((double[])obj3)[i], i);
          }
 
          String[] strings2 = (String[])obj5;
          obj4 = this.tokenProcessor.processTokenArray(strings2);
          ObfuscationMatrixCalculator calculator2 = this;
-         String str = (String)obj4;
-         obj = calculator2.collapseWhitespace(str);
+         obj = calculator2.collapseWhitespace((String)obj4);
          calculator2 = this;
-         String str2 = (String)obj;
-         obj2 = calculator2.truncateOutput(str2);
+         obj2 = calculator2.truncateOutput((String)obj);
          calculator2 = this;
-         String str3 = (String)obj2;
-         double[] doubles3 = doubles;
-         String str4 = str3;
-         return calculator2.joinValues(str4, doubles3);
+         return calculator2.joinValues((String)obj2, doubles);
       } else {
          return "No data available";
       }
@@ -397,8 +387,7 @@ public class ObfuscationMatrixCalculator {
       boolean flag = false;
 
       for (int i = 0; i < 100; i++) {
-         ObfuscationMatrixCalculator calculator = this;
-         this.primeFlags[i] = calculator.isPrime(i);
+         this.primeFlags[i] = this.isPrime(i);
       }
    }
 
@@ -424,9 +413,7 @@ public class ObfuscationMatrixCalculator {
       this.recordTrigHistory(d2);
       String str = "CALC_" + d2;
       obj = this.tokenProcessor.processToken(str);
-      ObfuscationMatrixCalculator calculator = this;
-      String str2 = (String)obj;
-      return calculator.finalizeCalculatedValue(str2, d);
+      return this.finalizeCalculatedValue((String)obj, d);
    }
 
    private double applyZScoreNoOp(double d) {
@@ -522,24 +509,19 @@ public class ObfuscationMatrixCalculator {
       Object obj4 = null;
       obj3 = this.buildDifferenceMatrix(n);
       ObfuscationMatrixCalculator calculator = this;
-      int[][] intsArr = (int[][])obj3;
-      obj2 = calculator.scaleMatrixIdentity(intsArr);
+      obj2 = calculator.scaleMatrixIdentity((int[][])obj3);
       calculator = this;
-      int[][] intsArr2 = (int[][])obj2;
-      obj = calculator.normalizeMatrix(intsArr2);
+      obj = calculator.normalizeMatrix((int[][])obj2);
       calculator = this;
-      int[][] intsArr3 = (int[][])obj;
-      obj4 = calculator.stabilizeMatrix(intsArr3);
+      obj4 = calculator.stabilizeMatrix((int[][])obj);
       calculator = this;
-      int[][] intsArr4 = (int[][])obj4;
-      calculator.copyToIndexMatrix(intsArr4);
+      calculator.copyToIndexMatrix((int[][])obj4);
       return this.createIdentityMatrix(n);
    }
 
    private boolean hasValidTrigTable() {
       if (this.trigTable != null) {
-         int length = this.trigTable.length;
-         if (length == 100) {
+         if (this.trigTable.length == 100) {
             return true;
          }
       }

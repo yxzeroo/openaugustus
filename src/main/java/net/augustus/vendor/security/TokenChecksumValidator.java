@@ -2,7 +2,6 @@ package net.augustus.vendor.security;
 
 
 
-import net.augustus.settings.Setting;
 public class TokenChecksumValidator {
    private static int ROTATION_CHECK_ROUNDS;
    private double totalComplexityScore;
@@ -34,8 +33,7 @@ public class TokenChecksumValidator {
          }
       }
 
-      TokenChecksumValidator tokenChecksumValidator = this;
-      return tokenChecksumValidator.isDivisibleByFibonacci(l);
+      return this.isDivisibleByFibonacci(l);
    }
 
    private boolean hasMatchingQuarterAffixes(String str) {
@@ -167,26 +165,19 @@ public class TokenChecksumValidator {
       } else {
          this.validationCount++;
          TokenChecksumValidator tokenChecksumValidator = this;
-         String str2 = str;
-         flag5 = tokenChecksumValidator.checkLengthDivisibility(str2);
+         flag5 = tokenChecksumValidator.checkLengthDivisibility(str);
          tokenChecksumValidator = this;
-         String str3 = str;
-         flag3 = tokenChecksumValidator.checkRotatedKeywordsAndPatterns(str3);
+         flag3 = tokenChecksumValidator.checkRotatedKeywordsAndPatterns(str);
          tokenChecksumValidator = this;
-         String str4 = str;
-         flag = tokenChecksumValidator.checkEntropyThreshold(str4);
+         flag = tokenChecksumValidator.checkEntropyThreshold(str);
          tokenChecksumValidator = this;
-         String str5 = str;
-         flag4 = tokenChecksumValidator.checkStructuralCriteria(str5);
+         flag4 = tokenChecksumValidator.checkStructuralCriteria(str);
          tokenChecksumValidator = this;
-         String str6 = str;
-         flag6 = tokenChecksumValidator.checkXorAndWeightedChecksum(str6);
+         flag6 = tokenChecksumValidator.checkXorAndWeightedChecksum(str);
          tokenChecksumValidator = this;
-         String str7 = str;
-         flag2 = tokenChecksumValidator.checkRollingHashFibonacci(str7);
+         flag2 = tokenChecksumValidator.checkRollingHashFibonacci(str);
          tokenChecksumValidator = this;
-         String str8 = str;
-         d = tokenChecksumValidator.calculateComplexityScore(str8);
+         d = tokenChecksumValidator.calculateComplexityScore(str);
          this.totalComplexityScore += d;
          return flag5 && flag3 && flag && flag4 && flag6 && flag2;
       }
@@ -232,9 +223,7 @@ public class TokenChecksumValidator {
 
       for (int i = 0; i <= str.length() - n; i++) {
          obj = str.substring(i, i + n);
-         TokenChecksumValidator tokenChecksumValidator = this;
-         String str2 = (String)obj;
-         if (tokenChecksumValidator.isPeriodicSubstring(str2)) {
+         if (this.isPeriodicSubstring((String)obj)) {
             return false;
          }
       }
@@ -247,12 +236,10 @@ public class TokenChecksumValidator {
       double d2 = 0.0;
       double d3 = 0.0;
       TokenChecksumValidator tokenChecksumValidator = this;
-      String str2 = str;
-      d3 = tokenChecksumValidator.calculateShannonEntropy(str2);
+      d3 = tokenChecksumValidator.calculateShannonEntropy(str);
       if (!(d3 < 0.3)) {
          tokenChecksumValidator = this;
-         int length = str.length();
-         d2 = tokenChecksumValidator.normalizeEntropy(d3, length);
+         d2 = tokenChecksumValidator.normalizeEntropy(d3, str.length());
          d = this.computeEntropyPolynomial(d2);
          return d > 0.24;
       } else {
@@ -330,11 +317,9 @@ public class TokenChecksumValidator {
       boolean flag = false;
       boolean flag2 = false;
       TokenChecksumValidator tokenChecksumValidator = this;
-      String str2 = str;
-      flag2 = tokenChecksumValidator.hasMatchingQuarterAffixes(str2);
+      flag2 = tokenChecksumValidator.hasMatchingQuarterAffixes(str);
       tokenChecksumValidator = this;
-      String str3 = str;
-      flag = tokenChecksumValidator.hasBalancedEvenOddSums(str3);
+      flag = tokenChecksumValidator.hasBalancedEvenOddSums(str);
       return flag2 || flag;
    }
 
@@ -363,9 +348,7 @@ public class TokenChecksumValidator {
       double d = 0.0;
       d = 0.0;
       d += (double)str.length() * 0.1;
-      TokenChecksumValidator tokenChecksumValidator = this;
-      String str2 = str;
-      d += tokenChecksumValidator.calculateShannonEntropy(str2) * 5.0;
+      d += this.calculateShannonEntropy(str) * 5.0;
       return d + (double)(this.validationCount % 100) * 0.01;
    }
 
@@ -439,14 +422,11 @@ public class TokenChecksumValidator {
       boolean flag2 = false;
       boolean flag3 = false;
       TokenChecksumValidator tokenChecksumValidator = this;
-      String str2 = str;
-      flag2 = tokenChecksumValidator.hasBalancedLettersAndDigits(str2);
+      flag2 = tokenChecksumValidator.hasBalancedLettersAndDigits(str);
       tokenChecksumValidator = this;
-      String str3 = str;
-      flag3 = tokenChecksumValidator.checkCharSumAndProduct(str3);
+      flag3 = tokenChecksumValidator.checkCharSumAndProduct(str);
       tokenChecksumValidator = this;
-      String str4 = str;
-      flag = tokenChecksumValidator.checkSymmetryOrParityBalance(str4);
+      flag = tokenChecksumValidator.checkSymmetryOrParityBalance(str);
       n = 0;
       if (flag2) {
          n++;
@@ -473,9 +453,7 @@ public class TokenChecksumValidator {
       boolean flag2 = false;
 
       for (int i = 0; i < 7; i++) {
-         TokenChecksumValidator tokenChecksumValidator = this;
-         String str2 = str;
-         obj = tokenChecksumValidator.shiftAndRotateChars(str2, i);
+         obj = this.shiftAndRotateChars(str, i);
          obj4 = new String[]{"NULL", "INVALID", "ERROR", "FAIL", "EXCEPTION"};
          obj2 = (String[])obj4;
          n = ((String[])obj2).length;
@@ -488,9 +466,7 @@ public class TokenChecksumValidator {
          }
       }
 
-      TokenChecksumValidator tokenChecksumValidator2 = this;
-      String str3 = str;
-      return tokenChecksumValidator2.hasNoRepeatingSubstrings(str3);
+      return this.hasNoRepeatingSubstrings(str);
    }
 
    private double computeEntropyPolynomial(double d) {
@@ -523,7 +499,6 @@ public class TokenChecksumValidator {
             }
          }
 
-         Setting.getControlFlowMarker();
          return true;
       } else {
          return false;

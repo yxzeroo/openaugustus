@@ -26,7 +26,7 @@ import net.augustus.utils.rotation.YawPitchHelper;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -38,11 +38,11 @@ import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
 public class FreeCam extends Module implements ClickListener, MoveInputListener, RenderListener, RenderEntitiesListener, ShouldRenderEntityListener, TickListener {
-   private final StringValue speed;
+   private final DoubleValue speed;
    public final BooleanValue spectatorRender;
    public final BooleanValue updateRaytrace;
    public final BooleanValue showRealPlayerModel;
-   public final StringValue minimumDistanceToShowPlayerModel;
+   public final DoubleValue minimumDistanceToShowPlayerModel;
    private final BooleanValue displayCoordinates;
    private final ColorSetting highlightColor;
    private final ColorSetting textColor;
@@ -62,29 +62,26 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    public FreeCam() {
        super("FreeCam", "FreieKamera", new Color(235, 116, 52), Categorys.MOVEMENT);
-      this.speed = (StringValue)(new StringValue(this, "Speed", 1.0, 0.0, 4.0, 2)).markVisualOnly();
+      this.speed = (DoubleValue)(new DoubleValue(this, "Speed", 1.0, 0.0, 4.0, 2)).markVisualOnly();
       this.spectatorRender = (BooleanValue)(new BooleanValue(this, "Spectator Render", false)).markVisualOnly();
       this.updateRaytrace = (BooleanValue)(new BooleanValue(this, "Update Raytrace", false)).markVisualOnly();
       this.showRealPlayerModel = (BooleanValue)(new BooleanValue(this, "Show real Player Model", true)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "Minimum distance to show player model", 1.0, 0.0, 10.0, 1);
+      DoubleValue stringValue = new DoubleValue(this, "Minimum distance to show player model", 1.0, 0.0, 10.0, 1);
       BooleanValue showRealPlayerModel2 = this.showRealPlayerModel;
       this.showRealPlayerModel.getClass();
       BooleanValue booleanValue = showRealPlayerModel2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.minimumDistanceToShowPlayerModel = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
+      this.minimumDistanceToShowPlayerModel = (DoubleValue)stringValue.visibleWhen(() -> booleanValue.getValue()).markVisualOnly();
       this.displayCoordinates = (BooleanValue)(new BooleanValue(this, "Display Coordinates", false)).markVisualOnly();
       ColorSetting colorSetting = new ColorSetting(this, "Highlight Color", new Color(5, 245, 69, 50));
       showRealPlayerModel2 = this.displayCoordinates;
       this.displayCoordinates.getClass();
       BooleanValue booleanValue2 = showRealPlayerModel2;
-      SettingVisibilityCondition condition2 = () -> booleanValue2.getValue();
-      this.highlightColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(condition2)).markVisualOnly();
+      this.highlightColor = (ColorSetting)((ColorSetting)colorSetting.withVisibility(() -> booleanValue2.getValue())).markVisualOnly();
       ColorSetting colorSetting2 = new ColorSetting(this, "Text Color", new Color(255, 255, 255, 255));
       showRealPlayerModel2 = this.displayCoordinates;
       this.displayCoordinates.getClass();
       BooleanValue booleanValue3 = showRealPlayerModel2;
-      SettingVisibilityCondition condition3 = () -> booleanValue3.getValue();
-      this.textColor = (ColorSetting)((ColorSetting)colorSetting2.withVisibility(condition3)).markVisualOnly();
+      this.textColor = (ColorSetting)((ColorSetting)colorSetting2.withVisibility(() -> booleanValue3.getValue())).markVisualOnly();
       this.pendingDisable = false;
       this.cameraPos = new Vec3(0.0, 0.0, 0.0);
       this.prevCameraPos = new Vec3(0.0, 0.0, 0.0);
@@ -104,15 +101,10 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onDisable() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer != null) {
          float rotationYaw = mc.thePlayer.rotationYaw;
          float rotationPitch = mc.thePlayer.rotationPitch;
-         RotationController rotationController = ClientManagers.rotationController;
-         Rotation rotation = new Rotation(rotationYaw, rotationPitch);
-         byte b = 3;
-         Rotation rotation2 = rotation;
-         rotationController.requestRotation(rotation2, b, this);
+         ClientManagers.rotationController.requestRotation(new Rotation(rotationYaw, rotationPitch), (byte)3, this);
          YawPitchHelper yawPitchHelper = Augustus.getInstance().getYawPitchHelper();
          yawPitchHelper.realYaw = rotationYaw;
          yawPitchHelper.realPitch = rotationPitch;
@@ -125,32 +117,20 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 100;
-      byte b3 = 21;
-      this.toggleEventSubscription(b3, b2);
-      byte b4 = 32;
-      this.toggleEventSubscription(b4);
-      byte b5 = 57;
-      this.toggleEventSubscription(b5);
-      byte b6 = 58;
-      this.toggleEventSubscription(b6);
-      byte b7 = 40;
-      this.toggleEventSubscription(b7);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)21, (byte)100);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)57);
+      this.toggleEventSubscription((byte)58);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick3() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer == null) {
          this.pendingDisable = true;
       } else {
-         RotationController rotationController = ClientManagers.rotationController;
-         Rotation rotation = new Rotation(mc.thePlayer.lastReportedYaw, mc.thePlayer.lastReportedPitch);
-         byte b = -50;
-         Rotation rotation2 = rotation;
-         rotationController.requestRotation(rotation2, b, this);
+         ClientManagers.rotationController.requestRotation(new Rotation(mc.thePlayer.lastReportedYaw, mc.thePlayer.lastReportedPitch), (byte)-50, this);
          mc.thePlayer.rotationYaw = mc.thePlayer.lastReportedYaw;
          mc.thePlayer.rotationPitch = mc.thePlayer.lastReportedPitch;
       }
@@ -158,7 +138,6 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onTick4() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (mc.thePlayer == null) {
          this.pendingDisable = true;
       } else {
@@ -169,7 +148,6 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.pendingDisable) {
          this.pendingDisable = false;
          this.toggle();
@@ -178,14 +156,10 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
             double[] doubles = MoveUtil.calculateMotion(0.5, event.getMoveStrafe(), event.getMoveForward(), this.cameraYaw);
             Vec3 vec = new Vec3(doubles[0], event.isOriginalJump() ? 0.4 : (event.isOriginalSneak() ? -0.4 : 0.0), doubles[1]);
             vec = vec.scale(this.speed.getValue());
-            boolean flag = false;
-            event.setJump(flag);
-            boolean flag2 = false;
-            event.setSneak(flag2);
-            float f = 0.0F;
-            event.setMoveForward(f);
-            float f2 = 0.0F;
-            event.setMoveStrafe(f2);
+            event.setJump(false);
+            event.setSneak(false);
+            event.setMoveForward(0.0F);
+            event.setMoveStrafe(0.0F);
             this.prevCameraPos = new Vec3(this.cameraPos);
             this.cameraPos = this.cameraPos.add(vec);
          }
@@ -196,15 +170,13 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
    public void onClick(EventClick event) {
       if (!this.updateRaytrace.getValue()) {
          event.cancel();
-         boolean flag = true;
-         event.setBlockAllClicks(flag);
+         event.setBlockAllClicks(true);
       }
    }
 
    @Override
    public void onRender(float f) {
       this.cameraYaw = mc.thePlayer.rotationYaw;
-      Fly.getCachedSettings();
       this.cameraPitch = mc.thePlayer.rotationPitch;
       if (this.displayCoordinates.getValue()) {
          Vec3 vec = RotationUtil.getLookVector(mc.thePlayer.rotationPitch, mc.thePlayer.rotationYaw).scale(200.0);
@@ -224,8 +196,7 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
             GL11.glLineWidth(3.0F);
             GL11.glTranslated(-mc.getRenderManager().getRenderPosX(), -mc.getRenderManager().getRenderPosY(), -mc.getRenderManager().getRenderPosZ());
             GlStateManager.disableAlpha();
-            byte b = 0;
-            RenderUtil.setGlColor(this.highlightColor.getColorInt(b));
+            RenderUtil.setGlColor(this.highlightColor.getColorInt((byte)0));
             BlockPos blockPos = hit.getBlockPos();
             RenderUtil.drawFilledBox2(
                (float)blockPos.getX(),
@@ -245,7 +216,6 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onRender(float f, ScaledResolution sr) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.displayCoordinates.getValue()) {
          Vec3 vec = RotationUtil.getLookVector(mc.thePlayer.rotationPitch, mc.thePlayer.rotationYaw).scale(200.0);
          Vec3 vec2 = this.prevCameraPos.lerp(this.cameraPos, (double)f);
@@ -261,11 +231,7 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
          if (hit != null && hit.hitVec != null) {
             BlockPos blockPos = hit.getBlockPos();
             String str = "x=" + blockPos.getX() + " y=" + blockPos.getY() + " z=" + blockPos.getZ();
-            FontRenderer fontRendererObj = mc.fontRendererObj;
-            int n = (sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(str)) / 2;
-            int n2 = sr.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 3;
-            byte b = 0;
-            fontRendererObj.drawString(str, n, n2, this.textColor.getColorInt(b));
+            mc.fontRendererObj.drawString(str, (sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(str)) / 2, sr.getScaledHeight() / 2 + mc.fontRendererObj.FONT_HEIGHT * 3, this.textColor.getColorInt((byte)0));
          }
 
          RenderUtil.resetGlColorState();
@@ -274,7 +240,6 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onRenderEntities(EventRenderEntities event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.showRealPlayerModel.getValue()) {
          if (this.cameraPos == null || !(this.cameraPos.distanceTo(this.realPosX, this.realPosY, this.realPosZ) < this.minimumDistanceToShowPlayerModel.getValue())) {
             EntityPlayerSP thePlayer = mc.thePlayer;
@@ -308,16 +273,13 @@ public class FreeCam extends Module implements ClickListener, MoveInputListener,
 
    @Override
    public void onShouldRenderEntity(EventShouldRenderEntity event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (event.getEntity() == mc.thePlayer) {
-         boolean flag = true;
-         event.setShouldRender(flag);
+         event.setShouldRender(true);
       }
    }
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

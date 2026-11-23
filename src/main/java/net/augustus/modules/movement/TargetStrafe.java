@@ -9,7 +9,6 @@ import net.augustus.modules.Module;
 import net.augustus.events.EventMove;
 import net.augustus.utils.rotation.RotationUtil;
 import net.augustus.ClientManagers;
-import net.augustus.settings.Setting;
 import net.augustus.utils.MoveUtil;
 import net.augustus.events.listeners.MoveListener;
 import net.augustus.utils.world.BlockUtil;
@@ -18,8 +17,8 @@ import net.augustus.utils.combat.CombatTargetUtil;
 import net.augustus.events.EventMoveInput;
 import net.augustus.Augustus;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -28,8 +27,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TargetStrafe extends Module implements MoveListener, MoveInputListener {
-   private final BooleansSetting conditionsToTargetStrafe;
-   private final StringValue radius;
+   private final StringValue conditionsToTargetStrafe;
+   private final DoubleValue radius;
    private final BooleanValue killAuraTarget;
    private final BooleanValue autoStrafe;
    private final BooleanValue onlyWhileSpace;
@@ -44,13 +43,13 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
 
    public TargetStrafe() {
        super("TargetStrafe", "Zielbeschuss", new Color(52, 0, 194), Categorys.MOVEMENT);
-      this.conditionsToTargetStrafe = new BooleansSetting(
+      this.conditionsToTargetStrafe = new StringValue(
          this,
          "ConditionsToTargetStrafe",
          "Everytime",
          new String[]{"Everytime", "OnlyWhileFlyEnabled", "OnlyWhileSpeedEnabled", "OnlyWhileSpeedOrFlyEnabled"}
       );
-      this.radius = new StringValue(this, "Radius", 2.5, 0.1, 6.0, 1);
+      this.radius = new DoubleValue(this, "Radius", 2.5, 0.1, 6.0, 1);
       this.killAuraTarget = new BooleanValue(this, "KillAuraTarget", true);
       this.autoStrafe = new BooleanValue(this, "AutoStrafe", true);
       this.onlyWhileSpace = new BooleanValue(this, "OnlyWhileSpace", true);
@@ -73,16 +72,13 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       this.target = null;
-      Fly.getCachedSettings();
       boolean flag = this.conditionsToTargetStrafe.getSelectedValue().equals("Everytime");
       boolean flag2 = this.conditionsToTargetStrafe.getSelectedValue().equals("OnlyWhileFlyEnabled") && ClientManagers.moduleManager.fly.isToggled();
       boolean flag3 = this.conditionsToTargetStrafe.getSelectedValue().equals("OnlyWhileSpeedEnabled") && ClientManagers.moduleManager.speed.isToggled();
@@ -92,9 +88,7 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
          if (this.killAuraTarget.getValue()) {
             this.target = CombatTargetUtil.getActiveTarget();
          } else {
-            Stream<Entity> stream = ((List<Entity>)mc.theWorld.loadedEntityList).stream();
-            this.sortedTargets = stream.filter(entity -> {
-               Setting[] cachedSettings = Fly.getCachedSettings();
+            this.sortedTargets = ((List<Entity>)mc.theWorld.loadedEntityList).stream().filter(entity -> {
                if (entity instanceof EntityLivingBase) {
                   if (!mc.thePlayer.canEntityBeSeen(entity)) {
                      return false;
@@ -160,8 +154,7 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
             }
 
             if (block instanceof BlockAir && !mc.thePlayer.onGround) {
-               long l = 300L;
-               if (this.timeHelper.reached2(l)) {
+               if (this.timeHelper.reached2(300L)) {
                   this.strafeLeft = !this.strafeLeft;
                   this.timeHelper.reset();
                }
@@ -169,20 +162,16 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
 
             double value = this.radius.getValue();
             RotationUtil rotationUtil = new RotationUtil();
-            boolean flag5 = false;
             float rotationPitch = mc.thePlayer.rotationPitch;
             float rotationYaw = mc.thePlayer.rotationYaw;
-            EntityLivingBase target2 = this.target;
-            double yaw = (double)rotationUtil.faceEntityEyes(target2, rotationYaw, rotationPitch, flag5).yaw;
+            double yaw = (double)rotationUtil.faceEntityEyes(this.target, rotationYaw, rotationPitch, false).yaw;
             yaw += (double)((this.strafeLeft ? -1 : 1) * 45);
             double d = Math.toRadians(yaw);
             double d2 = this.target.posX + Math.sin(d) * value;
             double d3 = this.target.posZ - Math.cos(d) * value;
-            boolean flag6 = false;
             float rotationPitch2 = mc.thePlayer.rotationPitch;
             float rotationYaw2 = mc.thePlayer.rotationYaw;
-            double posY = this.target.posY;
-            this.strafeYaw = rotationUtil.faceCoordinates(d2, posY, d3, rotationYaw2, rotationPitch2, flag6).yaw;
+            this.strafeYaw = rotationUtil.faceCoordinates(d2, this.target.posY, d3, rotationYaw2, rotationPitch2, false).yaw;
             if (this.autoStrafe.getValue()) {
                MoveUtil.strafe();
             }
@@ -198,21 +187,18 @@ public class TargetStrafe extends Module implements MoveListener, MoveInputListe
    @Override
    public void onMove(EventMove event) {
       if (this.target != null && !BlockUtil.isScaffoldActiveAndValid()) {
-         float strafeYaw2 = this.strafeYaw;
-         event.setYaw(strafeYaw2);
+         event.setYaw(this.strafeYaw);
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
       if (this.target != null && !BlockUtil.isScaffoldActiveAndValid()) {
-         float strafeYaw2 = this.strafeYaw;
-         event.setYaw(strafeYaw2);
+         event.setYaw(this.strafeYaw);
       }
    }
 
    private void restoreThirdPersonView() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.active) {
          if (this.thirdPersonMode.getValue()) {
             mc.gameSettings.thirdPersonView = this.previousThirdPersonView;

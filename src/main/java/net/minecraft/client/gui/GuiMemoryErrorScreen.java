@@ -16,9 +16,7 @@ public class GuiMemoryErrorScreen extends GuiScreen {
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
       if (button.id == 0) {
-         Minecraft mc2 = this.mc;
-         GuiMainMenu guiMainMenu = new GuiMainMenu();
-         mc2.displayGuiScreen(guiMainMenu);
+         this.mc.displayGuiScreen(new GuiMainMenu());
       } else if (button.id == 1) {
          this.mc.shutdown();
       }

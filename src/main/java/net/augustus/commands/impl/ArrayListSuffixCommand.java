@@ -8,14 +8,11 @@ public class ArrayListSuffixCommand extends Command {
 
    public void commandAction(String[] strings, String str) {
       if (strings.length == 2) {
-         String str2 = strings[1];
-         String str3 = str2;
+         String str3 = strings[1];
          ClientManagers.moduleManager.arrayList.customSuffix.setValue(str3);
-         String str4 = "§7Set suffix to " + strings[1];
-         this.sendChat(str4);
+         this.sendChat("§7Set suffix to " + strings[1]);
       } else {
-         String str5 = "§7" + this.getCommand() + " [§2Suffix§7]";
-         this.sendChat(str5);
+         this.sendChat("§7" + this.getCommand() + " [§2Suffix§7]");
       }
    }
 
@@ -24,8 +21,7 @@ public class ArrayListSuffixCommand extends Command {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + " §7(Set custom arraylist suffix)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + " §7(Set custom arraylist suffix)");
    }
 
 }

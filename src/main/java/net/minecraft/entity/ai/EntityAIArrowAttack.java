@@ -44,8 +44,7 @@ public class EntityAIArrowAttack extends EntityAIBase {
          this.rangedAttackEntityHost.attackEntityWithRangedAttack(this.attackTarget, f2);
          this.rangedAttackTime = MathHelper.floor_float(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
       } else if (this.rangedAttackTime < 0) {
-         float f3 = MathHelper.sqrt_double(distanceSq) / this.attackRadius;
-         this.rangedAttackTime = MathHelper.floor_float(f3 * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
+         this.rangedAttackTime = MathHelper.floor_float((MathHelper.sqrt_double(distanceSq) / this.attackRadius) * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
       }
    }
 

@@ -7,19 +7,15 @@ public class FractionMatrixRow {
    private static int flowState;
 
    public int getLeadingZeroCount() {
-      int flowState2 = getFlowState();
       if (this.dirty) {
          for (int i = 0; i < this.elements.length; i++) {
-            ShadedBigInteger numerator = this.elements[i].getNumerator();
-            ShadedBigInteger zero = ShadedBigInteger.ZERO;
-            if (!numerator.equals(zero)) {
+            if (!this.elements[i].getNumerator().equals(ShadedBigInteger.ZERO)) {
                this.leadingZeroCount = i;
                return i;
             }
          }
 
-         int length = this.elements.length;
-         this.leadingZeroCount = length;
+         this.leadingZeroCount = this.elements.length;
       }
 
       return this.leadingZeroCount;
@@ -30,23 +26,18 @@ public class FractionMatrixRow {
    }
 
    public void setElement(long l, RationalFraction rationalFraction, int n) {
-      boolean flag = true;
-      this.dirty = flag;
+      this.dirty = true;
       this.elements[n] = rationalFraction;
    }
 
    public FractionMatrixRow subtract(FractionMatrixRow fractionMatrixRow) {
-      int flowState2 = getFlowState();
       if (fractionMatrixRow.elements.length != this.elements.length) {
          throw new UnsupportedOperationException("Two matrices with an unequal length can not be subtracted!");
       } else {
          RationalFraction[] rationalFractions = new RationalFraction[this.elements.length];
 
          for (int i = 0; i < this.elements.length; i++) {
-            RationalFraction rationalFraction = this.elements[i];
-            RationalFraction rationalFraction2 = fractionMatrixRow.elements[i];
-            RationalFraction rationalFraction3 = rationalFraction2;
-            rationalFractions[i] = rationalFraction.subtract2(rationalFraction3);
+            rationalFractions[i] = this.elements[i].subtract2(fractionMatrixRow.elements[i]);
          }
 
          return new FractionMatrixRow(rationalFractions);
@@ -54,8 +45,7 @@ public class FractionMatrixRow {
    }
 
    public FractionMatrixRow(RationalFraction[] rationalFractions) {
-      boolean flag = true;
-      this.dirty = flag;
+      this.dirty = true;
       this.elements = rationalFractions;
    }
 
@@ -68,8 +58,7 @@ public class FractionMatrixRow {
    }
 
    public static int getInvertedFlowMarker() {
-      int flowState2 = getFlowState();
-      return flowState2 == 0 ? 82 : 0;
+      return getFlowState() == 0 ? 82 : 0;
    }
 
    static {

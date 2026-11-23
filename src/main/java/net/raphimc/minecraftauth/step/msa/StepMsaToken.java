@@ -257,9 +257,8 @@ public class StepMsaToken extends AbstractStep<MsaCodeStep.MsaCode, StepMsaToken
       @Override
       public int hashCode() {
          int PRIME = 59;
-         int result = 1;
          Object $refreshToken = this.getRefreshToken();
-         return result * 59 + ($refreshToken == null ? 43 : $refreshToken.hashCode());
+         return 1 * 59 + ($refreshToken == null ? 43 : $refreshToken.hashCode());
       }
    }
 }

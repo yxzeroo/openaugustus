@@ -12,7 +12,7 @@ import net.augustus.events.listeners.RenderGuiBackgroundListener;
 import net.augustus.render.RenderUtil;
 import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -23,18 +23,11 @@ public class CustomGuiBGColor extends Module implements RenderGuiBackgroundListe
       new MultiOptionSetting(this, "Guis", CustomGuiBgScreenOption.values());
 
       for (CustomGuiBgScreenOption customGuiBgScreenOption : CustomGuiBgScreenOption.values()) {
-         DoubleValue doubleValue = new DoubleValue(this, customGuiBgScreenOption.getName(), true);
+         SettingGroup doubleValue = new SettingGroup(this, customGuiBgScreenOption.getName(), true);
          String str = customGuiBgScreenOption.getName() + "Color";
          Color color2 = new Color(0, 0, 0, 50);
-         String str2 = str;
-         ColorSetting colorSetting = new ColorSetting(this, str2, color2, doubleValue);
-         String str3 = "Color";
-         ColorSetting colorSetting2 = (ColorSetting)colorSetting.withDisplayName(str3);
-         CustomGuiBgScreenOption.setBackgroundColorSetting(customGuiBgScreenOption, colorSetting2);
-         BooleanValue booleanValue = new BooleanValue(this, customGuiBgScreenOption.getName() + "Blur", false, doubleValue);
-         String str4 = "Blur";
-         BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str4);
-         CustomGuiBgScreenOption.setBlurSetting(customGuiBgScreenOption, booleanValue2);
+         CustomGuiBgScreenOption.setBackgroundColorSetting(customGuiBgScreenOption, (ColorSetting)new ColorSetting(this, str, color2, doubleValue).withDisplayName("Color"));
+         CustomGuiBgScreenOption.setBlurSetting(customGuiBgScreenOption, (BooleanValue)new BooleanValue(this, customGuiBgScreenOption.getName() + "Blur", false, doubleValue).withDisplayName("Blur"));
       }
    }
 
@@ -48,8 +41,7 @@ public class CustomGuiBGColor extends Module implements RenderGuiBackgroundListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 54;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)54);
    }
 
    @Override
@@ -80,12 +72,7 @@ public class CustomGuiBGColor extends Module implements RenderGuiBackgroundListe
       if (shaderRenderPass == ShaderRenderPass.BLUR) {
          RenderUtil.drawRect3(0, 0, screen.width, screen.height, -1);
       } else {
-         int width = screen.width;
-         int height = screen.height;
-         ColorSetting backgroundColorSetting = CustomGuiBgScreenOption.getBackgroundColorSetting(customGuiBgScreenOption);
-         byte b = 0;
-         int colorInt = backgroundColorSetting.getColorInt(b);
-         RenderUtil.drawRect3(0, 0, width, height, colorInt);
+         RenderUtil.drawRect3(0, 0, screen.width, screen.height, CustomGuiBgScreenOption.getBackgroundColorSetting(customGuiBgScreenOption).getColorInt((byte)0));
       }
    }
 

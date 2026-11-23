@@ -78,8 +78,7 @@ public final class CapeMatrix4f {
    }
 
    public void multiply(CapeQuaternion capeQuaternion) {
-      CapeMatrix4f capeMatrix4f = new CapeMatrix4f(capeQuaternion);
-      this.multiply2(capeMatrix4f);
+      this.multiply2(new CapeMatrix4f(capeQuaternion));
    }
 
    public static CapeMatrix4f createScaleMatrix(float f, float f2, float f3) {

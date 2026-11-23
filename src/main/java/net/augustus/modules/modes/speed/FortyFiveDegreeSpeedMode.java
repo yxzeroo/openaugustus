@@ -46,13 +46,10 @@ public class FortyFiveDegreeSpeedMode extends SpeedMode {
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (this.yawOffsetApplied && this.shouldActivate()) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
-         boolean flag = false;
-         event.setPreventInstantReverse(flag);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
+         event.setPreventInstantReverse(false);
          if (ClientManagers.moduleManager.speed.autoJump.getValue()) {
-            boolean flag2 = true;
-            event.setJump(flag2);
+            event.setJump(true);
          }
       }
    }
@@ -76,12 +73,7 @@ public class FortyFiveDegreeSpeedMode extends SpeedMode {
                ClientManagers.moduleManager.speed.autoJump.getValue()
                   || KeyboardInputUtil.isValidKeyCode(mc.gameSettings.keyBindJump.getKeyCode()) && KeyboardInputUtil.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode())
             )) {
-            RotationController rotationController = ClientManagers.rotationController;
-            float f2 = ClientManagers.moduleManager.speed.mouseSensi.getValue() ? RotationUtil.applyYawGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw) : f;
-            Speed speed2 = ClientManagers.moduleManager.speed;
-            byte b = 10;
-            float f3 = f2;
-            rotationController.requestYaw(f3, b, speed2);
+            ClientManagers.rotationController.requestYaw(ClientManagers.moduleManager.speed.mouseSensi.getValue() ? RotationUtil.applyYawGcd(f, ClientManagers.rotationController.getPreviousRotation().yaw) : f, (byte)10, ClientManagers.moduleManager.speed);
          } else {
             int n;
             if (isOmnidirectional) {
@@ -91,12 +83,7 @@ public class FortyFiveDegreeSpeedMode extends SpeedMode {
             }
 
             float f4 = f - (float)(45 * n);
-            RotationController rotationController2 = ClientManagers.rotationController;
-            float f5 = ClientManagers.moduleManager.speed.mouseSensi.getValue() ? RotationUtil.applyYawGcd(f4, ClientManagers.rotationController.getPreviousRotation().yaw) : f4;
-            Speed speed3 = ClientManagers.moduleManager.speed;
-            byte b2 = 10;
-            float f6 = f5;
-            rotationController2.requestYaw(f6, b2, speed3);
+            ClientManagers.rotationController.requestYaw(ClientManagers.moduleManager.speed.mouseSensi.getValue() ? RotationUtil.applyYawGcd(f4, ClientManagers.rotationController.getPreviousRotation().yaw) : f4, (byte)10, ClientManagers.moduleManager.speed);
          }
 
          this.yawOffsetApplied = true;

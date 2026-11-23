@@ -104,8 +104,7 @@ public class BlockTripWire extends Block {
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
       boolean value = (Boolean)state.getValue(SUSPENDED);
-      boolean flag = !World.doesBlockHaveSolidTopSurface(world, pos.getX(), pos.getY() - 1, pos.getZ());
-      if (value != flag) {
+      if (value != (!World.doesBlockHaveSolidTopSurface(world, pos.getX(), pos.getY() - 1, pos.getZ()))) {
          this.dropBlockAsItem(world, pos, state, 0);
          world.setBlockToAir(pos);
       }

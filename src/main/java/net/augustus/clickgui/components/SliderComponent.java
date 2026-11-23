@@ -11,10 +11,8 @@ public class SliderComponent extends GuiComponent {
    public int clickY;
    public int sliderHeight;
    public int clickX = 0;
-   private static int[] sliderStateFlags;
 
    public void mouseClickMove(int mouseX2, int mouseY2, int clickedMouseButton, long timeSinceLastClick) {
-      int[] sliderStateFlags2 = getSliderStateFlags();
       if (clickedMouseButton == 0 && RenderUtil.isHovered((float)this.x, (float)this.y, (float)this.sliderWidth, (float)this.sliderHeight, this.clickX, this.clickY)) {
          this.dragging = true;
       }
@@ -40,7 +38,6 @@ public class SliderComponent extends GuiComponent {
       int n9
    ) {
       super.updateLayout(n, n2, n5, n6, customFontUtil);
-      getSliderStateFlags();
       this.sliderWidth = n3;
       this.sliderHeight = n4;
       RenderUtil.drawRectOutline2((double)n, (double)n2, (double)(n + n3), (double)(n2 + n4), 2.0F, n8);
@@ -53,9 +50,7 @@ public class SliderComponent extends GuiComponent {
       }
 
       d = this.roundToDecimalPlaces(d, n7);
-      double d4 = MathHelper.clamp_double((d - d2) / (d3 - d2), 0.0, 1.0);
-      double d5 = (double)(n + 2) + d4 * (double)(n3 - 3);
-      RenderUtil.drawRect((double)(n + 2), (double)(n2 + 2), d5, (double)(n2 + n4 - 2), n9);
+      RenderUtil.drawRect((double)(n + 2), (double)(n2 + 2), (double)(n + 2) + MathHelper.clamp_double((d - d2) / (d3 - d2), 0.0, 1.0) * (double)(n3 - 3), (double)(n2 + n4 - 2), n9);
       return d;
    }
 
@@ -81,7 +76,6 @@ public class SliderComponent extends GuiComponent {
    }
 
    private double roundToDecimalPlaces(double d, int n) {
-      int[] sliderStateFlags2 = getSliderStateFlags();
       if (n == 0) {
          return (double)((int)d);
       } else {
@@ -116,17 +110,6 @@ public class SliderComponent extends GuiComponent {
       return this.clickY;
    }
 
-   public static void setSliderStateFlags(int[] ints) {
-      sliderStateFlags = ints;
-   }
 
-   public static int[] getSliderStateFlags() {
-      return sliderStateFlags;
-   }
 
-   static {
-      if (getSliderStateFlags() != null) {
-         setSliderStateFlags(new int[4]);
-      }
-   }
 }

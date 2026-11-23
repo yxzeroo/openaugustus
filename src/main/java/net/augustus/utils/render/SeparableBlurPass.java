@@ -13,17 +13,11 @@ public class SeparableBlurPass implements BlurPass, MC {
       if (this.blurShader != null) {
          this.intermediateFramebuffer.framebufferClear();
          float f = (float)n;
-         boolean flag = true;
          BlurPassDirection horizontal = BlurPassDirection.HORIZONTAL;
-         Framebuffer framebuffer3 = this.intermediateFramebuffer;
-         float f2 = f;
-         this.renderDirectionalPass(f2, framebuffer3, framebuffer, horizontal, framebuffer2, flag);
+         this.renderDirectionalPass(f, this.intermediateFramebuffer, framebuffer, horizontal, framebuffer2, true);
          f = (float)n;
-         boolean flag2 = false;
          BlurPassDirection vertical = BlurPassDirection.VERTICAL;
-         Framebuffer framebuffer4 = this.intermediateFramebuffer;
-         float f3 = f;
-         this.renderDirectionalPass(f3, framebuffer, framebuffer4, vertical, framebuffer2, flag2);
+         this.renderDirectionalPass(f, framebuffer, this.intermediateFramebuffer, vertical, framebuffer2, false);
       }
    }
 
@@ -62,10 +56,9 @@ public class SeparableBlurPass implements BlurPass, MC {
       this.blurShader.setUniform1i(str6, n);
       float f7 = (float)framebuffer.framebufferTextureWidth;
       float f8 = (float)framebuffer.framebufferTextureHeight;
-      float f9 = f7;
       float f10 = 0.0F;
       float f11 = 0.0F;
-      this.blurShader.drawQuad(f11, f10, f9, f8);
+      this.blurShader.drawQuad(f11, f10, f7, f8);
       this.blurShader.unbind();
    }
 

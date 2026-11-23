@@ -14,9 +14,7 @@ public class FeatureListJsonCodec implements FeatureConfigSerializer {
 
    @Override
    public boolean deserialize(JsonElement elem, boolean flag, UnaryFunction unaryFunction) {
-      JsonObject json = (JsonObject)elem;
-      JsonObject json2 = json;
-      return this.deserializeFromObject(json2, flag, unaryFunction);
+      return this.deserializeFromObject((JsonObject)elem, flag, unaryFunction);
    }
 
    public void setFeatures2(FeatureBase[] featureBases) {
@@ -31,8 +29,7 @@ public class FeatureListJsonCodec implements FeatureConfigSerializer {
       JsonElement elem = json.get(featureBase.getName());
       if (elem != null && elem.isJsonObject()) {
          JsonObject asJsonObject = elem.getAsJsonObject();
-         GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
-         featureBase.deserialize(gsonserializerprovider, asJsonObject, flag, unaryFunction);
+         featureBase.deserialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, asJsonObject, flag, unaryFunction);
       }
    }
 
@@ -41,10 +38,7 @@ public class FeatureListJsonCodec implements FeatureConfigSerializer {
       try {
          JsonObject json;
          if (this.features.size() == 1) {
-            FeatureBase featureBase = (FeatureBase)this.features.get(0);
-            Object obj = null;
-            GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
-            json = featureBase.serialize(gsonserializerprovider, (JsonObject)obj, unaryFunction);
+            json = ((FeatureBase)this.features.get(0)).serialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, (JsonObject)null, unaryFunction);
          } else {
             json = new JsonObject();
             this.features.forEach(obj2 -> serializeFeature(unaryFunction, json, (FeatureBase)obj2));
@@ -60,10 +54,7 @@ public class FeatureListJsonCodec implements FeatureConfigSerializer {
 
       try {
          if (this.features.size() == 1) {
-            FeatureBase featureBase = (FeatureBase)this.features.get(0);
-            boolean flag2 = false;
-            GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
-            featureBase.deserialize(gsonserializerprovider, json, flag2, unaryFunction);
+            ((FeatureBase)this.features.get(0)).deserialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, json, false, unaryFunction);
          } else {
             this.features.forEach(obj -> deserializeFeature(json, flag, unaryFunction, (FeatureBase)obj));
          }
@@ -75,9 +66,7 @@ public class FeatureListJsonCodec implements FeatureConfigSerializer {
    }
 
    private static void serializeFeature(UnaryFunction unaryFunction, JsonObject json, FeatureBase featureBase) {
-      Object obj = null;
-      GsonConfigSerializerProvider gsonserializerprovider = JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER;
-      JsonObject json2 = featureBase.serialize(gsonserializerprovider, (JsonObject)obj, unaryFunction);
+      JsonObject json2 = featureBase.serialize(JsonCodecRegistryHolder.GSON_SERIALIZER_PROVIDER, (JsonObject)null, unaryFunction);
       json.add(featureBase.getName(), json2);
    }
 

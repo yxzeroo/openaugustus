@@ -12,8 +12,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.Session;
@@ -23,75 +23,50 @@ public class MultiplayerProtocolMenu {
 
    private static void selectProtocolVersion(ProtocolVersion protocolVersion) {
       ViaAugustus.targetProtocolVersion = protocolVersion;
-      StringValue protocolVersionVal = ClientManagers.moduleManager.protocolVersion.protocolVersionVal;
-      double version = (double)protocolVersion.getVersion();
-      protocolVersionVal.setValue(version);
-      ConfigManager configManager = Augustus.getInstance().getConfigManager();
-      configManager.snapshotAll();
+      ClientManagers.moduleManager.protocolVersion.protocolVersionVal.setValue((double)protocolVersion.getVersion());
+      Augustus.getInstance().getConfigManager().snapshotAll();
    }
 
-   private static void cycleBansDisplayMode(BooleansSetting booleansSetting) {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.banStatistics.getSelectedValue();
-      switch (selectedValue) {
+   private static void cycleBansDisplayMode(StringValue booleansSetting) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.banStatistics.getSelectedValue()) {
          case "Icon":
-            String str = "Left";
-            booleansSetting.setSelectedValue(str);
+            booleansSetting.setSelectedValue("Left");
             break;
          case "Left":
-            String str2 = "Right";
-            booleansSetting.setSelectedValue(str2);
+            booleansSetting.setSelectedValue("Right");
             break;
          case "Right":
-            String str3 = "None";
-            booleansSetting.setSelectedValue(str3);
+            booleansSetting.setSelectedValue("None");
             break;
          case "None":
-            String str4 = "Icon";
-            booleansSetting.setSelectedValue(str4);
+            booleansSetting.setSelectedValue("Icon");
       }
    }
 
    static {
       QuickMenuBuilder quickMenuBuilder = QuickActionsSidebar.builder();
-      String str = "Quick actions";
-      quickMenuBuilder.addHeader(str);
+      quickMenuBuilder.addHeader("Quick actions");
       quickMenuBuilder.addSpacer();
       Runnable runnable = () -> {
          BungeeHackScreen bungeeHackScreen = new BungeeHackScreen(Minecraft.getMinecraft().currentScreen);
          Minecraft.getMinecraft().displayGuiScreen(bungeeHackScreen);
       };
-      String str2 = "Bungee Hack";
-      quickMenuBuilder.addAction(str2, runnable);
+      quickMenuBuilder.addAction("Bungee Hack", runnable);
       Runnable runnable2 = () -> {
          Session session = Minecraft.getMinecraft().session;
          if (session != null) {
             GuiScreen.setClipboardString(session.getUsername());
          }
       };
-      String str3 = "Copy IGN";
-      quickMenuBuilder.addAction(str3, runnable2);
+      quickMenuBuilder.addAction("Copy IGN", runnable2);
       BooleanValue fastServerPining1 = Augustus.getInstance().getModuleManager().augustusServer.fastServerPining1;
-      String str4 = "Fast Server Ping";
-      quickMenuBuilder.addBooleanSetting(str4, fastServerPining1);
-      BooleansSetting banStatistics = Augustus.getInstance().getModuleManager().augustusServer.banStatistics;
-      Supplier supplier = () -> formatBansDisplayLabel(banStatistics);
-      Runnable runnable3 = () -> cycleBansDisplayMode(banStatistics);
-      Supplier supplier2 = supplier;
-      quickMenuBuilder.addDynamicAction(supplier2, runnable3);
+      quickMenuBuilder.addBooleanSetting("Fast Server Ping", fastServerPining1);
+      StringValue banStatistics = Augustus.getInstance().getModuleManager().augustusServer.banStatistics;
+      quickMenuBuilder.addDynamicAction(() -> formatBansDisplayLabel(banStatistics), () -> cycleBansDisplayMode(banStatistics));
       quickMenuBuilder.addSpacer();
-      String str5 = "Protocol Hack";
-      quickMenuBuilder.addHeader(str5);
+      quickMenuBuilder.addHeader("Protocol Hack");
       quickMenuBuilder.addSpacer();
-      List reversedProtocols = ProtocolVersion.getReversedProtocols();
-      Supplier supplier3 = () -> ViaAugustus.targetProtocolVersion;
-      Consumer consumer = obj -> selectProtocolVersion((ProtocolVersion)obj);
-      Function function = obj2 -> ((ProtocolVersion)obj2).getName();
-      Function function2 = obj3 -> ProtocolVersion.getClosest((String)obj3);
-      Function function3 = function;
-      Consumer consumer2 = consumer;
-      Supplier supplier4 = supplier3;
-      List list = reversedProtocols;
-      quickMenuBuilder.addSelectableOptions(list, supplier4, consumer2, function3, function2);
+      quickMenuBuilder.addSelectableOptions(ProtocolVersion.getReversedProtocols(), () -> ViaAugustus.targetProtocolVersion, obj -> selectProtocolVersion((ProtocolVersion)obj), obj2 -> ((ProtocolVersion)obj2).getName(), obj3 -> ProtocolVersion.getClosest((String)obj3));
       SIDEBAR = quickMenuBuilder.build();
    }
 
@@ -99,7 +74,7 @@ public class MultiplayerProtocolMenu {
       return SIDEBAR;
    }
 
-   private static String formatBansDisplayLabel(BooleansSetting booleansSetting) {
+   private static String formatBansDisplayLabel(StringValue booleansSetting) {
       return "Bans: §6" + booleansSetting.getSelectedValue();
    }
 

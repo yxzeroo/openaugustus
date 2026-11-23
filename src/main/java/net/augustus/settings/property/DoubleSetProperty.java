@@ -9,13 +9,7 @@ import net.augustus.modules.FeatureBase;
 public class DoubleSetProperty extends AbstractConfigProperty {
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      SetPropertySerializer doubleSetCodec = configSerializerProvider.getDoubleSetCodec();
-      String name2 = this.getName();
-      Set set = flag ? (Set)this.getDefaultValue() : (Set)this.getValue();
-      String str = name2;
-      Set set2 = doubleSetCodec.readSet(str, set, json);
-      Set set3 = set2;
-      this.applyValue(set3);
+      this.applyValue(configSerializerProvider.getDoubleSetCodec().readSet(this.getName(), flag ? (Set)this.getDefaultValue() : (Set)this.getValue(), json));
    }
 
    public DoubleSetProperty(FeatureBase featureBase2, String str, Set set) {
@@ -29,11 +23,7 @@ public class DoubleSetProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      SetPropertySerializer doubleSetCodec = configSerializerProvider.getDoubleSetCodec();
-      String name2 = this.getName();
-      Set value2 = (Set)this.getValue();
-      String str = name2;
-      doubleSetCodec.writeSet(str, value2, json);
+      configSerializerProvider.getDoubleSetCodec().writeSet(this.getName(), (Set)this.getValue(), json);
       return json;
    }
 }

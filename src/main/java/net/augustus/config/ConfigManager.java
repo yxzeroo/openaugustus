@@ -13,15 +13,13 @@ public class ConfigManager {
    private static Setting[] cachedSettings;
 
    static {
-      Setting[] settings = new Setting[1];
-      setCachedSettings(settings);
+      setCachedSettings(new Setting[1]);
    }
 
    public ConfigManager() {
       super();
       this.moduleSettingsConfig = new ModuleSettingsConfigSection();
       this.moduleConfigStorage = new ModuleConfigStorage();
-      getCachedSettings();
       this.proxyConfig = new ProxyConfigStorage();
       this.accountConfig = new AccountConfigStorage();
       this.clientSettingsConfig = new ClientSettingsConfigFile();
@@ -29,7 +27,6 @@ public class ConfigManager {
 
    public void loadAll() {
       ((java.util.List<JsonConfigFile>)CONFIG_FILES).forEach((JsonConfigFile jsonConfigFile) -> {
-         Setting[] cachedSettings2 = getCachedSettings();
          if (jsonConfigFile.isAutoManaged()) {
             jsonConfigFile.load();
          }
@@ -41,7 +38,6 @@ public class ConfigManager {
    }
 
    private static void saveConfigFile(JsonConfigFile jsonConfigFile) {
-      Setting[] cachedSettings2 = getCachedSettings();
       if (jsonConfigFile.isAutoManaged()) {
          jsonConfigFile.save();
       }
@@ -52,7 +48,6 @@ public class ConfigManager {
    }
 
    private static void snapshotConfigFile(JsonConfigFile jsonConfigFile) {
-      Setting[] cachedSettings2 = getCachedSettings();
       if (jsonConfigFile.isAutoManaged()) {
          jsonConfigFile.captureSnapshot();
       }

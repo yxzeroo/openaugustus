@@ -42,9 +42,7 @@ public class PathBlockValidator {
       boolean flag2,
       boolean flag3
    ) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
-      double d = 1.0;
-      boolean isBlockPassable = isBlockPassable(world, n, n2, n3, state, n4, n5, n6, d, flag, flag3);
+      boolean isBlockPassable = isBlockPassable(world, n, n2, n3, state, n4, n5, n6, 1.0, flag, flag3);
       if (!isBlockPassable) {
          Block block = state.getBlock();
          if (block instanceof BlockStairs) {
@@ -52,9 +50,7 @@ public class PathBlockValidator {
                return true;
             }
 
-            IBlockState blockState2 = world.getBlockState2(n4, n5, n6);
-            boolean isStandingGroundCached = AStarPathFinder.isStandingGroundCached(pathfinderResultRef, pathfinderResultRef2, n4, n5, n6, flag, flag2, blockState2);
-            if (isStandingGroundCached) {
+            if (AStarPathFinder.isStandingGroundCached(pathfinderResultRef, pathfinderResultRef2, n4, n5, n6, flag, flag2, world.getBlockState2(n4, n5, n6))) {
                Vec3i directionVec = ((EnumFacing)state.getValue(BlockStairs.FACING)).getDirectionVec();
                int n7 = n - n4;
                int n8 = n2 - n5;
@@ -71,14 +67,7 @@ public class PathBlockValidator {
       }
 
       if (isBlockPassable) {
-         int n10 = n2 + 1;
-         IBlockState blockState = chunk.getBlockState(n, n2 + 1, n3);
-         int n11 = n5 + 1;
-         double d2 = 0.8;
-         int n12 = n11;
-         IBlockState state2 = blockState;
-         int n13 = n10;
-         if (isBlockPassable(world, n, n13, n3, state2, n4, n12, n6, d2, flag, flag3)) {
+         if (isBlockPassable(world, n, n2 + 1, n3, chunk.getBlockState(n, n2 + 1, n3), n4, n5 + 1, n6, 0.8, flag, flag3)) {
             return true;
          }
       }
@@ -87,7 +76,6 @@ public class PathBlockValidator {
    }
 
    public static boolean isFlowingLiquid(IBlockState state) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       return state.getBlock() instanceof BlockLiquid && (Integer)state.getValue(BlockLiquid.LEVEL) != 0;
    }
 
@@ -105,9 +93,7 @@ public class PathBlockValidator {
       boolean flag3,
       boolean flag4
    ) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
-      double d = 1.0;
-      boolean isBlockPassable = isBlockPassable(world, n, n2, n3, state, n4, n5, n6, d, flag2, flag3, flag4);
+      boolean isBlockPassable = isBlockPassable(world, n, n2, n3, state, n4, n5, n6, 1.0, flag2, flag3, flag4);
       if (!isBlockPassable) {
          Block block = state.getBlock();
          if (block instanceof BlockStairs) {
@@ -130,14 +116,7 @@ public class PathBlockValidator {
       }
 
       if (isBlockPassable) {
-         int n10 = n2 + 1;
-         IBlockState blockState2 = world.getBlockState2(n, n2 + 1, n3);
-         int n11 = n5 + 1;
-         double d2 = 0.8;
-         int n12 = n11;
-         IBlockState state2 = blockState2;
-         int n13 = n10;
-         if (isBlockPassable(world, n, n13, n3, state2, n4, n12, n6, d2, flag2, flag3, flag4)) {
+         if (isBlockPassable(world, n, n2 + 1, n3, world.getBlockState2(n, n2 + 1, n3), n4, n5 + 1, n6, 0.8, flag2, flag3, flag4)) {
             return true;
          }
       }
@@ -159,7 +138,6 @@ public class PathBlockValidator {
       boolean flag2,
       boolean flag3
    ) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       Block block = state.getBlock();
       if (block == Blocks.air) {
          return true;
@@ -175,8 +153,7 @@ public class PathBlockValidator {
          } else if (flag3 && block instanceof BlockLiquid) {
             return false;
          } else if (block == Blocks.ladder) {
-            EnumFacing value = (EnumFacing)state.getValue(BlockLadder.FACING);
-            Vec3i directionVec = value.getDirectionVec();
+            Vec3i directionVec = ((EnumFacing)state.getValue(BlockLadder.FACING)).getDirectionVec();
             return Math.signum((float)directionVec.getX()) != Math.signum((float)(n - n4))
                || Math.signum((float)directionVec.getZ()) != Math.signum((float)(n3 - n6));
          } else {
@@ -202,7 +179,6 @@ public class PathBlockValidator {
    }
 
    public static boolean isStandableBlock(IBlockAccess world, int n, int n2, int n3, boolean flag, boolean flag2, IBlockState state) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       Block block = state.getBlock();
       if (block == Blocks.air) {
          return false;
@@ -241,8 +217,7 @@ public class PathBlockValidator {
    public static boolean isBlockPassable(
       World world, int n, int n2, int n3, IBlockState state, int n4, int n5, int n6, double d, boolean flag, boolean flag2
    ) {
-      boolean flag3 = false;
-      return isBlockPassable(world, n, n2, n3, state, n4, n5, n6, d, flag, flag2, flag3);
+      return isBlockPassable(world, n, n2, n3, state, n4, n5, n6, d, flag, flag2, false);
    }
 
    public static boolean isLiquidAt(World world, BlockPos pos) {
@@ -250,23 +225,18 @@ public class PathBlockValidator {
    }
 
    public static boolean isLava(Block block) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       return block == Blocks.flowing_lava || block == Blocks.lava;
    }
 
    public static boolean isStandableBlock(IBlockAccess world, int n, int n2, int n3, boolean flag, boolean flag2) {
-      IBlockState blockState2 = world.getBlockState2(n, n2, n3);
-      IBlockState state = blockState2;
-      return isStandableBlock(world, n, n2, n3, flag, flag2, state);
+      return isStandableBlock(world, n, n2, n3, flag, flag2, world.getBlockState2(n, n2, n3));
    }
 
    public static boolean isWater(Block block) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       return block == Blocks.flowing_water || block == Blocks.water;
    }
 
    public static boolean hasAdjacentFlowingLiquid(int n, int n2, int n3, IBlockState state, IBlockAccess world) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (!(state.getBlock() instanceof BlockLiquid)) {
          return false;
       } else {
@@ -282,7 +252,6 @@ public class PathBlockValidator {
    public static boolean canPassThroughCorner(
       World world, int n, int n2, int n3, int n4, int n5, int n6, boolean flag, boolean flag2, boolean flag3, boolean flag4
    ) {
-      IBlockState blockState2 = world.getBlockState2(n, n2, n3);
-      return canPassThroughTwoTall(world, n, n2, n3, blockState2, n4, n5, n6, flag, flag2, flag3, flag4);
+      return canPassThroughTwoTall(world, n, n2, n3, world.getBlockState2(n, n2, n3), n4, n5, n6, flag, flag2, flag3, flag4);
    }
 }

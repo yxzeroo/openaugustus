@@ -6,8 +6,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class RenderChunkUtils {
    public static double getRelativeBufferSize2(RenderChunk renderChunk) {
-      int countBlocks = getCountBlocks(renderChunk);
-      return getRelativeBufferSize(countBlocks);
+      return getRelativeBufferSize(getCountBlocks(renderChunk));
    }
 
    public static double getRelativeBufferSize(int n) {
@@ -23,8 +22,7 @@ public class RenderChunkUtils {
       if (blockStorageArray == null) {
          return 0;
       } else {
-         int n = renderChunk.getPosition().getY() >> 4;
-         ExtendedBlockStorage extendedBlockStorage = blockStorageArray[n];
+         ExtendedBlockStorage extendedBlockStorage = blockStorageArray[renderChunk.getPosition().getY() >> 4];
          return extendedBlockStorage == null ? 0 : extendedBlockStorage.getBlockRefCount();
       }
    }

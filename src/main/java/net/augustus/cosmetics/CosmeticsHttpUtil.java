@@ -20,8 +20,7 @@ public class CosmeticsHttpUtil {
    private static SSLSocketFactory trustAllSocketFactory;
 
    public static InputStream openUrlStream(String str, int n, Object[] array) throws IOException {
-      String[] strings = (String[])null;
-      return openUrlStream(str, n, strings, array);
+      return openUrlStream(str, n, (String[])null, array);
    }
 
    public static String translateColorCodes(long l, String str) {
@@ -112,8 +111,7 @@ public class CosmeticsHttpUtil {
          PrintWriter writer = new PrintWriter(stringWriter);
       ) {
          t.printStackTrace(writer);
-         String str = stringWriter.toString();
-         return str;
+         return stringWriter.toString();
       } catch (IOException e) {
          throw new IllegalStateException(e);
       }

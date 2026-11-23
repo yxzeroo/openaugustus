@@ -52,11 +52,9 @@ public class MouseDeltaInterpolator implements MC {
          int n3 = (int)Math.round(this.accumulatedDelta[1] - (double)this.appliedDelta[1]);
          if (this.minBoundRotation != null && this.maxBoundRotation != null && (n2 != 0 || n3 != 0)) {
             float rotationPitch = mc.thePlayer.rotationPitch;
-            float rotationYaw = mc.thePlayer.rotationYaw;
-            Rotation rotation = RotationUtil.applyMouseDeltas(n2, n3, rotationYaw, rotationPitch);
+            Rotation rotation = RotationUtil.applyMouseDeltas(n2, n3, mc.thePlayer.rotationYaw, rotationPitch);
             Rotation maxBoundRotation2 = this.maxBoundRotation;
-            Rotation minBoundRotation2 = this.minBoundRotation;
-            if (!rotation.isWithinBounds(minBoundRotation2, maxBoundRotation2)) {
+            if (!rotation.isWithinBounds(this.minBoundRotation, maxBoundRotation2)) {
                n2 = 0;
                n3 = 0;
             }
@@ -66,10 +64,8 @@ public class MouseDeltaInterpolator implements MC {
          this.appliedDelta[1] = this.appliedDelta[1] + n3;
          event.setDeltaX(n2);
          event.setDeltaY(n3);
-         boolean flag = true;
-         event.setIgnoreInvertMouse(flag);
-         boolean flag2 = true;
-         event.setBypassSmoothCamera(flag2);
+         event.setIgnoreInvertMouse(true);
+         event.setBypassSmoothCamera(true);
       } else {
          this.appliedDelta[0] = this.appliedDelta[1] = 0;
          this.accumulatedDelta[0] = this.accumulatedDelta[1] = 0.0;

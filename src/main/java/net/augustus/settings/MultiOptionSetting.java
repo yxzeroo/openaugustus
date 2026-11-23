@@ -57,8 +57,7 @@ public class MultiOptionSetting extends Setting {
 
                   if (RenderUtil.isHovered((float)(n - 6), (float)renderY2, (float)(stringWidth + 12), (float)((int)(this.renderFont.getFontHeight() + 1.0F)), mouseX, mouseY)) {
                      this.dragToggleState = selectableOption.isSelected() ? 1 : 2;
-                     boolean flag2 = !selectableOption.isSelected();
-                     selectableOption.setSelected(flag2);
+                     selectableOption.setSelected(!selectableOption.isSelected());
                      this.notifyValueChanged();
                      this.notifyUserChanged();
                      flag = true;
@@ -80,8 +79,7 @@ public class MultiOptionSetting extends Setting {
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
    public SelectableOption[] getOptions() {
@@ -116,8 +114,7 @@ public class MultiOptionSetting extends Setting {
    }
 
    private Boolean readOptionEnabled(SelectableOption[] selectableOptions, SelectableOption selectableOption) {
-      String name = selectableOption.getName();
-      return this.findOptionByName(selectableOptions, name).isSelected();
+      return this.findOptionByName(selectableOptions, selectableOption.getName()).isSelected();
    }
 
    @Override
@@ -152,8 +149,7 @@ public class MultiOptionSetting extends Setting {
 
                      if (RenderUtil.isHovered((float)(n - 6), (float)renderY2, (float)(stringWidth + 12), (float)((int)(this.renderFont.getFontHeight() + 1.0F)), mouseX, mouseY)
                         && selectableOption.isSelected() == (this.dragToggleState == 1)) {
-                        boolean flag = !selectableOption.isSelected();
-                        selectableOption.setSelected(flag);
+                        selectableOption.setSelected(!selectableOption.isSelected());
                         this.notifyValueChanged();
                         this.notifyUserChanged();
                         break;
@@ -171,7 +167,7 @@ public class MultiOptionSetting extends Setting {
       }
    }
 
-   private MultiOptionSetting(String str, Module module, DoubleValue doubleValue, SelectableOption[] selectableOptions) {
+   private MultiOptionSetting(String str, Module module, SettingGroup doubleValue, SelectableOption[] selectableOptions) {
        super(module, doubleValue, str);
       this.optionProperties = new ArrayList();
       this.labelWidth = -1;
@@ -183,12 +179,9 @@ public class MultiOptionSetting extends Setting {
 
       for (SelectableOption selectableOption : this.options) {
          List optionProperties2 = this.optionProperties;
-         BooleanProperty booleanProperty = new BooleanProperty(this, selectableOption.getName(), selectableOption.isSelected());
-         Supplier supplier = () -> this.readOptionEnabled(selectableOptions, selectableOption);
-         BooleanProperty booleanProperty2 = (BooleanProperty)booleanProperty.withValueSupplier(supplier);
+         BooleanProperty booleanProperty2 = (BooleanProperty)new BooleanProperty(this, selectableOption.getName(), selectableOption.isSelected()).withValueSupplier(() -> this.readOptionEnabled(selectableOptions, selectableOption));
          Consumer consumer = obj -> {
-            String name = selectableOption.getName();
-            SelectableOption selectableOption2 = this.findOptionByName(selectableOptions, name);
+            SelectableOption selectableOption2 = this.findOptionByName(selectableOptions, selectableOption.getName());
             boolean flag = (Boolean)(obj);
             selectableOption2.setSelected(flag);
          };
@@ -215,7 +208,7 @@ public class MultiOptionSetting extends Setting {
       this.dragToggleState = 0;
    }
 
-   public MultiOptionSetting(Module module, String str, SelectableOption[] selectableOptions, DoubleValue doubleValue) {
+   public MultiOptionSetting(Module module, String str, SelectableOption[] selectableOptions, SettingGroup doubleValue) {
        this(str, module, doubleValue, selectableOptions);
    }
 
@@ -225,26 +218,16 @@ public class MultiOptionSetting extends Setting {
       super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
       if (flag) {
          String str = this.getDisplayName() + ": ";
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
-         byte b2 = 0;
-         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b2);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
          double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
-         boolean flag2 = this.labelWidth == -1;
-         boolean flag3 = flag2;
-         if (this.consumeLabelDirty(flag3)) {
+         customFontUtil.drawString(str, d, (double)n4, colorInt);
+         if (this.consumeLabelDirty(this.labelWidth == -1)) {
             this.labelWidth = (int)customFontUtil.getStringWidth(str);
             this.optionWidthCache.clear();
 
             for (SelectableOption selectableOption : this.options) {
-               ConcurrentHashMap optionWidthCache2 = this.optionWidthCache;
-               String name = selectableOption.getName();
-               String name2 = selectableOption.getName();
-               String str2 = name2;
-               optionWidthCache2.put(name, (int)customFontUtil.getStringWidth(str2));
+               this.optionWidthCache.put(selectableOption.getName(), (int)customFontUtil.getStringWidth(selectableOption.getName()));
             }
          }
 
@@ -267,16 +250,13 @@ public class MultiOptionSetting extends Setting {
                         ? RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F))
                         : RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F));
                      d = (double)n7;
-                     double d4 = (double)n8;
-                     double d5 = d;
-                     customFontUtil.drawString(name3, d5, d4, n9);
+                     customFontUtil.drawString(name3, d, (double)n8, n9);
                      n7 += num;
                      if (i < this.options.length - 1) {
                         d = (double)n7;
                         double d6 = (double)n8;
                         double d7 = d;
-                        String str3 = ", ";
-                        customFontUtil.drawString(str3, d7, d6, colorInt);
+                        customFontUtil.drawString(", ", d7, d6, colorInt);
                         n7 += SEPARATOR_WIDTH;
                      }
 

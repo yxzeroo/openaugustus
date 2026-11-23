@@ -28,8 +28,7 @@ public abstract class EntityAIDoorInteract extends EntityAIBase {
    public void updateTask() {
       float f = (float)((double)((float)this.doorPosition.getX() + 0.5F) - this.theEntity.posX);
       float f2 = (float)((double)((float)this.doorPosition.getZ() + 0.5F) - this.theEntity.posZ);
-      float f3 = this.entityPositionX * f + this.entityPositionZ * f2;
-      if (f3 < 0.0F) {
+      if ((this.entityPositionX * f + this.entityPositionZ * f2) < 0.0F) {
          this.hasStoppedDoorInteraction = true;
       }
    }

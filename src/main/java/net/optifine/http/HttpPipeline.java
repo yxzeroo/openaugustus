@@ -24,12 +24,9 @@ public class HttpPipeline {
 
    public static byte[] get(String str, Proxy proxy) throws IOException {
       if (str.startsWith("file:")) {
-         URL url = new URL(str);
-         InputStream in = url.openStream();
-         return Config.readAll(in);
+         return Config.readAll(new URL(str).openStream());
       } else {
-         HttpRequest httpRequest = makeRequest(str, proxy);
-         HttpResponse httpResponse = executeRequest(httpRequest);
+         HttpResponse httpResponse = executeRequest(makeRequest(str, proxy));
          if (httpResponse.getStatus() / 100 != 2) {
             throw new IOException("HTTP response: " + httpResponse.getStatus());
          } else {
@@ -40,8 +37,7 @@ public class HttpPipeline {
 
    public static boolean hasActiveRequests() {
       for (Object obj : mapConnections.values()) {
-         HttpPipelineConnection httpPipelineConnection = (HttpPipelineConnection)obj;
-         if (httpPipelineConnection.hasActiveRequests()) {
+         if (((HttpPipelineConnection)obj).hasActiveRequests()) {
             return true;
          }
       }
@@ -55,8 +51,7 @@ public class HttpPipeline {
       String str2 = "Exception";
       HttpPipeline.DefaultHttpListener obj = new HttpPipeline.DefaultHttpListener(map);
       synchronized (map) {
-         HttpPipelineRequest httpPipelineRequest = new HttpPipelineRequest(httpRequest, obj);
-         addRequest(httpPipelineRequest);
+         addRequest(new HttpPipelineRequest(httpRequest, obj));
 
          try {
             map.wait();
@@ -101,8 +96,7 @@ public class HttpPipeline {
 
    public static void addRequest(String str, HttpListener listener, Proxy proxy) throws IOException {
       HttpRequest httpRequest = makeRequest(str, proxy);
-      HttpPipelineRequest httpPipelineRequest = new HttpPipelineRequest(httpRequest, listener);
-      addRequest(httpPipelineRequest);
+      addRequest(new HttpPipelineRequest(httpRequest, listener));
    }
 
    public static void addRequest(String str, HttpListener listener) throws IOException {
@@ -135,8 +129,7 @@ public class HttpPipeline {
 
    private static synchronized void removeConnection(String str, int n, Proxy proxy, HttpPipelineConnection httpPipelineConnection) {
       String str2 = makeConnectionKey(str, n, proxy);
-      HttpPipelineConnection httpPipelineConnection2 = (HttpPipelineConnection)mapConnections.get(str2);
-      if (httpPipelineConnection2 == httpPipelineConnection) {
+      if (((HttpPipelineConnection)mapConnections.get(str2)) == httpPipelineConnection) {
          mapConnections.remove(str2);
       }
    }

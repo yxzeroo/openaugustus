@@ -273,8 +273,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry {
          && Minecraft.getMinecraft().getSession() != null
          && this.serverData != null
          && Minecraft.getMinecraft().getSession().getAccountEntry() != null) {
-         String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.banStatistics.getSelectedValue();
-         switch (selectedValue) {
+         switch (Augustus.getInstance().getModuleManager().augustusServer.banStatistics.getSelectedValue()) {
             case "Icon":
                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.6F);
                this.drawTextureAt(n2 + 4, n3 + 4, 22.0F, 22.0F, this.getAccountStatusIcon(this.serverData.serverIP));

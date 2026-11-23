@@ -93,11 +93,7 @@ public class Asn1DerValue {
       if (this.tag != 2) {
          throw new IOException("DerValue.getBigInteger, not an int " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         boolean flag = true;
-         int n2 = n;
-         return buffer2.getBigInteger(n2, flag);
+         return this.buffer.getBigInteger(this.data.available(), true);
       }
    }
 
@@ -105,11 +101,7 @@ public class Asn1DerValue {
       if (this.tag != 2) {
          throw new IOException("DerValue.getBigInteger, not an int " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         boolean flag = false;
-         int n2 = n;
-         return buffer2.getBigInteger(n2, flag);
+         return this.buffer.getBigInteger(this.data.available(), false);
       }
    }
 
@@ -126,8 +118,7 @@ public class Asn1DerValue {
    public boolean equals(Object obj) {
       boolean flag;
       if (obj instanceof Asn1DerValue) {
-         Asn1DerValue asn1DerValue = (Asn1DerValue)obj;
-         flag = this.equals2(asn1DerValue);
+         flag = this.equals2((Asn1DerValue)obj);
       } else {
          flag = false;
       }
@@ -143,9 +134,7 @@ public class Asn1DerValue {
       if (this.tag != 23) {
          throw new IOException("DerValue.getUTCTime, not a UtcTime: " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         return buffer2.getUTCTime(n);
+         return this.buffer.getUTCTime(this.data.available());
       }
    }
 
@@ -160,8 +149,7 @@ public class Asn1DerValue {
          }
       }
 
-      byte b = (byte)(flag ? 19 : 12);
-      this.data = this.init(b, str);
+      this.data = this.init((byte)(flag ? 19 : 12), str);
    }
 
    public boolean isContextSpecific(byte b) {
@@ -178,9 +166,7 @@ public class Asn1DerValue {
 
    public Asn1DerValue(byte[] bytes, int n, int n2, boolean flag) throws IOException {
        super();
-      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes, n, n2);
-      boolean flag2 = true;
-      this.data = this.init(flag2, byteArrayInputStream, flag);
+      this.data = this.init(true, new ByteArrayInputStream(bytes, n, n2), flag);
    }
 
    public Asn1DerValue(InputStream in) throws IOException {
@@ -222,21 +208,16 @@ public class Asn1DerValue {
       }
 
       byte[] bytes = str.getBytes((String)obj);
-      int length2 = bytes.length;
-      this.length = length2;
-      Asn1DerInputBuffer asn1DerInputBuffer = new Asn1DerInputBuffer(bytes, true);
-      this.buffer = asn1DerInputBuffer;
+      this.length = bytes.length;
+      this.buffer = new Asn1DerInputBuffer(bytes, true);
       Asn1DerInputStream asn1DerInputStream = new Asn1DerInputStream(this.buffer);
-      int n = 2147483647;
-      asn1DerInputStream.mark(n);
+      asn1DerInputStream.mark(2147483647);
       return asn1DerInputStream;
    }
 
    public Asn1DerValue(byte[] bytes, boolean flag) throws IOException {
        super();
-      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-      boolean flag2 = true;
-      this.data = this.init(flag2, byteArrayInputStream, flag);
+      this.data = this.init(true, new ByteArrayInputStream(bytes), flag);
    }
 
    public Asn1DerValue(byte b, String str) throws IOException {
@@ -248,9 +229,7 @@ public class Asn1DerValue {
       if (this.tag != 2) {
          throw new IOException("DerValue.getInteger, not an int " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         return buffer2.getInteger(n);
+         return this.buffer.getInteger(this.data.available());
       }
    }
 
@@ -283,9 +262,7 @@ public class Asn1DerValue {
       if (this.tag != 10) {
          throw new IOException("DerValue.getEnumerated, incorrect tag: " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         return buffer2.getInteger(n);
+         return this.buffer.getInteger(this.data.available());
       }
    }
 
@@ -312,19 +289,15 @@ public class Asn1DerValue {
       if (this.tag != 24) {
          throw new IOException("DerValue.getGeneralizedTime, not a GeneralizedTime: " + this.tag);
       } else {
-         Asn1DerInputBuffer buffer2 = this.buffer;
-         int n = this.data.available();
-         return buffer2.getGeneralizedTime(n);
+         return this.buffer.getGeneralizedTime(this.data.available());
       }
    }
 
    public Asn1DerValue(Asn1DerInputBuffer asn1DerInputBuffer) throws IOException {
        super();
-      byte b = (byte)asn1DerInputBuffer.read();
-      this.tag = b;
+      this.tag = (byte)asn1DerInputBuffer.read();
       byte b2 = (byte)asn1DerInputBuffer.read();
-      int length2 = Asn1DerInputStream.getLength(b2, asn1DerInputBuffer);
-      this.length = length2;
+      this.length = Asn1DerInputStream.getLength(b2, asn1DerInputBuffer);
       if (this.length == -1) {
          Asn1DerInputBuffer asn1DerInputBuffer2 = asn1DerInputBuffer.dup();
          int n = asn1DerInputBuffer2.available();
@@ -341,17 +314,14 @@ public class Asn1DerValue {
             throw new IOException("Indefinite length encoding not supported");
          }
 
-         int length3 = Asn1DerInputStream.getLength(asn1DerInputBuffer2);
-         this.length = length3;
-         Asn1DerInputBuffer asn1DerInputBuffer3 = asn1DerInputBuffer2.dup();
-         this.buffer = asn1DerInputBuffer3;
+         this.length = Asn1DerInputStream.getLength(asn1DerInputBuffer2);
+         this.buffer = asn1DerInputBuffer2.dup();
          int length4 = this.length;
          this.buffer.truncate(length4);
          this.data = new Asn1DerInputStream(this.buffer);
          asn1DerInputBuffer.skip((long)(this.length + b3));
       } else {
-         Asn1DerInputBuffer asn1DerInputBuffer4 = asn1DerInputBuffer.dup();
-         this.buffer = asn1DerInputBuffer4;
+         this.buffer = asn1DerInputBuffer.dup();
          int length5 = this.length;
          this.buffer.truncate(length5);
          this.data = new Asn1DerInputStream(this.buffer);
@@ -362,13 +332,10 @@ public class Asn1DerValue {
    public Asn1DerValue(byte b, byte[] bytes, boolean flag) {
        super();
       this.tag = b;
-      Asn1DerInputBuffer asn1DerInputBuffer = new Asn1DerInputBuffer((byte[])bytes.clone(), flag);
-      this.buffer = asn1DerInputBuffer;
-      int length2 = bytes.length;
-      this.length = length2;
+      this.buffer = new Asn1DerInputBuffer((byte[])bytes.clone(), flag);
+      this.length = bytes.length;
       this.data = new Asn1DerInputStream(this.buffer);
-      int n = 2147483647;
-      this.data.mark(n);
+      this.data.mark(2147483647);
    }
 
    public String getBMPString() throws IOException {
@@ -380,11 +347,9 @@ public class Asn1DerValue {
    }
 
    private Asn1DerInputStream init(boolean flag, InputStream in, boolean flag2) throws IOException {
-      byte b = (byte)in.read();
-      this.tag = b;
+      this.tag = (byte)in.read();
       byte b2 = (byte)in.read();
-      int length2 = Asn1DerInputStream.getLength(b2, (InputStream)in);
-      this.length = length2;
+      this.length = Asn1DerInputStream.getLength(b2, (InputStream)in);
       if (this.length == -1) {
          int n = in.available();
          byte b3 = 2;
@@ -400,16 +365,14 @@ public class Asn1DerValue {
             throw new IOException("Indefinite length encoding not supported");
          }
 
-         int length3 = Asn1DerInputStream.getLength((InputStream)in);
-         this.length = length3;
+         this.length = Asn1DerInputStream.getLength((InputStream)in);
       }
 
       if (flag && in.available() != this.length) {
          throw new IOException("extra data given to DerValue constructor");
       } else {
          byte[] bytes2 = IOUtils.readExactlyNBytes((InputStream)in, this.length);
-         Asn1DerInputBuffer asn1DerInputBuffer = new Asn1DerInputBuffer(bytes2, flag2);
-         this.buffer = asn1DerInputBuffer;
+         this.buffer = new Asn1DerInputBuffer(bytes2, flag2);
          return new Asn1DerInputStream(this.buffer);
       }
    }
@@ -476,8 +439,7 @@ public class Asn1DerValue {
 
    public Asn1DerValue(InputStream in, boolean flag) throws IOException {
        super();
-      boolean flag2 = false;
-      this.data = this.init(flag2, in, flag);
+      this.data = this.init(false, in, flag);
    }
 
    public static boolean isPrintableStringChar(char ch) {
@@ -528,8 +490,7 @@ public class Asn1DerValue {
 
    public byte[] getOctetString() throws IOException {
       if (this.tag != 4) {
-         byte b = 4;
-         if (!this.isConstructed(b)) {
+         if (!this.isConstructed((byte)4)) {
             throw new IOException("DerValue.getOctetString, not an Octet String: " + this.tag);
          }
       }
@@ -548,8 +509,7 @@ public class Asn1DerValue {
                bytes = null;
 
                while (asn1DerInputStream.available() != 0) {
-                  byte[] octetString = asn1DerInputStream.getOctetString();
-                  bytes = this.append(bytes, octetString);
+                  bytes = this.append(bytes, asn1DerInputStream.getOctetString());
                }
             }
 
@@ -560,8 +520,7 @@ public class Asn1DerValue {
 
    public void encode(Asn1DerOutputStream asn1DerOutputStream) throws IOException {
       asn1DerOutputStream.write(this.tag);
-      int length2 = this.length;
-      asn1DerOutputStream.putLength(length2);
+      asn1DerOutputStream.putLength(this.length);
       if (this.length > 0) {
          byte[] bytes = new byte[this.length];
          synchronized (this.data) {

@@ -1,6 +1,5 @@
 package net.augustus.vendor.launcher.util;
 
-import net.augustus.vendor.launcher.crypto.Sha256Digest;
 import java.util.Objects;
 
 public class Base64Codec {
@@ -30,7 +29,6 @@ public class Base64Codec {
 
    public static Base64Encoder getMimeEncoder(int n, byte[] bytes) {
       Objects.requireNonNull(bytes);
-      Sha256Digest.getFlowState();
       int[] fromBase64 = Base64Decoder.getFromBase64();
 
       for (byte b : bytes) {

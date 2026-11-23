@@ -45,8 +45,7 @@ public class SentrySpeedMode extends SpeedMode {
    @Override
    public void onMoveEntity(EventMoveEntity event) {
       if (event.getY() < 0.0) {
-         double d = event.getY() - 0.07999999821186066;
-         event.setY(d);
+         event.setY(event.getY() - 0.07999999821186066);
       }
    }
 

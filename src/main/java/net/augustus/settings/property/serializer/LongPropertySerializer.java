@@ -10,8 +10,7 @@ public final class LongPropertySerializer implements PrimitivePropertySerializer
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      Long val = (Long)obj;
-      this.writeLong(str, val, json);
+      this.writeLong(str, (Long)obj, json);
    }
 
    @Override

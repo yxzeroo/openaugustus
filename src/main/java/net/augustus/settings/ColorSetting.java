@@ -24,18 +24,18 @@ public class ColorSetting extends Setting {
    private final ColorBrightnessSliderComponent primaryBrightnessSlider;
    private final IntegerProperty fa;
    private final BooleanProperty r;
-   private final StringValue fSpeed;
-   private final StringValue fDist;
+   private final DoubleValue fSpeed;
+   private final DoubleValue fDist;
    private final ColorSaturationSliderComponent fadeSaturationSlider;
-   private final StringValue rSpeed;
+   private final DoubleValue rSpeed;
    private final ColorSaturationSliderComponent primarySaturationSlider;
    private final BooleanProperty ao;
    private Color fadeColor;
    private final DoubleProperty rd;
    private int renderYOffset;
-   private final StringValue rDist;
+   private final DoubleValue rDist;
    private final ColorAlphaSliderComponent fadeAlphaSlider;
-   private final StringValue aSpeed;
+   private final DoubleValue aSpeed;
    private final DoubleProperty rs;
    private final BooleanValue astolfo;
    private final DoubleProperty ad;
@@ -56,42 +56,35 @@ public class ColorSetting extends Setting {
    private int computedArgb;
    private IntegerProperty c;
    private Color primaryColor;
-   private final StringValue clientColorAlpha;
+   private final DoubleValue clientColorAlpha;
    private float[] primaryHsb;
    private static int subPanelOffsetX = 106;
-   private final StringValue aDist;
+   private final DoubleValue aDist;
    private final BooleanValue fade;
    private final IntegerProperty fc;
 
    @Override
    public void renderTooltip() {
-      CustomFontUtil renderFont2 = this.renderFont;
-      String str = this.getDisplayName() + ": ";
-      String str2 = str;
-      int stringWidth = (int)renderFont2.getStringWidth(str2);
-      this.drawDescriptionTooltip(stringWidth);
+      this.drawDescriptionTooltip((int)this.renderFont.getStringWidth(this.getDisplayName() + ": "));
    }
 
    public void setFadeAlpha(int n) {
       IntegerProperty fa2 = this.fa;
       Integer num = n;
-      Integer num2 = num;
-      fa2.setValue(num2);
+      fa2.setValue(num);
    }
 
    public void setFadeSpeed(double d) {
       DoubleProperty fs2 = this.fs;
       Double d2 = d;
-      Double d3 = d2;
-      fs2.setValue(d3);
+      fs2.setValue(d2);
       this.fSpeed.setValue(d);
    }
 
    public void setAstolfoEnabled(boolean flag) {
       BooleanProperty ao2 = this.ao;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      ao2.setValue(bool2);
+      ao2.setValue(bool);
       this.astolfo.setValue(flag);
    }
 
@@ -102,8 +95,7 @@ public class ColorSetting extends Setting {
    public void setPrimaryAlpha(int n) {
       IntegerProperty integerProperty = this.a;
       Integer num = n;
-      Integer num2 = num;
-      integerProperty.setValue(num2);
+      integerProperty.setValue(num);
    }
 
    @Override
@@ -161,28 +153,24 @@ public class ColorSetting extends Setting {
    public void setRainbowEnabled(boolean flag) {
       BooleanProperty booleanProperty = this.r;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      booleanProperty.setValue(bool2);
+      booleanProperty.setValue(bool);
       this.rainbow.setValue(flag);
    }
 
    private void onFadeAlphaPropertyChanged(int n) {
       Color color = new Color((Integer)this.fc.getValue());
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), n);
-      this.setFadeColor(color2);
+      this.setFadeColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), n));
    }
 
    private void onPrimaryRgbPropertyChanged(Integer num) {
       Color color = new Color(num);
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getPrimaryAlpha());
-      this.setPrimaryColor(color2);
+      this.setPrimaryColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getPrimaryAlpha()));
    }
 
    public void setRainbowDistance(double d) {
       DoubleProperty rd2 = this.rd;
       Double d2 = d;
-      Double d3 = d2;
-      rd2.setValue(d3);
+      rd2.setValue(d2);
       this.rDist.setValue(d);
    }
 
@@ -206,21 +194,19 @@ public class ColorSetting extends Setting {
    public void setAstolfoDistance(double d) {
       DoubleProperty ad2 = this.ad;
       Double d2 = d;
-      Double d3 = d2;
-      ad2.setValue(d3);
+      ad2.setValue(d2);
       this.aDist.setValue(d);
    }
 
    public void setClientColorAlpha(int n) {
       IntegerProperty cca2 = this.cca;
       Integer num = n;
-      Integer num2 = num;
-      cca2.setValue(num2);
+      cca2.setValue(num);
       double d = (double)n;
       this.clientColorAlpha.setValue(d);
    }
 
-   public StringValue getFSpeed() {
+   public DoubleValue getFSpeed() {
       return this.fSpeed;
    }
 
@@ -319,14 +305,11 @@ public class ColorSetting extends Setting {
 
    public void updateComputedColor(int n) {
       if (this.isRainbowEnabled()) {
-         int n2 = (int)this.getRainbowDistance() * n;
-         this.computedArgb = this.computeRainbowArgb(n2);
+         this.computedArgb = this.computeRainbowArgb((int)this.getRainbowDistance() * n);
       } else if (this.isFadeEnabled()) {
-         int n3 = (int)(this.getFadeDistance() * (double)n);
-         this.computedArgb = this.computeFadeArgb(n3);
+         this.computedArgb = this.computeFadeArgb((int)(this.getFadeDistance() * (double)n));
       } else if (this.isAstolfoEnabled()) {
-         int n4 = (int)(this.getAstolfoDistance() * (double)n);
-         this.computedArgb = this.computeAstolfoArgb(n4);
+         this.computedArgb = this.computeAstolfoArgb((int)(this.getAstolfoDistance() * (double)n));
       } else {
          if (this.isClientColorEnabled()) {
             this.computedArgb = ColorUtil.withAlpha(Augustus.getInstance().getClientColor(), this.getClientColorAlpha2());
@@ -345,8 +328,7 @@ public class ColorSetting extends Setting {
    }
 
    public ColorSetting withDefaultPrimaryColor(Color color) {
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-      this.setPrimaryColor(color2);
+      this.setPrimaryColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()));
       IntegerProperty integerProperty = this.c;
       Integer rgb = color.getRGB();
       integerProperty.setDefaultValue(rgb);
@@ -382,14 +364,10 @@ public class ColorSetting extends Setting {
          short s = 200;
          byte b = 20;
          String str = this.getDisplayName() + ": ";
-         byte b2 = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b2);
+         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
-         byte b3 = 0;
-         int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt(b3);
+         customFontUtil.drawString(str, d, (double)n4, colorInt);
+         int colorInt2 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt((byte)0);
          this.renderYOffset += 25;
          float[] primaryHsb2 = this.primaryHsb;
          ColorHueSliderComponent primaryHueSlider2 = this.primaryHueSlider;
@@ -398,12 +376,8 @@ public class ColorSetting extends Setting {
          float[] primaryHsb3 = this.primaryHsb;
          int primaryAlpha = this.getPrimaryAlpha();
          float[] floats = primaryHsb3;
-         byte b4 = 7;
          double d5 = 1.0;
-         double d6 = 0.0;
-         double d7 = d4;
-         int n8 = n7;
-         primaryHsb2[0] = (float)primaryHueSlider2.drawHueSlider(n3, n8, s, b, n, n2, d7, d6, d5, b4, customFontUtil, colorInt2, floats, primaryAlpha);
+         primaryHsb2[0] = (float)primaryHueSlider2.drawHueSlider(n3, n7, s, b, n, n2, d4, 0.0, d5, (byte)7, customFontUtil, colorInt2, floats, primaryAlpha);
          this.renderYOffset += 25;
          primaryHsb2 = this.primaryHsb;
          ColorSaturationSliderComponent component = this.primarySaturationSlider;
@@ -412,12 +386,8 @@ public class ColorSetting extends Setting {
          primaryHsb3 = this.primaryHsb;
          int primaryAlpha2 = this.getPrimaryAlpha();
          float[] floats2 = primaryHsb3;
-         byte b5 = 7;
          double d9 = 1.0;
-         double d10 = 0.0;
-         double d11 = d8;
-         int n9 = n7;
-         primaryHsb2[1] = (float)component.drawSaturationSlider(n3, n9, s, b, n, n2, d11, d10, d9, b5, customFontUtil, colorInt2, floats2, primaryAlpha2);
+         primaryHsb2[1] = (float)component.drawSaturationSlider(n3, n7, s, b, n, n2, d8, 0.0, d9, (byte)7, customFontUtil, colorInt2, floats2, primaryAlpha2);
          this.renderYOffset += 25;
          primaryHsb2 = this.primaryHsb;
          ColorBrightnessSliderComponent component2 = this.primaryBrightnessSlider;
@@ -426,26 +396,17 @@ public class ColorSetting extends Setting {
          primaryHsb3 = this.primaryHsb;
          int primaryAlpha3 = this.getPrimaryAlpha();
          float[] floats3 = primaryHsb3;
-         byte b6 = 7;
          double d12 = 1.0;
-         double d13 = 0.0;
-         double d14 = d4;
-         int n10 = n7;
-         primaryHsb2[2] = (float)component2.drawBrightnessSlider(n3, n10, s, b, n, n2, d14, d13, d12, b6, customFontUtil, colorInt2, floats3, primaryAlpha3);
+         primaryHsb2[2] = (float)component2.drawBrightnessSlider(n3, n7, s, b, n, n2, d4, 0.0, d12, (byte)7, customFontUtil, colorInt2, floats3, primaryAlpha3);
          this.renderYOffset += 25;
          ColorAlphaSliderComponent primaryAlphaSlider2 = this.primaryAlphaSlider;
          int n11 = n4 - 2 + this.renderYOffset;
          double primaryAlpha4 = (double)this.getPrimaryAlpha();
          float[] primaryHsb4 = this.primaryHsb;
-         byte b7 = 7;
          double d15 = 255.0;
-         double d16 = 0.0;
-         double d17 = primaryAlpha4;
-         int n12 = n11;
-         int n13 = (int)primaryAlphaSlider2.drawAlphaSlider(n3, n12, s, b, n, n2, d17, d16, d15, b7, customFontUtil, colorInt2, primaryHsb4);
+         int n13 = (int)primaryAlphaSlider2.drawAlphaSlider(n3, n11, s, b, n, n2, primaryAlpha4, 0.0, d15, (byte)7, customFontUtil, colorInt2, primaryHsb4);
          int n14;
-         int n15 = n13;
-         this.setPrimaryAlpha(n15);
+         this.setPrimaryAlpha(n13);
          this.renderYOffset += 27;
          Color color = new Color(Color.HSBtoRGB(this.primaryHsb[0], this.primaryHsb[1], this.primaryHsb[2]));
          this.primaryColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getPrimaryAlpha());
@@ -453,71 +414,58 @@ public class ColorSetting extends Setting {
          int n17 = 25;
          n14 = n3 + n16;
          n7 = n4 + n17;
-         boolean flag2 = true;
          int n18 = n7;
          int n19 = n14;
-         this.rainbow.render(n, n2, n19, n18, n5, n6, customFontUtil, flag2);
-         boolean value = this.rainbow.getValue();
-         this.setRainbowEnabled(value);
+         this.rainbow.render(n, n2, n19, n18, n5, n6, customFontUtil, true);
+         this.setRainbowEnabled(this.rainbow.getValue());
          n17 += 25;
          if (this.isRainbowEnabled()) {
             n14 = n3 + n16;
             n7 = n4 + n17;
-            boolean flag3 = true;
             int n20 = n7;
             int n21 = n14;
-            this.rSpeed.render(n, n2, n21, n20, n5, n6, customFontUtil, flag3);
-            double value2 = this.rSpeed.getValue();
-            this.setRainbowSpeed(value2);
+            this.rSpeed.render(n, n2, n21, n20, n5, n6, customFontUtil, true);
+            this.setRainbowSpeed(this.rSpeed.getValue());
             n17 += 25;
             n14 = n3 + n16;
             n7 = n4 + n17;
-            boolean flag4 = true;
             int n22 = n7;
             int n23 = n14;
-            this.rDist.render(n, n2, n23, n22, n5, n6, customFontUtil, flag4);
-            double value3 = this.rDist.getValue();
-            this.setRainbowDistance(value3);
+            this.rDist.render(n, n2, n23, n22, n5, n6, customFontUtil, true);
+            this.setRainbowDistance(this.rDist.getValue());
             n17 += 25;
          }
 
          n14 = n3 + n16;
          n7 = n4 + n17;
          int n24 = n6 + 50;
-         boolean flag5 = true;
          int n25 = n24;
          int n26 = n7;
          int n27 = n14;
-         this.fade.render(n, n2, n27, n26, n5, n25, customFontUtil, flag5);
-         boolean value4 = this.fade.getValue();
-         this.setFadeEnabled(value4);
+         this.fade.render(n, n2, n27, n26, n5, n25, customFontUtil, true);
+         this.setFadeEnabled(this.fade.getValue());
          n17 += 25;
          if (this.isFadeEnabled() && !this.isRainbowEnabled()) {
             if (!this.isClientColorEnabled()) {
                n14 = n3 + n16;
                n7 = n4 + n17;
-               boolean flag6 = true;
                int n28 = n7;
                int n29 = n14;
-               this.fSpeed.render(n, n2, n29, n28, n5, n6, customFontUtil, flag6);
-               double value5 = this.fSpeed.getValue();
-               this.setFadeSpeed(value5);
+               this.fSpeed.render(n, n2, n29, n28, n5, n6, customFontUtil, true);
+               this.setFadeSpeed(this.fSpeed.getValue());
                n17 += 25;
                n14 = n3 + n16;
                n7 = n4 + n17;
-               boolean flag7 = true;
                int n30 = n7;
                int n31 = n14;
-               this.fDist.render(n, n2, n31, n30, n5, n6, customFontUtil, flag7);
-               double value6 = this.fDist.getValue();
-               this.setFadeDistance(value6);
+               this.fDist.render(n, n2, n31, n30, n5, n6, customFontUtil, true);
+               this.setFadeDistance(this.fDist.getValue());
                int n32 = 0;
                n16 += s + 100;
                d = (double)(n3 + n16);
                double d18 = (double)(n4 + n32);
                double d19 = d;
-               String str2 = "FadeColor:";
-               customFontUtil.drawString(str2, d19, d18, colorInt);
+               customFontUtil.drawString("FadeColor:", d19, d18, colorInt);
                n32 += 25;
                primaryHsb2 = this.fadeHsb;
                ColorHueSliderComponent fadeHueSlider2 = this.fadeHueSlider;
@@ -527,13 +475,8 @@ public class ColorSetting extends Setting {
                primaryHsb3 = this.fadeHsb;
                int fadeAlpha = this.getFadeAlpha();
                float[] floats4 = primaryHsb3;
-               byte b8 = 7;
                double d20 = 1.0;
-               double d21 = 0.0;
-               double d22 = d4;
-               int n33 = n7;
-               int n34 = n14;
-               primaryHsb2[0] = (float)fadeHueSlider2.drawHueSlider(n34, n33, s, b, n, n2, d22, d21, d20, b8, customFontUtil, colorInt2, floats4, fadeAlpha);
+               primaryHsb2[0] = (float)fadeHueSlider2.drawHueSlider(n14, n7, s, b, n, n2, d4, 0.0, d20, (byte)7, customFontUtil, colorInt2, floats4, fadeAlpha);
                n32 += 25;
                primaryHsb2 = this.fadeHsb;
                ColorSaturationSliderComponent fadeSaturationSlider2 = this.fadeSaturationSlider;
@@ -543,13 +486,8 @@ public class ColorSetting extends Setting {
                primaryHsb3 = this.fadeHsb;
                int fadeAlpha2 = this.getFadeAlpha();
                float[] floats5 = primaryHsb3;
-               byte b9 = 7;
                double d23 = 1.0;
-               double d24 = 0.0;
-               double d25 = d8;
-               int n35 = n7;
-               int n36 = n14;
-               primaryHsb2[1] = (float)fadeSaturationSlider2.drawSaturationSlider(n36, n35, s, b, n, n2, d25, d24, d23, b9, customFontUtil, colorInt2, floats5, fadeAlpha2);
+               primaryHsb2[1] = (float)fadeSaturationSlider2.drawSaturationSlider(n14, n7, s, b, n, n2, d8, 0.0, d23, (byte)7, customFontUtil, colorInt2, floats5, fadeAlpha2);
                n32 += 25;
                primaryHsb2 = this.fadeHsb;
                ColorBrightnessSliderComponent fadeBrightnessSlider2 = this.fadeBrightnessSlider;
@@ -559,27 +497,16 @@ public class ColorSetting extends Setting {
                primaryHsb3 = this.fadeHsb;
                int fadeAlpha3 = this.getFadeAlpha();
                float[] floats6 = primaryHsb3;
-               byte b10 = 7;
                double d26 = 1.0;
-               double d27 = 0.0;
-               double d28 = d4;
-               int n37 = n7;
-               int n38 = n14;
-               primaryHsb2[2] = (float)fadeBrightnessSlider2.drawBrightnessSlider(n38, n37, s, b, n, n2, d28, d27, d26, b10, customFontUtil, colorInt2, floats6, fadeAlpha3);
+               primaryHsb2[2] = (float)fadeBrightnessSlider2.drawBrightnessSlider(n14, n7, s, b, n, n2, d4, 0.0, d26, (byte)7, customFontUtil, colorInt2, floats6, fadeAlpha3);
                n32 += 25;
                ColorAlphaSliderComponent fadeAlphaSlider2 = this.fadeAlphaSlider;
                int n39 = n3 + n16;
                n14 = n4 - 2 + n32;
                primaryAlpha4 = (double)this.getFadeAlpha();
                float[] fadeHsb2 = this.fadeHsb;
-               byte b11 = 7;
                double d29 = 255.0;
-               double d30 = 0.0;
-               double d31 = primaryAlpha4;
-               int n40 = n14;
-               int n41 = n39;
-               int n42 = (int)fadeAlphaSlider2.drawAlphaSlider(n41, n40, s, b, n, n2, d31, d30, d29, b11, customFontUtil, colorInt2, fadeHsb2);
-               this.setFadeAlpha(n42);
+               this.setFadeAlpha((int)fadeAlphaSlider2.drawAlphaSlider(n39, n14, s, b, n, n2, primaryAlpha4, 0.0, d29, (byte)7, customFontUtil, colorInt2, fadeHsb2));
                n17 = 0;
                n16 += s + 50;
                Color color2 = new Color(Color.HSBtoRGB(this.fadeHsb[0], this.fadeHsb[1], this.fadeHsb[2]));
@@ -595,34 +522,28 @@ public class ColorSetting extends Setting {
          n14 = n3 + n16;
          n7 = n4 + n17;
          n24 = n6 + 50;
-         boolean flag8 = true;
          int n43 = n24;
          int n44 = n7;
          int n45 = n14;
-         this.astolfo.render(n, n2, n45, n44, n5, n43, customFontUtil, flag8);
-         boolean value7 = this.astolfo.getValue();
-         this.setAstolfoEnabled(value7);
+         this.astolfo.render(n, n2, n45, n44, n5, n43, customFontUtil, true);
+         this.setAstolfoEnabled(this.astolfo.getValue());
          if (this.isAstolfoEnabled() && !this.isRainbowEnabled() && !this.isFadeEnabled()) {
             if (!this.isClientColorEnabled()) {
                n16 += 50 + subPanelOffsetX;
                int n46 = 25;
                n14 = n3 + n16;
                n7 = n4 + n46;
-               boolean flag9 = true;
                int n47 = n7;
                int n48 = n14;
-               this.aSpeed.render(n, n2, n48, n47, n5, n6, customFontUtil, flag9);
-               double value8 = this.aSpeed.getValue();
-               this.setAstolfoSpeed(value8);
+               this.aSpeed.render(n, n2, n48, n47, n5, n6, customFontUtil, true);
+               this.setAstolfoSpeed(this.aSpeed.getValue());
                n46 += 25;
                n14 = n3 + n16;
                n7 = n4 + n46;
-               boolean flag10 = true;
                int n49 = n7;
                int n50 = n14;
-               this.aDist.render(n, n2, n50, n49, n5, n6, customFontUtil, flag10);
-               double value9 = this.aDist.getValue();
-               this.setAstolfoDistance(value9);
+               this.aDist.render(n, n2, n50, n49, n5, n6, customFontUtil, true);
+               this.setAstolfoDistance(this.aDist.getValue());
                n17 = n46 + 25;
                n16 -= 50 + subPanelOffsetX;
             }
@@ -633,13 +554,11 @@ public class ColorSetting extends Setting {
             n14 = n3 + n16;
             n7 = n4 + n17;
             n24 = n6 + 50;
-            boolean flag11 = true;
             int n51 = n24;
             int n52 = n7;
             int n53 = n14;
-            this.clientColor.render(n, n2, n53, n52, n5, n51, customFontUtil, flag11);
-            boolean value10 = this.clientColor.getValue();
-            this.setClientColorEnabled(value10);
+            this.clientColor.render(n, n2, n53, n52, n5, n51, customFontUtil, true);
+            this.setClientColorEnabled(this.clientColor.getValue());
             if (this.isClientColorEnabled()) {
                n17 = 25;
                n16 += 50 + subPanelOffsetX;
@@ -649,17 +568,14 @@ public class ColorSetting extends Setting {
                n14 = n3 + n16;
                n7 = n4 + n17;
                n24 = n6 + 50;
-               boolean flag12 = true;
                int n54 = n24;
                int n55 = n7;
                int n56 = n14;
-               this.clientColorAlpha.render(n, n2, n56, n55, n5, n54, customFontUtil, flag12);
-               int n57 = MathHelper.clamp_int((int)this.clientColorAlpha.getValue(), 1, 255);
-               this.setClientColorAlpha(n57);
+               this.clientColorAlpha.render(n, n2, n56, n55, n5, n54, customFontUtil, true);
+               this.setClientColorAlpha(MathHelper.clamp_int((int)this.clientColorAlpha.getValue(), 1, 255));
             }
          } else {
-            boolean flag13 = false;
-            this.setClientColorEnabled(flag13);
+            this.setClientColorEnabled(false);
          }
 
          this.contentWidth = n16 + s + 20;
@@ -667,67 +583,36 @@ public class ColorSetting extends Setting {
       }
    }
 
-   private ColorSetting(String str, Module module, DoubleValue doubleValue, Color color) {
+   private ColorSetting(String str, Module module, SettingGroup doubleValue, Color color) {
        super(module, doubleValue, str);
       IntegerProperty integerProperty = new IntegerProperty(this, "A", 0);
       Consumer consumer = obj -> {
          Color color2 = new Color((Integer)this.c.getValue());
-         Color color3 = new Color(color2.getRed(), color2.getGreen(), color2.getBlue(), (Integer)obj);
-         this.setPrimaryColor(color3);
+         this.setPrimaryColor(new Color(color2.getRed(), color2.getGreen(), color2.getBlue(), (Integer)obj));
       };
       this.a = (IntegerProperty)integerProperty.withOnValueChanged(consumer);
-      IntegerProperty integerProperty2 = new IntegerProperty(this, "FA", 0);
-      Consumer consumer2 = obj2 -> this.onFadeAlphaPropertyChanged((int)obj2);
-      this.fa = (IntegerProperty)integerProperty2.withOnValueChanged(consumer2);
-      BooleanProperty booleanProperty = new BooleanProperty(this, "R", false);
-      Consumer consumer3 = obj3 -> this.setRainbowEnabled((boolean)obj3);
-      this.r = (BooleanProperty)booleanProperty.withOnValueChanged(consumer3);
-      BooleanProperty booleanProperty2 = new BooleanProperty(this, "F", false);
-      Consumer consumer4 = obj4 -> this.setFadeEnabled((boolean)obj4);
-      this.f = (BooleanProperty)booleanProperty2.withOnValueChanged(consumer4);
-      BooleanProperty booleanProperty3 = new BooleanProperty(this, "AO", false);
-      Consumer consumer5 = obj5 -> this.setAstolfoEnabled((boolean)obj5);
-      this.ao = (BooleanProperty)booleanProperty3.withOnValueChanged(consumer5);
-      BooleanProperty booleanProperty4 = new BooleanProperty(this, "CC", false);
-      Consumer consumer6 = obj6 -> this.setClientColorEnabled((boolean)obj6);
-      this.cc = (BooleanProperty)booleanProperty4.withOnValueChanged(consumer6);
+      this.fa = (IntegerProperty)new IntegerProperty(this, "FA", 0).withOnValueChanged(obj2 -> this.onFadeAlphaPropertyChanged((int)obj2));
+      this.r = (BooleanProperty)new BooleanProperty(this, "R", false).withOnValueChanged(obj3 -> this.setRainbowEnabled((boolean)obj3));
+      this.f = (BooleanProperty)new BooleanProperty(this, "F", false).withOnValueChanged(obj4 -> this.setFadeEnabled((boolean)obj4));
+      this.ao = (BooleanProperty)new BooleanProperty(this, "AO", false).withOnValueChanged(obj5 -> this.setAstolfoEnabled((boolean)obj5));
+      this.cc = (BooleanProperty)new BooleanProperty(this, "CC", false).withOnValueChanged(obj6 -> this.setClientColorEnabled((boolean)obj6));
       IntegerProperty integerProperty3 = new IntegerProperty(this, "FC", 0);
       Supplier supplier = () -> {
-         Color fadeColor2 = this.fadeColor;
-         return this.toOpaqueRgb(fadeColor2);
+         return this.toOpaqueRgb(this.fadeColor);
       };
-      IntegerProperty integerProperty4 = (IntegerProperty)integerProperty3.withValueSupplier(supplier);
-      Consumer consumer7 = obj7 -> this.onFadeRgbPropertyChanged((Integer)obj7);
-      this.fc = (IntegerProperty)integerProperty4.withOnValueChanged(consumer7);
-      IntegerProperty integerProperty5 = new IntegerProperty(this, "CCA", 100);
-      Consumer consumer8 = obj8 -> this.setClientColorAlpha((int)obj8);
-      this.cca = (IntegerProperty)integerProperty5.withOnValueChanged(consumer8);
-      DoubleProperty doubleProperty = new DoubleProperty(this, "RS", 0.0);
-      Consumer consumer9 = obj9 -> this.setRainbowSpeed((double)obj9);
-      this.rs = (DoubleProperty)doubleProperty.withOnValueChanged(consumer9);
-      DoubleProperty doubleProperty2 = new DoubleProperty(this, "RD", 0.0);
-      Consumer consumer10 = obj10 -> this.setRainbowDistance((double)obj10);
-      this.rd = (DoubleProperty)doubleProperty2.withOnValueChanged(consumer10);
-      DoubleProperty doubleProperty3 = new DoubleProperty(this, "FS", 0.0);
-      Consumer consumer11 = obj11 -> this.setFadeSpeed((double)obj11);
-      this.fs = (DoubleProperty)doubleProperty3.withOnValueChanged(consumer11);
-      DoubleProperty doubleProperty4 = new DoubleProperty(this, "FD", 0.0);
-      Consumer consumer12 = obj12 -> this.setFadeDistance((double)obj12);
-      this.fd = (DoubleProperty)doubleProperty4.withOnValueChanged(consumer12);
-      DoubleProperty doubleProperty5 = new DoubleProperty(this, "AS", 0.0);
-      Consumer consumer13 = obj13 -> this.setAstolfoSpeed((double)obj13);
-      this.as = (DoubleProperty)doubleProperty5.withOnValueChanged(consumer13);
-      DoubleProperty doubleProperty6 = new DoubleProperty(this, "AD", 0.0);
-      Consumer consumer14 = obj14 -> this.setAstolfoDistance((double)obj14);
-      this.ad = (DoubleProperty)doubleProperty6.withOnValueChanged(consumer14);
+      this.fc = (IntegerProperty)((IntegerProperty)integerProperty3.withValueSupplier(supplier)).withOnValueChanged(obj7 -> this.onFadeRgbPropertyChanged((Integer)obj7));
+      this.cca = (IntegerProperty)new IntegerProperty(this, "CCA", 100).withOnValueChanged(obj8 -> this.setClientColorAlpha((int)obj8));
+      this.rs = (DoubleProperty)new DoubleProperty(this, "RS", 0.0).withOnValueChanged(obj9 -> this.setRainbowSpeed((double)obj9));
+      this.rd = (DoubleProperty)new DoubleProperty(this, "RD", 0.0).withOnValueChanged(obj10 -> this.setRainbowDistance((double)obj10));
+      this.fs = (DoubleProperty)new DoubleProperty(this, "FS", 0.0).withOnValueChanged(obj11 -> this.setFadeSpeed((double)obj11));
+      this.fd = (DoubleProperty)new DoubleProperty(this, "FD", 0.0).withOnValueChanged(obj12 -> this.setFadeDistance((double)obj12));
+      this.as = (DoubleProperty)new DoubleProperty(this, "AS", 0.0).withOnValueChanged(obj13 -> this.setAstolfoSpeed((double)obj13));
+      this.ad = (DoubleProperty)new DoubleProperty(this, "AD", 0.0).withOnValueChanged(obj14 -> this.setAstolfoDistance((double)obj14));
       IntegerProperty integerProperty6 = new IntegerProperty(this, "C", 0);
       Supplier supplier2 = () -> {
-         Color primaryColor2 = this.primaryColor;
-         return this.toOpaqueRgb(primaryColor2);
+         return this.toOpaqueRgb(this.primaryColor);
       };
-      IntegerProperty integerProperty7 = (IntegerProperty)integerProperty6.withValueSupplier(supplier2);
-      Consumer consumer15 = obj15 -> this.onPrimaryRgbPropertyChanged((Integer)obj15);
-      this.c = (IntegerProperty)integerProperty7.withOnValueChanged(consumer15);
+      this.c = (IntegerProperty)((IntegerProperty)integerProperty6.withValueSupplier(supplier2)).withOnValueChanged(obj15 -> this.onPrimaryRgbPropertyChanged((Integer)obj15));
       this.primaryHsb = new float[3];
       this.fadeHsb = new float[3];
       this.primaryHueSlider = new ColorHueSliderComponent();
@@ -738,13 +623,13 @@ public class ColorSetting extends Setting {
       this.fade = new BooleanValue("Fade", false);
       this.astolfo = new BooleanValue("Astolfo", false);
       this.clientColor = new BooleanValue("ClientColor", false);
-      this.rSpeed = new StringValue("RSpeed", 70.0, 1.0, 200.0, 0);
-      this.fSpeed = new StringValue("FSpeed", 70.0, 1.0, 200.0, 0);
-      this.aSpeed = new StringValue("ASpeed", 70.0, 1.0, 200.0, 0);
-      this.rDist = new StringValue("RDist", 60.0, 0.0, 200.0, 0);
-      this.fDist = new StringValue("FDist", 60.0, 0.0, 200.0, 0);
-      this.aDist = new StringValue("ADist", 60.0, 0.0, 200.0, 0);
-      this.clientColorAlpha = new StringValue("ClientColorAlpha", 100.0, 1.0, 255.0, 0);
+      this.rSpeed = new DoubleValue("RSpeed", 70.0, 1.0, 200.0, 0);
+      this.fSpeed = new DoubleValue("FSpeed", 70.0, 1.0, 200.0, 0);
+      this.aSpeed = new DoubleValue("ASpeed", 70.0, 1.0, 200.0, 0);
+      this.rDist = new DoubleValue("RDist", 60.0, 0.0, 200.0, 0);
+      this.fDist = new DoubleValue("FDist", 60.0, 0.0, 200.0, 0);
+      this.aDist = new DoubleValue("ADist", 60.0, 0.0, 200.0, 0);
+      this.clientColorAlpha = new DoubleValue("ClientColorAlpha", 100.0, 1.0, 255.0, 0);
       this.fadeHueSlider = new ColorHueSliderComponent();
       this.fadeSaturationSlider = new ColorSaturationSliderComponent();
       this.fadeBrightnessSlider = new ColorBrightnessSliderComponent();
@@ -753,22 +638,17 @@ public class ColorSetting extends Setting {
       this.computedArgb = 0;
       this.setPrimaryColor(color);
       this.setFadeColor(color);
-      int alpha = this.fadeColor.getAlpha();
-      this.setFadeAlpha(alpha);
-      int alpha2 = this.primaryColor.getAlpha();
-      int n = alpha2;
-      this.setPrimaryAlpha(n);
+      this.setFadeAlpha(this.fadeColor.getAlpha());
+      this.setPrimaryAlpha(this.primaryColor.getAlpha());
       IntegerProperty integerProperty8 = this.c;
       Integer rgb = this.primaryColor.getRGB();
-      Integer num = rgb;
-      integerProperty8.setValue(num);
+      integerProperty8.setValue(rgb);
       integerProperty8 = this.c;
       Integer rgb2 = this.primaryColor.getRGB();
       integerProperty8.setDefaultValue(rgb2);
       integerProperty8 = this.fc;
       Integer rgb3 = this.primaryColor.getRGB();
-      Integer num2 = rgb3;
-      integerProperty8.setValue(num2);
+      integerProperty8.setValue(rgb3);
       integerProperty8 = this.fc;
       Integer rgb4 = this.primaryColor.getRGB();
       integerProperty8.setDefaultValue(rgb4);
@@ -782,7 +662,7 @@ public class ColorSetting extends Setting {
       Color.RGBtoHSB(this.primaryColor.getRed(), this.primaryColor.getGreen(), this.primaryColor.getBlue(), this.fadeHsb);
    }
 
-   public StringValue getASpeed() {
+   public DoubleValue getASpeed() {
       return this.aSpeed;
    }
 
@@ -796,24 +676,18 @@ public class ColorSetting extends Setting {
    }
 
    private int computeFadeArgb(int n) {
-      Color primaryColor2 = this.primaryColor;
-      Color fadeColor2 = this.fadeColor;
-      int fadeSpeed = (int)this.getFadeSpeed();
-      Color color = fadeColor2;
-      return ColorUtil.getAnimatedFadeColor(primaryColor2, color, n, fadeSpeed);
+      return ColorUtil.getAnimatedFadeColor(this.primaryColor, this.fadeColor, n, (int)this.getFadeSpeed());
    }
 
    public void setAstolfoSpeed(double d) {
       DoubleProperty as2 = this.as;
       Double d2 = d;
-      Double d3 = d2;
-      as2.setValue(d3);
+      as2.setValue(d2);
       this.aSpeed.setValue(d);
    }
 
    public ColorSetting withDefaultFadeColor(Color color) {
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-      this.setFadeColor(color2);
+      this.setFadeColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()));
       IntegerProperty fc2 = this.fc;
       Integer rgb = color.getRGB();
       fc2.setDefaultValue(rgb);
@@ -825,8 +699,7 @@ public class ColorSetting extends Setting {
    }
 
    public ColorSetting withDefaultFadeSpeed(int n) {
-      double d = (double)n;
-      this.setFadeSpeed(d);
+      this.setFadeSpeed((double)n);
       DoubleProperty fs2 = this.fs;
       Double d2 = (double)n;
       fs2.setDefaultValue(d2);
@@ -876,8 +749,7 @@ public class ColorSetting extends Setting {
    public void setFadeEnabled(boolean flag) {
       BooleanProperty booleanProperty = this.f;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      booleanProperty.setValue(bool2);
+      booleanProperty.setValue(bool);
       this.fade.setValue(flag);
    }
 
@@ -889,11 +761,11 @@ public class ColorSetting extends Setting {
       return this;
    }
 
-   public StringValue getClientColorAlpha() {
+   public DoubleValue getClientColorAlpha() {
       return this.clientColorAlpha;
    }
 
-   public StringValue getFDist() {
+   public DoubleValue getFDist() {
       return this.fDist;
    }
 
@@ -902,8 +774,7 @@ public class ColorSetting extends Setting {
    }
 
    public ColorSetting withDefaultFadeDistance(int n) {
-      double d = (double)n;
-      this.setFadeDistance(d);
+      this.setFadeDistance((double)n);
       DoubleProperty fd2 = this.fd;
       Double d2 = (double)n;
       fd2.setDefaultValue(d2);
@@ -946,7 +817,7 @@ public class ColorSetting extends Setting {
       this.aDist.keyTyped(typedChar, keyCode);
    }
 
-   public ColorSetting(Module module, String str, int n, DoubleValue doubleValue) {
+   public ColorSetting(Module module, String str, int n, SettingGroup doubleValue) {
        this(str, module, doubleValue, new Color(n));
    }
 
@@ -958,31 +829,28 @@ public class ColorSetting extends Setting {
       return (Double)this.fd.getValue();
    }
 
-   public StringValue getADist() {
+   public DoubleValue getADist() {
       return this.aDist;
    }
 
    public void setRainbowSpeed(double d) {
       DoubleProperty rs2 = this.rs;
       Double d2 = d;
-      Double d3 = d2;
-      rs2.setValue(d3);
+      rs2.setValue(d2);
       this.rSpeed.setValue(d);
    }
 
-   public ColorSetting(Module module, String str, Color color, DoubleValue doubleValue) {
+   public ColorSetting(Module module, String str, Color color, SettingGroup doubleValue) {
        this(str, module, doubleValue, color);
    }
 
    private void onFadeRgbPropertyChanged(Integer num) {
       Color color = new Color(num);
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getFadeAlpha());
-      this.setFadeColor(color2);
+      this.setFadeColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getFadeAlpha()));
    }
 
    public ColorSetting withDefaultRainbowSpeed(int n) {
-      double d = (double)n;
-      this.setRainbowSpeed(d);
+      this.setRainbowSpeed((double)n);
       DoubleProperty rs2 = this.rs;
       Double d2 = (double)n;
       rs2.setDefaultValue(d2);
@@ -999,9 +867,7 @@ public class ColorSetting extends Setting {
 
    public void setPrimaryColor(Color color) {
       this.primaryColor = color;
-      int alpha = this.primaryColor.getAlpha();
-      int n = alpha;
-      this.setPrimaryAlpha(n);
+      this.setPrimaryAlpha(this.primaryColor.getAlpha());
       Color.RGBtoHSB(this.primaryColor.getRed(), this.primaryColor.getGreen(), this.primaryColor.getBlue(), this.primaryHsb);
    }
 
@@ -1033,12 +899,11 @@ public class ColorSetting extends Setting {
    public void setFadeDistance(double d) {
       DoubleProperty fd2 = this.fd;
       Double d2 = d;
-      Double d3 = d2;
-      fd2.setValue(d3);
+      fd2.setValue(d2);
       this.fDist.setValue(d);
    }
 
-   public StringValue getRDist() {
+   public DoubleValue getRDist() {
       return this.rDist;
    }
 
@@ -1050,7 +915,7 @@ public class ColorSetting extends Setting {
       return this.renderYOffset;
    }
 
-   public StringValue getRSpeed() {
+   public DoubleValue getRSpeed() {
       return this.rSpeed;
    }
 
@@ -1085,14 +950,12 @@ public class ColorSetting extends Setting {
    public void setClientColorEnabled(boolean flag) {
       BooleanProperty cc2 = this.cc;
       Boolean bool = flag;
-      Boolean bool2 = bool;
-      cc2.setValue(bool2);
+      cc2.setValue(bool);
       this.clientColor.setValue(flag);
    }
 
    private int toOpaqueRgb(Color color) {
-      Color color2 = new Color(color.getRed(), color.getGreen(), color.getBlue());
-      return color2.getRGB();
+      return new Color(color.getRed(), color.getGreen(), color.getBlue()).getRGB();
    }
 
    public BooleanValue getClientColor() {
@@ -1101,8 +964,7 @@ public class ColorSetting extends Setting {
 
    public void setFadeColor(Color color) {
       this.fadeColor = color;
-      int alpha = this.fadeColor.getAlpha();
-      this.setFadeAlpha(alpha);
+      this.setFadeAlpha(this.fadeColor.getAlpha());
       Color.RGBtoHSB(this.fadeColor.getRed(), this.fadeColor.getGreen(), this.fadeColor.getBlue(), this.fadeHsb);
    }
 

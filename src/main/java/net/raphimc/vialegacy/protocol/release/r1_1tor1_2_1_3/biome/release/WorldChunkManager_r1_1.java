@@ -47,8 +47,7 @@ public class WorldChunkManager_r1_1 implements IWorldChunkManager {
       }
 
       if (flag && k == 16 && l == 16 && (i & 15) == 0 && (j & 15) == 0) {
-         NewBiomeGenBase[] abiomegenbase1 = this.biomeCache.getCachedBiomes(i, j);
-         System.arraycopy(abiomegenbase1, 0, abiomegenbase, 0, k * l);
+         System.arraycopy(this.biomeCache.getCachedBiomes(i, j), 0, abiomegenbase, 0, k * l);
          return abiomegenbase;
       } else {
          int[] ai = this.biomeIndexLayer.getInts(i, j, k, l);

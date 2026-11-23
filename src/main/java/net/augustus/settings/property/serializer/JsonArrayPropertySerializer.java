@@ -8,8 +8,7 @@ import com.google.gson.JsonObject;
 public final class JsonArrayPropertySerializer implements JsonPropertyCodec {
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      JsonArray array = (JsonArray)obj;
-      this.writeJsonArray(str, array, json);
+      this.writeJsonArray(str, (JsonArray)obj, json);
    }
 
    public JsonArray readJsonArray(String str, JsonArray array, JsonObject json) {
@@ -19,8 +18,7 @@ public final class JsonArrayPropertySerializer implements JsonPropertyCodec {
 
    @Override
    public Object read(String str, Object obj, JsonObject json) {
-      JsonArray array = (JsonArray)obj;
-      return this.readJsonArray(str, array, json);
+      return this.readJsonArray(str, (JsonArray)obj, json);
    }
 
    public void writeJsonArray(String str, JsonArray array, JsonObject json) {

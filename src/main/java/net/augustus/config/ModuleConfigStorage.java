@@ -29,8 +29,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
 
    @Override
    public void deserialize(JsonElement elem) {
-      JsonObject json = (JsonObject)elem;
-      this.deserializeEmpty(json);
+      this.deserializeEmpty((JsonObject)elem);
    }
 
    public void loadConfig(String str, String str2, boolean flag) {
@@ -46,8 +45,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
                } else {
                   boolean flag2 = false;
                   try {
-                     byte[] bytes = java.nio.file.Files.readAllBytes(file.toPath());
-                     flag2 = hasEncryptedHeader(bytes);
+                     flag2 = hasEncryptedHeader(java.nio.file.Files.readAllBytes(file.toPath()));
                   } catch (Exception e) {
                   }
                   str3 = flag2
@@ -64,9 +62,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
    }
 
    public JsonObject buildConfigJson(String str, boolean flag) {
-      ModuleConfigCodec moduleConfigCodec = (ModuleConfigCodec)this.formatCodecs.get(2);
-      String username = Augustus.getInstance().getUsername();
-      return moduleConfigCodec.encodeConfig(str, username, flag);
+      return ((ModuleConfigCodec)this.formatCodecs.get(2)).encodeConfig(str, Augustus.getInstance().getUsername(), flag);
    }
 
    public JsonObject readConfigJson(String str, String str2) {
@@ -109,10 +105,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
                moduleConfigCodec.applyConfig(json);
                if (flag) {
                   long l2 = System.currentTimeMillis() - l;
-                  String str2 = "Config loaded: §c" + str + " (" + l2 + "ms)";
-                  NotificationLevel info = NotificationLevel.INFO;
-                  String str3 = str2;
-                  this.notifyConfigStatus(str3, info);
+                  this.notifyConfigStatus("Config loaded: §c" + str + " (" + l2 + "ms)", NotificationLevel.INFO);
                   Augustus.getInstance().getModuleManager().sortModules();
                   ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
                }
@@ -132,10 +125,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
          this.writeJsonFile(file, (JsonElement)json);
          long l2 = System.currentTimeMillis() - l;
          ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
-         String str3 = "Config saved: §c" + str + " (" + l2 + "ms)";
-         NotificationLevel info = NotificationLevel.INFO;
-         String str4 = str3;
-         this.notifyConfigStatus(str4, info);
+         this.notifyConfigStatus("Config saved: §c" + str + " (" + l2 + "ms)", NotificationLevel.INFO);
          System.out.println("Saved");
       } catch (Exception e) {
          e.printStackTrace();
@@ -216,7 +206,6 @@ public class ModuleConfigStorage extends JsonConfigFile {
             (byte[])obj2
          )
       );
-      TextFormatUtil.getStateMarkers();
       this.formatCodecs = new HashMap();
       this.formatCodecs.put(2, new ConfigFormatV2());
    }
@@ -258,7 +247,6 @@ public class ModuleConfigStorage extends JsonConfigFile {
    }
 
    public String[] getConfigHeaderInfo(String str, String str2) {
-      String[] stateMarkers = TextFormatUtil.getStateMarkers();
       JsonObject json = this.readConfigJson(str2, str);
       if (json == null) {
          return null;
@@ -287,7 +275,6 @@ public class ModuleConfigStorage extends JsonConfigFile {
    }
 
    private static boolean hasEncryptedHeader(byte[] bytes) {
-      String[] stateMarkers = TextFormatUtil.getStateMarkers();
       if (bytes.length < ENCRYPTED_MAGIC_HEADER.length) {
          return false;
       } else {
@@ -302,14 +289,12 @@ public class ModuleConfigStorage extends JsonConfigFile {
    }
 
    private Integer readConfigVersion(JsonObject json) {
-      String[] stateMarkers = TextFormatUtil.getStateMarkers();
       JsonElement elem = json.get("Config_Header");
       if (elem == null) {
          return 1;
       } else {
          try {
-            JsonObject asJsonObject = elem.getAsJsonObject();
-            return asJsonObject.get("Config_Version").getAsInt();
+            return elem.getAsJsonObject().get("Config_Version").getAsInt();
          } catch (Exception e) {
             return null;
          }
@@ -317,8 +302,7 @@ public class ModuleConfigStorage extends JsonConfigFile {
    }
 
    public void loadConfig(String str, String str2) {
-      boolean flag = true;
-      this.loadConfig(str, str2, flag);
+      this.loadConfig(str, str2, true);
    }
 
 

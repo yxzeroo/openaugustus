@@ -314,8 +314,7 @@ public class EntityFishHook extends Entity {
             Entity entity2 = (Entity)list.get(i);
             if (entity2.canBeCollidedWith() && (entity2 != this.angler || this.ticksInAir >= 5)) {
                float f = 0.3F;
-               AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-               MovingObjectPosition hit2 = box.calculateIntercept(vec, vec2);
+               MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f, (double)f, (double)f).calculateIntercept(vec, vec2);
                if (hit2 != null) {
                   double d6 = vec.squareDistanceTo(hit2.hitVec);
                   if (d6 < d5 || d5 == 0.0) {

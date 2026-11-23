@@ -53,8 +53,7 @@ public class BlockHugeMushroom extends Block {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockHugeMushroom.EnumType.class);
+      VARIANT = PropertyEnum.create("variant", BlockHugeMushroom.EnumType.class);
    }
 
    @Override

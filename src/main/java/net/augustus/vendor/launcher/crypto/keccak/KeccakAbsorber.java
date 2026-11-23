@@ -35,8 +35,7 @@ public class KeccakAbsorber {
 
       int n;
       for (n = this.readBlockBits(in, bytes); n == KeccakParameters.getRate(this.sha3Type); n = this.readBlockBits(in, bytes)) {
-         byte b = 0;
-         this.xorBlock(longsArr, bytes, b, n);
+         this.xorBlock(longsArr, bytes, (byte)0, n);
          this.permutation.permute(longsArr);
       }
 
@@ -53,8 +52,7 @@ public class KeccakAbsorber {
       int n2 = 0;
 
       do {
-         int n3 = Math.min(KeccakParameters.getRate(this.sha3Type), n - n2);
-         this.xorBlock(longsArr, bytes, n2, n3);
+         this.xorBlock(longsArr, bytes, n2, Math.min(KeccakParameters.getRate(this.sha3Type), n - n2));
          this.permutation.permute(longsArr);
          n2 += KeccakParameters.getRate(this.sha3Type);
       } while (n2 < n);
@@ -85,11 +83,10 @@ public class KeccakAbsorber {
    }
 
    private void xorLane(long[][] longsArr, byte[] bytes, int n, int n2, int n3) {
-      byte b = 8;
       int n4 = n / 8;
       long l = 0L;
 
-      for (int i = b - 1; i >= 0; i--) {
+      for (int i = ((byte)8) - 1; i >= 0; i--) {
          l <<= 8;
          l += (long)Byte.toUnsignedInt(bytes[n4 + i]);
       }

@@ -47,8 +47,7 @@ public class TokenParser {
                throw new ParseException("Invalid character: '" + ch + "', in: " + str);
             }
 
-            Token token = readToken(ch, typeByFirstChar, pushbackReader);
-            list.add(token);
+            list.add(readToken(ch, typeByFirstChar, pushbackReader));
          }
       }
    }

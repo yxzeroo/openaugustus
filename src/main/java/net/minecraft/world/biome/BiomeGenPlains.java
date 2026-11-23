@@ -32,8 +32,7 @@ public class BiomeGenPlains extends BiomeGenBase {
 
    @Override
    public void decorate(World world, Random rand, BlockPos pos) {
-      double value = GRASS_COLOR_NOISE.getValue((double)(pos.getX() + 8) / 200.0, (double)(pos.getZ() + 8) / 200.0);
-      if (value < -0.8) {
+      if (GRASS_COLOR_NOISE.getValue((double)(pos.getX() + 8) / 200.0, (double)(pos.getZ() + 8) / 200.0) < -0.8) {
          this.theBiomeDecorator.flowersPerChunk = 15;
          this.theBiomeDecorator.grassPerChunk = 5;
       } else {
@@ -65,10 +64,8 @@ public class BiomeGenPlains extends BiomeGenBase {
 
    @Override
    public BlockFlower.EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
-      double value = GRASS_COLOR_NOISE.getValue((double)pos.getX() / 200.0, (double)pos.getZ() / 200.0);
-      if (value < -0.8) {
-         int n = rand.nextInt(4);
-         switch (n) {
+      if (GRASS_COLOR_NOISE.getValue((double)pos.getX() / 200.0, (double)pos.getZ() / 200.0) < -0.8) {
+         switch (rand.nextInt(4)) {
             case 0:
                return BlockFlower.EnumFlowerType.ORANGE_TULIP;
             case 1:

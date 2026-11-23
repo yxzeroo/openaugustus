@@ -66,8 +66,7 @@ public class CommandPlaySound extends CommandBase {
          }
 
          double d4 = d > 1.0 ? d * 16.0 : 16.0;
-         double distance = player.getDistance(xCoord, yCoord, zCoord);
-         if (distance > d4) {
+         if (player.getDistance(xCoord, yCoord, zCoord) > d4) {
             if (d3 <= 0.0) {
                throw new CommandException("commands.playsound.playerTooFar", new Object[]{player.getName()});
             }

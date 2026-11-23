@@ -121,8 +121,7 @@ public class BlockPumpkin extends BlockDirectional {
       BlockPattern.PatternHelper patternHelper;
       if ((patternHelper = this.getSnowmanPattern().match(world, pos)) != null) {
          for (int i = 0; i < this.getSnowmanPattern().getThumbLength(); i++) {
-            BlockWorldState blockWorldState = patternHelper.translateOffset(0, i, 0);
-            world.setBlockState(blockWorldState.getPos(), Blocks.air.getDefaultState(), 2);
+            world.setBlockState(patternHelper.translateOffset(0, i, 0).getPos(), Blocks.air.getDefaultState(), 2);
          }
 
          EntitySnowman entitySnowman = new EntitySnowman(world);
@@ -144,8 +143,7 @@ public class BlockPumpkin extends BlockDirectional {
          }
 
          for (int k = 0; k < this.getSnowmanPattern().getThumbLength(); k++) {
-            BlockWorldState blockWorldState2 = patternHelper.translateOffset(0, k, 0);
-            world.notifyNeighborsRespectDebug(blockWorldState2.getPos(), Blocks.air);
+            world.notifyNeighborsRespectDebug(patternHelper.translateOffset(0, k, 0).getPos(), Blocks.air);
          }
       } else if ((patternHelper = this.getGolemPattern().match(world, pos)) != null) {
          for (int m = 0; m < this.getGolemPattern().getPalmLength(); m++) {
@@ -175,8 +173,7 @@ public class BlockPumpkin extends BlockDirectional {
 
          for (int i2 = 0; i2 < this.getGolemPattern().getPalmLength(); i2++) {
             for (int i3 = 0; i3 < this.getGolemPattern().getThumbLength(); i3++) {
-               BlockWorldState blockWorldState3 = patternHelper.translateOffset(i2, i3, 0);
-               world.notifyNeighborsRespectDebug(blockWorldState3.getPos(), Blocks.air);
+               world.notifyNeighborsRespectDebug(patternHelper.translateOffset(i2, i3, 0).getPos(), Blocks.air);
             }
          }
       }

@@ -101,9 +101,7 @@ public class DoubleListStatistics {
    public static void selectionSort(ArrayList list) {
 
       for (int i = 0; i < list.size(); i++) {
-         int size = list.size();
-         int n = findMinIndex(list, i, size);
-         swap(list, n, i);
+         swap(list, findMinIndex(list, i, list.size()), i);
       }
    }
 

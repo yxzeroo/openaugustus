@@ -33,7 +33,6 @@ public class SelectableOptionMenuItem implements ContextMenuItem {
    @Override
    public Set getDisplayOptions() {
       LinkedHashSet set = new LinkedHashSet();
-      ScrollBar.getControlFlowGuard();
 
       for (Object obj : this.options) {
          String str = (String)this.valueToLabelMapper.apply(obj);

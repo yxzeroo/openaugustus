@@ -15,8 +15,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,8 +33,8 @@ import net.minecraft.network.play.server.S2DPacketOpenWindow;
 public class GommeMode2 extends Module implements TickListener, MoveInputListener, MotionListener, RenderListener, PacketListener {
    private final TimeHelper activationDelayTimer;
    private final TimeHelper windowListenTimer;
-   public BooleansSetting mode;
-   public StringValue startDelay;
+   public StringValue mode;
+   public DoubleValue startDelay;
    public BooleanValue sameStack;
    public BooleanValue noStopMove;
    public BooleanValue debugMessage;
@@ -48,8 +48,8 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
        super("GommeMode", "GommeModus", Color.RED, Categorys.COMBAT);
       this.activationDelayTimer = new TimeHelper();
       this.windowListenTimer = new TimeHelper();
-      this.mode = new BooleansSetting(this, "Mode", "New", new String[]{"NewNew", "New", "Old"});
-      this.startDelay = new StringValue(this, "StartDelay", 2000.0, 0.0, 10000.0, 0);
+      this.mode = new StringValue(this, "Mode", "New", new String[]{"NewNew", "New", "Old"});
+      this.startDelay = new DoubleValue(this, "StartDelay", 2000.0, 0.0, 10000.0, 0);
       this.sameStack = new BooleanValue(this, "SameStack", true);
       this.noStopMove = new BooleanValue(this, "NoStopMove", true);
       this.debugMessage = new BooleanValue(this, "DebugMessage", true);
@@ -64,16 +64,11 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 18;
-      this.toggleEventSubscription(b3);
-      byte b4 = 32;
-      this.toggleEventSubscription(b4);
-      byte b5 = 26;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
    }
 
    public void onMotion(EventMotion event) {
@@ -97,22 +92,17 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
          if (this.startDelay.getValue() == 0.0) {
             l = 0L;
          } else {
-            double value = this.startDelay.getValue();
-            long l2 = 200L;
-            long l3 = 0L;
-            l = (long)(value + (double)DefaultRandomGenerator.instance.nextLong2(l3, l2));
+            l = (long)(this.startDelay.getValue() + (double)DefaultRandomGenerator.instance.nextLong2(0L, 200L));
          }
 
-         long l4 = l;
-         if (activationDelayTimer2.reached2(l4) && mc.isNotInGui()) {
+         if (activationDelayTimer2.reached2(l) && mc.isNotInGui()) {
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, currentEquippedItem);
             mc.thePlayer.setItemInUse(null, 0);
             mc.thePlayer.sendChatMessage("/language");
             this.activated = true;
             this.windowListenTimer.reset();
             if (this.debugMessage.getValue()) {
-               String str = "Gomme mode activated";
-               this.sendChatMessage2(str);
+               this.sendChatMessage2("Gomme mode activated");
             }
          }
       }
@@ -122,25 +112,18 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
          if (this.startDelay.getValue() == 0.0) {
             l = 0L;
          } else {
-            double value2 = this.startDelay.getValue();
-            long l5 = 200L;
-            long l6 = 0L;
-            l = (long)(value2 + (double)DefaultRandomGenerator.instance.nextLong2(l6, l5));
+            l = (long)(this.startDelay.getValue() + (double)DefaultRandomGenerator.instance.nextLong2(0L, 200L));
          }
 
-         long l7 = l;
-         if (activationDelayTimer3.reached2(l7) && mc.isNotInGui()) {
+         if (activationDelayTimer3.reached2(l) && mc.isNotInGui()) {
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, currentEquippedItem);
             mc.thePlayer.sendQueue.addToSendQueueUnchecked(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
-            Minecraft mc2 = mc;
-            GuiInventory guiInventory = new GuiInventory(mc.thePlayer);
-            mc2.displayGuiScreen(guiInventory);
+            mc.displayGuiScreen(new GuiInventory(mc.thePlayer));
             mc.thePlayer.closeScreen();
             this.activated = true;
             this.windowListenTimer.reset();
             if (this.debugMessage.getValue()) {
-               String str2 = "Gomme mode activated";
-               this.sendChatMessage2(str2);
+               this.sendChatMessage2("Gomme mode activated");
             }
          }
       }
@@ -167,8 +150,7 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
 
    public void onTick() {
       if (this.mode.getSelectedValue().equals("New") && mc.thePlayer.openContainer.windowId == this.pendingWindowId) {
-         Object obj = null;
-         mc.displayGuiScreen((GuiScreen)obj);
+         mc.displayGuiScreen((GuiScreen)null);
          mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.openContainer.windowId));
          this.pendingWindowId = -1337;
       }
@@ -176,8 +158,7 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
 
    public void onRender(float f) {
       if (mc.thePlayer.openContainer.windowId == this.pendingWindowId && this.mode.getSelectedValue().equals("New")) {
-         Object obj = null;
-         mc.displayGuiScreen((GuiScreen)obj);
+         mc.displayGuiScreen((GuiScreen)null);
          mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.openContainer.windowId));
          this.pendingWindowId = -1337;
       }
@@ -186,8 +167,7 @@ public class GommeMode2 extends Module implements TickListener, MoveInputListene
    public void onPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof S2DPacketOpenWindow) {
-         long l = 5000L;
-         if (!this.windowListenTimer.reached2(l)) {
+         if (!this.windowListenTimer.reached2(5000L)) {
             S2DPacketOpenWindow packet2 = (S2DPacketOpenWindow)packet;
             if (packet2.getSlotCount() == 45) {
                this.pendingWindowId = packet2.getWindowId();

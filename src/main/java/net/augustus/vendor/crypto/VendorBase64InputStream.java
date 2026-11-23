@@ -16,7 +16,6 @@ public class VendorBase64InputStream extends InputStream {
 
    @Override
    public int available() throws IOException {
-      VendorAesHelper.getInvertedGuardFlag();
       if (!this.closed) {
          return this.is.available();
       } else {
@@ -26,11 +25,7 @@ public class VendorBase64InputStream extends InputStream {
 
    @Override
    public int read() throws IOException {
-      int guardFlag = VendorAesHelper.getGuardFlag();
-      byte b = 1;
-      byte b2 = 0;
-      byte[] sbBuf2 = this.sbBuf;
-      return this.read(sbBuf2, b2, b) == -1 ? -1 : this.sbBuf[0] & 0xFF;
+      return this.read(this.sbBuf, (byte)0, (byte)1) == -1 ? -1 : this.sbBuf[0] & 0xFF;
    }
 
    public VendorBase64InputStream(InputStream in, int[] ints, boolean flag) {
@@ -47,7 +42,6 @@ public class VendorBase64InputStream extends InputStream {
    @Override
    public int read(byte[] bytes, int n, int n2) throws IOException {
       int n3 = 0;
-      VendorAesHelper.getInvertedGuardFlag();
       int n4 = 0;
       if (!this.closed) {
          if (this.eof && this.nextout < 0) {
@@ -153,7 +147,6 @@ public class VendorBase64InputStream extends InputStream {
 
    @Override
    public void close() throws IOException {
-      VendorAesHelper.getInvertedGuardFlag();
       if (!this.closed) {
          this.closed = true;
          this.is.close();

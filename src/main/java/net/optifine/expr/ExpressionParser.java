@@ -55,9 +55,7 @@ public class ExpressionParser {
       }
 
       Token token2 = (Token)deque.poll();
-      Deque group = getGroup(deque, TokenType.BRACKET_CLOSE, true);
-      IExpression[] expressions = this.parseExpressions(group);
-      return makeFunction(functionType, expressions);
+      return makeFunction(functionType, this.parseExpressions(getGroup(deque, TokenType.BRACKET_CLOSE, true)));
    }
 
    public IExpressionFloat parseFloat(String str) throws ParseException {
@@ -173,8 +171,7 @@ public class ExpressionParser {
          );
       } else {
          for (int i = 0; i < expressions.length; i++) {
-            IExpression expression = expressions[i];
-            ExpressionType floatValue = expression.getFloatValue();
+            ExpressionType floatValue = expressions[i].getFloatValue();
             ExpressionType expressionType = parameterTypes[i];
             if (floatValue != expressionType) {
                throw new ParseException("Invalid argument type, function: \"" + functionType.getName() + "\", index: " + i + ", type: " + floatValue + ", should be: " + expressionType);
@@ -200,8 +197,7 @@ public class ExpressionParser {
             list2.remove(i);
             IExpression expression = (IExpression)list.remove(i);
             IExpression expression2 = (IExpression)list.remove(i);
-            IExpression expression3 = makeFunction(functionType, new IExpression[]{expression, expression2});
-            list.add(i, expression3);
+            list.add(i, makeFunction(functionType, new IExpression[]{expression, expression2}));
             i--;
          }
       }
@@ -221,16 +217,14 @@ public class ExpressionParser {
    }
 
    private IExpression makeBracketed(Token token, Deque deque) throws ParseException {
-      Deque group = getGroup(deque, TokenType.BRACKET_CLOSE, true);
-      return this.parseInfix(group);
+      return this.parseInfix(getGroup(deque, TokenType.BRACKET_CLOSE, true));
    }
 
    private IExpression[] parseExpressions(Deque deque) throws ParseException {
       ArrayList list = new ArrayList();
 
       while (true) {
-         Deque group = getGroup(deque, TokenType.COMMA, false);
-         IExpression expression = this.parseInfix(group);
+         IExpression expression = this.parseInfix(getGroup(deque, TokenType.COMMA, false));
          if (expression == null) {
             return (IExpression[])list.toArray(new IExpression[list.size()]);
          }

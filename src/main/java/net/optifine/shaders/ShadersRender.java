@@ -154,10 +154,7 @@ public class ShadersRender {
          minecraft.mcProfiler.endStartSection("shadow culling");
          Frustum frustum = new Frustum(instance);
          Entity renderViewEntity = minecraft.getRenderViewEntity();
-         double d = renderViewEntity.lastTickPosX + (renderViewEntity.posX - renderViewEntity.lastTickPosX) * (double)f;
-         double d2 = renderViewEntity.lastTickPosY + (renderViewEntity.posY - renderViewEntity.lastTickPosY) * (double)f;
-         double d3 = renderViewEntity.lastTickPosZ + (renderViewEntity.posZ - renderViewEntity.lastTickPosZ) * (double)f;
-         frustum.setPosition(d, d2, d3);
+         frustum.setPosition(renderViewEntity.lastTickPosX + (renderViewEntity.posX - renderViewEntity.lastTickPosX) * (double)f, renderViewEntity.lastTickPosY + (renderViewEntity.posY - renderViewEntity.lastTickPosY) * (double)f, renderViewEntity.lastTickPosZ + (renderViewEntity.posZ - renderViewEntity.lastTickPosZ) * (double)f);
          GlStateManager.shadeModel(7425);
          GlStateManager.enableDepth();
          GlStateManager.depthFunc(515);

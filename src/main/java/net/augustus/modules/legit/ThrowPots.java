@@ -62,12 +62,9 @@ public class ThrowPots extends Module implements SilentSlotListener, ClickListen
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 34;
-      this.toggleEventSubscription(b2);
-      byte b3 = 14;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)14);
    }
 
    public void onClick(EventClick event) {
@@ -76,8 +73,7 @@ public class ThrowPots extends Module implements SilentSlotListener, ClickListen
       if (!this.queuedPotions.isEmpty() && this.canThrowPotion()) {
          TuplePair tuplePair = (TuplePair)this.queuedPotions.get(0);
          if (this.ticksSinceSlotSwitch > this.delayBetweenSwitchAndClick.getLastIntValue() && mc.thePlayer.inventory.currentItem == (Integer)tuplePair.getSecond() && !this.potionThrown) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             this.potionThrown = true;
             this.ticksSinceThrow = 0;
             this.delayBetweenSwitchAndClick.nextValue();
@@ -102,10 +98,7 @@ public class ThrowPots extends Module implements SilentSlotListener, ClickListen
          }
 
          int second = (Integer)tuplePair.getSecond();
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = second;
-         byte b = 0;
-         SilentSlotManager.requestSlot(this, b, n, value);
+         SilentSlotManager.requestSlot(this, (byte)0, second, this.silentSlotSwitching.getValue());
       }
    }
 
@@ -140,11 +133,9 @@ public class ThrowPots extends Module implements SilentSlotListener, ClickListen
       for (int i = 0; i < 9; i++) {
          ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i + 36).getStack();
          if (stack != null && stack.getItem() instanceof ItemPotion && ItemPotion.isSplash(stack.getMetadata())) {
-            ItemPotion item = (ItemPotion)stack.getItem();
-            List effects = item.getEffects(stack);
+            List effects = ((ItemPotion)stack.getItem()).getEffects(stack);
             if (!effects.isEmpty()) {
-               PotionEffect potionEffect = (PotionEffect)effects.get(0);
-               if (potionEffect.getPotionID() == n) {
+               if (((PotionEffect)effects.get(0)).getPotionID() == n) {
                   return new TuplePair(stack, i);
                }
             }

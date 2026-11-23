@@ -5,20 +5,19 @@ import net.augustus.utils.MoveUtil;
 import net.augustus.utils.world.BlockUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.util.BlockPos;
 
 public class KarhuVelocityMode extends VelocityMode implements UpdateListener {
    private int strafeCounter = 0;
 
-   public KarhuVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public KarhuVelocityMode(Velocity velocity, SettingGroup doubleValue) {
       super(velocity, doubleValue, "Karhu");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -30,7 +29,7 @@ public class KarhuVelocityMode extends VelocityMode implements UpdateListener {
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new KarhuVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new KarhuVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override

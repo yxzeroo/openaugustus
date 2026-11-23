@@ -177,9 +177,7 @@ public class RenderItem implements IResourceManagerReloadListener {
 
    private void renderEffect(IBakedModel bakedModel, ItemStack stack) {
       if ((!Config.isCustomItems() || CustomItems.isUseGlint()) && (!Config.isShaderPackLoaded() || !Shaders.isShadowPass)) {
-         double d = 1.0;
-         int n = -8372020;
-         EventItemGlint event = ItemGlintListener.onItemGlint(stack, n, d);
+         EventItemGlint event = ItemGlintListener.onItemGlint(stack, -8372020, 1.0);
          GlStateManager.depthMask(false);
          GlStateManager.depthFunc(514);
          GlStateManager.disableLighting();
@@ -289,8 +287,7 @@ public class RenderItem implements IResourceManagerReloadListener {
       GlStateManager.pushMatrix();
       GlStateManager.scale(8.0F, 8.0F, 8.0F);
       long l = (long)((double)Sys.getTime() * 1000.0 * event.getSpeed() / (double)Sys.getTimerResolution());
-      float f = (float)(l % 3000L) / 3000.0F / 8.0F;
-      GlStateManager.translate(f, 0.0F, 0.0F);
+      GlStateManager.translate((float)(l % 3000L) / 3000.0F / 8.0F, 0.0F, 0.0F);
       GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
       if (!event.isCancelled()) {
          this.renderModel(bakedModel, event.getColor());
@@ -299,8 +296,7 @@ public class RenderItem implements IResourceManagerReloadListener {
       GlStateManager.popMatrix();
       GlStateManager.pushMatrix();
       GlStateManager.scale(8.0F, 8.0F, 8.0F);
-      float f2 = (float)(l % 4873L) / 4873.0F / 8.0F;
-      GlStateManager.translate(-f2, 0.0F, 0.0F);
+      GlStateManager.translate(-((float)(l % 4873L) / 4873.0F / 8.0F), 0.0F, 0.0F);
       GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
       if (!event.isCancelled()) {
          this.renderModel(bakedModel, event.getColor());
@@ -348,10 +344,8 @@ public class RenderItem implements IResourceManagerReloadListener {
 
    private void preTransform(ItemStack stack) {
       IBakedModel itemModel = this.itemModelMesher.getItemModel(stack);
-      Item item = stack.getItem();
-      if (item != null) {
-         boolean isGui3d = itemModel.isGui3d();
-         if (!isGui3d) {
+      if (stack.getItem() != null) {
+         if (!itemModel.isGui3d()) {
             GlStateManager.scale(2.0F, 2.0F, 2.0F);
          }
 
@@ -520,8 +514,7 @@ public class RenderItem implements IResourceManagerReloadListener {
             GlStateManager.enableBlend();
          }
 
-         boolean isItemDamaged = stack.isItemDamaged();
-         if (isItemDamaged) {
+         if (stack.isItemDamaged()) {
             int n3 = (int)Math.round(13.0 - (double)stack.getItemDamage() * 13.0 / (double)stack.getMaxDamage());
             int n4 = (int)Math.round(255.0 - (double)stack.getItemDamage() * 255.0 / (double)stack.getMaxDamage());
             GlStateManager.disableLighting();
@@ -529,8 +522,7 @@ public class RenderItem implements IResourceManagerReloadListener {
             GlStateManager.disableTexture2D();
             GlStateManager.disableAlpha();
             GlStateManager.disableBlend();
-            Tessellator instance = Tessellator.getInstance();
-            WorldRenderer worldRenderer = instance.getWorldRenderer();
+            WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
             this.draw(worldRenderer, n + 2, n2 + 13, 13, 2, 0, 0, 0, 255);
             this.draw(worldRenderer, n + 2, n2 + 13, 12, 1, (255 - n4) / 4, 64, 0, 255);
             int n5 = 255 - n4;
@@ -1074,8 +1066,7 @@ public class RenderItem implements IResourceManagerReloadListener {
 
    public void renderItem(ItemStack stack, ItemCameraTransforms.TransformType transformType) {
       if (stack != null) {
-         IBakedModel itemModel = this.itemModelMesher.getItemModel(stack);
-         this.renderItemModelTransform(stack, itemModel, transformType);
+         this.renderItemModelTransform(stack, this.itemModelMesher.getItemModel(stack), transformType);
       }
    }
 

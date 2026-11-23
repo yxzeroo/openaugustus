@@ -132,8 +132,7 @@ public class EntityTracker extends StoredObject {
       ObjectIterator it = this.hologramParts.values().iterator();
 
       while (it.hasNext()) {
-         HologramPartEntity hologramPartEntity = (HologramPartEntity)it.next();
-         hologramPartEntity.onRemove();
+         ((HologramPartEntity)it.next()).onRemove();
       }
 
       this.virtualHolograms.clear();

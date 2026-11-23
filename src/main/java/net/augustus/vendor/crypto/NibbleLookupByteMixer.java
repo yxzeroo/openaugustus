@@ -198,18 +198,13 @@ public class NibbleLookupByteMixer {
          }
 
          NibbleLookupByteMixer nibbleLookupByteMixer = this;
-         byte[] bytes2 = (byte[])obj;
-         byte[] bytes3 = bytes2;
-         obj = nibbleLookupByteMixer.applyMaskTableRound(bytes3);
+         obj = nibbleLookupByteMixer.applyMaskTableRound((byte[])obj);
          nibbleLookupByteMixer = this;
-         byte[] bytes4 = (byte[])obj;
-         obj = nibbleLookupByteMixer.applyPairSwapRotateRound(bytes4);
+         obj = nibbleLookupByteMixer.applyPairSwapRotateRound((byte[])obj);
          nibbleLookupByteMixer = this;
-         byte[] bytes5 = (byte[])obj;
-         obj = nibbleLookupByteMixer.applyAffineChecksumRound(bytes5);
+         obj = nibbleLookupByteMixer.applyAffineChecksumRound((byte[])obj);
          nibbleLookupByteMixer = this;
-         byte[] bytes6 = (byte[])obj;
-         obj = nibbleLookupByteMixer.applyNibbleTableRound(bytes6);
+         obj = nibbleLookupByteMixer.applyNibbleTableRound((byte[])obj);
          return (byte[])obj;
       }
    }

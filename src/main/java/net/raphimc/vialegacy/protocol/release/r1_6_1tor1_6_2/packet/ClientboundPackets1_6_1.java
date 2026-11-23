@@ -42,8 +42,7 @@ public enum ClientboundPackets1_6_1 implements ClientboundPacketType, PreNettyPa
    TAKE_ITEM_ENTITY(22, (user, buf) -> buf.skipBytes(8)),
    ADD_ENTITY(23, (user, buf) -> {
       buf.skipBytes(19);
-      int i = buf.readInt();
-      if (i > 0) {
+      if (buf.readInt() > 0) {
          buf.skipBytes(6);
       }
    }),
@@ -203,8 +202,7 @@ public enum ClientboundPackets1_6_1 implements ClientboundPacketType, PreNettyPa
    }),
    SET_SCORE(207, (user, buf) -> {
       PreNettyTypes.readString(buf);
-      byte b = buf.readByte();
-      if (b != 1) {
+      if (buf.readByte() != 1) {
          PreNettyTypes.readString(buf);
          buf.skipBytes(4);
       }

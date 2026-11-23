@@ -99,11 +99,10 @@ public class CredentialStorage {
             if (line == null) {
                return;
             }
-            String decoded = new String(
+            checkBox.setSelected(new String(
                Base64Codec.getRfc4648()
                   .decode3(line)
-            );
-            checkBox.setSelected(decoded.equals("True"));
+            ).equals("True"));
          } catch (Exception e) {
             e.printStackTrace();
          }

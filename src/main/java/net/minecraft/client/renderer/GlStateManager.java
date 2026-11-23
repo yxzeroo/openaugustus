@@ -183,8 +183,7 @@ public class GlStateManager {
       ((Buffer)intBuffer).rewind();
 
       while (intBuffer.position() < intBuffer.limit()) {
-         int n = intBuffer.get();
-         deleteTexture(n);
+         deleteTexture(intBuffer.get());
       }
 
       ((Buffer)intBuffer).rewind();

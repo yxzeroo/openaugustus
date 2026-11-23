@@ -28,8 +28,7 @@ public class UniversoCraftFlyMode extends FlyMode {
    public void onMotion(EventMotion event) {
       BlockPos pos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.9, mc.thePlayer.posZ);
       if (!mc.theWorld.getBlockState(pos).getBlock().isFullBlock()) {
-         boolean flag = false;
-         event.setOnGround(flag);
+         event.setOnGround(false);
       }
    }
 
@@ -39,10 +38,9 @@ public class UniversoCraftFlyMode extends FlyMode {
    public void onBlockBoundingBox(EventBlockBoundingBox event) {
       if (event.getBlock() instanceof BlockAir && (double)event.getBlockPos().getY() < this.collisionFloorY) {
          BlockPos blockPos = event.getBlockPos();
-         AxisAlignedBB box = new AxisAlignedBB(
+         event.setBoundingBox(new AxisAlignedBB(
             (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-         );
-         event.setBoundingBox(box);
+         ));
       }
    }
 }

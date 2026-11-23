@@ -31,9 +31,9 @@ import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -46,11 +46,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class BowAimbot extends Module implements MoveListener, ClickListener, TickListener, MoveInputListener, LoadWorldListener {
-   private final BooleansSetting mode;
-   public final DoubleValue rotations;
-   public final StringValue fovYaw;
-   public final StringValue fovPitch;
-   public final BooleansSetting moveFix;
+   private final StringValue mode;
+   public final SettingGroup rotations;
+   public final DoubleValue fovYaw;
+   public final DoubleValue fovPitch;
+   public final StringValue moveFix;
    public final BooleanValue moveFixIntave;
    public final BooleanValue autoShoot;
    public final BooleanValue noHorizontalBruteforce;
@@ -63,22 +63,18 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
 
    public BowAimbot() {
        super("BowAimbot", "BogenZiehlhilfe", new Color(12, 219, 77), Categorys.COMBAT);
-      this.mode = new BooleansSetting(this, "Mode", "Old", new String[]{"Old", "New"});
-      this.rotations = new DoubleValue(this, "Rotations", true);
-      this.fovYaw = (StringValue)(new StringValue(this, "FovYaw", 90.0, 0.0, 180.0, 0)).markVisualOnly();
-      this.fovPitch = (StringValue)(new StringValue(this, "FovPitch", 90.0, 0.0, 180.0, 0)).markVisualOnly();
-      BooleansSetting booleansSetting = new BooleansSetting(this, "MoveFix", "Default", new String[]{"None", "Default", "Advanced"});
-      String str = "SilentMoveFix";
-      this.moveFix = (BooleansSetting)booleansSetting.withDisplayName(str);
+      this.mode = new StringValue(this, "Mode", "Old", new String[]{"Old", "New"});
+      this.rotations = new SettingGroup(this, "Rotations", true);
+      this.fovYaw = (DoubleValue)(new DoubleValue(this, "FovYaw", 90.0, 0.0, 180.0, 0)).markVisualOnly();
+      this.fovPitch = (DoubleValue)(new DoubleValue(this, "FovPitch", 90.0, 0.0, 180.0, 0)).markVisualOnly();
+      this.moveFix = (StringValue)new StringValue(this, "MoveFix", "Default", new String[]{"None", "Default", "Advanced"}).withDisplayName("SilentMoveFix");
       BooleanValue booleanValue = new BooleanValue(this, "MoveFixIntave", true);
       SettingVisibilityCondition condition = () -> {
          return !ClientManagers.moduleManager.scaffold.moveFix.getSelectedValue().equalsIgnoreCase("None");
       };
       this.moveFixIntave = (BooleanValue)booleanValue.withVisibility(condition);
       this.autoShoot = new BooleanValue(this, "AutoShoot", true);
-      BooleanValue booleanValue2 = new BooleanValue(this, "No horizontal bruteforce", false);
-      SettingVisibilityCondition condition2 = () -> this.isNewModeSelected();
-      this.noHorizontalBruteforce = (BooleanValue)booleanValue2.withVisibility(condition2);
+      this.noHorizontalBruteforce = (BooleanValue)new BooleanValue(this, "No horizontal bruteforce", false).withVisibility(() -> this.isNewModeSelected());
       this.targetSelection = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter())).withSorting();
       this.target = null;
       this.aimTicks = 0L;
@@ -99,16 +95,11 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 21;
-      this.toggleEventSubscription(b4);
-      byte b5 = 17;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -124,12 +115,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
             float f = 0.0F;
             float f2 = 0.0F;
             if (this.mode.getSelectedValue().equals("New")) {
-               EntityLivingBase target3 = this.target;
-               ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
-               byte b = 4;
-               ItemStack stack = currentEquippedItem;
-               EntityLivingBase entity = target3;
-               TuplePair tuplePair = this.calculateTrajectoryAngles(entity, stack, b);
+               TuplePair tuplePair = this.calculateTrajectoryAngles(this.target, mc.thePlayer.getCurrentEquippedItem(), (byte)4);
                n = (Integer)tuplePair.getFirst();
                f = ((float[])tuplePair.getSecond())[1];
                f2 = ((float[])tuplePair.getSecond())[0];
@@ -143,15 +129,10 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
                double distanceToEntity = (double)mc.thePlayer.getDistanceToEntity(this.target);
                n = (int)(distanceToEntity / 1.75);
                int n2 = mc.thePlayer.ticksExisted + n;
-               boolean flag = true;
-               int n3 = n2;
                int ticksExisted = mc.thePlayer.ticksExisted;
                EntityLivingBase target4 = this.target;
-               ArrayList list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target4, ticksExisted, n3, flag);
-               int n4 = 999999;
-               Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list, n4);
-               double distanceToVec = mc.thePlayer.getDistanceToVec(clampedPosition);
-               double d = distanceToVec - distanceToEntity;
+               Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target4, ticksExisted, n2, true), 999999);
+               double d = mc.thePlayer.getDistanceToVec(clampedPosition) - distanceToEntity;
                if (d > 3.0) {
                   if (distanceToEntity > 80.0) {
                      n = (int)(distanceToEntity / 1.25);
@@ -165,9 +146,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
                int n5 = mc.thePlayer.ticksExisted + n;
                int ticksExisted2 = mc.thePlayer.ticksExisted;
                EntityLivingBase target5 = this.target;
-               ArrayList list2 = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target5, ticksExisted2, n5);
-               int n6 = 999999;
-               clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, n6);
+               clampedPosition = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target5, ticksExisted2, n5), 999999);
                double d2 = clampedPosition.xCoord - mc.thePlayer.posX;
                double d3 = clampedPosition.yCoord + (double)this.target.getEyeHeight() - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
                double d4 = clampedPosition.zCoord - mc.thePlayer.posZ;
@@ -180,11 +159,8 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
                f = (float)(-(Math.atan2(d3, d5) * 180.0 / Math.PI)) - (float)distanceToEntity * 0.11F;
             }
 
-            RotationEngine rotationEngine2 = this.rotationEngine;
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            Rotation rotation = rotationEngine2.rotateTowards(f2, f, previousRotation);
-            byte b2 = 4;
-            ClientManagers.rotationController.requestRotation(rotation, b2, this);
+            Rotation rotation = this.rotationEngine.rotateTowards(f2, f, ClientManagers.rotationController.getPreviousRotation());
+            ClientManagers.rotationController.requestRotation(rotation, (byte)4, this);
             this.aimTicks++;
          } else {
             this.aimTicks = 0L;
@@ -199,8 +175,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
       if (this.canAimBow() && this.target != null && this.autoShoot.getValue()) {
          BowAimbot bowAimbot = ClientManagers.moduleManager.bowAimbot;
          if (ClientManagers.rotationController.isOwnedBy(bowAimbot) && this.aimTicks > 1L && this.shouldReleaseBow()) {
-            boolean flag = true;
-            event.setBlockAllClicks(flag);
+            event.setBlockAllClicks(true);
          }
       }
    }
@@ -211,16 +186,13 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
          BowAimbot bowAimbot = ClientManagers.moduleManager.bowAimbot;
          if (ClientManagers.rotationController.isOwnedBy(bowAimbot)) {
             if (this.moveFix.getSelectedValue().equals("Advanced")) {
-               MoveFixMode advanced = MoveFixMode.ADVANCED;
-               event.setMoveFixMode(advanced);
+               event.setMoveFixMode(MoveFixMode.ADVANCED);
             } else {
-               MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-               event.setMoveFixMode(moveFixMode);
+               event.setMoveFixMode(MoveFixMode.DEFAULT);
             }
 
             if (this.moveFixIntave.getValue()) {
-               boolean flag = true;
-               event.setPreventInstantReverse(flag);
+               event.setPreventInstantReverse(true);
             }
          }
       }
@@ -231,8 +203,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
       if (this.canAimBow() && this.moveFix.getSelectedValue().equals("None") && this.target != null) {
          BowAimbot bowAimbot = ClientManagers.moduleManager.bowAimbot;
          if (ClientManagers.rotationController.isOwnedBy(bowAimbot)) {
-            float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-            event.setYaw(realYaw);
+            event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
          }
       }
    }
@@ -242,8 +213,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
       if (this.canAimBow() && this.moveFix.getSelectedValue().equals("None") && this.target != null) {
          BowAimbot bowAimbot = ClientManagers.moduleManager.bowAimbot;
          if (ClientManagers.rotationController.isOwnedBy(bowAimbot)) {
-            float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-            event.setYaw(realYaw);
+            event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
          }
       }
    }
@@ -251,8 +221,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
    @Override
    public void onLoadWorld(EventLoadWorld event) {
       this.target = null;
-      Object obj = null;
-      this.targetSelection.setCurrentTarget((Entity)obj);
+      this.targetSelection.setCurrentTarget((Entity)null);
    }
 
    private boolean hasArrowsInInventory() {
@@ -260,8 +229,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
       for (int i = 8; i < mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
          ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
          if (stack != null) {
-            Item item = stack.getItem();
-            if (item.equals(Items.arrow)) {
+            if (stack.getItem().equals(Items.arrow)) {
                return true;
             }
          }
@@ -286,8 +254,7 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
       } else {
          ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
          if (currentEquippedItem != null) {
-            ItemBow item = (ItemBow)currentEquippedItem.getItem();
-            int n = item.getMaxItemUseDuration(currentEquippedItem) - mc.thePlayer.getItemInUseCount();
+            int n = ((ItemBow)currentEquippedItem.getItem()).getMaxItemUseDuration(currentEquippedItem) - mc.thePlayer.getItemInUseCount();
             if (n >= 62000 && this.target != null) {
                mc.gameSettings.keyBindUseItem.setPressTime(1);
                this.wasFullyCharged = false;
@@ -332,10 +299,8 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
             list2 = list;
          } else {
             int n4 = mc.thePlayer.ticksExisted + n3;
-            boolean flag = true;
-            int n5 = n4;
             int ticksExisted = mc.thePlayer.ticksExisted;
-            list2 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted, n5, flag);
+            list2 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted, n4, true);
          }
 
          Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, n3);
@@ -363,13 +328,10 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
                for (int m = -1; m <= 1; m += 2) {
                   if (m != 1 || k != 0.0F) {
                      float f4 = MathHelper.clamp_float(f3 - j, -90.0F, 90.0F);
-                     double d5 = 0.5 + (double)(k * (float)m);
-                     float f5 = MathHelper.wrapAngleTo180_float((float)HitboxAngleUtil.lerpRange(yawRange, d5));
+                     float f5 = MathHelper.wrapAngleTo180_float((float)HitboxAngleUtil.lerpRange(yawRange, 0.5 + (double)(k * (float)m)));
                      ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-                     EntityPlayerSP thePlayer = mc.thePlayer;
-                     projectileSimulator.initFromShooterAngles(thePlayer, stack, f5, f4);
-                     byte b = 50;
-                     int n7 = projectileSimulator.simulateArrowHitTick(b, entity, box);
+                     projectileSimulator.initFromShooterAngles(mc.thePlayer, stack, f5, f4);
+                     int n7 = projectileSimulator.simulateArrowHitTick((byte)50, entity, box);
                      if (n7 != Integer.MAX_VALUE) {
                         n2 = n3 = n7 + 1;
                         f2 = f5;
@@ -391,21 +353,10 @@ public class BowAimbot extends Module implements MoveListener, ClickListener, Ti
 
    private EntityLivingBase findTarget() {
       EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-      EntityTargetFilter targetFilter = this.targetSelection.getTargetFilter();
-      EntityTargetFilter entityTargetFilter = targetFilter;
-      entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter);
-      boolean flag = false;
-      entityTargetSelector = entityTargetSelector.throughWalls(flag);
-      double value = this.fovYaw.getValue();
-      double value2 = this.fovPitch.getValue();
-      double d = value;
-      entityTargetSelector = entityTargetSelector.withinHitboxFov(d, value2).filterFocus();
-      TargetSelectionSettings targetSelection2 = this.targetSelection;
-      Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-      double d2 = -1.0;
-      Rotation rotation = previousRotation;
-      ToDoubleFunction toDoubleFunction = targetSelection2.createTargetComparatorKey(rotation, d2);
-      Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
+      entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelection.getTargetFilter());
+      entityTargetSelector = entityTargetSelector.throughWalls(false);
+      entityTargetSelector = entityTargetSelector.withinHitboxFov(this.fovYaw.getValue(), this.fovPitch.getValue()).filterFocus();
+      Optional optional = entityTargetSelector.sortBy(this.targetSelection.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), -1.0)).findBest();
       return optional.isPresent() && this.isLicenseTimestampValid() && optional.get() instanceof EntityLivingBase ? (EntityLivingBase)optional.get() : null;
    }
 

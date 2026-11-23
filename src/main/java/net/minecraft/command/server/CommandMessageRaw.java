@@ -50,8 +50,7 @@ public class CommandMessageRaw extends CommandBase {
          String str = buildString(strings, 1);
 
          try {
-            IChatComponent component = IChatComponent.Serializer.jsonToComponent(str);
-            player.addChatMessage(ChatComponentProcessor.processComponent(commandSender, component, player));
+            player.addChatMessage(ChatComponentProcessor.processComponent(commandSender, IChatComponent.Serializer.jsonToComponent(str), player));
          } catch (JsonParseException e) {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             throw new SyntaxErrorException("commands.tellraw.jsonException", new Object[]{rootCause == null ? "" : rootCause.getMessage()});

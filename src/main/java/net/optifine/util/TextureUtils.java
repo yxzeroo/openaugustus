@@ -148,8 +148,7 @@ public class TextureUtils {
    }
 
    public static boolean isPowerOfTwo(int n) {
-      int n2 = MathHelper.roundUpToPowerOfTwo(n);
-      return n2 == n;
+      return MathHelper.roundUpToPowerOfTwo(n) == n;
    }
 
    public static ITextureObject getTexture(ResourceLocation location) {
@@ -231,15 +230,13 @@ public class TextureUtils {
       bindTexture(n);
       GL11.glPixelStorei(3333, 1);
       GL11.glPixelStorei(3317, 1);
-      File file = new File(str);
-      File parentFile = file.getParentFile();
+      File parentFile = new File(str).getParentFile();
       if (parentFile != null) {
          parentFile.mkdirs();
       }
 
       for (int i = 0; i < 16; i++) {
-         File file2 = new File(str + "_" + i + ".png");
-         file2.delete();
+         new File(str + "_" + i + ".png").delete();
       }
 
       for (int j = 0; j <= n2; j++) {
@@ -268,8 +265,7 @@ public class TextureUtils {
       for (int i = 65536; i > 0; i >>= 1) {
          GlStateManager.glTexImage2D(32868, 0, 6408, i, i, 0, 6408, 5121, (IntBuffer)null);
          GL11.glGetError();
-         int n = GlStateManager.glGetTexLevelParameteri(32868, 0, 4096);
-         if (n != 0) {
+         if (GlStateManager.glGetTexLevelParameteri(32868, 0, 4096) != 0) {
             return i;
          }
       }
@@ -280,9 +276,7 @@ public class TextureUtils {
    public static void registerResourceListener() {
       IResourceManager resourceManager = Config.getResourceManager();
       if (resourceManager instanceof IReloadableResourceManager) {
-         IReloadableResourceManager manager = (IReloadableResourceManager)resourceManager;
-         TextureUtils.DefaultResourceManagerReloadListener obj = new TextureUtils.DefaultResourceManagerReloadListener();
-         manager.registerReloadListener(obj);
+         ((IReloadableResourceManager)resourceManager).registerReloadListener(new TextureUtils.DefaultResourceManagerReloadListener());
       }
 
       TextureUtils.DefaultTickableTextureObject obj2 = new TextureUtils.DefaultTickableTextureObject();
@@ -297,8 +291,7 @@ public class TextureUtils {
 
    public static BufferedImage scaleImage(BufferedImage image, int n) {
       int width = image.getWidth();
-      int height = image.getHeight();
-      int n2 = height * n / width;
+      int n2 = image.getHeight() * n / width;
       BufferedImage image2 = new BufferedImage(n, n2, 2);
       Graphics2D g2d = image2.createGraphics();
       Object obj = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
@@ -458,8 +451,7 @@ public class TextureUtils {
 
          Dimension dimension;
          try {
-            ImageInputStream imageInputStream = ImageIO.createImageInputStream(in);
-            imageReader.setInput(imageInputStream);
+            imageReader.setInput(ImageIO.createImageInputStream(in));
             int width = imageReader.getWidth(imageReader.getMinIndex());
             int height = imageReader.getHeight(imageReader.getMinIndex());
             dimension = new Dimension(width, height);
@@ -481,8 +473,7 @@ public class TextureUtils {
       if (textureAtlasSprite.getFrameCount() < 1) {
          ArrayList list = new ArrayList();
          int[][] intsArr = new int[n + 1][];
-         int[] ints = new int[iconWidth * iconHeight];
-         intsArr[0] = ints;
+         intsArr[0] = new int[iconWidth * iconHeight];
          list.add(intsArr);
          textureAtlasSprite.setFramesTextureData(list);
       }

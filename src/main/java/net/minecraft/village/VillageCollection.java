@@ -35,8 +35,7 @@ public class VillageCollection extends WorldSavedData {
       Iterator it = this.villageList.iterator();
 
       while (it.hasNext()) {
-         Village village = (Village)it.next();
-         if (village.isAnnihilated()) {
+         if (((Village)it.next()).isAnnihilated()) {
             it.remove();
             this.markDirty();
          }

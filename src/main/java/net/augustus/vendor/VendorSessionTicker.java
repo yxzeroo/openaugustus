@@ -59,15 +59,7 @@ public class VendorSessionTicker implements MC {
                } else {
                   if (17 > b) {
                      if (b <= 15) {
-                        String serverIP = mc.getCurrentServerData().serverIP;
-                        String username = mc.session.getUsername();
-                        String str = mc.thePlayer.getGameProfile().getId().toString();
-                        int entityId = mc.thePlayer.getEntityId();
-                        boolean flag = mc.session.getToken() == null || mc.session.getToken().isEmpty();
-                        int n3 = entityId;
-                        String str2 = str;
-                        String str3 = username;
-                        VendorPacketDispatcher.sendPresenceUpdate(serverIP, str3, str2, n3, flag);
+                        VendorPacketDispatcher.sendPresenceUpdate(mc.getCurrentServerData().serverIP, mc.session.getUsername(), mc.thePlayer.getGameProfile().getId().toString(), mc.thePlayer.getEntityId(), mc.session.getToken() == null || mc.session.getToken().isEmpty());
                         Augustus.getInstance().getModuleManager().irc.syncVisibilityStatus();
                         AugustusServerClient.presenceSyncPending = false;
                         break;
@@ -171,8 +163,7 @@ public class VendorSessionTicker implements MC {
                continue;
             }
 
-            AugustusServerClient instance = AugustusServerClient.getInstance();
-            instance.disconnectAndReconnect();
+            AugustusServerClient.getInstance().disconnectAndReconnect();
             l3 = l3 + 8761439492460582985L ^ -8848806804650953639L;
          }
 
@@ -259,12 +250,7 @@ public class VendorSessionTicker implements MC {
                      }
 
                      if (29 >= b) {
-                        RotationController rotationController = Augustus.getInstance().getRotationController();
-                        Rotation rotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
-                        int n4 = mc.getTimer().elapsedTicks - n;
-                        int n5 = n4;
-                        Rotation rotation2 = rotation;
-                        rotationController.beginRotationTick(rotation2, n5);
+                        Augustus.getInstance().getRotationController().beginRotationTick(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch), mc.getTimer().elapsedTicks - n);
                         l3 = (l3 ^ -4535370869952952983L) + 5712465058865661740L;
                         continue outerLoop;
                      }
@@ -324,30 +310,17 @@ public class VendorSessionTicker implements MC {
          && mc.session != null
          && !mc.isSingleplayer()
          && (serverChanged || AugustusServerClient.presenceSyncPending)) {
-         String serverIP2 = mc.getCurrentServerData().serverIP;
-         String username2 = mc.session.getUsername();
-         String str4 = mc.thePlayer.getGameProfile().getId().toString();
-         int entityId2 = mc.thePlayer.getEntityId();
-         boolean flag2 = mc.session.getToken() == null || mc.session.getToken().isEmpty();
-         int n6 = entityId2;
-         String str5 = str4;
-         String str6 = username2;
-         VendorPacketDispatcher.sendPresenceUpdate(serverIP2, str6, str5, n6, flag2);
+         VendorPacketDispatcher.sendPresenceUpdate(mc.getCurrentServerData().serverIP, mc.session.getUsername(), mc.thePlayer.getGameProfile().getId().toString(), mc.thePlayer.getEntityId(), mc.session.getToken() == null || mc.session.getToken().isEmpty());
          if (serverChanged && Augustus.getInstance().getQuestManager() != null) {
-            QuestManager questManager = Augustus.getInstance().getQuestManager();
-            String serverIP3 = mc.getCurrentServerData().serverIP;
-            questManager.activateQuestsForServer(serverIP3);
+            Augustus.getInstance().getQuestManager().activateQuestsForServer(mc.getCurrentServerData().serverIP);
          }
 
          serverChanged = false;
       }
 
       if (Augustus.getInstance().getModuleManager().cosmetics.isPendingSyncOnDisable() && AugustusServerHandler.isConnectedAndReady() && AugustusServerHandler.getActiveHandler().isSessionReady()) {
-         AugustusServerHandler activeHandler = AugustusServerHandler.getActiveHandler();
-         CosmeticsDisablePacket packet = new CosmeticsDisablePacket(sessionToken);
-         activeHandler.sendPacket((VendorPacket)packet);
-         boolean flag3 = false;
-         Augustus.getInstance().getModuleManager().cosmetics.setPendingSyncOnDisable(flag3);
+         AugustusServerHandler.getActiveHandler().sendPacket((VendorPacket)new CosmeticsDisablePacket(sessionToken));
+         Augustus.getInstance().getModuleManager().cosmetics.setPendingSyncOnDisable(false);
       }
 
       if (!mc.isSingleplayer()
@@ -355,9 +328,7 @@ public class VendorSessionTicker implements MC {
          && mc.thePlayer != null
          && mc.thePlayer.ticksExisted % 20 == 0
          && Augustus.getInstance().getQuestManager() != null) {
-         QuestManager questManager2 = Augustus.getInstance().getQuestManager();
-         String serverIP4 = mc.getCurrentServerData().serverIP;
-         questManager2.updateQuestsForServer(serverIP4);
+         Augustus.getInstance().getQuestManager().updateQuestsForServer(mc.getCurrentServerData().serverIP);
       }
 
       if (SettingManager.sessionToken != null) {
@@ -370,9 +341,7 @@ public class VendorSessionTicker implements MC {
 
       if (mc.theWorld != null && mc.thePlayer != null) {
          RayCastListener.onRayCast2();
-         Minecraft mc2 = mc;
-         MovingObjectPosition hit = new MovingObjectPosition(mc.objectMouseOver);
-         mc2.lastObjectMouseOver = hit;
+         mc.lastObjectMouseOver = new MovingObjectPosition(mc.objectMouseOver);
       }
 
       if (configSyncState == 1) {
@@ -381,8 +350,7 @@ public class VendorSessionTicker implements MC {
       }
 
       Augustus.getInstance().getClass();
-      String str7 = expiryHolder.toString();
-      l2 = Long.parseLong(str7);
+      l2 = Long.parseLong(expiryHolder.toString());
       l2 ^= 6868362108176948499L;
       if (System.currentTimeMillis() > l2 || l > l2) {
          AntiSamplerGuard.activateGuard(1);
@@ -422,12 +390,8 @@ public class VendorSessionTicker implements MC {
             obj2 = (VendorPayload)((TuplePair)obj).getSecond();
             VendorPacketDispatcher.pendingAckPackets.remove(num);
             if ((VendorPayload)obj2 != null) {
-               VendorPayload vendorPayload = (VendorPayload)obj2;
-               byte[] bytes = sessionToken;
-               vendorPayload.setSessionToken(bytes);
-               AugustusServerHandler activeHandler2 = AugustusServerHandler.getActiveHandler();
-               VendorPacket packet2 = (VendorPacket)((VendorPayload)obj2);
-               activeHandler2.sendPacket(packet2);
+               ((VendorPayload)obj2).setSessionToken(sessionToken);
+               AugustusServerHandler.getActiveHandler().sendPacket((VendorPacket)((VendorPayload)obj2));
                VendorPacketDispatcher.pendingAckPackets.put(num, new TuplePair(l, ((TuplePair)obj).getSecond()));
             }
          }

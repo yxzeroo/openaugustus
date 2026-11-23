@@ -23,8 +23,7 @@ public class TooltipManager {
 
    public void drawTooltips(int n, int n2, List list) {
       if (Math.abs(n - this.lastMouseX) <= 5 && Math.abs(n2 - this.lastMouseY) <= 5) {
-         short s = 700;
-         if (System.currentTimeMillis() >= this.mouseStillTime + (long)s) {
+         if (System.currentTimeMillis() >= this.mouseStillTime + (long)((short)700)) {
             GuiButton selectedButton = GuiScreenOF.getSelectedButton(n, n2, list);
             if (selectedButton != null) {
                Rectangle tooltipBounds = this.tooltipProvider.getTooltipBounds(this.guiScreen, n, n2);
@@ -36,8 +35,7 @@ public class TooltipManager {
                   }
 
                   if (this.tooltipProvider.isRenderBorder()) {
-                     int n3 = -528449408;
-                     this.drawRectBorder(tooltipBounds.x, tooltipBounds.y, tooltipBounds.x + tooltipBounds.width, tooltipBounds.y + tooltipBounds.height, n3);
+                     this.drawRectBorder(tooltipBounds.x, tooltipBounds.y, tooltipBounds.x + tooltipBounds.width, tooltipBounds.y + tooltipBounds.height, -528449408);
                   }
 
                   Gui.drawRect(tooltipBounds.x, tooltipBounds.y, tooltipBounds.x + tooltipBounds.width, tooltipBounds.y + tooltipBounds.height, -536870912);
@@ -49,8 +47,7 @@ public class TooltipManager {
                         n4 = 16719904;
                      }
 
-                     FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRendererObj;
-                     fontRendererObj.drawStringWithShadow(str, (float)(tooltipBounds.x + 5), (float)(tooltipBounds.y + 5 + i * 11), n4);
+                     Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(str, (float)(tooltipBounds.x + 5), (float)(tooltipBounds.y + 5 + i * 11), n4);
                   }
                }
             }

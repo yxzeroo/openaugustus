@@ -3,10 +3,10 @@ package net.augustus.modules.modes.faststop;
 import net.augustus.events.EventMoveInput;
 import net.augustus.events.EventSafeWalk;
 import net.augustus.modules.movement.FastStop;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class UnlegitFastStopMode extends FastStopMode {
-   public UnlegitFastStopMode(FastStop fastStop, DoubleValue doubleValue) {
+   public UnlegitFastStopMode(FastStop fastStop, SettingGroup doubleValue) {
       super(fastStop, doubleValue, "Unlegit");
    }
 

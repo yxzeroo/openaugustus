@@ -17,9 +17,9 @@ import net.augustus.Augustus;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -28,29 +28,29 @@ import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
 public class ChinaHat extends Module implements RenderListener, OrientCameraListener, MotionListener {
-   private final BooleansSetting colorMode;
+   private final StringValue colorMode;
    private final ColorSetting primaryColor;
    private final ColorSetting secondaryColor;
-   private final StringValue rainbowAlpha;
-   private final StringValue astolfoAlpha;
-   private final StringValue hatQualitiy;
-   private final StringValue radius;
-   private final StringValue height;
-   private final StringValue yOffset;
-   private final StringValue rotationSpeed;
-   private final StringValue rotationOffset;
+   private final DoubleValue rainbowAlpha;
+   private final DoubleValue astolfoAlpha;
+   private final DoubleValue hatQualitiy;
+   private final DoubleValue radius;
+   private final DoubleValue height;
+   private final DoubleValue yOffset;
+   private final DoubleValue rotationSpeed;
+   private final DoubleValue rotationOffset;
    private final BooleanValue inFirstPerson;
    private final BooleanValue rotateWithPlayer;
    private final BooleanValue rotateWithSpoofRotations;
    private final BooleanValue rotateVertical;
    private final BooleanValue onlyWhileModuleRotation;
-   private final DoubleValue outline;
+   private final SettingGroup outline;
    private final BooleanValue enabled;
-   private final StringValue lineWidth;
-   private final StringValue alpha;
-   private final StringValue redOffset;
-   private final StringValue greenOffset;
-   private final StringValue blueOffset;
+   private final DoubleValue lineWidth;
+   private final DoubleValue alpha;
+   private final DoubleValue redOffset;
+   private final DoubleValue greenOffset;
+   private final DoubleValue blueOffset;
    private float cameraEyeHeight;
    private Vec3 cameraOffset;
    private boolean usingSpoofedRotation;
@@ -59,52 +59,41 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
 
    public ChinaHat() {
        super("ChinaHat", "ChinaHut", new Color(50, 168, 139), Categorys.RENDER);
-      this.colorMode = new BooleansSetting(this, "ColorMode", "Fade", new String[]{"Fade", "Rainbow", "Astolfo"});
-      ColorSetting colorSetting = new ColorSetting(this, "Color1", new Color(255, 0, 0));
-      SettingVisibilityCondition condition = () -> this.isPrimaryColorVisible();
-      this.primaryColor = (ColorSetting)colorSetting.withVisibility(condition);
-      ColorSetting colorSetting2 = new ColorSetting(this, "Color2", new Color(0, 0, 255));
-      SettingVisibilityCondition condition2 = () -> this.isSecondaryColorVisible();
-      this.secondaryColor = (ColorSetting)colorSetting2.withVisibility(condition2);
-      StringValue stringValue = new StringValue(this, "Rainbow Alpha", 170.0, 0.1, 255.0, 2);
-      SettingVisibilityCondition condition3 = () -> this.isRainbowAlphaVisible();
-      this.rainbowAlpha = stringValue.visibleWhen(condition3);
-      StringValue stringValue2 = new StringValue(this, "Astolfo Alpha", 170.0, 0.1, 255.0, 2);
-      SettingVisibilityCondition condition4 = () -> this.isAstolfoAlphaVisible();
-      this.astolfoAlpha = stringValue2.visibleWhen(condition4);
-      this.hatQualitiy = new StringValue(this, "HatQualitiy", 100.0, 8.0, 300.0, 0);
-      this.radius = new StringValue(this, "Radius", 0.65, 0.1, 10.0, 3);
-      this.height = new StringValue(this, "Height", 0.25, 0.1, 1.0, 3);
-      this.yOffset = new StringValue(this, "Y Offset", 0.0, -0.1, 1.0, 3);
-      this.rotationSpeed = new StringValue(this, "RotationSpeed", 1.0, 0.0, 360.0, 0);
-      this.rotationOffset = new StringValue(this, "RotationOffset", 1.0, 0.0, 360.0, 0);
+      this.colorMode = new StringValue(this, "ColorMode", "Fade", new String[]{"Fade", "Rainbow", "Astolfo"});
+      this.primaryColor = (ColorSetting)new ColorSetting(this, "Color1", new Color(255, 0, 0)).withVisibility(() -> this.isPrimaryColorVisible());
+      this.secondaryColor = (ColorSetting)new ColorSetting(this, "Color2", new Color(0, 0, 255)).withVisibility(() -> this.isSecondaryColorVisible());
+      this.rainbowAlpha = new DoubleValue(this, "Rainbow Alpha", 170.0, 0.1, 255.0, 2).visibleWhen(() -> this.isRainbowAlphaVisible());
+      this.astolfoAlpha = new DoubleValue(this, "Astolfo Alpha", 170.0, 0.1, 255.0, 2).visibleWhen(() -> this.isAstolfoAlphaVisible());
+      this.hatQualitiy = new DoubleValue(this, "HatQualitiy", 100.0, 8.0, 300.0, 0);
+      this.radius = new DoubleValue(this, "Radius", 0.65, 0.1, 10.0, 3);
+      this.height = new DoubleValue(this, "Height", 0.25, 0.1, 1.0, 3);
+      this.yOffset = new DoubleValue(this, "Y Offset", 0.0, -0.1, 1.0, 3);
+      this.rotationSpeed = new DoubleValue(this, "RotationSpeed", 1.0, 0.0, 360.0, 0);
+      this.rotationOffset = new DoubleValue(this, "RotationOffset", 1.0, 0.0, 360.0, 0);
       this.inFirstPerson = new BooleanValue(this, "InFirstPerson", true);
       this.rotateWithPlayer = new BooleanValue(this, "Rotate with player", true);
       BooleanValue booleanValue = new BooleanValue(this, "Rotate with spoof rotations", true);
       BooleanValue rotateWithPlayer2 = this.rotateWithPlayer;
       this.rotateWithPlayer.getClass();
       BooleanValue booleanValue2 = rotateWithPlayer2;
-      SettingVisibilityCondition condition5 = () -> booleanValue2.getValue();
-      this.rotateWithSpoofRotations = (BooleanValue)booleanValue.withVisibility(condition5);
+      this.rotateWithSpoofRotations = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
       BooleanValue booleanValue3 = new BooleanValue(this, "Rotate vertical", false);
       rotateWithPlayer2 = this.rotateWithPlayer;
       this.rotateWithPlayer.getClass();
       BooleanValue booleanValue4 = rotateWithPlayer2;
-      SettingVisibilityCondition condition6 = () -> booleanValue4.getValue();
-      this.rotateVertical = (BooleanValue)booleanValue3.withVisibility(condition6);
+      this.rotateVertical = (BooleanValue)booleanValue3.withVisibility(() -> booleanValue4.getValue());
       BooleanValue booleanValue5 = new BooleanValue(this, "Only while module rotation", true);
       rotateWithPlayer2 = this.rotateVertical;
       this.rotateVertical.getClass();
       BooleanValue booleanValue6 = rotateWithPlayer2;
-      SettingVisibilityCondition condition7 = () -> booleanValue6.getValue();
-      this.onlyWhileModuleRotation = (BooleanValue)booleanValue5.withVisibility(condition7);
-      this.outline = new DoubleValue(this, "Outline", false);
+      this.onlyWhileModuleRotation = (BooleanValue)booleanValue5.withVisibility(() -> booleanValue6.getValue());
+      this.outline = new SettingGroup(this, "Outline", false);
       this.enabled = new BooleanValue(this, "Enabled", true, this.outline);
-      this.lineWidth = new StringValue(this, "Line-width", 2.0, 0.01, 4.0, 2, this.outline);
-      this.alpha = new StringValue(this, "Alpha", 255.0, 0.1, 255.0, 2, this.outline);
-      this.redOffset = new StringValue(this, "Red offset", -25.0, -255.0, 255.0, 1, this.outline);
-      this.greenOffset = new StringValue(this, "Green offset", -25.0, -255.0, 255.0, 1, this.outline);
-      this.blueOffset = new StringValue(this, "Blue offset", -25.0, -255.0, 255.0, 1, this.outline);
+      this.lineWidth = new DoubleValue(this, "Line-width", 2.0, 0.01, 4.0, 2, this.outline);
+      this.alpha = new DoubleValue(this, "Alpha", 255.0, 0.1, 255.0, 2, this.outline);
+      this.redOffset = new DoubleValue(this, "Red offset", -25.0, -255.0, 255.0, 1, this.outline);
+      this.greenOffset = new DoubleValue(this, "Green offset", -25.0, -255.0, 255.0, 1, this.outline);
+      this.blueOffset = new DoubleValue(this, "Blue offset", -25.0, -255.0, 255.0, 1, this.outline);
    }
 
    @Override
@@ -117,13 +106,9 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 18;
-      this.toggleEventSubscription(b2);
-      int n = 100000;
-      byte b3 = 24;
-      this.toggleEventSubscription(b3, n);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)24, 100000);
    }
 
    @Override
@@ -161,10 +146,8 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
          int n = (int)this.hatQualitiy.getValue() / 2;
          double value2 = this.radius.getValue();
          double value3 = this.height.getValue();
-         byte b = 0;
-         this.primaryColor.getColorInt(b);
-         byte b2 = 0;
-         this.secondaryColor.getColorInt(b2);
+         this.primaryColor.getColorInt((byte)0);
+         this.secondaryColor.getColorInt((byte)0);
          double d = (double)this.primaryColor.getRed() / 255.0;
          double d2 = (double)this.primaryColor.getGreen() / 255.0;
          double d3 = (double)this.primaryColor.getBlue() / 255.0;
@@ -175,12 +158,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
          double d8 = (double)this.secondaryColor.getAlpha() / 255.0;
          float rotationYaw = mc.thePlayer.rotationYaw;
          float f2 = value ? mc.thePlayer.rotationPitch : 0.0F;
-         float prevSpinAngle2 = this.prevSpinAngle;
-         float spinAngle2 = this.spinAngle;
-         float renderPartialTicks = mc.getTimer().renderPartialTicks;
-         float f3 = spinAngle2;
-         float f4 = prevSpinAngle2;
-         float f5 = (float)((double)this.interpolateAngle(f4, f3, renderPartialTicks) + this.rotationOffset.getValue());
+         float f5 = (float)((double)this.interpolateAngle(this.prevSpinAngle, this.spinAngle, mc.getTimer().renderPartialTicks) + this.rotationOffset.getValue());
          if (this.usingSpoofedRotation && value && this.rotateWithSpoofRotations.getValue()) {
             rotationYaw = MathStatisticsUtil.lerp2(mc.thePlayer.prevRotationYawHead, mc.thePlayer.rotationYawHead, mc.getTimer().renderPartialTicks);
             f2 = MathStatisticsUtil.lerp2(mc.thePlayer.prevRotationPitchHead, mc.thePlayer.rotationPitchHead, mc.getTimer().renderPartialTicks);
@@ -194,8 +172,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
          Vec3 vec2 = RotationUtil.getLookVector(0.0F, rotationYaw).scale(value2);
          Vec3 vec3 = vec2.scale(-1.0);
          Vec3 vec4 = new Vec3(0.0, 1.0, 0.0);
-         Vec3 vec5 = vec3.subtract(vec2);
-         Vec3 vec6 = vec4.crossProduct(vec5).normalize();
+         Vec3 vec6 = vec4.crossProduct(vec3.subtract(vec2)).normalize();
          Vec3 vec7 = vec2.add(vec);
          Vec3 vec8 = vec7;
          double d10 = value2 * value2;
@@ -205,9 +182,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
          }
 
          Vec3 vec9 = RotationUtil.getLookVector(0.0F, f5).scale(value2);
-         Vec3 vec10 = vec9.scale(-1.0);
-         Vec3 vec11 = vec10.subtract(vec9);
-         Vec3 vec12 = vec11.crossProduct(vec4).normalize();
+         Vec3 vec12 = vec9.scale(-1.0).subtract(vec9).crossProduct(vec4).normalize();
          Vec3[] vecs = new Vec3[n * 2 + 2];
          float[][] floatsArr = new float[vecs.length][];
          boolean flag = this.colorMode.getSelectedValue().equalsIgnoreCase("rainbow");
@@ -217,9 +192,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
 
          for (int i = 0; i <= n; i++) {
             double d11 = (double)i / (double)n;
-            Vec3 vec13 = new Vec3(Math.cos((d11 + 0.5) * Math.PI + d9), 0.0, Math.sin((d11 + 0.5) * Math.PI + d9)).scale(value2);
-            Vec3 vec14 = this.projectOntoAxis(vec6, vec13);
-            Vec3[] vecs2 = intersectCircleChord(vec14, vec6, vec2, vec3, d10, i, n);
+            Vec3[] vecs2 = intersectCircleChord(this.projectOntoAxis(vec6, new Vec3(Math.cos((d11 + 0.5) * Math.PI + d9), 0.0, Math.sin((d11 + 0.5) * Math.PI + d9)).scale(value2)), vec6, vec2, vec3, d10, i, n);
             Vec3 vec15 = vecs2[0];
             Vec3 vec16 = vecs2[1];
             Vec3 vec17 = this.projectOntoAxis(vec12, vec15);
@@ -232,12 +205,10 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
             vec15 = vec15.add(vec);
             vec16 = vec16.add(vec);
             if (flag) {
-               double d15 = (Math.atan2(vec15.zCoord, vec15.xCoord) / Math.PI * 180.0 + 180.0 - d14) % 360.0 / 360.0;
-               double[] doubles = hsvToRgb(d15, 1.0, 1.0);
+               double[] doubles = hsvToRgb((Math.atan2(vec15.zCoord, vec15.xCoord) / Math.PI * 180.0 + 180.0 - d14) % 360.0 / 360.0, 1.0, 1.0);
                GlStateManager.color((float)doubles[0], (float)doubles[1], (float)doubles[2], f6);
             } else if (flag2) {
-               double d16 = MathHelper.wrapAngleTo180_double(Math.atan2(vec15.zCoord, vec15.xCoord) / Math.PI * 180.0 + 180.0 - d14) + 180.0;
-               int[] astolfoRgbArray = ColorUtil.getAstolfoRgbArray(d16);
+               int[] astolfoRgbArray = ColorUtil.getAstolfoRgbArray(MathHelper.wrapAngleTo180_double(Math.atan2(vec15.zCoord, vec15.xCoord) / Math.PI * 180.0 + 180.0 - d14) + 180.0);
                GlStateManager.color((float)astolfoRgbArray[0] / 255.0F, (float)astolfoRgbArray[1] / 255.0F, (float)astolfoRgbArray[2] / 255.0F, f7);
             } else {
                GlStateManager.color(
@@ -257,12 +228,10 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
             GL11.glVertex3d(vec15.xCoord, vec15.yCoord - value3, vec15.zCoord);
             GL11.glEnd();
             if (flag) {
-               double d17 = (Math.atan2(vec16.zCoord, vec16.xCoord) / Math.PI * 180.0 + 180.0 - d14) % 360.0 / 360.0;
-               double[] doubles2 = hsvToRgb(d17, 1.0, 1.0);
+               double[] doubles2 = hsvToRgb((Math.atan2(vec16.zCoord, vec16.xCoord) / Math.PI * 180.0 + 180.0 - d14) % 360.0 / 360.0, 1.0, 1.0);
                GlStateManager.color((float)doubles2[0], (float)doubles2[1], (float)doubles2[2], f6);
             } else if (flag2) {
-               double d18 = MathHelper.wrapAngleTo180_double(Math.atan2(vec16.zCoord, vec16.xCoord) / Math.PI * 180.0 + 180.0 - d14) + 180.0;
-               int[] astolfoRgbArray2 = ColorUtil.getAstolfoRgbArray(d18);
+               int[] astolfoRgbArray2 = ColorUtil.getAstolfoRgbArray(MathHelper.wrapAngleTo180_double(Math.atan2(vec16.zCoord, vec16.xCoord) / Math.PI * 180.0 + 180.0 - d14) + 180.0);
                GlStateManager.color((float)astolfoRgbArray2[0] / 255.0F, (float)astolfoRgbArray2[1] / 255.0F, (float)astolfoRgbArray2[2] / 255.0F, f7);
             } else {
                GlStateManager.color(
@@ -298,10 +267,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
             for (int j = 0; j < vecs.length; j++) {
                Vec3 vec19 = vecs[j].scale(1.0001);
                float[] floats = floatsArr[j];
-               float f12 = MathHelper.clamp_float(floats[0] + f8, 0.0F, 1.0F);
-               float f13 = MathHelper.clamp_float(floats[1] + f9, 0.0F, 1.0F);
-               float f14 = MathHelper.clamp_float(floats[2] + f10, 0.0F, 1.0F);
-               GlStateManager.color(f12, f13, f14, f11);
+               GlStateManager.color(MathHelper.clamp_float(floats[0] + f8, 0.0F, 1.0F), MathHelper.clamp_float(floats[1] + f9, 0.0F, 1.0F), MathHelper.clamp_float(floats[2] + f10, 0.0F, 1.0F), f11);
                GL11.glVertex3d(vec19.xCoord + vec.xCoord, vec19.yCoord + vec.yCoord - value3 + 0.001, vec19.zCoord + vec.zCoord);
             }
 
@@ -346,8 +312,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
    }
 
    public Vec3 projectOntoAxis(Vec3 vec, Vec3 vec2) {
-      double d = vec2.dotProduct(vec);
-      Vec3 vec3 = vec.scale(d);
+      Vec3 vec3 = vec.scale(vec2.dotProduct(vec));
       Vec3 vec4 = vec2.add(vec3);
       Vec3 vec5 = vec2.subtract(vec3);
       Vec3 vec6 = vec4;
@@ -359,8 +324,7 @@ public class ChinaHat extends Module implements RenderListener, OrientCameraList
    }
 
    public float interpolateAngle(float f, float f2, float f3) {
-      float f4 = Math.abs(f2 - f);
-      return f4 <= 180.0F ? f + (f2 - f) * f3 : f + (360.0F - f + f2) * f3;
+      return Math.abs(f2 - f) <= 180.0F ? f + (f2 - f) * f3 : f + (360.0F - f + f2) * f3;
    }
 
    @Override

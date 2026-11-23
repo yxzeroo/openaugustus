@@ -37,9 +37,7 @@ public class MoreCosmeticsCore {
 
    public static void logError(Throwable t) {
       LOGGER.catching(t);
-      String stackTraceString = CosmeticsHttpUtil.getStackTraceString(t);
-      ConsoleMessageType error = ConsoleMessageType.ERROR;
-      CosmeticsDebugConsole.appendMessage(stackTraceString, error);
+      CosmeticsDebugConsole.appendMessage(CosmeticsHttpUtil.getStackTraceString(t), ConsoleMessageType.ERROR);
    }
 
    public static MoreCosmeticsCore getInstance(int n) {
@@ -61,8 +59,7 @@ public class MoreCosmeticsCore {
 
    public static void logInfo(String str) {
       LOGGER.info("[MoreCosmetics] " + str);
-      ConsoleMessageType log = ConsoleMessageType.LOG;
-      CosmeticsDebugConsole.appendMessage(str, log);
+      CosmeticsDebugConsole.appendMessage(str, ConsoleMessageType.LOG);
    }
 
    public AbstractCosmeticRenderer getCosmeticRenderer() {
@@ -95,8 +92,7 @@ public class MoreCosmeticsCore {
          }
 
          for (CosmeticTickListener listener : (Iterable<CosmeticTickListener>)(this.tickListeners)) {
-            int tickCount = CosmeticRenderState.tickCount;
-            listener.onTick(tickCount);
+            listener.onTick(CosmeticRenderState.tickCount);
          }
 
          CosmeticRenderState.tickCount++;
@@ -119,12 +115,9 @@ public class MoreCosmeticsCore {
 
       try {
          GeckoLibRegistry.initialize();
-         MinecraftBridge minecraftBridge2 = this.minecraftBridge = this.createMinecraftBridge();
-         this.registerTickListener((CosmeticTickListener)minecraftBridge2);
-         boolean flag = false;
-         UUID playerUuid = this.minecraftBridge.getPlayerUuid(flag);
-         CosmeticDataManager cosmeticDataManager2 = this.cosmeticDataManager = new CosmeticDataManager(playerUuid);
-         this.registerTickListener(cosmeticDataManager2);
+         this.registerTickListener((CosmeticTickListener)(this.minecraftBridge = this.createMinecraftBridge()));
+         UUID playerUuid = this.minecraftBridge.getPlayerUuid(false);
+         this.registerTickListener(this.cosmeticDataManager = new CosmeticDataManager(playerUuid));
          this.modelLoader = this.minecraftBridge.createModelLoader();
          this.cosmeticRenderer = this.minecraftBridge.createCosmeticRenderer();
          CosmeticsEnvironment.detectRuntimeFlags();
@@ -134,8 +127,7 @@ public class MoreCosmeticsCore {
    }
 
    public static void logDebug(String str) {
-      ConsoleMessageType debug = ConsoleMessageType.DEBUG;
-      CosmeticsDebugConsole.appendMessage(str, debug);
+      CosmeticsDebugConsole.appendMessage(str, ConsoleMessageType.DEBUG);
    }
 
 

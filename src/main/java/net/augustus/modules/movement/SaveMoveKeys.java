@@ -7,7 +7,6 @@ import net.augustus.modules.Module;
 import net.augustus.events.EventPacket;
 import net.augustus.utils.input.KeyboardInputUtil;
 import net.augustus.settings.RandomizedRangeSettings;
-import net.augustus.settings.Setting;
 import net.augustus.utils.TuplePair;
 import net.augustus.events.listeners.PacketListener;
 import net.minecraft.client.settings.KeyBinding;
@@ -35,12 +34,10 @@ public class SaveMoveKeys extends Module implements PacketListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    public void saveKeyState(KeyBinding keyBinding) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.isToggled()) {
          if (keyBinding.getKeyDescription().equals("key.forward")
             || keyBinding.getKeyDescription().equals("key.left")
@@ -53,7 +50,6 @@ public class SaveMoveKeys extends Module implements PacketListener {
    }
 
    public void restoreKeyStates() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.isToggled() && this.ticksSinceGuiClose == this.loadKeyDelay.getLastIntValue() && mc.currentScreen == null) {
          this.ticksSinceGuiClose = 10000;
          this.loadKeyDelay.nextValue();
@@ -79,8 +75,7 @@ public class SaveMoveKeys extends Module implements PacketListener {
    }
 
    public void onPacket(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S07PacketRespawn) {
+      if (event.getPacket() instanceof S07PacketRespawn) {
          this.savedKeyStates.clear();
       }
    }

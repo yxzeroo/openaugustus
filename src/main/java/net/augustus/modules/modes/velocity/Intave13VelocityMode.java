@@ -4,18 +4,17 @@ import net.augustus.events.listeners.UpdateListener;
 import net.augustus.utils.MoveUtil;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class Intave13VelocityMode extends VelocityMode implements UpdateListener {
 
-   public Intave13VelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public Intave13VelocityMode(Velocity velocity, SettingGroup doubleValue) {
       super(velocity, doubleValue, "Intave13");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -27,7 +26,7 @@ public class Intave13VelocityMode extends VelocityMode implements UpdateListener
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new Intave13VelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new Intave13VelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override

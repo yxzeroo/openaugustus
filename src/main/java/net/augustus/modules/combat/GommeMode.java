@@ -43,22 +43,16 @@ public class GommeMode extends Module implements AttackEntityListener, SilentSlo
 
    public void onSilentSlot() {
       if (this.lastAttackedEntity != null && this.lastAttackedEntity instanceof EntityLivingBase) {
-         EntityLivingBase lastAttackedEntity2 = (EntityLivingBase)this.lastAttackedEntity;
-         if (lastAttackedEntity2.hurtTime < 6) {
+         if (((EntityLivingBase)this.lastAttackedEntity).hurtTime < 6) {
             this.lastAttackedEntity = null;
          } else {
             ItemStack currentEquippedItem = mc.thePlayer.getCurrentEquippedItem();
             if ((currentEquippedItem == null || currentEquippedItem.getItem() instanceof ItemSword || !mc.thePlayer.isUsingItem()) && !mc.playerController.isHittingBlock) {
-               byte b = 36;
-               ArrayList sortedWeapons = InventoryUtil.getSortedWeapons(mc.thePlayer.inventoryContainer, b);
+               ArrayList sortedWeapons = InventoryUtil.getSortedWeapons(mc.thePlayer.inventoryContainer, (byte)36);
                if (!sortedWeapons.isEmpty()) {
                   TuplePair tuplePair = (TuplePair)sortedWeapons.get(0);
                   if ((Integer)tuplePair.getSecond() - 36 != mc.thePlayer.inventory.currentItem) {
-                     int n = (Integer)tuplePair.getSecond() - 36;
-                     boolean value = this.silentSlotSwitching.getValue();
-                     int n2 = n;
-                     byte b2 = 8;
-                     SilentSlotManager.requestSlot(this, b2, n2, value);
+                     SilentSlotManager.requestSlot(this, (byte)8, (Integer)tuplePair.getSecond() - 36, this.silentSlotSwitching.getValue());
                   }
                }
             }

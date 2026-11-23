@@ -26,8 +26,7 @@ public class ArmorStandRenderer extends RendererLivingEntity {
 
    public ArmorStandRenderer(RenderManager renderManager2) {
       super(renderManager2, new ModelArmorStand(), 0.0F);
-      ArmorStandRenderer.DefaultLayerBipedArmor obj = new ArmorStandRenderer.DefaultLayerBipedArmor(this, this);
-      this.addLayer(obj);
+      this.addLayer(new ArmorStandRenderer.DefaultLayerBipedArmor(this, this));
       this.addLayer(new LayerHeldItem(this));
       this.addLayer(new LayerCustomHead(this.getArmorStandModel().bipedHead));
    }

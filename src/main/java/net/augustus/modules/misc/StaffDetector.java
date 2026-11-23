@@ -45,9 +45,9 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.options.NotificationCategoryOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -74,36 +74,36 @@ import org.lwjgl.opengl.GL11;
 public class StaffDetector extends Module implements LoadWorldListener, RenderListener, PacketListener, TickListener {
    private static final String STAFF_LISTS_DIR = ClientPaths.CLIENT_DIR + File.separator + "staffLists";
    private final MultiOptionSetting modes;
-   private final DoubleValue normalModeSettings;
+   private final SettingGroup normalModeSettings;
    private final BooleanValue excludeRawUuids;
    private final BooleanValue showInSpectatorListNormal;
    private final BooleanValue chatMessageNormal;
    private final BooleanValue notificationNormal;
    private final BooleanValue acousticWarningNormal;
-   private final DoubleValue simpleModeSettings;
+   private final SettingGroup simpleModeSettings;
    private final BooleanValue showInSpectatorListSimple;
    private final BooleanValue chatMessageSimple;
    private final BooleanValue notificationSimple;
    private final BooleanValue acousticWarningSimple;
-   private final DoubleValue oldgommeModeSettings;
+   private final SettingGroup oldgommeModeSettings;
    private final RandomizedRangeSettings checkDelay;
    private final BooleanValue showInSpectatorListGomme;
    private final BooleanValue chatMessageGomme;
    private final BooleanValue notificationGomme;
    private final BooleanValue acousticWarningGomme;
-   private final DoubleValue otherModeSettings;
+   private final SettingGroup otherModeSettings;
    private final BooleanValue showInSpectatorListOther;
    private final BooleanValue chatMessageOther;
    private final BooleanValue notificationOther;
    private final BooleanValue acousticWarningOther;
-   private final DoubleValue listbasedModeSettings;
-   private final BooleansSetting lists;
+   private final SettingGroup listbasedModeSettings;
+   private final StringValue lists;
    private final BooleanValue showInSpectatorListListBased;
    private final BooleanValue chatMessageListBased;
    private final BooleanValue notificationListBased;
    private final BooleanValue acousticWarningListBased;
-   private final StringValue acousticWaringVolume;
-   private final StringValue scale;
+   private final DoubleValue acousticWaringVolume;
+   private final DoubleValue scale;
    private final BlurShadowSettings blurShadowSettings;
    private final TimeHelper timeHelper;
    private final ArrayList gommeTabSpectators;
@@ -121,190 +121,111 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
    public StaffDetector() {
        super("StaffDetector", "Moderatorerkenner", new Color(80, 162, 181), Categorys.MISC);
       this.modes = new MultiOptionSetting(this, "Modes", StaffDetectorModeOption.values());
-      DoubleValue doubleValue = new DoubleValue(this, "Normal-Mode settings");
-      SettingVisibilityCondition condition = StaffDetectorModeOption.NORMAL::isSelected;
-      this.normalModeSettings = doubleValue.visibleWhen(condition);
+      this.normalModeSettings = new SettingGroup(this, "Normal-Mode settings").visibleWhen(StaffDetectorModeOption.NORMAL::isSelected);
       BooleanValue booleanValue = new BooleanValue(this, "Exclude raw UUIDS", true, this.normalModeSettings);
-      DoubleValue normalModeSettings2 = this.normalModeSettings;
+      SettingGroup normalModeSettings2 = this.normalModeSettings;
       this.normalModeSettings.getClass();
-      DoubleValue doubleValue2 = normalModeSettings2;
-      SettingVisibilityCondition condition2 = () -> doubleValue2.isVisible();
-      this.excludeRawUuids = (BooleanValue)booleanValue.withVisibility(condition2);
-      BooleanValue booleanValue2 = new BooleanValue(this, "Show in spectator list normal", true, this.normalModeSettings);
-      String str = "Show in spectator list";
-      BooleanValue booleanValue3 = (BooleanValue)booleanValue2.withDisplayName(str);
+      SettingGroup doubleValue2 = normalModeSettings2;
+      this.excludeRawUuids = (BooleanValue)booleanValue.withVisibility(() -> doubleValue2.isVisible());
+      BooleanValue booleanValue3 = (BooleanValue)new BooleanValue(this, "Show in spectator list normal", true, this.normalModeSettings).withDisplayName("Show in spectator list");
       normalModeSettings2 = this.normalModeSettings;
       this.normalModeSettings.getClass();
-      DoubleValue doubleValue3 = normalModeSettings2;
-      SettingVisibilityCondition condition3 = () -> doubleValue3.isVisible();
-      this.showInSpectatorListNormal = (BooleanValue)booleanValue3.withVisibility(condition3);
-      BooleanValue booleanValue4 = new BooleanValue(this, "Chat message normal", true, this.normalModeSettings);
-      String str2 = "Send chat message";
-      BooleanValue booleanValue5 = (BooleanValue)booleanValue4.withDisplayName(str2);
+      SettingGroup doubleValue3 = normalModeSettings2;
+      this.showInSpectatorListNormal = (BooleanValue)booleanValue3.withVisibility(() -> doubleValue3.isVisible());
+      BooleanValue booleanValue5 = (BooleanValue)new BooleanValue(this, "Chat message normal", true, this.normalModeSettings).withDisplayName("Send chat message");
       normalModeSettings2 = this.normalModeSettings;
       this.normalModeSettings.getClass();
-      DoubleValue doubleValue4 = normalModeSettings2;
-      SettingVisibilityCondition condition4 = () -> doubleValue4.isVisible();
-      this.chatMessageNormal = (BooleanValue)booleanValue5.withVisibility(condition4);
-      BooleanValue booleanValue6 = new BooleanValue(this, "Notification normal", true, this.normalModeSettings);
-      String str3 = "Show notification";
-      BooleanValue booleanValue7 = (BooleanValue)booleanValue6.withDisplayName(str3);
-      SettingVisibilityCondition condition5 = () -> this.isNormalNotificationVisible();
-      this.notificationNormal = (BooleanValue)booleanValue7.withVisibility(condition5);
-      BooleanValue booleanValue8 = new BooleanValue(this, "Acoustic warning normal", true, this.normalModeSettings);
-      String str4 = "Acoustic warning";
-      BooleanValue booleanValue9 = (BooleanValue)booleanValue8.withDisplayName(str4);
+      SettingGroup doubleValue4 = normalModeSettings2;
+      this.chatMessageNormal = (BooleanValue)booleanValue5.withVisibility(() -> doubleValue4.isVisible());
+      this.notificationNormal = (BooleanValue)((BooleanValue)new BooleanValue(this, "Notification normal", true, this.normalModeSettings).withDisplayName("Show notification")).withVisibility(() -> this.isNormalNotificationVisible());
+      BooleanValue booleanValue9 = (BooleanValue)new BooleanValue(this, "Acoustic warning normal", true, this.normalModeSettings).withDisplayName("Acoustic warning");
       normalModeSettings2 = this.normalModeSettings;
       this.normalModeSettings.getClass();
-      DoubleValue doubleValue5 = normalModeSettings2;
-      SettingVisibilityCondition condition6 = () -> doubleValue5.isVisible();
-      this.acousticWarningNormal = (BooleanValue)booleanValue9.withVisibility(condition6);
-      DoubleValue doubleValue6 = new DoubleValue(this, "Simple-Mode settings");
-      SettingVisibilityCondition condition7 = StaffDetectorModeOption.SIMPLE::isSelected;
-      this.simpleModeSettings = doubleValue6.visibleWhen(condition7);
-      BooleanValue booleanValue10 = new BooleanValue(this, "Show in spectator list simple", true, this.simpleModeSettings);
-      String str5 = "Show in spectator list";
-      BooleanValue booleanValue11 = (BooleanValue)booleanValue10.withDisplayName(str5);
+      SettingGroup doubleValue5 = normalModeSettings2;
+      this.acousticWarningNormal = (BooleanValue)booleanValue9.withVisibility(() -> doubleValue5.isVisible());
+      this.simpleModeSettings = new SettingGroup(this, "Simple-Mode settings").visibleWhen(StaffDetectorModeOption.SIMPLE::isSelected);
+      BooleanValue booleanValue11 = (BooleanValue)new BooleanValue(this, "Show in spectator list simple", true, this.simpleModeSettings).withDisplayName("Show in spectator list");
       normalModeSettings2 = this.simpleModeSettings;
       this.simpleModeSettings.getClass();
-      DoubleValue doubleValue7 = normalModeSettings2;
-      SettingVisibilityCondition condition8 = () -> doubleValue7.isVisible();
-      this.showInSpectatorListSimple = (BooleanValue)booleanValue11.withVisibility(condition8);
-      BooleanValue booleanValue12 = new BooleanValue(this, "Chat message simple", true, this.simpleModeSettings);
-      String str6 = "Send chat message";
-      BooleanValue booleanValue13 = (BooleanValue)booleanValue12.withDisplayName(str6);
+      SettingGroup doubleValue7 = normalModeSettings2;
+      this.showInSpectatorListSimple = (BooleanValue)booleanValue11.withVisibility(() -> doubleValue7.isVisible());
+      BooleanValue booleanValue13 = (BooleanValue)new BooleanValue(this, "Chat message simple", true, this.simpleModeSettings).withDisplayName("Send chat message");
       normalModeSettings2 = this.simpleModeSettings;
       this.simpleModeSettings.getClass();
-      DoubleValue doubleValue8 = normalModeSettings2;
-      SettingVisibilityCondition condition9 = () -> doubleValue8.isVisible();
-      this.chatMessageSimple = (BooleanValue)booleanValue13.withVisibility(condition9);
-      BooleanValue booleanValue14 = new BooleanValue(this, "Notification simple", true, this.simpleModeSettings);
-      String str7 = "Show notification";
-      BooleanValue booleanValue15 = (BooleanValue)booleanValue14.withDisplayName(str7);
+      SettingGroup doubleValue8 = normalModeSettings2;
+      this.chatMessageSimple = (BooleanValue)booleanValue13.withVisibility(() -> doubleValue8.isVisible());
+      BooleanValue booleanValue15 = (BooleanValue)new BooleanValue(this, "Notification simple", true, this.simpleModeSettings).withDisplayName("Show notification");
       SettingVisibilityCondition condition10 = () -> {
          return this.simpleModeSettings.isVisible() && this.isVanishNotificationActive();
       };
       this.notificationSimple = (BooleanValue)booleanValue15.withVisibility(condition10);
-      BooleanValue booleanValue16 = new BooleanValue(this, "Acoustic warning simple", true, this.simpleModeSettings);
-      String str8 = "Acoustic warning";
-      BooleanValue booleanValue17 = (BooleanValue)booleanValue16.withDisplayName(str8);
+      BooleanValue booleanValue17 = (BooleanValue)new BooleanValue(this, "Acoustic warning simple", true, this.simpleModeSettings).withDisplayName("Acoustic warning");
       normalModeSettings2 = this.simpleModeSettings;
       this.simpleModeSettings.getClass();
-      DoubleValue doubleValue9 = normalModeSettings2;
-      SettingVisibilityCondition condition11 = () -> doubleValue9.isVisible();
-      this.acousticWarningSimple = (BooleanValue)booleanValue17.withVisibility(condition11);
-      DoubleValue doubleValue10 = new DoubleValue(this, "OldGomme-Mode settings");
-      SettingVisibilityCondition condition12 = StaffDetectorModeOption.GOMME::isSelected;
-      this.oldgommeModeSettings = doubleValue10.visibleWhen(condition12);
+      SettingGroup doubleValue9 = normalModeSettings2;
+      this.acousticWarningSimple = (BooleanValue)booleanValue17.withVisibility(() -> doubleValue9.isVisible());
+      this.oldgommeModeSettings = new SettingGroup(this, "OldGomme-Mode settings").visibleWhen(StaffDetectorModeOption.GOMME::isSelected);
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "CheckDelay", 2000.0, 3000.0, 500.0, 5000.0, 0, this.oldgommeModeSettings)).withoutNotInARow();
       normalModeSettings2 = this.oldgommeModeSettings;
       this.oldgommeModeSettings.getClass();
-      DoubleValue doubleValue11 = normalModeSettings2;
-      SettingVisibilityCondition condition13 = () -> doubleValue11.isVisible();
-      this.checkDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition13);
-      BooleanValue booleanValue18 = new BooleanValue(this, "Show in spectator list gomme", true, this.oldgommeModeSettings);
-      String str9 = "Show in spectator list";
-      BooleanValue booleanValue19 = (BooleanValue)booleanValue18.withDisplayName(str9);
+      SettingGroup doubleValue11 = normalModeSettings2;
+      this.checkDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> doubleValue11.isVisible());
+      BooleanValue booleanValue19 = (BooleanValue)new BooleanValue(this, "Show in spectator list gomme", true, this.oldgommeModeSettings).withDisplayName("Show in spectator list");
       normalModeSettings2 = this.oldgommeModeSettings;
       this.oldgommeModeSettings.getClass();
-      DoubleValue doubleValue12 = normalModeSettings2;
-      SettingVisibilityCondition condition14 = () -> doubleValue12.isVisible();
-      this.showInSpectatorListGomme = (BooleanValue)booleanValue19.withVisibility(condition14);
-      BooleanValue booleanValue20 = new BooleanValue(this, "Chat message gomme", true, this.oldgommeModeSettings);
-      String str10 = "Send chat message";
-      BooleanValue booleanValue21 = (BooleanValue)booleanValue20.withDisplayName(str10);
+      SettingGroup doubleValue12 = normalModeSettings2;
+      this.showInSpectatorListGomme = (BooleanValue)booleanValue19.withVisibility(() -> doubleValue12.isVisible());
+      BooleanValue booleanValue21 = (BooleanValue)new BooleanValue(this, "Chat message gomme", true, this.oldgommeModeSettings).withDisplayName("Send chat message");
       normalModeSettings2 = this.oldgommeModeSettings;
       this.oldgommeModeSettings.getClass();
-      DoubleValue doubleValue13 = normalModeSettings2;
-      SettingVisibilityCondition condition15 = () -> doubleValue13.isVisible();
-      this.chatMessageGomme = (BooleanValue)booleanValue21.withVisibility(condition15);
-      BooleanValue booleanValue22 = new BooleanValue(this, "Notification gomme", true, this.oldgommeModeSettings);
-      String str11 = "Show notification";
-      BooleanValue booleanValue23 = (BooleanValue)booleanValue22.withDisplayName(str11);
-      SettingVisibilityCondition condition16 = () -> this.isGommeNotificationVisible();
-      this.notificationGomme = (BooleanValue)booleanValue23.withVisibility(condition16);
-      BooleanValue booleanValue24 = new BooleanValue(this, "Acoustic warning gomme", true, this.oldgommeModeSettings);
-      String str12 = "Acoustic warning";
-      BooleanValue booleanValue25 = (BooleanValue)booleanValue24.withDisplayName(str12);
+      SettingGroup doubleValue13 = normalModeSettings2;
+      this.chatMessageGomme = (BooleanValue)booleanValue21.withVisibility(() -> doubleValue13.isVisible());
+      this.notificationGomme = (BooleanValue)((BooleanValue)new BooleanValue(this, "Notification gomme", true, this.oldgommeModeSettings).withDisplayName("Show notification")).withVisibility(() -> this.isGommeNotificationVisible());
+      BooleanValue booleanValue25 = (BooleanValue)new BooleanValue(this, "Acoustic warning gomme", true, this.oldgommeModeSettings).withDisplayName("Acoustic warning");
       normalModeSettings2 = this.oldgommeModeSettings;
       this.oldgommeModeSettings.getClass();
-      DoubleValue doubleValue14 = normalModeSettings2;
-      SettingVisibilityCondition condition17 = () -> doubleValue14.isVisible();
-      this.acousticWarningGomme = (BooleanValue)booleanValue25.withVisibility(condition17);
-      DoubleValue doubleValue15 = new DoubleValue(this, "Other-Mode settings");
-      SettingVisibilityCondition condition18 = StaffDetectorModeOption.OTHER::isSelected;
-      this.otherModeSettings = doubleValue15.visibleWhen(condition18);
-      BooleanValue booleanValue26 = new BooleanValue(this, "Show in spectator list other", true, this.otherModeSettings);
-      String str13 = "Show in spectator list";
-      BooleanValue booleanValue27 = (BooleanValue)booleanValue26.withDisplayName(str13);
+      SettingGroup doubleValue14 = normalModeSettings2;
+      this.acousticWarningGomme = (BooleanValue)booleanValue25.withVisibility(() -> doubleValue14.isVisible());
+      this.otherModeSettings = new SettingGroup(this, "Other-Mode settings").visibleWhen(StaffDetectorModeOption.OTHER::isSelected);
+      BooleanValue booleanValue27 = (BooleanValue)new BooleanValue(this, "Show in spectator list other", true, this.otherModeSettings).withDisplayName("Show in spectator list");
       normalModeSettings2 = this.otherModeSettings;
       this.otherModeSettings.getClass();
-      DoubleValue doubleValue16 = normalModeSettings2;
-      SettingVisibilityCondition condition19 = () -> doubleValue16.isVisible();
-      this.showInSpectatorListOther = (BooleanValue)booleanValue27.withVisibility(condition19);
-      BooleanValue booleanValue28 = new BooleanValue(this, "Chat message other", true, this.otherModeSettings);
-      String str14 = "Send chat message";
-      BooleanValue booleanValue29 = (BooleanValue)booleanValue28.withDisplayName(str14);
+      SettingGroup doubleValue16 = normalModeSettings2;
+      this.showInSpectatorListOther = (BooleanValue)booleanValue27.withVisibility(() -> doubleValue16.isVisible());
+      BooleanValue booleanValue29 = (BooleanValue)new BooleanValue(this, "Chat message other", true, this.otherModeSettings).withDisplayName("Send chat message");
       normalModeSettings2 = this.otherModeSettings;
       this.otherModeSettings.getClass();
-      DoubleValue doubleValue17 = normalModeSettings2;
-      SettingVisibilityCondition condition20 = () -> doubleValue17.isVisible();
-      this.chatMessageOther = (BooleanValue)booleanValue29.withVisibility(condition20);
-      BooleanValue booleanValue30 = new BooleanValue(this, "Notification other", true, this.otherModeSettings);
-      String str15 = "Show notification";
-      BooleanValue booleanValue31 = (BooleanValue)booleanValue30.withDisplayName(str15);
-      SettingVisibilityCondition condition21 = () -> this.isOtherNotificationVisible();
-      this.notificationOther = (BooleanValue)booleanValue31.withVisibility(condition21);
-      BooleanValue booleanValue32 = new BooleanValue(this, "Acoustic warning other", true, this.otherModeSettings);
-      String str16 = "Acoustic warning";
-      BooleanValue booleanValue33 = (BooleanValue)booleanValue32.withDisplayName(str16);
+      SettingGroup doubleValue17 = normalModeSettings2;
+      this.chatMessageOther = (BooleanValue)booleanValue29.withVisibility(() -> doubleValue17.isVisible());
+      this.notificationOther = (BooleanValue)((BooleanValue)new BooleanValue(this, "Notification other", true, this.otherModeSettings).withDisplayName("Show notification")).withVisibility(() -> this.isOtherNotificationVisible());
+      BooleanValue booleanValue33 = (BooleanValue)new BooleanValue(this, "Acoustic warning other", true, this.otherModeSettings).withDisplayName("Acoustic warning");
       normalModeSettings2 = this.otherModeSettings;
       this.otherModeSettings.getClass();
-      DoubleValue doubleValue18 = normalModeSettings2;
-      SettingVisibilityCondition condition22 = () -> doubleValue18.isVisible();
-      this.acousticWarningOther = (BooleanValue)booleanValue33.withVisibility(condition22);
-      DoubleValue doubleValue19 = new DoubleValue(this, "ListBased-Mode settings");
-      SettingVisibilityCondition condition23 = StaffDetectorModeOption.LIST_BASED::isSelected;
-      this.listbasedModeSettings = doubleValue19.visibleWhen(condition23);
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Lists", "GommeHDDefault", new String[0], this.listbasedModeSettings);
+      SettingGroup doubleValue18 = normalModeSettings2;
+      this.acousticWarningOther = (BooleanValue)booleanValue33.withVisibility(() -> doubleValue18.isVisible());
+      this.listbasedModeSettings = new SettingGroup(this, "ListBased-Mode settings").visibleWhen(StaffDetectorModeOption.LIST_BASED::isSelected);
+      StringValue booleansSetting = new StringValue(this, "Lists", "GommeHDDefault", new String[0], this.listbasedModeSettings);
       normalModeSettings2 = this.listbasedModeSettings;
       this.listbasedModeSettings.getClass();
-      DoubleValue doubleValue20 = normalModeSettings2;
-      SettingVisibilityCondition condition24 = () -> doubleValue20.isVisible();
-      BooleansSetting booleansSetting2 = (BooleansSetting)booleansSetting.withVisibility(condition24);
-      SettingChangeListener listener = () -> this.loadSelectedStaffList();
-      SettingChangeListener listener2 = listener;
-      this.lists = (BooleansSetting)booleansSetting2.withChangeListener(listener2);
-      BooleanValue booleanValue34 = new BooleanValue(this, "Show in spectator list list based", true, this.listbasedModeSettings);
-      String str17 = "Show in spectator list";
-      BooleanValue booleanValue35 = (BooleanValue)booleanValue34.withDisplayName(str17);
+      SettingGroup doubleValue20 = normalModeSettings2;
+      this.lists = (StringValue)((StringValue)booleansSetting.withVisibility(() -> doubleValue20.isVisible())).withChangeListener(() -> this.loadSelectedStaffList());
+      BooleanValue booleanValue35 = (BooleanValue)new BooleanValue(this, "Show in spectator list list based", true, this.listbasedModeSettings).withDisplayName("Show in spectator list");
       normalModeSettings2 = this.listbasedModeSettings;
       this.listbasedModeSettings.getClass();
-      DoubleValue doubleValue21 = normalModeSettings2;
-      SettingVisibilityCondition condition25 = () -> doubleValue21.isVisible();
-      this.showInSpectatorListListBased = (BooleanValue)booleanValue35.withVisibility(condition25);
-      BooleanValue booleanValue36 = new BooleanValue(this, "Chat message list based", true, this.listbasedModeSettings);
-      String str18 = "Send chat message";
-      BooleanValue booleanValue37 = (BooleanValue)booleanValue36.withDisplayName(str18);
+      SettingGroup doubleValue21 = normalModeSettings2;
+      this.showInSpectatorListListBased = (BooleanValue)booleanValue35.withVisibility(() -> doubleValue21.isVisible());
+      BooleanValue booleanValue37 = (BooleanValue)new BooleanValue(this, "Chat message list based", true, this.listbasedModeSettings).withDisplayName("Send chat message");
       normalModeSettings2 = this.listbasedModeSettings;
       this.listbasedModeSettings.getClass();
-      DoubleValue doubleValue22 = normalModeSettings2;
-      SettingVisibilityCondition condition26 = () -> doubleValue22.isVisible();
-      this.chatMessageListBased = (BooleanValue)booleanValue37.withVisibility(condition26);
-      BooleanValue booleanValue38 = new BooleanValue(this, "Notification list based", true, this.listbasedModeSettings);
-      String str19 = "Show notification";
-      BooleanValue booleanValue39 = (BooleanValue)booleanValue38.withDisplayName(str19);
-      SettingVisibilityCondition condition27 = () -> this.isListNotificationVisible();
-      this.notificationListBased = (BooleanValue)booleanValue39.withVisibility(condition27);
-      BooleanValue booleanValue40 = new BooleanValue(this, "Acoustic warning list based", true, this.listbasedModeSettings);
-      String str20 = "Acoustic warning";
-      BooleanValue booleanValue41 = (BooleanValue)booleanValue40.withDisplayName(str20);
+      SettingGroup doubleValue22 = normalModeSettings2;
+      this.chatMessageListBased = (BooleanValue)booleanValue37.withVisibility(() -> doubleValue22.isVisible());
+      this.notificationListBased = (BooleanValue)((BooleanValue)new BooleanValue(this, "Notification list based", true, this.listbasedModeSettings).withDisplayName("Show notification")).withVisibility(() -> this.isListNotificationVisible());
+      BooleanValue booleanValue41 = (BooleanValue)new BooleanValue(this, "Acoustic warning list based", true, this.listbasedModeSettings).withDisplayName("Acoustic warning");
       normalModeSettings2 = this.listbasedModeSettings;
       this.listbasedModeSettings.getClass();
-      DoubleValue doubleValue23 = normalModeSettings2;
-      SettingVisibilityCondition condition28 = () -> doubleValue23.isVisible();
-      this.acousticWarningListBased = (BooleanValue)booleanValue41.withVisibility(condition28);
-      StringValue stringValue = new StringValue(this, "Acoustic waring volume", 93.0, 0.0, 100.0, 0);
+      SettingGroup doubleValue23 = normalModeSettings2;
+      this.acousticWarningListBased = (BooleanValue)booleanValue41.withVisibility(() -> doubleValue23.isVisible());
+      DoubleValue stringValue = new DoubleValue(this, "Acoustic waring volume", 93.0, 0.0, 100.0, 0);
       SettingVisibilityCondition condition29 = () -> {
          return this.acousticWarningNormal.getValue() && this.acousticWarningNormal.isVisible()
             || this.acousticWarningGomme.getValue() && this.acousticWarningGomme.isVisible()
@@ -312,7 +233,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
             || this.acousticWarningListBased.getValue() && this.acousticWarningListBased.isVisible();
       };
       this.acousticWaringVolume = stringValue.visibleWhen(condition29);
-      StringValue stringValue2 = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
+      DoubleValue stringValue2 = new DoubleValue(this, "Scale", 2.0, 1.0, 4.0, 2);
       SettingVisibilityCondition condition30 = () -> {
          return this.showInSpectatorListNormal.getValue() && this.showInSpectatorListNormal.isVisible()
             || this.showInSpectatorListGomme.getValue() && this.showInSpectatorListGomme.isVisible()
@@ -320,11 +241,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
             || this.showInSpectatorListListBased.getValue() && this.showInSpectatorListListBased.isVisible();
       };
       this.scale = stringValue2.visibleWhen(condition30);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      BlurShadowSettings blurShadowSettings3 = blurShadowSettings2.withCustomShadowColor(black);
-      SettingVisibilityCondition condition31 = () -> this.isBlurShadowVisible();
-      this.blurShadowSettings = (BlurShadowSettings)blurShadowSettings3.withVisibility(condition31);
+      this.blurShadowSettings = (BlurShadowSettings)new BlurShadowSettings(this).withCustomShadowColor(Color.black).withVisibility(() -> this.isBlurShadowVisible());
       this.timeHelper = new TimeHelper();
       this.gommeTabSpectators = new ArrayList();
       this.gommeDetectedStaff = new HashSet();
@@ -359,14 +276,10 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -394,17 +307,11 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
          int n5 = n2;
          int n6 = n3;
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
             byte b = 1;
             if (shaderRenderPass == ShaderRenderPass.SHADOW) {
-               int n7 = n - n5 / 2;
-               int n8 = n + n5 / 2;
-               int n9 = b + n6;
-               BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-               int rgb = Color.black.getRGB();
-               RenderUtil.drawRect3(n7, 0, n8, n9, blurShadowSettings2.resolveShadowColor(rgb));
+               RenderUtil.drawRect3(n - n5 / 2, 0, n + n5 / 2, b + n6, this.blurShadowSettings.resolveShadowColor(Color.black.getRGB()));
             } else {
                RenderUtil.drawRect6(n - n5 / 2, 0, n + n5 / 2, b + n6, 0, 0, 0, 150);
             }
@@ -433,9 +340,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
    public void onTick2() {
       this.rebuildSpectatorOverlayMap();
       if (StaffDetectorModeOption.GOMME.isSelected()) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         long lastIntValue = (long)this.checkDelay.getLastIntValue();
-         if (timeHelper2.reached2(lastIntValue) && !(mc.currentScreen instanceof GuiChat)) {
+         if (this.timeHelper.reached2((long)this.checkDelay.getLastIntValue()) && !(mc.currentScreen instanceof GuiChat)) {
             this.checkDelay.nextValue();
             this.timeHelper.reset();
             this.sendGommeTabCompleteProbe();
@@ -475,22 +380,19 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
       if (StaffDetectorModeOption.LIST_BASED.isSelected() && !this.configuredStaffNames.isEmpty()) {
          for (NetworkPlayerInfo networkPlayerInfo2 : (Iterable<NetworkPlayerInfo>)(mc.getNetHandler().getPlayerInfoMap())) {
             if (networkPlayerInfo2 != null && networkPlayerInfo2.getGameProfile() != null) {
-               String name3 = networkPlayerInfo2.getGameProfile().getName();
-               this.checkListBasedStaffName(name3);
+               this.checkListBasedStaffName(networkPlayerInfo2.getGameProfile().getName());
             }
          }
 
          for (Entity entity : (Iterable<Entity>)(mc.theWorld.loadedEntityList)) {
             if (entity instanceof EntityPlayer) {
-               String name4 = ((EntityPlayer)entity).getGameProfile().getName();
-               this.checkListBasedStaffName(name4);
+               this.checkListBasedStaffName(((EntityPlayer)entity).getGameProfile().getName());
             }
          }
       }
 
       if (StaffDetectorModeOption.NORMAL.isSelected() && !this.pendingLookupTasks.isEmpty() && (this.activeLookupFuture == null || !this.activeLookupFuture.isDone())) {
-         Runnable runnable = (Runnable)this.pendingLookupTasks.get(0);
-         this.activeLookupFuture = CompletableFuture.runAsync(runnable);
+         this.activeLookupFuture = CompletableFuture.runAsync((Runnable)this.pendingLookupTasks.get(0));
          this.pendingLookupTasks.remove(0);
       }
 
@@ -509,17 +411,15 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
          if (StaffDetectorModeOption.NORMAL.isSelected() && packet instanceof S38PacketPlayerListItem) {
             S38PacketPlayerListItem packet2 = (S38PacketPlayerListItem)packet;
             if (Objects.requireNonNull(packet2.getAction()) == S38PacketPlayerListItem.Action.UPDATE_LATENCY) {
-               S38PacketPlayerListItem packet3 = packet2;
                this.pendingLookupTasks.add((Runnable)() -> {
                   LinkedList list = new LinkedList();
 
-                  for (S38PacketPlayerListItem.AddPlayerData addPlayerData : (Iterable<S38PacketPlayerListItem.AddPlayerData>)(packet3.getPlayers())) {
+                  for (S38PacketPlayerListItem.AddPlayerData addPlayerData : (Iterable<S38PacketPlayerListItem.AddPlayerData>)(packet2.getPlayers())) {
                      if (!mc.getNetHandler().getPlayerInfoMap2().containsKey(addPlayerData.getProfile().getId())) {
                         UUID id = addPlayerData.getProfile().getId();
 
                         try {
-                           URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + id);
-                           HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                           HttpURLConnection conn = (HttpURLConnection)new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + id).openConnection();
                            conn.setRequestMethod("GET");
                            conn.setConnectTimeout(20000);
                            conn.connect();
@@ -534,8 +434,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
                            conn.disconnect();
                            IOUtils.closeQuietly(reader);
                            String[] strings = sb.toString().split("\"");
-                           String str2 = strings[7];
-                           this.handleNormalStaffDetected(str2);
+                           this.handleNormalStaffDetected(strings[7]);
                            list.add(strings[7]);
                         } catch (Exception e) {
                            if (!this.excludeRawUuids.getValue()) {
@@ -560,8 +459,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
                List players = packet4.getPlayers();
                int n = players == null ? 0 : players.size();
                NetHandlerPlayClient netHandler = mc.getNetHandler();
-               int n2 = netHandler == null ? 0 : netHandler.getPlayerInfoMap().size();
-               if (n != n2) {
+               if (n != (netHandler == null ? 0 : netHandler.getPlayerInfoMap().size())) {
                   if (!this.simpleStaffDetected) {
                      if (this.acousticWarningSimple.getValue()) {
                         this.playWarningSound();
@@ -569,14 +467,12 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
 
                      if (this.chatMessageSimple.getValue()) {
                         String str4 = "unknown";
-                        StaffDetectorModeOption simple = StaffDetectorModeOption.SIMPLE;
-                        this.sendStaffChatAlert(simple, str4);
+                        this.sendStaffChatAlert(StaffDetectorModeOption.SIMPLE, str4);
                      }
 
                      if (this.notificationSimple.getValue()) {
                         String str5 = "unknown";
-                        StaffDetectorModeOption simple2 = StaffDetectorModeOption.SIMPLE;
-                        this.sendStaffNotification(simple2, str5);
+                        this.sendStaffNotification(StaffDetectorModeOption.SIMPLE, str5);
                      }
                   }
 
@@ -588,8 +484,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
          }
 
          if (StaffDetectorModeOption.GOMME.isSelected() && packet instanceof S3APacketTabComplete && !(mc.currentScreen instanceof GuiChat)) {
-            S3APacketTabComplete packet5 = (S3APacketTabComplete)packet;
-            String[] matches = packet5.getMatches();
+            String[] matches = ((S3APacketTabComplete)packet).getMatches();
             ArrayList list2 = new ArrayList();
 
             for (String str6 : matches) {
@@ -615,13 +510,11 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
                   for (String str8 : (Iterable<String>)(list2)) {
                      if (!this.gommeTabSpectators.contains(str8)) {
                         if (this.chatMessageGomme.getValue()) {
-                           StaffDetectorModeOption gomme = StaffDetectorModeOption.GOMME;
-                           this.sendStaffChatAlert(gomme, str8);
+                           this.sendStaffChatAlert(StaffDetectorModeOption.GOMME, str8);
                         }
 
                         if (this.notificationGomme.getValue()) {
-                           StaffDetectorModeOption gomme2 = StaffDetectorModeOption.GOMME;
-                           this.sendStaffNotification(gomme2, str8);
+                           this.sendStaffNotification(StaffDetectorModeOption.GOMME, str8);
                         }
                      }
                   }
@@ -644,14 +537,12 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
 
                   if (this.chatMessageOther.getValue()) {
                      String str9 = "unknown";
-                     StaffDetectorModeOption other = StaffDetectorModeOption.OTHER;
-                     this.sendStaffChatAlert(other, str9);
+                     this.sendStaffChatAlert(StaffDetectorModeOption.OTHER, str9);
                   }
 
                   if (this.notificationOther.getValue()) {
                      String str10 = "unknown";
-                     StaffDetectorModeOption other2 = StaffDetectorModeOption.OTHER;
-                     this.sendStaffNotification(other2, str10);
+                     this.sendStaffNotification(StaffDetectorModeOption.OTHER, str10);
                   }
                }
 
@@ -659,8 +550,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
             }
 
             if (l - this.getOtherModeLastDetectedMs() > 30000L) {
-               long l2 = 0L;
-               this.setOtherModeLastDetectedMs(l2);
+               this.setOtherModeLastDetectedMs(0L);
             }
          }
       }
@@ -673,13 +563,11 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
          }
 
          if (this.chatMessageListBased.getValue()) {
-            StaffDetectorModeOption listbased = StaffDetectorModeOption.LIST_BASED;
-            this.sendStaffChatAlert(listbased, str);
+            this.sendStaffChatAlert(StaffDetectorModeOption.LIST_BASED, str);
          }
 
          if (this.notificationListBased.getValue()) {
-            StaffDetectorModeOption listbased2 = StaffDetectorModeOption.LIST_BASED;
-            this.sendStaffNotification(listbased2, str);
+            this.sendStaffNotification(StaffDetectorModeOption.LIST_BASED, str);
          }
 
          this.listDetectedStaff.add(str);
@@ -694,28 +582,24 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
          }
 
          if (this.chatMessageNormal.getValue()) {
-            StaffDetectorModeOption normal = StaffDetectorModeOption.NORMAL;
-            this.sendStaffChatAlert(normal, str);
+            this.sendStaffChatAlert(StaffDetectorModeOption.NORMAL, str);
          }
 
          if (this.notificationNormal.getValue()) {
-            StaffDetectorModeOption normal2 = StaffDetectorModeOption.NORMAL;
-            this.sendStaffNotification(normal2, str);
+            this.sendStaffNotification(StaffDetectorModeOption.NORMAL, str);
          }
       }
    }
 
    private void sendStaffChatAlert(StaffDetectorModeOption staffDetectorModeOption, String str) {
-      String str2 = "§4§lStaff detected (" + staffDetectorModeOption.getName() + "):§6 " + str;
-      this.sendChatMessage2(str2);
+      this.sendChatMessage2("§4§lStaff detected (" + staffDetectorModeOption.getName() + "):§6 " + str);
    }
 
    private void sendStaffNotification(StaffDetectorModeOption staffDetectorModeOption, String str) {
       if (Augustus.getInstance().getModuleManager().notifications.isToggled() && NotificationCategoryOption.VANISH_NOTIFICATION.isSelected()) {
          String str2 = "§4§lStaff detected (" + staffDetectorModeOption.getName() + "):§6 " + str;
          NotificationLevel info = NotificationLevel.INFO;
-         String str3 = str2;
-         NotificationManager.pushNotification("VanishNotify", str3, info);
+         NotificationManager.pushNotification("VanishNotify", str2, info);
       }
    }
 
@@ -768,8 +652,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
       }
 
       if (!StaffDetectorModeOption.OTHER.isSelected()) {
-         long l = 0L;
-         this.setOtherModeLastDetectedMs(l);
+         this.setOtherModeLastDetectedMs(0L);
       }
 
       if (!StaffDetectorModeOption.NORMAL.isSelected()) {
@@ -781,32 +664,26 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
       this.gommeTabSpectators.clear();
       this.gommeDetectedStaff.clear();
       this.listDetectedStaff.clear();
-      long l = 0L;
-      this.setOtherModeLastDetectedMs(l);
+      this.setOtherModeLastDetectedMs(0L);
       this.normalDetectedStaff.clear();
    }
 
    private void extractDefaultStaffLists() {
       String str = Augustus.getInstance().getName().toLowerCase() + "/stafflists";
-      boolean flag = true;
       String str2 = str;
-      ClientFileUtil.extractResource("assets/augustus/stafflists/BlocksMCDefault.txt", str2, flag);
+      ClientFileUtil.extractResource("assets/augustus/stafflists/BlocksMCDefault.txt", str2, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/stafflists";
-      boolean flag2 = true;
       String str3 = str;
-      ClientFileUtil.extractResource("assets/augustus/stafflists/HypixelDefault.txt", str3, flag2);
+      ClientFileUtil.extractResource("assets/augustus/stafflists/HypixelDefault.txt", str3, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/stafflists";
-      boolean flag3 = true;
       String str4 = str;
-      ClientFileUtil.extractResource("assets/augustus/stafflists/GamsterDefault.txt", str4, flag3);
+      ClientFileUtil.extractResource("assets/augustus/stafflists/GamsterDefault.txt", str4, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/stafflists";
-      boolean flag4 = true;
       String str5 = str;
-      ClientFileUtil.extractResource("assets/augustus/stafflists/GommeHDDefault.txt", str5, flag4);
+      ClientFileUtil.extractResource("assets/augustus/stafflists/GommeHDDefault.txt", str5, true);
       str = Augustus.getInstance().getName().toLowerCase() + "/stafflists";
-      boolean flag5 = true;
       String str6 = str;
-      ClientFileUtil.extractResource("assets/augustus/stafflists/PikaDefault.txt", str6, flag5);
+      ClientFileUtil.extractResource("assets/augustus/stafflists/PikaDefault.txt", str6, true);
       this.refreshStaffListOptions();
    }
 
@@ -850,8 +727,7 @@ public class StaffDetector extends Module implements LoadWorldListener, RenderLi
             });
             this.configuredStaffNames.clear();
             this.configuredStaffNames.addAll(list);
-            String str = "Loaded " + list.size() + " staff names!";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Loaded " + list.size() + " staff names!");
          }
       }
    }

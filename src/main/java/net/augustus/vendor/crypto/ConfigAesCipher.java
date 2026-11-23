@@ -76,9 +76,7 @@ public class ConfigAesCipher {
    }
 
    public byte[] decrypt(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return this.decrypt(bytes, b, length);
+      return this.decrypt(bytes, (byte)0, bytes.length);
    }
 
    public byte[] getIv() {

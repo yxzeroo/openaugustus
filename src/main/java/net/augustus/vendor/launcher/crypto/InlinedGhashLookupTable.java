@@ -6,7 +6,6 @@ public class InlinedGhashLookupTable {
    public final byte[] hashSubkey;
 
    public boolean matchesHashSubkey(byte[] bytes) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes.length != this.hashSubkey.length) {
          return false;
       } else {
@@ -21,7 +20,6 @@ public class InlinedGhashLookupTable {
    }
 
    public InlinedGhashLookupTable(byte[] bytes) {
-      Sha256Digest.getFlowState();
       this.hashSubkey = new byte[16];
       System.arraycopy(bytes, 0, this.hashSubkey, 0, 16);
       this.lookupTable = new long[16][256];

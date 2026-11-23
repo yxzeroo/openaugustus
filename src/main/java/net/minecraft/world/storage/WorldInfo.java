@@ -70,8 +70,7 @@ public class WorldInfo {
    public WorldInfo(NBTTagCompound tag) {
       this.randomSeed = tag.getLong("RandomSeed");
       if (tag.hasKey("generatorName", 8)) {
-         String string = tag.getString("generatorName");
-         this.terrainType = WorldType.parseWorldType(string);
+         this.terrainType = WorldType.parseWorldType(tag.getString("generatorName"));
          if (this.terrainType == null) {
             this.terrainType = WorldType.DEFAULT;
          } else if (this.terrainType.isVersioned()) {
@@ -507,8 +506,7 @@ public class WorldInfo {
    }
 
    public void setWorldTime(long l) {
-      EventWorldTime event = WorldTimeListener.onWorldTime2(l);
-      this.worldTime = event.getWorldTime();
+      this.worldTime = WorldTimeListener.onWorldTime2(l).getWorldTime();
    }
 
    public double getBorderCenterX() {

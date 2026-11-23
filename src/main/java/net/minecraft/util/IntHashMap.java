@@ -15,9 +15,7 @@ public class IntHashMap {
    }
 
    private void grow(int n) {
-      IntHashMap.Entry[] slots2 = this.slots;
-      int length = slots2.length;
-      if (length == 1073741824) {
+      if (this.slots.length == 1073741824) {
          this.threshold = Integer.MAX_VALUE;
       } else {
          IntHashMap.Entry[] entrys = new IntHashMap.Entry[n];
@@ -79,8 +77,7 @@ public class IntHashMap {
    }
 
    public final IntHashMap.Entry removeEntry(int n) {
-      int n2 = computeHash(n);
-      int slotIndex = getSlotIndex(n2, this.slots.length);
+      int slotIndex = getSlotIndex(computeHash(n), this.slots.length);
       IntHashMap.Entry entry = this.slots[slotIndex];
       IntHashMap.Entry entry2 = entry;
 

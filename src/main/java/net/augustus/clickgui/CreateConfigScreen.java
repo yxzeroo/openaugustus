@@ -2,7 +2,6 @@ package net.augustus.clickgui;
 
 import net.augustus.Augustus;
 import net.augustus.config.ModuleConfigStorage;
-import net.augustus.settings.SettingVisibilityRegistry;
 import net.augustus.utils.ChatUtil;
 import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
@@ -16,15 +15,12 @@ public class CreateConfigScreen extends GuiScreen {
    private GuiTextField configNameField;
 
    private void createConfig() {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       if (!this.configNameField.getText().equals("")) {
          ChatUtil.sendChat3("Config created: §c" + this.configNameField.getText());
          ModuleConfigStorage moduleConfigStorage = Augustus.getInstance().getConfigManager().moduleConfigStorage;
          String text = this.configNameField.getText();
          boolean unprotected2 = this.unprotected;
-         String str = "configs";
-         String str2 = text;
-         moduleConfigStorage.saveConfig(str2, str, unprotected2);
+         moduleConfigStorage.saveConfig(text, "configs", unprotected2);
          this.configNameField.setText("");
       }
    }
@@ -52,7 +48,6 @@ public class CreateConfigScreen extends GuiScreen {
 
    @Override
    public void keyTyped(char typedChar, int keyCode) throws IOException {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       this.configNameField.textboxKeyTyped(typedChar, keyCode);
       if (keyCode == 1) {
          GuiScreen parentScreen22 = this.parentScreen2;
@@ -81,7 +76,6 @@ public class CreateConfigScreen extends GuiScreen {
 
    @Override
    public void actionPerformed(GuiButton button) throws IOException {
-      int[] controlFlowState = SettingVisibilityRegistry.getControlFlowState();
       super.actionPerformed(button);
       if (button.id == 2) {
          this.createConfig();

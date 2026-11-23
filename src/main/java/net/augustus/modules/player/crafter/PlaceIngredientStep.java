@@ -11,8 +11,7 @@ public class PlaceIngredientStep implements CraftingStep {
 
    @Override
    public boolean execute(CraftingInventoryActions craftingInventoryActions, GuiCrafting guiCrafting) {
-      int craftingSlot2 = this.craftingSlot;
-      return craftingInventoryActions.placeOneInSlot(guiCrafting, craftingSlot2);
+      return craftingInventoryActions.placeOneInSlot(guiCrafting, this.craftingSlot);
    }
 
 

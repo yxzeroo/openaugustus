@@ -40,7 +40,6 @@ public class EventShouldRenderEntity extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      ShouldRenderEntityListener listener = (ShouldRenderEntityListener)obj;
-      this.call2(listener);
+      this.call2((ShouldRenderEntityListener)obj);
    }
 }

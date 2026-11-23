@@ -12,7 +12,6 @@ public class GeoQuad {
 
    public GeoQuad(GeoVertex[] geoVertexs, float f, float f2, float f3, float f4, float f5, float f6, Boolean bool, GeoDirection geoDirection) {
       this.direction = geoDirection;
-      GeoVector3f.getFlowState();
       this.vertices = geoVertexs;
       float f7 = f + f3;
       float f8 = f2 + f4;

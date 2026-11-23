@@ -6,7 +6,6 @@ public class GhashLookupTable {
    public final long[][] lookupTable;
 
    public GhashLookupTable(byte[] bytes) {
-      Sha256Digest.getFlowState();
       System.arraycopy(bytes, 0, this.hashSubkey, 0, 16);
       this.lookupTable = new long[16][256];
       long l = 0L;
@@ -54,7 +53,6 @@ public class GhashLookupTable {
    }
 
    public boolean matchesHashSubkey(byte[] bytes) {
-      int[] flowState = Sha256Digest.getFlowState();
       if (bytes.length != this.hashSubkey.length) {
          return false;
       } else {

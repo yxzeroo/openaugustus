@@ -84,10 +84,8 @@ public abstract class NestedFeatureProperty extends FeatureBase implements Confi
          }
 
          ConfigProperty configProperty = (ConfigProperty)obj;
-         JsonObject asJsonObject = value.getAsJsonObject();
-         configProperty.deserialize(configSerializerProvider, asJsonObject, flag, unaryFunction);
-         Supplier supplier = () -> configProperty;
-         this.registerEntry(supplier);
+         configProperty.deserialize(configSerializerProvider, value.getAsJsonObject(), flag, unaryFunction);
+         this.registerEntry(() -> configProperty);
          if (ints == null) {
             break;
          }
@@ -126,10 +124,9 @@ public abstract class NestedFeatureProperty extends FeatureBase implements Confi
       int[] controlFlowState = BooleanProperty.getControlFlowState();
       this.onChildAdded = null;
       this.childFactory = null;
-      int[] ints = controlFlowState;
       this.featureBase = featureBase2;
       FeatureBase featureBase3 = featureBase2;
-      if (ints != null) {
+      if (controlFlowState != null) {
          if (featureBase2 == null) {
             return;
          }

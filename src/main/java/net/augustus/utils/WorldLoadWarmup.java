@@ -88,8 +88,7 @@ public class WorldLoadWarmup implements MC {
          float value19 = (float)ClientManagers.moduleManager.killAura.bestHitXMinDist.getValue();
          float value20 = (float)ClientManagers.moduleManager.killAura.bestHitYMInDist.getValue();
          boolean value21 = ClientManagers.moduleManager.killAura.betterAcceleration.getValue();
-         boolean flag = true;
-         int value22 = (int)ClientManagers.moduleManager.killAura.fixRotationChance.getValue(flag);
+         int value22 = (int)ClientManagers.moduleManager.killAura.fixRotationChance.getValue(true);
          double d = ClientManagers.moduleManager.killAura.maxFixRotationReach.nextValue();
          double value23 = ClientManagers.moduleManager.killAura.minFixRotationAngle.getValue();
          double value24 = ClientManagers.moduleManager.killAura.minDistanceToBestVecYaw.getValue();
@@ -124,7 +123,6 @@ public class WorldLoadWarmup implements MC {
          boolean flag5 = value11;
          String str2 = selectedValue5;
          String str3 = selectedValue4;
-         byte b = 0;
          int n2 = value10;
          int n3 = value9;
          int n4 = value8;
@@ -134,7 +132,6 @@ public class WorldLoadWarmup implements MC {
          String str5 = selectedValue2;
          boolean flag6 = value6;
          boolean flag7 = value5;
-         Object obj = null;
          float f12 = value4;
          boolean flag8 = value3;
          boolean flag9 = value2;
@@ -146,9 +143,8 @@ public class WorldLoadWarmup implements MC {
          RandomizedRangeSettings randomizedRangeSettings4 = yawSpeed;
          RandomizedRangeSettings randomizedRangeSettings5 = pitchAcceleration;
          RandomizedRangeSettings randomizedRangeSettings6 = yawAcceleration;
-         EntityPlayerSP player = thePlayer;
          rotationUtil.computeKillAuraRotation(
-            (EntityLivingBase)player,
+            (EntityLivingBase)thePlayer,
             randomizedRangeSettings6,
             randomizedRangeSettings5,
             randomizedRangeSettings4,
@@ -160,7 +156,7 @@ public class WorldLoadWarmup implements MC {
             flag9,
             flag8,
             f12,
-            (Vec3)obj,
+            (Vec3)null,
             flag7,
             flag6,
             str5,
@@ -170,7 +166,7 @@ public class WorldLoadWarmup implements MC {
             n4,
             n3,
             n2,
-            b,
+            (byte)0,
             str3,
             str2,
             flag5,
@@ -240,8 +236,7 @@ public class WorldLoadWarmup implements MC {
          value19 = (float)ClientManagers.moduleManager.killAura.bestHitXMinDist.getValue();
          value20 = (float)ClientManagers.moduleManager.killAura.bestHitYMInDist.getValue();
          value21 = ClientManagers.moduleManager.killAura.betterAcceleration.getValue();
-         boolean flag11 = true;
-         value22 = (int)ClientManagers.moduleManager.killAura.fixRotationChance.getValue(flag11);
+         value22 = (int)ClientManagers.moduleManager.killAura.fixRotationChance.getValue(true);
          d = ClientManagers.moduleManager.killAura.maxFixRotationReach.nextValue();
          value23 = ClientManagers.moduleManager.killAura.minFixRotationAngle.getValue();
          value24 = ClientManagers.moduleManager.killAura.minDistanceToBestVecYaw.getValue();
@@ -276,7 +271,6 @@ public class WorldLoadWarmup implements MC {
          boolean flag15 = value11;
          String str8 = selectedValue5;
          String str9 = selectedValue4;
-         byte b2 = 0;
          int n7 = value10;
          int n8 = value9;
          int n9 = value8;
@@ -286,7 +280,6 @@ public class WorldLoadWarmup implements MC {
          String str11 = selectedValue2;
          boolean flag16 = value6;
          boolean flag17 = value5;
-         Object obj2 = null;
          float f26 = value4;
          boolean flag18 = value3;
          boolean flag19 = value2;
@@ -298,9 +291,8 @@ public class WorldLoadWarmup implements MC {
          RandomizedRangeSettings randomizedRangeSettings10 = yawSpeed;
          RandomizedRangeSettings randomizedRangeSettings11 = pitchAcceleration;
          RandomizedRangeSettings randomizedRangeSettings12 = yawAcceleration;
-         EntityPlayerSP player2 = thePlayer2;
          rotationUtil.computeKillAuraRotation(
-            (EntityLivingBase)player2,
+            (EntityLivingBase)thePlayer2,
             randomizedRangeSettings12,
             randomizedRangeSettings11,
             randomizedRangeSettings10,
@@ -312,7 +304,7 @@ public class WorldLoadWarmup implements MC {
             flag19,
             flag18,
             f26,
-            (Vec3)obj2,
+            (Vec3)null,
             flag17,
             flag16,
             str11,
@@ -322,7 +314,7 @@ public class WorldLoadWarmup implements MC {
             n9,
             n8,
             n7,
-            b2,
+            (byte)0,
             str9,
             str8,
             flag15,
@@ -352,24 +344,16 @@ public class WorldLoadWarmup implements MC {
             str7,
             value28
          );
-         AxisAlignedBB box = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
-         RotationUtil.getNearestPointInBox(box);
+         RotationUtil.getNearestPointInBox(new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
          RotationUtil.getNearestPointOnEntity((Entity)mc.thePlayer);
          EntityPlayerSP thePlayer3 = mc.thePlayer;
          RotationUtil.getNearestPointFromEntity((Entity)mc.thePlayer, (Entity)thePlayer3);
          Vec3 vec = new Vec3(0.0, 0.0, 0.0);
          EntityPlayerSP thePlayer4 = mc.thePlayer;
          Vec3 vec2 = new Vec3(0.0, 0.0, 0.0);
-         EntityPlayerSP player3 = thePlayer4;
-         RotationUtil.getNearestPointOnEntityAt(vec, (EntityLivingBase)player3, vec2);
-         byte b3 = 5;
-         float f29 = 6.0F;
-         rotationUtil.generateDeltaCandidates(f29, b3);
-         Rotation rotation = new Rotation(20.0F, 30.0F);
-         Rotation rotation2 = new Rotation(34.0F, 56.0F);
-         Rotation rotation3 = new Rotation(100.0F, 102.0F);
-         Rotation rotation4 = rotation2;
-         RotationUtil.computeAngleBetweenRotations(rotation, rotation4, rotation3);
+         RotationUtil.getNearestPointOnEntityAt(vec, (EntityLivingBase)thePlayer4, vec2);
+         rotationUtil.generateDeltaCandidates(6.0F, (byte)5);
+         RotationUtil.computeAngleBetweenRotations(new Rotation(20.0F, 30.0F), new Rotation(34.0F, 56.0F), new Rotation(100.0F, 102.0F));
          rotationUtil.reset();
          RotationUtil.isNearCardinalYaw(10.0F);
          RotationUtil.applyYawGcd(10.0F, 10.0F);
@@ -377,40 +361,22 @@ public class WorldLoadWarmup implements MC {
          ClientManagers.moduleManager.scaffold.findBlockPlacementData();
          float f30 = 10.0F;
          ClientManagers.moduleManager.scaffold.isPredictedOutsideNextBlock(f30);
-         boolean flag21 = false;
-         ClientManagers.moduleManager.scaffold.computePitchRandomOffset(flag21);
+         ClientManagers.moduleManager.scaffold.computePitchRandomOffset(false);
          Rotation rotation5 = new Rotation(10.0F, 10.0F);
          Rotation rotation6 = new Rotation(10.0F, 10.0F);
-         boolean flag22 = false;
          double d16 = 10.0;
-         double d17 = 0.3;
-         byte b4 = 1;
-         Rotation rotation7 = rotation6;
-         Rotation rotation8 = rotation5;
-         rotationUtil.createBezierCurve(rotation8, rotation7, b4, d17, d16, flag22);
+         rotationUtil.createBezierCurve(rotation5, rotation6, (byte)1, 0.3, d16, false);
          PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
-         byte b5 = -1;
-         byte b6 = -1;
-         SilentSlotManager.requestSlot((Module)null, b6, b5);
+         SilentSlotManager.requestSlot((Module)null, (byte)-1, (byte)-1);
 
          try {
             Framebuffer framebuffer = new Framebuffer(mc.displayWidth, mc.displayHeight, false);
             framebuffer.bindFramebuffer(false);
-            ClickGuiScreen clickGui = Augustus.getInstance().getClickGui();
-            Minecraft minecraft = Minecraft.getMinecraft();
-            clickGui.setMc(minecraft);
-            ClickGuiScreen clickGui2 = Augustus.getInstance().getClickGui();
-            float f31 = 0.0F;
-            byte b7 = 10;
-            byte b8 = 10;
-            clickGui2.drawScreen(b8, b7, f31);
+            Augustus.getInstance().getClickGui().setMc(Minecraft.getMinecraft());
+            Augustus.getInstance().getClickGui().drawScreen((byte)10, (byte)10, 0.0F);
             Augustus.getInstance().getClickGui().updateScreen();
             framebuffer.bindFramebuffer(false);
-            ClickGuiScreen clickGui3 = Augustus.getInstance().getClickGui();
-            float f32 = 0.0F;
-            byte b9 = 10;
-            byte b10 = 10;
-            clickGui3.drawScreen(b10, b9, f32);
+            Augustus.getInstance().getClickGui().drawScreen((byte)10, (byte)10, 0.0F);
             mc.getFramebuffer().bindFramebuffer(false);
          } catch (Throwable e) {
             e.printStackTrace();
@@ -420,32 +386,19 @@ public class WorldLoadWarmup implements MC {
          double d18 = 1.0;
          double d19 = 1.0;
          double d20 = 1.0;
-         byte b11 = 1;
-         byte b12 = 1;
-         byte b13 = 1;
          EntityPlayerSP thePlayer5 = mc.thePlayer;
-         EntityPlayerSP thePlayer6 = mc.thePlayer;
-         predictor.predictYawBounds(thePlayer6, (EntityLivingBase)thePlayer5, b13, b12, b11, d20, d19, d18);
+         predictor.predictYawBounds(mc.thePlayer, (EntityLivingBase)thePlayer5, (byte)1, (byte)1, (byte)1, d20, d19, d18);
          (new Dummy()).updateEventSubscriptions();
          RayTraceUtil.rayTraceDefaultReach(1.0F, 1.0F, 1.0F);
          BlockPos pos = new BlockPos(1, 1, 1);
          double d21 = 1.0;
          float f33 = 1.0F;
-         float f34 = 1.0F;
-         RayTraceUtil.rayTraceBlock(pos, f34, f33, d21);
-         KillAura killAura = ClientManagers.moduleManager.killAura;
-         EventClick event = new EventClick(ClickButtonType.LEFT);
-         boolean flag23 = false;
-         EventClick event2 = event;
-         killAura.dispatchAttackClick(event2, flag23);
+         RayTraceUtil.rayTraceBlock(pos, 1.0F, f33, d21);
+         ClientManagers.moduleManager.killAura.dispatchAttackClick(new EventClick(ClickButtonType.LEFT), false);
          String str13 = "d";
          FontManager.rubikBold32.getStringWidth(str13);
-         Augustus instance = Augustus.getInstance();
-         EventWarmupDummyModule event3 = new EventWarmupDummyModule();
-         instance.setEventWarmupDummyModule(event3);
-         EventWarmupDummyModule eventWarmupDummyModule = Augustus.getInstance().getEventWarmupDummyModule();
-         boolean flag24 = true;
-         eventWarmupDummyModule.setWarmupActive(flag24);
+         Augustus.getInstance().setEventWarmupDummyModule(new EventWarmupDummyModule());
+         Augustus.getInstance().getEventWarmupDummyModule().setWarmupActive(true);
          Augustus.getInstance().getModuleManager().cosmetics.initLocalPlayerModelData();
          AbstractCosmeticRenderer cosmeticRenderer = MoreCosmeticsCore.getInstance().getCosmeticRenderer();
          if (cosmeticRenderer instanceof PlayerCosmeticRenderer) {
@@ -462,16 +415,13 @@ public class WorldLoadWarmup implements MC {
                   if ((modelData = (ModelData)mc.thePlayer.getCosmetics().get(key)) != null) {
                      EntityPlayerSP thePlayer7 = mc.thePlayer;
                      ModelPlayer playerModel = renderPlayer.getPlayerModel();
-                     boolean flag25 = false;
-                     ModelPlayer modelPlayer = playerModel;
                      float f35 = 1.0F;
                      float f36 = 1.0F;
                      float f37 = 1.0F;
                      float f38 = 1.0F;
                      float f39 = 1.0F;
                      float f40 = 1.0F;
-                     EntityPlayerSP player4 = thePlayer7;
-                     playerCosmeticRenderer.renderCosmeticModel((AbstractClientPlayer)player4, value29, modelData, f40, f39, f38, f37, f36, f35, modelPlayer, flag25);
+                     playerCosmeticRenderer.renderCosmeticModel((AbstractClientPlayer)thePlayer7, value29, modelData, f40, f39, f38, f37, f36, f35, playerModel, false);
                   }
                }
             }

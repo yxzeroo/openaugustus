@@ -7,21 +7,17 @@ import net.augustus.utils.render.BlurShadowManager;
 import net.augustus.utils.render.ColorUtil;
 import net.augustus.utils.render.ShaderRenderPass;
 import net.augustus.modules.render.TargetESP;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.entity.EntityLivingBase;
 import org.lwjgl.opengl.GL11;
 
 public class HitBoxTargetEspMode extends AbstractColoredTargetEspMode {
-   private final StringValue hitBoxLineWidth;
+   private final DoubleValue hitBoxLineWidth;
 
-   public HitBoxTargetEspMode(TargetESP targetESP, DoubleValue doubleValue) {
+   public HitBoxTargetEspMode(TargetESP targetESP, SettingGroup doubleValue) {
        super(targetESP, doubleValue, "HitBox");
-      StringValue stringValue = new StringValue(this.parentModule, "HitBoxLineWidth", 0.0, 0.0, 12.0, 0, this.modeSetting);
-      String str = "LineWidth";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.hitBoxLineWidth = stringValue2.visibleWhen(condition);
+      this.hitBoxLineWidth = new DoubleValue(this.parentModule, "HitBoxLineWidth", 0.0, 0.0, 12.0, 0, this.modeSetting).named("LineWidth").visibleWhen(() -> this.isSelected());
    }
 
    @Override
@@ -45,15 +41,12 @@ public class HitBoxTargetEspMode extends AbstractColoredTargetEspMode {
       float collisionBorderSize = entity.getCollisionBorderSize();
       float f = entity.width / 2.0F + collisionBorderSize;
       float f2 = entity.height + collisionBorderSize;
-      boolean isBlurActive = ((TargetESP)this.parentModule).blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, ((TargetESP)this.parentModule).blurShadowSettings.isShadowActive());
+      BlurShadowManager.enableOneShotPass(((TargetESP)this.parentModule).blurShadowSettings.isBlurActive(), ((TargetESP)this.parentModule).blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderHitBoxPass(targetColor, interpolatedRenderX, f, interpolatedRenderY, collisionBorderSize, interpolatedRenderZ, f2, shaderRenderPass));
    }
 
    private void renderHitBoxPass(int n, float f, float f2, float f3, float f4, float f5, float f6, ShaderRenderPass shaderRenderPass) {
-      BlurShadowSettings blurShadowSettings = ((TargetESP)this.parentModule).blurShadowSettings;
-      int n2 = ColorUtil.resolvePassColor(shaderRenderPass, n);
-      RenderUtil.setGlColor(blurShadowSettings.resolvePassColor(shaderRenderPass, n2));
+      RenderUtil.setGlColor(((TargetESP)this.parentModule).blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n)));
       RenderUtil.drawFilledBox2(f - f2, f3 - f4, f5 - f2, f + f2, f3 + f6, f5 + f2);
       if (this.hitBoxLineWidth.getValue() > 0.0) {
          GL11.glLineWidth((float)(this.hitBoxLineWidth.getValue() / 2.0));

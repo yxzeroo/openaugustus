@@ -20,11 +20,7 @@ public class VboCubeEntry {
    private CubeVboBatchRenderer batchRenderer;
 
    public VboCubeEntry setColor(int n) {
-      float redFloat = ColorUtil.getRedFloat(n);
-      float greenFloat = ColorUtil.getGreenFloat(n);
-      float blueFloat = ColorUtil.getBlueFloat(n);
-      float alphaFloat = ColorUtil.getAlphaFloat(n);
-      return this.setColor(redFloat, greenFloat, blueFloat, alphaFloat);
+      return this.setColor(ColorUtil.getRedFloat(n), ColorUtil.getGreenFloat(n), ColorUtil.getBlueFloat(n), ColorUtil.getAlphaFloat(n));
    }
 
    public void writeCubeVertices(FloatBuffer floatBuffer) {
@@ -38,8 +34,7 @@ public class VboCubeEntry {
       float f7 = f2;
       float f8 = this.y;
       float f9 = f;
-      float f10 = this.x;
-      this.writeFace(floatBuffer, f10, f9, f8, f7, f6, f5, cubeFaceAxis);
+      this.writeFace(floatBuffer, this.x, f9, f8, f7, f6, f5, cubeFaceAxis);
       f = this.x + this.width;
       f2 = this.y + this.height;
       CubeFaceAxis cubeFaceAxis2 = CubeFaceAxis.Z;
@@ -48,8 +43,7 @@ public class VboCubeEntry {
       float f13 = f2;
       float f14 = this.y;
       float f15 = f;
-      float f16 = this.x;
-      this.writeFace(floatBuffer, f16, f15, f14, f13, f12, f11, cubeFaceAxis2);
+      this.writeFace(floatBuffer, this.x, f15, f14, f13, f12, f11, cubeFaceAxis2);
       f2 = this.y + this.height;
       f4 = this.z + this.depth;
       CubeFaceAxis cubeFaceAxis3 = CubeFaceAxis.X;
@@ -58,20 +52,15 @@ public class VboCubeEntry {
       float f19 = f2;
       float f20 = this.y;
       float f21 = this.x;
-      float f22 = this.x;
-      this.writeFace(floatBuffer, f22, f21, f20, f19, f18, f17, cubeFaceAxis3);
+      this.writeFace(floatBuffer, this.x, f21, f20, f19, f18, f17, cubeFaceAxis3);
       f = this.x + this.width;
       float f23 = this.x + this.width;
       f3 = this.y + this.height;
       float f24 = this.z + this.depth;
       CubeFaceAxis cubeFaceAxis4 = CubeFaceAxis.X;
-      float f25 = f24;
       float f26 = this.z;
       float f27 = f3;
-      float f28 = this.y;
-      float f29 = f23;
-      float f30 = f;
-      this.writeFace(floatBuffer, f30, f29, f28, f27, f26, f25, cubeFaceAxis4);
+      this.writeFace(floatBuffer, f, f23, this.y, f27, f26, f24, cubeFaceAxis4);
       f = this.x + this.width;
       f23 = this.y + this.height;
       f2 = this.y + this.height;
@@ -82,8 +71,7 @@ public class VboCubeEntry {
       float f33 = f2;
       float f34 = f23;
       float f35 = f;
-      float f36 = this.x;
-      this.writeFace(floatBuffer, f36, f35, f34, f33, f32, f31, cubeFaceAxis5);
+      this.writeFace(floatBuffer, this.x, f35, f34, f33, f32, f31, cubeFaceAxis5);
       f = this.x + this.width;
       f4 = this.z + this.depth;
       CubeFaceAxis cubeFaceAxis6 = CubeFaceAxis.Y;
@@ -92,8 +80,7 @@ public class VboCubeEntry {
       float f39 = this.y;
       float f40 = this.y;
       float f41 = f;
-      float f42 = this.x;
-      this.writeFace(floatBuffer, f42, f41, f40, f39, f38, f37, cubeFaceAxis6);
+      this.writeFace(floatBuffer, this.x, f41, f40, f39, f38, f37, cubeFaceAxis6);
    }
 
    public VboCubeEntry setDimensions(char ch, float f, short s, float f2, float f3, int n) {
@@ -143,8 +130,7 @@ public class VboCubeEntry {
 
    public void attachToRenderer(CubeVboBatchRenderer cubeVboBatchRenderer) {
       this.batchRenderer = cubeVboBatchRenderer;
-      byte b = 1;
-      this.cubeVertexBuffer = cubeVboBatchRenderer.allocateCubeFloatBuffer(b);
+      this.cubeVertexBuffer = cubeVboBatchRenderer.allocateCubeFloatBuffer((byte)1);
       this.dirty = false;
    }
 

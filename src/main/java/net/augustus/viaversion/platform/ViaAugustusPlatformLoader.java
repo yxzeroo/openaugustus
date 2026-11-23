@@ -18,7 +18,6 @@ public final class ViaAugustusPlatformLoader implements ViaPlatformLoader {
 
    public void load() {
       ViaProviders providers = Via.getManager().getProviders();
-      ViaAugustusPlatform.getPlatformStateFlags();
       providers.use(VersionProvider.class, new ViaAugustusVersionProvider());
       providers.use(EncryptionProvider.class, new ViaLegacyEncryptionProvider());
       providers.use(GameProfileFetcher.class, new ViaLegacyGameProfileFetcher());

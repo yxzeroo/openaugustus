@@ -153,8 +153,7 @@ public class GuiIngame extends Gui {
       int n = sr.getScaledWidth() / 2 - 91;
       this.mc.mcProfiler.startSection("expBar");
       this.mc.getTextureManager().bindTexture(Gui.icons);
-      int n2 = this.mc.thePlayer.xpBarCap();
-      if (n2 > 0) {
+      if (this.mc.thePlayer.xpBarCap() > 0) {
          short s = 182;
          int n3 = (int)(this.mc.thePlayer.experience * (float)(s + 1));
          int n4 = sr.getScaledHeight() - 32 + 3;
@@ -264,8 +263,7 @@ public class GuiIngame extends Gui {
          int stringWidth = this.getFontRenderer().getStringWidth(scoreObjective.getDisplayName());
 
          for (Object obj : list2) {
-            ScorePlayerTeam playersTeam = scoreboard.getPlayersTeam(((Score)obj).getPlayerName());
-            String str = ScorePlayerTeam.formatPlayerName(playersTeam, ((Score)obj).getPlayerName())
+            String str = ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(((Score)obj).getPlayerName()), ((Score)obj).getPlayerName())
                + (ClientManagers.moduleManager.scoreboard.isToggled() ? "" : ": " + EnumChatFormatting.RED + ((Score)obj).getScorePoints());
             stringWidth = Math.max(stringWidth, this.getFontRenderer().getStringWidth(str));
          }
@@ -327,24 +325,11 @@ public class GuiIngame extends Gui {
                int n8 = 0;
                if (!flag || shaderRenderPass != ShaderRenderPass.NONE) {
                   if (ClientManagers.moduleManager.scoreboard.isToggled() && ClientManagers.moduleManager.scoreboard.rounded.getValue()) {
-                     float f = (float)(n5 - 2);
-                     float f2 = (float)(n7 - n3 * this.getFontRenderer().FONT_HEIGHT);
-                     float f3 = (float)n4;
-                     float f4 = (float)n7;
-                     float value = (float)ClientManagers.moduleManager.scoreboard.roundFactor.getValue();
-                     BlurShadowSettings blurShadowSettings = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                     int n9 = 1342177280;
-                     int n10 = ColorUtil.resolvePassColor(shaderRenderPass, n9);
                      RenderUtil.drawRoundedRect(
-                        f, f2, f3, f4, value, 1, false, false, true, true, blurShadowSettings.resolvePassColor(shaderRenderPass, n10)
+                        (float)(n5 - 2), (float)(n7 - n3 * this.getFontRenderer().FONT_HEIGHT), (float)n4, (float)n7, (float)ClientManagers.moduleManager.scoreboard.roundFactor.getValue(), 1, false, false, true, true, ClientManagers.moduleManager.scoreboard.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1342177280))
                      );
                   } else {
-                     int n11 = n5 - 2;
-                     int n12 = n7 - n3 * this.getFontRenderer().FONT_HEIGHT;
-                     BlurShadowSettings blurShadowSettings2 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                     int n13 = 1342177280;
-                     int n14 = ColorUtil.resolvePassColor(shaderRenderPass, n13);
-                     drawRect(n11, n7, n4, n12, blurShadowSettings2.resolvePassColor(shaderRenderPass, n14));
+                     drawRect(n5 - 2, n7, n4, n7 - n3 * this.getFontRenderer().FONT_HEIGHT, ClientManagers.moduleManager.scoreboard.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1342177280)));
                   }
                }
 
@@ -353,17 +338,13 @@ public class GuiIngame extends Gui {
                   int n15 = n7 - n8 * this.getFontRenderer().FONT_HEIGHT;
                   if (shaderRenderPass == ShaderRenderPass.NONE) {
                      Score score = (Score)obj2;
-                     ScorePlayerTeam playersTeam2 = scoreboard.getPlayersTeam(score.getPlayerName());
-                     String str3 = ScorePlayerTeam.formatPlayerName(playersTeam2, score.getPlayerName());
+                     String str3 = ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(score.getPlayerName()), score.getPlayerName());
                      String str4 = EnumChatFormatting.RED + "" + score.getScorePoints();
                      if (AntiStrike.DOMAIN_PATTERN.matcher(str3).find()) {
                         ClientManagers.moduleManager.antiStrike.updateScoreboardLineServer(str3);
                         if (ClientManagers.moduleManager.antiStrike.isToggled() && ClientManagers.moduleManager.antiStrike.replaceServerName.getValue()) {
                            String[] strings = str3.split("\\.");
-                           StringBuilder sb = new StringBuilder();
-                           String str5 = strings[0];
-                           char ch = 167;
-                           str3 = sb.append(TextFormatUtil.extractFormattingCodes(str5, ch)).append("Augustus.top").toString();
+                           str3 = new StringBuilder().append(TextFormatUtil.extractFormattingCodes(strings[0], (char)167)).append("Augustus.top").toString();
                         }
                      }
 
@@ -376,37 +357,20 @@ public class GuiIngame extends Gui {
                   if (n8 == list3.size()) {
                      if (!flag || shaderRenderPass != ShaderRenderPass.NONE) {
                         if (ClientManagers.moduleManager.scoreboard.isToggled() && ClientManagers.moduleManager.scoreboard.rounded.getValue()) {
-                           float f5 = (float)(n5 - 2);
-                           float f6 = (float)(n15 - this.getFontRenderer().FONT_HEIGHT - 1);
-                           float f7 = (float)n4;
-                           float f8 = (float)(n15 - 1);
-                           float value2 = (float)ClientManagers.moduleManager.scoreboard.roundFactor.getValue();
-                           BlurShadowSettings blurShadowSettings3 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                           int n16 = 1610612736;
-                           int n17 = ColorUtil.resolvePassColor(shaderRenderPass, n16);
                            RenderUtil.drawRoundedRect(
-                              f5, f6, f7, f8, value2, 1, true, true, false, false, blurShadowSettings3.resolvePassColor(shaderRenderPass, n17)
+                              (float)(n5 - 2), (float)(n15 - this.getFontRenderer().FONT_HEIGHT - 1), (float)n4, (float)(n15 - 1), (float)ClientManagers.moduleManager.scoreboard.roundFactor.getValue(), 1, true, true, false, false, ClientManagers.moduleManager.scoreboard.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1610612736))
                            );
-                           int n18 = n5 - 2;
-                           int n19 = n15 - 1;
-                           BlurShadowSettings blurShadowSettings4 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                           int n20 = 1342177280;
-                           int n21 = ColorUtil.resolvePassColor(shaderRenderPass, n20);
-                           drawRect(n18, n19, n4, n15, blurShadowSettings4.resolvePassColor(shaderRenderPass, n21));
+                           drawRect(n5 - 2, n15 - 1, n4, n15, ClientManagers.moduleManager.scoreboard.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1342177280)));
                         } else {
                            int n22 = n5 - 2;
                            int n23 = n15 - this.getFontRenderer().FONT_HEIGHT - 1;
                            int n24 = n15 - 1;
                            BlurShadowSettings blurShadowSettings5 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                           int n25 = 1610612736;
-                           int n26 = ColorUtil.resolvePassColor(shaderRenderPass, n25);
-                           drawRect(n22, n23, n4, n24, blurShadowSettings5.resolvePassColor(shaderRenderPass, n26));
+                           drawRect(n22, n23, n4, n24, blurShadowSettings5.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1610612736)));
                            n22 = n5 - 2;
                            n23 = n15 - 1;
                            blurShadowSettings5 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                           int n27 = 1342177280;
-                           int n28 = ColorUtil.resolvePassColor(shaderRenderPass, n27);
-                           drawRect(n22, n23, n4, n15, blurShadowSettings5.resolvePassColor(shaderRenderPass, n28));
+                           drawRect(n22, n23, n4, n15, blurShadowSettings5.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, 1342177280)));
                         }
                      }
 
@@ -415,23 +379,14 @@ public class GuiIngame extends Gui {
                         ClientManagers.moduleManager.antiStrike.updateScoreboardTitleServer(displayName);
                         if (ClientManagers.moduleManager.antiStrike.isToggled() && ClientManagers.moduleManager.antiStrike.replaceServerName.getValue()) {
                            String[] strings2 = displayName.split("\\.");
-                           StringBuilder sb2 = new StringBuilder();
-                           String str6 = strings2[0];
-                           char ch2 = 167;
-                           displayName = sb2.append(TextFormatUtil.extractFormattingCodes(str6, ch2)).append("Augustus.top").toString();
+                           displayName = new StringBuilder().append(TextFormatUtil.extractFormattingCodes(strings2[0], (char)167)).append("Augustus.top").toString();
                         }
                      } else {
                         String str7 = "";
                         ClientManagers.moduleManager.antiStrike.updateScoreboardTitleServer(str7);
                      }
 
-                     FontRenderer fontRenderer = this.getFontRenderer();
-                     int n29 = n5 + n6 / 2 - this.getFontRenderer().getStringWidth(displayName) / 2;
-                     int n30 = n15 - this.getFontRenderer().FONT_HEIGHT;
-                     BlurShadowSettings blurShadowSettings6 = ClientManagers.moduleManager.scoreboard.blurShadowSettings;
-                     byte b2 = -1;
-                     int n31 = ColorUtil.resolvePassColor(shaderRenderPass, b2);
-                     fontRenderer.drawStringInt(displayName, n29, n30, blurShadowSettings6.resolvePassColor(shaderRenderPass, n31), flag2);
+                     this.getFontRenderer().drawStringInt(displayName, n5 + n6 / 2 - this.getFontRenderer().getStringWidth(displayName) / 2, n15 - this.getFontRenderer().FONT_HEIGHT, ClientManagers.moduleManager.scoreboard.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, (byte)-1)), flag2);
                   }
                }
             }
@@ -444,8 +399,7 @@ public class GuiIngame extends Gui {
       int scaledWidth = sr.getScaledWidth();
       int scaledHeight = sr.getScaledHeight();
       this.mc.entityRenderer.setupOverlayRendering(sr);
-      RenderPassType rendeR2DPRE = RenderPassType.RENDER2D_PRE;
-      RenderListener.onRender(f, sr, rendeR2DPRE);
+      RenderListener.onRender(f, sr, RenderPassType.RENDER2D_PRE);
       GlStateManager.enableBlend();
       if (!this.disableVignette && Config.isVignetteEnabled()) {
          this.renderVignette(this.mc.thePlayer.getBrightness(f), sr);
@@ -529,8 +483,7 @@ public class GuiIngame extends Gui {
             f3 = 1.0F - (float)(sleepTimer - 100) / 10.0F;
          }
 
-         int n = (int)(220.0F * f3) << 24 | 1052704;
-         drawRect(0, 0, scaledWidth, scaledHeight, n);
+         drawRect(0, 0, scaledWidth, scaledHeight, (int)(220.0F * f3) << 24 | 1052704);
          GlStateManager.enableAlpha();
          GlStateManager.enableDepth();
          this.mc.mcProfiler.endSection();
@@ -630,8 +583,7 @@ public class GuiIngame extends Gui {
          float f5 = (float)this.titlesTimer - f;
          int n5 = 255;
          if (this.titlesTimer > this.titleFadeOut + this.titleDisplayTime) {
-            float f6 = (float)(this.titleFadeIn + this.titleDisplayTime + this.titleFadeOut) - f5;
-            n5 = (int)(f6 * 255.0F / (float)this.titleFadeIn);
+            n5 = (int)(((float)(this.titleFadeIn + this.titleDisplayTime + this.titleFadeOut) - f5) * 255.0F / (float)this.titleFadeIn);
          }
 
          if (this.titlesTimer <= this.titleFadeOut) {
@@ -702,8 +654,7 @@ public class GuiIngame extends Gui {
       GlStateManager.disableLighting();
       GlStateManager.disableTexture2D();
       GlStateManager.enableTexture2D();
-      RenderPassType rendeR2DPOST = RenderPassType.RENDER2D_POST;
-      RenderListener.onRender(f, sr, rendeR2DPOST);
+      RenderListener.onRender(f, sr, RenderPassType.RENDER2D_POST);
       GlStateManager.enableAlpha();
       if (this.mc.gameSettings.showDebugInfo) {
          this.overlayDebug.renderDebugInfo(sr);
@@ -861,8 +812,7 @@ public class GuiIngame extends Gui {
    }
 
    public void renderHotbarItem(int n, int n2, int n3, float f, EntityPlayer player) {
-      ItemStack stack = player.inventory.mainInventory[n];
-      this.renderHotbarItemStack(stack, n2, n3, f);
+      this.renderHotbarItemStack(player.inventory.mainInventory[n], n2, n3, f);
    }
 
    public void renderHorseJumpBar(ScaledResolution sr, int n) {
@@ -1047,8 +997,7 @@ public class GuiIngame extends Gui {
             this.mc.mcProfiler.endStartSection("mountHealth");
             EntityLivingBase entity = (EntityLivingBase)ridingEntity;
             int n17 = (int)Math.ceil((double)entity.getCurrentHealth());
-            float maxHealth = entity.getMaxHealth();
-            int n18 = (int)(maxHealth + 0.5F) / 2;
+            int n18 = (int)(entity.getMaxHealth() + 0.5F) / 2;
             if (n18 > 30) {
                n18 = 30;
             }
@@ -1231,9 +1180,7 @@ public class GuiIngame extends Gui {
          RenderHelper.enableGUIStandardItemLighting();
 
          for (int i = 0; i < 9; i++) {
-            int n2 = sr.getScaledWidth() / 2 - 90 + i * 20 + 2;
-            int n3 = sr.getScaledHeight() - 16 - 3;
-            this.renderHotbarItem(i, n2, n3, f, renderViewEntity);
+            this.renderHotbarItem(i, sr.getScaledWidth() / 2 - 90 + i * 20 + 2, sr.getScaledHeight() - 16 - 3, f, renderViewEntity);
          }
 
          RenderHelper.disableStandardItemLighting();

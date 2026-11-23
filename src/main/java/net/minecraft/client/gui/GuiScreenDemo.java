@@ -18,9 +18,7 @@ public class GuiScreenDemo extends GuiScreen {
       super.drawDefaultBackground();
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       this.mc.getTextureManager().bindTexture(DEMO_BACKGROUND_TEXTURE);
-      int n = (this.width - 248) / 2;
-      int n2 = (this.height - 166) / 2;
-      this.drawTexturedModalRect(n, n2, 0, 0, 248, 166);
+      this.drawTexturedModalRect((this.width - 248) / 2, (this.height - 166) / 2, 0, 0, 248, 166);
    }
 
    @Override

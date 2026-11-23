@@ -26,8 +26,8 @@ import net.augustus.events.listeners.InventoryCloseListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -49,13 +49,13 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
    private final RangeSetting tickDelayBeforeClick;
    private final BooleanValue drop;
    private final BooleanValue inventoryDrop;
-   private final StringValue dropBowlsIfYouHaveMoreThan;
+   private final DoubleValue dropBowlsIfYouHaveMoreThan;
    private final RangeSetting tickDelayDrop;
    private final RangeSetting tickDelayAfter;
    private final BooleanValue silent;
    private final BooleanValue random;
    private final BooleanValue stopClickingAtSouping;
-   private final DoubleValue deprecated;
+   private final SettingGroup deprecated;
    private final BooleanValue openInv;
    private final BooleanValue autoOpen;
    private final RandomizedRangeSettings autoOpenDelay;
@@ -63,7 +63,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
    private final BooleanValue fill;
    private final RandomizedRangeSettings fillDelay;
    private final BooleanValue craft;
-   private final StringValue reCraftIfSoupsLowerThan;
+   private final DoubleValue reCraftIfSoupsLowerThan;
    private final BooleanValue craftInstant;
    private final RandomizedRangeSettings craftCPS;
    private final BooleanValue autoClose;
@@ -104,66 +104,54 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
       BooleanValue drop2 = this.drop;
       this.drop.getClass();
       BooleanValue booleanValue2 = drop2;
-      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
-      this.inventoryDrop = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "DropBowlsIfYouHaveMoreThan", 0.0, 0.0, 64.0, 0);
+      this.inventoryDrop = (BooleanValue)booleanValue.withVisibility(() -> booleanValue2.getValue());
+      DoubleValue stringValue = new DoubleValue(this, "DropBowlsIfYouHaveMoreThan", 0.0, 0.0, 64.0, 0);
       drop2 = this.drop;
       this.drop.getClass();
       BooleanValue booleanValue3 = drop2;
-      SettingVisibilityCondition condition2 = () -> booleanValue3.getValue();
-      this.dropBowlsIfYouHaveMoreThan = stringValue.visibleWhen(condition2);
+      this.dropBowlsIfYouHaveMoreThan = stringValue.visibleWhen(() -> booleanValue3.getValue());
       RangeSetting rangeSetting = new RangeSetting(this, "TickDelayDrop", 1.0, 2.0, 0.0, 7.0, 0);
       drop2 = this.drop;
       this.drop.getClass();
       BooleanValue booleanValue4 = drop2;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.tickDelayDrop = rangeSetting.visibleWhen(condition3);
+      this.tickDelayDrop = rangeSetting.visibleWhen(() -> booleanValue4.getValue());
       this.tickDelayAfter = new RangeSetting(this, "TickDelayAfter", 1.0, 2.0, 0.0, 7.0, 0);
       this.silent = new BooleanValue(this, "Silent", true);
       this.random = new BooleanValue(this, "Random", true);
       this.stopClickingAtSouping = new BooleanValue(this, "StopClickingAtSouping", false);
-      this.deprecated = new DoubleValue(this, "Deprecated");
+      this.deprecated = new SettingGroup(this, "Deprecated");
       this.openInv = new BooleanValue(this, "OpenInv", true, this.deprecated);
       this.autoOpen = new BooleanValue(this, "AutoOpen", false, this.deprecated);
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "AutoOpenDelay", 150.0, 250.0, 0.0, 1000.0, 0, this.deprecated)).withoutNotInARow();
       BooleanValue autoOpen2 = this.autoOpen;
       this.autoOpen.getClass();
       BooleanValue booleanValue5 = autoOpen2;
-      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
-      this.autoOpenDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition4);
+      this.autoOpenDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> booleanValue5.getValue());
       this.startDelay = (new RandomizedRangeSettings(this, "StartDelay", 150.0, 200.0, 0.0, 1000.0, 0, this.deprecated)).withoutNotInARow();
       this.fill = new BooleanValue(this, "Fill", true, this.deprecated);
       RandomizedRangeSettings randomizedRangeSettings2 = (new RandomizedRangeSettings(this, "FillDelay", 50.0, 100.0, 0.0, 500.0, 0, this.deprecated)).withoutNotInARow();
       autoOpen2 = this.fill;
       this.fill.getClass();
       BooleanValue booleanValue6 = autoOpen2;
-      SettingVisibilityCondition condition5 = () -> booleanValue6.getValue();
-      this.fillDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition5);
+      this.fillDelay = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(() -> booleanValue6.getValue());
       this.craft = new BooleanValue(this, "Craft", true, this.deprecated);
-      StringValue stringValue2 = new StringValue(this, "ReCraftIfSoupsLowerThan", 4.0, 0.0, 20.0, 0, this.deprecated);
+      DoubleValue stringValue2 = new DoubleValue(this, "ReCraftIfSoupsLowerThan", 4.0, 0.0, 20.0, 0, this.deprecated);
       drop2 = this.craft;
       this.craft.getClass();
       BooleanValue booleanValue7 = drop2;
-      SettingVisibilityCondition condition6 = () -> booleanValue7.getValue();
-      this.reCraftIfSoupsLowerThan = stringValue2.visibleWhen(condition6);
+      this.reCraftIfSoupsLowerThan = stringValue2.visibleWhen(() -> booleanValue7.getValue());
       BooleanValue booleanValue8 = new BooleanValue(this, "CraftInstant", false, this.deprecated);
       drop2 = this.craft;
       this.craft.getClass();
       BooleanValue booleanValue9 = drop2;
-      SettingVisibilityCondition condition7 = () -> booleanValue9.getValue();
-      this.craftInstant = (BooleanValue)booleanValue8.withVisibility(condition7);
-      RandomizedRangeSettings randomizedRangeSettings3 = (new RandomizedRangeSettings(this, "CraftCPS", 13.0, 16.0, 0.0, 20.0, 0, this.deprecated)).withoutNotInARow();
-      SettingVisibilityCondition condition8 = () -> this.isCraftCpsVisible();
-      this.craftCPS = (RandomizedRangeSettings)randomizedRangeSettings3.withVisibility(condition8);
+      this.craftInstant = (BooleanValue)booleanValue8.withVisibility(() -> booleanValue9.getValue());
+      this.craftCPS = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "CraftCPS", 13.0, 16.0, 0.0, 20.0, 0, this.deprecated)).withoutNotInARow().withVisibility(() -> this.isCraftCpsVisible());
       BooleanValue booleanValue10 = new BooleanValue(this, "AutoClose", true, this.deprecated);
       drop2 = this.fill;
       this.fill.getClass();
       BooleanValue booleanValue11 = drop2;
-      SettingVisibilityCondition condition9 = () -> booleanValue11.getValue();
-      this.autoClose = (BooleanValue)booleanValue10.withVisibility(condition9);
-      RandomizedRangeSettings randomizedRangeSettings4 = (new RandomizedRangeSettings(this, "AutoCloseDelay", 150.0, 250.0, 0.0, 1000.0, 0, this.deprecated)).withoutNotInARow();
-      SettingVisibilityCondition condition10 = () -> this.isAutoCloseDelayVisible();
-      this.autoCloseDelay = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition10);
+      this.autoClose = (BooleanValue)booleanValue10.withVisibility(() -> booleanValue11.getValue());
+      this.autoCloseDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "AutoCloseDelay", 150.0, 250.0, 0.0, 1000.0, 0, this.deprecated)).withoutNotInARow().withVisibility(() -> this.isAutoCloseDelayVisible());
       this.soupHotbarSlots = new ArrayList();
       this.soupConsumed = false;
       this.bowlDropped = false;
@@ -205,18 +193,11 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 20;
-      byte b2 = 7;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 3;
-      byte b4 = 52;
-      this.toggleEventSubscription(b4, b3);
-      byte b5 = 34;
-      this.toggleEventSubscription(b5);
-      byte b6 = 26;
-      this.toggleEventSubscription(b6);
-      byte b7 = 9;
-      this.toggleEventSubscription(b7);
+      this.toggleEventSubscription((byte)7, (byte)20);
+      this.toggleEventSubscription((byte)52, (byte)3);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)9);
    }
 
    @Override
@@ -258,13 +239,9 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
             }
 
             if (!flag && (n4 > 0 || n3 > 0 && n2 > 0 && n > 0)) {
-               TimeHelper autoOpenTimer2 = this.autoOpenTimer;
-               long lastIntValue = (long)this.autoOpenDelay.getLastIntValue();
-               if (autoOpenTimer2.reached2(lastIntValue)) {
+               if (this.autoOpenTimer.reached2((long)this.autoOpenDelay.getLastIntValue())) {
                   ViaAugustus.sendOpenInventoryPacketIfLegacy();
-                  Minecraft mc2 = mc;
-                  GuiInventory guiInventory = new GuiInventory(mc.thePlayer);
-                  mc2.displayGuiScreen(guiInventory);
+                  mc.displayGuiScreen(new GuiInventory(mc.thePlayer));
                   this.autoOpenTimer.reset();
                   this.autoOpenDelay.nextValue();
                }
@@ -277,11 +254,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
 
          this.targetSoupSlot = this.selectSoupHotbarSlot();
          if (this.targetSoupSlot > -1 && this.targetSoupSlot < 9) {
-            int targetSoupSlot2 = this.targetSoupSlot;
-            boolean value = this.silent.getValue();
-            int n5 = targetSoupSlot2;
-            byte b = 5;
-            SilentSlotManager.requestSlot(this, b, n5, value);
+            SilentSlotManager.requestSlot(this, (byte)5, this.targetSoupSlot, this.silent.getValue());
          }
       }
    }
@@ -304,8 +277,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
       if (!mc.playerController.isInCreativeMode()) {
          this.clickBlocked = event.isIgnoreVanillaClicks() || event.isBlockAllClicks() || !SilentSlotManager.isOwnedBy(this) && SilentSlotManager.getActiveModule();
          if (SilentSlotManager.isOwnedBy(this) && this.stopClickingAtSouping.getValue()) {
-            boolean flag = true;
-            event.setBlockAllClicks(flag);
+            event.setBlockAllClicks(true);
          }
 
          if (mc.isNotInGui() && !this.clickBlocked) {
@@ -314,18 +286,13 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                if (this.soupCycleTicks > this.delayBeforeClick && !mc.thePlayer.isUsingItem() && !this.soupConsumed) {
                   if (this.stopClickingAtSouping.getValue()) {
                      event.clearLeftClicks();
-                     boolean flag3 = false;
-                     event.setLeftMouseDown(flag3);
-                     boolean flag4 = false;
-                     event.setBlockAllClicks(flag4);
-                     boolean flag5 = true;
-                     event.setIgnoreVanillaClicks(flag5);
+                     event.setLeftMouseDown(false);
+                     event.setBlockAllClicks(false);
+                     event.setIgnoreVanillaClicks(true);
                   }
 
-                  byte b = 1;
-                  event.addRightClicks(b);
-                  Runnable runnable = () -> this.consumeSoupAndDropBowl();
-                  event.setRightClickAction(runnable);
+                  event.addRightClicks((byte)1);
+                  event.setRightClickAction(() -> this.consumeSoupAndDropBowl());
                   flag2 = true;
                   this.soupConsumed = true;
                }
@@ -420,8 +387,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
 
    private boolean craftSoupsInInventory() {
       if (mc.currentScreen instanceof GuiInventory && this.craft.getValue()) {
-         Container inventoryContainer = mc.thePlayer.inventoryContainer;
-         int[] ints = this.countSoupIngredients(inventoryContainer);
+         int[] ints = this.countSoupIngredients(mc.thePlayer.inventoryContainer);
          if (ints[1] != 0 && ints[2] != 0 && ints[3] != 0) {
             int n = Math.min(ints[1], Math.min(ints[2], ints[3]));
             int n2 = ints[0];
@@ -436,8 +402,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                for (int i = 1; i < mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
                   if (i == 1) {
                      flags = new boolean[]{false, false, false};
-                     Container inventoryContainer2 = mc.thePlayer.inventoryContainer;
-                     n2 = this.countSoupIngredients(inventoryContainer2)[0];
+                     n2 = this.countSoupIngredients(mc.thePlayer.inventoryContainer)[0];
                   }
 
                   ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
@@ -460,8 +425,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                                  return false;
                               }
 
-                              Container inventoryContainer3 = mc.thePlayer.inventoryContainer;
-                              this.clickInventorySlot(inventoryContainer3, i, n3);
+                              this.clickInventorySlot(mc.thePlayer.inventoryContainer, i, n3);
                               flag = true;
                               i = 0;
                            }
@@ -471,14 +435,12 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                                  return false;
                               }
 
-                              byte b = 0;
-                              this.shiftClickSlot(b);
+                              this.shiftClickSlot((byte)0);
                               flag = true;
                               i = 0;
                            }
                         } else {
-                           ItemStack itemStack = mc.thePlayer.inventory.getItemStack();
-                           Item item2 = itemStack.getItem();
+                           Item item2 = mc.thePlayer.inventory.getItemStack().getItem();
 
                            for (int k = 0; k < 3; k++) {
                               if (item2.equals(items[k]) && !flags[k]) {
@@ -487,10 +449,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                                  }
 
                                  int n4 = k + 1;
-                                 byte b2 = 0;
-                                 int n5 = n4;
-                                 Container inventoryContainer4 = mc.thePlayer.inventoryContainer;
-                                 this.clickInventorySlot(inventoryContainer4, n5, b2);
+                                 this.clickInventorySlot(mc.thePlayer.inventoryContainer, n4, (byte)0);
                                  flag = true;
                                  i = 0;
                               }
@@ -544,9 +503,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
       if (this.craftInstant.getValue()) {
          return false;
       } else {
-         ActionRateAccumulator actionRateAccumulator2 = this.actionRateAccumulator;
-         int lastIntValue = this.craftCPS.getLastIntValue();
-         boolean flag = actionRateAccumulator2.shouldTrigger(lastIntValue);
+         boolean flag = this.actionRateAccumulator.shouldTrigger(this.craftCPS.getLastIntValue());
          if (flag) {
             this.craftCPS.nextValue();
          }
@@ -559,9 +516,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
       if (!this.fill.getValue()) {
          return true;
       } else {
-         TimeHelper fillActionTimer2 = this.fillActionTimer;
-         long lastIntValue = (long)this.fillDelay.getLastIntValue();
-         if (!fillActionTimer2.reached2(lastIntValue)) {
+         if (!this.fillActionTimer.reached2((long)this.fillDelay.getLastIntValue())) {
             return false;
          } else {
             boolean flag = false;
@@ -573,8 +528,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
                   break;
                }
 
-               Item item = stack.getItem();
-               if (item.equals(Items.bowl) && stack.stackSize < stack.getMaxStackSize()) {
+               if (stack.getItem().equals(Items.bowl) && stack.stackSize < stack.getMaxStackSize()) {
                   flag = true;
                   break;
                }
@@ -600,8 +554,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
             int n = 0;
 
             for (int k = 36; k < mc.thePlayer.inventoryContainer.inventorySlots.size(); k++) {
-               ItemStack stack3 = mc.thePlayer.inventoryContainer.getSlot(k).getStack();
-               if (stack3 == null) {
+               if (mc.thePlayer.inventoryContainer.getSlot(k).getStack() == null) {
                   n++;
                }
             }
@@ -646,9 +599,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
          } else {
             if ((mc.currentScreen instanceof GuiInventory || !this.openInv.getValue() && mc.isNotInGui() && this.fill.getValue())
                && (this.fill.getValue() || this.craft.getValue())) {
-               TimeHelper inventoryStartTimer2 = this.inventoryStartTimer;
-               long lastIntValue = (long)this.startDelay.getLastIntValue();
-               if (!inventoryStartTimer2.reached2(lastIntValue)) {
+               if (!this.inventoryStartTimer.reached2((long)this.startDelay.getLastIntValue())) {
                   return true;
                }
 
@@ -676,9 +627,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
    public void onInventoryClose(EventInventoryClose event) {
       if (!mc.isNotInGui()) {
          if (this.autoClose.getValue() && this.performedInventoryAction && this.fill.getValue()) {
-            double lastIntValue = (double)this.autoCloseDelay.getLastIntValue();
-            double d = lastIntValue;
-            if (event.canCloseAfterDelay(d)) {
+            if (event.canCloseAfterDelay((double)this.autoCloseDelay.getLastIntValue())) {
                mc.thePlayer.closeScreen();
             }
          }
@@ -686,8 +635,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
    }
 
    private boolean canStartSoupSwitch() {
-      int n = mc.thePlayer.ticksExisted - this.lastHealthChangeTick;
-      return n >= this.delayBeforeSwitch && this.isLicenseTimestampValid() && this.healthChanged;
+      return (mc.thePlayer.ticksExisted - this.lastHealthChangeTick) >= this.delayBeforeSwitch && this.isLicenseTimestampValid() && this.healthChanged;
    }
 
    private int selectSoupHotbarSlot() {
@@ -733,33 +681,23 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
       RandomNumberGenerator instance = DefaultRandomGenerator.instance;
       double minValue = this.health.getMinValue();
       double maxValue = this.health.getMaxValue();
-      double d = maxValue;
-      double d2 = minValue;
-      this.healthThreshold = instance.nextInt(d2, d);
+      this.healthThreshold = instance.nextInt(minValue, maxValue);
       RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
       minValue = this.tickDelayBeforeClick.getMinValue();
       maxValue = this.tickDelayBeforeClick.getMaxValue();
-      double d3 = maxValue;
-      double d4 = minValue;
-      this.delayBeforeClick = instance2.nextInt(d4, d3);
+      this.delayBeforeClick = instance2.nextInt(minValue, maxValue);
       RandomNumberGenerator instance3 = DefaultRandomGenerator.instance;
       minValue = this.tickDelayAfter.getMinValue();
       maxValue = this.tickDelayAfter.getMaxValue();
-      double d5 = maxValue;
-      double d6 = minValue;
-      this.delayAfterClick = instance3.nextInt(d6, d5);
+      this.delayAfterClick = instance3.nextInt(minValue, maxValue);
       RandomNumberGenerator instance4 = DefaultRandomGenerator.instance;
       minValue = this.tickDelayDrop.getMinValue();
       maxValue = this.tickDelayDrop.getMaxValue();
-      double d7 = maxValue;
-      double d8 = minValue;
-      this.delayBeforeDrop = instance4.nextInt(d8, d7);
+      this.delayBeforeDrop = instance4.nextInt(minValue, maxValue);
       RandomNumberGenerator instance5 = DefaultRandomGenerator.instance;
       minValue = this.tickDelayBeforeSwitch.getMinValue();
       maxValue = this.tickDelayBeforeSwitch.getMaxValue();
-      double d9 = maxValue;
-      double d10 = minValue;
-      this.delayBeforeSwitch = instance5.nextInt(d10, d9);
+      this.delayBeforeSwitch = instance5.nextInt(minValue, maxValue);
       this.soupConsumed = false;
       this.bowlDropped = false;
       this.soupHotbarSlots.clear();
@@ -814,9 +752,7 @@ public class AutoSoup extends Module implements ClickListener, InventoryCloseLis
 
    private boolean shouldDropBowl() {
       if (this.drop.getValue()) {
-         ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         Item bowl = Items.bowl;
-         if ((double)containerSlotQuery.filterItemExact(bowl).count() >= Math.max(0.0, this.dropBowlsIfYouHaveMoreThan.getValue())) {
+         if ((double)ContainerSlotQuery.of(mc.thePlayer.inventoryContainer).filterItemExact(Items.bowl).count() >= Math.max(0.0, this.dropBowlsIfYouHaveMoreThan.getValue())) {
             return true;
          }
       }

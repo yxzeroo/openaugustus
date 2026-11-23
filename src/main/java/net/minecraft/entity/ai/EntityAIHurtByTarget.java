@@ -15,8 +15,7 @@ public class EntityAIHurtByTarget extends EntityAITarget {
 
    @Override
    public boolean shouldExecute() {
-      int revengeTimer = this.taskOwner.getRevengeTimer();
-      return revengeTimer != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAITarget(), false);
+      return this.taskOwner.getRevengeTimer() != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAITarget(), false);
    }
 
    public EntityAIHurtByTarget(EntityCreature entityCreature, boolean flag, Class[] clazzs) {

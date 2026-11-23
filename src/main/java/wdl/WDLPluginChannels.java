@@ -180,8 +180,7 @@ public class WDLPluginChannels {
                String str7 = byteArrayDataInput.readUTF();
                String str8 = byteArrayDataInput.readUTF();
                int n10 = byteArrayDataInput.readInt();
-               Collection items = ((Multimap)chunkOverrides.get(str7)).removeAll(str8);
-               int size = items.size();
+               int size = ((Multimap)chunkOverrides.get(str7)).removeAll(str8).size();
 
                for (int index = 0; index < n10; index++) {
                   ((Multimap)chunkOverrides.get(str7)).put(str8, ChunkRange.readFromInput(byteArrayDataInput));

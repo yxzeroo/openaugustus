@@ -48,8 +48,7 @@ public class CubeVboBatchRenderer {
 
    public void addCube(VboCubeEntry vboCubeEntry) {
       if (this.freeSlotIndices.isEmpty()) {
-         int n = (int)((float)this.capacityCubes * 1.5F);
-         this.resizeBuffer(n);
+         this.resizeBuffer((int)((float)this.capacityCubes * 1.5F));
       }
 
       int n2 = (Integer)this.freeSlotIndices.poll();
@@ -60,8 +59,7 @@ public class CubeVboBatchRenderer {
 
    public void render() {
       if (this.freeSlotIndices.size() != this.capacityCubes) {
-         Object obj = null;
-         this.glStateSnapshot.capture((RenderPassTask)obj);
+         this.glStateSnapshot.capture((RenderPassTask)null);
          GL11.glPushAttrib(8192);
          GlStateManager.disableAlpha();
          GlStateManager.disableCull();
@@ -75,15 +73,13 @@ public class CubeVboBatchRenderer {
          GL11.glDisableClientState(32884);
          GL11.glDisableClientState(32886);
          GL11.glPopAttrib();
-         Object obj2 = null;
-         this.glStateSnapshot.restore((ShaderRenderPass)obj2);
+         this.glStateSnapshot.restore((ShaderRenderPass)null);
       }
    }
 
    public void clear() {
       this.resetFreeSlots();
-      int initialCapacity2 = this.initialCapacity;
-      this.resizeBuffer(initialCapacity2);
+      this.resizeBuffer(this.initialCapacity);
       this.capacityCubes = this.initialCapacity;
    }
 
@@ -104,13 +100,11 @@ public class CubeVboBatchRenderer {
 
    public void removeCube(VboCubeEntry vboCubeEntry) {
       this.freeSlotIndices.add(vboCubeEntry.getSlotIndex());
-      boolean flag = true;
-      this.uploadCubeData(vboCubeEntry, flag);
+      this.uploadCubeData(vboCubeEntry, true);
    }
 
    private void clearBufferWithOnes(FloatBuffer floatBuffer) {
-      byte b = 0;
-      this.fillBufferWithOnes(floatBuffer, b);
+      this.fillBufferWithOnes(floatBuffer, (byte)0);
    }
 
    public FloatBuffer allocateCubeFloatBuffer(int n) {
@@ -120,8 +114,7 @@ public class CubeVboBatchRenderer {
    private void resizeBuffer(int n) {
       int n2 = n - this.capacityCubes;
       if (n2 > 0) {
-         int capacityCubes2 = this.capacityCubes;
-         this.enqueueSlotRange(capacityCubes2, n);
+         this.enqueueSlotRange(this.capacityCubes, n);
       }
 
       this.capacityCubes = n;
@@ -135,13 +128,11 @@ public class CubeVboBatchRenderer {
          ((Buffer)this.vertexBuffer).flip();
          ((Buffer)this.vertexBuffer).limit(this.vertexBuffer.capacity());
          floatBuffer.put(this.vertexBuffer);
-         int n3 = this.vertexBuffer.capacity();
-         this.fillBufferWithOnes(floatBuffer, n3);
+         this.fillBufferWithOnes(floatBuffer, this.vertexBuffer.capacity());
          this.vertexBuffer = floatBuffer;
       } else {
          this.vertexBuffer = floatBuffer;
-         FloatBuffer vertexBuffer2 = this.vertexBuffer;
-         this.clearBufferWithOnes(vertexBuffer2);
+         this.clearBufferWithOnes(this.vertexBuffer);
       }
 
       ((Buffer)this.vertexBuffer).flip();
@@ -152,9 +143,7 @@ public class CubeVboBatchRenderer {
 
    private void resetFreeSlots() {
       this.freeSlotIndices.clear();
-      int initialCapacity2 = this.initialCapacity;
-      byte b = 0;
-      this.enqueueSlotRange(b, initialCapacity2);
+      this.enqueueSlotRange((byte)0, this.initialCapacity);
    }
 
    public CubeVboBatchRenderer(int n) {
@@ -170,8 +159,7 @@ public class CubeVboBatchRenderer {
    }
 
    public void updateCube(VboCubeEntry vboCubeEntry) {
-      boolean flag = false;
-      this.uploadCubeData(vboCubeEntry, flag);
+      this.uploadCubeData(vboCubeEntry, false);
    }
 
 

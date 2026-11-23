@@ -10,8 +10,8 @@ import net.augustus.utils.TickCounter;
 import net.augustus.utils.combat.CombatOptimizationUtil;
 import java.util.ArrayList;
 import net.augustus.modules.Module;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MovingObjectPosition;
@@ -21,37 +21,23 @@ public class DragClickPatternMode extends AbstractClickPatternMode {
    private final RandomizedRangeSettings dragCPSInAirRecalculateTickDelay;
    private final RandomizedRangeSettings maxCPS;
    private final RandomizedRangeSettings maxCPSRecalculateTickDelay;
-   private final StringValue minStandardDeviation;
+   private final DoubleValue minStandardDeviation;
    private final ArrayList recentClickCounts;
    private final ActionRateAccumulator actionRateAccumulator;
    private final TickCounter airCpsRecalcCounter;
    private final TickCounter maxCpsRecalcCounter;
 
-   public DragClickPatternMode(Module module, DoubleValue doubleValue) {
+   public DragClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "DragClick");
       this.recentClickCounts = new ArrayList();
       this.actionRateAccumulator = new ActionRateAccumulator(20, 0.0);
       this.airCpsRecalcCounter = new TickCounter();
       this.maxCpsRecalcCounter = new TickCounter();
-      RandomizedRangeSettings randomizedRangeSettings = new RandomizedRangeSettings(module, "DragCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, doubleValue);
-      String str = "CPSInAir";
-      RandomizedRangeSettings randomizedRangeSettings2 = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.dragCPSInAir = (RandomizedRangeSettings)randomizedRangeSettings2.withVisibility(condition);
-      RandomizedRangeSettings randomizedRangeSettings3 = new RandomizedRangeSettings(module, "DragCPSInAirRecalculateTickDelay", 10.0, 30.0, 0.0, 60.0, 0, doubleValue);
-      String str2 = "CPSInAirRecalculateTickDelay";
-      RandomizedRangeSettings randomizedRangeSettings4 = ((RandomizedRangeSettings)randomizedRangeSettings3.withDisplayNamePrefix(str2)).withoutNotInARow();
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.dragCPSInAirRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings4.withVisibility(condition2);
-      RandomizedRangeSettings randomizedRangeSettings5 = new RandomizedRangeSettings(module, "MaxCPS", 18.0, 20.0, 1.0, 40.0, 0, doubleValue);
-      SettingVisibilityCondition condition3 = () -> this.isSelected();
-      this.maxCPS = (RandomizedRangeSettings)randomizedRangeSettings5.withVisibility(condition3);
-      RandomizedRangeSettings randomizedRangeSettings6 = (new RandomizedRangeSettings(module, "MaxCPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, doubleValue)).withoutNotInARow();
-      SettingVisibilityCondition condition4 = () -> this.isSelected();
-      this.maxCPSRecalculateTickDelay = (RandomizedRangeSettings)randomizedRangeSettings6.withVisibility(condition4);
-      StringValue stringValue = new StringValue(module, "MinStandardDeviation", 0.5, 0.0, 1.0, 2, doubleValue);
-      SettingVisibilityCondition condition5 = () -> this.isSelected();
-      this.minStandardDeviation = stringValue.visibleWhen(condition5);
+      this.dragCPSInAir = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "DragCPSInAir", 4.0, 8.0, 0.0, 20.0, 0, doubleValue).withDisplayNamePrefix("CPSInAir")).withVisibility(() -> this.isSelected());
+      this.dragCPSInAirRecalculateTickDelay = (RandomizedRangeSettings)((RandomizedRangeSettings)new RandomizedRangeSettings(module, "DragCPSInAirRecalculateTickDelay", 10.0, 30.0, 0.0, 60.0, 0, doubleValue).withDisplayNamePrefix("CPSInAirRecalculateTickDelay")).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.maxCPS = (RandomizedRangeSettings)new RandomizedRangeSettings(module, "MaxCPS", 18.0, 20.0, 1.0, 40.0, 0, doubleValue).withVisibility(() -> this.isSelected());
+      this.maxCPSRecalculateTickDelay = (RandomizedRangeSettings)(new RandomizedRangeSettings(module, "MaxCPSRecalculateTickDelay", 3.0, 8.0, 1.0, 40.0, 0, doubleValue)).withoutNotInARow().withVisibility(() -> this.isSelected());
+      this.minStandardDeviation = new DoubleValue(module, "MinStandardDeviation", 0.5, 0.0, 1.0, 2, doubleValue).visibleWhen(() -> this.isSelected());
    }
 
    @Override
@@ -61,20 +47,13 @@ public class DragClickPatternMode extends AbstractClickPatternMode {
       if (this.recentClickCounts.size() < 5) {
          n = 1;
       } else {
-         TickCounter maxCpsRecalcCounter2 = this.maxCpsRecalcCounter;
-         int lastIntValue = this.maxCPSRecalculateTickDelay.getLastIntValue();
-         if (maxCpsRecalcCounter2.hasReached2(lastIntValue)) {
+         if (this.maxCpsRecalcCounter.hasReached2(this.maxCPSRecalculateTickDelay.getLastIntValue())) {
             this.maxCpsRecalcCounter.reset();
             this.maxCPSRecalculateTickDelay.nextSecureValue();
             this.maxCPS.nextSecureValue();
          }
 
-         ArrayList recentClickCounts2 = this.recentClickCounts;
-         double value = this.minStandardDeviation.getValue();
-         double lastIntValue2 = (double)this.maxCPS.getLastIntValue();
-         double d = value;
-         byte b = 21;
-         n = CombatOptimizationUtil.chooseOptimalClickCount(recentClickCounts2, b, d, lastIntValue2);
+         n = CombatOptimizationUtil.chooseOptimalClickCount(this.recentClickCounts, (byte)21, this.minStandardDeviation.getValue(), (double)this.maxCPS.getLastIntValue());
       }
 
       if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks()) {
@@ -82,20 +61,15 @@ public class DragClickPatternMode extends AbstractClickPatternMode {
       }
 
       if (objectMouseOver == null || objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
-         TickCounter airCpsRecalcCounter2 = this.airCpsRecalcCounter;
-         int lastIntValue3 = this.dragCPSInAirRecalculateTickDelay.getLastIntValue();
-         if (airCpsRecalcCounter2.hasReached2(lastIntValue3)) {
+         if (this.airCpsRecalcCounter.hasReached2(this.dragCPSInAirRecalculateTickDelay.getLastIntValue())) {
             this.airCpsRecalcCounter.reset();
             this.dragCPSInAirRecalculateTickDelay.nextSecureValue();
             this.dragCPSInAir.nextSecureValue();
          }
 
-         ActionRateAccumulator actionRateAccumulator2 = this.actionRateAccumulator;
-         int lastIntValue4 = this.dragCPSInAir.getLastIntValue();
-         n = actionRateAccumulator2.accumulate(lastIntValue4);
+         n = this.actionRateAccumulator.accumulate(this.dragCPSInAir.getLastIntValue());
       } else if (n == 0) {
-         ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-         if (parentModule2.isCritFixEnabled() && mc.objectMouseOver != null) {
+         if (((ClickModuleContext)this.parentModule).isCritFixEnabled() && mc.objectMouseOver != null) {
             boolean flag = ClientManagers.moduleManager.criticals.isToggled()
                || mc.thePlayer.fallDistance > 0.0F
                   && !mc.thePlayer.onGround

@@ -5,26 +5,23 @@ import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Criticals;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class NoGroundCriticalsMode extends PacketCriticalsModeBase implements PacketListener {
-   private final StringValue floating;
+   private final DoubleValue floating;
 
-   public NoGroundCriticalsMode(Criticals criticals, DoubleValue doubleValue) {
+   public NoGroundCriticalsMode(Criticals criticals, SettingGroup doubleValue) {
        super(criticals, doubleValue, "NoGround");
-      StringValue stringValue = new StringValue(this.parentModule, "Floating", 0.0, 0.0, 1.0, 7, this.modeSetting);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.floating = stringValue.visibleWhen(condition);
+      this.floating = new DoubleValue(this.parentModule, "Floating", 0.0, 0.0, 1.0, 7, this.modeSetting).visibleWhen(() -> this.isSelected());
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 26;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
@@ -32,7 +29,7 @@ public class NoGroundCriticalsMode extends PacketCriticalsModeBase implements Pa
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new NoGroundCriticalsMode((Criticals)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new NoGroundCriticalsMode((Criticals)obj, (SettingGroup)obj2);
    }
 
    @Override

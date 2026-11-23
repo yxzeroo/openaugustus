@@ -22,11 +22,9 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
 public class DescriptionYamlManager {
    private final Yaml yaml;
-   private static int[] parseFlags;
 
    public void saveToFile(String str) {
       LinkedHashMap map = new LinkedHashMap();
-      getParseFlags();
 
       for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
          String str2 = module.getCategorys().name().toLowerCase(Locale.ROOT);
@@ -43,9 +41,7 @@ public class DescriptionYamlManager {
             for (ConfigProperty configProperty : (Iterable<ConfigProperty>)(((FeatureBase)module).getProperties())) {
                if (configProperty instanceof Setting && !(configProperty instanceof RandomizedRangeSettings) && !(configProperty instanceof BlurShadowSettings) && !(configProperty instanceof WeaponFilterSettings)) {
                   Setting setting = (Setting)configProperty;
-                  String str4 = setting.getName().toLowerCase(Locale.ROOT);
-                  String str5 = setting.getDescription() != null && !setting.getDescription().isEmpty() ? setting.getDescription() : "";
-                  map4.put(str4, str5);
+                  map4.put(setting.getName().toLowerCase(Locale.ROOT), setting.getDescription() != null && !setting.getDescription().isEmpty() ? setting.getDescription() : "");
                }
             }
          }
@@ -63,8 +59,7 @@ public class DescriptionYamlManager {
    }
 
    public void loadAndApply(String str) {
-      Map map = this.loadFromFile(str);
-      this.applyDescriptions(map);
+      this.applyDescriptions(this.loadFromFile(str));
    }
 
    public DescriptionYamlManager() {
@@ -75,7 +70,6 @@ public class DescriptionYamlManager {
    }
 
    public Map loadFromFile(String str) {
-      int[] parseFlags2 = getParseFlags();
 
       try (FileInputStream fileInputStream = new FileInputStream(str)) {
          Map map = (Map)this.yaml.load(fileInputStream);
@@ -83,28 +77,24 @@ public class DescriptionYamlManager {
 
          for (Entry entry : (Iterable<Entry>)(map.entrySet())) {
             String key = (String)entry.getKey();
-            Map value = (Map)entry.getValue();
 
-            for (Entry entry2 : (Iterable<Entry>)(value.entrySet())) {
+            for (Entry entry2 : (Iterable<Entry>)(((Map)entry.getValue()).entrySet())) {
                String key2 = (String)entry2.getKey();
                Map value2 = (Map)entry2.getValue();
                if (value2.containsKey("description")) {
                   String str2 = String.valueOf(value2.get("description")).trim();
                   if (!str2.isEmpty()) {
-                     String str3 = key + "." + key2;
-                     map2.put(str3.toLowerCase(Locale.ROOT), str2);
+                     map2.put((key + "." + key2).toLowerCase(Locale.ROOT), str2);
                   }
                }
 
                if (value2.containsKey("settings")) {
-                  Map map3 = (Map)value2.get("settings");
 
-                  for (Entry entry3 : (Iterable<Entry>)(map3.entrySet())) {
+                  for (Entry entry3 : (Iterable<Entry>)(((Map)value2.get("settings")).entrySet())) {
                      String key3 = (String)entry3.getKey();
                      String str4 = ((String)entry3.getValue()).trim();
                      if (!str4.isEmpty()) {
-                        String str5 = key + "." + key2 + "." + key3;
-                        map2.put(str5.toLowerCase(Locale.ROOT), str4);
+                        map2.put((key + "." + key2 + "." + key3).toLowerCase(Locale.ROOT), str4);
                      }
                   }
                }
@@ -120,13 +110,11 @@ public class DescriptionYamlManager {
    }
 
    public void applyDescriptions(Map map) {
-      int[] parseFlags2 = getParseFlags();
 
       for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
          String str = module.getCategorys().name().toLowerCase(Locale.ROOT) + "." + ((FeatureBase)module).getName().toLowerCase(Locale.ROOT);
          if (map.containsKey(str)) {
-            String str2 = (String)map.get(str);
-            module.setDescription(str2);
+            module.setDescription((String)map.get(str));
          }
 
          for (ConfigProperty configProperty : (Iterable<ConfigProperty>)(((FeatureBase)module).getProperties())) {
@@ -134,24 +122,14 @@ public class DescriptionYamlManager {
                Setting setting = (Setting)configProperty;
                String str3 = str + "." + setting.getName().toLowerCase(Locale.ROOT);
                if (map.containsKey(str3)) {
-                  String str4 = (String)map.get(str3);
-                  setting.setDescription(str4);
+                  setting.setDescription((String)map.get(str3));
                }
             }
          }
       }
    }
 
-   public static void setParseFlags(int[] ints) {
-      parseFlags = ints;
-   }
 
-   public static int[] getParseFlags() {
-      return parseFlags;
-   }
 
-   static {
-      setParseFlags((int[])null);
-   }
 
 }

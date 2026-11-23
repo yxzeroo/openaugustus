@@ -206,8 +206,7 @@ public class JsonToNBT {
          while (str2.length() > 0) {
             String str3 = nextElement(str2, true);
             if (str3.length() > 0) {
-               boolean flag = false;
-               compound.tagList.add(parseTag(str3, flag));
+               compound.tagList.add(parseTag(str3, false));
             }
 
             if (str2.length() < str3.length() + 1) {
@@ -230,8 +229,7 @@ public class JsonToNBT {
          while (str2.length() > 0) {
             String str4 = nextElement(str2, false);
             if (str4.length() > 0) {
-               boolean flag2 = true;
-               list.tagList.add(parseTag(str4, flag2));
+               list.tagList.add(parseTag(str4, true));
             }
 
             if (str2.length() < str4.length() + 1) {

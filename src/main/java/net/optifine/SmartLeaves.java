@@ -62,8 +62,7 @@ public class SmartLeaves {
          List[] lists = new List[values.length];
 
          for (int j = 0; j < values.length; j++) {
-            EnumFacing facing2 = values[j];
-            List faceQuads2 = bakedModel2.getFaceQuads(facing2);
+            List faceQuads2 = bakedModel2.getFaceQuads(values[j]);
             BakedQuad bakedQuad = (BakedQuad)faceQuads2.get(0);
             BakedQuad bakedQuad2 = new BakedQuad((int[])bakedQuad.getVertexData().clone(), bakedQuad.getTintIndex(), bakedQuad.getFace(), bakedQuad.getSprite());
             int[] vertexData = bakedQuad2.getVertexData();
@@ -111,8 +110,7 @@ public class SmartLeaves {
          return true;
       } else {
          Block block = state.getBlock();
-         Block block2 = state2.getBlock();
-         return block != block2
+         return block != state2.getBlock()
             ? false
             : (
                block instanceof BlockOldLeaf
@@ -142,16 +140,13 @@ public class SmartLeaves {
       if (modelManager == null) {
          return null;
       } else {
-         ResourceLocation location = new ResourceLocation("blockstates/" + str + "_leaves.json");
-         if (Config.getDefiningResourcePack(location) != Config.getDefaultResourcePack()) {
+         if (Config.getDefiningResourcePack(new ResourceLocation("blockstates/" + str + "_leaves.json")) != Config.getDefaultResourcePack()) {
             return null;
          } else {
-            ResourceLocation location2 = new ResourceLocation("models/block/" + str + "_leaves.json");
-            if (Config.getDefiningResourcePack(location2) != Config.getDefaultResourcePack()) {
+            if (Config.getDefiningResourcePack(new ResourceLocation("models/block/" + str + "_leaves.json")) != Config.getDefaultResourcePack()) {
                return null;
             } else {
-               ModelResourceLocation modelResourceLocation = new ModelResourceLocation(str + "_leaves", "normal");
-               IBakedModel model = modelManager.getModel(modelResourceLocation);
+               IBakedModel model = modelManager.getModel(new ModelResourceLocation(str + "_leaves", "normal"));
                if (model != null && model != modelManager.getMissingModel()) {
                   List generalQuads = model.getGeneralQuads();
                   if (generalQuads.size() == 0) {

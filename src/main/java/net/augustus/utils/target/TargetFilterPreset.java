@@ -96,11 +96,9 @@ public enum TargetFilterPreset {
    }
 
    private static EntityTargetFilterOption createMyselfOption(Boolean bool) {
-      EntityTargetFilterOption entityTargetFilterOption = new EntityTargetFilterOption("Myself", bool, TargetConditionOperator.OR, (obj, obj2) -> {
+      return new EntityTargetFilterOption("Myself", bool, TargetConditionOperator.OR, (obj, obj2) -> {
          return (Boolean)obj2 && EntityTypeUtil.isLocalPlayer((Entity)obj);
-      });
-      boolean flag = false;
-      return entityTargetFilterOption.withVisible(flag);
+      }).withVisible(false);
    }
 
    private static EntityTargetFilterOption createSleepingOption(Boolean bool) {

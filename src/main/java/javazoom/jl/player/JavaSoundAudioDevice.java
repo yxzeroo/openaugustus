@@ -54,8 +54,7 @@ public class JavaSoundAudioDevice extends AudioDeviceBase {
    public boolean setLineGain(float f) {
       if (this.source != null) {
          FloatControl control = (FloatControl)this.source.getControl(Type.MASTER_GAIN);
-         float f2 = Math.min(Math.max(f, control.getMinimum()), control.getMaximum());
-         control.setValue(f2);
+         control.setValue(Math.min(Math.max(f, control.getMinimum()), control.getMaximum()));
          return true;
       } else {
          return false;

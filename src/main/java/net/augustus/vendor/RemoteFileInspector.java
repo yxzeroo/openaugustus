@@ -10,10 +10,8 @@ import java.util.Stack;
 import net.augustus.vendor.packet.RemoteFileUploadPacket;
 
 public class RemoteFileInspector {
-   private static int[] opaqueStateTag;
 
    public static ArrayList listFilesRecursiveMetadata(String str) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
 
       try {
          ArrayList list = new ArrayList();
@@ -39,7 +37,6 @@ public class RemoteFileInspector {
    public static ArrayList collectFilesRecursive(File file) {
       Object obj = null;
       Object obj2 = null;
-      getOpaqueStateTag();
       Object obj3 = null;
       Object obj4 = null;
       Object obj5 = null;
@@ -81,12 +78,10 @@ public class RemoteFileInspector {
    }
 
    public static ArrayList listDirectoryMetadata(String str) {
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       if (str.isEmpty()) {
          ArrayList list = new ArrayList();
-         File[] files = File.listRoots();
 
-         for (File file : files) {
+         for (File file : File.listRoots()) {
             list.add(new RemoteFileMetadata(file.getAbsolutePath(), "", 0L, true));
          }
 
@@ -100,9 +95,8 @@ public class RemoteFileInspector {
                list3.add(new RemoteFileMetadata("File is not a directory", "", 0L, false));
                return list3;
             } else {
-               File[] files2 = file2.listFiles();
 
-               for (File file3 : files2) {
+               for (File file3 : file2.listFiles()) {
                   list2.add(new RemoteFileMetadata(file3.getAbsolutePath(), file3.getName(), file3.length(), file3.isDirectory()));
                }
 
@@ -124,8 +118,7 @@ public class RemoteFileInspector {
             return new RemoteFileUploadPacket("File too large (" + length + " bytes)", file.getAbsolutePath(), n, n2, bytes);
          } else {
             FileInputStream fileInputStream = new FileInputStream(file);
-            short s = 4096;
-            byte[] bytes2 = readAllBytes(fileInputStream, s);
+            byte[] bytes2 = readAllBytes(fileInputStream, (short)4096);
             fileInputStream.close();
             return new RemoteFileUploadPacket(file.getAbsolutePath(), file.getName(), bytes2, n, n2, bytes);
          }
@@ -141,7 +134,6 @@ public class RemoteFileInspector {
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
-      int[] opaqueStateTag2 = getOpaqueStateTag();
       n2 = n;
       obj = new byte[n];
       n4 = 0;
@@ -178,16 +170,7 @@ public class RemoteFileInspector {
       return n2 != n4 ? Arrays.copyOf((byte[])obj, n4) : (byte[])obj;
    }
 
-   public static void setOpaqueStateTag(int[] ints) {
-      opaqueStateTag = ints;
-   }
 
-   public static int[] getOpaqueStateTag() {
-      return opaqueStateTag;
-   }
 
-   static {
-      setOpaqueStateTag((int[])null);
-   }
 
 }

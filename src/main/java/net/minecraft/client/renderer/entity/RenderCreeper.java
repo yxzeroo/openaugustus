@@ -49,8 +49,7 @@ public class RenderCreeper extends RenderLiving {
       creeperFlashIntensity *= creeperFlashIntensity;
       creeperFlashIntensity *= creeperFlashIntensity;
       float f3 = (1.0F + creeperFlashIntensity * 0.4F) * f2;
-      float f4 = (1.0F + creeperFlashIntensity * 0.1F) / f2;
-      GlStateManager.scale(f3, f4, f3);
+      GlStateManager.scale(f3, (1.0F + creeperFlashIntensity * 0.1F) / f2, f3);
    }
 
    public RenderCreeper(RenderManager renderManager2) {

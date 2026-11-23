@@ -133,11 +133,9 @@ public class BlockPart {
 
       private Map parseFaces(JsonDeserializationContext context, JsonObject json) {
          EnumMap enumMap = Maps.newEnumMap(EnumFacing.class);
-         JsonObject jsonObject = JsonUtils.getJsonObject(json, "faces");
 
-         for (Entry entry : jsonObject.entrySet()) {
-            EnumFacing facing = this.parseEnumFacing((String)entry.getKey());
-            enumMap.put(facing, (BlockPartFace)context.deserialize((JsonElement)entry.getValue(), BlockPartFace.class));
+         for (Entry entry : JsonUtils.getJsonObject(json, "faces").entrySet()) {
+            enumMap.put(this.parseEnumFacing((String)entry.getKey()), (BlockPartFace)context.deserialize((JsonElement)entry.getValue(), BlockPartFace.class));
          }
 
          return enumMap;

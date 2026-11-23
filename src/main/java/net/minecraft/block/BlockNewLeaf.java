@@ -45,8 +45,7 @@ public class BlockNewLeaf extends BlockLeaves {
    }
 
    static {
-      String str = "variant";
-      VARIANT = PropertyEnum.create(str, BlockPlanks.EnumType.class, new BlockNewLeaf.FilterPredicate());
+      VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, new BlockNewLeaf.FilterPredicate());
    }
 
    @Override

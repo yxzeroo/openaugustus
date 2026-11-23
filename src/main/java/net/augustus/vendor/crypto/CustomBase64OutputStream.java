@@ -31,12 +31,7 @@ public class CustomBase64OutputStream extends FilterOutputStream {
       Object obj = null;
       obj = new byte[1];
       ((byte[])obj)[0] = (byte)(n & 0xFF);
-      CustomBase64OutputStream customBase64OutputStream = this;
-      byte[] bytes = (byte[])obj;
-      byte b = 1;
-      byte b3 = 0;
-      byte[] bytes2 = bytes;
-      customBase64OutputStream.write(bytes2, b3, b);
+      this.write((byte[])obj, (byte)0, (byte)1);
    }
 
    @Override

@@ -294,8 +294,7 @@ public class BlockFlowerPot extends BlockContainer {
          } else if (tileEntity.getFlowerPotItem() != null) {
             return false;
          } else {
-            Block blockFromItem = Block.getBlockFromItem(currentItem.getItem());
-            return this.canNotContain(blockFromItem, currentItem.getMetadata());
+            return this.canNotContain(Block.getBlockFromItem(currentItem.getItem()), currentItem.getMetadata());
          }
       } else {
          return false;
@@ -334,8 +333,7 @@ public class BlockFlowerPot extends BlockContainer {
          } else if (tileEntity.getFlowerPotItem() != null) {
             return false;
          } else {
-            Block blockFromItem = Block.getBlockFromItem(currentItem.getItem());
-            if (!this.canNotContain(blockFromItem, currentItem.getMetadata())) {
+            if (!this.canNotContain(Block.getBlockFromItem(currentItem.getItem()), currentItem.getMetadata())) {
                return false;
             } else {
                tileEntity.setFlowerPotData(currentItem.getItem(), currentItem.getMetadata());

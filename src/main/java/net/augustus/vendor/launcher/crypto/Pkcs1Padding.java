@@ -5,7 +5,6 @@ public class Pkcs1Padding {
    private static int flowState;
 
    public static byte[] unpad(byte[] bytes) {
-      int invertedFlowMarker = getInvertedFlowMarker();
       if (bytes.length >= 11 && bytes[0] == 0 && bytes[1] == 2) {
          int n = -1;
 
@@ -30,7 +29,6 @@ public class Pkcs1Padding {
    }
 
    public static byte[] pad(byte[] bytes, int n) {
-      int flowState2 = getFlowState();
       if (bytes.length > n - 11) {
          throw new IllegalArgumentException("Data too large for block size");
       } else {
@@ -66,8 +64,7 @@ public class Pkcs1Padding {
    }
 
    public static int getInvertedFlowMarker() {
-      int flowState2 = getFlowState();
-      return flowState2 == 0 ? 98 : 0;
+      return getFlowState() == 0 ? 98 : 0;
    }
 
    static {

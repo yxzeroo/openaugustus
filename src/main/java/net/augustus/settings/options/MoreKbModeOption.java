@@ -5,8 +5,8 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.UnaryFunction;
 import net.augustus.modules.Module;
 import net.augustus.modules.combat.KillAura;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.interfaces.MC;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 
@@ -61,8 +61,8 @@ public enum MoreKbModeOption implements SelectableOption {
    });
    private final String name;
    private boolean selected = false;
-   private DoubleValue settingsGroup;
-   private StringValue chanceSetting;
+   private SettingGroup settingsGroup;
+   private DoubleValue chanceSetting;
    private UnaryFunction sprintResetAction;
 
    private MoreKbModeOption(String str, UnaryFunction unaryFunction) {
@@ -91,20 +91,16 @@ public enum MoreKbModeOption implements SelectableOption {
       this.selected = flag;
    }
 
-   private void initSettings(Module module, DoubleValue doubleValue) {
-      DoubleValue doubleValue2 = new DoubleValue(module, this.name + "Settings", true, doubleValue);
-      SettingVisibilityCondition condition = this::isSelected;
-      this.settingsGroup = doubleValue2.visibleWhen(condition);
-      StringValue stringValue = new StringValue(module, this.name + "Chance", 100.0, 0.0, 100.0, 0, this.settingsGroup);
-      String str = "Chance";
-      this.chanceSetting = stringValue.named(str);
+   private void initSettings(Module module, SettingGroup doubleValue) {
+      this.settingsGroup = new SettingGroup(module, this.name + "Settings", true, doubleValue).visibleWhen(this::isSelected);
+      this.chanceSetting = new DoubleValue(module, this.name + "Chance", 100.0, 0.0, 100.0, 0, this.settingsGroup).named("Chance");
    }
 
-   public static void initOptionSettings(MoreKbModeOption moreKbModeOption, Module module, DoubleValue doubleValue) {
+   public static void initOptionSettings(MoreKbModeOption moreKbModeOption, Module module, SettingGroup doubleValue) {
       moreKbModeOption.initSettings(module, doubleValue);
    }
 
-   public static DoubleValue getSettingsGroup(MoreKbModeOption moreKbModeOption) {
+   public static SettingGroup getSettingsGroup(MoreKbModeOption moreKbModeOption) {
       return moreKbModeOption.settingsGroup;
    }
 
@@ -112,7 +108,7 @@ public enum MoreKbModeOption implements SelectableOption {
       return moreKbModeOption.sprintResetAction;
    }
 
-   public static StringValue getChanceSetting(MoreKbModeOption moreKbModeOption) {
+   public static DoubleValue getChanceSetting(MoreKbModeOption moreKbModeOption) {
       return moreKbModeOption.chanceSetting;
    }
 

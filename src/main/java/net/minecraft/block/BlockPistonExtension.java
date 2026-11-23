@@ -76,8 +76,7 @@ public class BlockPistonExtension extends Block {
 
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-      EnumFacing value = (EnumFacing)state.getValue(FACING);
-      BlockPos pos2 = pos.offset(value.getOpposite());
+      BlockPos pos2 = pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite());
       IBlockState blockState2 = world.getBlockState(pos2);
       if (blockState2.getBlock() != Blocks.piston && blockState2.getBlock() != Blocks.sticky_piston) {
          world.setBlockToAir(pos);
@@ -191,8 +190,7 @@ public class BlockPistonExtension extends Block {
    @Override
    public void breakBlock(World world, BlockPos pos, IBlockState state) {
       super.breakBlock(world, pos, state);
-      EnumFacing opposite = ((EnumFacing)state.getValue(FACING)).getOpposite();
-      pos = pos.offset(opposite);
+      pos = pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite());
       IBlockState blockState2 = world.getBlockState(pos);
       if ((blockState2.getBlock() == Blocks.piston || blockState2.getBlock() == Blocks.sticky_piston) && (Boolean)blockState2.getValue(BlockPistonBase.EXTENDED)) {
          blockState2.getBlock().dropBlockAsItem(world, pos, blockState2, 0);

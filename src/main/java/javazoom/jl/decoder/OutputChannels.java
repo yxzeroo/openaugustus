@@ -36,8 +36,7 @@ public class OutputChannels {
    public boolean equals(Object obj) {
       boolean flag = false;
       if (obj instanceof OutputChannels) {
-         OutputChannels outputChannels2 = (OutputChannels)obj;
-         flag = outputChannels2.outputChannels == this.outputChannels;
+         flag = ((OutputChannels)obj).outputChannels == this.outputChannels;
       }
 
       return flag;

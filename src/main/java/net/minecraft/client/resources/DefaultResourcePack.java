@@ -60,8 +60,7 @@ public class DefaultResourcePack implements IResourcePack {
    @Override
    public IMetadataSection getPackMetadata(IMetadataSerializer metadataSerializer, String str) throws IOException {
       try {
-         FileInputStream fileInputStream = new FileInputStream((File)this.mapAssets.get("pack.mcmeta"));
-         return AbstractResourcePack.readMetadata(metadataSerializer, fileInputStream, str);
+         return AbstractResourcePack.readMetadata(metadataSerializer, new FileInputStream((File)this.mapAssets.get("pack.mcmeta")), str);
       } catch (RuntimeException e) {
          return null;
       } catch (FileNotFoundException e2) {

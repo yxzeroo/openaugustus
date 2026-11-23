@@ -22,8 +22,7 @@ public class EventStep extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      StepListener listener = (StepListener)obj;
-      this.call2(listener);
+      this.call2((StepListener)obj);
    }
 
    private void reset(float f, StateTypes stateTypes) {

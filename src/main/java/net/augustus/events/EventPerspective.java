@@ -14,8 +14,7 @@ public class EventPerspective extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      PerspectiveListener listener = (PerspectiveListener)obj;
-      this.call2(listener);
+      this.call2((PerspectiveListener)obj);
    }
 
    public boolean isHandPass() {

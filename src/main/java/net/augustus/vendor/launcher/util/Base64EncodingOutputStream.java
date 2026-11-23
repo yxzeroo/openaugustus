@@ -1,6 +1,5 @@
 package net.augustus.vendor.launcher.util;
 
-import net.augustus.vendor.launcher.crypto.Sha256Digest;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,12 +18,9 @@ public class Base64EncodingOutputStream extends FilterOutputStream {
 
    public Base64EncodingOutputStream(OutputStream out2, char[] chars, byte[] bytes, int n, boolean flag) {
       super(out2);
-      byte b = 0;
-      this.leftover = b;
-      boolean flag2 = false;
-      this.closed = flag2;
-      byte b3 = 0;
-      this.linepos = b3;
+      this.leftover = (byte)0;
+      this.closed = false;
+      this.linepos = (byte)0;
       this.base64 = chars;
       this.newline = bytes;
       this.linemax = n;
@@ -33,7 +29,6 @@ public class Base64EncodingOutputStream extends FilterOutputStream {
 
    @Override
    public void write(byte[] bytes, int n, int n2) throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.closed) {
          throw new IOException("Stream is closed");
       } else if (n < 0 || n2 < 0 || n2 > bytes.length - n) {
@@ -41,30 +36,25 @@ public class Base64EncodingOutputStream extends FilterOutputStream {
       } else if (n2 != 0) {
          if (this.leftover != 0) {
             if (this.leftover == 1) {
-               int n3 = bytes[n++] & 255;
-               this.b1 = n3;
+               this.b1 = bytes[n++] & 255;
                if (--n2 == 0) {
-                  int n4 = this.leftover + 1;
-                  this.leftover = n4;
+                  this.leftover = this.leftover + 1;
                   return;
                }
             }
 
-            int n5 = bytes[n++] & 255;
-            this.b2 = n5;
+            this.b2 = bytes[n++] & 255;
             n2--;
             this.checkNewline();
             this.out.write(this.base64[this.b0 >> 2]);
             this.out.write(this.base64[this.b0 << 4 & 63 | this.b1 >> 4]);
             this.out.write(this.base64[this.b1 << 2 & 63 | this.b2 >> 6]);
             this.out.write(this.base64[this.b2 & 63]);
-            int n6 = this.linepos + 4;
-            this.linepos = n6;
+            this.linepos = this.linepos + 4;
          }
 
          int n7 = n2 / 3;
-         int n8 = n2 - n7 * 3;
-         this.leftover = n8;
+         this.leftover = n2 - n7 * 3;
 
          while (n7-- > 0) {
             this.checkNewline();
@@ -73,37 +63,29 @@ public class Base64EncodingOutputStream extends FilterOutputStream {
             this.out.write(this.base64[n9 >>> 12 & 63]);
             this.out.write(this.base64[n9 >>> 6 & 63]);
             this.out.write(this.base64[n9 & 63]);
-            int n10 = this.linepos + 4;
-            this.linepos = n10;
+            this.linepos = this.linepos + 4;
          }
 
          if (this.leftover == 1) {
-            int n11 = bytes[n++] & 255;
-            this.b0 = n11;
+            this.b0 = bytes[n++] & 255;
          } else if (this.leftover == 2) {
-            int n12 = bytes[n++] & 255;
-            this.b0 = n12;
-            int n13 = bytes[n++] & 255;
-            this.b1 = n13;
+            this.b0 = bytes[n++] & 255;
+            this.b1 = bytes[n++] & 255;
          }
       }
    }
 
    private void checkNewline() throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (this.linepos == this.linemax) {
          this.out.write(this.newline);
-         byte b = 0;
-         this.linepos = b;
+         this.linepos = (byte)0;
       }
    }
 
    @Override
    public void close() throws IOException {
-      int[] flowState = Sha256Digest.getFlowState();
       if (!this.closed) {
-         boolean flag = true;
-         this.closed = flag;
+         this.closed = true;
          if (this.leftover == 1) {
             this.checkNewline();
             this.out.write(this.base64[this.b0 >> 2]);
@@ -122,18 +104,14 @@ public class Base64EncodingOutputStream extends FilterOutputStream {
             }
          }
 
-         byte b = 0;
-         this.leftover = b;
+         this.leftover = (byte)0;
          this.out.close();
       }
    }
 
    @Override
    public void write(int n) throws IOException {
-      byte[] bytes = new byte[]{(byte)(n & 0xFF)};
-      byte b = 1;
-      byte b3 = 0;
-      this.write(bytes, b3, b);
+      this.write(new byte[]{(byte)(n & 0xFF)}, (byte)0, (byte)1);
    }
 
 }

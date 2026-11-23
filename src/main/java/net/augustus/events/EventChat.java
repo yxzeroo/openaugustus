@@ -26,8 +26,6 @@ public class EventChat extends CancellableEvent {
 
    @Override
    public void call(Object obj) {
-      ChatListener listener = (ChatListener)obj;
-      ChatListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((ChatListener)obj);
    }
 }

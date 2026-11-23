@@ -54,7 +54,6 @@ public class LineGraphWidget {
    }
 
    public void drawGraph(int n, int n2, float f) {
-      String controlFlowGuard = ScrollBar.getControlFlowGuard();
       if (!this.samples.isEmpty()) {
          float f2 = (Float)Collections.min(this.samples);
          float f3 = (Float)Collections.max(this.samples);
@@ -80,23 +79,18 @@ public class LineGraphWidget {
             Color.DARK_GRAY.getRGB()
          );
          float f6 = (Float)this.samples.get(this.samples.size() - 1);
-         boolean flag = false;
-         this.glStateSaver.setTexture2D(flag);
-         boolean flag2 = true;
-         this.glStateSaver.setLineSmooth(flag2);
+         this.glStateSaver.setTexture2D(false);
+         this.glStateSaver.setLineSmooth(true);
          GL11.glHint(3154, 4354);
          float f7 = GL11.glGetFloat(2849);
          GL11.glLineWidth(2.0F);
-         int clientColor = Augustus.getInstance().getClientColor();
-         RenderUtil.setGlColorWithAlpha(clientColor, 1.0F);
+         RenderUtil.setGlColorWithAlpha(Augustus.getInstance().getClientColor(), 1.0F);
          GL11.glShadeModel(7425);
          GL11.glBegin(3);
 
          for (int i = 0; i < this.samples.size(); i++) {
             float f8 = ((Float)this.samples.get(i) - f2) / (f3 - f2);
-            float f9 = (float)i / (float)(this.samples.size() - 1) * (float)this.width;
-            float f10 = (float)this.height - f8 * (float)this.height;
-            GL11.glVertex2f(f9, f10);
+            GL11.glVertex2f((float)i / (float)(this.samples.size() - 1) * (float)this.width, (float)this.height - f8 * (float)this.height);
          }
 
          GL11.glEnd();

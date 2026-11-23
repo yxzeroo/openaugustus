@@ -41,8 +41,7 @@ public class BlockStainedGlass extends BlockBreakable {
    }
 
    static {
-      String str = "color";
-      COLOR = PropertyEnum.create(str, EnumDyeColor.class);
+      COLOR = PropertyEnum.create("color", EnumDyeColor.class);
    }
 
    @Override

@@ -38,8 +38,7 @@ public class AutoClickerP3Check extends ModuleMode {
    public void onClientPacket(Packet packet) {
       if (packet instanceof C03PacketPlayer) {
          boolean flag = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.objectMouseOver.entityHit instanceof EntityLivingBase;
-         long l = 3000L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(3000L)) {
             this.currentTarget = null;
          }
 
@@ -91,8 +90,7 @@ public class AutoClickerP3Check extends ModuleMode {
       }
 
       if (packet instanceof C02PacketUseEntity) {
-         C02PacketUseEntity packet2 = (C02PacketUseEntity)packet;
-         if (packet2.getAction() == C02PacketUseEntity.Action.ATTACK) {
+         if (((C02PacketUseEntity)packet).getAction() == C02PacketUseEntity.Action.ATTACK) {
             this.attacksThisTick++;
          }
       }

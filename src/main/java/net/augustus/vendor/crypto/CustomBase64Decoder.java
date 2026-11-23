@@ -72,8 +72,7 @@ public class CustomBase64Decoder {
    }
 
    public byte[] decode2(String str) {
-      byte[] bytes = str.getBytes(StandardCharsets.ISO_8859_1);
-      return this.decode(bytes);
+      return this.decode(str.getBytes(StandardCharsets.ISO_8859_1));
    }
 
    public static int[] getFromBase64() {
@@ -84,20 +83,9 @@ public class CustomBase64Decoder {
       Object obj = null;
       int n = 0;
       CustomBase64Decoder customBase64Decoder = this;
-      byte[] bytes2 = bytes;
-      int length = bytes.length;
-      byte b = 0;
-      byte[] bytes3 = bytes2;
-      obj = new byte[customBase64Decoder.outLength(bytes3, b, length)];
+      obj = new byte[customBase64Decoder.outLength(bytes, (byte)0, bytes.length)];
       customBase64Decoder = this;
-      byte[] bytes4 = bytes;
-      int length2 = bytes.length;
-      byte[] bytes5 = (byte[])obj;
-      byte[] bytes6 = bytes5;
-      int n2 = length2;
-      byte b2 = 0;
-      byte[] bytes7 = bytes4;
-      n = customBase64Decoder.decode0(bytes7, b2, n2, bytes6);
+      n = customBase64Decoder.decode0(bytes, (byte)0, bytes.length, (byte[])obj);
       if (n != ((byte[])obj).length) {
          obj = Arrays.copyOf((byte[])obj, n);
       }
@@ -152,21 +140,10 @@ public class CustomBase64Decoder {
    public int decode(byte[] bytes, byte[] bytes2) {
       int n = 0;
       CustomBase64Decoder customBase64Decoder = this;
-      byte[] bytes3 = bytes;
-      int length = bytes.length;
-      byte b = 0;
-      byte[] bytes4 = bytes3;
-      n = customBase64Decoder.outLength(bytes4, b, length);
+      n = customBase64Decoder.outLength(bytes, (byte)0, bytes.length);
       if (bytes2.length >= n) {
          customBase64Decoder = this;
-         byte[] bytes5 = bytes;
-         int length2 = bytes.length;
-         byte[] bytes6 = bytes2;
-         byte[] bytes7 = bytes6;
-         int n2 = length2;
-         byte b2 = 0;
-         byte[] bytes8 = bytes5;
-         return customBase64Decoder.decode0(bytes8, b2, n2, bytes7);
+         return customBase64Decoder.decode0(bytes, (byte)0, bytes.length, bytes2);
       } else {
          throw new IllegalArgumentException("Output byte array is too small for decoding all input bytes");
       }
@@ -226,8 +203,7 @@ public class CustomBase64Decoder {
       Objects.requireNonNull(in);
       int[] ints = this.isURL ? fromBase64URL : fromBase64;
       boolean isMIME2 = this.isMIME;
-      int[] ints2 = ints;
-      return new CustomBase64InputStream(in, ints2, isMIME2);
+      return new CustomBase64InputStream(in, ints, isMIME2);
    }
 
 }

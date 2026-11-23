@@ -10,7 +10,7 @@ import net.augustus.utils.math.RandomNumberGenerator;
 import net.augustus.utils.math.DefaultRandomGenerator;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.RenderBlockListener;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -20,11 +20,11 @@ import net.minecraft.util.Vec3;
 
 public class JobSystemBreaker extends Module implements RenderBlockListener, TickListener {
    private static final Set GOLD_ORE_POSITIONS = Sets.newConcurrentHashSet();
-   private final StringValue range;
+   private final DoubleValue range;
 
    public JobSystemBreaker() {
        super("JobSystemBreaker", "JobTerminierere", new Color(66, 135, 245), Categorys.FUN);
-      this.range = new StringValue(this, "Range", 6.0, 4.5, 6.0, 2);
+      this.range = new DoubleValue(this, "Range", 6.0, 4.5, 6.0, 2);
    }
 
    @Override
@@ -40,10 +40,8 @@ public class JobSystemBreaker extends Module implements RenderBlockListener, Tic
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 30;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)30);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -68,15 +66,13 @@ public class JobSystemBreaker extends Module implements RenderBlockListener, Tic
             EnumFacing[] values = EnumFacing.getValues();
             RandomNumberGenerator instance = DefaultRandomGenerator.instance;
             int n = EnumFacing.getValues().length - 1;
-            byte b = 0;
-            netHandler.addToSendQueue(new C07PacketPlayerDigging(startdestroyblock, (BlockPos)obj, values[instance.nextInt2(b, n)]));
+            netHandler.addToSendQueue(new C07PacketPlayerDigging(startdestroyblock, (BlockPos)obj, values[instance.nextInt2((byte)0, n)]));
             netHandler = mc.getNetHandler();
             startdestroyblock = C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK;
             values = EnumFacing.getValues();
             instance = DefaultRandomGenerator.instance;
             int n2 = EnumFacing.getValues().length - 1;
-            byte b2 = 0;
-            netHandler.addToSendQueue(new C07PacketPlayerDigging(startdestroyblock, (BlockPos)obj, values[instance.nextInt2(b2, n2)]));
+            netHandler.addToSendQueue(new C07PacketPlayerDigging(startdestroyblock, (BlockPos)obj, values[instance.nextInt2((byte)0, n2)]));
             return true;
          } else {
             return false;

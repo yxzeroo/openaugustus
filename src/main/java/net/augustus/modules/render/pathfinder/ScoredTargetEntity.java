@@ -20,8 +20,7 @@ public class ScoredTargetEntity implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      ScoredTargetEntity scoredTargetEntity = (ScoredTargetEntity)other;
-      return this.compareByDistance(scoredTargetEntity);
+      return this.compareByDistance((ScoredTargetEntity)other);
    }
 
    public static Entity getEntity(ScoredTargetEntity scoredTargetEntity) {

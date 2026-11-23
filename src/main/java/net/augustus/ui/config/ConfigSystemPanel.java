@@ -70,13 +70,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    private static final float SAVE_BUTTON_WIDTH;
 
    private void scanLocalConfigDirectory() {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       this.userConfigs.clear();
 
       try {
-         File file = new File(CONFIGS_DIRECTORY);
-         File[] files = file.listFiles(file2 -> {
-            int[] windowStateFlags3 = ClickGuiWindow.getWindowStateFlags();
+         File[] files = new File(CONFIGS_DIRECTORY).listFiles(file2 -> {
             return !file2.isDirectory() && file2.getName().endsWith(".json");
          });
          if (files != null) {
@@ -97,20 +94,17 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    }
 
    private void onLocalConfigFileDeleted(Path path) {
-      File file = path.toFile();
-      this.removeConfigEntryForFile(file);
+      this.removeConfigEntryForFile(path.toFile());
    }
 
    @Override
    public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (this.isVisible()) {
          super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
       }
    }
 
    public static void notifyConfigStatus(String str, NotificationLevel notificationLevel) {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (mc.theWorld != null) {
          ChatUtil.sendChat3(str);
          if (Augustus.getInstance().getModuleManager().notifications.isToggled() && NotificationCategoryOption.CONFIG_SYSTEM.isSelected()) {
@@ -120,10 +114,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    }
 
    private synchronized void reloadOnlineConfigs() {
-      byte b = 0;
-      List list = this.fetchOnlineConfigItems(b);
-      byte b2 = 2;
-      List list2 = this.fetchOnlineConfigItems(b2);
+      List list = this.fetchOnlineConfigItems((byte)0);
+      List list2 = this.fetchOnlineConfigItems((byte)2);
       this.officialConfigs.clear();
       this.officialConfigs.addAll(list);
       this.friendConfigs.clear();
@@ -169,13 +161,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
    private void mergeAndSortUserConfigs() {
       List<OnlineConfigMetadata> list = java.util.Collections.emptyList();
-      ClickGuiWindow.getWindowStateFlags();
 
       for (OnlineConfigMetadata onlineConfigMetadata : list) {
          String name = onlineConfigMetadata.getName();
-         Stream<AbstractConfigListItem> stream = this.userConfigs.stream();
-         boolean flag = stream.anyMatch(configListItem -> configListItem.getConfigName().equals(name));
-         if (!flag) {
+         if (!this.userConfigs.stream().anyMatch(configListItem -> configListItem.getConfigName().equals(name))) {
             UserConfigListItem userConfigListItem = new UserConfigListItem(name, onlineConfigMetadata.getAuthor(), onlineConfigMetadata.getUpdatedDate(), onlineConfigMetadata.getUpdatedTime(), false, true, onlineConfigMetadata.isEditable());
             this.userConfigs.add(userConfigListItem);
          }
@@ -194,7 +183,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    }
 
    private void loadLocalConfigEntry(File file) {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       String name = file.getName();
       short s = 22191;
       if (name.endsWith(".json")) {
@@ -217,9 +205,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             this.userConfigs.add(new UserConfigListItem(str, str7, str3, str4, true, this.isConfigUploadedOnline(str), Boolean.parseBoolean(str6)));
          } catch (Exception e) {
             if (mc.theWorld != null) {
-               String str8 = "Failed to load config: " + file.getName();
-               NotificationLevel error = NotificationLevel.ERROR;
-               notifyConfigStatus(str8, error);
+               notifyConfigStatus("Failed to load config: " + file.getName(), NotificationLevel.ERROR);
             }
          }
       }
@@ -227,7 +213,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
    @Override
    public void drawWindow(int n, int n2, float f) {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       super.drawWindow(n, n2, f);
       if (this.isVisible()) {
          ScaledResolution sr = new ScaledResolution(mc);
@@ -254,8 +239,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
          n2 -= this.getY();
          GL11.glTranslatef((float)this.getX(), (float)this.getY(), 0.0F);
          int n3 = this.getWidth() / 4;
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.headerColor.getColorInt(b);
+         int colorInt = ClientManagers.moduleManager.clickGui.headerColor.getColorInt((byte)0);
          RenderUtil.drawRect3(n3 - 1, 30, n3 + 1, this.getHeight(), colorInt);
          RenderUtil.drawRect3(n3 * 2 - 1, 30, n3 * 2 + 1, this.getHeight(), colorInt);
          RenderUtil.drawRect3(n3 * 3 - 1, 30, n3 * 3 + 1, this.getHeight(), colorInt);
@@ -264,12 +248,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             float width2 = (float)this.getWidth();
             float height2 = (float)this.getHeight();
             float f2 = this.isFullScreen() ? 0.0F : (float)this.cornerRadius;
-            byte b2 = 0;
-            RenderUtil.drawRoundedRectOutline(0.0F, 0.0F, width2, height2, f2, 1, 1, ClientManagers.moduleManager.clickGui.outlineColor.getColorInt(b2));
+            RenderUtil.drawRoundedRectOutline(0.0F, 0.0F, width2, height2, f2, 1, 1, ClientManagers.moduleManager.clickGui.outlineColor.getColorInt((byte)0));
          }
 
-         byte b3 = 0;
-         int colorInt2 = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b3);
+         int colorInt2 = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
          GL11.glEnable(3089);
          RenderUtil.scissorRectScaled(
             (float)this.getX(),
@@ -308,16 +290,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             CustomFontUtil itemFont2 = this.itemFont;
             String configName = configListItem.getConfigName();
             int n6;
-            String str5 = configName;
-            int n7 = (int)(f3 - itemFont2.getStringWidth(str5) / 2.0F);
+            int n7 = (int)(f3 - itemFont2.getStringWidth(configName) / 2.0F);
             int n8 = 90 + n4 + this.officialConfigsScrollOffset;
             n6 = (int)this.itemFont.getFontHeight();
-            boolean flag = false;
-            CustomFontUtil itemFont3 = this.itemFont;
-            int n9 = n6;
-            int n10 = n8;
-            int n11 = n7;
-            configListItem.renderItem(n11, n10, n5, n9, n, n2, itemFont3, flag);
+            configListItem.renderItem(n7, n8, n5, n6, n, n2, this.itemFont, false);
             n4 += 25;
          }
 
@@ -325,22 +301,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
          int n12 = n3 - 15;
          int n13 = n3 - 5;
          int n14 = this.getHeight() - this.cornerRadius;
-         int n15 = 90 - this.officialConfigsScrollOffset;
-         int n16 = n14;
-         int n17 = n13;
-         byte b4 = 90;
-         int n18 = n12;
-         smoothScrollBar.drawVerticalBar(n18, b4, n17, n16, n15, n4, colorInt);
+         smoothScrollBar.drawVerticalBar(n12, (byte)90, n13, n14, 90 - this.officialConfigsScrollOffset, n4, colorInt);
          SmoothScrollBar smoothScrollBar2 = this.officialConfigsScrollBar;
          n14 = this.getHeight() - this.cornerRadius;
          int n19 = this.officialConfigsScrollOffset;
-         int n20 = this.getHeight() - this.cornerRadius - 90;
-         byte b5 = 90;
-         byte b6 = 0;
-         int n21 = n19;
-         int n22 = n14;
-         byte b7 = 90;
-         this.officialConfigsScrollOffset = smoothScrollBar2.updateScrollOffset(n4, b7, n22, n21, b6, b5, n3, n20, n, n2);
+         this.officialConfigsScrollOffset = smoothScrollBar2.updateScrollOffset(n4, (byte)90, n14, n19, (byte)0, (byte)90, n3, this.getHeight() - this.cornerRadius - 90, n, n2);
          RenderUtil.scissorRectScaled(
             (float)(this.getX() + n3 + 3),
             (float)(this.getY() + 90),
@@ -352,19 +317,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
          for (AbstractConfigListItem configListItem2 : this.userConfigs) {
             int n24 = n3 - 3;
-            float f4 = (float)n3 + (float)n24 / 2.0F;
-            CustomFontUtil itemFont4 = this.itemFont;
-            String configName2 = configListItem2.getConfigName();
-            String str6 = configName2;
-            int n25 = (int)(f4 - itemFont4.getStringWidth(str6) / 2.0F);
+            int n25 = (int)(((float)n3 + (float)n24 / 2.0F) - this.itemFont.getStringWidth(configListItem2.getConfigName()) / 2.0F);
             int n26 = 90 + n23 + this.userConfigsScrollOffset;
             n14 = (int)this.itemFont.getFontHeight();
             boolean flag2 = this.selectedConfig != null ? configListItem2.equals(this.selectedConfig) : false;
-            CustomFontUtil itemFont5 = this.itemFont;
-            int n27 = n14;
-            int n28 = n26;
-            int n29 = n25;
-            configListItem2.renderItem(n29, n28, n24, n27, n, n2, itemFont5, flag2);
+            configListItem2.renderItem(n25, n26, n24, n14, n, n2, this.itemFont, flag2);
             n23 += 25;
          }
 
@@ -372,21 +329,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
          int n30 = n3 * 2 - 15;
          n13 = n3 * 2 - 5;
          n14 = this.getHeight() - this.cornerRadius;
-         int n31 = 90 - this.userConfigsScrollOffset;
-         int n32 = n14;
-         int n33 = n13;
-         byte b8 = 90;
-         int n34 = n30;
-         smoothScrollBar.drawVerticalBar(n34, b8, n33, n32, n31, n23, colorInt);
+         smoothScrollBar.drawVerticalBar(n30, (byte)90, n13, n14, 90 - this.userConfigsScrollOffset, n23, colorInt);
          SmoothScrollBar userConfigsScrollBar2 = this.userConfigsScrollBar;
          n14 = this.getHeight() - this.cornerRadius;
          n19 = this.userConfigsScrollOffset;
-         int n35 = this.getHeight() - this.cornerRadius - 90;
-         byte b9 = 90;
-         int n36 = n19;
-         int n37 = n14;
-         byte b10 = 90;
-         this.userConfigsScrollOffset = userConfigsScrollBar2.updateScrollOffset(n23, b10, n37, n36, n3, b9, n3, n35, n, n2);
+         this.userConfigsScrollOffset = userConfigsScrollBar2.updateScrollOffset(n23, (byte)90, n14, n19, n3, (byte)90, n3, this.getHeight() - this.cornerRadius - 90, n, n2);
          RenderUtil.scissorRectScaled(
             (float)(this.getX() + n3 * 2 + 3),
             (float)(this.getY() + 90),
@@ -398,19 +345,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
          for (AbstractConfigListItem configListItem3 : this.friendConfigs) {
             int n39 = n3 - 3;
-            float f5 = (float)(n3 * 2) + (float)n39 / 2.0F;
-            CustomFontUtil itemFont6 = this.itemFont;
-            String configName3 = configListItem3.getConfigName();
-            String str7 = configName3;
-            int n40 = (int)(f5 - itemFont6.getStringWidth(str7) / 2.0F);
+            int n40 = (int)(((float)(n3 * 2) + (float)n39 / 2.0F) - this.itemFont.getStringWidth(configListItem3.getConfigName()) / 2.0F);
             int n41 = 90 + n38 + this.friendConfigsScrollOffset;
             n14 = (int)this.itemFont.getFontHeight();
             boolean flag3 = this.selectedConfig != null ? configListItem3.equals(this.selectedConfig) : false;
-            CustomFontUtil itemFont7 = this.itemFont;
-            int n42 = n14;
-            int n43 = n41;
-            int n44 = n40;
-            configListItem3.renderItem(n44, n43, n39, n42, n, n2, itemFont7, flag3);
+            configListItem3.renderItem(n40, n41, n39, n14, n, n2, this.itemFont, flag3);
             n38 += 25;
          }
 
@@ -418,23 +357,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
          int n45 = n3 * 3 - 15;
          n13 = n3 * 3 - 5;
          n14 = this.getHeight() - this.cornerRadius;
-         int n46 = 90 - this.friendConfigsScrollOffset;
-         int n47 = n14;
-         int n48 = n13;
-         byte b11 = 90;
-         int n49 = n45;
-         smoothScrollBar.drawVerticalBar(n49, b11, n48, n47, n46, n38, colorInt);
+         smoothScrollBar.drawVerticalBar(n45, (byte)90, n13, n14, 90 - this.friendConfigsScrollOffset, n38, colorInt);
          SmoothScrollBar friendConfigsScrollBar2 = this.friendConfigsScrollBar;
          n14 = this.getHeight() - this.cornerRadius;
          n19 = this.friendConfigsScrollOffset;
-         int n50 = n3 * 2;
-         int n51 = this.getHeight() - this.cornerRadius - 90;
-         byte b12 = 90;
-         int n52 = n50;
-         int n53 = n19;
-         int n54 = n14;
-         byte b13 = 90;
-         this.friendConfigsScrollOffset = friendConfigsScrollBar2.updateScrollOffset(n38, b13, n54, n53, n52, b12, n3, n51, n, n2);
+         this.friendConfigsScrollOffset = friendConfigsScrollBar2.updateScrollOffset(n38, (byte)90, n14, n19, n3 * 2, (byte)90, n3, this.getHeight() - this.cornerRadius - 90, n, n2);
          RenderUtil.scissorRectScaled(
             (float)(this.getX() + n3 * 3 + 3),
             (float)(this.getY() + 40),
@@ -456,10 +383,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)CREATE_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d9 = d8;
          double d10 = d;
-         String str8 = "Create";
-         headerFont2.drawString(str8, d10, d9, hoveredColor);
+         headerFont2.drawString("Create", d10, d8, hoveredColor);
          n55 += 35;
          CustomFontUtil headerFont3 = this.headerFont;
          d = (double)((int)((float)(n3 * 3) + (float)n3 / 2.0F - LOAD_BUTTON_WIDTH / 2.0F));
@@ -474,10 +399,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)LOAD_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d12 = d11;
          double d13 = d;
-         String str9 = "Load";
-         headerFont3.drawString(str9, d13, d12, hoveredColor2);
+         headerFont3.drawString("Load", d13, d11, hoveredColor2);
          n55 += 35;
          CustomFontUtil headerFont4 = this.headerFont;
          d = (double)((int)((float)(n3 * 3) + (float)n3 / 2.0F - SAVE_BUTTON_WIDTH / 2.0F));
@@ -492,10 +415,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)SAVE_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d15 = d14;
          double d16 = d;
-         String str10 = "Save";
-         headerFont4.drawString(str10, d16, d15, hoveredColor3);
+         headerFont4.drawString("Save", d16, d14, hoveredColor3);
          n55 += 35;
          CustomFontUtil headerFont5 = this.headerFont;
          d = (double)((int)((float)(n3 * 3) + (float)n3 / 2.0F - FOLDER_BUTTON_WIDTH / 2.0F));
@@ -510,10 +431,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)FOLDER_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d18 = d17;
          double d19 = d;
-         String str11 = "Folder";
-         headerFont5.drawString(str11, d19, d18, hoveredColor4);
+         headerFont5.drawString("Folder", d19, d17, hoveredColor4);
          n55 += 35;
          CustomFontUtil headerFont6 = this.headerFont;
          d = (double)((int)((float)(n3 * 3) + (float)n3 / 2.0F - REFRESH_BUTTON_WIDTH / 2.0F));
@@ -528,10 +447,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)REFRESH_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d21 = d20;
          double d22 = d;
-         String str12 = "Refresh";
-         headerFont6.drawString(str12, d22, d21, hoveredColor5);
+         headerFont6.drawString("Refresh", d22, d20, hoveredColor5);
          if (this.shareActionLabel != null) {
             n55 += 35;
             String shareActionLabel2 = this.shareActionLabel;
@@ -550,10 +467,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
                (int)stringWidth + 20,
                (int)this.itemFont.getFontHeight() + 6
             );
-            double d24 = d23;
-            double d25 = d;
-            String str13 = shareActionLabel3;
-            headerFont7.drawString(str13, d25, d24, hoveredColor6);
+            headerFont7.drawString(shareActionLabel3, d, d23, hoveredColor6);
          }
 
          CustomFontUtil headerFont8 = this.headerFont;
@@ -569,18 +483,11 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             (int)DELETE_BUTTON_SMALL_WIDTH + 20,
             (int)this.itemFont.getFontHeight() + 6
          );
-         double d27 = d26;
          double d28 = d;
-         String str14 = "Delete";
-         headerFont8.drawString(str14, d28, d27, hoveredColor7);
+         headerFont8.drawString("Delete", d28, d26, hoveredColor7);
          GL11.glDisable(3089);
          n14 = this.getWidth();
-         int n56 = this.getHeight() - this.cornerRadius;
-         int n57 = n56;
-         int n58 = n14;
-         byte b14 = 0;
-         byte b15 = 0;
-         if (this.isMouseOver(b15, b14, n58, n57, n, n2)) {
+         if (this.isMouseOver((byte)0, (byte)0, n14, this.getHeight() - this.cornerRadius, n, n2)) {
             for (AbstractConfigListItem configListItem4 : this.officialConfigs) {
                configListItem4.renderTooltip();
             }
@@ -617,17 +524,14 @@ public class ConfigSystemPanel extends ClickGuiWindow {
       this.initialLoadTriggered = false;
       DirectoryWatcher directoryWatcher = DirectoryWatchService.watch(CONFIGS_DIRECTORY);
       Consumer consumer = obj -> {
-         File file = ((Path)obj).toFile();
-         this.onLocalConfigFileModified(file);
+         this.onLocalConfigFileModified(((Path)obj).toFile());
       };
       directoryWatcher = directoryWatcher.onCreate(consumer);
-      Consumer consumer2 = obj2 -> this.onLocalConfigFileDeleted((Path)obj2);
-      directoryWatcher.onDelete(consumer2).register();
+      directoryWatcher.onDelete(obj2 -> this.onLocalConfigFileDeleted((Path)obj2)).register();
    }
 
    @Override
    public void mouseReleased(int mouseX, int mouseY, int state) {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (this.isVisible()) {
          super.mouseReleased(mouseX, mouseY, state);
       }
@@ -635,7 +539,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
    @Override
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (this.isVisible()) {
          int n = this.getWidth() / 4;
          super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -656,9 +559,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             )) {
                System.out.println("Create");
                ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE);
-               Minecraft mc2 = mc;
-               CreateConfigScreen createConfigScreen = new CreateConfigScreen(Augustus.getInstance().getClickGui());
-               mc2.displayGuiScreen(createConfigScreen);
+               mc.displayGuiScreen(new CreateConfigScreen(Augustus.getInstance().getClickGui()));
             }
          }
 
@@ -670,13 +571,8 @@ public class ConfigSystemPanel extends ClickGuiWindow {
          String str4 = "Load";
          if (RenderUtil.isHovered(f2, 82.0F, (float)((int)this.itemFont.getStringWidth(str4) + 20), (float)((int)this.itemFont.getFontHeight() + 6), mouseX, mouseY)
             && this.selectedConfig != null) {
-            ConfigManager configManager = Augustus.getInstance().getConfigManager();
-            configManager.snapshotAll();
-            ModuleConfigStorage moduleConfigStorage = Augustus.getInstance().getConfigManager().moduleConfigStorage;
-            String configName = this.selectedConfig.getConfigName();
-            String str5 = "configs";
-            String str6 = configName;
-            moduleConfigStorage.loadConfig(str6, str5);
+            Augustus.getInstance().getConfigManager().snapshotAll();
+            Augustus.getInstance().getConfigManager().moduleConfigStorage.loadConfig(this.selectedConfig.getConfigName(), "configs");
          }
 
          if (!Augustus.getInstance().isConfigEditingEnabled()) {
@@ -694,15 +590,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
                ModuleConfigStorage moduleConfigStorage2 = Augustus.getInstance().getConfigManager().moduleConfigStorage;
                String configName3 = this.selectedConfig.getConfigName();
                boolean isEditable = this.selectedConfig.isEditable();
-               String str9 = "configs";
-               String str10 = configName3;
-               moduleConfigStorage2.saveConfig(str10, str9, isEditable);
-               File file = new File(Augustus.getInstance().getConfigManager().moduleConfigStorage.getDirectoryPath() + File.separator + "configs", this.selectedConfig.getConfigName() + ".json");
-               this.loadLocalConfigEntry(file);
+               moduleConfigStorage2.saveConfig(configName3, "configs", isEditable);
+               this.loadLocalConfigEntry(new File(Augustus.getInstance().getConfigManager().moduleConfigStorage.getDirectoryPath() + File.separator + "configs", this.selectedConfig.getConfigName() + ".json"));
                this.userConfigs.sort(Comparator.comparing(configListItem -> configListItem.getConfigName().toLowerCase()));
-               Stream<AbstractConfigListItem> stream = this.userConfigs.stream();
-               String str11 = configName2;
-               this.selectedConfig = stream.filter(configListItem2 -> configListItem2.getConfigName().equals(str11)).findFirst().orElse(null);
+               this.selectedConfig = this.userConfigs.stream().filter(configListItem2 -> configListItem2.getConfigName().equals(configName2)).findFirst().orElse(null);
             }
          }
 
@@ -746,9 +637,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             exitBlock:
             if (this.selectedConfig != null) {
                if (!this.selectedConfig.isEditable()) {
-                  AbstractConfigListItem selectedConfig2 = this.selectedConfig;
-                  String username = Augustus.getInstance().getUsername();
-                  if (!selectedConfig2.isAuthor(username)) {
+                  if (!this.selectedConfig.isAuthor(Augustus.getInstance().getUsername())) {
                      break exitBlock;
                   }
                }
@@ -761,8 +650,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
                   mouseX,
                   mouseY
                )) {
-                  String configName4 = this.selectedConfig.getConfigName();
-                  if (ConfigNameValidator.isValidConfigName(configName4)) {
+                  if (ConfigNameValidator.isValidConfigName(this.selectedConfig.getConfigName())) {
                      if (false) {
                         if (this.selectedConfig.isSharedWithFriends()) {
                         } else {
@@ -774,15 +662,13 @@ public class ConfigSystemPanel extends ClickGuiWindow {
                         ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
                         short s = 26300;
                         NotificationLevel error2 = NotificationLevel.ERROR;
-                        String str16 = "Wait until the cooldown is over";
-                        notifyConfigStatus(str16, error2);
+                        notifyConfigStatus("Wait until the cooldown is over", error2);
                      }
                   } else {
                      ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE6);
                      short s2 = 19602;
                      NotificationLevel error3 = NotificationLevel.ERROR;
-                     String str17 = "Config name does not qualify for uploading. (Allowed: (a-Z, 0-9)";
-                     notifyConfigStatus(str17, error3);
+                     notifyConfigStatus("Config name does not qualify for uploading. (Allowed: (a-Z, 0-9)", error3);
                   }
                }
             }
@@ -798,19 +684,15 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             String configName5 = this.selectedConfig.getConfigName();
             if (this.refreshFuture == null || this.refreshFuture.isDone()) {
                this.refreshFuture = CompletableFuture.runAsync(() -> {
-                  int[] windowStateFlags3 = ClickGuiWindow.getWindowStateFlags();
                   if (this.selectedConfig != null) {
-                     File file2 = new File(ClientPaths.CLIENT_DIR + File.separator + "configs" + File.separator + this.selectedConfig.getConfigName() + ".json");
-                     ClientFileUtil.moveToTrashOrDelete(file2);
+                     ClientFileUtil.moveToTrashOrDelete(new File(ClientPaths.CLIENT_DIR + File.separator + "configs" + File.separator + this.selectedConfig.getConfigName() + ".json"));
                      this.selectedConfig = null;
                   }
 
                   this.refreshOnlineConfigs();
                });
                ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
-               String str20 = "Config moved to trash bin: §c" + configName5;
-               NotificationLevel error4 = NotificationLevel.ERROR;
-               notifyConfigStatus(str20, error4);
+               notifyConfigStatus("Config moved to trash bin: §c" + configName5, NotificationLevel.ERROR);
                System.out.println("Delete");
             }
          }
@@ -820,15 +702,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             n2 = this.getY() + 90;
             int n5 = this.getX() + n - 3;
             n3 = this.getY() + this.getHeight() - this.cornerRadius;
-            int n6 = mouseX + this.getX();
-            int n7 = mouseY + this.getY();
-            int n8 = n7;
-            int n9 = n6;
-            int n10 = n3;
-            int n11 = n5;
-            int n12 = n2;
-            int n13 = n4;
-            if (this.isMouseWithinBounds(n13, n12, n11, n10, n9, n8)) {
+            if (this.isMouseWithinBounds(n4, n2, n5, n3, mouseX + this.getX(), mouseY + this.getY())) {
                configListItem3.mouseClicked(mouseX, mouseY, mouseButton);
             }
          }
@@ -838,15 +712,7 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             n2 = this.getY() + 90;
             int n15 = this.getX() + n * 3 - 3;
             n3 = this.getY() + this.getHeight() - this.cornerRadius;
-            int n16 = mouseX + this.getX();
-            int n17 = mouseY + this.getY();
-            int n18 = n17;
-            int n19 = n16;
-            int n20 = n3;
-            int n21 = n15;
-            int n22 = n2;
-            int n23 = n14;
-            if (this.isMouseWithinBounds(n23, n22, n21, n20, n19, n18)) {
+            if (this.isMouseWithinBounds(n14, n2, n15, n3, mouseX + this.getX(), mouseY + this.getY())) {
                configListItem4.mouseClicked(mouseX, mouseY, mouseButton);
             }
          }
@@ -856,22 +722,10 @@ public class ConfigSystemPanel extends ClickGuiWindow {
             n2 = this.getY() + 90;
             int n25 = this.getX() + n * 2 - 3;
             n3 = this.getY() + this.getHeight() - this.cornerRadius;
-            int n26 = mouseX + this.getX();
-            int n27 = mouseY + this.getY();
-            int n28 = n27;
-            int n29 = n26;
-            int n30 = n3;
-            int n31 = n25;
-            int n32 = n2;
-            int n33 = n24;
-            boolean isMouseWithinBounds = this.isMouseWithinBounds(n33, n32, n31, n30, n29, n28);
+            boolean isMouseWithinBounds = this.isMouseWithinBounds(n24, n2, n25, n3, mouseX + this.getX(), mouseY + this.getY());
             if (isMouseWithinBounds && configListItem5.getFontRenderer() != null) {
                f2 = (float)(configListItem5.getX() - 5);
-               float y2 = (float)configListItem5.getY();
-               CustomFontUtil fontRenderer = configListItem5.getFontRenderer();
-               String configName6 = configListItem5.getConfigName();
-               String str21 = configName6;
-               if (RenderUtil.isHovered(f2, y2, (float)((int)(fontRenderer.getStringWidth(str21) + 10.0F)), (float)(configListItem5.getHeight() + 2), mouseX, mouseY)
+               if (RenderUtil.isHovered(f2, (float)configListItem5.getY(), (float)((int)(configListItem5.getFontRenderer().getStringWidth(configListItem5.getConfigName()) + 10.0F)), (float)(configListItem5.getHeight() + 2), mouseX, mouseY)
                   && mouseButton == 0) {
                   this.selectedConfig = configListItem5;
                }
@@ -886,7 +740,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
    private List fetchOnlineConfigItems(int n) {
       List<OnlineConfigMetadata> list = java.util.Collections.emptyList();
-      ClickGuiWindow.getWindowStateFlags();
       ArrayList<AbstractConfigListItem> list2 = new ArrayList<>();
 
       for (OnlineConfigMetadata onlineConfigMetadata : list) {
@@ -914,7 +767,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    }
 
    private void reloadAllConfigs() {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       this.scanLocalConfigDirectory();
       if (this.selectedConfig != null) {
          this.selectedConfig = this.userConfigs.stream().filter(configListItem -> configListItem.getConfigName().equals(this.selectedConfig.getConfigName())).findFirst().orElse(null);
@@ -925,7 +777,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
 
    @Override
    public void keyTyped(char typedChar, int keyCode) throws IOException {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (this.isVisible()) {
          super.keyTyped(typedChar, keyCode);
       }
@@ -936,7 +787,6 @@ public class ConfigSystemPanel extends ClickGuiWindow {
    }
 
    public void onPanelOpened() {
-      int[] windowStateFlags2 = ClickGuiWindow.getWindowStateFlags();
       if (!this.initialLoadTriggered) {
          this.refreshFuture = CompletableFuture.runAsync(() -> this.performInitialReload());
          this.initialLoadTriggered = true;

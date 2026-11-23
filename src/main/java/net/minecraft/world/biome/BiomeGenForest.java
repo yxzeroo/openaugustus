@@ -23,12 +23,9 @@ public class BiomeGenForest extends BiomeGenBase {
       if (this.type == 3) {
          for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-               int n = i * 4 + 1 + 8 + rand.nextInt(3);
-               int n2 = j * 4 + 1 + 8 + rand.nextInt(3);
-               BlockPos height = world.getHeight(pos.add(n, 0, n2));
+               BlockPos height = world.getHeight(pos.add(i * 4 + 1 + 8 + rand.nextInt(3), 0, j * 4 + 1 + 8 + rand.nextInt(3)));
                if (rand.nextInt(20) == 0) {
-                  WorldGenBigMushroom worldGenBigMushroom = new WorldGenBigMushroom();
-                  worldGenBigMushroom.generate(world, rand, height);
+                  new WorldGenBigMushroom().generate(world, rand, height);
                } else {
                   WorldGenAbstractTree worldGenAbstractTree = this.genBigTreeChance(rand);
                   worldGenAbstractTree.setDecorationDefaults();

@@ -2,10 +2,10 @@ package net.augustus.modules.modes.noweb;
 
 import net.augustus.events.EventUpdate;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class IgnoreNoWebMode extends AbstractNoWebMode {
-   public IgnoreNoWebMode(NoWeb noWeb, DoubleValue doubleValue) {
+   public IgnoreNoWebMode(NoWeb noWeb, SettingGroup doubleValue) {
       super(noWeb, doubleValue, "Ignore");
    }
 

@@ -21,13 +21,11 @@ public class GraphPointListProperty extends AbstractConfigProperty {
        super(graphSetting2, str, array, array);
       this.graphSetting = graphSetting2;
       this.defaultPointCoords = list;
-      JsonArray array2 = this.serializeDefaultPoints();
-      this.setDefaultValue(array2);
+      this.setDefaultValue(this.serializeDefaultPoints());
    }
 
    private void applyPointsFromJson(JsonArray array) {
       List points = this.graphSetting.getPoints();
-      BooleanProperty.getControlFlowState();
       points.clear();
 
       for (JsonElement elem : array) {
@@ -58,7 +56,6 @@ public class GraphPointListProperty extends AbstractConfigProperty {
    }
 
    private JsonArray serializeDefaultPoints() {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
       JsonArray array = new JsonArray();
       if (this.defaultPointCoords == null) {
          return array;
@@ -77,19 +74,12 @@ public class GraphPointListProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
       if (!json.has(this.getName())) {
          if (flag) {
-            Object defaultValue2 = this.getDefaultValue();
-            JsonArray array = (JsonArray)defaultValue2;
-            this.applyPointsFromJson(array);
+            this.applyPointsFromJson((JsonArray)this.getDefaultValue());
          }
       } else {
-         JsonPropertyCodec jsonArrayCodec = configSerializerProvider.getJsonArrayCodec();
-         String name2 = this.getName();
-         JsonArray array2 = new JsonArray();
-         String str = name2;
-         JsonArray array3 = (JsonArray)jsonArrayCodec.read(str, array2, json);
+         JsonArray array3 = (JsonArray)configSerializerProvider.getJsonArrayCodec().read(this.getName(), new JsonArray(), json);
          this.applyPointsFromJson(array3);
          this.applyValue(array3);
       }
@@ -98,18 +88,14 @@ public class GraphPointListProperty extends AbstractConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      BooleanProperty.getControlFlowState();
       JsonArray array = this.serializeCurrentPoints();
-      JsonPropertyCodec jsonArrayCodec = configSerializerProvider.getJsonArrayCodec();
-      String name2 = this.getName();
-      jsonArrayCodec.write(name2, array, json);
+      configSerializerProvider.getJsonArrayCodec().write(this.getName(), array, json);
       this.setValue(array);
       return json;
    }
 
    private JsonArray serializeCurrentPoints() {
       JsonArray array = new JsonArray();
-      BooleanProperty.getControlFlowState();
 
       for (GraphPoint graphPoint : (Iterable<GraphPoint>)(this.graphSetting.getPoints())) {
          JsonObject json = new JsonObject();

@@ -20,11 +20,9 @@ public class ServerFileWritePacket implements VendorPacket {
    @Override
    public void writePacketData(VendorPacketBuffer buf) throws Exception {
       VendorPacketBuffer vendorPacketBuffer = buf;
-      String relativePath2 = this.relativePath;
-      vendorPacketBuffer.writeUtfString(relativePath2);
+      vendorPacketBuffer.writeUtfString(this.relativePath);
       vendorPacketBuffer = buf;
-      byte[] fileContent2 = this.fileContent;
-      vendorPacketBuffer.writeByteArray(fileContent2);
+      vendorPacketBuffer.writeByteArray(this.fileContent);
    }
 
    public ServerFileWritePacket(String str, byte[] bytes) {

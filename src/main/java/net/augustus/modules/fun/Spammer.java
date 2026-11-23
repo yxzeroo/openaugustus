@@ -43,9 +43,7 @@ public class Spammer extends Module implements TickListener {
       this.randomMode = new ModeSetting(this, "RandomMode", "RandomAlphanumeric", biFunctions);
       this.stopSpammingIfYouAreAlone = new BooleanValue(this, "Stop spamming if you are alone", true);
       this.inInventory = new BooleanValue(this, "In inventory", false);
-      DynamicSettingList dynamicSettingList = new DynamicSettingList(this, "Messages", n -> this.createMessageSetting(n), 1, 50);
-      byte b = 1;
-      this.messages = dynamicSettingList.withInitialCount(b);
+      this.messages = new DynamicSettingList(this, "Messages", n -> this.createMessageSetting(n), 1, 50).withInitialCount((byte)1);
       this.tickCounter = 0;
       this.blockedCommandAttempts = 0;
       this.usedPlayerNames = new HashSet();
@@ -62,8 +60,7 @@ public class Spammer extends Module implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -80,8 +77,7 @@ public class Spammer extends Module implements TickListener {
          this.tickCounter = 0;
          SpammerRandomMode abstractSubMode = (SpammerRandomMode)this.randomMode.getAbstractSubMode();
          if (abstractSubMode != null) {
-            String str = abstractSubMode.generateRandomSuffix();
-            this.sendNextMessage(str);
+            this.sendNextMessage(abstractSubMode.generateRandomSuffix());
          }
 
          this.tickDelay.nextValue();
@@ -99,13 +95,11 @@ public class Spammer extends Module implements TickListener {
                && !str2.startsWith(commandManager.replyCommand.getCommand().toLowerCase(Locale.ROOT))
                && !str2.startsWith(commandManager.msgCommand.getCommand().toLowerCase(Locale.ROOT))) {
                this.blockedCommandAttempts = 0;
-               String value = textInputSetting.getValue();
-               str2 = this.replacePlaceholders(value, str);
+               str2 = this.replacePlaceholders(textInputSetting.getValue(), str);
                mc.thePlayer.sendChatMessage(str2);
             } else {
                if (this.blockedCommandAttempts > 1) {
-                  boolean flag = true;
-                  ClientManagers.moduleManager.shuffleMode.setToggled(flag);
+                  ClientManagers.moduleManager.shuffleMode.setToggled(true);
                }
 
                this.blockedCommandAttempts++;
@@ -128,10 +122,7 @@ public class Spammer extends Module implements TickListener {
          items = values;
       }
 
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      int n = items.size() - 1;
-      byte b = 0;
-      int n2 = instance.nextInt2(b, n);
+      int n2 = DefaultRandomGenerator.instance.nextInt2((byte)0, items.size() - 1);
       int n3 = 0;
       String str = "";
 

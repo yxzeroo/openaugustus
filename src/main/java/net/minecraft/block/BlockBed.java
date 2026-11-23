@@ -168,8 +168,7 @@ public class BlockBed extends BlockDirectional {
 
          if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != BiomeGenBase.hell) {
             if ((Boolean)state.getValue(OCCUPIED)) {
-               EntityPlayer playerInBed = this.getPlayerInBed(world, pos);
-               if (playerInBed != null) {
+               if (this.getPlayerInBed(world, pos) != null) {
                   player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.occupied", new Object[0]));
                   return true;
                }

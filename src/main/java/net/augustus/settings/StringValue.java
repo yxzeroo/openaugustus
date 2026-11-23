@@ -1,399 +1,216 @@
 package net.augustus.settings;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import net.augustus.modules.Module;
-import net.augustus.clickgui.components.SliderComponent;
-import net.augustus.clickgui.components.TextFieldComponent;
-import net.augustus.utils.input.KeyboardInputUtil;
 import net.augustus.font.CustomFontUtil;
 import net.augustus.ClientManagers;
-import net.augustus.settings.property.DoubleProperty;
 import net.augustus.font.FontManager;
-import net.augustus.utils.math.MathStatisticsUtil;
+import net.augustus.settings.property.StringProperty;
 import net.augustus.render.RenderUtil;
-import net.augustus.Augustus;
-import net.minecraft.util.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketThreadUtil;
 
 public class StringValue extends Setting {
-   private final TextFieldComponent textField;
-   private int decimalPlaces;
-   private boolean wasArrowAdjusting;
-   private long arrowPressStartTimeMs;
-   private long lastArrowRepeatTimeMs;
-   private boolean scrollAdjusted;
-   private final SliderComponent slider;
-   private double minValue;
+   private final ConcurrentHashMap optionWidthCache;
    private int labelWidth;
-   private final DoubleProperty v;
-   private double lastSyncedValue;
-   private boolean arrowAdjusting;
-   private double maxValue;
+   private final StringProperty s;
+   private static final int SEPARATOR_WIDTH;
+   private int renderedHeight;
+   private String[] options;
+
+   public String getSelectedValue() {
+      return (String)this.s.getValue();
+   }
 
    @Override
    public int getHeight() {
-      return 27;
+      return this.renderedHeight;
    }
 
-   public StringValue visibleWhen(SettingVisibilityCondition condition) {
-      this.visibilityCondition = condition;
-      return this;
+   public StringValue(Module module, String str, String str2, String[] strings, SettingGroup doubleValue) {
+       this(str, module, doubleValue, str2, strings);
    }
 
-   @Override
-   public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
-      customFontUtil = FontManager.consolas30TextField;
-      super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
-      String str = this.getDisplayName() + ": ";
-      this.wasArrowAdjusting = this.arrowAdjusting;
-      boolean flag2 = this.labelWidth == -1;
-      boolean flag3 = flag2;
-      if (this.consumeLabelDirty(flag3)) {
-         this.labelWidth = (int)customFontUtil.getStringWidth(str);
-      }
-
-      if (flag) {
-         byte b = 0;
-         int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt(b);
-         byte b2 = 0;
-         int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt(b2);
-         double d = (double)n3;
-         double d2 = (double)n4;
-         double d3 = d;
-         customFontUtil.drawString(str, d3, d2, colorInt);
-         n3 += this.labelWidth;
-         int hoveredColor = RenderUtil.getHoveredColor(
-            colorInt,
-            0.2,
-            n,
-            n2,
-            (int)((float)n3 + (float)(200 - this.textField.getTextWidth()) / 2.0F) - 4,
-            n4,
-            this.textField.getTextWidth() + 8,
-            (int)(customFontUtil.getFontHeight() + 1.0F)
-         );
-         if (RenderUtil.isHovered((float)this.slider.getX(), (float)this.slider.getY(), (float)this.slider.getSliderWidth(), (float)this.slider.getSliderHeight(), n, n2)) {
-            if (this.arrowAdjusting
-               && (KeyboardInputUtil.isKeyDown(203) || KeyboardInputUtil.isKeyDown(205))
-               && System.currentTimeMillis() - this.arrowPressStartTimeMs >= 400L
-               && System.currentTimeMillis() - this.lastArrowRepeatTimeMs >= 50L) {
-               double d4 = 1.0 / Math.pow(10.0, (double)Math.min(this.decimalPlaces, 3)) * (double)(KeyboardInputUtil.isKeyDown(203) ? -1 : 1);
-               if (this.getValue() + d4 <= this.maxValue) {
-                  if (this.getValue() + d4 >= this.minValue) {
-                     double d5 = this.getValue() + d4;
-                     this.setValue(d5);
-                     this.notifyValueChanged();
-                     this.notifyUserChanged();
-                  }
-               }
-
-               this.lastArrowRepeatTimeMs = System.currentTimeMillis();
-            }
-
-            this.scrollAdjusted = false;
-            if (KeyboardInputUtil.isCtrlDown()) {
-               int lastDelta = Augustus.getInstance().getMouseWheelTracker().lastDelta;
-               if (lastDelta != 0) {
-                  lastDelta = lastDelta > 0 ? 1 : -1;
-                  double d6 = (double)Math.abs(lastDelta) / Math.pow(10.0, (double)Math.min(this.decimalPlaces, 3)) * (double)lastDelta;
-                  if (this.getValue() + d6 <= this.maxValue && this.getValue() + d6 >= this.minValue) {
-                     double d7 = this.getValue() + d6;
-                     this.setValue(d7);
-                     this.notifyValueChanged();
-                     this.notifyUserChanged();
-                     this.scrollAdjusted = true;
-                  }
-               }
-            }
-         }
-
-         if (!KeyboardInputUtil.isKeyDown(203) && !KeyboardInputUtil.isKeyDown(205)) {
-            this.arrowAdjusting = false;
-         }
-
-         byte b3 = 0;
-         int colorInt3 = ClientManagers.moduleManager.clickGui.headerColor.getColorInt(b3);
-         SliderComponent slider2 = this.slider;
-         int n7 = n4 - 2;
-         double value = this.getValue();
-         double minValue2 = this.minValue;
-         double maxValue2 = this.maxValue;
-         int decimalPlaces2 = this.decimalPlaces;
-         int hoveredColor2 = RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n3, n4 - 2, 200, 20);
-         int n8 = decimalPlaces2;
-         double d8 = maxValue2;
-         double d9 = minValue2;
-         double d10 = value;
-         byte b4 = 20;
-         short s = 200;
-         int n9 = n7;
-         double d11 = slider2.drawSlider(n3, n9, s, b4, n, n2, d10, d9, d8, n8, customFontUtil, colorInt3, hoveredColor2);
-         if (d11 != this.getValue()) {
-            this.notifyValueChanged();
-            this.notifyUserChanged();
-         }
-
-         this.setValue(d11);
-         int textWidth = this.textField.getTextWidth();
-         int n10 = (int)((float)n3 + (float)(200 - textWidth) / 2.0F);
-         int n11 = n10;
-         this.textField.drawTextField(n11, n4, n, n2, customFontUtil, hoveredColor);
-         if (this.textField.isFocused()) {
-            if (!Objects.equals(this.textField.getText(), "")) {
-               if (!this.textField.getText().equals("-") && !this.textField.getText().endsWith("-") && !this.textField.getText().endsWith("E")) {
-                  String text = this.textField.getText();
-                  Double d12 = this.tryParseDouble(text);
-                  if (d12 != null) {
-                     double d13 = d12;
-                     int decimalPlaces3 = this.decimalPlaces;
-                     double d14 = d13;
-                     double d15 = this.roundToDecimals(d14, decimalPlaces3);
-                     if (d15 != this.getValue()) {
-                        this.notifyValueChanged();
-                        this.notifyUserChanged();
-                     }
-
-                     this.setValue(d15);
-                  }
-               } else {
-                  double d16 = 1.7976931348623157E308;
-                  this.setValue(d16);
-               }
-            }
-         } else {
-            double value2 = this.getValue();
-            Double d17;
-            if (this.textField.getText() != null && !this.textField.getText().isEmpty()) {
-               String text2 = this.textField.getText();
-               d17 = this.tryParseDouble(text2);
-            } else {
-               d17 = null;
-            }
-
-            Double d18 = d17;
-            if (this.lastSyncedValue != value2 || d18 != null && d18 != value2) {
-               int n12 = (int)value2;
-               if ((double)n12 != value2) {
-                  TextFieldComponent textField2 = this.textField;
-                  String str2 = String.valueOf(value2);
-                  String str3 = str2;
-                  textField2.setText(str3);
-               } else {
-                  TextFieldComponent textField3 = this.textField;
-                  String str4 = String.valueOf(n12);
-                  String str5 = str4;
-                  textField3.setText(str5);
-               }
-            } else if (this.textField.getText() != null && this.textField.getText().isEmpty()) {
-               int lastSyncedValue2 = (int)this.lastSyncedValue;
-               if ((double)lastSyncedValue2 != this.lastSyncedValue) {
-                  TextFieldComponent textField4 = this.textField;
-                  String str6 = String.valueOf(this.lastSyncedValue);
-                  String str7 = str6;
-                  textField4.setText(str7);
-               } else {
-                  TextFieldComponent textField5 = this.textField;
-                  String str8 = String.valueOf(lastSyncedValue2);
-                  String str9 = str8;
-                  textField5.setText(str9);
-               }
-            }
-
-            this.lastSyncedValue = this.getValue();
-         }
-
-         boolean flag4 = this.textField.isFocused() || this.slider.isDragging();
-         this.setFocused(flag4);
-         this.contentWidth = n3 + 220;
-      }
-   }
-
-   public TextFieldComponent getTextField() {
-      return this.textField;
-   }
-
-   public void setValue(double d) {
-      DoubleProperty doubleProperty = this.v;
-      Double d2 = d;
-      Double d3 = d2;
-      doubleProperty.setValue(d3);
-   }
-
-   public void setMaxValue(double d) {
-      this.maxValue = d;
-   }
-
-   public void setMinValue(double d) {
-      this.minValue = d;
-   }
-
-   private double roundToDecimals(double d, int n) {
-      if (n == 0) {
-         return (double)((int)d);
+   public void setOptions(String[] strings) {
+      if (Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+         this.applyOptions(strings);
       } else {
-         double d2 = Math.pow(10.0, (double)n);
-         return (double)Math.round(d * d2) / d2;
+         PacketThreadUtil.runOnMainThreadImmediate(() -> {
+            this.applyOptions(strings);
+         });
       }
    }
 
-   private StringValue(String str, Module module, DoubleValue doubleValue, double d, double d2, double d3, int n) {
-       super(module, doubleValue, str);
-      this.v = new DoubleProperty(this, "V", 0.0);
-      this.slider = new SliderComponent();
-      this.lastArrowRepeatTimeMs = 0L;
-      this.arrowPressStartTimeMs = 0L;
-      this.arrowAdjusting = false;
-      this.labelWidth = -1;
-      this.lastSyncedValue = 0.0;
-      this.wasArrowAdjusting = false;
-      this.scrollAdjusted = false;
-      this.setValue(d);
-      DoubleProperty doubleProperty = this.v;
-      Double d4 = d;
-      doubleProperty.setDefaultValue(d4);
-      this.minValue = d2;
-      this.maxValue = d3;
-      this.decimalPlaces = n;
-      this.textField = new TextFieldComponent(String.valueOf(d), StringInputMode.NUMERIC);
+   private void updateLabelWidth() {
+      if (this.consumeLabelDirty(this.labelWidth == -1)) {
+         this.labelWidth = (int)FontManager.consolas30Booleans.getStringWidth(this.getDisplayName() + ": ");
+      }
    }
 
-   public StringValue(String str, double d, double d2, double d3, int n) {
-       this(str, null, null, d, d2, d3, n);
-   }
-
-   public StringValue named(String str) {
-      this.setDisplayName(str);
-      return this;
-   }
-
-   public StringValue(Module module, String str, double d, double d2, double d3, int n) {
-       this(str, module, null, d, d2, d3, n);
+   public StringValue(Module module, String str, String str2, String[] strings) {
+       this(str, module, null, str2, strings);
    }
 
    @Override
    public void resetToDefault() {
-      this.v.resetToDefault();
+      this.setSelectedValue((String)this.s.getDefaultValue());
    }
 
-   public double getMaxValue() {
-      return this.maxValue;
-   }
-
-   private Double tryParseDouble(String str) {
-      try {
-         return Double.parseDouble(str);
-      } catch (NumberFormatException e) {
-         return null;
+   public void setSelectedValue(String str) {
+      if (!str.equals(this.getSelectedValue())) {
+         this.notifyValueChanged();
       }
+
+      this.s.setValue(str);
    }
 
-   public double getValue() {
-      return (Double)this.v.getValue();
+   @Override
+   public void render(int n, int n2, int n3, int n4, int n5, int n6, CustomFontUtil customFontUtil, boolean flag) {
+
+      try {
+         customFontUtil = FontManager.consolas30Booleans;
+         super.render(n, n2, n3, n4, n5, n6, customFontUtil, flag);
+         this.updateLabelWidth();
+         if (flag) {
+            String str = this.getDisplayName() + ": ";
+            int colorInt = ClientManagers.moduleManager.clickGui.textColor.getColorInt((byte)0);
+            int colorInt2 = ClientManagers.moduleManager.clickGui.hoverTextColor.getColorInt((byte)0);
+            double d = (double)n3;
+            customFontUtil.drawString(str, d, (double)n4, colorInt);
+            int n7 = n3 + this.labelWidth;
+            int n8 = n4;
+            int n9 = 0;
+
+            for (String str2 : this.getOptions()) {
+               try {
+                  Integer num = (Integer)this.optionWidthCache.get(str2);
+                  if (num != null) {
+                     if (n7 + num + (n9 < this.getOptions().length - 1 ? SEPARATOR_WIDTH : 0) > n5) {
+                        n8 += (int)(customFontUtil.getFontHeight() + 1.0F);
+                        n7 = n3 + this.labelWidth;
+                     }
+
+                     int n10 = str2.equals(this.getSelectedValue())
+                        ? RenderUtil.getHoveredColor(colorInt2, 0.1294, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F))
+                        : RenderUtil.getHoveredColor(colorInt, 0.2, n, n2, n7 - 6, n8, num + 12, (int)(customFontUtil.getFontHeight() + 1.0F));
+                     boolean flag3 = n9 < this.getOptions().length - 1;
+                     d = (double)n7;
+                     customFontUtil.drawString(str2, d, (double)n8, n10);
+                     n7 += num;
+                     if (flag3) {
+                        d = (double)n7;
+                        double d6 = (double)n8;
+                        double d7 = d;
+                        customFontUtil.drawString(", ", d7, d6, colorInt);
+                        n7 += SEPARATOR_WIDTH;
+                     }
+
+                     if (n9 > 150) {
+                        customFontUtil = FontManager.consolas30Default;
+                     }
+
+                     n9++;
+                  }
+               } catch (Exception e) {
+                  String str4 = this.getName() + " " + this.getParentModuleName() + " " + Arrays.toString((Object[])this.getOptions()) + " " + customFontUtil;
+                  throw new RuntimeException(str4, e);
+               }
+            }
+
+            this.renderedHeight = (int)((float)n8 + customFontUtil.getFontHeight() + 12.0F - (float)n4);
+            this.contentWidth = 150;
+         }
+      } catch (Exception e2) {
+         String str5 = this.getName() + " " + this.getParentModuleName() + " " + Arrays.toString((Object[])this.getOptions()) + " " + customFontUtil;
+         throw new RuntimeException(str5, e2);
+      }
    }
 
    @Override
    public void randomize() {
-      if (this.getName().contains("frequency")) {
-         double d = MathStatisticsUtil.lerp(this.minValue, 5.0, Math.random());
-         this.setValue(d);
-      } else if (this.getDisplayName().contains("Rate of change")) {
-         double d2 = MathStatisticsUtil.lerp(this.minValue, 5.0, Math.random());
-         this.setValue(d2);
-      } else {
-         double d3 = MathStatisticsUtil.lerp(this.minValue, this.maxValue, Math.random());
-         this.setValue(d3);
+      if (!this.getDisplayName().contains("Point selection mode")) {
+         this.setSelectedValue(this.options[ThreadLocalRandom.current().nextInt(this.options.length)]);
       }
    }
 
-   @Override
-   public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-      super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-      this.slider.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+   private StringValue(String str, Module module, SettingGroup doubleValue, String str2, String[] strings) {
+       super(module, doubleValue, str);
+      this.s = (StringProperty)new StringProperty(this, "S", "").withOnValueChanged(obj -> this.setSelectedValue((String)obj));
+      this.renderedHeight = 0;
+      this.labelWidth = -1;
+      this.optionWidthCache = new ConcurrentHashMap();
+      this.s.setValue(str2);
+      this.s.setDefaultValue(str2);
+      this.setOptions(strings);
    }
 
-   public double getMinValue() {
-      return this.minValue;
+   static {
+      String str = ", ";
+      SEPARATOR_WIDTH = (int)FontManager.consolas30Booleans.getStringWidth(str);
    }
 
-   @Override
-   public void mouseReleased(int mouseX, int mouseY, int state) {
-      super.mouseReleased(mouseX, mouseY, state);
-      this.slider.mouseReleased(mouseX, mouseY, state);
+   public int getSelectedIndex() {
+      return Arrays.asList(this.options).indexOf(this.getSelectedValue());
+   }
+
+   public String[] getOptions() {
+      return this.options;
    }
 
    @Override
    public void renderTooltip() {
-      int labelWidth2 = this.labelWidth;
-      this.drawDescriptionTooltip(labelWidth2);
+      this.drawDescriptionTooltip(this.labelWidth);
    }
 
-   public void setDecimalPlaces(int n) {
-      this.decimalPlaces = n;
-   }
+   private void applyOptions(String[] strings) {
+      this.options = strings;
+      this.optionWidthCache.clear();
 
-   public boolean isWasArrowAdjusting() {
-      return this.wasArrowAdjusting;
-   }
-
-   public double getValue(boolean flag) {
-      return flag ? MathHelper.clamp_double(this.getValue(), this.minValue, this.maxValue) : this.getValue();
-   }
-
-   public int getDecimalPlaces() {
-      return this.decimalPlaces;
-   }
-
-   @Override
-   public Setting withDisplayName(String str) {
-      return this.named(str);
-   }
-
-   public SliderComponent getSlider() {
-      return this.slider;
-   }
-
-   @Override
-   public Setting withVisibility(SettingVisibilityCondition condition) {
-      return this.visibleWhen(condition);
-   }
-
-   @Override
-   public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-      super.mouseClicked(mouseX, mouseY, mouseButton);
-      this.textField.mouseClicked(mouseX, mouseY, mouseButton);
-      this.slider.mouseClicked(mouseX, mouseY, mouseButton);
-      return false;
-   }
-
-   public StringValue(Module module, String str, double d, double d2, double d3, int n, DoubleValue doubleValue) {
-       this(str, module, doubleValue, d, d2, d3, n);
-   }
-
-   @Override
-   public void keyTyped(char typedChar, int keyCode) throws IOException {
-      super.keyTyped(typedChar, keyCode);
-      this.textField.keyTyped(typedChar, keyCode);
-      this.slider.keyTyped(typedChar, keyCode);
-      if (RenderUtil.isHovered(
-            (float)this.slider.getX(), (float)this.slider.getY(), (float)this.slider.getSliderWidth(), (float)this.slider.getSliderHeight(), this.lastMouseX, this.lastMouseY
-         )
-         && (keyCode == 203 || keyCode == 205)) {
-         this.arrowAdjusting = true;
-         this.arrowPressStartTimeMs = System.currentTimeMillis();
-         this.lastArrowRepeatTimeMs = System.currentTimeMillis();
-         double d = 1.0 / Math.pow(10.0, (double)this.decimalPlaces) * (double)(keyCode == 203 ? -1 : 1);
-         if (this.getValue() + d <= this.maxValue && this.getValue() + d >= this.minValue) {
-            double d2 = this.getValue() + d;
-            this.setValue(d2);
-            this.notifyValueChanged();
-            this.notifyUserChanged();
+      for (String str : strings) {
+         if (str != null) {
+            this.optionWidthCache.put(str, (int)FontManager.consolas30Booleans.getStringWidth(str));
          }
       }
    }
 
-   public boolean isScrollAdjusted() {
-      return this.scrollAdjusted;
-   }
+   @Override
+   public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+      boolean flag = false;
+      if (mouseButton == 0 || mouseButton == 1) {
+         int n = this.renderX + this.labelWidth;
+         int renderY2 = this.renderY;
+         int n2 = 0;
 
+         for (String str : this.getOptions()) {
+            Integer num = (Integer)this.optionWidthCache.get(str);
+            if (num != null) {
+               if (n + num + (n2 < this.getOptions().length - 1 ? SEPARATOR_WIDTH : 0) > this.boundsWidth) {
+                  renderY2 += (int)(this.renderFont.getFontHeight() + 1.0F);
+                  n = this.renderX + this.labelWidth;
+               }
+
+               if (RenderUtil.isHovered((float)(n - 6), (float)renderY2, (float)(num + 12), (float)((int)(this.renderFont.getFontHeight() + 1.0F)), mouseX, mouseY)) {
+                  this.notifyUserChanged();
+                  this.setSelectedValue(str);
+                  flag = true;
+                  break;
+               }
+
+               n += num;
+               if (n2 < this.getOptions().length - 1) {
+                  n += SEPARATOR_WIDTH;
+               }
+
+               n2++;
+            }
+         }
+      }
+
+      return flag;
+   }
 
 }

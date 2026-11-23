@@ -53,8 +53,7 @@ public class EntityLightningBolt extends EntityWeatherEffect {
                );
 
             for (int i = 0; i < list.size(); i++) {
-               Entity entity = (Entity)list.get(i);
-               entity.onStruckByLightning(this);
+               ((Entity)list.get(i)).onStruckByLightning(this);
             }
          }
       }

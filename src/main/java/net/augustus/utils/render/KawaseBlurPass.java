@@ -101,21 +101,15 @@ public class KawaseBlurPass implements BlurPass, MC {
       framebuffer.bindFramebuffer(true);
       ShaderProgram shaderProgram = f3 > 1.0F ? this.upsampleShader : this.downsampleShader;
       shaderProgram.bind();
-      String str = "offset";
-      shaderProgram.setUniform1f(str, f);
-      String str2 = "tex";
-      shaderProgram.bindTextureUniform(str2, framebuffer2);
+      shaderProgram.setUniform1f("offset", f);
+      shaderProgram.bindTextureUniform("tex", framebuffer2);
       float f4 = (float)framebuffer2.framebufferTextureWidth * f3;
       float f5 = (float)framebuffer2.framebufferTextureHeight * f3;
-      float f6 = f4;
-      String str3 = "resolution";
-      shaderProgram.setUniform2f(str3, f6, f5);
+      shaderProgram.setUniform2f("resolution", f4, f5);
       float f7 = f2 == 1.0F ? (float)framebuffer2.framebufferTextureHeight : (float)framebuffer2.framebufferTextureHeight - (float)framebuffer2.framebufferTextureHeight * f2;
       float f8 = (float)framebuffer2.framebufferTextureWidth * f2;
       float f9 = 0.0F;
-      float f10 = f8;
-      float f11 = 0.0F;
-      shaderProgram.drawQuad(f11, f7, f10, f9);
+      shaderProgram.drawQuad(0.0F, f7, f8, f9);
       shaderProgram.unbind();
       return framebuffer;
    }

@@ -17,15 +17,13 @@ public class RawMouseInput extends Module {
    public void onEnable() {
       if (!Minecraft.isRunningOnMac) {
          RawMouseInputThread.INSTANCE.controllerEnvironment = RawMouseInputThread.createDefaultControllerEnvironment();
-         Object obj = null;
-         RawMouseInputThread.INSTANCE.setMouseDevice((Mouse)obj);
+         RawMouseInputThread.INSTANCE.setMouseDevice((Mouse)null);
          setActive(true);
       }
    }
 
    public void onDisable() {
-      Object obj = null;
-      RawMouseInputThread.INSTANCE.setMouseDevice((Mouse)obj);
+      RawMouseInputThread.INSTANCE.setMouseDevice((Mouse)null);
       setActive(false);
    }
 

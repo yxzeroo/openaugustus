@@ -20,10 +20,7 @@ public class AnimationKeyframeParser {
    }
 
    private static List getEasingArgs(JsonElement elem) {
-      JsonObject asJsonObject = elem.getAsJsonObject();
-      JsonElement elem2 = asJsonObject.get("easingArgs");
-      JsonArray asJsonArray = elem2.getAsJsonArray();
-      return GeoAnimationJsonParser.convertJsonArrayToList(asJsonArray);
+      return GeoAnimationJsonParser.convertJsonArrayToList(elem.getAsJsonObject().get("easingArgs").getAsJsonArray());
    }
 
    private static boolean hasEasingArgs(JsonElement elem) {
@@ -45,12 +42,9 @@ public class AnimationKeyframeParser {
          Double d2 = NumberUtils.isNumber((String)entry.getKey()) ? Double.parseDouble((String)entry.getKey()) : 0.0;
          Double d3 = d2 - d;
          JsonArray keyFrameVector = getKeyFrameVector((JsonElement)entry.getValue());
-         JsonElement elem = keyFrameVector.get(0);
-         MolangValue molangValue = parseExpression(molangParser, elem);
-         JsonElement elem2 = keyFrameVector.get(1);
-         MolangValue molangValue2 = parseExpression(molangParser, elem2);
-         JsonElement elem3 = keyFrameVector.get(2);
-         MolangValue molangValue3 = parseExpression(molangParser, elem3);
+         MolangValue molangValue = parseExpression(molangParser, keyFrameVector.get(0));
+         MolangValue molangValue2 = parseExpression(molangParser, keyFrameVector.get(1));
+         MolangValue molangValue3 = parseExpression(molangParser, keyFrameVector.get(2));
          Object obj4 = flag && molangValue instanceof ConstantValue ? ConstantValue.fromDouble(Math.toRadians(-molangValue.get())) : molangValue;
          Object obj5 = flag && molangValue2 instanceof ConstantValue ? ConstantValue.fromDouble(Math.toRadians(-molangValue2.get())) : molangValue2;
          Object obj6 = flag && molangValue3 instanceof ConstantValue ? ConstantValue.fromDouble(Math.toRadians(molangValue3.get())) : molangValue3;
@@ -89,8 +83,7 @@ public class AnimationKeyframeParser {
    }
 
    public static GeoVectorKeyFrameList convertJsonToKeyFrames(List list, MolangParser molangParser) throws NumberFormatException, MolangException {
-      boolean flag = false;
-      return convertJson(list, flag, molangParser);
+      return convertJson(list, false, molangParser);
    }
 
    public static MolangValue parseExpression(MolangParser molangParser, JsonElement elem) throws MolangException {
@@ -101,8 +94,7 @@ public class AnimationKeyframeParser {
       String asString = elem.getAsJsonObject().get("easing").getAsString();
 
       try {
-         String str = Character.toUpperCase(asString.charAt(0)) + asString.substring(1);
-         return GeoEasingType.valueOf(str);
+         return GeoEasingType.valueOf(Character.toUpperCase(asString.charAt(0)) + asString.substring(1));
       } catch (Exception e) {
          MoreCosmeticsCore.LOGGER.fatal("Unknown easing type: {}", new Object[]{asString});
          throw new RuntimeException(e);
@@ -114,8 +106,7 @@ public class AnimationKeyframeParser {
    }
 
    public static GeoVectorKeyFrameList convertJsonToRotationKeyFrames(List list, MolangParser molangParser) throws NumberFormatException, MolangException {
-      boolean flag = true;
-      GeoVectorKeyFrameList geoVectorKeyFrameList = convertJson(list, flag, molangParser);
+      GeoVectorKeyFrameList geoVectorKeyFrameList = convertJson(list, true, molangParser);
       return new GeoVectorKeyFrameList(geoVectorKeyFrameList.xKeyFrames, geoVectorKeyFrameList.yKeyFrames, geoVectorKeyFrameList.zKeyFrames);
    }
 

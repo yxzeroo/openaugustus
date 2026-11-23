@@ -74,17 +74,13 @@ public class PolarFlyMode extends FlyMode {
          this.waitingStartBlink = false;
          this.enableTimestampMs = System.currentTimeMillis();
          EnumFacing north = EnumFacing.NORTH;
-         BlockPos originBlockPos2 = this.originBlockPos;
-         this.northWaterFlowed = this.northWaterCleared = this.isAdjacentBlockSolid(originBlockPos2, north);
+         this.northWaterFlowed = this.northWaterCleared = this.isAdjacentBlockSolid(this.originBlockPos, north);
          EnumFacing south = EnumFacing.SOUTH;
-         BlockPos originBlockPos3 = this.originBlockPos;
-         this.southWaterFlowed = this.southWaterCleared = this.isAdjacentBlockSolid(originBlockPos3, south);
+         this.southWaterFlowed = this.southWaterCleared = this.isAdjacentBlockSolid(this.originBlockPos, south);
          EnumFacing east = EnumFacing.EAST;
-         BlockPos originBlockPos4 = this.originBlockPos;
-         this.eastWaterFlowed = this.eastWaterCleared = this.isAdjacentBlockSolid(originBlockPos4, east);
+         this.eastWaterFlowed = this.eastWaterCleared = this.isAdjacentBlockSolid(this.originBlockPos, east);
          EnumFacing west = EnumFacing.WEST;
-         BlockPos originBlockPos5 = this.originBlockPos;
-         this.westWaterFlowed = this.westWaterCleared = this.isAdjacentBlockSolid(originBlockPos5, west);
+         this.westWaterFlowed = this.westWaterCleared = this.isAdjacentBlockSolid(this.originBlockPos, west);
       }
    }
 
@@ -99,8 +95,7 @@ public class PolarFlyMode extends FlyMode {
             this.startY = mc.thePlayer.lastGroundY;
             this.initDelayTimer.reset();
          } else {
-            boolean flag = false;
-            this.fly.setToggled(flag);
+            this.fly.setToggled(false);
             String str = "§cInvalid starting pos for PolarFly. Please build two blocks up with air to all sites.";
             this.fly.sendChatMessage2(str);
          }
@@ -108,9 +103,8 @@ public class PolarFlyMode extends FlyMode {
 
       if (this.waterBucketSlot >= 0) {
          Fly fly2 = this.fly;
-         byte b = -90;
          float f = 90.0F;
-         ClientManagers.rotationController.requestPitch(f, b, fly2);
+         ClientManagers.rotationController.requestPitch(f, (byte)-90, fly2);
       }
    }
 
@@ -118,56 +112,45 @@ public class PolarFlyMode extends FlyMode {
    }
 
    public void onClick(EventClick event) {
-      long l = 500L;
-      if (this.initDelayTimer.reached2(l) && this.waterBucketSlot >= 0 && this.initializedOnGround) {
+      if (this.initDelayTimer.reached2(500L) && this.waterBucketSlot >= 0 && this.initializedOnGround) {
          if (this.pendingFirstClick) {
-            byte b = 1;
-            event.addRightClicks(b);
+            event.addRightClicks((byte)1);
             this.pendingFirstClick = false;
             this.firstClickTimer.reset();
             this.waitingStartBlink = true;
-            String str = "Click 1 " + this.getElapsedMs();
-            this.debugLog(str);
+            this.debugLog("Click 1 " + this.getElapsedMs());
          } else if (this.pendingSecondClick && this.hasWaterFlowedAllSides()) {
-            byte b2 = 1;
-            event.addRightClicks(b2);
+            event.addRightClicks((byte)1);
             this.secondClickTimer.reset();
             this.pendingSecondClick = false;
             this.waitingStopBlink = true;
-            String str2 = "Click 2 " + this.getElapsedMs();
-            this.debugLog(str2);
+            this.debugLog("Click 2 " + this.getElapsedMs());
          }
       }
 
       if (this.waitingStartBlink) {
-         long l2 = 25L;
-         if (this.firstClickTimer.reached2(l2)) {
+         if (this.firstClickTimer.reached2(25L)) {
             this.blinkRequested = true;
             this.waitingStartBlink = false;
-            String str3 = "Start blink " + this.getElapsedMs();
-            this.debugLog(str3);
+            this.debugLog("Start blink " + this.getElapsedMs());
          }
       }
 
       if (this.waitingStopBlink) {
-         long l3 = 725L;
-         if (this.secondClickTimer.reached2(l3)) {
+         if (this.secondClickTimer.reached2(725L)) {
             this.blinkRequested = false;
             this.waitingStopBlink = false;
-            String str4 = "Stop blink " + this.getElapsedMs();
-            this.debugLog(str4);
+            this.debugLog("Stop blink " + this.getElapsedMs());
             this.flyStartTimer.reset();
             this.waitingStartFly = true;
          }
       }
 
       if (this.waitingStartFly) {
-         long l4 = 475L;
-         if (this.flyStartTimer.reached2(l4)) {
+         if (this.flyStartTimer.reached2(475L)) {
             this.blinkRequested = true;
             this.flyingActive = true;
-            String str5 = "Start fly " + this.getElapsedMs();
-            this.debugLog(str5);
+            this.debugLog("Start fly " + this.getElapsedMs());
             this.waitingStartFly = false;
          }
       }
@@ -185,26 +168,21 @@ public class PolarFlyMode extends FlyMode {
    public void onSilentSlot() {
       if (this.waterBucketSlot == -1 && this.initializedOnGround) {
          ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-         byte b = 36;
-         containerSlotQuery = containerSlotQuery.fromSlot(b);
-         Item waterBucket = Items.water_bucket;
-         OptionalInt optionalInt = containerSlotQuery.filterItemExact(waterBucket).findFirstSlotIndex();
+         containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+         OptionalInt optionalInt = containerSlotQuery.filterItemExact(Items.water_bucket).findFirstSlotIndex();
          if (optionalInt.isPresent()) {
             this.waterBucketSlot = optionalInt.getAsInt() - 36;
          } else {
             String str = "§cYou need a water bucket in your hotbar. Fly disabled.";
             this.fly.sendChatMessage2(str);
             this.waterBucketSlot = -2;
-            boolean flag = false;
-            this.fly.setToggled(flag);
+            this.fly.setToggled(false);
          }
       }
 
       if (this.waterBucketSlot != -1 && this.pendingSecondClick) {
-         boolean flag2 = true;
          int waterBucketSlot2 = this.waterBucketSlot;
-         byte b2 = -10;
-         SilentSlotManager.requestSlot(this.fly, b2, waterBucketSlot2, flag2);
+         SilentSlotManager.requestSlot(this.fly, (byte)-10, waterBucketSlot2, true);
       }
    }
 
@@ -222,24 +200,20 @@ public class PolarFlyMode extends FlyMode {
             Block block = blockState.getBlock();
             if (block instanceof BlockLiquid) {
                float f = (float)((Integer)blockState.getValue(BlockLiquid.LEVEL)).intValue();
-               String str = "Value: " + f;
-               this.debugLog(str);
+               this.debugLog("Value: " + f);
             }
 
             this.updateAdjacentWaterState(blockPosition, block);
-            String str2 = "Water flowing block " + blockPosition + " " + blockState.getBlock() + " " + this.getElapsedMs();
-            this.debugLog(str2);
+            this.debugLog("Water flowing block " + blockPosition + " " + blockState.getBlock() + " " + this.getElapsedMs());
          }
       }
 
       if (packet instanceof S32PacketConfirmTransaction) {
-         String str3 = "Confirm transaction " + this.getElapsedMs();
-         this.debugLog(str3);
+         this.debugLog("Confirm transaction " + this.getElapsedMs());
       }
 
       if (packet instanceof S22PacketMultiBlockChange) {
-         S22PacketMultiBlockChange packet3 = (S22PacketMultiBlockChange)packet;
-         S22PacketMultiBlockChange.BlockUpdateData[] changedBlocks = packet3.getChangedBlocks();
+         S22PacketMultiBlockChange.BlockUpdateData[] changedBlocks = ((S22PacketMultiBlockChange)packet).getChangedBlocks();
          boolean flag = false;
 
          for (S22PacketMultiBlockChange.BlockUpdateData blockUpdateData : changedBlocks) {
@@ -249,26 +223,22 @@ public class PolarFlyMode extends FlyMode {
                Block block2 = blockState2.getBlock();
                if (block2 instanceof BlockLiquid) {
                   float f2 = (float)((Integer)blockState2.getValue(BlockLiquid.LEVEL)).intValue();
-                  String str4 = "Value: " + f2;
-                  this.debugLog(str4);
+                  this.debugLog("Value: " + f2);
                }
 
                this.updateAdjacentWaterState(pos, block2);
-               String str5 = "Water flowing multi block " + pos + " " + blockState2.getBlock() + " " + this.getElapsedMs();
-               this.debugLog(str5);
+               this.debugLog("Water flowing multi block " + pos + " " + blockState2.getBlock() + " " + this.getElapsedMs());
                flag = true;
             }
          }
 
          if (flag) {
-            String str6 = "Multi block END";
-            this.debugLog(str6);
+            this.debugLog("Multi block END");
          }
       }
 
       if (event.getPacket() instanceof S08PacketPlayerPosLook) {
-         boolean flag2 = false;
-         this.fly.setToggled(flag2);
+         this.fly.setToggled(false);
       }
 
       if (!this.blinkRequested) {
@@ -276,8 +246,7 @@ public class PolarFlyMode extends FlyMode {
       }
 
       if (this.blinkActive) {
-         boolean flag3 = true;
-         event.setDelayed(flag3);
+         event.setDelayed(true);
       }
 
       if (this.blinkRequested && packet instanceof S32PacketConfirmTransaction) {
@@ -287,13 +256,10 @@ public class PolarFlyMode extends FlyMode {
 
    public void onMoveInput(EventMoveInput event) {
       if (this.flyingActive) {
-         float f = 1.0F;
-         event.setMoveForward(f);
+         event.setMoveForward(1.0F);
       } else if (!this.pendingFirstClick && this.pendingSecondClick) {
-         float f2 = 0.0F;
-         event.setMoveForward(f2);
-         float f3 = 0.0F;
-         event.setMoveStrafe(f3);
+         event.setMoveForward(0.0F);
+         event.setMoveStrafe(0.0F);
       }
    }
 
@@ -302,10 +268,9 @@ public class PolarFlyMode extends FlyMode {
          Block block = event.getBlock();
          if ((block instanceof BlockAir || block instanceof BlockLiquid) && (double)event.getBlockPos().getY() < this.startY) {
             BlockPos blockPos = event.getBlockPos();
-            AxisAlignedBB box = new AxisAlignedBB(
+            event.setBoundingBox(new AxisAlignedBB(
                (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 1), (double)(blockPos.getZ() + 1)
-            );
-            event.setBoundingBox(box);
+            ));
          }
       }
    }
@@ -398,8 +363,7 @@ public class PolarFlyMode extends FlyMode {
                double d = mc.thePlayer.posX + (double)facing.getFrontOffsetX();
                double d2 = mc.thePlayer.posY + (double)i;
                double d3 = mc.thePlayer.posZ + (double)facing.getFrontOffsetZ();
-               Block block = mc.theWorld.getBlockState(d, d2, d3).getBlock();
-               if (block.getMaterial() != Material.air) {
+               if (mc.theWorld.getBlockState(d, d2, d3).getBlock().getMaterial() != Material.air) {
                   return false;
                }
             }

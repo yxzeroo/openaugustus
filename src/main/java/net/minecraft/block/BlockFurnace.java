@@ -194,8 +194,7 @@ public class BlockFurnace extends BlockContainer {
    }
 
    static {
-      String str = "facing";
-      FACING = PropertyDirection.create(str, EnumFacing.Plane.HORIZONTAL);
+      FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
    }
 
    @Override

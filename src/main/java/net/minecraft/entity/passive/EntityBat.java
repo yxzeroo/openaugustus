@@ -200,8 +200,7 @@ public class EntityBat extends EntityAmbientCreature {
          this.motionX = this.motionX + (Math.signum(d) * 0.5 - this.motionX) * 0.1F;
          this.motionY = this.motionY + (Math.signum(d2) * 0.7F - this.motionY) * 0.1F;
          this.motionZ = this.motionZ + (Math.signum(d3) * 0.5 - this.motionZ) * 0.1F;
-         float f = (float)(MathHelper.atan2(this.motionZ, this.motionX) * 180.0 / Math.PI) - 90.0F;
-         float f2 = MathHelper.wrapAngleTo180_float(f - this.rotationYaw);
+         float f2 = MathHelper.wrapAngleTo180_float(((float)(MathHelper.atan2(this.motionZ, this.motionX) * 180.0 / Math.PI) - 90.0F) - this.rotationYaw);
          this.moveForward = 0.5F;
          this.rotationYaw += f2;
          if (this.rand.nextInt(100) == 0 && this.entityWorld.getBlockState(pos2).getBlock().isNormalCube()) {

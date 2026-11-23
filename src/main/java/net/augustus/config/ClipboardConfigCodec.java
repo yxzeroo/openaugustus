@@ -14,7 +14,7 @@ import java.util.List;
 import net.augustus.modules.AbstractFeature;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ClipboardConfigCodec {
@@ -24,12 +24,11 @@ public class ClipboardConfigCodec {
       114, -27, 95, -64, 18, -101, 73, -38, 126, -9, 44, -87, 61, -122, 7, -55, 89, -16, 35, -78, 103, -41, 52, -94, 67, -128, 21, -63, 98, -11, 76, -49
    };
 
-   public static boolean importSettingGroup(Module module, DoubleValue doubleValue, String str) {
+   public static boolean importSettingGroup(Module module, SettingGroup doubleValue, String str) {
       str = decodePayload(str);
       JsonObject json = (JsonObject)GsonConstants.GSON.fromJson(str, JsonObject.class);
       if (json.has("ModuleOrCategoryName") && json.has("Values") && json.get("Values").isJsonObject()) {
-         String asString = json.get("ModuleOrCategoryName").getAsString();
-         if (!asString.equals(doubleValue.getName())) {
+         if (!json.get("ModuleOrCategoryName").getAsString().equals(doubleValue.getName())) {
             return false;
          }
 
@@ -37,12 +36,9 @@ public class ClipboardConfigCodec {
       }
 
       FeatureListJsonCodec featureListJsonCodec = CODEC;
-      Module[] modules = new Module[]{module};
-      featureListJsonCodec.setFeatures2(modules);
+      featureListJsonCodec.setFeatures2(new Module[]{module});
       featureListJsonCodec = CODEC;
-      UnaryFunction unaryFunction = obj -> true;
-      boolean flag = true;
-      boolean flag2 = featureListJsonCodec.deserializeFromObject(json, flag, unaryFunction);
+      boolean flag2 = featureListJsonCodec.deserializeFromObject(json, true, obj -> true);
       if (flag2) {
          ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
          ChatUtil.sendChat3("Imported " + doubleValue.getDisplayName() + " successfully from clipboard");
@@ -58,8 +54,7 @@ public class ClipboardConfigCodec {
          clipboardString = decodePayload(clipboardString);
          JsonObject json = (JsonObject)GsonConstants.GSON.fromJson(clipboardString, JsonObject.class);
          if (json.has("ModuleOrCategoryName") && json.has("Values") && json.get("Values").isJsonObject()) {
-            String asString = json.get("ModuleOrCategoryName").getAsString();
-            if (!asString.equals(categorys.name())) {
+            if (!json.get("ModuleOrCategoryName").getAsString().equals(categorys.name())) {
                return false;
             }
 
@@ -67,12 +62,9 @@ public class ClipboardConfigCodec {
          }
 
          FeatureListJsonCodec featureListJsonCodec = CODEC;
-         List displayModules = categorys.getDisplayModules();
-         featureListJsonCodec.setFeatures(displayModules);
+         featureListJsonCodec.setFeatures(categorys.getDisplayModules());
          featureListJsonCodec = CODEC;
-         UnaryFunction unaryFunction = obj -> shouldImportCategoryProperty((ConfigProperty)obj);
-         boolean flag = true;
-         boolean flag2 = featureListJsonCodec.deserializeFromObject(json, flag, unaryFunction);
+         boolean flag2 = featureListJsonCodec.deserializeFromObject(json, true, obj -> shouldImportCategoryProperty((ConfigProperty)obj));
          if (flag2) {
             ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
             ChatUtil.sendChat3("Imported " + categorys.name() + " successfully from clipboard");
@@ -90,8 +82,7 @@ public class ClipboardConfigCodec {
          int n = 0;
 
          for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-            if (ch == '_') {
+            if (str.charAt(i) == '_') {
                if (++n >= 2) {
                   str = str.substring(i + 1);
                   bytes = CustomBase64.getRfc46482().decode2(str);
@@ -107,12 +98,8 @@ public class ClipboardConfigCodec {
          byte[] bytes2 = new byte[bytes.length - ENCRYPTED_MAGIC_HEADER.length];
          System.arraycopy(bytes, ENCRYPTED_MAGIC_HEADER.length, bytes2, 0, bytes2.length);
          PaddedAesCipher paddedAesCipher = new PaddedAesCipher();
-         byte[] bytes3 = aesKey;
-         boolean flag = true;
-         paddedAesCipher.init(flag, bytes3);
-         int length = bytes2.length;
-         byte b = 0;
-         byte[] bytes4 = paddedAesCipher.decrypt(bytes2, b, length);
+         paddedAesCipher.init(true, aesKey);
+         byte[] bytes4 = paddedAesCipher.decrypt(bytes2, (byte)0, bytes2.length);
          return bytes4 == null ? "" : new String(bytes4, StandardCharsets.UTF_8);
       } else {
          return new String(bytes, StandardCharsets.UTF_8);
@@ -121,23 +108,18 @@ public class ClipboardConfigCodec {
 
    public static boolean exportCategory(Categorys categorys) {
       FeatureListJsonCodec featureListJsonCodec = CODEC;
-      List displayModules = categorys.getDisplayModules();
-      featureListJsonCodec.setFeatures(displayModules);
+      featureListJsonCodec.setFeatures(categorys.getDisplayModules());
       JsonObject json = new JsonObject();
       String str = categorys.name();
       json.addProperty("ModuleOrCategoryName", str);
       featureListJsonCodec = CODEC;
-      UnaryFunction unaryFunction = obj -> shouldExportCategoryProperty((ConfigProperty)obj);
-      JsonObject json2 = featureListJsonCodec.serializeToObject(unaryFunction);
+      JsonObject json2 = featureListJsonCodec.serializeToObject(obj -> shouldExportCategoryProperty((ConfigProperty)obj));
       if (json2 == null) {
          return false;
       } else {
          json.add("Values", json2);
          String str2 = GsonConstants.GSON.toJson(json);
-         StringBuilder sb = new StringBuilder().append("Name_").append(str).append("_");
-         CustomBase64Encoder rfc4648 = CustomBase64.getRfc4648();
-         byte[] bytes = encryptPayload(str2);
-         str2 = sb.append(rfc4648.encodeToString(bytes)).toString();
+         str2 = new StringBuilder().append("Name_").append(str).append("_").append(CustomBase64.getRfc4648().encodeToString(encryptPayload(str2))).toString();
          GuiScreen.setClipboardString(str2);
          ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
          ChatUtil.sendChat3("Exported " + categorys.name() + " successfully to clipboard");
@@ -150,33 +132,27 @@ public class ClipboardConfigCodec {
    }
 
 
-   public static String encodeSettingGroup(Module module, DoubleValue doubleValue) {
+   public static String encodeSettingGroup(Module module, SettingGroup doubleValue) {
       FeatureListJsonCodec featureListJsonCodec = CODEC;
-      Module[] modules = new Module[]{module};
-      featureListJsonCodec.setFeatures2(modules);
+      featureListJsonCodec.setFeatures2(new Module[]{module});
       JsonObject json = new JsonObject();
       String name = doubleValue.getName();
       json.addProperty("ModuleOrCategoryName", name);
       featureListJsonCodec = CODEC;
-      UnaryFunction unaryFunction = obj -> belongsToSettingGroup(doubleValue, (ConfigProperty)obj);
-      JsonObject json2 = featureListJsonCodec.serializeToObject(unaryFunction);
+      JsonObject json2 = featureListJsonCodec.serializeToObject(obj -> belongsToSettingGroup(doubleValue, (ConfigProperty)obj));
       if (json2 == null) {
          return null;
       } else {
          json.add("Values", json2);
          String str = GsonConstants.GSON.toJson(json);
-         StringBuilder sb = new StringBuilder().append("Name_").append(name).append("_");
-         CustomBase64Encoder rfc4648 = CustomBase64.getRfc4648();
-         byte[] bytes = encryptPayload(str);
-         return sb.append(rfc4648.encodeToString(bytes)).toString();
+         return new StringBuilder().append("Name_").append(name).append("_").append(CustomBase64.getRfc4648().encodeToString(encryptPayload(str))).toString();
       }
    }
 
-   public static boolean importSettingGroupFromClipboard(Module module, DoubleValue doubleValue) {
+   public static boolean importSettingGroupFromClipboard(Module module, SettingGroup doubleValue) {
 
       try {
-         String clipboardString = GuiScreen.getClipboardString();
-         return importSettingGroup(module, doubleValue, clipboardString);
+         return importSettingGroup(module, doubleValue, GuiScreen.getClipboardString());
       } catch (Exception e) {
          return false;
       }
@@ -196,7 +172,7 @@ public class ClipboardConfigCodec {
       }
    }
 
-   private static Boolean belongsToSettingGroup(DoubleValue doubleValue, ConfigProperty configProperty) {
+   private static Boolean belongsToSettingGroup(SettingGroup doubleValue, ConfigProperty configProperty) {
       return configProperty.getFeatureBase() instanceof Module && !(configProperty instanceof AbstractFeature)
          ? false
          : configProperty == doubleValue
@@ -205,12 +181,11 @@ public class ClipboardConfigCodec {
             || configProperty.getFeatureBase() instanceof Setting && isNestedSetting((Setting)configProperty.getFeatureBase(), doubleValue);
    }
 
-   private static boolean isNestedSetting(Setting setting, DoubleValue doubleValue) {
+   private static boolean isNestedSetting(Setting setting, SettingGroup doubleValue) {
 
       for (Setting setting2 : (Iterable<Setting>)(doubleValue.getChildren())) {
-         if (setting2 instanceof DoubleValue) {
-            DoubleValue doubleValue2 = (DoubleValue)setting2;
-            if (isNestedSetting(setting, doubleValue2)) {
+         if (setting2 instanceof SettingGroup) {
+            if (isNestedSetting(setting, (SettingGroup)setting2)) {
                return true;
             }
          }
@@ -227,7 +202,7 @@ public class ClipboardConfigCodec {
       return !(configProperty.getFeatureBase() instanceof Module) || configProperty.getName().equals("M_T") && configProperty.getFeatureBase() instanceof Module || configProperty instanceof AbstractFeature;
    }
 
-   public static boolean exportSettingGroup(Module module, DoubleValue doubleValue) {
+   public static boolean exportSettingGroup(Module module, SettingGroup doubleValue) {
       String str = encodeSettingGroup(module, doubleValue);
       if (str == null) {
          return false;
@@ -246,8 +221,7 @@ public class ClipboardConfigCodec {
          clipboardString = decodePayload(clipboardString);
          JsonObject json = (JsonObject)GsonConstants.GSON.fromJson(clipboardString, JsonObject.class);
          if (json.has("ModuleOrCategoryName") && json.has("Values") && json.get("Values").isJsonObject()) {
-            String asString = json.get("ModuleOrCategoryName").getAsString();
-            if (!asString.equals(module.getName())) {
+            if (!json.get("ModuleOrCategoryName").getAsString().equals(module.getName())) {
                return false;
             }
 
@@ -255,12 +229,9 @@ public class ClipboardConfigCodec {
          }
 
          FeatureListJsonCodec featureListJsonCodec = CODEC;
-         Module[] modules = new Module[]{module};
-         featureListJsonCodec.setFeatures2(modules);
+         featureListJsonCodec.setFeatures2(new Module[]{module});
          featureListJsonCodec = CODEC;
-         UnaryFunction unaryFunction = obj -> true;
-         boolean flag = true;
-         boolean flag2 = featureListJsonCodec.deserializeFromObject(json, flag, unaryFunction);
+         boolean flag2 = featureListJsonCodec.deserializeFromObject(json, true, obj -> true);
          if (flag2) {
             ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
             ChatUtil.sendChat3("Imported " + module.getName() + " successfully from clipboard");
@@ -276,12 +247,8 @@ public class ClipboardConfigCodec {
       if (str != null && !str.isEmpty()) {
          byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
          PaddedAesCipher paddedAesCipher = new PaddedAesCipher();
-         byte[] bytes2 = aesKey;
-         boolean flag = false;
-         paddedAesCipher.init(flag, bytes2);
-         int length = bytes.length;
-         byte b = 0;
-         byte[] bytes3 = paddedAesCipher.encrypt(bytes, b, length);
+         paddedAesCipher.init(false, aesKey);
+         byte[] bytes3 = paddedAesCipher.encrypt(bytes, (byte)0, bytes.length);
          byte[] bytes4 = new byte[1];
          if (bytes3 != null) {
             bytes4 = new byte[ENCRYPTED_MAGIC_HEADER.length + bytes3.length];
@@ -297,8 +264,7 @@ public class ClipboardConfigCodec {
 
    public static boolean exportModule(Module module) {
       FeatureListJsonCodec featureListJsonCodec = CODEC;
-      Module[] modules = new Module[]{module};
-      featureListJsonCodec.setFeatures2(modules);
+      featureListJsonCodec.setFeatures2(new Module[]{module});
       JsonObject json = new JsonObject();
       String name = module.getName();
       json.addProperty("ModuleOrCategoryName", name);
@@ -312,10 +278,7 @@ public class ClipboardConfigCodec {
       } else {
          json.add("Values", json2);
          String str = GsonConstants.GSON.toJson(json);
-         StringBuilder sb = new StringBuilder().append("Name_").append(name).append("_");
-         CustomBase64Encoder rfc4648 = CustomBase64.getRfc4648();
-         byte[] bytes = encryptPayload(str);
-         str = sb.append(rfc4648.encodeToString(bytes)).toString();
+         str = new StringBuilder().append("Name_").append(name).append("_").append(CustomBase64.getRfc4648().encodeToString(encryptPayload(str))).toString();
          GuiScreen.setClipboardString(str);
          ClientSounds.playSound(ClientSounds.AUGUSTUS_TEXTURE2);
          ChatUtil.sendChat3("Exported " + module.getName() + " successfully to clipboard");

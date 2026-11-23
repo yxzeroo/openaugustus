@@ -48,11 +48,8 @@ public class OldMineplexSpeedMode extends SpeedMode {
          mc.thePlayer.jump();
          this.airTicks = 0;
          float movementYaw = MoveUtil.getMovementYaw();
-         boolean flag = true;
-         float f = movementYaw;
          double d = 0.0;
-         double d2 = -0.20000000298023224;
-         MoveUtil.setMotionWithOffsetAndSprint(d2, d, f, flag);
+         MoveUtil.setMotionWithOffsetAndSprint(-0.20000000298023224, d, movementYaw, true);
          mc.getTimer().timerSpeed = 1.0F;
       } else if (this.isMoving()) {
          if (mc.thePlayer.isCollidedHorizontally) {

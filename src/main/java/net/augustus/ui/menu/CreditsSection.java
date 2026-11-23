@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 
 public abstract class CreditsSection {
    private final String sectionTitle;
-   private static int[] controlFlowGuard;
 
    public abstract List getSocialLinks();
 
@@ -30,17 +29,6 @@ public abstract class CreditsSection {
       return this.sectionTitle;
    }
 
-   public static void setControlFlowGuard(int[] ints) {
-      controlFlowGuard = ints;
-   }
 
-   public static int[] getControlFlowGuard() {
-      return controlFlowGuard;
-   }
 
-   static {
-      if (getControlFlowGuard() != null) {
-         setControlFlowGuard(new int[2]);
-      }
-   }
 }

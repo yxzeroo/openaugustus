@@ -45,8 +45,7 @@ public class CosmeticsWidgetList {
    }
 
    public void layout(int n, int n2) {
-      byte b = 0;
-      this.layout(n, n2, b);
+      this.layout(n, n2, (byte)0);
    }
 
    public int getTopY() {
@@ -75,23 +74,16 @@ public class CosmeticsWidgetList {
             CosmeticsMenuRenderer renderer = this.parentGui.getRenderer();
             int n5 = this.currentDrawY - 1;
             int n6 = this.posX + n3 + 3;
-            byte b = 5;
             int bordercolor = CosmeticsColors.BORDER_COLOR;
             int n7 = n6;
-            int n8 = n5;
-            int posX2 = this.posX;
-            renderer.drawRoundedRect(posX2, n8, n7, n4, bordercolor, b);
+            renderer.drawRoundedRect(this.posX, n5, n7, n4, bordercolor, (byte)5);
             renderer = this.parentGui.getRenderer();
             int n9 = this.posX + 1;
             n6 = this.posX + n3 + 3 - 1;
             int n10 = n4 - 1;
-            byte b2 = 5;
             int panelbackground = CosmeticsColors.PANEL_BACKGROUND;
-            int n11 = n10;
             int n12 = n6;
-            int currentDrawY2 = this.currentDrawY;
-            int n13 = n9;
-            renderer.drawRoundedRect(n13, currentDrawY2, n12, n11, panelbackground, b2);
+            renderer.drawRoundedRect(n9, this.currentDrawY, n12, n10, panelbackground, (byte)5);
          }
 
          for (int i = this.scrollOffset; i < this.entries.size(); i++) {
@@ -100,10 +92,8 @@ public class CosmeticsWidgetList {
                break;
             }
 
-            byte b3 = 20;
             int currentDrawY3 = this.currentDrawY;
-            int posX3 = this.posX;
-            cosmeticsMenuEntry.draw(obj, posX3, currentDrawY3, n3, b3, n, n2);
+            cosmeticsMenuEntry.draw(obj, this.posX, currentDrawY3, n3, (byte)20, n, n2);
             this.maxRightX = this.posX + n3 > this.maxRightX ? this.posX + n3 : this.maxRightX;
             this.currentDrawY = this.currentDrawY + 20 + (this.popup ? 0 : 1);
          }

@@ -671,8 +671,7 @@ public class PacketBuffer extends ByteBuf {
 
    public NBTTagCompound readNBTTagCompoundFromBuffer() throws IOException {
       int n = this.readerIndex();
-      byte b = this.readByte();
-      if (b == 0) {
+      if (this.readByte() == 0) {
          return null;
       } else {
          this.readerIndex(n);

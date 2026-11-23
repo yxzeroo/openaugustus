@@ -147,8 +147,7 @@ public class ModifiableAttributeInstance implements IAttributeInstance {
    @Override
    public void removeModifier(AttributeModifier attributeModifier) {
       for (int i = 0; i < 3; i++) {
-         Set set = (Set)this.mapByOperation.get(i);
-         set.remove(attributeModifier);
+         ((Set)this.mapByOperation.get(i)).remove(attributeModifier);
       }
 
       Set set2 = (Set)this.mapByName.get(attributeModifier.getName());

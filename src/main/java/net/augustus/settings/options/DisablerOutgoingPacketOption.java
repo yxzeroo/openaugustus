@@ -4,8 +4,8 @@ import net.augustus.settings.RangeSetting;
 import net.augustus.settings.SelectableOption;
 import net.augustus.viaversion.packet.C0APacketSwingHand;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.client.C02PacketUseEntity;
@@ -63,10 +63,10 @@ public enum DisablerOutgoingPacketOption implements SelectableOption {
 private String name;
    private boolean selected;
    private Class packetClass;
-   private StringValue intervalSetting;
+   private DoubleValue intervalSetting;
    private BooleanValue invertIntervalSetting;
    private BooleanValue alwaysSetting;
-   private BooleansSetting cancelConditionSetting;
+   private StringValue cancelConditionSetting;
    private RangeSetting tickRangeSetting;
    private int packetCount = 0;
 private DisablerOutgoingPacketOption(String str, Class clazz) {
@@ -93,7 +93,7 @@ private DisablerOutgoingPacketOption(String str, Class clazz) {
       return option.name;
    }
 
-   public static StringValue setIntervalSetting(DisablerOutgoingPacketOption option, StringValue stringValue) {
+   public static DoubleValue setIntervalSetting(DisablerOutgoingPacketOption option, DoubleValue stringValue) {
       return option.intervalSetting = stringValue;
    }
 
@@ -109,7 +109,7 @@ private DisablerOutgoingPacketOption(String str, Class clazz) {
       return option.tickRangeSetting = rangeSetting;
    }
 
-   public static BooleansSetting setCancelConditionSetting(DisablerOutgoingPacketOption option, BooleansSetting booleansSetting) {
+   public static StringValue setCancelConditionSetting(DisablerOutgoingPacketOption option, StringValue booleansSetting) {
       return option.cancelConditionSetting = booleansSetting;
    }
 
@@ -125,11 +125,11 @@ private DisablerOutgoingPacketOption(String str, Class clazz) {
       return option.selected;
    }
 
-   public static BooleansSetting getCancelConditionSetting(DisablerOutgoingPacketOption option) {
+   public static StringValue getCancelConditionSetting(DisablerOutgoingPacketOption option) {
       return option.cancelConditionSetting;
    }
 
-   public static StringValue getIntervalSetting(DisablerOutgoingPacketOption option) {
+   public static DoubleValue getIntervalSetting(DisablerOutgoingPacketOption option) {
       return option.intervalSetting;
    }
 

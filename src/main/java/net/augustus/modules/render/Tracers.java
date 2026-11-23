@@ -25,8 +25,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,42 +34,34 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 public class Tracers extends Module implements OrientCameraListener, RenderListener, TickListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue staticColor;
    public final ColorSetting color2;
    public final BooleanValue teamColors;
-   public final StringValue lineWidth;
+   public final DoubleValue lineWidth;
    public final BlurShadowSettings blurShadowSettings;
    private final TargetSelectionSettings entities;
    private final BooleanValue onlyAlerted;
-   public final StringValue maximumRenderDistance;
+   public final DoubleValue maximumRenderDistance;
    private boolean savedViewBobbing;
    private final java.util.ArrayList targetEntities;
    public float cameraEyeHeight;
 
    public Tracers() {
        super("Tracers", "Isotopenindikator", new Color(12, 58, 133), Categorys.RENDER);
-      this.mode = new BooleansSetting(this, "Mode", "Feet", new String[]{"Feet", "CrossHair"});
+      this.mode = new StringValue(this, "Mode", "Feet", new String[]{"Feet", "CrossHair"});
       BooleanValue booleanValue = new BooleanValue(this, "StaticColor", false);
       SettingVisibilityCondition condition = () -> {
          return !ClientManagers.moduleManager.tracers.color2.isRainbowEnabled();
       };
       this.staticColor = (BooleanValue)booleanValue.withVisibility(condition);
-      ColorSetting colorSetting = new ColorSetting(this, "Color", new Color(21, 121, 230, 65));
-      SettingVisibilityCondition condition2 = () -> isColorVisible();
-      this.color2 = (ColorSetting)colorSetting.withVisibility(condition2);
-      BooleanValue booleanValue2 = new BooleanValue(this, "TeamColors", false);
-      SettingVisibilityCondition condition3 = () -> isTeamColorsVisible();
-      this.teamColors = (BooleanValue)booleanValue2.withVisibility(condition3);
-      this.lineWidth = new StringValue(this, "LineWidth", 6.0, 0.1, 15.0, 1);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black).disableBothByDefault();
-      TargetSelectionSettings targetSelectionSettings = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter());
-      String str = "Entities";
-      this.entities = targetSelectionSettings.withTargetsDisplayName(str);
+      this.color2 = (ColorSetting)new ColorSetting(this, "Color", new Color(21, 121, 230, 65)).withVisibility(() -> isColorVisible());
+      this.teamColors = (BooleanValue)new BooleanValue(this, "TeamColors", false).withVisibility(() -> isTeamColorsVisible());
+      this.lineWidth = new DoubleValue(this, "LineWidth", 6.0, 0.1, 15.0, 1);
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black).disableBothByDefault();
+      this.entities = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter()).withTargetsDisplayName("Entities");
       this.onlyAlerted = new BooleanValue(this, "OnlyAlerted", false);
-      this.maximumRenderDistance = new StringValue(this, "MaximumRenderDistance", 500.0, 0.0, 500.0, 0);
+      this.maximumRenderDistance = new DoubleValue(this, "MaximumRenderDistance", 500.0, 0.0, 500.0, 0);
       this.targetEntities = new java.util.ArrayList();
       this.cameraEyeHeight = 0.0F;
    }
@@ -88,40 +80,28 @@ public class Tracers extends Module implements OrientCameraListener, RenderListe
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 11;
-      byte b2 = 24;
-      this.toggleEventSubscription(b2, b);
-      byte b3 = 32;
-      this.toggleEventSubscription(b3);
-      byte b4 = 40;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)24, (byte)11);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onTick2() {
       this.targetEntities.clear();
       if (this.isLicenseTimestampValid()) {
-         List loadedEntityList = mc.theWorld.loadedEntityList;
-         EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(loadedEntityList);
-         EntityTargetFilter targetFilter = this.entities.getTargetFilter();
-         EntityTargetFilter entityTargetFilter = targetFilter;
-         entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter);
-         double value = this.maximumRenderDistance.getValue();
-         entityTargetSelector = entityTargetSelector.maxDistance(value);
-         Predicate predicate = obj -> this.isAlertedOrAllowedEntity((Entity)obj);
-         entityTargetSelector = entityTargetSelector.filter(predicate);
-         Consumer consumer = obj2 -> this.targetEntities.add((EntityLivingBase)obj2);
-         entityTargetSelector.forEach(consumer);
+         EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
+         entityTargetSelector = entityTargetSelector.withTargetFilter(this.entities.getTargetFilter());
+         entityTargetSelector = entityTargetSelector.maxDistance(this.maximumRenderDistance.getValue());
+         entityTargetSelector = entityTargetSelector.filter(obj -> this.isAlertedOrAllowedEntity((Entity)obj));
+         entityTargetSelector.forEach(obj2 -> this.targetEntities.add((EntityLivingBase)obj2));
       }
    }
 
    @Override
    public void onRender(float f) {
       RenderUtil.begin3DRender();
-      float f2 = (float)(this.lineWidth.getValue() / 2.0);
-      GL11.glLineWidth(f2);
-      boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+      GL11.glLineWidth((float)(this.lineWidth.getValue() / 2.0));
+      BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderTracersPass(shaderRenderPass));
       RenderUtil.end3DRender();
       GL11.glLineWidth(1.0F);
@@ -144,19 +124,13 @@ public class Tracers extends Module implements OrientCameraListener, RenderListe
          n2 = Color.HSBtoRGB((float)(0.011415525F * d), floats[1], floats[2]);
       }
 
-      BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-      int n3 = ColorUtil.resolvePassColor(shaderRenderPass, n2);
-      int n4 = blurShadowSettings2.resolvePassColor(shaderRenderPass, n3);
-      String selectedValue = this.mode.getSelectedValue();
-      int n5 = n4;
-      RenderUtil.drawTracerLine(entity, n5, selectedValue);
+      RenderUtil.drawTracerLine(entity, this.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n2)), this.mode.getSelectedValue());
    }
 
    private void renderTracersPass(ShaderRenderPass shaderRenderPass) {
 
       for (int i = 0; i < this.targetEntities.size(); i++) {
-         EntityLivingBase entity = (EntityLivingBase)this.targetEntities.get(i);
-         this.renderEntityTracer(entity, i, shaderRenderPass);
+         this.renderEntityTracer((EntityLivingBase)this.targetEntities.get(i), i, shaderRenderPass);
       }
    }
 

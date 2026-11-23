@@ -13,8 +13,7 @@ public class ShaderOptionSwitchConst extends ShaderOptionSwitch {
       if (!matcher.matches()) {
          return false;
       } else {
-         String str2 = matcher.group(1);
-         return str2.matches(this.getName());
+         return matcher.group(1).matches(this.getName());
       }
    }
 

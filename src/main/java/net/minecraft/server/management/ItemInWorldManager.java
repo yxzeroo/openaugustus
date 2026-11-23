@@ -61,8 +61,7 @@ public class ItemInWorldManager {
             this.isDestroyingBlock = false;
          } else {
             int n3 = this.curblockDamage - this.initialDamage;
-            float f2 = block2.getPlayerRelativeBlockHardness(this.thisPlayerMP, this.thisPlayerMP.entityWorld, this.delayedDestroyPos) * (float)(n3 + 1);
-            int n4 = (int)(f2 * 10.0F);
+            int n4 = (int)((block2.getPlayerRelativeBlockHardness(this.thisPlayerMP, this.thisPlayerMP.entityWorld, this.delayedDestroyPos) * (float)(n3 + 1)) * 10.0F);
             if (n4 != this.durabilityRemainingOnBlock) {
                this.theWorld.sendBlockBreakProgress(this.thisPlayerMP.getEntityId(), this.destroyPos, n4);
                this.durabilityRemainingOnBlock = n4;
@@ -91,8 +90,7 @@ public class ItemInWorldManager {
          int n = this.curblockDamage - this.initialDamage;
          Block block = this.theWorld.getBlockState(pos).getBlock();
          if (block.getMaterial() != Material.air) {
-            float f = block.getPlayerRelativeBlockHardness(this.thisPlayerMP, this.thisPlayerMP.entityWorld, pos) * (float)(n + 1);
-            if (f >= 0.7F) {
+            if ((block.getPlayerRelativeBlockHardness(this.thisPlayerMP, this.thisPlayerMP.entityWorld, pos) * (float)(n + 1)) >= 0.7F) {
                this.isDestroyingBlock = false;
                this.theWorld.sendBlockBreakProgress(this.thisPlayerMP.getEntityId(), pos, -1);
                this.tryHarvestBlock(pos);

@@ -8,8 +8,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 public class LookDownDisableSettings extends SettingComposite implements MC {
-   private final BooleansSetting disableWhileLookingDown;
-   private final StringValue lookDownPitch;
+   private final StringValue disableWhileLookingDown;
+   private final DoubleValue lookDownPitch;
 
    private boolean isHoldingBlock() {
       if (mc.thePlayer == null) {
@@ -19,8 +19,7 @@ public class LookDownDisableSettings extends SettingComposite implements MC {
          if (currentEquippedItem == null) {
             return false;
          } else {
-            Item item = currentEquippedItem.getItem();
-            return item instanceof ItemBlock;
+            return currentEquippedItem.getItem() instanceof ItemBlock;
          }
       }
    }
@@ -29,20 +28,12 @@ public class LookDownDisableSettings extends SettingComposite implements MC {
       return !this.disableWhileLookingDown.getSelectedValue().equals("None");
    }
 
-   public LookDownDisableSettings(Module module, String str, DoubleValue doubleValue) {
+   public LookDownDisableSettings(Module module, String str, SettingGroup doubleValue) {
        super();
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.disableWhileLookingDown = (StringValue)this.registerSetting(new StringValue(
          module, "_DisableWhileLookingDown" + str, "None", new String[]{"None", "OnlyHoldingBlock", "Always"}, doubleValue
-      );
-      String str2 = "DisableWhileLookingDown";
-      Setting setting = booleansSetting.withDisplayName(str2);
-      this.disableWhileLookingDown = (BooleansSetting)this.registerSetting(setting);
-      StringValue stringValue = new StringValue(module, "_LookDownPitch" + str, 70.0, 0.0, 90.0, 0, doubleValue);
-      String str3 = "LookDownPitch";
-      StringValue stringValue2 = stringValue.named(str3);
-      SettingVisibilityCondition condition = () -> this.isPitchSettingVisible();
-      StringValue stringValue3 = stringValue2.visibleWhen(condition);
-      this.lookDownPitch = (StringValue)this.registerSetting(stringValue3);
+      ).withDisplayName("DisableWhileLookingDown"));
+      this.lookDownPitch = (DoubleValue)this.registerSetting(new DoubleValue(module, "_LookDownPitch" + str, 70.0, 0.0, 90.0, 0, doubleValue).named("LookDownPitch").visibleWhen(() -> this.isPitchSettingVisible()));
    }
 
    public LookDownDisableSettings(Module module, String str) {
@@ -50,8 +41,7 @@ public class LookDownDisableSettings extends SettingComposite implements MC {
    }
 
    public boolean shouldDisable() {
-      String selectedValue = this.disableWhileLookingDown.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.disableWhileLookingDown.getSelectedValue()) {
          case "None":
             return false;
          case "OnlyHoldingBlock":
@@ -69,7 +59,7 @@ public class LookDownDisableSettings extends SettingComposite implements MC {
       return (double)ClientManagers.rotationController.getPreviousRotation().pitch < this.lookDownPitch.getValue();
    }
 
-   public LookDownDisableSettings(Module module, DoubleValue doubleValue) {
+   public LookDownDisableSettings(Module module, SettingGroup doubleValue) {
        this(module, "", doubleValue);
    }
 

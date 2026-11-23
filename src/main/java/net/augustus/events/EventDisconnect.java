@@ -12,7 +12,6 @@ public class EventDisconnect extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      DisconnectListener listener = (DisconnectListener)obj;
-      this.call2(listener);
+      this.call2((DisconnectListener)obj);
    }
 }

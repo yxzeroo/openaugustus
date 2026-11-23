@@ -247,8 +247,7 @@ public class EntityList {
       ArrayList list = Lists.newArrayList();
 
       for (String str : (Iterable<String>)(keys)) {
-         Class clazz = (Class)stringToClassMapping.get(str);
-         if ((clazz.getModifiers() & 1024) != 1024) {
+         if ((((Class)stringToClassMapping.get(str)).getModifiers() & 1024) != 1024) {
             list.add(str);
          }
       }

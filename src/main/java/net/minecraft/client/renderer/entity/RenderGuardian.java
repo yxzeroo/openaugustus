@@ -58,9 +58,7 @@ public class RenderGuardian extends RenderLiving {
          float eyeHeight = entityGuardian.getEyeHeight();
          GlStateManager.pushMatrix();
          GlStateManager.translate((float)d, (float)d2 + eyeHeight, (float)d3);
-         Vec3 position = this.getPosition(targetedEntity, (double)targetedEntity.height * 0.5, f2);
-         Vec3 position2 = this.getPosition(entityGuardian, (double)eyeHeight, f2);
-         Vec3 vec = position.subtract(position2);
+         Vec3 vec = this.getPosition(targetedEntity, (double)targetedEntity.height * 0.5, f2).subtract(this.getPosition(entityGuardian, (double)eyeHeight, f2));
          double d4 = vec.lengthVector() + 1.0;
          vec = vec.normalize();
          float f6 = (float)Math.acos(vec.yCoord);

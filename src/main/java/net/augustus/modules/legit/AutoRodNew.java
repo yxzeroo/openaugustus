@@ -44,8 +44,8 @@ import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -64,11 +64,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class AutoRodNew extends Module implements LoadWorldListener, MoveListener, ClickListener, TickListener, MoveInputListener, RenderListener, SilentSlotListener {
-   private final DoubleValue rotations;
-   private final StringValue maxTargetLookFovDiff;
-   public final StringValue fovYaw;
-   public final StringValue fovPitch;
-   public final StringValue maxRodRange;
+   private final SettingGroup rotations;
+   private final DoubleValue maxTargetLookFovDiff;
+   public final DoubleValue fovYaw;
+   public final DoubleValue fovPitch;
+   public final DoubleValue maxRodRange;
    public final BooleanValue moveFix;
    private final TargetSelectionSettings targetSelectionSettings;
    public final BooleanValue ignoreEatingTargets;
@@ -101,11 +101,11 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
    public AutoRodNew() {
        super("AutoRodNew", "AutomatischeAngel", new Color(203, 232, 162), Categorys.LEGIT);
-      this.rotations = new DoubleValue(this, "Rotations", true);
-      this.maxTargetLookFovDiff = new StringValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
-      this.fovYaw = (StringValue)(new StringValue(this, "FovYaw", 90.0, 0.0, 180.0, 0)).markVisualOnly();
-      this.fovPitch = (StringValue)(new StringValue(this, "FovPitch", 90.0, 0.0, 180.0, 0)).markVisualOnly();
-      this.maxRodRange = new StringValue(this, "MaxRodRange", 10.0, 0.0, 20.0, 2);
+      this.rotations = new SettingGroup(this, "Rotations", true);
+      this.maxTargetLookFovDiff = new DoubleValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
+      this.fovYaw = (DoubleValue)(new DoubleValue(this, "FovYaw", 90.0, 0.0, 180.0, 0)).markVisualOnly();
+      this.fovPitch = (DoubleValue)(new DoubleValue(this, "FovPitch", 90.0, 0.0, 180.0, 0)).markVisualOnly();
+      this.maxRodRange = new DoubleValue(this, "MaxRodRange", 10.0, 0.0, 20.0, 2);
       this.moveFix = new BooleanValue(this, "MoveFix", true);
       this.targetSelectionSettings = (new TargetSelectionSettings(this, TargetFilterPresets.createCombatFilter())).withSorting();
       this.ignoreEatingTargets = new BooleanValue(this, "IgnoreEatingTargets", true);
@@ -123,12 +123,8 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
       ColorSetting colorSetting = new ColorSetting(this, "ESPColor", Color.GREEN);
       BooleanValue esp2 = this.esp;
       this.esp.getClass();
-      BooleanValue booleanValue = esp2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.espColor = (ColorSetting)colorSetting.withVisibility(condition);
-      BlurShadowSettings blurShadowSettings2 = (new BlurShadowSettings(this)).disableBlurByDefault();
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.espColor = (ColorSetting)colorSetting.withVisibility(() -> esp2.getValue());
+      this.blurShadowSettings = (new BlurShadowSettings(this)).disableBlurByDefault().withCustomShadowColor(Color.black);
       this.timeHelper = new TimeHelper();
       this.ticksSinceCast = 0;
       this.selectedHotbarSlot = -1;
@@ -157,20 +153,13 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 21;
-      this.toggleEventSubscription(b4);
-      byte b5 = 32;
-      this.toggleEventSubscription(b5);
-      byte b6 = 34;
-      this.toggleEventSubscription(b6);
-      byte b7 = 17;
-      this.toggleEventSubscription(b7);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -186,27 +175,20 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
       if (this.canUseRod() && (!ClientManagers.moduleManager.scaffold.isToggled() || !this.disableWhileScaffold.getValue())) {
          this.target = this.findTarget();
          if (this.target != null) {
-            double d = (double)RotationUtil.getEntityLookAngleToPlayer(this.target);
-            if (d > this.maxTargetLookFovDiff.getValue()) {
+            if (((double)RotationUtil.getEntityLookAngleToPlayer(this.target)) > this.maxTargetLookFovDiff.getValue()) {
                this.target = null;
                return;
             }
 
-            byte b = 8;
-            EntityLivingBase target3 = this.target;
-            this.predictedFlightTicks = this.estimateImpactTicks(target3, b);
+            this.predictedFlightTicks = this.estimateImpactTicks(this.target, (byte)8);
             if (this.predictedFlightTicks < 0 || this.predictedFlightTicks >= 10) {
                return;
             }
 
             int n = mc.thePlayer.ticksExisted + this.predictedFlightTicks;
-            boolean flag = true;
-            int n2 = n;
             int ticksExisted = mc.thePlayer.ticksExisted;
             EntityLivingBase target4 = this.target;
-            ArrayList list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target4, ticksExisted, n2, flag);
-            int n3 = 99999;
-            Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list, n3);
+            Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, target4, ticksExisted, n, true), 99999);
             if (this.combat.getValue() && this.onlyRodIfNotInReach.getValue()) {
                if (!this.isTargetOutOfReachDuringFlight()) {
                   return;
@@ -224,10 +206,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             );
             this.predictedTargetPos = clampedPosition;
             int n4 = mc.thePlayer.ticksExisted + 1;
-            byte b2 = 0;
             int ticksExisted2 = mc.thePlayer.ticksExisted;
             int ticksExisted3 = mc.thePlayer.ticksExisted;
-            Vec3 vec = (Vec3)TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted3, ticksExisted2, b2, n4).get(0);
+            Vec3 vec = (Vec3)TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted3, ticksExisted2, (byte)0, n4).get(0);
             double d3 = clampedPosition.xCoord - vec.xCoord;
             double d4 = clampedPosition.yCoord + (double)this.target.height / 1.7 - (vec.yCoord + (double)mc.thePlayer.getEyeHeight());
             double d5 = clampedPosition.zCoord - vec.zCoord;
@@ -235,11 +216,8 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             double d6 = (double)MathHelper.sqrt_double(d3 * d3 + d5 * d5);
             double distanceToEntity = (double)mc.thePlayer.getDistanceToEntity(this.target);
             float f2 = (float)((double)((float)(-(Math.atan2(d4, d6) * 180.0 / Math.PI))) - 0.55F * Math.max(0.0, distanceToEntity - 3.0));
-            RotationEngine rotationEngine2 = this.rotationEngine;
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            Rotation rotation = rotationEngine2.rotateTowards(f, f2, previousRotation);
-            byte b3 = 0;
-            ClientManagers.rotationController.requestRotation(rotation, b3, this);
+            Rotation rotation = this.rotationEngine.rotateTowards(f, f2, ClientManagers.rotationController.getPreviousRotation());
+            ClientManagers.rotationController.requestRotation(rotation, (byte)0, this);
             this.predictedTargetBox = box;
          }
       }
@@ -260,8 +238,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             }
 
             if (this.luckyThrow.getValue() || this.willCurrentRotationHitTarget()) {
-               byte b = 1;
-               event.addRightClicks(b);
+               event.addRightClicks((byte)1);
                this.ticksSinceCast = 0;
                this.rodCast = true;
                this.needsFallbackSlotUpdate = true;
@@ -270,8 +247,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
          }
 
          if (entityFishHook != null && this.rightClickIfRodOnTarget.getValue() && !this.rodCast && this.ticksSinceCast > 3 && this.pendingRightClickReel) {
-            byte b2 = 1;
-            event.addRightClicks(b2);
+            event.addRightClicks((byte)1);
             this.pendingRightClickReel = false;
          }
       }
@@ -279,10 +255,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
    private boolean isTargetOutOfReachDuringFlight() {
       int n = mc.thePlayer.ticksExisted + this.predictedFlightTicks;
-      byte b = 0;
       int ticksExisted = mc.thePlayer.ticksExisted;
       int ticksExisted2 = mc.thePlayer.ticksExisted;
-      ArrayList list = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, b, n);
+      ArrayList list = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, (byte)0, n);
       int n2 = mc.thePlayer.ticksExisted + this.predictedFlightTicks;
       int ticksExisted3 = mc.thePlayer.ticksExisted;
       EntityLivingBase target2 = this.target;
@@ -293,9 +268,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
       for (int i = 0; i < n3; i++) {
          Vec3 vec = TrajectoryPredictionUtil.getClampedPosition(list, i).addVector(0.0, eyeHeight, 0.0);
          Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, i);
-         boolean flag = true;
-         AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(this.target, clampedPosition, flag);
-         if (RotationUtil.clampPointToBox(vec, entityBoundingBoxAt).distanceTo(vec) <= 3.0) {
+         if (RotationUtil.clampPointToBox(vec, EntityBoundsUtil.getEntityBoundingBoxAt(this.target, clampedPosition, true)).distanceTo(vec) <= 3.0) {
             return false;
          }
       }
@@ -308,14 +281,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
       EntityPlayerSP thePlayer = mc.thePlayer;
       ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(this.findRodHotbarSlot() + 36).getStack();
       float lastReportedPitch = mc.thePlayer.lastReportedPitch;
-      float lastReportedYaw = mc.thePlayer.lastReportedYaw;
-      ItemStack stack2 = stack;
-      EntityPlayerSP player = thePlayer;
-      projectileSimulator.initFromShooterAngles(player, stack2, lastReportedYaw, lastReportedPitch);
+      projectileSimulator.initFromShooterAngles(thePlayer, stack, mc.thePlayer.lastReportedYaw, lastReportedPitch);
       AxisAlignedBB predictedTargetBox2 = this.predictedTargetBox;
-      EntityLivingBase target2 = this.target;
-      byte b = 100;
-      return projectileSimulator.willFishingHookHitTarget(b, target2, predictedTargetBox2);
+      return projectileSimulator.willFishingHookHitTarget((byte)100, this.target, predictedTargetBox2);
    }
 
    @Override
@@ -340,15 +308,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
                   this.hookHitTarget = true;
                }
 
-               boolean flag = true;
-               AxisAlignedBB entityBoundingBoxAt = EntityBoundsUtil.getEntityBoundingBoxAt(entityFishHook, vec, flag);
-               EntityLivingBase target2 = this.target;
-               Vec3 vec2 = new Vec3(
+               if (EntityBoundsUtil.getEntityBoundingBoxAt(entityFishHook, vec, true).intersectsWith(EntityBoundsUtil.getEntityBoundingBoxAt(this.target, new Vec3(
                   (double)((float)this.target.serverPosX / 32.0F), (double)((float)this.target.serverPosY / 32.0F), (double)((float)this.target.serverPosZ / 32.0F)
-               );
-               boolean flag2 = true;
-               Vec3 vec3 = vec2;
-               if (entityBoundingBoxAt.intersectsWith(EntityBoundsUtil.getEntityBoundingBoxAt(target2, vec3, flag2))) {
+               ), true))) {
                   this.hookHitTarget = true;
                }
 
@@ -397,35 +359,28 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
       this.ticksSinceCast++;
       if (this.target != null && !mc.thePlayer.isUsingItem()) {
-         int selectedHotbarSlot2 = this.selectedHotbarSlot;
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = selectedHotbarSlot2;
-         byte b = 2;
-         SilentSlotManager.requestSlot(this, b, n, value);
+         SilentSlotManager.requestSlot(this, (byte)2, this.selectedHotbarSlot, this.silentSlotSwitching.getValue());
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.target != null && this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 
    @Override
    public void onMove(EventMove event) {
       if (this.target != null && !this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
       if (this.target != null && !this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
@@ -437,13 +392,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
          float f3 = (float)((double)((float)this.predictedTargetPos.yCoord) - mc.getRenderManager().getRenderPosY());
          float f4 = (float)((double)((float)this.predictedTargetPos.zCoord) - mc.getRenderManager().getRenderPosZ());
          float f5 = this.target.width / 2.0F;
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
-            BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-            byte b = 0;
-            int colorInt = this.espColor.getColorInt(b);
-            RenderUtil.setGlColor(blurShadowSettings2.resolvePassColor(shaderRenderPass, colorInt));
+            RenderUtil.setGlColor(this.blurShadowSettings.resolvePassColor(shaderRenderPass, this.espColor.getColorInt((byte)0)));
             RenderUtil.drawFilledBox2(f2 - f5, f3, f4 - f5, f2 + f5, f3 + this.target.height, f4 + f5);
          });
       }
@@ -454,8 +405,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
    @Override
    public void onLoadWorld(EventLoadWorld event) {
       this.target = null;
-      Object obj = null;
-      this.targetSelectionSettings.setCurrentTarget((Entity)obj);
+      this.targetSelectionSettings.setCurrentTarget((Entity)null);
    }
 
    private int estimateImpactTicks(EntityLivingBase entity, int n) {
@@ -465,12 +415,9 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
       double d = (double)(entity.width / 2.0F + 0.1F);
       ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(this.findRodHotbarSlot() + 36).getStack();
       int n3 = mc.thePlayer.ticksExisted + 1;
-      byte b = 0;
       int ticksExisted = mc.thePlayer.ticksExisted;
       int ticksExisted2 = mc.thePlayer.ticksExisted;
-      ArrayList list2 = TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, b, n3);
-      short s = 999;
-      Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(list2, s);
+      Vec3 clampedPosition = TrajectoryPredictionUtil.getClampedPosition(TrajectoryPredictionUtil.predictPlayerPositions(mc.thePlayer, ticksExisted2, ticksExisted, (byte)0, n3), (short)999);
 
       for (int i = 0; i < n; i++) {
          ArrayList list3;
@@ -478,14 +425,11 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             list3 = list;
          } else {
             int n4 = mc.thePlayer.ticksExisted + n2;
-            boolean flag2 = true;
-            int n5 = n4;
             int ticksExisted3 = mc.thePlayer.ticksExisted;
-            list3 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted3, n5, flag2);
+            list3 = list = TrajectoryPredictionUtil.predictTargetPositions(mc.thePlayer, entity, ticksExisted3, n4, true);
          }
 
-         short s2 = 9999;
-         Vec3 clampedPosition2 = TrajectoryPredictionUtil.getClampedPosition(list3, s2);
+         Vec3 clampedPosition2 = TrajectoryPredictionUtil.getClampedPosition(list3, (short)9999);
          double xCoord = clampedPosition2.xCoord;
          double yCoord = clampedPosition2.yCoord;
          double zCoord = clampedPosition2.zCoord;
@@ -503,10 +447,8 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             for (int k = -1; k < 2; k += 2) {
                float f4 = f2 + j * (float)k;
                ProjectileSimulator projectileSimulator = new ProjectileSimulator();
-               EntityPlayerSP thePlayer = mc.thePlayer;
-               projectileSimulator.initFromShooterAngles(thePlayer, stack, f3, f4);
-               byte b2 = 100;
-               int n6 = projectileSimulator.simulateFishingHookHitTick(b2, entity, box);
+               projectileSimulator.initFromShooterAngles(mc.thePlayer, stack, f3, f4);
+               int n6 = projectileSimulator.simulateFishingHookHitTick((byte)100, entity, box);
                if (n6 != Integer.MAX_VALUE) {
                   if (!flag && i == n - 1 && n6 <= n2 - 1) {
                      flag = true;
@@ -544,8 +486,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
          && (mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemFishingRod || this.combat.getValue())
          && this.selectedHotbarSlot != -1) {
          if (this.findRodHotbarSlot() != -1 && !mc.gameSettings.keyBindUseItem.isKeyDown()) {
-            long l = 100L;
-            if ((this.timeHelper.reached2(l) || !this.click.getValue())
+            if ((this.timeHelper.reached2(100L) || !this.click.getValue())
                && (!this.onlyWhileKillAuraHasTarget.getValue() || ClientManagers.moduleManager.killAura.isToggled() && ClientManagers.moduleManager.killAura.target != null)) {
                ItemStack heldItemStack = SilentSlotManager.heldItemStack;
                if (this.weaponWhitelist.isItemAllowed(heldItemStack) && !this.lookDownDisableSettings.shouldDisable()) {
@@ -583,10 +524,8 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
    public int findRodHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      Predicate predicate = obj -> obj instanceof ItemFishingRod;
-      OptionalInt optionalInt = containerSlotQuery.filterItem(predicate).findFirstSlotIndex();
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      OptionalInt optionalInt = containerSlotQuery.filterItem(obj -> obj instanceof ItemFishingRod).findFirstSlotIndex();
       return optionalInt.isPresent() ? optionalInt.getAsInt() - 36 : -1;
    }
 
@@ -601,14 +540,12 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
             this.fallbackHotbarSlot = SilentSlotManager.realHotbarSlot;
          } else {
             ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-            byte b = 36;
-            OptionalInt optionalInt = containerSlotQuery.fromSlot(b).emptyOnly().findFirstSlotIndex();
+            OptionalInt optionalInt = containerSlotQuery.fromSlot((byte)36).emptyOnly().findFirstSlotIndex();
             if (optionalInt.isPresent()) {
                this.fallbackHotbarSlot = optionalInt.getAsInt() - 36;
             } else {
                containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-               byte b2 = 36;
-               containerSlotQuery = containerSlotQuery.fromSlot(b2);
+               containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
                Predicate predicate = obj -> {
                   return !(obj instanceof ItemFood) && !(obj instanceof ItemSkull);
                };
@@ -619,9 +556,7 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
                   int n2 = 0;
 
                   do {
-                     byte b3 = 8;
-                     byte b4 = 0;
-                     this.fallbackHotbarSlot = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+                     this.fallbackHotbarSlot = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)8);
                   } while (this.fallbackHotbarSlot == n && ++n2 < 10);
                }
             }
@@ -637,25 +572,12 @@ public class AutoRodNew extends Module implements LoadWorldListener, MoveListene
 
    private EntityLivingBase findTarget() {
       EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-      EntityTargetFilter targetFilter = this.targetSelectionSettings.getTargetFilter();
-      EntityTargetFilter entityTargetFilter = targetFilter;
-      entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter);
-      boolean flag = false;
-      entityTargetSelector = entityTargetSelector.throughWalls(flag);
-      double value = this.maxRodRange.getValue();
-      entityTargetSelector = entityTargetSelector.maxDistance(value);
-      double value2 = this.fovYaw.getValue();
-      double value3 = this.fovPitch.getValue();
-      double d = value2;
-      entityTargetSelector = entityTargetSelector.withinFov(d, value3).filterFocus();
-      Predicate predicate = obj -> this.isValidTargetState((Entity)obj);
-      entityTargetSelector = entityTargetSelector.filter(predicate);
-      TargetSelectionSettings targetSelectionSettings2 = this.targetSelectionSettings;
-      Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-      double d2 = -1.0;
-      Rotation rotation = previousRotation;
-      ToDoubleFunction toDoubleFunction = targetSelectionSettings2.createTargetComparatorKey(rotation, d2);
-      Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
+      entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelectionSettings.getTargetFilter());
+      entityTargetSelector = entityTargetSelector.throughWalls(false);
+      entityTargetSelector = entityTargetSelector.maxDistance(this.maxRodRange.getValue());
+      entityTargetSelector = entityTargetSelector.withinFov(this.fovYaw.getValue(), this.fovPitch.getValue()).filterFocus();
+      entityTargetSelector = entityTargetSelector.filter(obj -> this.isValidTargetState((Entity)obj));
+      Optional optional = entityTargetSelector.sortBy(this.targetSelectionSettings.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), -1.0)).findBest();
       EntityLivingBase entity = optional.isPresent() && optional.get() instanceof EntityLivingBase ? (EntityLivingBase)optional.get() : null;
       if (this.combat.getValue() && entity != null && (double)mc.thePlayer.getDistanceToEntityBox(entity) < 3.2) {
          entity = null;

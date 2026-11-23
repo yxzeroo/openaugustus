@@ -16,8 +16,7 @@ public class GenLayerVoronoiZoom extends GenLayer {
       int n8 = (n4 >> 2) + 2;
       int[] ints = this.parent.getInts(n5, n6, n7, n8);
       int n9 = n7 - 1 << 2;
-      int n10 = n8 - 1 << 2;
-      int[] intCache = IntCache.getIntCache(n9 * n10);
+      int[] intCache = IntCache.getIntCache(n9 * (n8 - 1 << 2));
 
       for (int i = 0; i < n8 - 1; i++) {
          int n11 = 0;

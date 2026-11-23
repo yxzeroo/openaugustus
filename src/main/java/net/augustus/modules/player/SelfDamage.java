@@ -11,70 +11,50 @@ import net.augustus.utils.player.PlayerUtil;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class SelfDamage extends Module implements UpdateListener, PacketListener, PacketDelayListener {
-   private final BooleansSetting modes;
-   private final StringValue setPositionYAdd;
-   private final StringValue motion;
-   private final StringValue loops;
-   private final StringValue yAddInLoopFirst;
+   private final StringValue modes;
+   private final DoubleValue setPositionYAdd;
+   private final DoubleValue motion;
+   private final DoubleValue loops;
+   private final DoubleValue yAddInLoopFirst;
    private final BooleanValue secondPacket;
-   private final StringValue yAddInLoopSecond;
+   private final DoubleValue yAddInLoopSecond;
    private final BooleanValue finishPacket;
-   private final StringValue yAddFinish;
+   private final DoubleValue yAddFinish;
    private final BooleanValue onlyOnGround;
    private final BooleanValue repeat;
-   private final StringValue repeatTicks;
+   private final DoubleValue repeatTicks;
    private int ticksSinceDamage;
    private boolean damageTriggered;
    private int jumpCount;
 
    public SelfDamage() {
        super("SelfDamage", "SelbstSchaden", new Color(235, 64, 52), Categorys.PLAYER);
-      this.modes = new BooleansSetting(this, "Modes", "Motion", new String[]{"Motion", "Packet1", "Packet2", "Custom", "Fake", "SetPosition", "3Jump"});
-      StringValue stringValue = new StringValue(this, "SetPositionYAdd", 3.1, -4.0, 4.0, 4);
-      String str = "YAdd";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSetPositionYAddVisible();
-      this.setPositionYAdd = stringValue2.visibleWhen(condition);
-      StringValue stringValue3 = new StringValue(this, "Motion", 5.0, 0.0, 10.0, 2);
+      this.modes = new StringValue(this, "Modes", "Motion", new String[]{"Motion", "Packet1", "Packet2", "Custom", "Fake", "SetPosition", "3Jump"});
+      this.setPositionYAdd = new DoubleValue(this, "SetPositionYAdd", 3.1, -4.0, 4.0, 4).named("YAdd").visibleWhen(() -> this.isSetPositionYAddVisible());
+      DoubleValue stringValue3 = new DoubleValue(this, "Motion", 5.0, 0.0, 10.0, 2);
       SettingVisibilityCondition condition2 = () -> {
          return this.modes.getSelectedValue().equals("Motion");
       };
       this.motion = stringValue3.visibleWhen(condition2);
-      StringValue stringValue4 = new StringValue(this, "Loops", 51.0, 1.0, 100.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isLoopsVisible();
-      this.loops = stringValue4.visibleWhen(condition3);
-      StringValue stringValue5 = new StringValue(this, "YAddInLoopFirst", 0.02, 0.0, 1.0, 4);
-      SettingVisibilityCondition condition4 = () -> this.isFirstPacketYAddVisible();
-      this.yAddInLoopFirst = stringValue5.visibleWhen(condition4);
-      BooleanValue booleanValue = new BooleanValue(this, "SecondPacket", true);
-      SettingVisibilityCondition condition5 = () -> this.isSecondPacketVisible();
-      this.secondPacket = (BooleanValue)booleanValue.withVisibility(condition5);
-      StringValue stringValue6 = new StringValue(this, "YAddInLoopSecond", 0.02, 0.0, 1.0, 4);
-      SettingVisibilityCondition condition6 = () -> this.isSecondPacketYAddVisible();
-      this.yAddInLoopSecond = stringValue6.visibleWhen(condition6);
-      BooleanValue booleanValue2 = new BooleanValue(this, "FinishPacket", true);
-      SettingVisibilityCondition condition7 = () -> this.isFinishPacketVisible();
-      this.finishPacket = (BooleanValue)booleanValue2.withVisibility(condition7);
-      StringValue stringValue7 = new StringValue(this, "YAddFinish", 0.0, 0.0, 1.0, 4);
+      this.loops = new DoubleValue(this, "Loops", 51.0, 1.0, 100.0, 0).visibleWhen(() -> this.isLoopsVisible());
+      this.yAddInLoopFirst = new DoubleValue(this, "YAddInLoopFirst", 0.02, 0.0, 1.0, 4).visibleWhen(() -> this.isFirstPacketYAddVisible());
+      this.secondPacket = (BooleanValue)new BooleanValue(this, "SecondPacket", true).withVisibility(() -> this.isSecondPacketVisible());
+      this.yAddInLoopSecond = new DoubleValue(this, "YAddInLoopSecond", 0.02, 0.0, 1.0, 4).visibleWhen(() -> this.isSecondPacketYAddVisible());
+      this.finishPacket = (BooleanValue)new BooleanValue(this, "FinishPacket", true).withVisibility(() -> this.isFinishPacketVisible());
+      DoubleValue stringValue7 = new DoubleValue(this, "YAddFinish", 0.0, 0.0, 1.0, 4);
       SettingVisibilityCondition condition8 = () -> {
          return this.modes.getSelectedValue().equals("Custom") && this.finishPacket.getValue();
       };
       this.yAddFinish = stringValue7.visibleWhen(condition8);
-      BooleanValue booleanValue3 = new BooleanValue(this, "OnlyOnGround", false);
-      SettingVisibilityCondition condition9 = () -> this.isOnlyOnGroundVisible();
-      this.onlyOnGround = (BooleanValue)booleanValue3.withVisibility(condition9);
-      BooleanValue booleanValue4 = new BooleanValue(this, "Repeat", false);
-      SettingVisibilityCondition condition10 = () -> this.isRepeatVisible();
-      this.repeat = (BooleanValue)booleanValue4.withVisibility(condition10);
-      StringValue stringValue8 = new StringValue(this, "RepeatTicks", 140.0, 0.0, 200.0, 0);
-      SettingVisibilityCondition condition11 = () -> this.isRepeatTicksVisible();
-      this.repeatTicks = stringValue8.visibleWhen(condition11);
+      this.onlyOnGround = (BooleanValue)new BooleanValue(this, "OnlyOnGround", false).withVisibility(() -> this.isOnlyOnGroundVisible());
+      this.repeat = (BooleanValue)new BooleanValue(this, "Repeat", false).withVisibility(() -> this.isRepeatVisible());
+      this.repeatTicks = new DoubleValue(this, "RepeatTicks", 140.0, 0.0, 200.0, 0).visibleWhen(() -> this.isRepeatTicksVisible());
       this.ticksSinceDamage = 0;
       this.damageTriggered = false;
       this.jumpCount = 0;
@@ -93,18 +73,14 @@ public class SelfDamage extends Module implements UpdateListener, PacketListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 25;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)25);
    }
 
    @Override
    public void onUpdate() {
-      String selectedValue = this.modes.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.modes.getSelectedValue());
       if (!this.damageTriggered || this.modes.getSelectedValue().equals("3Jump")) {
          if (mc.thePlayer == null || this.onlyOnGround.getValue() && !mc.thePlayer.onGround && !this.modes.getSelectedValue().equals("3Jump")) {
             return;
@@ -127,14 +103,12 @@ public class SelfDamage extends Module implements UpdateListener, PacketListener
    @Override
    public void onPacketDelay(EventPacketDelay event) {
       if (this.modes.getSelectedValue().equals("3Jump") && this.jumpCount < 4) {
-         boolean flag = true;
-         event.setDelayed(flag);
+         event.setDelayed(true);
       }
    }
 
    private void applySelfDamage() {
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "Motion":
             mc.thePlayer.motionY = (double)((float)this.motion.getValue());
             break;
@@ -179,8 +153,7 @@ public class SelfDamage extends Module implements UpdateListener, PacketListener
       if (this.modes.getSelectedValue().equals("3Jump") && this.jumpCount < 4) {
          Packet packet = event.getPacket();
          if (packet instanceof C03PacketPlayer) {
-            C03PacketPlayer packet2 = (C03PacketPlayer)packet;
-            packet2.setOnGround(false);
+            ((C03PacketPlayer)packet).setOnGround(false);
          }
       }
    }

@@ -28,7 +28,6 @@ private final List modules = new ArrayList();
    }
 
    private Categorys(int n, boolean flag) {
-      isControlFlowFlag();
       this.displayModules = new ArrayList();
       this.special = flag;
       this.hidden = flag;
@@ -59,7 +58,6 @@ private final List modules = new ArrayList();
    }
 
    public static boolean isControlFlowFlagCleared() {
-      boolean isControlFlowFlag = isControlFlowFlag();
-      return !isControlFlowFlag;
+      return !isControlFlowFlag();
    }
 }

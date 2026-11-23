@@ -36,8 +36,7 @@ public class ClientFileUtil {
    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
    public static void writeJsonArray(String str, String str2, JsonArray array) {
-      Gson prettygson = GsonConstants.PRETTY_GSON;
-      writeJsonArray(str, str2, array, prettygson);
+      writeJsonArray(str, str2, array, GsonConstants.PRETTY_GSON);
    }
 
    public static File getExistingFile(String str) throws FileNotFoundException {
@@ -83,8 +82,7 @@ public class ClientFileUtil {
    }
 
    public static void writeJsonObject(String str, String str2, JsonObject json) {
-      Gson prettygson = GsonConstants.PRETTY_GSON;
-      writeJsonObject(str, str2, json, prettygson);
+      writeJsonObject(str, str2, json, GsonConstants.PRETTY_GSON);
    }
 
    public static JsonArray readJsonArray(String str, String str2, Runnable runnable) {
@@ -169,8 +167,7 @@ public class ClientFileUtil {
 
 
    public static JsonObject readJsonObject(String str, String str2, Runnable runnable) {
-      File file = new File(str, str2);
-      return readJsonObject(file, runnable);
+      return readJsonObject(new File(str, str2), runnable);
    }
 
    public static void moveToTrashOrDelete(File file) {

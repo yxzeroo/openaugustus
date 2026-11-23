@@ -39,9 +39,8 @@ public enum GeoEasingType {
 
 
    public static GeoEasingType getEasingTypeFromString(String str, long l) {
-      GeoEasingType[] values = values();
 
-      for (GeoEasingType geoEasingType : values) {
+      for (GeoEasingType geoEasingType : values()) {
          if (geoEasingType.name().compareToIgnoreCase(str) == 0) {
             return geoEasingType;
          }

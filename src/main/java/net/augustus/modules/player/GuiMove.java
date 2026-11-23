@@ -25,9 +25,9 @@ import net.augustus.events.EventSprint;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiScreen;
@@ -48,70 +48,31 @@ public class GuiMove extends Module implements SprintListener, MoveInputListener
       this.guis = new MultiOptionSetting(this, "Guis", GuiMoveScreenOption.values());
       this.timeHelper = new TimeHelper();
       this.activeScreenOption = null;
-      GuiMoveScreenOption[] values = GuiMoveScreenOption.values();
 
-      for (GuiMoveScreenOption guiMoveScreenOption : values) {
+      for (GuiMoveScreenOption guiMoveScreenOption : GuiMoveScreenOption.values()) {
          String str = guiMoveScreenOption.getName().toLowerCase(Locale.ROOT);
-         DoubleValue doubleValue = new DoubleValue(this, guiMoveScreenOption.getName());
-         SettingVisibilityCondition condition = guiMoveScreenOption::isSelected;
-         DoubleValue doubleValue2 = doubleValue.visibleWhen(condition);
-         BooleansSetting booleansSetting = new BooleansSetting(this, guiMoveScreenOption.getName() + "Mode", "Basic", new String[]{"Basic", "Resprint", "Intave"}, doubleValue2);
-         String str2 = "Mode";
-         BooleansSetting booleansSetting2 = (BooleansSetting)booleansSetting.withDisplayName(str2);
-         GuiMoveScreenOption.setModeSetting(guiMoveScreenOption, booleansSetting2);
-         BooleanValue booleanValue = new BooleanValue(this, guiMoveScreenOption.getName() + "Sneak", false, doubleValue2);
-         String str3 = "Sneak in " + str;
-         BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str3);
-         GuiMoveScreenOption.setSneakSetting(guiMoveScreenOption, booleanValue2);
-         BooleanValue booleanValue3 = new BooleanValue(this, guiMoveScreenOption.getName() + "Jump", false, doubleValue2);
-         String str4 = "Jump in " + str;
-         BooleanValue booleanValue4 = (BooleanValue)booleanValue3.withDisplayName(str4);
-         GuiMoveScreenOption.setJumpSetting(guiMoveScreenOption, booleanValue4);
+         SettingGroup doubleValue2 = new SettingGroup(this, guiMoveScreenOption.getName()).visibleWhen(guiMoveScreenOption::isSelected);
+         GuiMoveScreenOption.setModeSetting(guiMoveScreenOption, (StringValue)new StringValue(this, guiMoveScreenOption.getName() + "Mode", "Basic", new String[]{"Basic", "Resprint", "Intave"}, doubleValue2).withDisplayName("Mode"));
+         GuiMoveScreenOption.setSneakSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "Sneak", false, doubleValue2).withDisplayName("Sneak in " + str));
+         GuiMoveScreenOption.setJumpSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "Jump", false, doubleValue2).withDisplayName("Jump in " + str));
          if (guiMoveScreenOption == GuiMoveScreenOption.INVENTORY) {
-            BooleanValue booleanValue5 = new BooleanValue(this, "NoInvPacket", false, doubleValue2);
-            String str5 = "No inventory open packet";
-            this.noInvPacket = (BooleanValue)booleanValue5.withDisplayName(str5);
+            this.noInvPacket = (BooleanValue)new BooleanValue(this, "NoInvPacket", false, doubleValue2).withDisplayName("No inventory open packet");
          }
 
-         BooleanValue booleanValue6 = new BooleanValue(this, guiMoveScreenOption.getName() + "Rotate", false, doubleValue2);
-         String str6 = "Rotate in " + str;
-         BooleanValue booleanValue7 = (BooleanValue)booleanValue6.withDisplayName(str6);
-         GuiMoveScreenOption.setRotateSetting(guiMoveScreenOption, booleanValue7);
-         BooleanValue booleanValue8 = new BooleanValue(this, guiMoveScreenOption.getName() + "RotateOnlyAtClick", false, doubleValue2);
-         String str7 = "Rotate only while click in " + str;
-         BooleanValue booleanValue9 = (BooleanValue)booleanValue8.withDisplayName(str7);
+         GuiMoveScreenOption.setRotateSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "Rotate", false, doubleValue2).withDisplayName("Rotate in " + str));
+         BooleanValue booleanValue9 = (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "RotateOnlyAtClick", false, doubleValue2).withDisplayName("Rotate only while click in " + str);
          BooleanValue rotateSetting = GuiMoveScreenOption.getRotateSetting(guiMoveScreenOption);
          rotateSetting.getClass();
-         BooleanValue booleanValue10 = rotateSetting;
-         SettingVisibilityCondition condition2 = () -> booleanValue10.getValue();
-         BooleanValue booleanValue11 = (BooleanValue)booleanValue9.withVisibility(condition2);
-         GuiMoveScreenOption.setRotateOnlyAtClickSetting(guiMoveScreenOption, booleanValue11);
-         BooleanValue booleanValue12 = new BooleanValue(this, guiMoveScreenOption.getName() + "MoveOnlyOnGround", false, doubleValue2);
-         String str8 = "Move only on ground in " + str;
-         BooleanValue booleanValue13 = (BooleanValue)booleanValue12.withDisplayName(str8);
-         GuiMoveScreenOption.setMoveOnlyOnGroundSetting(guiMoveScreenOption, booleanValue13);
-         BooleanValue booleanValue14 = new BooleanValue(this, guiMoveScreenOption.getName() + "SneakMotionWhileMovement", false, doubleValue2);
-         String str9 = "Sneak motion while moving in " + str;
-         BooleanValue booleanValue15 = (BooleanValue)booleanValue14.withDisplayName(str9);
-         GuiMoveScreenOption.setSneakMotionWhileMovingSetting(guiMoveScreenOption, booleanValue15);
-         BooleansSetting booleansSetting3 = new BooleansSetting(
+         GuiMoveScreenOption.setRotateOnlyAtClickSetting(guiMoveScreenOption, (BooleanValue)booleanValue9.withVisibility(() -> rotateSetting.getValue()));
+         GuiMoveScreenOption.setMoveOnlyOnGroundSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "MoveOnlyOnGround", false, doubleValue2).withDisplayName("Move only on ground in " + str));
+         GuiMoveScreenOption.setSneakMotionWhileMovingSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "SneakMotionWhileMovement", false, doubleValue2).withDisplayName("Sneak motion while moving in " + str));
+         StringValue booleansSetting4 = (StringValue)new StringValue(
             this, guiMoveScreenOption.getName() + "Sprint mode", "None", new String[]{"None", "Legit", "AllDirection", "AllDirectionMotion"}, doubleValue2
-         );
-         String str10 = "Sprint mode";
-         BooleansSetting booleansSetting4 = (BooleansSetting)booleansSetting3.withDisplayName(str10);
+         ).withDisplayName("Sprint mode");
          GuiMoveScreenOption.setSprintModeSetting(guiMoveScreenOption, booleansSetting4);
-         BooleanValue booleanValue16 = new BooleanValue(this, guiMoveScreenOption.getName() + "Jump sprint", false, doubleValue2);
-         String str11 = "Sprint jump boost motion";
-         BooleanValue booleanValue17 = (BooleanValue)booleanValue16.withDisplayName(str11);
-         GuiMoveScreenOption.setSprintJumpBoostSetting(guiMoveScreenOption, booleanValue17);
-         StringValue stringValue = new StringValue(this, guiMoveScreenOption.getName() + "MotionMultiplierForward", 1.0, 0.0, 2.0, 2, doubleValue2);
-         String str12 = "Motion multiplier forward in " + str;
-         StringValue stringValue2 = stringValue.named(str12);
-         GuiMoveScreenOption.setForwardMotionMultiplierSetting(guiMoveScreenOption, stringValue2);
-         StringValue stringValue3 = new StringValue(this, guiMoveScreenOption.getName() + "MotionMultiplierDiagonal", 1.0, 0.0, 2.0, 2, doubleValue2);
-         String str13 = "Motion multiplier diagonal in " + str;
-         StringValue stringValue4 = stringValue3.named(str13);
-         GuiMoveScreenOption.setDiagonalMotionMultiplierSetting(guiMoveScreenOption, stringValue4);
+         GuiMoveScreenOption.setSprintJumpBoostSetting(guiMoveScreenOption, (BooleanValue)new BooleanValue(this, guiMoveScreenOption.getName() + "Jump sprint", false, doubleValue2).withDisplayName("Sprint jump boost motion"));
+         GuiMoveScreenOption.setForwardMotionMultiplierSetting(guiMoveScreenOption, new DoubleValue(this, guiMoveScreenOption.getName() + "MotionMultiplierForward", 1.0, 0.0, 2.0, 2, doubleValue2).named("Motion multiplier forward in " + str));
+         GuiMoveScreenOption.setDiagonalMotionMultiplierSetting(guiMoveScreenOption, new DoubleValue(this, guiMoveScreenOption.getName() + "MotionMultiplierDiagonal", 1.0, 0.0, 2.0, 2, doubleValue2).named("Motion multiplier diagonal in " + str));
       }
    }
 
@@ -125,179 +86,126 @@ public class GuiMove extends Module implements SprintListener, MoveInputListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 36;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
-      byte b3 = 43;
-      this.toggleEventSubscription(b3);
-      byte b4 = 26;
-      this.toggleEventSubscription(b4);
-      byte b5 = 20;
-      this.toggleEventSubscription(b5);
-      byte b6 = 33;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)36);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)20);
+      this.toggleEventSubscription((byte)33);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.activeScreenOption == GuiMoveScreenOption.OTHER_SCREENS) {
-         BooleanValue booleanValue = GuiMoveScreenOption.getRotateOnlyAtClickSetting(this.activeScreenOption);
-         boolean flag = true;
-         booleanValue.setValue(flag);
+         GuiMoveScreenOption.getRotateOnlyAtClickSetting(this.activeScreenOption).setValue(true);
       }
 
       exitBlock:
       if (this.getMode().equals("Resprint") && this.canMoveInGui()) {
-         int keyCode = mc.gameSettings.keyBindForward.getKeyCode();
-         if (this.isValidKeyCode(keyCode)) {
-            int keyCode2 = mc.gameSettings.keyBindForward.getKeyCode();
-            int keyCode3 = mc.gameSettings.keyBindForward.getKeyCode();
-            int n = keyCode3;
-            KeyBinding.setKeyBindState(keyCode2, this.isKeyDownSafe(n));
+         if (this.isValidKeyCode(mc.gameSettings.keyBindForward.getKeyCode())) {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindForward.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindForward.getKeyCode()));
          }
 
-         int keyCode4 = mc.gameSettings.keyBindBack.getKeyCode();
-         if (this.isValidKeyCode(keyCode4)) {
-            int keyCode5 = mc.gameSettings.keyBindBack.getKeyCode();
-            int keyCode6 = mc.gameSettings.keyBindBack.getKeyCode();
-            int n2 = keyCode6;
-            KeyBinding.setKeyBindState(keyCode5, this.isKeyDownSafe(n2));
+         if (this.isValidKeyCode(mc.gameSettings.keyBindBack.getKeyCode())) {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindBack.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindBack.getKeyCode()));
          }
 
-         int keyCode7 = mc.gameSettings.keyBindRight.getKeyCode();
-         if (this.isValidKeyCode(keyCode7)) {
-            int keyCode8 = mc.gameSettings.keyBindRight.getKeyCode();
-            int keyCode9 = mc.gameSettings.keyBindRight.getKeyCode();
-            int n3 = keyCode9;
-            KeyBinding.setKeyBindState(keyCode8, this.isKeyDownSafe(n3));
+         if (this.isValidKeyCode(mc.gameSettings.keyBindRight.getKeyCode())) {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindRight.getKeyCode()));
          }
 
-         int keyCode10 = mc.gameSettings.keyBindLeft.getKeyCode();
-         if (this.isValidKeyCode(keyCode10)) {
-            int keyCode11 = mc.gameSettings.keyBindLeft.getKeyCode();
-            int keyCode12 = mc.gameSettings.keyBindLeft.getKeyCode();
-            int n4 = keyCode12;
-            KeyBinding.setKeyBindState(keyCode11, this.isKeyDownSafe(n4));
+         if (this.isValidKeyCode(mc.gameSettings.keyBindLeft.getKeyCode())) {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindLeft.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindLeft.getKeyCode()));
          }
 
          if (this.isSneakEnabled()) {
-            int keyCode13 = mc.gameSettings.keyBindSneak.getKeyCode();
-            if (this.isValidKeyCode(keyCode13)) {
-               int keyCode14 = mc.gameSettings.keyBindSneak.getKeyCode();
-               int keyCode15 = mc.gameSettings.keyBindSneak.getKeyCode();
-               int n5 = keyCode15;
-               KeyBinding.setKeyBindState(keyCode14, this.isKeyDownSafe(n5));
+            if (this.isValidKeyCode(mc.gameSettings.keyBindSneak.getKeyCode())) {
+               KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindSneak.getKeyCode()));
             }
          }
 
          if (this.isJumpEnabled()) {
-            int keyCode16 = mc.gameSettings.keyBindJump.getKeyCode();
-            if (this.isValidKeyCode(keyCode16)) {
-               int keyCode17 = mc.gameSettings.keyBindJump.getKeyCode();
-               int keyCode18 = mc.gameSettings.keyBindJump.getKeyCode();
-               int n6 = keyCode18;
-               KeyBinding.setKeyBindState(keyCode17, this.isKeyDownSafe(n6));
+            if (this.isValidKeyCode(mc.gameSettings.keyBindJump.getKeyCode())) {
+               KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), this.isKeyDownSafe(mc.gameSettings.keyBindJump.getKeyCode()));
                break exitBlock;
             }
          }
 
-         int keyCode19 = mc.gameSettings.keyBindJump.getKeyCode();
-         if (this.isValidKeyCode(keyCode19)) {
+         if (this.isValidKeyCode(mc.gameSettings.keyBindJump.getKeyCode())) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
          }
       }
 
       if (this.canMoveInGui()) {
          if (this.isSneakMotionWhileMoving()) {
-            float f = (float)((double)event.getMoveForward() * 0.3);
-            event.setMoveForward(f);
-            float f2 = (float)((double)event.getMoveStrafe() * 0.3);
-            event.setMoveStrafe(f2);
+            event.setMoveForward((float)((double)event.getMoveForward() * 0.3));
+            event.setMoveStrafe((float)((double)event.getMoveStrafe() * 0.3));
          }
       }
 
       if (this.canMoveInGui() && this.getMode().equals("Intave")) {
-         boolean flag2 = true;
-         event.setSneak(flag2);
+         event.setSneak(true);
       }
    }
 
    @Override
    public void onUpdate2() {
       int n;
-      GuiScreen currentScreen = mc.currentScreen;
-      this.activeScreenOption = this.resolveScreenOption(currentScreen);
+      this.activeScreenOption = this.resolveScreenOption(mc.currentScreen);
       if (!this.canMoveInGui()) {
          this.timeHelper.reset();
       } else {
-         String mode = this.getMode();
-         switch (mode) {
+         switch (this.getMode()) {
             case "Intave":
-               long l = 300L;
-               if (!this.timeHelper.reached2(l)) {
+               if (!this.timeHelper.reached2(300L)) {
                   break;
                }
             case "Basic":
-               int keyCode = mc.gameSettings.keyBindForward.getKeyCode();
-               if (this.isValidKeyCode(keyCode)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindForward.getKeyCode())) {
                   KeyBinding keyBindForward = mc.gameSettings.keyBindForward;
                   n = mc.gameSettings.keyBindForward.getKeyCode();
-                  int n2 = n;
-                  keyBindForward.setPressed(this.isKeyDownSafe(n2));
+                  keyBindForward.setPressed(this.isKeyDownSafe(n));
                }
 
-               int keyCode2 = mc.gameSettings.keyBindBack.getKeyCode();
-               if (this.isValidKeyCode(keyCode2)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindBack.getKeyCode())) {
                   KeyBinding keyBindBack = mc.gameSettings.keyBindBack;
                   n = mc.gameSettings.keyBindBack.getKeyCode();
-                  int n3 = n;
-                  keyBindBack.setPressed(this.isKeyDownSafe(n3));
+                  keyBindBack.setPressed(this.isKeyDownSafe(n));
                }
 
-               int keyCode3 = mc.gameSettings.keyBindRight.getKeyCode();
-               if (this.isValidKeyCode(keyCode3)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindRight.getKeyCode())) {
                   KeyBinding keyBindRight = mc.gameSettings.keyBindRight;
                   n = mc.gameSettings.keyBindRight.getKeyCode();
-                  int n4 = n;
-                  keyBindRight.setPressed(this.isKeyDownSafe(n4));
+                  keyBindRight.setPressed(this.isKeyDownSafe(n));
                }
 
-               int keyCode4 = mc.gameSettings.keyBindLeft.getKeyCode();
-               if (this.isValidKeyCode(keyCode4)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindLeft.getKeyCode())) {
                   KeyBinding keyBindLeft = mc.gameSettings.keyBindLeft;
                   n = mc.gameSettings.keyBindLeft.getKeyCode();
-                  int n5 = n;
-                  keyBindLeft.setPressed(this.isKeyDownSafe(n5));
+                  keyBindLeft.setPressed(this.isKeyDownSafe(n));
                }
 
-               int keyCode5 = mc.gameSettings.keyBindSprint.getKeyCode();
-               if (this.isValidKeyCode(keyCode5)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindSprint.getKeyCode())) {
                   KeyBinding keyBindSprint = mc.gameSettings.keyBindSprint;
                   n = mc.gameSettings.keyBindSprint.getKeyCode();
-                  int n6 = n;
-                  keyBindSprint.setPressed(this.isKeyDownSafe(n6));
+                  keyBindSprint.setPressed(this.isKeyDownSafe(n));
                }
 
-               int keyCode6 = mc.gameSettings.keyBindJump.getKeyCode();
-               if (this.isValidKeyCode(keyCode6)) {
+               if (this.isValidKeyCode(mc.gameSettings.keyBindJump.getKeyCode())) {
                   if (this.isJumpEnabled()) {
                      KeyBinding keyBindJump = mc.gameSettings.keyBindJump;
                      n = mc.gameSettings.keyBindJump.getKeyCode();
-                     int n7 = n;
-                     keyBindJump.setPressed(this.isKeyDownSafe(n7));
+                     keyBindJump.setPressed(this.isKeyDownSafe(n));
                   } else {
                      mc.gameSettings.keyBindJump.setPressed(false);
                   }
                }
 
                if (this.isSneakEnabled()) {
-                  int keyCode7 = mc.gameSettings.keyBindSneak.getKeyCode();
-                  if (this.isValidKeyCode(keyCode7)) {
+                  if (this.isValidKeyCode(mc.gameSettings.keyBindSneak.getKeyCode())) {
                      KeyBinding keyBindSneak = mc.gameSettings.keyBindSneak;
                      n = mc.gameSettings.keyBindSneak.getKeyCode();
-                     int n8 = n;
-                     keyBindSneak.setPressed(this.isKeyDownSafe(n8));
+                     keyBindSneak.setPressed(this.isKeyDownSafe(n));
                   }
                }
          }
@@ -320,26 +228,22 @@ public class GuiMove extends Module implements SprintListener, MoveInputListener
    @Override
    public void onSprint3(EventSprint event) {
       if (this.canMoveInGui()) {
-         boolean flag = !this.getSprintMode().equals("None");
-         event.setSprintKeyDown(flag);
-         boolean flag2 = this.getSprintMode().equals("AllDirection") && (!this.getMode().equals("Resprint") || mc.previousScreen != null);
-         event.setForceSprint(flag2);
+         event.setSprintKeyDown(!this.getSprintMode().equals("None"));
+         event.setForceSprint(this.getSprintMode().equals("AllDirection") && (!this.getMode().equals("Resprint") || mc.previousScreen != null));
       }
    }
 
    @Override
    public void onSprint(EventSprint event) {
       if (this.canMoveInGui()) {
-         boolean flag = this.isSprintJumpBoostEnabled() && MoveUtil.isMoving();
-         event.setOmniJumpSprint(flag);
+         event.setOmniJumpSprint(this.isSprintJumpBoostEnabled() && MoveUtil.isMoving());
       }
    }
 
    @Override
    public void onSprint2(EventSprint event) {
       if (this.canMoveInGui()) {
-         boolean flag = this.getSprintMode().equals("AllDirectionMotion") && (!this.getMode().equals("Resprint") || mc.previousScreen != null);
-         event.setMotionSprint(flag);
+         event.setMotionSprint(this.getSprintMode().equals("AllDirectionMotion") && (!this.getMode().equals("Resprint") || mc.previousScreen != null));
       }
    }
 
@@ -347,8 +251,7 @@ public class GuiMove extends Module implements SprintListener, MoveInputListener
    public void onPacket2(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof C16PacketClientStatus && this.noInvPacket.getValue()) {
-         C16PacketClientStatus packet2 = (C16PacketClientStatus)packet;
-         if (packet2.getStatus() == C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
+         if (((C16PacketClientStatus)packet).getStatus() == C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
             event.cancel();
          }
       }
@@ -366,25 +269,20 @@ public class GuiMove extends Module implements SprintListener, MoveInputListener
 
          double d2 = d;
          if (this.getMode().equals("Intave")) {
-            long l = 300L;
-            if (this.timeHelper.reached2(l) && mc.thePlayer.onGround) {
-               float f = (float)Math.toDegrees(MoveUtil.getDirection(mc.thePlayer.rotationYaw));
-               d2 = RotationUtil.isNearCardinalYaw(f) ? 2.72 : 1.0;
+            if (this.timeHelper.reached2(300L) && mc.thePlayer.onGround) {
+               d2 = RotationUtil.isNearCardinalYaw((float)Math.toDegrees(MoveUtil.getDirection(mc.thePlayer.rotationYaw))) ? 2.72 : 1.0;
             }
          }
 
-         double d3 = event.getX() * d2;
-         event.setX(d3);
-         double d4 = event.getZ() * d2;
-         event.setZ(d4);
+         event.setX(event.getX() * d2);
+         event.setZ(event.getZ() * d2);
       }
    }
 
    @Override
    public void onSafeWalk(EventSafeWalk event) {
       if (this.canMoveInGui() && this.getMode().equals("Intave")) {
-         boolean flag = true;
-         event.setDisableSneakSafeWalk(flag);
+         event.setDisableSneakSafeWalk(true);
       }
    }
 

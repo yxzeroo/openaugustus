@@ -17,23 +17,13 @@ public class DoubleListProperty extends AbstractConfigProperty {
    }
 
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      JsonListPropertyCodec doubleListCodec = configSerializerProvider.getDoubleListCodec();
-      String name2 = this.getName();
-      List list = flag ? (List)this.getDefaultValue() : (List)this.getValue();
-      String str = name2;
-      List list2 = doubleListCodec.readList(str, list, json);
-      List list3 = list2;
-      this.applyValue(list3);
+      this.applyValue(configSerializerProvider.getDoubleListCodec().readList(this.getName(), flag ? (List)this.getDefaultValue() : (List)this.getValue(), json));
    }
 
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       super.serialize(configSerializerProvider, json, unaryFunction);
-      JsonListPropertyCodec doubleListCodec = configSerializerProvider.getDoubleListCodec();
-      String name2 = this.getName();
-      List value2 = (List)this.getValue();
-      String str = name2;
-      doubleListCodec.writeList(str, value2, json);
+      configSerializerProvider.getDoubleListCodec().writeList(this.getName(), (List)this.getValue(), json);
       return json;
    }
 }

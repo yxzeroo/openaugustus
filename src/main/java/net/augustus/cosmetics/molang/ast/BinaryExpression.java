@@ -14,11 +14,7 @@ public class BinaryExpression implements MolangValue {
 
    @Override
    public double get() {
-      MolangOperation operation2 = this.operation;
-      double d = this.left.get();
-      double d2 = this.right.get();
-      double d3 = d;
-      return operation2.calculate(d3, d2);
+      return this.operation.calculate(this.left.get(), this.right.get());
    }
 
    public BinaryExpression(MolangOperation molangOperation, MolangValue molangValue, MolangValue molangValue2) {

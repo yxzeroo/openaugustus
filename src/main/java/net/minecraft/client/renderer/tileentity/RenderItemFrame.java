@@ -54,8 +54,7 @@ public class RenderItemFrame extends Render {
       } else {
          if (!Config.zoomMode) {
             Entity renderViewEntity = this.mc.getRenderViewEntity();
-            double distanceSq = entityItemFrame.getDistanceSq(renderViewEntity.posX, renderViewEntity.posY, renderViewEntity.posZ);
-            if (distanceSq > itemRenderDistanceSq) {
+            if (entityItemFrame.getDistanceSq(renderViewEntity.posX, renderViewEntity.posY, renderViewEntity.posZ) > itemRenderDistanceSq) {
                return false;
             }
          }
@@ -106,8 +105,7 @@ public class RenderItemFrame extends Render {
 
          if (!Config.zoomMode) {
             EntityPlayerSP thePlayer = this.mc.thePlayer;
-            double distanceSq = entityItemFrame.getDistanceSq(thePlayer.posX, thePlayer.posY, thePlayer.posZ);
-            if (distanceSq > 4096.0) {
+            if (entityItemFrame.getDistanceSq(thePlayer.posX, thePlayer.posY, thePlayer.posZ) > 4096.0) {
                return;
             }
          }

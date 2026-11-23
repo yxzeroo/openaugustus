@@ -7,8 +7,7 @@ import java.util.List;
 public final class IntegerArrayPropertySerializer implements ArrayPropertySerializer {
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      Integer num = (Integer)obj;
-      this.writeIntegerElement(array, num);
+      this.writeIntegerElement(array, (Integer)obj);
    }
 
    @Override

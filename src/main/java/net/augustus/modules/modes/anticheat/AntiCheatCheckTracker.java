@@ -31,9 +31,7 @@ public class AntiCheatCheckTracker {
    }
 
    public void reportHitbug(HitbugFlagType hitbugFlagType) {
-      String str = "You got Hitbug! Congratulations! " + hitbugFlagType.getLabel();
-      String str2 = str;
-      this.debugLog(str2);
+      this.debugLog("You got Hitbug! Congratulations! " + hitbugFlagType.getLabel());
    }
 
    public AntiCheatCheckTracker(int n, String str, AntiCheatCategory antiCheatCategory2) {

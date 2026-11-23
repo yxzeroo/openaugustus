@@ -36,9 +36,7 @@ public class EventBlockBoundingBox extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      BlockBoundingBoxListener listener = (BlockBoundingBoxListener)obj;
-      BlockBoundingBoxListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((BlockBoundingBoxListener)obj);
    }
 
    private void reset(AxisAlignedBB box, Block block2, BlockPos pos) {

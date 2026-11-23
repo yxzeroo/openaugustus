@@ -164,9 +164,7 @@ public abstract class LayerArmorBase implements LayerRenderer {
 
    private void renderGlint(EntityLivingBase entity, ModelBase modelBase, ItemStack stack, float f, float f2, float f3, float f4, float f5, float f6, float f7) {
       if ((!Config.isCustomItems() || CustomItems.isUseGlint()) && (!Config.isShaderPackLoaded() || !Shaders.isShadowPass)) {
-         double d = 1.0;
-         int n = -8372020;
-         EventItemGlint event = ItemGlintListener.onItemGlint(stack, n, d);
+         EventItemGlint event = ItemGlintListener.onItemGlint(stack, -8372020, 1.0);
          float f8 = (float)((double)entity.ticksExisted * event.getSpeed()) + f3;
          this.renderer.bindTexture(ENCHANTED_ITEM_GLINT_RES);
          if (Config.isShaderPackLoaded()) {

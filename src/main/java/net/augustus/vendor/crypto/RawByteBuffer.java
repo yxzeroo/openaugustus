@@ -66,17 +66,14 @@ public abstract class RawByteBuffer {
    public RawByteBuffer put(byte[] bytes, int n, int n2) {
       boolean flag = false;
       int n3 = 0;
-      int length = bytes.length;
-      checkBounds(n, n2, length);
+      checkBounds(n, n2, bytes.length);
       if (n2 > this.remaining()) {
          throw new RuntimeException();
       } else {
          n3 = n + n2;
 
          for (int i = n; i < n3; i++) {
-            RawByteBuffer rawByteBuffer = this;
-            byte b = bytes[i];
-            rawByteBuffer.put(b);
+            this.put(bytes[i]);
          }
 
          return this;
@@ -94,9 +91,7 @@ public abstract class RawByteBuffer {
    }
 
    public static RawByteBuffer wrap(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return wrap(bytes, b, length);
+      return wrap(bytes, (byte)0, bytes.length);
    }
 
    public RawByteBuffer get(byte[] bytes, int n, int n2) {
@@ -117,9 +112,7 @@ public abstract class RawByteBuffer {
    }
 
    public final RawByteBuffer put2(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return this.put(bytes, b, length);
+      return this.put(bytes, (byte)0, bytes.length);
    }
 
    public RawByteBuffer(int n, int n2, int n3, int n4, byte[] bytes, int n5) {
@@ -191,9 +184,7 @@ public abstract class RawByteBuffer {
    }
 
    public RawByteBuffer get(byte[] bytes) {
-      int length = bytes.length;
-      byte b = 0;
-      return this.get(bytes, b, length);
+      return this.get(bytes, (byte)0, bytes.length);
    }
 
    public final int getLimit() {

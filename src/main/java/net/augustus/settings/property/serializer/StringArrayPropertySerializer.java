@@ -16,7 +16,6 @@ public final class StringArrayPropertySerializer implements ArrayPropertySeriali
 
    @Override
    public void writeElement(JsonArray array, Object obj) {
-      String str = (String)obj;
-      this.writeStringElement(array, str);
+      this.writeStringElement(array, (String)obj);
    }
 }

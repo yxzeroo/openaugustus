@@ -41,14 +41,9 @@ public final class AesCrypto {
          return null;
       } else {
          byte[] bytes2 = new byte[n2];
-         int blockSize = this.getBlockSize();
-         this.checkBlockAlignment(n2, blockSize);
-         byte b = 0;
-         this.decryptCbc(bytes, n, n2, bytes2, b);
-         int length = bytes.length;
-         byte b2 = 0;
-         int n3 = this.unpad(bytes2, b2, length);
-         return Arrays.copyOf(bytes2, n3);
+         this.checkBlockAlignment(n2, this.getBlockSize());
+         this.decryptCbc(bytes, n, n2, bytes2, (byte)0);
+         return Arrays.copyOf(bytes2, this.unpad(bytes2, (byte)0, bytes.length));
       }
    }
 
@@ -92,8 +87,7 @@ public final class AesCrypto {
          }
 
          if (n5 != 0) {
-            int n6 = Math.addExact(b, n2);
-            this.padWithLen(bytes2, n6, n5);
+            this.padWithLen(bytes2, Math.addExact(b, n2), n5);
          }
 
          return bytes2;
@@ -110,9 +104,7 @@ public final class AesCrypto {
             this.cbcScratchBlock[i] = (byte)(bytes[i + n] ^ this.cbcFeedbackIv[i]);
          }
 
-         byte b = 0;
-         byte[] cbcScratchBlock2 = this.cbcScratchBlock;
-         this.encryptBlock(cbcScratchBlock2, b, bytes2, n3);
+         this.encryptBlock(this.cbcScratchBlock, (byte)0, bytes2, n3);
          System.arraycopy(bytes2, n3, this.cbcFeedbackIv, 0, this.getBlockSize());
          n += this.getBlockSize();
          n3 += this.getBlockSize();
@@ -130,18 +122,15 @@ public final class AesCrypto {
          return null;
       } else {
          try {
-            boolean flag = false;
-            bytes = this.prepareInput(bytes, n, n2, flag);
+            bytes = this.prepareInput(bytes, n, n2, false);
          } catch (ShortBufferException | IllegalBlockSizeException e) {
             throw new RuntimeException(e);
          }
 
          n2 = bytes.length;
          byte[] bytes2 = new byte[n2];
-         int blockSize = this.getBlockSize();
-         this.checkBlockAlignment(n2, blockSize);
-         byte b = 0;
-         this.encryptCbc(bytes, n, n2, bytes2, b);
+         this.checkBlockAlignment(n2, this.getBlockSize());
+         this.encryptCbc(bytes, n, n2, bytes2, (byte)0);
          if (bytes2.length % this.getBlockSize() != 0) {
             System.out.println("Writing " + bytes2.length);
          }
@@ -199,8 +188,7 @@ public final class AesCrypto {
    }
 
    private void makeKey(byte[] bytes) throws InvalidKeyException {
-      int length = bytes.length;
-      int rounds = this.getRounds(length);
+      int rounds = this.getRounds(bytes.length);
       int n = (rounds + 1) * 4;
       byte b = 4;
       int[][] intsArr = new int[rounds + 1][4];
@@ -274,10 +262,8 @@ public final class AesCrypto {
          }
       }
 
-      boolean flag = false;
-      int[] ints2 = this.expandToSubKey(intsArr, flag);
-      boolean flag2 = true;
-      int[] ints3 = this.expandToSubKey(intsArr2, flag2);
+      int[] ints2 = this.expandToSubKey(intsArr, false);
+      int[] ints3 = this.expandToSubKey(intsArr2, true);
       this.hasAtLeast12Rounds = rounds >= 12;
       this.has14Rounds = rounds == 14;
       this.roundLimit = rounds * 4;
@@ -292,9 +278,7 @@ public final class AesCrypto {
       int n4 = n + n2;
 
       while (n < n4) {
-         byte b = 0;
-         byte[] cbcScratchBlock2 = this.cbcScratchBlock;
-         this.decryptBlock(bytes, n, cbcScratchBlock2, b);
+         this.decryptBlock(bytes, n, this.cbcScratchBlock, (byte)0);
 
          for (int i = 0; i < this.getBlockSize(); i++) {
             bytes2[i + n3] = (byte)(this.cbcScratchBlock[i] ^ this.cbcFeedbackIv[i]);
@@ -314,8 +298,7 @@ public final class AesCrypto {
          if (n3 > bytes.length) {
             throw new ShortBufferException("Buffer too small to hold padding");
          } else {
-            byte b = (byte)(n2 & 0xFF);
-            Arrays.fill(bytes, n, n3, b);
+            Arrays.fill(bytes, n, n3, (byte)(n2 & 0xFF));
          }
       }
    }
@@ -410,11 +393,7 @@ public final class AesCrypto {
          return 0;
       } else {
          n = this.log[n & 0xFF];
-         int n2 = bytes[0] != 0 ? this.alog[(n + this.log[bytes[0] & 255]) % 255] & 0xFF : 0;
-         int n3 = bytes[1] != 0 ? this.alog[(n + this.log[bytes[1] & 255]) % 255] & 0xFF : 0;
-         int n4 = bytes[2] != 0 ? this.alog[(n + this.log[bytes[2] & 255]) % 255] & 0xFF : 0;
-         int n5 = bytes[3] != 0 ? this.alog[(n + this.log[bytes[3] & 255]) % 255] & 0xFF : 0;
-         return n2 << 24 | n3 << 16 | n4 << 8 | n5;
+         return (bytes[0] != 0 ? this.alog[(n + this.log[bytes[0] & 255]) % 255] & 0xFF : 0) << 24 | (bytes[1] != 0 ? this.alog[(n + this.log[bytes[1] & 255]) % 255] & 0xFF : 0) << 16 | (bytes[2] != 0 ? this.alog[(n + this.log[bytes[2] & 255]) % 255] & 0xFF : 0) << 8 | (bytes[3] != 0 ? this.alog[(n + this.log[bytes[3] & 255]) % 255] & 0xFF : 0);
       }
    }
 
@@ -444,14 +423,13 @@ public final class AesCrypto {
       this.rcon = new byte[30];
       this.cbcScratchBlock = new byte[this.getBlockSize()];
       this.cbcFeedbackIv = new byte[this.getBlockSize()];
-      short s = 283;
       int n = 0;
       this.alog[0] = 1;
 
       for (int i = 1; i < 256; i++) {
          n = this.alog[i - 1] << 1 ^ this.alog[i - 1];
          if ((n & 256) != 0) {
-            n ^= s;
+            n ^= (short)283;
          }
 
          this.alog[i] = n;
@@ -547,12 +525,7 @@ public final class AesCrypto {
          for (int i9 = 0; i9 < 4; i9++) {
             if (i6 != i9) {
                for (int i10 = i6 + 1; i10 < 8; i10++) {
-                  byte[] bytes2 = bytesArr5[i9];
-                  byte b3 = bytesArr5[i9][i10];
-                  byte b4 = bytesArr5[i6][i10];
-                  byte b5 = bytesArr5[i9][i6];
-                  byte b6 = b4;
-                  bytes2[i10] = (byte)(b3 ^ this.mul(b6, b5));
+                  bytesArr5[i9][i10] = (byte)(bytesArr5[i9][i10] ^ this.mul(bytesArr5[i6][i10], bytesArr5[i9][i6]));
                }
 
                bytesArr5[i9][i6] = 0;
@@ -599,8 +572,7 @@ public final class AesCrypto {
       int n4 = 1;
 
       for (int i14 = 1; i14 < 30; i14++) {
-         byte b8 = 2;
-         n4 = this.mul(b8, n4);
+         n4 = this.mul((byte)2, n4);
          this.rcon[i14] = (byte)n4;
       }
 

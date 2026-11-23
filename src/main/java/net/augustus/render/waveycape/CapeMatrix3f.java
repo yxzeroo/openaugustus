@@ -31,8 +31,7 @@ public final class CapeMatrix3f {
    }
 
    public void mul(CapeQuaternion capeQuaternion) {
-      CapeMatrix3f capeMatrix3f = new CapeMatrix3f(capeQuaternion);
-      this.mul3(capeMatrix3f);
+      this.mul3(new CapeMatrix3f(capeQuaternion));
    }
 
    public CapeMatrix3f(CapeMatrix3f capeMatrix3f) {

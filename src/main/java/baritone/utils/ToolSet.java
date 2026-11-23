@@ -101,8 +101,7 @@ public class ToolSet {
       if (stack == null) {
          return -1;
       } else if (stack.getItem() instanceof ItemTool) {
-         ItemTool item = (ItemTool)stack.getItem();
-         return item.getToolMaterial().getHarvestLevel();
+         return ((ItemTool)stack.getItem()).getToolMaterial().getHarvestLevel();
       } else {
          return -1;
       }
@@ -114,13 +113,11 @@ public class ToolSet {
          double d = this.potionAmplifier();
          Function<Double, Double> function = d2 -> d * d2;
          this.backendCalculation = function.compose(obj -> {
-            ItemStack stackInSlot = this.player.inventory.getStackInSlot(this.getBestSlot((Block)obj, false, true));
-            return calculateSpeedVsBlock(stackInSlot, ((Block)obj).getDefaultState()) * this.avoidanceMultiplier((Block)obj);
+            return calculateSpeedVsBlock(this.player.inventory.getStackInSlot(this.getBestSlot((Block)obj, false, true)), ((Block)obj).getDefaultState()) * this.avoidanceMultiplier((Block)obj);
          });
       } else {
          this.backendCalculation = obj2 -> {
-            ItemStack stackInSlot2 = this.player.inventory.getStackInSlot(this.getBestSlot((Block)obj2, false, true));
-            return calculateSpeedVsBlock(stackInSlot2, ((Block)obj2).getDefaultState()) * this.avoidanceMultiplier((Block)obj2);
+            return calculateSpeedVsBlock(this.player.inventory.getStackInSlot(this.getBestSlot((Block)obj2, false, true)), ((Block)obj2).getDefaultState()) * this.avoidanceMultiplier((Block)obj2);
          };
       }
    }

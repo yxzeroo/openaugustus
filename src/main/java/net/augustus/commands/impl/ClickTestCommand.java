@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import net.augustus.modules.legit.AutoClicker;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class ClickTestCommand extends Command {
 
@@ -58,8 +58,7 @@ public class ClickTestCommand extends Command {
    public void commandAction(String[] strings, String str) {
       AbstractClickPatternMode abstractSubMode = (AbstractClickPatternMode)Augustus.getInstance().getModuleManager().autoClicker.mode.getAbstractSubMode();
       if (abstractSubMode instanceof RecordedClickPatternMode) {
-         RecordedClickPatternMode recordedClickPatternMode = (RecordedClickPatternMode)abstractSubMode;
-         Integer[] allDelays = recordedClickPatternMode.getActivePattern().allDelays;
+         Integer[] allDelays = ((RecordedClickPatternMode)abstractSubMode).getActivePattern().allDelays;
          ArrayList list = new ArrayList();
          ArrayList list2 = new ArrayList();
 
@@ -94,13 +93,13 @@ public class ClickTestCommand extends Command {
             double d = this.calculateCurveError(dataPoint2Ds, list5);
             double d2 = this.calculateCurveError(dataPoint2Ds2, list6);
             if (Double.isFinite(d) && (tuplePair == null || (Double)tuplePair.getSecond() > d)) {
-               DoubleValue pressedTimings = subMode.pressedTimings;
+               SettingGroup pressedTimings = subMode.pressedTimings;
                tuplePair = new TuplePair(ClipboardConfigCodec.encodeSettingGroup(autoClicker, pressedTimings), d);
                System.out.println("Pressed: " + d);
             }
 
             if (Double.isFinite(d2) && (tuplePair2 == null || (Double)tuplePair2.getSecond() > d2)) {
-               DoubleValue unpressedTimings = subMode.unpressedTimings;
+               SettingGroup unpressedTimings = subMode.unpressedTimings;
                tuplePair2 = new TuplePair(ClipboardConfigCodec.encodeSettingGroup(autoClicker, unpressedTimings), d2);
                System.out.println("Unpressed: " + d2);
             }
@@ -110,14 +109,10 @@ public class ClickTestCommand extends Command {
          AutoClicker autoClicker2 = Augustus.getInstance().getModuleManager().autoClicker;
          String str3 = "Density";
          DensityClickPatternMode subMode2 = (DensityClickPatternMode)autoClicker2.mode.getSubMode(str3);
-         DoubleValue pressedTimings2 = subMode2.pressedTimings;
-         String first = (String)tuplePair.getFirst();
-         DoubleValue doubleValue = pressedTimings2;
-         ClipboardConfigCodec.importSettingGroup(autoClicker2, doubleValue, first);
+         SettingGroup pressedTimings2 = subMode2.pressedTimings;
+         ClipboardConfigCodec.importSettingGroup(autoClicker2, pressedTimings2, (String)tuplePair.getFirst());
          pressedTimings2 = subMode2.unpressedTimings;
-         String first2 = (String)tuplePair2.getFirst();
-         DoubleValue doubleValue2 = pressedTimings2;
-         ClipboardConfigCodec.importSettingGroup(autoClicker2, doubleValue2, first2);
+         ClipboardConfigCodec.importSettingGroup(autoClicker2, pressedTimings2, (String)tuplePair2.getFirst());
          System.out.println("Original:");
          System.out.println("unten,oben");
 

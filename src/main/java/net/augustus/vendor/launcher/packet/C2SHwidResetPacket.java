@@ -8,7 +8,6 @@ public class C2SHwidResetPacket implements LauncherPacket {
    private byte[] activationKey;
    private byte[] passwordHash;
    private byte[] usernameHash;
-   private static int[] controlFlowMarker;
 
    @Override
    public void write(NettyPacketBuf nettyPacketBuf) throws Exception {
@@ -55,15 +54,6 @@ public class C2SHwidResetPacket implements LauncherPacket {
       return this.hwidHash;
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(null);
-   }
 }

@@ -5,30 +5,25 @@ import net.augustus.events.listeners.MotionListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import java.util.function.BiFunction;
 import net.augustus.modules.movement.HighJump;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 
 public class VanillaHighJumpMode extends HighJumpMode implements MotionListener {
-   public final StringValue vanillaHeight;
+   public final DoubleValue vanillaHeight;
 
-   public VanillaHighJumpMode(HighJump highJump, DoubleValue doubleValue) {
+   public VanillaHighJumpMode(HighJump highJump, SettingGroup doubleValue) {
        super(highJump, doubleValue, "Vanilla");
-      StringValue stringValue = new StringValue(this.parentModule, "VanillaHeight", 1.0, 0.42, 5.0, 2, this.modeSetting);
-      String str = "Height";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.vanillaHeight = stringValue2.visibleWhen(condition);
+      this.vanillaHeight = new DoubleValue(this.parentModule, "VanillaHeight", 1.0, 0.42, 5.0, 2, this.modeSetting).named("Height").visibleWhen(() -> this.isSelected());
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new VanillaHighJumpMode((HighJump)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new VanillaHighJumpMode((HighJump)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void updateEventSubscriptions() {
       super.updateEventSubscriptions();
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override

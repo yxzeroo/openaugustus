@@ -36,8 +36,7 @@ public class Rotation {
 
    public double manhattanDistance(Rotation rotation) {
       float f = Math.abs(this.yaw - rotation.yaw);
-      float f2 = Math.abs(this.pitch - rotation.pitch);
-      return (double)(f2 + f);
+      return (double)(Math.abs(this.pitch - rotation.pitch) + f);
    }
 
    public float[] toArray() {

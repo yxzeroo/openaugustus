@@ -13,8 +13,7 @@ public class BasicDataRetriever implements DataRetriever {
 
    @Override
    public boolean isFavorite(String str) throws TheAlteningException {
-      JsonObject asJsonObject = this.retrieveData("http://api.thealtening.com/v2/favorite?token=" + str + "&key=" + this.apiKey).getAsJsonObject();
-      return this.isSuccess(asJsonObject);
+      return this.isSuccess(this.retrieveData("http://api.thealtening.com/v2/favorite?token=" + str + "&key=" + this.apiKey).getAsJsonObject());
    }
 
    @Override
@@ -25,8 +24,7 @@ public class BasicDataRetriever implements DataRetriever {
 
    @Override
    public boolean isPrivate(String str) throws TheAlteningException {
-      JsonObject asJsonObject = this.retrieveData("http://api.thealtening.com/v2/private?token=" + str + "&key=" + this.apiKey).getAsJsonObject();
-      return this.isSuccess(asJsonObject);
+      return this.isSuccess(this.retrieveData("http://api.thealtening.com/v2/private?token=" + str + "&key=" + this.apiKey).getAsJsonObject());
    }
 
    public AsynchronousDataRetriever toAsync() {

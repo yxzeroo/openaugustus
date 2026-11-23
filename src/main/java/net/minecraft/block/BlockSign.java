@@ -72,8 +72,7 @@ public class BlockSign extends BlockContainer {
       if (world.isRemote) {
          return true;
       } else {
-         TileEntity tileEntity = world.getTileEntity(pos);
-         return tileEntity instanceof TileEntitySign;
+         return world.getTileEntity(pos) instanceof TileEntitySign;
       }
    }
 

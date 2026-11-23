@@ -141,36 +141,24 @@ public class CustomColors {
       potionColors = null;
       paletteFormatDefault = readProperty("mcpatcher/color.properties", "palette.format", CustomColormap.FORMAT_STRINGS, "vanilla");
       String str = "mcpatcher/colormap/";
-      String[] strings = new String[]{"water.png", "watercolorX.png"};
-      waterColors = getCustomColors(str, strings, 256, 256);
+      waterColors = getCustomColors(str, new String[]{"water.png", "watercolorX.png"}, 256, 256);
       updateUseDefaultGrassFoliageColors();
       if (Config.isCustomColors()) {
-         String[] strings2 = new String[]{"pine.png", "pinecolor.png"};
-         foliagePineColors = getCustomColors(str, strings2, 256, 256);
-         String[] strings3 = new String[]{"birch.png", "birchcolor.png"};
-         foliageBirchColors = getCustomColors(str, strings3, 256, 256);
-         String[] strings4 = new String[]{"swampgrass.png", "swampgrasscolor.png"};
-         swampGrassColors = getCustomColors(str, strings4, 256, 256);
-         String[] strings5 = new String[]{"swampfoliage.png", "swampfoliagecolor.png"};
-         swampFoliageColors = getCustomColors(str, strings5, 256, 256);
-         String[] strings6 = new String[]{"sky0.png", "skycolor0.png"};
-         skyColors = getCustomColors(str, strings6, 256, 256);
-         String[] strings7 = new String[]{"fog0.png", "fogcolor0.png"};
-         fogColors = getCustomColors(str, strings7, 256, 256);
-         String[] strings8 = new String[]{"underwater.png", "underwatercolor.png"};
-         underwaterColors = getCustomColors(str, strings8, 256, 256);
-         String[] strings9 = new String[]{"underlava.png", "underlavacolor.png"};
-         underlavaColors = getCustomColors(str, strings9, 256, 256);
-         String[] strings10 = new String[]{"redstone.png", "redstonecolor.png"};
-         redstoneColors = getCustomColors(str, strings10, 16, 1);
+         foliagePineColors = getCustomColors(str, new String[]{"pine.png", "pinecolor.png"}, 256, 256);
+         foliageBirchColors = getCustomColors(str, new String[]{"birch.png", "birchcolor.png"}, 256, 256);
+         swampGrassColors = getCustomColors(str, new String[]{"swampgrass.png", "swampgrasscolor.png"}, 256, 256);
+         swampFoliageColors = getCustomColors(str, new String[]{"swampfoliage.png", "swampfoliagecolor.png"}, 256, 256);
+         skyColors = getCustomColors(str, new String[]{"sky0.png", "skycolor0.png"}, 256, 256);
+         fogColors = getCustomColors(str, new String[]{"fog0.png", "fogcolor0.png"}, 256, 256);
+         underwaterColors = getCustomColors(str, new String[]{"underwater.png", "underwatercolor.png"}, 256, 256);
+         underlavaColors = getCustomColors(str, new String[]{"underlava.png", "underlavacolor.png"}, 256, 256);
+         redstoneColors = getCustomColors(str, new String[]{"redstone.png", "redstonecolor.png"}, 16, 1);
          xpOrbColors = getCustomColors(str + "xporb.png", -1, -1);
          durabilityColors = getCustomColors(str + "durability.png", -1, -1);
-         String[] strings11 = new String[]{"stem.png", "stemcolor.png"};
-         stemColors = getCustomColors(str, strings11, 8, 1);
+         stemColors = getCustomColors(str, new String[]{"stem.png", "stemcolor.png"}, 8, 1);
          stemPumpkinColors = getCustomColors(str + "pumpkinstem.png", 8, 1);
          stemMelonColors = getCustomColors(str + "melonstem.png", 8, 1);
-         String[] strings12 = new String[]{"myceliumparticle.png", "myceliumparticlecolor.png"};
-         myceliumParticleColors = getCustomColors(str, strings12, -1, -1);
+         myceliumParticleColors = getCustomColors(str, new String[]{"myceliumparticle.png", "myceliumparticlecolor.png"}, -1, -1);
          Pair pair = parseLightMapPacks();
          lightMapPacks = (LightMapPack[])pair.getLeft();
          lightmapMinDimensionId = (Integer)pair.getRight();
@@ -182,8 +170,7 @@ public class CustomColors {
 
    private static String readProperty(String str, String str2, String[] strings, String str3) {
       try {
-         ResourceLocation location = new ResourceLocation(str);
-         InputStream resourceStream = Config.getResourceStream(location);
+         InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
          if (resourceStream == null) {
             return str3;
          } else {
@@ -238,8 +225,7 @@ public class CustomColors {
       } else {
          int n2 = nums[0];
          int n3 = nums[nums.length - 1];
-         int n4 = n3 - n2 + 1;
-         CustomColormap[] customColormaps = new CustomColormap[n4];
+         CustomColormap[] customColormaps = new CustomColormap[n3 - n2 + 1];
 
          for (int j = 0; j < nums.length; j++) {
             Integer num = nums[j];
@@ -249,8 +235,7 @@ public class CustomColors {
                if (customColors.getWidth() < 16) {
                   warn("Invalid lightmap width: " + customColors.getWidth() + ", path: " + str5);
                } else {
-                  int n5 = num - n2;
-                  customColormaps[n5] = customColors;
+                  customColormaps[num - n2] = customColors;
                }
             }
          }
@@ -267,8 +252,7 @@ public class CustomColors {
                LightMap lightMap = new LightMap(customColormap);
                LightMap lightMap2 = customColors2 != null ? new LightMap(customColors2) : null;
                LightMap lightMap3 = customColors3 != null ? new LightMap(customColors3) : null;
-               LightMapPack lightMapPack = new LightMapPack(lightMap, lightMap2, lightMap3);
-               lightMapPacks2[k] = lightMapPack;
+               lightMapPacks2[k] = new LightMapPack(lightMap, lightMap2, lightMap3);
             }
          }
 
@@ -293,8 +277,7 @@ public class CustomColors {
 
    private static void readColorProperties(String str) {
       try {
-         ResourceLocation location = new ResourceLocation(str);
-         InputStream resourceStream = Config.getResourceStream(location);
+         InputStream resourceStream = Config.getResourceStream(new ResourceLocation(str));
          if (resourceStream == null) {
             return;
          }
@@ -356,18 +339,15 @@ public class CustomColors {
          String property2 = properties.getProperty(str4);
          dbg("Block palette: " + str4 + " = " + property2);
          String str5 = str4.substring(str2.length());
-         String basePath = TextureUtils.getBasePath(str);
-         str5 = TextureUtils.fixResourcePath(str5, basePath);
+         str5 = TextureUtils.fixResourcePath(str5, TextureUtils.getBasePath(str));
          CustomColormap customColors = getCustomColors(str5, 256, 256);
          if (customColors == null) {
             warn("Colormap not found: " + str5);
          } else {
-            ConnectedParser connectedParser = new ConnectedParser("CustomColors");
-            MatchBlock[] matchBlocks = connectedParser.parseMatchBlocks(property2);
+            MatchBlock[] matchBlocks = new ConnectedParser("CustomColors").parseMatchBlocks(property2);
             if (matchBlocks != null && matchBlocks.length > 0) {
                for (int j = 0; j < matchBlocks.length; j++) {
-                  MatchBlock matchBlock = matchBlocks[j];
-                  customColors.addMatchBlock(matchBlock);
+                  customColors.addMatchBlock(matchBlocks[j]);
                }
 
                list.add(customColors);
@@ -390,8 +370,7 @@ public class CustomColors {
          dbg("Block colormap: " + str);
 
          try {
-            ResourceLocation location = new ResourceLocation("minecraft", str);
-            InputStream resourceStream = Config.getResourceStream(location);
+            InputStream resourceStream = Config.getResourceStream(new ResourceLocation("minecraft", str));
             if (resourceStream == null) {
                warn("File not found: " + str);
             } else {
@@ -412,8 +391,7 @@ public class CustomColors {
 
       if (customColormaps != null) {
          for (int j = 0; j < customColormaps.length; j++) {
-            CustomColormap customColormap2 = customColormaps[j];
-            addToBlockList(customColormap2, list);
+            addToBlockList(customColormaps[j], list);
          }
       }
 
@@ -456,8 +434,7 @@ public class CustomColors {
       for (int i = 0; i < list.size(); i++) {
          List list2 = (List)list.get(i);
          if (list2 != null) {
-            CustomColormap[] customColormaps = (CustomColormap[])list2.toArray(new CustomColormap[list2.size()]);
-            customColormapsArr[i] = customColormaps;
+            customColormapsArr[i] = (CustomColormap[])list2.toArray(new CustomColormap[list2.size()]);
          }
       }
 
@@ -466,8 +443,7 @@ public class CustomColors {
 
    private static int readColor2(Properties properties, String[] strings) {
       for (int i = 0; i < strings.length; i++) {
-         String str = strings[i];
-         int n = readColor(properties, str);
+         int n = readColor(properties, strings[i]);
          if (n >= 0) {
             return n;
          }
@@ -537,8 +513,7 @@ public class CustomColors {
 
    public static CustomColormap getCustomColors(String str, int n, int n2) {
       try {
-         ResourceLocation location = new ResourceLocation(str);
-         if (!Config.hasResource(location)) {
+         if (!Config.hasResource(new ResourceLocation(str))) {
             return null;
          } else {
             dbg("Colormap " + str);
@@ -702,10 +677,7 @@ public class CustomColors {
          }
       }
 
-      int n4 = n / 9;
-      int n5 = n2 / 9;
-      int n6 = n3 / 9;
-      return n4 << 16 | n5 << 8 | n6;
+      return (n / 9) << 16 | (n2 / 9) << 8 | (n3 / 9);
    }
 
    public static int getFluidColor(IBlockAccess world, IBlockState state, BlockPos pos, RenderEnv renderEnv) {
@@ -730,10 +702,7 @@ public class CustomColors {
          int n2 = n >> 16 & 0xFF;
          int n3 = n >> 8 & 0xFF;
          int n4 = n & 0xFF;
-         float f = (float)n2 / 255.0F;
-         float f2 = (float)n3 / 255.0F;
-         float f3 = (float)n4 / 255.0F;
-         entityFX.setRBGColorF(f, f2, f3);
+         entityFX.setRBGColorF((float)n2 / 255.0F, (float)n3 / 255.0F, (float)n4 / 255.0F);
       }
    }
 
@@ -743,10 +712,7 @@ public class CustomColors {
          int n = colorRandom >> 16 & 0xFF;
          int n2 = colorRandom >> 8 & 0xFF;
          int n3 = colorRandom & 0xFF;
-         float f = (float)n / 255.0F;
-         float f2 = (float)n2 / 255.0F;
-         float f3 = (float)n3 / 255.0F;
-         entityFX.setRBGColorF(f, f2, f3);
+         entityFX.setRBGColorF((float)n / 255.0F, (float)n2 / 255.0F, (float)n3 / 255.0F);
       }
    }
 
@@ -761,30 +727,24 @@ public class CustomColors {
 
    public static void updateReddustFX(EntityFX entityFX, IBlockAccess world, double d, double d2, double d3) {
       if (redstoneColors != null) {
-         IBlockState blockState = world.getBlockState(new BlockPos(d, d2, d3));
-         int redstoneLevel = getRedstoneLevel(blockState, 15);
+         int redstoneLevel = getRedstoneLevel(world.getBlockState(new BlockPos(d, d2, d3)), 15);
          int color = redstoneColors.getColor(redstoneLevel);
          int n = color >> 16 & 0xFF;
          int n2 = color >> 8 & 0xFF;
          int n3 = color & 0xFF;
-         float f = (float)n / 255.0F;
-         float f2 = (float)n2 / 255.0F;
-         float f3 = (float)n3 / 255.0F;
-         entityFX.setRBGColorF(f, f2, f3);
+         entityFX.setRBGColorF((float)n / 255.0F, (float)n2 / 255.0F, (float)n3 / 255.0F);
       }
    }
 
    private static int getRedstoneLevel(IBlockState state, int n) {
-      Block block = state.getBlock();
-      if (!(block instanceof BlockRedstoneWire)) {
+      if (!(state.getBlock() instanceof BlockRedstoneWire)) {
          return n;
       } else {
          Comparable value = state.getValue(BlockRedstoneWire.POWER);
          if (!(value instanceof Integer)) {
             return n;
          } else {
-            Integer num = (Integer)value;
-            return num;
+            return (Integer)value;
          }
       }
    }
@@ -793,8 +753,7 @@ public class CustomColors {
       if (xpOrbTime <= 0) {
          return f;
       } else {
-         float f2 = 628.0F / (float)xpOrbTime;
-         return f * f2;
+         return f * (628.0F / (float)xpOrbTime);
       }
    }
 
@@ -914,10 +873,7 @@ public class CustomColors {
          int n = colorSmooth >> 16 & 0xFF;
          int n2 = colorSmooth >> 8 & 0xFF;
          int n3 = colorSmooth & 0xFF;
-         float f = (float)n / 255.0F;
-         float f2 = (float)n2 / 255.0F;
-         float f3 = (float)n3 / 255.0F;
-         return customColorFader.getColor((double)f, (double)f2, (double)f3);
+         return customColorFader.getColor((double)((float)n / 255.0F), (double)((float)n2 / 255.0F), (double)((float)n3 / 255.0F));
       }
    }
 
@@ -934,8 +890,7 @@ public class CustomColors {
       if (customColormap == null) {
          return -1;
       } else {
-         int metadata = renderEnv.getMetadata();
-         return customColormap.getColor(metadata);
+         return customColormap.getColor(renderEnv.getMetadata());
       }
    }
 
@@ -945,8 +900,7 @@ public class CustomColors {
       } else if (lightMapPacks == null) {
          return false;
       } else {
-         int dimensionId = world.provider.getDimensionId();
-         int n = dimensionId - lightmapMinDimensionId;
+         int n = world.provider.getDimensionId() - lightmapMinDimensionId;
          if (n >= 0 && n < lightMapPacks.length) {
             LightMapPack lightMapPack = lightMapPacks[n];
             return lightMapPack == null ? false : lightMapPack.updateLightmap(world, f, ints, flag, f2);
@@ -957,14 +911,12 @@ public class CustomColors {
    }
 
    public static Vec3 getWorldFogColor(Vec3 vec, World world, Entity entity, float f) {
-      int dimensionId = world.provider.getDimensionId();
-      switch (dimensionId) {
+      switch (world.provider.getDimensionId()) {
          case -1:
             vec = getFogColorNether(vec);
             break;
          case 0:
-            Minecraft minecraft = Minecraft.getMinecraft();
-            vec = getFogColor(vec, minecraft.theWorld, entity.posX, entity.posY + 1.0, entity.posZ);
+            vec = getFogColor(vec, Minecraft.getMinecraft().theWorld, entity.posX, entity.posY + 1.0, entity.posZ);
             break;
          case 1:
             vec = getFogColorEnd(vec);
@@ -974,11 +926,9 @@ public class CustomColors {
    }
 
    public static Vec3 getWorldSkyColor(Vec3 vec, World world, Entity entity, float f) {
-      int dimensionId = world.provider.getDimensionId();
-      switch (dimensionId) {
+      switch (world.provider.getDimensionId()) {
          case 0:
-            Minecraft minecraft = Minecraft.getMinecraft();
-            vec = getSkyColor(vec, minecraft.theWorld, entity.posX, entity.posY + 1.0, entity.posZ);
+            vec = getSkyColor(vec, Minecraft.getMinecraft().theWorld, entity.posX, entity.posY + 1.0, entity.posZ);
             break;
          case 1:
             vec = getSkyColorEnd(vec);
@@ -996,8 +946,7 @@ public class CustomColors {
          String str4 = (String)obj;
          String property = properties.getProperty(str4);
          if (str4.startsWith(str2)) {
-            String str5 = StrUtils.removePrefix(str4, str2);
-            int entityIdByName = EntityUtils.getEntityIdByName(str5);
+            int entityIdByName = EntityUtils.getEntityIdByName(StrUtils.removePrefix(str4, str2));
             if (entityIdByName < 0) {
                warn("Invalid spawn egg name: " + str4);
             } else {
@@ -1121,8 +1070,7 @@ public class CustomColors {
          String str4 = (String)obj;
          String property = properties.getProperty(str4);
          if (str4.startsWith(str2)) {
-            String str5 = StrUtils.removePrefix(str4, str2);
-            int n2 = Config.parseInt(str5, -1);
+            int n2 = Config.parseInt(StrUtils.removePrefix(str4, str2), -1);
             int n3 = parseColor(property);
             if (n2 >= 0 && n2 < ints.length && n3 >= 0) {
                ints[n2] = n3;
@@ -1161,8 +1109,7 @@ public class CustomColors {
          String str4 = (String)obj;
          String property = properties.getProperty(str4);
          if (str4.startsWith(str2)) {
-            String str5 = StrUtils.removePrefix(str4, str2);
-            int mapColorIndex = getMapColorIndex(str5);
+            int mapColorIndex = getMapColorIndex(StrUtils.removePrefix(str4, str2));
             int n2 = parseColor(property);
             if (mapColorIndex >= 0 && mapColorIndex < ints.length && n2 >= 0) {
                ints[mapColorIndex] = n2;

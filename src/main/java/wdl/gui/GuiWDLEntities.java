@@ -59,9 +59,7 @@ public class GuiWDLEntities extends GuiScreen {
       }
 
       if (button.id == 101 && button.enabled) {
-         Minecraft mc2 = this.mc;
-         GuiWDLEntityRangePresets guiWDLEntityRangePresets = new GuiWDLEntityRangePresets(this);
-         mc2.displayGuiScreen(guiWDLEntityRangePresets);
+         this.mc.displayGuiScreen(new GuiWDLEntityRangePresets(this));
       }
 
       if (button.id == 200) {

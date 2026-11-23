@@ -59,8 +59,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
                if (this.partiallyRequested) {
                   this.requestEndX = this.displayXToChunkX(mouseX);
                   this.requestEndZ = this.displayYToChunkZ(mouseY);
-                  ChunkRange chunkRange = new ChunkRange("", this.requestStartX, this.requestStartZ, this.requestEndX, this.requestEndZ);
-                  WDLPluginChannels.addChunkOverrideRequest(chunkRange);
+                  WDLPluginChannels.addChunkOverrideRequest(new ChunkRange("", this.requestStartX, this.requestStartZ, this.requestEndX, this.requestEndZ));
                   this.partiallyRequested = false;
                } else {
                   this.requestStartX = this.displayXToChunkX(mouseX);
@@ -161,15 +160,11 @@ public class GuiWDLChunkOverrides extends GuiScreen {
       }
 
       if (button.id == 200) {
-         Minecraft mc2 = this.mc;
-         GuiWDLPermissions guiWDLPermissions = new GuiWDLPermissions(this.parent);
-         mc2.displayGuiScreen(guiWDLPermissions);
+         this.mc.displayGuiScreen(new GuiWDLPermissions(this.parent));
       }
 
       if (button.id == 201) {
-         Minecraft mc3 = this.mc;
-         GuiWDLPermissionRequest guiWDLPermissionRequest = new GuiWDLPermissionRequest(this.parent);
-         mc3.displayGuiScreen(guiWDLPermissionRequest);
+         this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
       }
 
       if (button.id == 202) {
@@ -184,9 +179,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
          int n2 = this.partiallyRequested ? this.requestStartZ : this.displayYToChunkZ(mouseY);
          int n3 = this.displayXToChunkX(mouseX);
          int n4 = this.displayYToChunkZ(mouseY);
-         ChunkRange chunkRange = new ChunkRange("", n, n2, n3, n4);
-         int n5 = 127 + (int)(Math.sin((double)Minecraft.getSystemTime() * 3.141592653589793 / 5000.0) * 64.0);
-         this.displayRange(chunkRange, 16777215, n5);
+         this.displayRange(new ChunkRange("", n, n2, n3, n4), 16777215, 127 + (int)(Math.sin((double)Minecraft.getSystemTime() * 3.141592653589793 / 5000.0) * 64.0));
       }
 
       for (Multimap multimap : (Iterable<Multimap>)(WDLPluginChannels.getChunkOverrides().values())) {
@@ -196,8 +189,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
       }
 
       for (ChunkRange chunkRange3 : (Iterable<ChunkRange>)(WDLPluginChannels.getChunkOverrideRequests())) {
-         int n6 = 127 + (int)(Math.sin((double)Minecraft.getSystemTime() * 3.141592653589793 / 5000.0) * 64.0);
-         this.displayRange(chunkRange3, 8421504, n6);
+         this.displayRange(chunkRange3, 8421504, 127 + (int)(Math.sin((double)Minecraft.getSystemTime() * 3.141592653589793 / 5000.0) * 64.0));
       }
 
       int n7 = (int)((WDL.thePlayer.posX / 16.0 - (double)this.scrollX) * 8.0 + (double)(this.width / 2));

@@ -79,8 +79,7 @@ public class WalkNodeProcessor extends NodeProcessor {
                         return -4;
                      }
 
-                     Material material = block.getMaterial();
-                     if (material != Material.lava) {
+                     if (block.getMaterial() != Material.lava) {
                         return 0;
                      }
 

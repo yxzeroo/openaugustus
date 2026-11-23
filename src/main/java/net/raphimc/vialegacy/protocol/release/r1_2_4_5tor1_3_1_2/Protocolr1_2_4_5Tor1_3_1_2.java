@@ -92,8 +92,7 @@ public class Protocolr1_2_4_5Tor1_3_1_2
          login.write(Types.BYTE, (byte)0);
          login.write(Types.BYTE, (byte)0);
          login.sendToServer(Protocolr1_2_4_5Tor1_3_1_2.class);
-         State currentState = wrapper.user().getProtocolInfo().getServerState();
-         if (currentState != State.LOGIN) {
+         if (wrapper.user().getProtocolInfo().getServerState() != State.LOGIN) {
             wrapper.cancel();
          } else {
             wrapper.write(Types.SHORT_BYTE_ARRAY, new byte[0]);
@@ -184,8 +183,7 @@ public class Protocolr1_2_4_5Tor1_3_1_2
                   double x = (double)((Integer)wrapper.get(Types.INT, 1)).intValue() / 32.0;
                   double y = (double)((Integer)wrapper.get(Types.INT, 2)).intValue() / 32.0;
                   double z = (double)((Integer)wrapper.get(Types.INT, 3)).intValue() / 32.0;
-                  EntityTracker tracker = (EntityTracker)wrapper.user().get(EntityTracker.class);
-                  tracker.getTrackedEntities().put(entityId, new TrackedLivingEntity(entityId, new Location(x, y, z), EntityType.PLAYER));
+                  ((EntityTracker)wrapper.user().get(EntityTracker.class)).getTrackedEntities().put(entityId, new TrackedLivingEntity(entityId, new Location(x, y, z), EntityType.PLAYER));
                });
             }
          }
@@ -269,10 +267,9 @@ public class Protocolr1_2_4_5Tor1_3_1_2
                      }
 
                      if (typeId == ObjectType.FISHIHNG_HOOK.getId()) {
-                        Optional<AbstractTrackedEntity> nearestEntity = entityTracker.getNearestEntity(
+                        data = entityTracker.getNearestEntity(
                            location, 2.0, e -> e.getEntityType().isOrHasParent(EntityType.PLAYER)
-                        );
-                        data = nearestEntity.map(AbstractTrackedEntity::getEntityId).orElseGet(entityTracker::getPlayerID);
+                        ).map(AbstractTrackedEntity::getEntityId).orElseGet(entityTracker::getPlayerID);
                      }
 
                      wrapper.set(Types.INT, 4, data);
@@ -586,11 +583,10 @@ public class Protocolr1_2_4_5Tor1_3_1_2
                this.handler(
                   wrapper -> {
                      EntityTracker entityTracker = (EntityTracker)wrapper.user().get(EntityTracker.class);
-                     Location loc = new Location(
-                        (Double)wrapper.get(Types.DOUBLE, 0), (Double)wrapper.get(Types.DOUBLE, 1), (Double)wrapper.get(Types.DOUBLE, 2)
-                     );
                      entityTracker.playSoundAt(
-                        loc, Sound.RANDOM_EXPLODE, 4.0F, (1.0F + (entityTracker.RND.nextFloat() - entityTracker.RND.nextFloat()) * 0.2F) * 0.7F
+                        new Location(
+                        (Double)wrapper.get(Types.DOUBLE, 0), (Double)wrapper.get(Types.DOUBLE, 1), (Double)wrapper.get(Types.DOUBLE, 2)
+                     ), Sound.RANDOM_EXPLODE, 4.0F, (1.0F + (entityTracker.RND.nextFloat() - entityTracker.RND.nextFloat()) * 0.2F) * 0.7F
                      );
                   }
                );

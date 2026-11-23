@@ -22,7 +22,6 @@ public final class ShadedMathContext implements Serializable {
    }
 
    public ShadedMathContext(long l, String str) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (str == null) {
          throw new NullPointerException("null String");
       } else {
@@ -40,8 +39,7 @@ public final class ShadedMathContext implements Serializable {
             }
 
             n3 = n2 + 1 + 13;
-            String str2 = str.substring(n3, str.length());
-            this.roundingMode = ShadedRoundingMode.valueOf(str2);
+            this.roundingMode = ShadedRoundingMode.valueOf(str.substring(n3, str.length()));
          } catch (RuntimeException e) {
             throw new IllegalArgumentException("bad string format");
          }
@@ -69,7 +67,6 @@ public final class ShadedMathContext implements Serializable {
    }
 
    private void readObject(long l, ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-      int[] flowState = ShadedNumber.getFlowState();
       objectInputStream.defaultReadObject();
       if (this.precision < 0) {
          String str = "MathContext: invalid digits in stream";
@@ -82,7 +79,6 @@ public final class ShadedMathContext implements Serializable {
 
    @Override
    public boolean equals(Object obj) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!(obj instanceof ShadedMathContext)) {
          return false;
       } else {
@@ -96,8 +92,7 @@ public final class ShadedMathContext implements Serializable {
    }
 
    static {
-      long l = 5579720004786848255L;
-      serialVersionUID = l;
+      serialVersionUID = 5579720004786848255L;
       UNLIMITED = new ShadedMathContext(0, ShadedRoundingMode.HALF_UP);
       DECIMAL32 = new ShadedMathContext(7, ShadedRoundingMode.HALF_EVEN);
       DECIMAL64 = new ShadedMathContext(16, ShadedRoundingMode.HALF_EVEN);

@@ -116,8 +116,7 @@ public class Village {
    }
 
    public int setReputationForPlayer(String str, int n) {
-      int reputationForPlayer = this.getReputationForPlayer(str);
-      int n2 = MathHelper.clamp_int(reputationForPlayer + n, -30, 10);
+      int n2 = MathHelper.clamp_int(this.getReputationForPlayer(str) + n, -30, 10);
       this.playerReputation.put(str, n2);
       return n2;
    }
@@ -184,8 +183,7 @@ public class Village {
 
       for (String str : (Iterable<String>)(this.playerReputation.keySet())) {
          NBTTagCompound tag3 = new NBTTagCompound();
-         PlayerProfileCache playerProfileCache = MinecraftServer.getServer().getPlayerProfileCache();
-         GameProfile gameProfileForUsername = playerProfileCache.getGameProfileForUsername(str);
+         GameProfile gameProfileForUsername = MinecraftServer.getServer().getPlayerProfileCache().getGameProfileForUsername(str);
          if (gameProfileForUsername != null) {
             tag3.setString("UUID", gameProfileForUsername.getId().toString());
             tag3.setInteger("S", (Integer)this.playerReputation.get(str));
@@ -226,8 +224,7 @@ public class Village {
       for (int j = 0; j < tagList2.tagCount(); j++) {
          NBTTagCompound compoundTagAt2 = tagList2.getCompoundTagAt(j);
          if (compoundTagAt2.hasKey("UUID")) {
-            PlayerProfileCache playerProfileCache = MinecraftServer.getServer().getPlayerProfileCache();
-            GameProfile profileByUUID = playerProfileCache.getProfileByUUID(UUID.fromString(compoundTagAt2.getString("UUID")));
+            GameProfile profileByUUID = MinecraftServer.getServer().getPlayerProfileCache().getProfileByUUID(UUID.fromString(compoundTagAt2.getString("UUID")));
             if (profileByUUID != null) {
                this.playerReputation.put(profileByUUID.getName(), compoundTagAt2.getInteger("S"));
             }

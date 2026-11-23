@@ -33,8 +33,7 @@ public class PlayerConfigurations {
             getMapConfigurations().put(nameClear, playerConfiguration);
             PlayerConfigurationReceiver receiver = new PlayerConfigurationReceiver(nameClear);
             String str = HttpUtils.getPlayerItemsUrl() + "/users/" + nameClear + ".cfg";
-            FileDownloadThread fileDownloadThread = new FileDownloadThread(str, receiver);
-            fileDownloadThread.start();
+            new FileDownloadThread(str, receiver).start();
          }
 
          return playerConfiguration;

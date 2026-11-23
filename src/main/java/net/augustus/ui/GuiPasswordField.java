@@ -46,8 +46,7 @@ public class GuiPasswordField extends Gui {
    }
 
    public void setCursorPositionEnd() {
-      int length = this.text.length();
-      this.setCursorPosition(length);
+      this.setCursorPosition(this.text.length());
    }
 
    public void setFocused(boolean flag) {
@@ -62,8 +61,7 @@ public class GuiPasswordField extends Gui {
       this.cursorPosition = n;
       int length = this.text.length();
       this.cursorPosition = MathHelper.clamp_int(this.cursorPosition, 0, length);
-      int cursorPosition2 = this.cursorPosition;
-      this.setSelectionPos(cursorPosition2);
+      this.setSelectionPos(this.cursorPosition);
    }
 
    public String getSelectedText() {
@@ -128,8 +126,7 @@ public class GuiPasswordField extends Gui {
       if (this.validator.apply(str2)) {
          this.text = str2;
          this.rawPasswordText = str2;
-         int n5 = n - this.selectionEnd + n4;
-         this.moveCursorBy(n5);
+         this.moveCursorBy(n - this.selectionEnd + n4);
          if (this.guiResponder != null) {
             this.guiResponder.setEntryValue(this.id, this.text);
          }
@@ -141,24 +138,21 @@ public class GuiPasswordField extends Gui {
          return false;
       } else if (GuiScreen.isKeyComboCtrlA(n)) {
          this.setCursorPositionEnd();
-         byte b = 0;
-         this.setSelectionPos(b);
+         this.setSelectionPos((byte)0);
          return true;
       } else if (GuiScreen.isKeyComboCtrlC(n)) {
          GuiScreen.setClipboardString(this.getSelectedText());
          return true;
       } else if (GuiScreen.isKeyComboCtrlV(n)) {
          if (this.isEnabled) {
-            String clipboardString = GuiScreen.getClipboardString();
-            this.writeText(clipboardString);
+            this.writeText(GuiScreen.getClipboardString());
          }
 
          return true;
       } else if (GuiScreen.isKeyComboCtrlX(n)) {
          GuiScreen.setClipboardString(this.getSelectedText());
          if (this.isEnabled) {
-            String str = "";
-            this.writeText(str);
+            this.writeText("");
          }
 
          return true;
@@ -167,19 +161,16 @@ public class GuiPasswordField extends Gui {
             case 14:
                if (GuiScreen.isCtrlKeyDown()) {
                   if (this.isEnabled) {
-                     byte b2 = -1;
-                     this.deleteWords(b2);
+                     this.deleteWords((byte)-1);
                   }
                } else if (this.isEnabled) {
-                  byte b3 = -1;
-                  this.deleteFromCursor(b3);
+                  this.deleteFromCursor((byte)-1);
                }
 
                return true;
             case 199:
                if (GuiScreen.isShiftKeyDown()) {
-                  byte b4 = 0;
-                  this.setSelectionPos(b4);
+                  this.setSelectionPos((byte)0);
                } else {
                   this.setCursorPositionZero();
                }
@@ -188,54 +179,34 @@ public class GuiPasswordField extends Gui {
             case 203:
                if (GuiScreen.isShiftKeyDown()) {
                   if (GuiScreen.isCtrlKeyDown()) {
-                     int selectionEnd2 = this.getSelectionEnd();
-                     byte b5 = -1;
-                     int nthWordFromPos = this.getNthWordFromPos(b5, selectionEnd2);
-                     int n2 = nthWordFromPos;
-                     this.setSelectionPos(n2);
+                     this.setSelectionPos(this.getNthWordFromPos((byte)-1, this.getSelectionEnd()));
                   } else {
-                     int n3 = this.getSelectionEnd() - 1;
-                     int n4 = n3;
-                     this.setSelectionPos(n4);
+                     this.setSelectionPos(this.getSelectionEnd() - 1);
                   }
                } else if (GuiScreen.isCtrlKeyDown()) {
-                  byte b6 = -1;
-                  int nthWordFromCursor = this.getNthWordFromCursor(b6);
-                  this.setCursorPosition(nthWordFromCursor);
+                  this.setCursorPosition(this.getNthWordFromCursor((byte)-1));
                } else {
-                  byte b7 = -1;
-                  this.moveCursorBy(b7);
+                  this.moveCursorBy((byte)-1);
                }
 
                return true;
             case 205:
                if (GuiScreen.isShiftKeyDown()) {
                   if (GuiScreen.isCtrlKeyDown()) {
-                     int selectionEnd3 = this.getSelectionEnd();
-                     byte b8 = 1;
-                     int nthWordFromPos2 = this.getNthWordFromPos(b8, selectionEnd3);
-                     int n5 = nthWordFromPos2;
-                     this.setSelectionPos(n5);
+                     this.setSelectionPos(this.getNthWordFromPos((byte)1, this.getSelectionEnd()));
                   } else {
-                     int n6 = this.getSelectionEnd() + 1;
-                     int n7 = n6;
-                     this.setSelectionPos(n7);
+                     this.setSelectionPos(this.getSelectionEnd() + 1);
                   }
                } else if (GuiScreen.isCtrlKeyDown()) {
-                  byte b9 = 1;
-                  int nthWordFromCursor2 = this.getNthWordFromCursor(b9);
-                  this.setCursorPosition(nthWordFromCursor2);
+                  this.setCursorPosition(this.getNthWordFromCursor((byte)1));
                } else {
-                  byte b10 = 1;
-                  this.moveCursorBy(b10);
+                  this.moveCursorBy((byte)1);
                }
 
                return true;
             case 207:
                if (GuiScreen.isShiftKeyDown()) {
-                  int length = this.text.length();
-                  int n8 = length;
-                  this.setSelectionPos(n8);
+                  this.setSelectionPos(this.text.length());
                } else {
                   this.setCursorPositionEnd();
                }
@@ -244,20 +215,17 @@ public class GuiPasswordField extends Gui {
             case 211:
                if (GuiScreen.isCtrlKeyDown()) {
                   if (this.isEnabled) {
-                     byte b11 = 1;
-                     this.deleteWords(b11);
+                     this.deleteWords((byte)1);
                   }
                } else if (this.isEnabled) {
-                  byte b12 = 1;
-                  this.deleteFromCursor(b12);
+                  this.deleteFromCursor((byte)1);
                }
 
                return true;
             default:
                if (ChatAllowedCharacters.isAllowedCharacter(ch)) {
                   if (this.isEnabled) {
-                     String str2 = Character.toString(ch);
-                     this.writeText(str2);
+                     this.writeText(Character.toString(ch));
                   }
 
                   return true;
@@ -275,8 +243,7 @@ public class GuiPasswordField extends Gui {
    public void deleteFromCursor(int n) {
       if (this.text.length() != 0) {
          if (this.selectionEnd != this.cursorPosition) {
-            String str = "";
-            this.writeText(str);
+            this.writeText("");
          } else {
             boolean flag = n < 0;
             int n2 = flag ? this.cursorPosition + n : this.cursorPosition;
@@ -342,8 +309,7 @@ public class GuiPasswordField extends Gui {
          }
 
          int width2 = this.getWidth();
-         String str = this.fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), width2);
-         int n2 = str.length() + this.lineScrollOffset;
+         int n2 = this.fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), width2).length() + this.lineScrollOffset;
          if (n == this.lineScrollOffset) {
             this.lineScrollOffset = this.lineScrollOffset - this.fontRenderer.trimStringToWidth(this.text, width2, true).length();
          }
@@ -367,19 +333,15 @@ public class GuiPasswordField extends Gui {
    }
 
    public void setCursorPositionZero() {
-      byte b = 0;
-      this.setCursorPosition(b);
+      this.setCursorPosition((byte)0);
    }
 
    public void deleteWords(int n) {
       if (this.text.length() != 0) {
          if (this.selectionEnd != this.cursorPosition) {
-            String str = "";
-            this.writeText(str);
+            this.writeText("");
          } else {
-            int n2 = this.getNthWordFromCursor(n) - this.cursorPosition;
-            int n3 = n2;
-            this.deleteFromCursor(n3);
+            this.deleteFromCursor(this.getNthWordFromCursor(n) - this.cursorPosition);
          }
       }
    }
@@ -443,10 +405,7 @@ public class GuiPasswordField extends Gui {
             int n9 = n5 + this.fontRenderer.getStringWidth(str2.substring(0, n3));
             int n10 = n6 - 1;
             n4 = n9 - 1;
-            int n11 = n6 + 1 + this.fontRenderer.FONT_HEIGHT;
-            int n12 = n4;
-            int n13 = n10;
-            this.drawCursorVertical(n8, n13, n12, n11);
+            this.drawCursorVertical(n8, n10, n4, n6 + 1 + this.fontRenderer.FONT_HEIGHT);
          }
       }
 
@@ -454,8 +413,7 @@ public class GuiPasswordField extends Gui {
    }
 
    public int getNthWordFromPos(int n, int n2) {
-      boolean flag = true;
-      return this.getNthWordFromPos(n, n2, flag);
+      return this.getNthWordFromPos(n, n2, true);
    }
 
    public int getSelectionEnd() {
@@ -485,8 +443,7 @@ public class GuiPasswordField extends Gui {
    }
 
    public void moveCursorBy(int n) {
-      int n2 = this.selectionEnd + n;
-      this.setCursorPosition(n2);
+      this.setCursorPosition(this.selectionEnd + n);
    }
 
    public void setValidator(Predicate predicate) {
@@ -505,11 +462,8 @@ public class GuiPasswordField extends Gui {
             n -= 4;
          }
 
-         FontRenderer fontRenderer2 = this.fontRenderer;
-         String str = this.text.substring(this.lineScrollOffset);
-         String str2 = fontRenderer2.trimStringToWidth(str, this.getWidth());
-         int n2 = this.fontRenderer.trimStringToWidth(str2, n).length() + this.lineScrollOffset;
-         this.setCursorPosition(n2);
+         String str2 = this.fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+         this.setCursorPosition(this.fontRenderer.trimStringToWidth(str2, n).length() + this.lineScrollOffset);
       }
    }
 
@@ -532,8 +486,7 @@ public class GuiPasswordField extends Gui {
    }
 
    public int getNthWordFromCursor(int n) {
-      int cursorPosition2 = this.getCursorPosition();
-      return this.getNthWordFromPos(n, cursorPosition2);
+      return this.getNthWordFromPos(n, this.getCursorPosition());
    }
 
    public void setIsEnabled(boolean flag) {

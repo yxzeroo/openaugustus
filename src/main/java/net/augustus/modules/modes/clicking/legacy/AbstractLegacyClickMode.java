@@ -2,12 +2,12 @@ package net.augustus.modules.modes.clicking.legacy;
 
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.entity.EntityLivingBase;
 
 public abstract class AbstractLegacyClickMode extends AbstractSubMode {
 
-   public AbstractLegacyClickMode(Module module, DoubleValue doubleValue, String str) {
+   public AbstractLegacyClickMode(Module module, SettingGroup doubleValue, String str) {
       super(module, doubleValue, str);
    }
 

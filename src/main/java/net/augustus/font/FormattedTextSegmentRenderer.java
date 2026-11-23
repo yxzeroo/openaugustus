@@ -24,7 +24,6 @@ public class FormattedTextSegmentRenderer {
    public final int shadowColor;
 
    public void flushSegment() {
-      int[] fontStateFlags = CustomFontUtil.getFontStateFlags();
       float f = this.baseY * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer);
       if (this.segmentBuffer.length() != 0) {
          String str = this.segmentBuffer.toString();
@@ -59,8 +58,7 @@ public class FormattedTextSegmentRenderer {
             FormattedUnicodeFontRenderer parentRenderer2 = this.parentRenderer;
             boolean value = (Boolean)this.boldRef.getValue();
             boolean value2 = (Boolean)this.italicRef.getValue();
-            boolean flag = value;
-            UnicodeFont styledFontAccess = FormattedUnicodeFontRenderer.getStyledFontAccess(parentRenderer2, flag, value2);
+            UnicodeFont styledFontAccess = FormattedUnicodeFontRenderer.getStyledFontAccess(parentRenderer2, value, value2);
             Color color = new Color(this.shadowPass ? this.shadowColor : (Integer)this.currentColorRef.getValue());
             styledFontAccess.drawString((Float)this.cursorXRef.getValue(), f, str, color);
             float f3 = (float)this.parentRenderer.measureSegmentWidth(styledFontAccess, str) / FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer);
@@ -76,21 +74,13 @@ public class FormattedTextSegmentRenderer {
                if ((Boolean)this.strikethroughRef.getValue()) {
                   float f4 = f + this.parentRenderer.getFontHeight() * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer) / 2.0F;
                   float value3 = (Float)this.cursorXRef.getValue();
-                  float f5 = (Float)this.cursorXRef.getValue() + f3 * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer);
-                  float f6 = f4 + 1.0F;
-                  float f7 = f5;
-                  float f8 = value3;
-                  this.emitQuadVertices(f8, f4, f7, f6);
+                  this.emitQuadVertices(value3, f4, (Float)this.cursorXRef.getValue() + f3 * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer), f4 + 1.0F);
                }
 
                if ((Boolean)this.underlineRef.getValue()) {
                   float f9 = f + this.parentRenderer.getFontHeight() * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer);
                   float value4 = (Float)this.cursorXRef.getValue();
-                  float f10 = (Float)this.cursorXRef.getValue() + f3 * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer);
-                  float f11 = f9 + 1.0F;
-                  float f12 = f10;
-                  float f13 = value4;
-                  this.emitQuadVertices(f13, f9, f12, f11);
+                  this.emitQuadVertices(value4, f9, (Float)this.cursorXRef.getValue() + f3 * FormattedUnicodeFontRenderer.getScaleFactorAccess(this.parentRenderer), f9 + 1.0F);
                }
 
                GL11.glEnd();

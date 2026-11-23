@@ -2,7 +2,6 @@ package net.augustus.vendor.crypto.math;
 
 
 
-import net.augustus.vendor.crypto.CustomBigInteger;
 public class ShadedBigDecimalStringHelper {
    public static final boolean assertionsDisabled = !ShadedBigDecimal.class.desiredAssertionStatus();
    public static final char[] DIGIT_ONES = new char[]{
@@ -214,7 +213,6 @@ public class ShadedBigDecimalStringHelper {
 
    public int putIntCompact(long l) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n2 = 0;
       long l2 = 0L;
       int n3 = 0;

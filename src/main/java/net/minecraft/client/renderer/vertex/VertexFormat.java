@@ -84,8 +84,7 @@ public class VertexFormat {
       int n = 0;
 
       for (int i = this.elements.size(); n < i; n++) {
-         VertexFormatElement vertexFormatElement = (VertexFormatElement)this.elements.get(n);
-         if (vertexFormatElement.isPositionElement()) {
+         if (((VertexFormatElement)this.elements.get(n)).isPositionElement()) {
             return true;
          }
       }

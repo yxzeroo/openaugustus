@@ -17,10 +17,8 @@ public class PlayerConfigurationReceiver implements IFileDownloadListener {
       if (bytes != null) {
          try {
             String str2 = new String(bytes, "ASCII");
-            JsonParser jsonParser = new JsonParser();
-            JsonElement elem = jsonParser.parse(str2);
-            PlayerConfigurationParser parser = new PlayerConfigurationParser(this.player);
-            PlayerConfiguration playerConfiguration = parser.parsePlayerConfiguration(elem);
+            JsonElement elem = new JsonParser().parse(str2);
+            PlayerConfiguration playerConfiguration = new PlayerConfigurationParser(this.player).parsePlayerConfiguration(elem);
             if (playerConfiguration != null) {
                playerConfiguration.setInitialized(true);
                PlayerConfigurations.setPlayerConfiguration(this.player, playerConfiguration);

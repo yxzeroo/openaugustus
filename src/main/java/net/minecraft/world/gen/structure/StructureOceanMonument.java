@@ -77,8 +77,7 @@ public class StructureOceanMonument extends MapGenStructure {
             return false;
          }
 
-         boolean flag = this.worldObj.getWorldChunkManager().areBiomesViable(n3 * 16 + 8, n4 * 16 + 8, 29, WATER_BIOMES);
-         if (flag) {
+         if (this.worldObj.getWorldChunkManager().areBiomesViable(n3 * 16 + 8, n4 * 16 + 8, 29, WATER_BIOMES)) {
             return true;
          }
       }
@@ -147,11 +146,7 @@ public class StructureOceanMonument extends MapGenStructure {
 
       private void create(World world, Random rand, int n, int n2) {
          rand.setSeed(world.getSeed());
-         long l = rand.nextLong();
-         long l2 = rand.nextLong();
-         long l3 = (long)n * l;
-         long l4 = (long)n2 * l2;
-         rand.setSeed(l3 ^ l4 ^ world.getSeed());
+         rand.setSeed(((long)n * rand.nextLong()) ^ ((long)n2 * rand.nextLong()) ^ world.getSeed());
          int n3 = n * 16 + 8 - 29;
          int n4 = n2 * 16 + 8 - 29;
          EnumFacing facing = EnumFacing.Plane.HORIZONTAL.random(rand);

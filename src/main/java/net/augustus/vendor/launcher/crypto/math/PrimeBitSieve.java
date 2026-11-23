@@ -10,16 +10,13 @@ public class PrimeBitSieve {
 
    public ShadedBigInteger retrieve(ShadedBigInteger shadedBigInteger, int n, Random rand) {
       int n2 = 1;
-      ShadedNumber.getFlowState();
 
       for (int i = 0; i < this.bits.length; i++) {
          long l = this.bits[i] ^ e;
 
          for (int j = 0; j < 64; j++) {
             if ((l & 1L) == 1L) {
-               ShadedBigInteger shadedBigInteger2 = ShadedBigInteger.valueOf((long)n2);
-               ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
-               ShadedBigInteger shadedBigInteger4 = shadedBigInteger.add(shadedBigInteger3);
+               ShadedBigInteger shadedBigInteger4 = shadedBigInteger.add(ShadedBigInteger.valueOf((long)n2));
                if (shadedBigInteger4.primeToCertainty(n, rand)) {
                   return shadedBigInteger4;
                }
@@ -77,23 +74,17 @@ public class PrimeBitSieve {
 
    private PrimeBitSieve() {
       super();
-      short s = 9600;
-      this.length = s;
-      long[] longs = new long[unitIndex(this.length - 1) + 1];
-      this.bits = longs;
-      byte b = 0;
-      this.set(b);
+      this.length = (short)9600;
+      this.bits = new long[unitIndex(this.length - 1) + 1];
+      this.set((byte)0);
       int n = 1;
       int n2 = 3;
 
       do {
          int n3 = n + n2;
-         int length2 = this.length;
-         this.sieveSingle(length2, n3, n2);
-         int n4 = n + 1;
-         int n5 = n4;
-         int length3 = this.length;
-         n = this.sieveSearch(length3, n5);
+         this.sieveSingle(this.length, n3, n2);
+         int n5 = n + 1;
+         n = this.sieveSearch(this.length, n5);
          n2 = 2 * n + 1;
       } while (n > 0 && n2 < this.length);
    }
@@ -104,9 +95,7 @@ public class PrimeBitSieve {
 
    public PrimeBitSieve(ShadedBigInteger shadedBigInteger, int n) {
       super();
-      long[] longs = new long[unitIndex(n - 1) + 1];
-      this.bits = longs;
-      ShadedNumber.getFlowState();
+      this.bits = new long[unitIndex(n - 1) + 1];
       this.length = n;
       int n2 = 0;
       int length2 = smallSieve.length;
@@ -122,10 +111,8 @@ public class PrimeBitSieve {
             n2 += n4;
          }
 
-         int n5 = (n2 - 1) / 2;
-         this.sieveSingle(n, n5, n4);
-         int n6 = n3 + 1;
-         int n7 = n6;
+         this.sieveSingle(n, (n2 - 1) / 2, n4);
+         int n7 = n3 + 1;
          int length3 = smallSieve.length;
          n3 = smallSieve.sieveSearch(length3, n7);
          n4 = n3 * 2 + 1;

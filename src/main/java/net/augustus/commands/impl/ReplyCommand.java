@@ -11,17 +11,14 @@ public class ReplyCommand extends AbstractIrcCommand {
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (reply to private messages from other augustus user)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (reply to private messages from other augustus user)");
    }
 
    public void commandAction(String[] strings, String str) {
       if (!Augustus.getInstance().getModuleManager().ircChat.isToggled()) {
-         String str2 = "Please enable the IRCChat module";
-         this.sendChat(str2);
+         this.sendChat("Please enable the IRCChat module");
       } else if (Augustus.getInstance().getModuleManager().ircChat.getLastWhisperPartner().isEmpty()) {
-         String str3 = "No direct message to reply";
-         this.sendChat(str3);
+         this.sendChat("No direct message to reply");
       } else {
          if (strings.length > 1) {
             StringBuilder sb = new StringBuilder();
@@ -34,8 +31,7 @@ public class ReplyCommand extends AbstractIrcCommand {
             String lastWhisperPartner = Augustus.getInstance().getModuleManager().ircChat.getLastWhisperPartner();
             String str4 = sb.toString();
          } else {
-            String str5 = "§7" + this.getCommand() + " [§cusername§7] [§2message§7]";
-            this.sendChat(str5);
+            this.sendChat("§7" + this.getCommand() + " [§cusername§7] [§2message§7]");
          }
       }
    }

@@ -286,8 +286,7 @@ public abstract class CommandBase implements ICommand {
             sb.append(" ");
          }
 
-         String str = strings[i];
-         sb.append(str);
+         sb.append(strings[i]);
       }
 
       return sb.toString();

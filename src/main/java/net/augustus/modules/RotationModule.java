@@ -16,21 +16,21 @@ import net.augustus.Augustus;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public abstract class RotationModule extends Module implements MoveListener, MoveInputListener {
    public final RangeSetting yawSpeedInRotationModule;
    public final RangeSetting pitchSpeedInRotationModule;
-   public final BooleansSetting randomTypeInRotationModule;
-   public final BooleansSetting randomizeInRotationModule;
-   public final StringValue randomStrengthInRotationModule;
+   public final StringValue randomTypeInRotationModule;
+   public final StringValue randomizeInRotationModule;
+   public final DoubleValue randomStrengthInRotationModule;
    public final BooleanValue advancedRotsInRotationModule;
    public final BooleanValue interpolationInRotationModule;
    public final BooleanValue moveFixInRotationModule;
-   public final BooleansSetting silentMoveFix;
+   public final StringValue silentMoveFix;
    public final BooleanValue silentMoveFixIntaveInRotationModule;
    public boolean rotating;
 
@@ -38,40 +38,22 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
        super(str, str2, flag, color2, categorys2);
       RangeSetting rangeSetting = new RangeSetting(this, "YawSpeedInRotationModule", 30.0, 50.0, 0.0, 180.0, 0);
       String str3 = "MaxYawSpeed";
-      String str4 = "MinYawSpeed";
-      this.yawSpeedInRotationModule = rangeSetting.withBoundNames(str4, str3);
+      this.yawSpeedInRotationModule = rangeSetting.withBoundNames("MinYawSpeed", str3);
       RangeSetting rangeSetting2 = new RangeSetting(this, "PitchSpeedInRotationModule", 30.0, 50.0, 0.0, 180.0, 0);
       String str5 = "MaxPitchSpeed";
-      String str6 = "MinPitchSpeed";
-      this.pitchSpeedInRotationModule = rangeSetting2.withBoundNames(str6, str5);
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.pitchSpeedInRotationModule = rangeSetting2.withBoundNames("MinPitchSpeed", str5);
+      this.randomTypeInRotationModule = (StringValue)new StringValue(
          this, "RandomTypeInRotationModule", "SecureRandom", new String[]{"Random", "SecureRandom", "Gaussian", "Intave"}
-      );
-      String str7 = "RandomType";
-      this.randomTypeInRotationModule = (BooleansSetting)booleansSetting.withDisplayName(str7);
-      BooleansSetting booleansSetting2 = new BooleansSetting(
+      ).withDisplayName("RandomType");
+      this.randomizeInRotationModule = (StringValue)new StringValue(
          this, "RandomizeInRotationModule", "OnlyRotation", new String[]{"None", "Basic", "Doubled", "OnlyRotation"}
-      );
-      String str8 = "Randomize";
-      this.randomizeInRotationModule = (BooleansSetting)booleansSetting2.withDisplayName(str8);
-      StringValue stringValue = new StringValue(this, "RandomStrengthInRotationModule", 1.25, 0.01, 5.0, 2);
-      String str9 = "RandomStrength";
-      this.randomStrengthInRotationModule = stringValue.named(str9);
-      BooleanValue booleanValue = new BooleanValue(this, "AdvancedRotsInRotationModule", true);
-      String str10 = "AdvancedRots";
-      this.advancedRotsInRotationModule = (BooleanValue)booleanValue.withDisplayName(str10);
-      BooleanValue booleanValue2 = new BooleanValue(this, "InterpolationInRotationModule", false);
-      String str11 = "Interpolation";
-      this.interpolationInRotationModule = (BooleanValue)booleanValue2.withDisplayName(str11);
-      BooleanValue booleanValue3 = new BooleanValue(this, "MoveFixInRotationModule", true);
-      String str12 = "MoveFix";
-      this.moveFixInRotationModule = (BooleanValue)booleanValue3.withDisplayName(str12);
-      BooleansSetting booleansSetting3 = new BooleansSetting(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"});
-      String str13 = "SilentMoveFix";
-      this.silentMoveFix = (BooleansSetting)booleansSetting3.withDisplayName(str13);
-      BooleanValue booleanValue4 = new BooleanValue(this, "SilentMoveFixIntaveInRotationModule", true);
-      String str14 = "SilentMoveFixIntave";
-      this.silentMoveFixIntaveInRotationModule = (BooleanValue)booleanValue4.withDisplayName(str14);
+      ).withDisplayName("Randomize");
+      this.randomStrengthInRotationModule = new DoubleValue(this, "RandomStrengthInRotationModule", 1.25, 0.01, 5.0, 2).named("RandomStrength");
+      this.advancedRotsInRotationModule = (BooleanValue)new BooleanValue(this, "AdvancedRotsInRotationModule", true).withDisplayName("AdvancedRots");
+      this.interpolationInRotationModule = (BooleanValue)new BooleanValue(this, "InterpolationInRotationModule", false).withDisplayName("Interpolation");
+      this.moveFixInRotationModule = (BooleanValue)new BooleanValue(this, "MoveFixInRotationModule", true).withDisplayName("MoveFix");
+      this.silentMoveFix = (StringValue)new StringValue(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}).withDisplayName("SilentMoveFix");
+      this.silentMoveFixIntaveInRotationModule = (BooleanValue)new BooleanValue(this, "SilentMoveFixIntaveInRotationModule", true).withDisplayName("SilentMoveFixIntave");
       this.rotating = false;
    }
 
@@ -79,40 +61,22 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
        super(str, str2, color2, categorys2);
       RangeSetting rangeSetting = new RangeSetting(this, "YawSpeedInRotationModule", 30.0, 50.0, 0.0, 180.0, 0);
       String str3 = "MaxYawSpeed";
-      String str4 = "MinYawSpeed";
-      this.yawSpeedInRotationModule = rangeSetting.withBoundNames(str4, str3);
+      this.yawSpeedInRotationModule = rangeSetting.withBoundNames("MinYawSpeed", str3);
       RangeSetting rangeSetting2 = new RangeSetting(this, "PitchSpeedInRotationModule", 30.0, 50.0, 0.0, 180.0, 0);
       String str5 = "MaxPitchSpeed";
-      String str6 = "MinPitchSpeed";
-      this.pitchSpeedInRotationModule = rangeSetting2.withBoundNames(str6, str5);
-      BooleansSetting booleansSetting = new BooleansSetting(
+      this.pitchSpeedInRotationModule = rangeSetting2.withBoundNames("MinPitchSpeed", str5);
+      this.randomTypeInRotationModule = (StringValue)new StringValue(
          this, "RandomTypeInRotationModule", "SecureRandom", new String[]{"Random", "SecureRandom", "Gaussian", "Intave"}
-      );
-      String str7 = "RandomType";
-      this.randomTypeInRotationModule = (BooleansSetting)booleansSetting.withDisplayName(str7);
-      BooleansSetting booleansSetting2 = new BooleansSetting(
+      ).withDisplayName("RandomType");
+      this.randomizeInRotationModule = (StringValue)new StringValue(
          this, "RandomizeInRotationModule", "OnlyRotation", new String[]{"None", "Basic", "Doubled", "OnlyRotation"}
-      );
-      String str8 = "Randomize";
-      this.randomizeInRotationModule = (BooleansSetting)booleansSetting2.withDisplayName(str8);
-      StringValue stringValue = new StringValue(this, "RandomStrengthInRotationModule", 1.25, 0.01, 5.0, 2);
-      String str9 = "RandomStrength";
-      this.randomStrengthInRotationModule = stringValue.named(str9);
-      BooleanValue booleanValue = new BooleanValue(this, "AdvancedRotsInRotationModule", true);
-      String str10 = "AdvancedRots";
-      this.advancedRotsInRotationModule = (BooleanValue)booleanValue.withDisplayName(str10);
-      BooleanValue booleanValue2 = new BooleanValue(this, "InterpolationInRotationModule", false);
-      String str11 = "Interpolation";
-      this.interpolationInRotationModule = (BooleanValue)booleanValue2.withDisplayName(str11);
-      BooleanValue booleanValue3 = new BooleanValue(this, "MoveFixInRotationModule", true);
-      String str12 = "MoveFix";
-      this.moveFixInRotationModule = (BooleanValue)booleanValue3.withDisplayName(str12);
-      BooleansSetting booleansSetting3 = new BooleansSetting(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"});
-      String str13 = "SilentMoveFix";
-      this.silentMoveFix = (BooleansSetting)booleansSetting3.withDisplayName(str13);
-      BooleanValue booleanValue4 = new BooleanValue(this, "SilentMoveFixIntaveInRotationModule", true);
-      String str14 = "SilentMoveFixIntave";
-      this.silentMoveFixIntaveInRotationModule = (BooleanValue)booleanValue4.withDisplayName(str14);
+      ).withDisplayName("Randomize");
+      this.randomStrengthInRotationModule = new DoubleValue(this, "RandomStrengthInRotationModule", 1.25, 0.01, 5.0, 2).named("RandomStrength");
+      this.advancedRotsInRotationModule = (BooleanValue)new BooleanValue(this, "AdvancedRotsInRotationModule", true).withDisplayName("AdvancedRots");
+      this.interpolationInRotationModule = (BooleanValue)new BooleanValue(this, "InterpolationInRotationModule", false).withDisplayName("Interpolation");
+      this.moveFixInRotationModule = (BooleanValue)new BooleanValue(this, "MoveFixInRotationModule", true).withDisplayName("MoveFix");
+      this.silentMoveFix = (StringValue)new StringValue(this, "SilentMoveFix", "Default", new String[]{"None", "Default", "Advanced"}).withDisplayName("SilentMoveFix");
+      this.silentMoveFixIntaveInRotationModule = (BooleanValue)new BooleanValue(this, "SilentMoveFixIntaveInRotationModule", true).withDisplayName("SilentMoveFixIntave");
       this.rotating = false;
    }
 
@@ -126,50 +90,37 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 21;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)21);
    }
 
    public Rotation applyRotation2(float[] floats) {
-      float f = floats[0];
-      float f2 = floats[1];
-      float f3 = f2;
-      float f4 = f;
-      return this.applyRotation(f4, f3);
+      return this.applyRotation(floats[0], floats[1]);
    }
 
    public Rotation applyRotation(Rotation rotation) {
       float pitch = rotation.pitch;
-      float yaw = rotation.yaw;
-      return this.applyRotation(yaw, pitch);
+      return this.applyRotation(rotation.yaw, pitch);
    }
 
    public Rotation calculateRotationToVec(Vec3 vec) {
       double zCoord = vec.zCoord;
       double yCoord = vec.yCoord;
-      double xCoord = vec.xCoord;
-      return this.calculateRotationToPos(xCoord, yCoord, zCoord);
+      return this.calculateRotationToPos(vec.xCoord, yCoord, zCoord);
    }
 
    public Rotation calculateRotationToPos(double d, double d2, double d3) {
       double d4 = d - mc.thePlayer.posX;
       double d5 = d2 - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
       double d6 = d3 - mc.thePlayer.posZ;
-      float f = (float)(MathHelper.atan2(d6, d4) * 180.0 / Math.PI - 90.0);
-      float f2 = (float)(-(MathHelper.atan2(d5, (double)MathHelper.sqrt_double(d4 * d4 + d6 * d6)) * 180.0 / Math.PI));
-      return this.applyRotation(f, f2);
+      return this.applyRotation((float)(MathHelper.atan2(d6, d4) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d5, (double)MathHelper.sqrt_double(d4 * d4 + d6 * d6)) * 180.0 / Math.PI)));
    }
 
    public Rotation calculateRotationToPosWithSpeed(double d, double d2, double d3, float f, float f2) {
       double d4 = d - mc.thePlayer.posX;
       double d5 = d2 - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
       double d6 = d3 - mc.thePlayer.posZ;
-      float f3 = (float)(MathHelper.atan2(d6, d4) * 180.0 / Math.PI - 90.0);
-      float f4 = (float)(-(MathHelper.atan2(d5, (double)MathHelper.sqrt_double(d4 * d4 + d6 * d6)) * 180.0 / Math.PI));
-      Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-      return this.computeSmoothedRotation(f3, f4, previousRotation, f, f2);
+      return this.computeSmoothedRotation((float)(MathHelper.atan2(d6, d4) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d5, (double)MathHelper.sqrt_double(d4 * d4 + d6 * d6)) * 180.0 / Math.PI)), ClientManagers.rotationController.getPreviousRotation(), f, f2);
    }
 
    public Rotation calculateInterpolatedRotationFromBase(double d, double d2, double d3, Rotation rotation, float f) {
@@ -179,9 +130,7 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
       double d7 = d - d4;
       double d8 = d2 - (d5 + (double)mc.thePlayer.getEyeHeight());
       double d9 = d3 - d6;
-      float f2 = (float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0);
-      float f3 = (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI));
-      return this.applyRotationWithRandomSpeed(f2, f3, rotation);
+      return this.applyRotationWithRandomSpeed((float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI)), rotation);
    }
 
    public Rotation calculateSmoothInterpolatedRotation(double d, double d2, double d3, Rotation rotation, float f, float f2, float f3) {
@@ -191,9 +140,7 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
       double d7 = d - d4;
       double d8 = d2 - (d5 + (double)mc.thePlayer.getEyeHeight());
       double d9 = d3 - d6;
-      float f4 = (float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0);
-      float f5 = (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI));
-      return this.computeSmoothedRotation(f4, f5, rotation, f, f2);
+      return this.computeSmoothedRotation((float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI)), rotation, f, f2);
    }
 
    public Rotation calculateInterpolatedRotationToPos(double d, double d2, double d3, float f) {
@@ -203,33 +150,23 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
       double d7 = d - d4;
       double d8 = d2 - (d5 + (double)mc.thePlayer.getEyeHeight());
       double d9 = d3 - d6;
-      float f2 = (float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0);
-      float f3 = (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI));
-      return this.applyRotation(f2, f3);
+      return this.applyRotation((float)(MathHelper.atan2(d9, d7) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d8, (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9)) * 180.0 / Math.PI)));
    }
 
    public Rotation applyRotation(float f, float f2) {
-      Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-      Rotation rotation = previousRotation;
-      return this.applyRotationWithRandomSpeed(f, f2, rotation);
+      return this.applyRotationWithRandomSpeed(f, f2, ClientManagers.rotationController.getPreviousRotation());
    }
 
    public Rotation applyRotationWithRandomSpeed(float f, float f2, Rotation rotation) {
       RandomNumberGenerator instance = DefaultRandomGenerator.instance;
       double minValue = this.yawSpeedInRotationModule.getMinValue();
-      double maxValue = this.yawSpeedInRotationModule.getMaxValue();
-      double d = minValue;
-      float f3 = instance.nextSecureFloat(d, maxValue);
+      float f3 = instance.nextSecureFloat(minValue, this.yawSpeedInRotationModule.getMaxValue());
       instance = DefaultRandomGenerator.instance;
       minValue = this.pitchSpeedInRotationModule.getMinValue();
-      double maxValue2 = this.pitchSpeedInRotationModule.getMaxValue();
-      double d2 = minValue;
-      float f4 = instance.nextSecureFloat(d2, maxValue2);
-      return this.computeSmoothedRotation(f, f2, rotation, f3, f4);
+      return this.computeSmoothedRotation(f, f2, rotation, f3, instance.nextSecureFloat(minValue, this.pitchSpeedInRotationModule.getMaxValue()));
    }
 
    public Rotation computeSmoothedRotation(float f, float f2, Rotation rotation, float f3, float f4) {
-      boolean isControlFlowFlag = Categorys.isControlFlowFlag();
       float f5;
       float f6;
       if (this.interpolationInRotationModule.getValue()) {
@@ -240,8 +177,7 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
          f6 = RotationUtil.updateAngle(rotation.pitch, f2, f4);
       }
 
-      String selectedValue = this.randomizeInRotationModule.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.randomizeInRotationModule.getSelectedValue()) {
          case "Basic":
             f5 += this.computeRandomOffset(f6);
             f6 += this.computeRandomOffset(f5);
@@ -290,9 +226,7 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
 
    private float computeRandomOffset(float f) {
       double value = this.randomStrengthInRotationModule.getValue();
-      Categorys.isControlFlowFlagCleared();
-      String selectedValue = this.randomTypeInRotationModule.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.randomTypeInRotationModule.getSelectedValue()) {
          case "Random":
             double d = -value;
             return DefaultRandomGenerator.instance.nextFloat2(d, value);
@@ -312,55 +246,43 @@ public abstract class RotationModule extends Module implements MoveListener, Mov
 
    @Override
    public void onMove(EventMove event) {
-      boolean isControlFlowFlag = Categorys.isControlFlowFlag();
       if (this.rotating && !this.moveFixInRotationModule.getValue()) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
-      boolean isControlFlowFlag = Categorys.isControlFlowFlag();
       if (this.rotating && !this.moveFixInRotationModule.getValue()) {
-         float realYaw = Augustus.getInstance().getYawPitchHelper().realYaw;
-         event.setYaw(realYaw);
+         event.setYaw(Augustus.getInstance().getYawPitchHelper().realYaw);
       }
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
-      boolean flag = Categorys.isControlFlowFlagCleared();
       if (this.rotating && this.moveFixInRotationModule.getValue() && !this.silentMoveFix.getSelectedValue().equals("None") && ClientManagers.rotationController.isOwnedBy(this)) {
          if (this.silentMoveFix.getSelectedValue().equals("Advanced")) {
-            MoveFixMode advanced = MoveFixMode.ADVANCED;
-            event.setMoveFixMode(advanced);
+            event.setMoveFixMode(MoveFixMode.ADVANCED);
          } else {
-            MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-            event.setMoveFixMode(moveFixMode);
+            event.setMoveFixMode(MoveFixMode.DEFAULT);
          }
 
          if (this.silentMoveFixIntaveInRotationModule.getValue()) {
-            boolean flag2 = true;
-            event.setPreventInstantReverse(flag2);
+            event.setPreventInstantReverse(true);
          }
       }
    }
 
    public void initVisibilityConditions() {
-      BooleansSetting silentMoveFix2 = this.silentMoveFix;
+      StringValue silentMoveFix2 = this.silentMoveFix;
       SettingVisibilityCondition condition = () -> {
-         boolean flag = Categorys.isControlFlowFlagCleared();
          return this.moveFixInRotationModule.getValue() && this.moveFixInRotationModule.isVisible();
       };
       silentMoveFix2.withVisibility(condition);
-      BooleanValue booleanValue = this.silentMoveFixIntaveInRotationModule;
-      SettingVisibilityCondition condition2 = () -> this.isSilentMoveFixIntaveVisible();
-      booleanValue.withVisibility(condition2);
+      this.silentMoveFixIntaveInRotationModule.withVisibility(() -> this.isSilentMoveFixIntaveVisible());
    }
 
    private boolean isSilentMoveFixIntaveVisible() {
-      boolean isControlFlowFlag = Categorys.isControlFlowFlag();
       return this.silentMoveFix.isVisible() && !this.silentMoveFix.getSelectedValue().equals("None");
    }
 

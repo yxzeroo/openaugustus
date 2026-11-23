@@ -4,14 +4,14 @@ import net.augustus.events.EventUpdate;
 import net.augustus.events.listeners.UpdateListener;
 import net.augustus.modules.modes.AbstractSubMode;
 import net.augustus.modules.movement.NoWeb;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 
 public abstract class AbstractNoWebMode extends AbstractSubMode implements UpdateListener {
    public boolean wasInWeb = false;
    public final TimeHelper timeHelper = new TimeHelper();
 
-   public AbstractNoWebMode(NoWeb noWeb, DoubleValue doubleValue, String str) {
+   public AbstractNoWebMode(NoWeb noWeb, SettingGroup doubleValue, String str) {
       super(noWeb, doubleValue, str);
    }
 
@@ -22,8 +22,7 @@ public abstract class AbstractNoWebMode extends AbstractSubMode implements Updat
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    public void onUpdate(EventUpdate event) {
@@ -32,8 +31,7 @@ public abstract class AbstractNoWebMode extends AbstractSubMode implements Updat
       }
 
       if (mc.thePlayer.isInWeb() && ((NoWeb)this.parentModule).upDown.getValue()) {
-         long l = 200L;
-         if (this.timeHelper.reached2(l)) {
+         if (this.timeHelper.reached2(200L)) {
             if (mc.gameSettings.keyBindJump.isKeyDown()) {
                mc.thePlayer.motionY = ((NoWeb)this.parentModule).upSpeed.getValue();
             } else if (mc.gameSettings.keyBindSneak.isKeyDown()) {

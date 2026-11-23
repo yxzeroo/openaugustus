@@ -63,8 +63,7 @@ private String name;
          return false;
       } else {
          if (renderRender instanceof RendererLivingEntity) {
-            RendererLivingEntity rendererLivingEntity = (RendererLivingEntity)renderRender;
-            EntityLivingBase renderEntity = rendererLivingEntity.renderEntity;
+            EntityLivingBase renderEntity = ((RendererLivingEntity)renderRender).renderEntity;
             if (renderEntity == null) {
                return false;
             }

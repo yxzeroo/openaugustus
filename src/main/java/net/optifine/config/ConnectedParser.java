@@ -40,8 +40,7 @@ public class ConnectedParser {
          String[] strings = Config.tokenize(str, " ");
 
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            MatchBlock[] matchBlocks = this.parseMatchBlock(str2);
+            MatchBlock[] matchBlocks = this.parseMatchBlock(strings[i]);
             if (matchBlocks != null) {
                list.addAll(Arrays.asList(matchBlocks));
             }
@@ -90,8 +89,7 @@ public class ConnectedParser {
          Object[] array3 = (Object[])Array.newInstance(array.getClass().getComponentType(), strings.length);
 
          for (int i = 0; i < strings.length; i++) {
-            String str3 = strings[i];
-            Object obj = this.parseObject(str3, array, nameGetter, str2);
+            Object obj = this.parseObject(strings[i], array, nameGetter, str2);
             if (obj == null) {
                return array2;
             }
@@ -164,8 +162,7 @@ public class ConnectedParser {
       String[] strings = Config.tokenize(str, ",");
 
       for (int i = 0; i < strings.length; i++) {
-         String str2 = strings[i];
-         int n2 = parseCareerId(n, str2);
+         int n2 = parseCareerId(n, strings[i]);
          if (n2 < 0) {
             return null;
          }
@@ -237,8 +234,7 @@ public class ConnectedParser {
          String[] strings = Config.tokenize(str, " ,");
 
          for (int i = 0; i < strings.length; i++) {
-            String str2 = strings[i];
-            RangeInt rangeInt = this.parseRangeInt(str2);
+            RangeInt rangeInt = this.parseRangeInt(strings[i]);
             if (rangeInt == null) {
                return null;
             }
@@ -308,8 +304,7 @@ public class ConnectedParser {
                      }
                   }
 
-                  MatchBlock matchBlock = new MatchBlock(idFromBlock, ints);
-                  matchBlocks[i] = matchBlock;
+                  matchBlocks[i] = new MatchBlock(idFromBlock, ints);
                }
 
                return matchBlocks;
@@ -387,10 +382,7 @@ public class ConnectedParser {
       } else if (matchBlocks.length != 1) {
          return state;
       } else {
-         MatchBlock matchBlock = matchBlocks[0];
-         int blockId = matchBlock.getBlockId();
-         Block blockById = Block.getBlockById(blockId);
-         return blockById.getDefaultState();
+         return Block.getBlockById(matchBlocks[0].getBlockId()).getDefaultState();
       }
    }
 
@@ -425,8 +417,7 @@ public class ConnectedParser {
          }
       }
 
-      Integer[] nums = (Integer[])treeSet.toArray(new Integer[treeSet.size()]);
-      return Config.toPrimitive(nums);
+      return Config.toPrimitive((Integer[])treeSet.toArray(new Integer[treeSet.size()]));
    }
 
    private static int parseCareerId(int n, String str) {
@@ -542,8 +533,7 @@ public class ConnectedParser {
          for (int i = 0; i < biomeGenArray.length; i++) {
             BiomeGenBase biomeGenBase = biomeGenArray[i];
             if (biomeGenBase != null) {
-               String str2 = biomeGenBase.biomeName.replace(" ", "").toLowerCase();
-               if (str2.equals(str)) {
+               if (biomeGenBase.biomeName.replace(" ", "").toLowerCase().equals(str)) {
                   return biomeGenBase;
                }
             }
@@ -642,8 +632,7 @@ public class ConnectedParser {
          }
       }
 
-      Integer[] nums = (Integer[])treeSet.toArray(new Integer[treeSet.size()]);
-      return Config.toPrimitive(nums);
+      return Config.toPrimitive((Integer[])treeSet.toArray(new Integer[treeSet.size()]));
    }
 
    public boolean startsWithDigit(String str) {
@@ -652,8 +641,7 @@ public class ConnectedParser {
       } else if (str.length() < 1) {
          return false;
       } else {
-         char ch = str.charAt(0);
-         return Character.isDigit(ch);
+         return Character.isDigit(str.charAt(0));
       }
    }
 
@@ -684,8 +672,7 @@ public class ConnectedParser {
          if (this.startsWithDigit(str)) {
             return this.parseIntList(str);
          } else {
-            IBlockState defaultState = block.getDefaultState();
-            Collection propertyNames = defaultState.getPropertyNames();
+            Collection propertyNames = block.getDefaultState().getPropertyNames();
             HashMap map = new HashMap();
 
             for (int i = 0; i < strings.length; i++) {
@@ -735,8 +722,7 @@ public class ConnectedParser {
                   int n = k;
 
                   try {
-                     IBlockState stateFromMeta = this.getStateFromMeta(block, n);
-                     if (this.matchState(stateFromMeta, map)) {
+                     if (this.matchState(this.getStateFromMeta(block, n), map)) {
                         list.add(n);
                      }
                   } catch (IllegalArgumentException e) {
@@ -761,8 +747,7 @@ public class ConnectedParser {
 
    private static Object getValueName(Comparable comparable) {
       if (comparable instanceof IStringSerializable) {
-         IStringSerializable stringSerializable = (IStringSerializable)comparable;
-         return stringSerializable.getName();
+         return ((IStringSerializable)comparable).getName();
       } else {
          return comparable.toString();
       }
@@ -852,11 +837,9 @@ public class ConnectedParser {
    }
 
    public static Comparable parsePropertyValue(IProperty property, String str) {
-      Class valueClass = property.getValueClass();
-      Comparable comparable = parseValue(str, valueClass);
+      Comparable comparable = parseValue(str, property.getValueClass());
       if (comparable == null) {
-         Collection allowedValues = property.getAllowedValues();
-         comparable = getPropertyValue(str, allowedValues);
+         comparable = getPropertyValue(str, property.getAllowedValues());
       }
 
       return comparable;

@@ -4,14 +4,14 @@ import net.augustus.modules.Module;
 
 public abstract class ModuleSettingGroupBase {
    private final Module parentModule;
-   private final DoubleValue parentGroup;
+   private final SettingGroup parentGroup;
 
    public ModuleSettingGroupBase(Module module) {
       this.parentModule = module;
       this.parentGroup = null;
    }
 
-   public ModuleSettingGroupBase(Module module, DoubleValue doubleValue) {
+   public ModuleSettingGroupBase(Module module, SettingGroup doubleValue) {
       this.parentModule = module;
       this.parentGroup = doubleValue;
    }
@@ -20,7 +20,7 @@ public abstract class ModuleSettingGroupBase {
       return this.parentModule;
    }
 
-   public DoubleValue getParentGroup() {
+   public SettingGroup getParentGroup() {
       return this.parentGroup;
    }
 

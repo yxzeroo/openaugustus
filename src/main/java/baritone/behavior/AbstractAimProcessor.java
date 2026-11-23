@@ -13,9 +13,7 @@ public abstract class AbstractAimProcessor implements ITickableAimProcessor {
    private double randomPitchOffset;
 
    private float snapToSensitivity(float f, float f2) {
-      float f3 = f2 - f;
-      int n = this.degreesToPixels(f3);
-      return f + this.pixelsToDegrees(n);
+      return f + this.pixelsToDegrees(this.degreesToPixels(f2 - f));
    }
 
    public abstract Rotation getPrevRotation();
@@ -41,8 +39,7 @@ public abstract class AbstractAimProcessor implements ITickableAimProcessor {
    }
 
    private int degreesToPixels(float f) {
-      float f2 = this.pixelsToDegrees(1);
-      return Math.round(f / f2);
+      return Math.round(f / this.pixelsToDegrees(1));
    }
 
    @Override

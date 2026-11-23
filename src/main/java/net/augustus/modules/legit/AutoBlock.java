@@ -21,8 +21,8 @@ import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -32,11 +32,11 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MovingObjectPosition;
 
 public class AutoBlock extends Module implements ClickListener, PacketDelayListener, AttackEntityListener {
-   private final BooleansSetting mode;
-   private final StringValue startBlockingAdditionalRange;
-   private final StringValue maximumPlayerHurtTime;
-   private final StringValue maximumHurtTime;
-   private final StringValue ticksToTryHitAfterUnblock;
+   private final StringValue mode;
+   private final DoubleValue startBlockingAdditionalRange;
+   private final DoubleValue maximumPlayerHurtTime;
+   private final DoubleValue maximumHurtTime;
+   private final DoubleValue ticksToTryHitAfterUnblock;
    private final RandomizedRangeSettings maximumLagDuration;
    private final BooleanValue subtractOwnPingFromLagDuration;
    private final BooleanValue onlyOnRightClick;
@@ -54,14 +54,12 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
 
    public AutoBlock() {
        super("AutoBlock", "AutomatisiertesBlockieren", Color.green, Categorys.LEGIT);
-      this.mode = new BooleansSetting(this, "Mode", "Default", new String[]{"Default", "Lag"});
-      this.startBlockingAdditionalRange = new StringValue(this, "StartBlockingAdditionalRange", 0.5, 0.0, 2.0, 2);
-      this.maximumPlayerHurtTime = new StringValue(this, "MaximumPlayerHurtTime", 4.0, 3.0, 10.0, 0);
-      this.maximumHurtTime = new StringValue(this, "MaximumHurtTime", 1.0, 4.0, 0.0, 0);
-      this.ticksToTryHitAfterUnblock = new StringValue(this, "TicksToTryHitAfterUnblock", 2.0, 0.0, 4.0, 0);
-      RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this, "MaximumLagDuration", 250.0, 350.0, 0.0, 1000.0, 0)).withoutNotInARow();
-      SettingVisibilityCondition condition = () -> this.isLagMode();
-      this.maximumLagDuration = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
+      this.mode = new StringValue(this, "Mode", "Default", new String[]{"Default", "Lag"});
+      this.startBlockingAdditionalRange = new DoubleValue(this, "StartBlockingAdditionalRange", 0.5, 0.0, 2.0, 2);
+      this.maximumPlayerHurtTime = new DoubleValue(this, "MaximumPlayerHurtTime", 4.0, 3.0, 10.0, 0);
+      this.maximumHurtTime = new DoubleValue(this, "MaximumHurtTime", 1.0, 4.0, 0.0, 0);
+      this.ticksToTryHitAfterUnblock = new DoubleValue(this, "TicksToTryHitAfterUnblock", 2.0, 0.0, 4.0, 0);
+      this.maximumLagDuration = (RandomizedRangeSettings)(new RandomizedRangeSettings(this, "MaximumLagDuration", 250.0, 350.0, 0.0, 1000.0, 0)).withoutNotInARow().withVisibility(() -> this.isLagMode());
       this.subtractOwnPingFromLagDuration = new BooleanValue(this, "SubtractOwnPingFromLagDuration", false);
       this.onlyOnRightClick = (BooleanValue)(new BooleanValue(this, "OnlyOnRightClick", true)).markVisualOnly();
       this.forceHit = new BooleanValue(this, "ForceHit", true);
@@ -86,9 +84,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
 
    @Override
    public void updateEventSubscriptions() {
-      int n = 90000;
-      byte b = 7;
-      this.toggleEventSubscription(b, n);
+      this.toggleEventSubscription((byte)7, 90000);
       this.onAttackEntity();
       this.onAttackEntity();
    }
@@ -98,16 +94,13 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
       if (this.active.get() && this.lagBlocking.get()) {
          if (this.isLagMode()) {
             Packet packet = event.getPacket();
-            TimeHelper lagTimer2 = this.lagTimer;
-            long effectiveLagDuration = (long)this.getEffectiveLagDuration();
-            if (lagTimer2.reached2(effectiveLagDuration) && this.delayingPackets) {
+            if (this.lagTimer.reached2((long)this.getEffectiveLagDuration()) && this.delayingPackets) {
                this.delayingPackets = false;
                this.lagBlocking.set(false);
             }
 
             if (this.delayingPackets) {
-               boolean flag = true;
-               event.setDelayed(flag);
+               event.setDelayed(true);
             }
 
             if (packet instanceof C03PacketPlayer && !this.delayingPackets) {
@@ -124,28 +117,22 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
       this.updateTarget();
       this.active.set(this.canAutoBlock());
       if (this.active.get()) {
-         String selectedValue = this.mode.getSelectedValue();
-         switch (selectedValue) {
+         switch (this.mode.getSelectedValue()) {
             case "Default":
                if (!this.isPlayerHurtTimeWithinLimit()) {
-                  boolean flag = false;
-                  event.setRightMouseDown(flag);
+                  event.setRightMouseDown(false);
                } else if (!this.shouldUnblockToAttack()) {
                   if (!mc.thePlayer.isUsingItem()) {
                      this.triggerBlock(event);
                   } else {
-                     boolean flag2 = true;
-                     event.setRightMouseDown(flag2);
+                     event.setRightMouseDown(true);
                   }
                } else {
                   this.unblockHitTicks = (int)this.ticksToTryHitAfterUnblock.getValue();
-                  boolean flag3 = false;
-                  event.setRightMouseDown(flag3);
+                  event.setRightMouseDown(false);
                   if (this.forceHit.getValue() && this.isAimingAtLivingEntity() && event.getLeftClicks() <= 0 && mc.gameSettings.keyBindAttack.getPressTime() <= 0 && !mc.thePlayer.isUsingItem()) {
-                     byte b = 1;
-                     event.addLeftClicks(b);
-                     boolean flag4 = true;
-                     event.setBreakingBlock(flag4);
+                     event.addLeftClicks((byte)1);
+                     event.setBreakingBlock(true);
                   }
 
                   if ((event.getLeftClicks() > 0 || mc.gameSettings.keyBindAttack.getPressTime() > 0) && this.isAimingAtLivingEntity() && !mc.thePlayer.isUsingItem()) {
@@ -156,8 +143,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
                break;
             case "Lag":
                if (!this.isPlayerHurtTimeWithinLimit()) {
-                  boolean flag5 = false;
-                  event.setRightMouseDown(flag5);
+                  event.setRightMouseDown(false);
                   this.lagBlocking.set(false);
                   this.delayingPackets = false;
                } else if (!this.shouldUnblockToAttack()) {
@@ -166,18 +152,14 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
                      this.lagBlocking.set(true);
                      this.delayingPackets = false;
                   } else {
-                     boolean flag6 = false;
-                     event.setRightMouseDown(flag6);
+                     event.setRightMouseDown(false);
                   }
                } else {
                   this.unblockHitTicks = (int)this.ticksToTryHitAfterUnblock.getValue();
-                  boolean flag7 = false;
-                  event.setRightMouseDown(flag7);
+                  event.setRightMouseDown(false);
                   if (this.forceHit.getValue() && this.isAimingAtLivingEntity() && event.getLeftClicks() <= 0 && mc.gameSettings.keyBindAttack.getPressTime() <= 0 && !mc.thePlayer.isUsingItem()) {
-                     byte b2 = 1;
-                     event.addLeftClicks(b2);
-                     boolean flag8 = true;
-                     event.setBreakingBlock(flag8);
+                     event.addLeftClicks((byte)1);
+                     event.setBreakingBlock(true);
                   }
 
                   if ((event.getLeftClicks() > 0 || mc.gameSettings.keyBindAttack.getPressTime() > 0) && this.isAimingAtLivingEntity() && !mc.thePlayer.isUsingItem()) {
@@ -203,11 +185,9 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
    }
 
    private void triggerBlock(EventClick event) {
-      byte b = 1;
-      event.addRightClicks(b);
+      event.addRightClicks((byte)1);
       if (!this.interactAutoBlock.getValue()) {
-         Runnable runnable = () -> sendUseHeldItem();
-         event.setRightClickAction(runnable);
+         event.setRightClickAction(() -> sendUseHeldItem());
       }
    }
 
@@ -217,8 +197,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
             return true;
          }
 
-         byte b = 1;
-         if (this.canRayCastTargetInTicks(b) || this.unblockHitTicks > 0) {
+         if (this.canRayCastTargetInTicks((byte)1) || this.unblockHitTicks > 0) {
             return true;
          }
       }
@@ -260,8 +239,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
    }
 
    private void updateTarget() {
-      long l = 600L;
-      if (this.targetResetTimer.reached2(l)) {
+      if (this.targetResetTimer.reached2(600L)) {
          this.target = null;
       }
 
@@ -275,10 +253,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
          }
       }
 
-      EntityTargetFilter targetFilter = this.targetSelectionSettings.getTargetFilter();
-      EntityLivingBase target2 = this.target;
-      boolean flag = targetFilter.matches(target2);
-      if (!flag) {
+      if (!this.targetSelectionSettings.getTargetFilter().matches(this.target)) {
          this.target = null;
       }
 
@@ -297,8 +272,7 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
 
    private static void sendUseHeldItem() {
       if (!mc.playerController.isHittingBlock() || ClientManagers.moduleManager.fixes.isPlaceWhileBreakEnabled()) {
-         byte b = 4;
-         mc.rightClickDelayTimer = b;
+         mc.rightClickDelayTimer = (byte)4;
          ItemStack currentItem = mc.thePlayer.inventory.getCurrentItem();
          if (currentItem != null && mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, currentItem)) {
             mc.entityRenderer.itemRenderer.resetEquippedProgress2();

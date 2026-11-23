@@ -22,7 +22,7 @@ import net.augustus.events.EventBlockChange;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.events.listeners.BlockChangeListener;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBarrier;
 import net.minecraft.block.material.MapColor;
@@ -38,11 +38,11 @@ import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
 public class MiniMap extends Module implements TickListener, RenderListener, PacketListener, BlockChangeListener, LoadWorldListener, ChunkLoadListener {
-   private final StringValue height;
-   private final StringValue posX;
-   private final StringValue posY;
-   private final StringValue size;
-   private final StringValue scale;
+   private final DoubleValue height;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
+   private final DoubleValue size;
+   private final DoubleValue scale;
    private final BlurShadowSettings blurShadowSettings;
    private final Long2ObjectMap chunkMapCache;
    private int renderX;
@@ -54,14 +54,12 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
 
    public MiniMap() {
        super("MiniMap", "TomTom", new Color(92, 214, 98), Categorys.RENDER);
-      this.height = new StringValue(this, "Height", 255.0, 0.0, 255.0, 0);
-      this.posX = new StringValue(this, "PosX", 0.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 20.0, 0.0, 100.0, 2);
-      this.size = new StringValue(this, "Size", 200.0, 10.0, 400.0, 0);
-      this.scale = new StringValue(this, "Scale", 100.0, 50.0, 400.0, 2);
-      BlurShadowSettings blurShadowSettings2 = (new BlurShadowSettings(this)).removeBlurSetting();
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.height = new DoubleValue(this, "Height", 255.0, 0.0, 255.0, 0);
+      this.posX = new DoubleValue(this, "PosX", 0.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 20.0, 0.0, 100.0, 2);
+      this.size = new DoubleValue(this, "Size", 200.0, 10.0, 400.0, 0);
+      this.scale = new DoubleValue(this, "Scale", 100.0, 50.0, 400.0, 2);
+      this.blurShadowSettings = (new BlurShadowSettings(this)).removeBlurSetting().withCustomShadowColor(Color.black);
       this.chunkMapCache = new Long2ObjectOpenHashMap();
       this.renderX = 5;
       this.renderY = 5;
@@ -89,11 +87,7 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
             for (LongHashMap.Entry j = hashArray[i]; j != null; j = j.nextEntry) {
                if (set.add(j)) {
                   Chunk value = (Chunk)j.getValue();
-                  int n = value.xPosition << 4;
-                  int n2 = value.zPosition << 4;
-                  int n3 = n2;
-                  int n4 = n;
-                  this.scanChunkColumn(n4, n3);
+                  this.scanChunkColumn(value.xPosition << 4, value.zPosition << 4);
                }
             }
          }
@@ -106,16 +100,11 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 55;
-      this.toggleEventSubscription(b3);
-      byte b4 = 56;
-      this.toggleEventSubscription(b4);
-      byte b5 = 40;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)55);
+      this.toggleEventSubscription((byte)56);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -137,10 +126,8 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
          int n = x & 15;
          int n2 = z & 15;
          int[][][] orCreateChunkData = this.getOrCreateChunkData(x, z);
-         int n3 = orCreateChunkData[1][n][n2];
-         if (y >= n3) {
-            IBlockState blockState = event.getBlockState();
-            MapColor solidMapColor = this.getSolidMapColor(blockState);
+         if (y >= orCreateChunkData[1][n][n2]) {
+            MapColor solidMapColor = this.getSolidMapColor(event.getBlockState());
             if (solidMapColor == null) {
                Chunk chunkFromChunkCoords = mc.theWorld.getChunkFromChunkCoords(x, z);
 
@@ -173,18 +160,13 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
             this.scanLoadedChunks();
          }
 
-         int value = (int)this.scale.getValue();
-         this.updateMinimapTexture(value);
+         this.updateMinimapTexture((int)this.scale.getValue());
       }
    }
 
    @Override
    public void onChunkLoad(EventChunkLoad event) {
-      int n = event.getChunkX() << 4;
-      int n2 = event.getChunkZ() << 4;
-      int n3 = n2;
-      int n4 = n;
-      this.scanChunkColumn(n4, n3);
+      this.scanChunkColumn(event.getChunkX() << 4, event.getChunkZ() << 4);
    }
 
    private void scanChunkColumn(int n, int n2) {
@@ -226,12 +208,10 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
          this.textureId = this.createMapTexture(n, n);
       }
 
-      int[][] pixelColors2 = this.pixelColors;
-      this.populatePixelGrid(n, pixelColors2);
+      this.populatePixelGrid(n, this.pixelColors);
       int[][] pixelColors3 = this.pixelColors;
       int textureId2 = this.textureId;
-      ByteBuffer textureBuffer2 = this.textureBuffer;
-      this.uploadPixelGridToTexture(textureBuffer2, textureId2, pixelColors3, n, n);
+      this.uploadPixelGridToTexture(this.textureBuffer, textureId2, pixelColors3, n, n);
    }
 
    public int[][][] getOrCreateChunkData(int n, int n2) {
@@ -287,10 +267,8 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
       int n2 = (int)mc.thePlayer.posX - n / 2;
       int n3 = (int)mc.thePlayer.posZ - n / 2;
       int n4 = n / 16 + 2;
-      int n5 = n2 & 15;
-      int n6 = -n5;
-      int n7 = n3 & 15;
-      int n8 = -n7;
+      int n6 = -(n2 & 15);
+      int n8 = -(n3 & 15);
 
       for (int i = -1; i < n4; i++) {
          for (int j = -1; j < n4; j++) {
@@ -353,12 +331,10 @@ public class MiniMap extends Module implements TickListener, RenderListener, Pac
       int n3 = this.renderY - 1;
       int n4 = this.renderX + n + 1;
       int n5 = this.renderY + n + 1;
-      int n6 = -267119596;
-      RenderUtil.drawRect3(n2, n3, n4, n5, this.blurShadowSettings.resolvePassColor(shaderRenderPass, n6));
+      RenderUtil.drawRect3(n2, n3, n4, n5, this.blurShadowSettings.resolvePassColor(shaderRenderPass, -267119596));
       n4 = this.renderX + n;
       n5 = this.renderY + n;
-      int n7 = -15461356;
-      RenderUtil.drawRect3(this.renderX, this.renderY, n4, n5, this.blurShadowSettings.resolvePassColor(shaderRenderPass, n7));
+      RenderUtil.drawRect3(this.renderX, this.renderY, n4, n5, this.blurShadowSettings.resolvePassColor(shaderRenderPass, -15461356));
       RenderUtil.setGlColorRgba(255, 255, 255, 255);
       this.drawMinimapTexture(n);
       RenderUtil.drawRect3(

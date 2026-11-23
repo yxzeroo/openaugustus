@@ -48,8 +48,7 @@ public class BlockMobSpawner extends BlockContainer {
    @Override
    public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float f, int n) {
       super.dropBlockAsItemWithChance(world, pos, state, f, n);
-      int n2 = 15 + world.rand.nextInt(15) + world.rand.nextInt(15);
-      this.dropXpOnBlockBreak(world, pos, n2);
+      this.dropXpOnBlockBreak(world, pos, 15 + world.rand.nextInt(15) + world.rand.nextInt(15));
    }
 
    @Override

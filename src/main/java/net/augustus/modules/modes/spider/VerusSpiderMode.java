@@ -4,18 +4,17 @@ import net.augustus.events.EventMotion;
 import net.augustus.events.listeners.MotionListener;
 import java.util.function.BiFunction;
 import net.augustus.modules.movement.Spider;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class VerusSpiderMode extends AbstractSpiderMode implements MotionListener {
 
-   public VerusSpiderMode(Spider spider, DoubleValue doubleValue) {
+   public VerusSpiderMode(Spider spider, SettingGroup doubleValue) {
       super(spider, doubleValue, "Verus");
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
@@ -27,12 +26,11 @@ public class VerusSpiderMode extends AbstractSpiderMode implements MotionListene
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new VerusSpiderMode((Spider)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new VerusSpiderMode((Spider)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void onMotion(EventMotion event) {
-      int[] controlFlowState22 = AbstractSpiderMode.getControlFlowState2();
       if (this.canClimbWall()) {
          if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.ticksExisted % 4 != 0) {
             mc.thePlayer.motionY = 0.5;

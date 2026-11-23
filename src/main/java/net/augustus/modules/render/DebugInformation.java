@@ -22,7 +22,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.options.DebugInfoElementOption;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.Packet;
@@ -34,9 +34,9 @@ import org.lwjgl.opengl.GL11;
 
 public class DebugInformation extends Module implements RenderListener, PacketListener, TickListener {
    private final MultiOptionSetting debugInformation;
-   private final StringValue scale;
-   private final StringValue posX;
-   private final StringValue posY;
+   private final DoubleValue scale;
+   private final DoubleValue posX;
+   private final DoubleValue posY;
    private final BooleanValue fontShadow;
    private final ColorSetting leftColor;
    private final ColorSetting rightColor;
@@ -52,9 +52,9 @@ public class DebugInformation extends Module implements RenderListener, PacketLi
    public DebugInformation() {
        super("DebugInformation", "DebugInformation", new Color(235, 122, 52), Categorys.RENDER);
       this.debugInformation = new MultiOptionSetting(this, "Debug information", DebugInfoElementOption.values());
-      this.scale = new StringValue(this, "Scale", 2.0, 0.5, 4.0, 2);
-      this.posX = new StringValue(this, "PosX", 0.0, 0.0, 100.0, 2);
-      this.posY = new StringValue(this, "PosY", 0.0, 0.0, 100.0, 2);
+      this.scale = new DoubleValue(this, "Scale", 2.0, 0.5, 4.0, 2);
+      this.posX = new DoubleValue(this, "PosX", 0.0, 0.0, 100.0, 2);
+      this.posY = new DoubleValue(this, "PosY", 0.0, 0.0, 100.0, 2);
       this.fontShadow = new BooleanValue(this, "FontShadow", true);
       this.leftColor = new ColorSetting(this, "LeftColor", Color.white);
       this.rightColor = new ColorSetting(this, "RightColor", Color.lightGray);
@@ -72,12 +72,9 @@ public class DebugInformation extends Module implements RenderListener, PacketLi
    }
 
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick2() {
@@ -106,14 +103,11 @@ public class DebugInformation extends Module implements RenderListener, PacketLi
 
       if (packet instanceof C03PacketPlayer) {
          if (!(packet instanceof C03PacketPlayer.C04PacketPlayerPosition) && !(packet instanceof C03PacketPlayer.C06PacketPlayerPosLook)) {
-            float f = 0.0F;
-            this.updateBlocksPerSecond(f);
+            this.updateBlocksPerSecond(0.0F);
          } else {
             C03PacketPlayer packet2 = (C03PacketPlayer)packet;
             double d = Math.abs(packet2.getPositionX() - this.lastPosX);
-            double d2 = Math.abs(packet2.getPositionZ() - this.lastPosZ);
-            float f2 = (float)(Math.hypot(d2, d) * 20.0);
-            this.updateBlocksPerSecond(f2);
+            this.updateBlocksPerSecond((float)(Math.hypot(Math.abs(packet2.getPositionZ() - this.lastPosZ), d) * 20.0));
             this.lastPosX = packet2.getPositionX();
             this.lastPosZ = packet2.getPositionZ();
          }
@@ -248,18 +242,10 @@ public class DebugInformation extends Module implements RenderListener, PacketLi
          TuplePair first = (TuplePair)tuplePair.getFirst();
          int n = i * mc.fontRendererObj.FONT_HEIGHT;
          String first2 = (String)first.getFirst();
-         byte b = 0;
-         int colorInt = this.leftColor.getColorInt(b);
-         byte b2 = 0;
-         String str14 = first2;
-         this.drawStyledString(str14, b2, n, colorInt);
+         this.drawStyledString(first2, (byte)0, n, this.leftColor.getColorInt((byte)0));
          first2 = tuplePair.getSecond() + "";
          int second = (Integer)first.getSecond();
-         byte b3 = 0;
-         int colorInt2 = this.rightColor.getColorInt(b3);
-         int n2 = second;
-         String str15 = first2;
-         this.drawStyledString(str15, n2, n, colorInt2);
+         this.drawStyledString(first2, second, n, this.rightColor.getColorInt((byte)0));
       }
    }
 

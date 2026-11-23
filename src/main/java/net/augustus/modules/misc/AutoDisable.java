@@ -18,9 +18,9 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketThreadUtil;
@@ -28,10 +28,10 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
 public class AutoDisable extends Module implements TickListener, LoadWorldListener, PacketListener {
    private final BooleanValue disableOnTeleport;
-   private final StringValue minTeleportDistance;
-   private final BooleansSetting mode;
-   private final StringValue forcedisableModulesForXMs;
-   private final StringValue retoggleModulesAfterXMs;
+   private final DoubleValue minTeleportDistance;
+   private final StringValue mode;
+   private final DoubleValue forcedisableModulesForXMs;
+   private final DoubleValue retoggleModulesAfterXMs;
    private final HashMap moduleDisableSettings;
    private boolean hasPendingRetoggles;
    private final TimeHelper forceDisableTimer;
@@ -41,19 +41,13 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
    public AutoDisable() {
        super("AutoDisable", "AutoAusschalten", new Color(169, 224, 81), Categorys.MISC);
       this.disableOnTeleport = (BooleanValue)(new BooleanValue(this, "Disable on Teleport", false)).markVisualOnly();
-      StringValue stringValue = new StringValue(this, "Min teleport distance", 50.0, 0.0, 1000.0, 1);
+      DoubleValue stringValue = new DoubleValue(this, "Min teleport distance", 50.0, 0.0, 1000.0, 1);
       BooleanValue disableOnTeleport2 = this.disableOnTeleport;
       this.disableOnTeleport.getClass();
-      BooleanValue booleanValue = disableOnTeleport2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.minTeleportDistance = (StringValue)stringValue.visibleWhen(condition).markVisualOnly();
-      this.mode = (BooleansSetting)(new BooleansSetting(this, "Mode", "Simple", new String[]{"Simple", "Expert"})).markVisualOnly();
-      StringValue stringValue2 = new StringValue(this, "Forcedisable modules for x ms", 0.0, 0.0, 5000.0, 0);
-      SettingVisibilityCondition condition2 = () -> this.isSimpleForceDisableDelayVisible();
-      this.forcedisableModulesForXMs = (StringValue)stringValue2.visibleWhen(condition2).markVisualOnly();
-      StringValue stringValue3 = new StringValue(this, "Retoggle modules after x ms", 0.0, 0.0, 5000.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isSimpleRetoggleDelayVisible();
-      this.retoggleModulesAfterXMs = (StringValue)stringValue3.visibleWhen(condition3).markVisualOnly();
+      this.minTeleportDistance = (DoubleValue)stringValue.visibleWhen(() -> disableOnTeleport2.getValue()).markVisualOnly();
+      this.mode = (StringValue)(new StringValue(this, "Mode", "Simple", new String[]{"Simple", "Expert"})).markVisualOnly();
+      this.forcedisableModulesForXMs = (DoubleValue)new DoubleValue(this, "Forcedisable modules for x ms", 0.0, 0.0, 5000.0, 0).visibleWhen(() -> this.isSimpleForceDisableDelayVisible()).markVisualOnly();
+      this.retoggleModulesAfterXMs = (DoubleValue)new DoubleValue(this, "Retoggle modules after x ms", 0.0, 0.0, 5000.0, 0).visibleWhen(() -> this.isSimpleRetoggleDelayVisible()).markVisualOnly();
       this.moduleDisableSettings = new HashMap();
       this.hasPendingRetoggles = false;
       this.forceDisableTimer = new TimeHelper();
@@ -65,21 +59,17 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
       if (this.moduleDisableSettings.isEmpty()) {
          for (Categorys categorys2 : Categorys.values()) {
             if (!categorys2.hidden) {
-               DoubleValue doubleValue = (DoubleValue)(new DoubleValue(this, categorys2.name())).markVisualOnly();
+               SettingGroup doubleValue = (SettingGroup)(new SettingGroup(this, categorys2.name())).markVisualOnly();
 
                for (Module module : (Iterable<Module>)(moduleManager.getModulesByCategory(categorys2))) {
                   if (!(module instanceof AutoDisable)) {
                      BooleanValue booleanValue = (BooleanValue)(new BooleanValue(this, module.getName2(), false, doubleValue)).markVisualOnly();
-                     DoubleValue doubleValue2 = new DoubleValue(this, module.getName2() + "Settings", doubleValue);
-                     SettingVisibilityCondition condition = () -> this.isExpertModuleOptionVisible(booleanValue);
-                     DoubleValue doubleValue3 = (DoubleValue)doubleValue2.visibleWhen(condition).markVisualOnly();
+                     SettingGroup doubleValue3 = (SettingGroup)new SettingGroup(this, module.getName2() + "Settings", doubleValue).visibleWhen(() -> this.isExpertModuleOptionVisible(booleanValue)).markVisualOnly();
                      HashMap moduleDisableSettings2 = this.moduleDisableSettings;
-                     StringValue stringValue = new StringValue(
+                     Setting setting = new DoubleValue(
                         this, module.getName() + "Forcedisable modules for x ms", 0.0, 0.0, 5000.0, 0, doubleValue3
-                     );
-                     String str = "Forcedisable modules for x ms";
-                     Setting setting = stringValue.named(str).markVisualOnly();
-                     StringValue stringValue2 = (StringValue)(new StringValue(
+                     ).named("Forcedisable modules for x ms").markVisualOnly();
+                     DoubleValue stringValue2 = (DoubleValue)(new DoubleValue(
                            this, module.getName() + "Retoggle modules after x ms", 0.0, 0.0, 5000.0, 0, doubleValue3
                         ))
                         .markVisualOnly();
@@ -102,12 +92,9 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 17;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
@@ -132,14 +119,11 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
             long l2 = (long)retoggleDelayMs;
             boolean flag5 = this.retoggleTimer.reached2(l2);
             if (flag2 && flag4) {
-               boolean flag6 = false;
-               module.setToggleLocked(flag6);
+               module.setToggleLocked(false);
             }
 
             if (flag3 && flag4 && flag5) {
-               boolean flag7 = false;
-               boolean flag8 = true;
-               module.setToggled(flag8, flag7);
+               module.setToggled(true, false);
                it.remove();
                flag = true;
             }
@@ -157,8 +141,7 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
 
    @Override
    public void onPacket4(EventPacket event) {
-      Packet packet = event.getPacket();
-      if (packet instanceof S08PacketPlayerPosLook) {
+      if (event.getPacket() instanceof S08PacketPlayerPosLook) {
          PacketThreadUtil.runOnMainThreadImmediate(() -> this.handleTeleportPacket(event));
       }
    }
@@ -182,12 +165,10 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
                      flag = true;
                   }
 
-                  boolean flag2 = false;
-                  module.setToggled(flag2);
+                  module.setToggled(false);
                   this.disabledModules.add(module);
                   if (forceDisableDelayMs > 0) {
-                     boolean flag3 = true;
-                     module.setToggleLocked(flag3);
+                     module.setToggleLocked(true);
                   }
                }
             }
@@ -201,23 +182,17 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
 
    private int getForceDisableDelayMs(Module module) {
       if (this.mode.getSelectedValue().equals("Simple")) {
-         boolean flag = true;
-         return (int)this.forcedisableModulesForXMs.getValue(flag);
+         return (int)this.forcedisableModulesForXMs.getValue(true);
       } else {
-         StringValue second = (StringValue)((TupleTriple)this.moduleDisableSettings.get(module)).second;
-         boolean flag2 = true;
-         return (int)second.getValue(flag2);
+         return (int)((DoubleValue)((TupleTriple)this.moduleDisableSettings.get(module)).second).getValue(true);
       }
    }
 
    private int getRetoggleDelayMs(Module module) {
       if (this.mode.getSelectedValue().equals("Simple")) {
-         boolean flag = true;
-         return (int)this.retoggleModulesAfterXMs.getValue(flag);
+         return (int)this.retoggleModulesAfterXMs.getValue(true);
       } else {
-         StringValue third = (StringValue)((TupleTriple)this.moduleDisableSettings.get(module)).third;
-         boolean flag2 = true;
-         return (int)third.getValue(flag2);
+         return (int)((DoubleValue)((TupleTriple)this.moduleDisableSettings.get(module)).third).getValue(true);
       }
    }
 
@@ -227,8 +202,7 @@ public class AutoDisable extends Module implements TickListener, LoadWorldListen
          boolean hasPendingRetoggles2 = this.hasPendingRetoggles;
          this.hasPendingRetoggles = this.disableConfiguredModules();
          if (this.hasPendingRetoggles && !hasPendingRetoggles2) {
-            String str = "Disabled modules because of teleport!";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Disabled modules because of teleport!");
          }
       }
    }

@@ -70,8 +70,7 @@ public class ExtendedBlockStorage {
    }
 
    public void set(int n, int n2, int n3, IBlockState state) {
-      IBlockState state2 = this.get(n, n2, n3);
-      Block block = state2.getBlock();
+      Block block = this.get(n, n2, n3).getBlock();
       Block block2 = state.getBlock();
       if (block != Blocks.air) {
          this.blockRefCount--;

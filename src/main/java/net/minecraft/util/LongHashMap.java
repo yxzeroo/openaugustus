@@ -121,8 +121,7 @@ public class LongHashMap {
    }
 
    public final LongHashMap.Entry removeKey(long l) {
-      int hashedKey = getHashedKey(l);
-      int hashIndex = getHashIndex(hashedKey, this.mask);
+      int hashIndex = getHashIndex(getHashedKey(l), this.mask);
       LongHashMap.Entry entry = this.hashArray[hashIndex];
       LongHashMap.Entry entry2 = entry;
 
@@ -167,9 +166,7 @@ public class LongHashMap {
    }
 
    private void resizeTable(int n) {
-      LongHashMap.Entry[] hashArray2 = this.hashArray;
-      int length = hashArray2.length;
-      if (length == 1073741824) {
+      if (this.hashArray.length == 1073741824) {
          this.capacity = Integer.MAX_VALUE;
       } else {
          LongHashMap.Entry[] entrys = new LongHashMap.Entry[n];
@@ -219,9 +216,7 @@ public class LongHashMap {
             Long key2 = this.getKey();
             Long key3 = entry.getKey();
             if (Objects.equals(key2, key3)) {
-               Object value2 = this.getValue();
-               Object value3 = entry.getValue();
-               return Objects.equals(value2, value3);
+               return Objects.equals(this.getValue(), entry.getValue());
             } else {
                return false;
             }

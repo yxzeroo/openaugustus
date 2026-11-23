@@ -6,10 +6,7 @@ public class MinFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      double arg = this.getArg(b);
-      byte b2 = 1;
-      return Math.min(arg, this.getArg(b2));
+      return Math.min(this.getArg((byte)0), this.getArg((byte)1));
    }
 
    public MinFunction(MolangValue[] molangValues, String str) throws Exception {

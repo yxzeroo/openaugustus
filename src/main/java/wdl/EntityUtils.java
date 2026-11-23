@@ -103,8 +103,7 @@ public class EntityUtils {
             return entityRange;
          }
       } else if ("user".equals(str)) {
-         String property = WDL.worldProps.getProperty("Entity." + getEntityType(entity) + ".TrackDistance", "-1");
-         int n = Integer.parseInt(property);
+         int n = Integer.parseInt(WDL.worldProps.getProperty("Entity." + getEntityType(entity) + ".TrackDistance", "-1"));
          return n == -1 ? getEntityTrackDistance2("server", entity) : n;
       } else {
          throw new IllegalArgumentException("Mode is not a valid mode: " + str);
@@ -183,9 +182,7 @@ public class EntityUtils {
             classToStringMapping = map2;
          }
       } catch (Exception e) {
-         Minecraft minecraft = Minecraft.getMinecraft();
-         CrashReport crashReport = new CrashReport("World Downloader Mod: failed to set up entity ranges!", e);
-         minecraft.crashed(crashReport);
+         Minecraft.getMinecraft().crashed(new CrashReport("World Downloader Mod: failed to set up entity ranges!", e));
          throw new Error("World Downloader Mod: failed to set up entity ranges!", e);
       }
    }
@@ -318,9 +315,8 @@ public class EntityUtils {
          int defaultEntityRange = getDefaultEntityRange(str2);
          if (defaultEntityRange < 0) {
             for (ModInfo modInfo : (Iterable<ModInfo>)(WDLApi.getImplementingExtensions(ISpecialEntityHandler.class))) {
-               Multimap specialEntities = ((ISpecialEntityHandler)modInfo.mod).getSpecialEntities();
 
-               for (Entry entry : (Iterable<Entry>)(specialEntities.entries())) {
+               for (Entry entry : (Iterable<Entry>)(((ISpecialEntityHandler)modInfo.mod).getSpecialEntities().entries())) {
                   if (str2.equals(entry.getValue())) {
                      return getEntityTrackDistance(str, (String)entry.getKey());
                   }
@@ -331,8 +327,7 @@ public class EntityUtils {
          return defaultEntityRange;
       } else if (!"server".equals(str)) {
          if ("user".equals(str)) {
-            String property = WDL.worldProps.getProperty("Entity." + str2 + ".TrackDistance", "-1");
-            int n = Integer.parseInt(property);
+            int n = Integer.parseInt(WDL.worldProps.getProperty("Entity." + str2 + ".TrackDistance", "-1"));
             return n == -1 ? getEntityTrackDistance("server", str2) : n;
          } else {
             throw new IllegalArgumentException("Mode is not a valid mode: " + str);
@@ -346,9 +341,8 @@ public class EntityUtils {
             }
 
             for (ModInfo modInfo2 : (Iterable<ModInfo>)(WDLApi.getImplementingExtensions(ISpecialEntityHandler.class))) {
-               Multimap specialEntities2 = ((ISpecialEntityHandler)modInfo2.mod).getSpecialEntities();
 
-               for (Entry entry2 : (Iterable<Entry>)(specialEntities2.entries())) {
+               for (Entry entry2 : (Iterable<Entry>)(((ISpecialEntityHandler)modInfo2.mod).getSpecialEntities().entries())) {
                   if (str2.equals(entry2.getValue())) {
                      return getEntityTrackDistance(str, (String)entry2.getKey());
                   }

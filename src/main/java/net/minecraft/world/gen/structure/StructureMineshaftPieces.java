@@ -900,11 +900,8 @@ public class StructureMineshaftPieces {
 
             for (int j = 0; j <= 2; j++) {
                for (int k = 0; k <= n; k++) {
-                  byte b = -1;
-                  IBlockState blockStateFromPos = this.getBlockStateFromPos(world, j, b, k, structureBoundingBox);
-                  if (blockStateFromPos.getBlock().getMaterial() == Material.air) {
-                     byte b2 = -1;
-                     this.setBlockState(world, Blocks.planks.getDefaultState(), j, b2, k, structureBoundingBox);
+                  if (this.getBlockStateFromPos(world, j, (byte)-1, k, structureBoundingBox).getBlock().getMaterial() == Material.air) {
+                     this.setBlockState(world, Blocks.planks.getDefaultState(), j, (byte)-1, k, structureBoundingBox);
                   }
                }
             }

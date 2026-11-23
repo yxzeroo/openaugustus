@@ -31,8 +31,7 @@ public class MovementInputFromOptions extends MovementInput implements MC {
       boolean flag2 = false;
 
       for (int i = KeyBinding.getPressedMovementKeys().size() - 1; i >= 0; i--) {
-         KeyBinding keyBinding = (KeyBinding)KeyBinding.getPressedMovementKeys().get(i);
-         int keyCode5 = keyBinding.getKeyCode();
+         int keyCode5 = ((KeyBinding)KeyBinding.getPressedMovementKeys().get(i)).getKeyCode();
          if (!flag && (keyCode5 == keyCode || keyCode5 == keyCode4)) {
             if (keyCode5 == keyCode) {
                this.moveForward = 1.0F;
@@ -167,8 +166,7 @@ public class MovementInputFromOptions extends MovementInput implements MC {
             double[] doubles = PlayerUtil.predictPlayerPosition(0, mc.thePlayer);
             Vec3 vec = new Vec3(doubles[0], doubles[1], doubles[2]);
             double d = vec.xCoord - mc.thePlayer.posX;
-            double d2 = vec.zCoord - mc.thePlayer.posZ;
-            float f8 = RotationUtil.updateAngle(yaw, (float)(Math.atan2(d2, d) * 180.0 / 3.141592653589793 - 90.0), 180.0F);
+            float f8 = RotationUtil.updateAngle(yaw, (float)(Math.atan2(vec.zCoord - mc.thePlayer.posZ, d) * 180.0 / 3.141592653589793 - 90.0), 180.0F);
             this.yawDriftOffset += yaw - f8;
          } else {
             this.yawDriftOffset = 0.0F;

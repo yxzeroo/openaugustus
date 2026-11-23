@@ -58,10 +58,7 @@ public final class PaddedAesCipher {
 
          if (n5 != 0) {
             paddedAesCipher = this;
-            byte[] bytes2 = (byte[])obj;
-            int n7 = Math.addExact(b, n2);
-            byte[] bytes3 = bytes2;
-            paddedAesCipher.padWithLen(bytes3, n7, n5);
+            paddedAesCipher.padWithLen((byte[])obj, Math.addExact(b, n2), n5);
          }
 
          return (byte[])obj;
@@ -73,20 +70,16 @@ public final class PaddedAesCipher {
          return null;
       } else {
          try {
-            boolean flag = false;
-            bytes = this.prepareBuffer(bytes, n, n2, flag);
+            bytes = this.prepareBuffer(bytes, n, n2, false);
          } catch (ShortBufferException | IllegalBlockSizeException e) {
             throw new RuntimeException(e);
          }
 
          n2 = bytes.length;
          byte[] bytes2 = new byte[n2];
-         int blockSize = this.getBlockSize();
-         this.checkBlockAlignment(n2, blockSize);
-         byte b = 0;
-         this.encryptCbc(bytes, n, n2, bytes2, b);
-         int length = bytes2.length;
-         if (length % this.getBlockSize() != 0) {
+         this.checkBlockAlignment(n2, this.getBlockSize());
+         this.encryptCbc(bytes, n, n2, bytes2, (byte)0);
+         if (bytes2.length % this.getBlockSize() != 0) {
             System.out.println("Writing " + bytes2.length);
          }
 
@@ -204,20 +197,11 @@ public final class PaddedAesCipher {
          n5 = 0;
 
          while (true) {
-            PaddedAesCipher paddedAesCipher = this;
-            if (n5 >= paddedAesCipher.getBlockSize()) {
-               PaddedAesCipher paddedAesCipher2 = this;
-               byte[] bytes3 = bytes2;
-               byte b = 0;
-               byte[] kBuffer2 = this.kBuffer;
-               paddedAesCipher2.encryptBlock(kBuffer2, b, bytes3, n3);
-               byte[] bytes4 = bytes2;
-               PaddedAesCipher paddedAesCipher3 = this;
-               System.arraycopy(bytes4, n3, this.r, 0, paddedAesCipher3.getBlockSize());
-               PaddedAesCipher paddedAesCipher4 = this;
-               n += paddedAesCipher4.getBlockSize();
-               PaddedAesCipher paddedAesCipher5 = this;
-               n3 += paddedAesCipher5.getBlockSize();
+            if (n5 >= this.getBlockSize()) {
+               this.encryptBlock(this.kBuffer, (byte)0, bytes2, n3);
+               System.arraycopy(bytes2, n3, this.r, 0, this.getBlockSize());
+               n += this.getBlockSize();
+               n3 += this.getBlockSize();
                break;
             }
 
@@ -260,14 +244,13 @@ public final class PaddedAesCipher {
       this.rcon = new byte[30];
       this.kBuffer = new byte[this.getBlockSize()];
       this.r = new byte[this.getBlockSize()];
-      short s = 283;
       int n = 0;
       this.alog[0] = 1;
 
       for (int i = 1; i < 256; i++) {
          n = this.alog[i - 1] << 1 ^ this.alog[i - 1];
          if ((n & 256) != 0) {
-            n ^= s;
+            n ^= (short)283;
          }
 
          this.alog[i] = n;
@@ -363,12 +346,7 @@ public final class PaddedAesCipher {
          for (int i10 = 0; i10 < 4; i10++) {
             if (i7 != i10) {
                for (int i11 = i7 + 1; i11 < 8; i11++) {
-                  byte[] bytes2 = bytesArr5[i10];
-                  byte b3 = bytesArr5[i10][i11];
-                  byte b4 = bytesArr5[i7][i11];
-                  byte b5 = bytesArr5[i10][i7];
-                  byte b6 = b4;
-                  bytes2[i11] = (byte)(b3 ^ this.mul(b6, b5));
+                  bytesArr5[i10][i11] = (byte)(bytesArr5[i10][i11] ^ this.mul(bytesArr5[i7][i11], bytesArr5[i10][i7]));
                }
 
                bytesArr5[i10][i7] = 0;
@@ -415,8 +393,7 @@ public final class PaddedAesCipher {
       int n4 = 1;
 
       for (int i15 = 1; i15 < 30; i15++) {
-         byte b8 = 2;
-         n4 = this.mul(b8, n4);
+         n4 = this.mul((byte)2, n4);
          this.rcon[i15] = (byte)n4;
       }
 
@@ -473,24 +450,14 @@ public final class PaddedAesCipher {
       n5 = n + n2;
 
       while (n < n5) {
-         PaddedAesCipher paddedAesCipher = this;
-         byte[] bytes3 = bytes;
-         byte b = 0;
-         byte[] kBuffer2 = this.kBuffer;
-         byte[] bytes4 = bytes3;
-         paddedAesCipher.decryptBlock(bytes4, n, kBuffer2, b);
+         this.decryptBlock(bytes, n, this.kBuffer, (byte)0);
          n4 = 0;
 
          while (true) {
-            PaddedAesCipher paddedAesCipher2 = this;
-            if (n4 >= paddedAesCipher2.getBlockSize()) {
-               byte[] bytes5 = bytes;
-               PaddedAesCipher paddedAesCipher3 = this;
-               System.arraycopy(bytes5, n, this.r, 0, paddedAesCipher3.getBlockSize());
-               PaddedAesCipher paddedAesCipher4 = this;
-               n += paddedAesCipher4.getBlockSize();
-               PaddedAesCipher paddedAesCipher5 = this;
-               n3 += paddedAesCipher5.getBlockSize();
+            if (n4 >= this.getBlockSize()) {
+               System.arraycopy(bytes, n, this.r, 0, this.getBlockSize());
+               n += this.getBlockSize();
+               n3 += this.getBlockSize();
                break;
             }
 
@@ -508,22 +475,11 @@ public final class PaddedAesCipher {
       if (n2 > 0) {
          obj = new byte[n2];
          PaddedAesCipher paddedAesCipher = this;
-         PaddedAesCipher paddedAesCipher2 = this;
-         int blockSize = paddedAesCipher2.getBlockSize();
-         paddedAesCipher.checkBlockAlignment(n2, blockSize);
+         paddedAesCipher.checkBlockAlignment(n2, this.getBlockSize());
          paddedAesCipher = this;
-         byte[] bytes2 = bytes;
-         byte[] bytes3 = (byte[])obj;
-         byte b = 0;
-         byte[] bytes4 = bytes3;
-         byte[] bytes5 = bytes2;
-         paddedAesCipher.decryptCbc(bytes5, n, n2, bytes4, b);
+         paddedAesCipher.decryptCbc(bytes, n, n2, (byte[])obj, (byte)0);
          paddedAesCipher = this;
-         byte[] bytes6 = (byte[])obj;
-         int length = bytes.length;
-         byte b2 = 0;
-         byte[] bytes7 = bytes6;
-         n3 = paddedAesCipher.unpad(bytes7, b2, length);
+         n3 = paddedAesCipher.unpad((byte[])obj, (byte)0, bytes.length);
          return Arrays.copyOf((byte[])obj, n3);
       } else {
          return null;
@@ -548,8 +504,7 @@ public final class PaddedAesCipher {
    }
 
    public int padLength(int n) {
-      int blockSize = this.getBlockSize();
-      return blockSize - n % this.getBlockSize();
+      return this.getBlockSize() - n % this.getBlockSize();
    }
 
    public int unpad(byte[] bytes, int n, int n2) {
@@ -563,8 +518,7 @@ public final class PaddedAesCipher {
          b = bytes[n5 - 1];
          n4 = b & 255;
          if (n4 >= 1) {
-            PaddedAesCipher paddedAesCipher = this;
-            if (n4 <= paddedAesCipher.getBlockSize()) {
+            if (n4 <= this.getBlockSize()) {
                n3 = n5 - n4;
                if (n3 < n) {
                   return -1;
@@ -590,8 +544,7 @@ public final class PaddedAesCipher {
       if (bytes == null) {
          throw new InvalidKeyException("Empty key");
       } else {
-         int length = bytes.length;
-         int rounds = this.getRounds(length);
+         int rounds = this.getRounds(bytes.length);
          int n = (rounds + 1) * 4;
          byte b = 4;
          int[][] intsArr = new int[rounds + 1][4];
@@ -668,10 +621,8 @@ public final class PaddedAesCipher {
             }
          }
 
-         boolean flag = false;
-         int[] ints2 = this.expandToSubKey(intsArr, flag);
-         boolean flag2 = true;
-         int[] ints3 = this.expandToSubKey(intsArr2, flag2);
+         int[] ints2 = this.expandToSubKey(intsArr, false);
+         int[] ints3 = this.expandToSubKey(intsArr2, true);
          this.ro12 = rounds >= 12;
          this.ro14 = rounds == 14;
          this.limit = rounds * 4;
@@ -695,11 +646,9 @@ public final class PaddedAesCipher {
 
    public void resetIv() {
       PaddedAesCipher paddedAesCipher = this;
-      PaddedAesCipher paddedAesCipher2 = this;
-      paddedAesCipher.r = new byte[paddedAesCipher2.getBlockSize()];
+      paddedAesCipher.r = new byte[this.getBlockSize()];
       paddedAesCipher = this;
-      PaddedAesCipher paddedAesCipher3 = this;
-      paddedAesCipher.kBuffer = new byte[paddedAesCipher3.getBlockSize()];
+      paddedAesCipher.kBuffer = new byte[this.getBlockSize()];
    }
 
    public void init(boolean flag, byte[] bytes) {

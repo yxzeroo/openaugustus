@@ -18,42 +18,22 @@ public class MultiRoundKeyedTokenCipher {
 
          for (int i = 0; i < n % 5 + 1; i++) {
             MultiRoundKeyedTokenCipher cipher = this;
-            byte[] bytes3 = (byte[])obj2;
-            int n2 = (int)(this.accumulator & 255L) + i;
-            byte[] bytes4 = bytes3;
-            obj2 = cipher.rotateAndMask(bytes4, n2);
+            obj2 = cipher.rotateAndMask((byte[])obj2, (int)(this.accumulator & 255L) + i);
             cipher = this;
-            byte[] bytes5 = (byte[])obj2;
-            byte[] bytes6 = (byte[])obj;
-            byte[] bytes7 = bytes5;
-            obj2 = cipher.mixWithKeyAndSwapNibbles(bytes7, bytes6, i);
+            obj2 = cipher.mixWithKeyAndSwapNibbles((byte[])obj2, (byte[])obj, i);
             if (i % 2 == 0) {
                cipher = this;
-               byte[] bytes8 = (byte[])obj2;
-               byte b = (byte)(this.roundSeed & 0xFF);
-               byte b2 = b;
-               byte[] bytes9 = bytes8;
-               obj2 = cipher.applyForwardFeedback(bytes9, b2);
+               obj2 = cipher.applyForwardFeedback((byte[])obj2, (byte)(this.roundSeed & 0xFF));
             } else {
                cipher = this;
-               byte[] bytes10 = (byte[])obj2;
-               byte b3 = (byte)((int)(this.accumulator >> 8 & 255L));
-               byte[] bytes11 = bytes10;
-               obj2 = cipher.applyConditionalInvert(bytes11, b3);
+               obj2 = cipher.applyConditionalInvert((byte[])obj2, (byte)((int)(this.accumulator >> 8 & 255L)));
             }
          }
 
          MultiRoundKeyedTokenCipher cipher2 = this;
-         byte[] bytes12 = (byte[])obj2;
-         int n3 = (int)(this.accumulator & 65535L);
-         byte[] bytes13 = bytes12;
-         obj2 = cipher2.shuffleWithSubkey(bytes13, n3);
+         obj2 = cipher2.shuffleWithSubkey((byte[])obj2, (int)(this.accumulator & 65535L));
          cipher2 = this;
-         byte[] bytes14 = (byte[])obj2;
-         int length = bytes.length;
-         int n4 = length;
-         byte[] bytes15 = bytes14;
-         return cipher2.finalizeBlock(bytes15, n4);
+         return cipher2.finalizeBlock((byte[])obj2, bytes.length);
       } else {
          return new byte[0];
       }

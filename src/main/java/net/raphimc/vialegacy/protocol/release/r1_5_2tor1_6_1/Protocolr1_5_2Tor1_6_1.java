@@ -289,8 +289,7 @@ public class Protocolr1_5_2Tor1_6_1
                      channel = "MC|RPack";
                      String[] data = new String((byte[])wrapper.read(Types.REMAINING_BYTES), StandardCharsets.UTF_8).split("\u0000");
                      String url = data[0];
-                     String resolution = data[1];
-                     if (!resolution.equals("16")) {
+                     if (!data[1].equals("16")) {
                         wrapper.cancel();
                         return;
                      }
@@ -359,8 +358,7 @@ public class Protocolr1_5_2Tor1_6_1
 
    void handleWolfEntityData(int entityId, List<EntityData> entityDataList, PacketWrapper wrapper) {
       for (EntityData entityData : entityDataList) {
-         EntityDataIndex1_7_6 index = EntityDataIndex1_7_6.searchIndex(EntityType.WOLF, entityData.id());
-         if (index == EntityDataIndex1_7_6.TAMEABLE_FLAGS) {
+         if (EntityDataIndex1_7_6.searchIndex(EntityType.WOLF, entityData.id()) == EntityDataIndex1_7_6.TAMEABLE_FLAGS) {
             if (((Byte)entityData.value() & 4) != 0) {
                PacketWrapper attributes = PacketWrapper.create(ClientboundPackets1_6_1.UPDATE_ATTRIBUTES, wrapper.user());
                attributes.write(Types.INT, entityId);

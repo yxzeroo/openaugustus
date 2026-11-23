@@ -16,8 +16,7 @@ public class PolysUnion {
          PolysUnion polysUnion = new PolysUnion();
          if (elem.isJsonPrimitive()) {
             try {
-               String asString = elem.getAsString();
-               polysUnion.enumValue = PolysEnum.forValue(asString);
+               polysUnion.enumValue = PolysEnum.forValue(elem.getAsString());
             } catch (Exception e) {
             }
          } else {

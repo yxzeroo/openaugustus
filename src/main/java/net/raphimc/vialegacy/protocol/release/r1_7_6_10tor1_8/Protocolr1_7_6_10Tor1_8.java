@@ -123,8 +123,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.create(Types.BOOLEAN, false);
             this.handler(wrapper -> {
                ProtocolInfo protocolInfo = wrapper.user().getProtocolInfo();
-               TablistStorage tablistStorage = (TablistStorage)wrapper.user().get(TablistStorage.class);
-               tablistStorage.sendTempEntry(new TabListEntry(protocolInfo.getUsername(), protocolInfo.getUuid()));
+               ((TablistStorage)wrapper.user().get(TablistStorage.class)).sendTempEntry(new TabListEntry(protocolInfo.getUsername(), protocolInfo.getUuid()));
                int entityId = (Integer)wrapper.get(Types.INT, 0);
                byte dimensionId = (Byte)wrapper.get(Types.BYTE, 0);
                EntityTracker tracker = (EntityTracker)wrapper.user().get(EntityTracker.class);
@@ -198,8 +197,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
                      }
 
                      ProtocolInfo protocolInfo = wrapper.user().getProtocolInfo();
-                     TablistStorage tablistStorage = (TablistStorage)wrapper.user().get(TablistStorage.class);
-                     tablistStorage.sendTempEntry(new TabListEntry(protocolInfo.getUsername(), protocolInfo.getUuid()));
+                     ((TablistStorage)wrapper.user().get(TablistStorage.class)).sendTempEntry(new TabListEntry(protocolInfo.getUsername(), protocolInfo.getUuid()));
                      wrapper.send(Protocolr1_7_6_10Tor1_8.class);
                      wrapper.cancel();
                      PacketWrapper setBorder = PacketWrapper.create(ClientboundPackets1_8.SET_BORDER, wrapper.user());
@@ -640,9 +638,8 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.handler(wrapper -> {
                int chunkX = (Integer)wrapper.get(Types.INT, 0);
                int chunkZ = (Integer)wrapper.get(Types.INT, 1);
-               BlockChangeRecord[] blockChangeRecords = (BlockChangeRecord[])wrapper.get(Types.BLOCK_CHANGE_ARRAY, 0);
 
-               for (BlockChangeRecord record : blockChangeRecords) {
+               for (BlockChangeRecord record : (BlockChangeRecord[])wrapper.get(Types.BLOCK_CHANGE_ARRAY, 0)) {
                   int targetX = record.getSectionX() + (chunkX << 4);
                   int targetY = record.getY(-1);
                   int targetZ = record.getSectionZ() + (chunkZ << 4);
@@ -709,10 +706,9 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
                      ChunkTracker chunkTracker = (ChunkTracker)wrapper.user().get(ChunkTracker.class);
 
                      for (int i = 0; i < recordCount; i++) {
-                        BlockPosition pos = new BlockPosition(
+                        chunkTracker.trackAndRemap(new BlockPosition(
                            x + (Byte)wrapper.passthrough(Types.BYTE), y + (Byte)wrapper.passthrough(Types.BYTE), z + (Byte)wrapper.passthrough(Types.BYTE)
-                        );
-                        chunkTracker.trackAndRemap(pos, new IdAndData(0, 0));
+                        ), new IdAndData(0, 0));
                      }
                   }
                );
@@ -730,8 +726,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
          if (!disableRelativeVolume && effectId == 2006) {
             wrapper.setPacketType(ClientboundPackets1_8.LEVEL_PARTICLES);
             Random rnd = new Random();
-            ChunkTracker chunkTracker = (ChunkTracker)wrapper.user().get(ChunkTracker.class);
-            IdAndData block = chunkTracker.getBlockNotNull(pos);
+            IdAndData block = ((ChunkTracker)wrapper.user().get(ChunkTracker.class)).getBlockNotNull(pos);
             if (block.getId() != 0) {
                double d = (double)Math.min(0.2F + (float)data / 15.0F, 10.0F);
                if (d > 2.5) {
@@ -939,8 +934,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.handler(wrapper -> {
                byte windowId = (Byte)wrapper.passthrough(Types.BYTE);
                short slot = (Short)wrapper.read(Types.SHORT);
-               short windowType = ((WindowTracker)wrapper.user().get(WindowTracker.class)).get((short)windowId);
-               if (windowType == 4 && slot >= 1) {
+               if (((WindowTracker)wrapper.user().get(WindowTracker.class)).get((short)windowId) == 4 && slot >= 1) {
                   slot++;
                }
 
@@ -980,8 +974,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.handler(wrapper -> {
                short windowId = (Short)wrapper.get(Types.UNSIGNED_BYTE, 0);
                short progressBar = (Short)wrapper.get(Types.SHORT, 0);
-               short windowType = ((WindowTracker)wrapper.user().get(WindowTracker.class)).get(windowId);
-               if (windowType == 2) {
+               if (((WindowTracker)wrapper.user().get(WindowTracker.class)).get(windowId) == 2) {
                   switch (progressBar) {
                      case 0:
                         progressBar = 2;
@@ -1159,8 +1152,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.map(Types.STRING);
             this.read(Types.UNSIGNED_SHORT);
             this.handlerSoftFail(wrapper -> {
-               String channel = (String)wrapper.get(Types.STRING, 0);
-               switch (channel) {
+               switch ((String)wrapper.get(Types.STRING, 0)) {
                   case "MC|Brand":
                      wrapper.write(Types.STRING, new String((byte[])wrapper.read(Types.REMAINING_BYTES), StandardCharsets.UTF_8));
                      break;
@@ -1243,8 +1235,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
                   wrapper.read(Types.FLOAT);
                   wrapper.read(Types.FLOAT);
                   wrapper.read(Types.FLOAT);
-                  EntityTracker entityTracker = (EntityTracker)wrapper.user().get(EntityTracker.class);
-                  EntityType entityType = entityTracker.getTrackedEntities().get(wrapper.get(Types.INT, 0));
+                  EntityType entityType = ((EntityTracker)wrapper.user().get(EntityTracker.class)).getTrackedEntities().get(wrapper.get(Types.INT, 0));
                   if (entityType == null || !entityType.isOrHasParent(EntityType.ARMOR_STAND)) {
                      wrapper.cancel();
                   }
@@ -1336,8 +1327,7 @@ public class Protocolr1_7_6_10Tor1_8 extends AbstractProtocol<ClientboundPackets
             this.handler(wrapper -> {
                byte windowId = (Byte)wrapper.passthrough(Types.BYTE);
                short slot = (Short)wrapper.passthrough(Types.SHORT);
-               short windowType = ((WindowTracker)wrapper.user().get(WindowTracker.class)).get((short)windowId);
-               if (windowType == 4) {
+               if (((WindowTracker)wrapper.user().get(WindowTracker.class)).get((short)windowId) == 4) {
                   if (slot == 1) {
                      PacketWrapper resetHandItem = PacketWrapper.create(ClientboundPackets1_8.CONTAINER_SET_SLOT, wrapper.user());
                      resetHandItem.write(Types.BYTE, (byte)-1);

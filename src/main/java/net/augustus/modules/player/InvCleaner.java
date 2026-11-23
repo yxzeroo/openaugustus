@@ -23,9 +23,9 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -53,11 +53,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 public class InvCleaner extends Module implements ClickListener, TickListener, RenderListener, MoveInputListener, DropItemListener, PacketListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
    public final BooleanValue noMove;
    public final BooleanValue interactCheck;
    public final BooleanValue stopMovement;
-   public final StringValue startDelay;
+   public final DoubleValue startDelay;
    public final RangeSetting sortDelay;
    public final RangeSetting dropDelay;
    public final RangeSetting delayBeforeAutoArmor;
@@ -65,20 +65,20 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
    public final BooleanValue smartDelay;
    public final BooleanValue stopOnInteraction;
    public final BooleanValue visualize;
-   public final StringValue failRate;
-   public final BooleansSetting sequence;
-   public final BooleansSetting eventToClick;
-   public final BooleansSetting clickMode;
-   private final DoubleValue slots;
-   private final BooleansSetting slot1;
-   private final BooleansSetting slot2;
-   private final BooleansSetting slot3;
-   private final BooleansSetting slot4;
-   private final BooleansSetting slot5;
-   private final BooleansSetting slot6;
-   private final BooleansSetting slot7;
-   private final BooleansSetting slot8;
-   private final BooleansSetting slot9;
+   public final DoubleValue failRate;
+   public final StringValue sequence;
+   public final StringValue eventToClick;
+   public final StringValue clickMode;
+   private final SettingGroup slots;
+   private final StringValue slot1;
+   private final StringValue slot2;
+   private final StringValue slot3;
+   private final StringValue slot4;
+   private final StringValue slot5;
+   private final StringValue slot6;
+   private final StringValue slot7;
+   private final StringValue slot8;
+   private final StringValue slot9;
    private final TimeHelper actionTimer;
    private final TimeHelper startDelayTimer;
    private final TimeHelper postActionTimer;
@@ -91,17 +91,11 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
 
    public InvCleaner() {
        super("InvCleaner", "InventarLeerer", new Color(32, 94, 103), Categorys.PLAYER);
-      this.mode = new BooleansSetting(this, "Mode", "OpenInv", new String[]{"OpenInv", "SpoofInv", "Basic"});
-      BooleanValue booleanValue = new BooleanValue(this, "NoMove", false);
-      SettingVisibilityCondition condition = () -> this.isNoMoveVisible();
-      this.noMove = (BooleanValue)booleanValue.withVisibility(condition);
-      BooleanValue booleanValue2 = new BooleanValue(this, "InteractCheck", false);
-      SettingVisibilityCondition condition2 = () -> this.isInteractCheckVisible();
-      this.interactCheck = (BooleanValue)booleanValue2.withVisibility(condition2);
-      BooleanValue booleanValue3 = new BooleanValue(this, "StopMovement", false);
-      SettingVisibilityCondition condition3 = () -> this.isStopMovementVisible();
-      this.stopMovement = (BooleanValue)booleanValue3.withVisibility(condition3);
-      this.startDelay = new StringValue(this, "StartDelay", 100.0, 0.0, 1000.0, 0);
+      this.mode = new StringValue(this, "Mode", "OpenInv", new String[]{"OpenInv", "SpoofInv", "Basic"});
+      this.noMove = (BooleanValue)new BooleanValue(this, "NoMove", false).withVisibility(() -> this.isNoMoveVisible());
+      this.interactCheck = (BooleanValue)new BooleanValue(this, "InteractCheck", false).withVisibility(() -> this.isInteractCheckVisible());
+      this.stopMovement = (BooleanValue)new BooleanValue(this, "StopMovement", false).withVisibility(() -> this.isStopMovementVisible());
+      this.startDelay = new DoubleValue(this, "StartDelay", 100.0, 0.0, 1000.0, 0);
       this.sortDelay = new RangeSetting(this, "SortDelay", 70.0, 120.0, 0.0, 400.0, 0);
       this.dropDelay = new RangeSetting(this, "DropDelay", 70.0, 120.0, 0.0, 400.0, 0);
       this.delayBeforeAutoArmor = new RangeSetting(this, "DelayBeforeAutoArmor", 70.0, 120.0, 0.0, 400.0, 0);
@@ -109,20 +103,20 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
       this.smartDelay = new BooleanValue(this, "SmartDelay", false);
       this.stopOnInteraction = new BooleanValue(this, "StopOnInteraction", false);
       this.visualize = new BooleanValue(this, "Visualize", false);
-      this.failRate = new StringValue(this, "FailRate", 5.0, 0.0, 100.0, 0);
-      this.sequence = new BooleansSetting(this, "Sequence", "Basic", new String[]{"Basic", "Nearest", "Random"});
-      this.eventToClick = new BooleansSetting(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
-      this.clickMode = new BooleansSetting(this, "ClickMode", "Basic", new String[]{"Basic"});
-      this.slots = new DoubleValue(this, "Slots");
-      this.slot1 = new BooleansSetting(this, "Slot1", "Sword", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot2 = new BooleansSetting(this, "Slot2", "Bow", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot3 = new BooleansSetting(this, "Slot3", "Rod", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot4 = new BooleansSetting(this, "Slot4", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot5 = new BooleansSetting(this, "Slot5", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot6 = new BooleansSetting(this, "Slot6", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot7 = new BooleansSetting(this, "Slot7", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot8 = new BooleansSetting(this, "Slot8", "Food", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
-      this.slot9 = new BooleansSetting(this, "Slot9", "Gapple", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.failRate = new DoubleValue(this, "FailRate", 5.0, 0.0, 100.0, 0);
+      this.sequence = new StringValue(this, "Sequence", "Basic", new String[]{"Basic", "Nearest", "Random"});
+      this.eventToClick = new StringValue(this, "EventToClick", "EventTick", new String[]{"EventTick", "EventRender"});
+      this.clickMode = new StringValue(this, "ClickMode", "Basic", new String[]{"Basic"});
+      this.slots = new SettingGroup(this, "Slots");
+      this.slot1 = new StringValue(this, "Slot1", "Sword", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot2 = new StringValue(this, "Slot2", "Bow", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot3 = new StringValue(this, "Slot3", "Rod", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot4 = new StringValue(this, "Slot4", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot5 = new StringValue(this, "Slot5", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot6 = new StringValue(this, "Slot6", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot7 = new StringValue(this, "Slot7", "None", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot8 = new StringValue(this, "Slot8", "Food", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
+      this.slot9 = new StringValue(this, "Slot9", "Gapple", new String[]{"None", "Sword", "Bow", "Rod", "Food", "Gapple"}, this.slots);
       this.actionTimer = new TimeHelper();
       this.startDelayTimer = new TimeHelper();
       this.postActionTimer = new TimeHelper();
@@ -138,11 +132,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
          mc.thePlayer.setSpoofedScreen(mc.currentScreen);
       }
 
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      double minValue = this.sortDelay.getMinValue();
-      double maxValue = this.sortDelay.getMaxValue();
-      double d = minValue;
-      this.nextActionDelayMs = instance.nextLong(d, maxValue);
+      this.nextActionDelayMs = DefaultRandomGenerator.instance.nextLong(this.sortDelay.getMinValue(), this.sortDelay.getMaxValue());
    }
 
    @Override
@@ -153,32 +143,21 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
-      byte b3 = 32;
-      this.toggleEventSubscription(b3);
-      byte b4 = 9;
-      this.toggleEventSubscription(b4);
-      int n = 100000;
-      byte b5 = 21;
-      this.toggleEventSubscription(b5, n);
-      byte b6 = 26;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)9);
+      this.toggleEventSubscription((byte)21, 100000);
+      this.toggleEventSubscription((byte)26);
    }
 
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (mc.currentScreen == null && this.mode.getSelectedValue().equals("SpoofInv") && mc.thePlayer.getSpoofedScreen() != null && this.stopMovement.getValue()) {
-         boolean flag = false;
-         event.setJump(flag);
-         boolean flag2 = false;
-         event.setSneak(flag2);
-         float f = 0.0F;
-         event.setMoveForward(f);
-         float f2 = 0.0F;
-         event.setMoveStrafe(f2);
+         event.setJump(false);
+         event.setSneak(false);
+         event.setMoveForward(0.0F);
+         event.setMoveStrafe(0.0F);
       }
    }
 
@@ -203,8 +182,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
 
    @Override
    public void onTick() {
-      String selectedValue = this.mode.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.mode.getSelectedValue());
       if (this.eventToClick.getSelectedValue().equals("EventTick") && !this.mode.getSelectedValue().equals("SpoofInv")) {
          this.processInventory();
       }
@@ -409,9 +387,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
       ItemStack stack15 = null;
       ItemStack stack16 = null;
       double value = this.startDelay.getValue();
-      long l = 35L;
-      long l2 = -35L;
-      long l3 = (long)Math.max(value + (double)DefaultRandomGenerator.instance.nextLong2(l2, l), 0.0);
+      long l3 = (long)Math.max(value + (double)DefaultRandomGenerator.instance.nextLong2(-35L, 35L), 0.0);
       boolean flag = mc.currentScreen instanceof GuiInventory
          || !this.mode.getSelectedValue().equalsIgnoreCase("OpenInv")
             && (mc.currentScreen == null || mc.currentScreen instanceof GuiInventory)
@@ -485,8 +461,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
                   ItemPotion item = (ItemPotion)stack17.getItem();
                   if (!item.getEffects(stack17).isEmpty()) {
                      PotionEffect potionEffect = (PotionEffect)item.getEffects(stack17).get(0);
-                     Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
-                     if (!potion.isBadEffect()) {
+                     if (!Potion.potionTypes[potionEffect.getPotionID()].isBadEffect()) {
                         stack17.setSlotIndex(i);
                         list6.add(stack17);
                         list10.add(stack17);
@@ -1021,9 +996,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
    }
 
    private void queueHotbarSwap(ItemStack stack, int n) {
-      byte b = 100;
-      byte b2 = 1;
-      if (!((double)DefaultRandomGenerator.instance.nextInt2(b2, b) < this.failRate.getValue())) {
+      if (!((double)DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)100) < this.failRate.getValue())) {
          this.openSpoofedInventory();
          if (this.mode.getSelectedValue().equals("SpoofInv") && this.eventToClick.getSelectedValue().equals("EventTick")) {
             this.queuedActions.add(() -> this.executeQueuedHotbarSwap(stack, n));
@@ -1041,8 +1014,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
             double d = Math.abs((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft) - InventoryUtil.getLastCursorPos().x);
             double d2 = Math.abs((double)(slot.yDisplayPosition + 2 + currentScreen.guiTop) - InventoryUtil.getLastCursorPos().y);
             double d3 = Math.sqrt(d * d + d2 * d2);
-            double minValue = this.sortDelay.getMinValue();
-            double d4 = minValue + this.sortDelay.getMaxValue() - this.sortDelay.getMinValue() / 2.0;
+            double d4 = this.sortDelay.getMinValue() + this.sortDelay.getMaxValue() - this.sortDelay.getMinValue() / 2.0;
             double d5 = d3 / 30.0;
             if (d3 > 36.0) {
                long l = (long)(d4 * d5);
@@ -1056,8 +1028,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
       }
 
       this.resetActionTimers();
-      String selectedValue = this.clickMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.clickMode.getSelectedValue()) {
          case "Exploit":
             Augustus.getInstance().getClass();
             break;
@@ -1072,17 +1043,11 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
       }
 
       stack.setSlotIndex(n + 36);
-      RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-      double minValue2 = this.sortDelay.getMinValue();
-      double maxValue = this.sortDelay.getMaxValue();
-      double d6 = minValue2;
-      this.nextActionDelayMs = instance.nextLong(d6, maxValue);
+      this.nextActionDelayMs = DefaultRandomGenerator.instance.nextLong(this.sortDelay.getMinValue(), this.sortDelay.getMaxValue());
    }
 
    private void queueDropSlot(int n) {
-      byte b = 100;
-      byte b2 = 1;
-      if (!((double)DefaultRandomGenerator.instance.nextInt2(b2, b) < this.failRate.getValue())) {
+      if (!((double)DefaultRandomGenerator.instance.nextInt2((byte)1, (byte)100) < this.failRate.getValue())) {
          this.openSpoofedInventory();
          if (this.mode.getSelectedValue().equals("SpoofInv") && this.eventToClick.getSelectedValue().equals("EventTick")) {
             this.queuedActions.add(() -> {
@@ -1090,11 +1055,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
             });
          } else {
             this.dropSlot(n);
-            RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-            double minValue = this.dropDelay.getMinValue();
-            double maxValue = this.dropDelay.getMaxValue();
-            double d = minValue;
-            this.nextActionDelayMs = instance.nextLong(d, maxValue);
+            this.nextActionDelayMs = DefaultRandomGenerator.instance.nextLong(this.dropDelay.getMinValue(), this.dropDelay.getMaxValue());
          }
       }
    }
@@ -1107,8 +1068,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
             double d = Math.abs((double)(slot.xDisplayPosition + 2 + currentScreen.guiLeft) - InventoryUtil.getLastCursorPos().x);
             double d2 = Math.abs((double)(slot.yDisplayPosition + 2 + currentScreen.guiTop) - InventoryUtil.getLastCursorPos().y);
             double d3 = Math.sqrt(d * d + d2 * d2);
-            double minValue = this.dropDelay.getMinValue();
-            double d4 = minValue + this.dropDelay.getMaxValue() - this.dropDelay.getMinValue() / 2.0;
+            double d4 = this.dropDelay.getMinValue() + this.dropDelay.getMaxValue() - this.dropDelay.getMinValue() / 2.0;
             double d5 = d3 / 30.0;
             if (d3 > 36.0) {
                long l = (long)(d4 * d5);
@@ -1122,8 +1082,7 @@ public class InvCleaner extends Module implements ClickListener, TickListener, R
       }
 
       this.resetActionTimers();
-      String selectedValue = this.clickMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.clickMode.getSelectedValue()) {
          case "Basic":
             mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, n, 1, 4, mc.thePlayer);
             break;

@@ -78,8 +78,7 @@ public class EasyMcAuthenticator {
             return elem.getAsJsonObject().get("error").getAsString();
          } else {
             if (elem.getAsJsonObject().has("session") && elem.getAsJsonObject().has("uuid")) {
-               JsonObject asJsonObject = elem.getAsJsonObject();
-               if (asJsonObject.has("mcName")) {
+               if (elem.getAsJsonObject().has("mcName")) {
                   return elem.getAsJsonObject();
                }
             }

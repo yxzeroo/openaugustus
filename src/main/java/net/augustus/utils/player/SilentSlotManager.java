@@ -31,8 +31,7 @@ public class SilentSlotManager {
    public static void scheduleSlotSwitch(Module module, int n, int n2, int n3, boolean flag) {
 
       for (int i = scheduledSwitches.size() - 1; i > 0; i--) {
-         ScheduledSlotSwitch scheduledSlotSwitch = (ScheduledSlotSwitch)scheduledSwitches.get(i);
-         if (ScheduledSlotSwitch.getOwnerModule(scheduledSlotSwitch) == module) {
+         if (ScheduledSlotSwitch.getOwnerModule((ScheduledSlotSwitch)scheduledSwitches.get(i)) == module) {
             scheduledSwitches.remove(i);
          }
       }
@@ -74,9 +73,7 @@ public class SilentSlotManager {
             Module ownerModule = ScheduledSlotSwitch.getOwnerModule(scheduledSlotSwitch);
             int priority = ScheduledSlotSwitch.getPriority(scheduledSlotSwitch);
             boolean isSilentMode = ScheduledSlotSwitch.isSilentMode(scheduledSlotSwitch);
-            int targetSlot = ScheduledSlotSwitch.getTargetSlot(scheduledSlotSwitch);
-            int n = priority;
-            requestSlot(ownerModule, n, targetSlot, isSilentMode);
+            requestSlot(ownerModule, priority, ScheduledSlotSwitch.getTargetSlot(scheduledSlotSwitch), isSilentMode);
          }
       }
 
@@ -90,8 +87,7 @@ public class SilentSlotManager {
    }
 
    public static void requestSlot(Module module, int n, int n2) {
-      boolean flag = true;
-      requestSlot(module, n, n2, flag);
+      requestSlot(module, n, n2, true);
    }
 
    public static boolean getActiveModule() {
@@ -99,7 +95,6 @@ public class SilentSlotManager {
    }
 
    public static void scheduleSlotSwitch(Module module, int n, int n2, int n3) {
-      boolean flag = true;
-      scheduleSlotSwitch(module, n, n2, n3, flag);
+      scheduleSlotSwitch(module, n, n2, n3, true);
    }
 }

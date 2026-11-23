@@ -270,8 +270,7 @@ public class Bootstrap {
             d4 = 0.0;
          }
 
-         EntityBoat entityBoat = new EntityBoat(world, d, d2 + d4, d3);
-         world.spawnEntityInWorld(entityBoat);
+         world.spawnEntityInWorld(new EntityBoat(world, d, d2 + d4, d3));
          stack.splitStack(1);
          return stack;
       }

@@ -372,8 +372,7 @@ public class ComponentScatteredFeaturePieces {
 
          for (int j = 0; j < this.scatteredFeatureSizeX; j++) {
             for (int k = 0; k < this.scatteredFeatureSizeZ; k++) {
-               byte b = -5;
-               this.replaceAirAndLiquidDownwards(world, Blocks.sandstone.getDefaultState(), j, b, k, structureBoundingBox);
+               this.replaceAirAndLiquidDownwards(world, Blocks.sandstone.getDefaultState(), j, (byte)-5, k, structureBoundingBox);
             }
          }
 

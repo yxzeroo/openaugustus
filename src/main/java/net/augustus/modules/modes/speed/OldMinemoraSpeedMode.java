@@ -48,19 +48,15 @@ public class OldMinemoraSpeedMode extends SpeedMode {
          mc.thePlayer.motionZ *= 1.02;
       }
 
-      double d = event.getY() - 0.01;
-      event.setY(d);
-      double d2 = event.getX() * 1.0123000144958496;
-      event.setX(d2);
-      double d3 = event.getZ() * 1.0123000144958496;
-      event.setZ(d3);
+      event.setY(event.getY() - 0.01);
+      event.setX(event.getX() * 1.0123000144958496);
+      event.setZ(event.getZ() * 1.0123000144958496);
    }
 
    @Override
    public void onPreMoveInput(EventMoveInput event) {
       if (MoveUtil.isMoving()) {
-         boolean flag = true;
-         event.setJump(flag);
+         event.setJump(true);
       }
    }
 

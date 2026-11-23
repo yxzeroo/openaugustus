@@ -27,8 +27,7 @@ public class ContainerUtil implements MC {
             InventoryBasic lowerChestInventory = (InventoryBasic)guiChest.lowerChestInventory;
 
             try {
-               JsonObject json = IChatComponent.Serializer.componentToJsonObject(lowerChestInventory.getDisplayNameComponent());
-               String asString = json.get("translate").getAsString();
+               String asString = IChatComponent.Serializer.componentToJsonObject(lowerChestInventory.getDisplayNameComponent()).get("translate").getAsString();
                flag2 = asString.equals("container.enderchest") && !flag || asString.equals("container.chestDouble") || asString.equals("container.chest");
             } catch (Exception e) {
             }
@@ -57,8 +56,7 @@ public class ContainerUtil implements MC {
    }
 
    public static void dropSlot(Container container, String str, Slot slot) {
-      Object obj = null;
-      dropSlot(container, str, slot, (Runnable)obj);
+      dropSlot(container, str, slot, (Runnable)null);
    }
 
    public static boolean isChestOpen() {
@@ -66,8 +64,7 @@ public class ContainerUtil implements MC {
    }
 
    public static double getSlotCenterY(Container container, Slot slot) {
-      ScaledResolution sr = new ScaledResolution(mc);
-      int n = (sr.getScaledHeight() - InventoryUtil.getContainerGuiHeight(container)) / 2;
+      int n = (new ScaledResolution(mc).getScaledHeight() - InventoryUtil.getContainerGuiHeight(container)) / 2;
       return (double)(slot.yDisplayPosition + 8 + n);
    }
 
@@ -88,8 +85,7 @@ public class ContainerUtil implements MC {
    }
 
    public static void swapHotbarSlot(Container container, String str, Slot slot, int n) {
-      Object obj = null;
-      swapHotbarSlot(container, str, slot, n, (Runnable)obj);
+      swapHotbarSlot(container, str, slot, n, (Runnable)null);
    }
 
    public static boolean isInventoryOpen() {
@@ -109,13 +105,11 @@ public class ContainerUtil implements MC {
    }
 
    public static void shiftClickSlot(Container container, String str, Slot slot) {
-      Object obj = null;
-      shiftClickSlot(container, str, slot, (Runnable)obj);
+      shiftClickSlot(container, str, slot, (Runnable)null);
    }
 
    public static double getSlotCenterX(Slot slot) {
-      ScaledResolution sr = new ScaledResolution(mc);
-      int n = (sr.getScaledWidth() - 176) / 2;
+      int n = (new ScaledResolution(mc).getScaledWidth() - 176) / 2;
       return (double)(slot.xDisplayPosition + 8 + n);
    }
 
@@ -124,8 +118,7 @@ public class ContainerUtil implements MC {
    }
 
    public static void pickupClickSlot(Container container, Slot slot, int n) {
-      Object obj = null;
-      pickupClickSlot(container, slot, n, (Runnable)obj);
+      pickupClickSlot(container, slot, n, (Runnable)null);
    }
 
    public static void swapHotbarSlot(Container container, String str, Slot slot, int n, Runnable runnable) {

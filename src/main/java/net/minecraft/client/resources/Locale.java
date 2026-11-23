@@ -80,8 +80,7 @@ public class Locale {
          }
       }
 
-      float f = (float)n / (float)n2;
-      this.unicode = (double)f > 0.1;
+      this.unicode = (double)((float)n / (float)n2) > 0.1;
    }
 
    private void loadLocaleData(List list) throws IOException {

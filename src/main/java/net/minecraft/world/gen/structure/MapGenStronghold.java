@@ -121,9 +121,7 @@ public class MapGenStronghold extends MapGenStructure {
          List pendingChildren = stairs2.pendingChildren;
 
          while (!pendingChildren.isEmpty()) {
-            int n3 = rand.nextInt(pendingChildren.size());
-            StructureComponent structureComponent = (StructureComponent)pendingChildren.remove(n3);
-            structureComponent.buildComponent(stairs2, this.components, rand);
+            ((StructureComponent)pendingChildren.remove(rand.nextInt(pendingChildren.size()))).buildComponent(stairs2, this.components, rand);
          }
 
          this.updateBoundingBox();

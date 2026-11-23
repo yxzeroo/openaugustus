@@ -7,8 +7,7 @@ import java.util.Locale;
 public class ServerIrcCommand extends AbstractIrcCommand {
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Execute server commands)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Execute server commands)");
    }
 
    public ServerIrcCommand() {
@@ -30,8 +29,7 @@ public class ServerIrcCommand extends AbstractIrcCommand {
          sb.setLength(Math.max(0, sb.length() - 1));
          String str5 = strings[1];
          String str6 = strings[2];
-         String str7 = sb.toString();
-         String str8 = str7;
+         String str8 = sb.toString();
          String str9 = str6;
       } else if (strings.length == 1 && strings[0].toLowerCase(Locale.ROOT).equals(this.getCommand())) {
          String username = Augustus.getInstance().getUsername();

@@ -126,14 +126,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
    };
 
    public ShadedBigDecimal max(ShadedBigDecimal shadedBigDecimal) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.compareTo2(shadedBigDecimal) >= 0 ? this : shadedBigDecimal;
    }
 
    private static ShadedBigDecimal divideAndRound(long l, long l2, int n, int n2, int n3) {
       int n4 = 0;
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag = false;
       long l4 = 0L;
       byte b = 1;
@@ -198,7 +196,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       long l3 = 0L;
       int n2 = 0;
       long l4 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag = false;
       byte b = 3;
       long l5 = 0L;
@@ -248,19 +245,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public ShadedBigDecimal movePointRight(int n) {
       Object obj = null;
       int n2 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal = this;
-      long l = (long)this.scale - (long)n;
-      long l2 = l;
-      n2 = shadedBigDecimal.checkScale(l2);
+      n2 = shadedBigDecimal.checkScale((long)this.scale - (long)n);
       obj = new ShadedBigDecimal(this.intVal, this.intCompact, n2, 0);
       if (((ShadedBigDecimal)obj).scale >= 0) {
          shadedBigDecimal = (ShadedBigDecimal)obj;
       } else {
          shadedBigDecimal = (ShadedBigDecimal)obj;
-         byte b = 7;
-         byte b2 = 0;
-         shadedBigDecimal = shadedBigDecimal.setScale2(b2, b);
+         shadedBigDecimal = shadedBigDecimal.setScale2((byte)0, (byte)7);
       }
 
       return shadedBigDecimal;
@@ -268,7 +260,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static int longCompareMagnitude(long l, long l2) {
       byte b = 2;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       l3 = -8650254317502495923L ^ (long)"긢ꔷ탰⇒乍䂠傫奟왠슭㿮颊䯏돱\ueca1\uf6bf沗ꛬ᧔ग़镄න攭窊攪狔".hashCode();
       if (l >= 0L) {
@@ -314,7 +305,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static boolean needIncrement3(ShadedMutableBigInteger shadedMutableBigInteger, int n, int n2, ShadedMutableBigInteger shadedMutableBigInteger2, ShadedMutableBigInteger shadedMutableBigInteger3) {
       int n3 = 0;
       byte b = 1;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (!assertionsDisabled) {
          ;
       }
@@ -325,9 +315,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                return commonNeedIncrement(n, n2, n3, shadedMutableBigInteger2.isOdd());
             }
 
-            ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger3;
-            ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger;
-            n3 = shadedMutableBigInteger4.compareHalf(shadedMutableBigInteger5);
+            n3 = shadedMutableBigInteger3.compareHalf(shadedMutableBigInteger);
          }
       } while (!shadedMutableBigInteger3.isZero());
 
@@ -339,7 +327,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n = 0;
       boolean flag2 = false;
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag3 = false;
       long l2 = 0L;
       int n2 = 0;
@@ -373,8 +360,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             if (this.intCompact != -9223372036854775808L) {
                ShadedBigDecimalStringHelper helper = (ShadedBigDecimalStringHelper)obj3;
                l = Math.abs(this.intCompact);
-               long l4 = l;
-               n5 = helper.putIntCompact(l4);
+               n5 = helper.putIntCompact(l);
                obj2 = ((ShadedBigDecimalStringHelper)obj3).getCmpCharArray();
             } else {
                n5 = 0;
@@ -465,38 +451,26 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public CustomBigInteger toBigInteger() {
-      byte b = 1;
-      byte b2 = 0;
-      ShadedBigDecimal shadedBigDecimal = this.setScale2(b2, b);
-      return shadedBigDecimal.inflated();
+      return this.setScale2((byte)0, (byte)1).inflated();
    }
 
    private static int compareMagnitudeNormalized2(CustomBigInteger customBigInteger, int n, CustomBigInteger customBigInteger2, int n2) {
       int n3 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -7616008257448988054L ^ (long)"䚴諆㣶Ǆꎩᔍ\ue67d㣥亚ꮶ蔯쏘鏢뤀⩚ᩓ\ued7aꯓ\ue6a5饜ϫ䐗".hashCode();
       n3 = n - n2;
       l = (l ^ -9045598588079394661L) + 4206192387264620525L;
       if (n3 >= 0) {
          l = (l ^ 1482879745320982698L) + -2353012793386205543L;
-         CustomBigInteger customBigInteger3 = customBigInteger;
-         CustomBigInteger customBigInteger4 = bigMultiplyPowerTen2(customBigInteger2, n3);
-         return customBigInteger3.compareMagnitude(customBigInteger4);
+         return customBigInteger.compareMagnitude(bigMultiplyPowerTen2(customBigInteger2, n3));
       } else {
          l = (l ^ -2892322117498063800L) + 2094920801062154177L;
-         CustomBigInteger customBigInteger5 = customBigInteger;
-         int n4 = -n3;
-         CustomBigInteger customBigInteger6 = bigMultiplyPowerTen2(customBigInteger5, n4);
-         CustomBigInteger customBigInteger7 = customBigInteger2;
-         CustomBigInteger customBigInteger8 = customBigInteger7;
-         return customBigInteger6.compareMagnitude(customBigInteger8);
+         return bigMultiplyPowerTen2(customBigInteger, -n3).compareMagnitude(customBigInteger2);
       }
    }
 
    private static int checkScale2(long l, long l2) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l3 = 0L;
       l3 = -5117957771434525564L ^ (long)"b톧愭츠闞㿊ᣗ榴➴㒜枷㌑貒淾鼻㰂㉖\uaac7녍堖嚊泔ᾖ\uf575页쩵⛶".hashCode();
@@ -538,24 +512,16 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal subtract(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (shadedMathContext.precision != 0) {
-         ShadedBigDecimal shadedBigDecimal2 = this;
-         ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal.negate();
-         ShadedMathContext shadedMathContext2 = shadedMathContext;
-         ShadedBigDecimal shadedBigDecimal4 = shadedBigDecimal3;
-         return shadedBigDecimal2.add(shadedBigDecimal4, shadedMathContext2);
+         return this.add(shadedBigDecimal.negate(), shadedMathContext);
       } else {
-         ShadedBigDecimal shadedBigDecimal5 = this;
-         ShadedBigDecimal shadedBigDecimal6 = shadedBigDecimal;
-         return shadedBigDecimal5.subtract(shadedBigDecimal6);
+         return this.subtract(shadedBigDecimal);
       }
    }
 
    public ShadedBigDecimal stripTrailingZeros() {
       byte b = 6;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       l = 2185224376369278722L ^ (long)"鞜⯾\u2feb暘⮋\u0a7c쪨红⊣\ue44fᢈഛ䱝酂꧟拋ᩩ螩쮗릍岧緊魾炶컊䷪".hashCode();
       if (this.intCompact == 0L) {
          l = l - -8890477864836713693L ^ 2369173233114642044L;
@@ -570,9 +536,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
          while (true) {
             while (3 < b) {
                if (5 > b) {
-                  long l2 = -9223372036854775808L;
                   int scale2 = this.scale;
-                  return createAndStripZerosToMatchScale(this.intVal, scale2, l2);
+                  return createAndStripZerosToMatchScale(this.intVal, scale2, -9223372036854775808L);
                }
 
                if (b > 5) {
@@ -599,13 +564,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static CustomBigInteger bigMultiplyPowerTen(long l, int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return n > 0 ? bigTenToThe(n).multiply(l) : CustomBigInteger.valueOf(l);
    }
 
    private static long parseExp(char[] chars, int n, int n2) {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       boolean flag = false;
       char ch = 0;
       int n3 = 0;
@@ -682,7 +645,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static int precision(long l, long l2) {
       int n = 0;
       int n2 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l3 = 0L;
       l3 = -3850049099477070134L ^ (long)"덼舟\uece5姦캕\udca1ꉫᦽ懏㧨⨹숐듟ﯱɀ죈慕뭏ඓ栁".hashCode();
@@ -721,7 +683,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(int n, ShadedMathContext shadedMathContext) {
        super();
-      CustomBigInteger.getOpaqueStateTag();
       int precision2 = shadedMathContext.precision;
       long l = (long)n;
       int n2 = 0;
@@ -745,7 +706,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public String toPlainString() {
       String str = null;
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       StringBuilder sb = null;
       String str2 = null;
       int n2 = 0;
@@ -776,13 +736,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   l = l + -3840569760692342323L ^ -5977111163086308223L;
                } else {
                   if (b < 24) {
-                     ShadedBigDecimal shadedBigDecimal = this;
-                     int n3 = this.signum();
-                     String str3 = str2;
-                     int scale2 = this.scale;
-                     String str4 = str3;
-                     int n4 = n3;
-                     return shadedBigDecimal.getValueString(n4, str4, scale2);
+                     return this.getValueString(this.signum(), str2, this.scale);
                   }
 
                   if (b <= 24) {
@@ -910,7 +864,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static int bigDigitLength(CustomBigInteger customBigInteger) {
       int n = 0;
       byte b = 3;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (customBigInteger.signum == 0) {
          ;
       }
@@ -923,9 +876,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          n = (int)(((long)customBigInteger.bitLength() + 1L) * 646456993L >>> 31);
       }
 
-      CustomBigInteger customBigInteger2 = customBigInteger;
-      CustomBigInteger customBigInteger3 = bigTenToThe(n);
-      return customBigInteger2.compareMagnitude(customBigInteger3) >= 0 ? n + 1 : n;
+      return customBigInteger.compareMagnitude(bigTenToThe(n)) >= 0 ? n + 1 : n;
    }
 
    private static ShadedBigDecimal divide4(CustomBigInteger customBigInteger, int n, CustomBigInteger customBigInteger2, int n2, int n3, int n4) {
@@ -933,7 +884,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       CustomBigInteger customBigInteger3 = null;
       int n6 = 0;
       byte b = 5;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       outerLoop:
       while (true) {
@@ -942,20 +892,15 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
 
          if (1 >= b) {
-            CustomBigInteger customBigInteger4 = customBigInteger;
-            CustomBigInteger customBigInteger5 = customBigInteger3;
-            return divideAndRound3(customBigInteger4, customBigInteger5, n3, n4, n3);
+            return divideAndRound3(customBigInteger, customBigInteger3, n3, n4, n3);
          }
 
          if (b <= 2) {
-            CustomBigInteger customBigInteger6 = customBigInteger3;
-            CustomBigInteger customBigInteger7 = customBigInteger2;
-            return divideAndRound3(customBigInteger6, customBigInteger7, n3, n4, n3);
+            return divideAndRound3(customBigInteger3, customBigInteger2, n3, n4, n3);
          }
 
          CustomBigInteger customBigInteger8 = customBigInteger;
-         long l = (long)n3 + (long)n2;
-         if (checkScale(customBigInteger8, l) > n) {
+         if (checkScale(customBigInteger8, (long)n3 + (long)n2) > n) {
             ;
          }
 
@@ -973,8 +918,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                }
             } else {
                customBigInteger8 = customBigInteger2;
-               long l2 = (long)n - (long)n3;
-               n5 = checkScale(customBigInteger8, l2);
+               n5 = checkScale(customBigInteger8, (long)n - (long)n3);
             }
          }
 
@@ -984,7 +928,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal createAndStripZerosToMatchScale(CustomBigInteger customBigInteger, int n, long l) {
       CustomBigInteger[] customBigIntegers = null;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l2 = 0L;
       l2 = -2509725131496015323L ^ (long)"橱р訰뛆귯ꆐ\udd39\u0099ܞ뛝椷乒ᵷ鬆\uf5eb舫肭ꕜ艼\ue783耒ᒫ鍱".hashCode();
@@ -994,9 +937,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          while (b > 5) {
             if (b >= 8) {
                if (b <= 8) {
-                  CustomBigInteger customBigInteger2 = customBigInteger;
-                  byte b2 = 0;
-                  return valueOf(customBigInteger2, n, b2);
+                  return valueOf(customBigInteger, n, (byte)0);
                }
 
                if (9 >= b) {
@@ -1012,9 +953,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                l2 = l2 - 5930558034993327031L ^ 8191786461936113122L;
             } else {
                if (b <= 6) {
-                  CustomBigInteger customBigInteger3 = customBigInteger;
-                  CustomBigInteger ten = CustomBigInteger.TEN;
-                  if (customBigInteger3.compareMagnitude(ten) < 0) {
+                  if (customBigInteger.compareMagnitude(CustomBigInteger.TEN) < 0) {
                      l2 = l2 + -1652331219966719793L ^ 4256640520233891868L;
                   } else {
                      l2 = (l2 ^ -8329983209732398345L) - -754675467414429497L;
@@ -1033,14 +972,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
             while (true) {
                while (b < 2) {
                   if (b <= 0) {
-                     CustomBigInteger customBigInteger4 = customBigInteger;
-                     long l3 = (long)n - 1L;
-                     n = checkScale(customBigInteger4, l3);
+                     n = checkScale(customBigInteger, (long)n - 1L);
                      l2 = l2 + -8448709526031089374L ^ 6403327319580854550L;
                   } else {
-                     CustomBigInteger customBigInteger5 = customBigInteger;
-                     byte b3 = 0;
-                     if (customBigInteger5.testBit(b3)) {
+                     if (customBigInteger.testBit((byte)0)) {
                         l2 = l2 + -3952594451791442520L ^ -6997462877045460607L;
                         continue outerLoop;
                      }
@@ -1053,9 +988,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (3 >= b) {
                      l2 = (l2 ^ 810891648705778418L) + -3674450338509899826L;
                   } else {
-                     CustomBigInteger customBigInteger6 = customBigInteger;
-                     CustomBigInteger ten2 = CustomBigInteger.TEN;
-                     customBigIntegers = customBigInteger6.divideAndRemainder(ten2);
+                     customBigIntegers = customBigInteger.divideAndRemainder(CustomBigInteger.TEN);
                      l2 = (l2 ^ -3633771570386356424L) + 3392882561629005446L;
                   }
                   break;
@@ -1072,7 +1005,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static CustomBigInteger bigTenToThe(int n) {
       CustomBigInteger[] customBigIntegers = null;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       if (n >= 0) {
          if (n < BIG_TEN_POWERS_TABLE_MAX) {
@@ -1111,7 +1043,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       long l6 = 0L;
       long l7 = 0L;
       long l8 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l9 = 0L;
       long l10 = 0L;
       int n4 = 0;
@@ -1229,7 +1160,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal, int n, int n2) {
       byte b = 9;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -6908042274286624626L ^ (long)"ꪕ뻁끫\uf763駉蜻䶒䫨胄텃\ue140ꮳ權륕৷𢡄꠲楊팈ꉲ䒊Ⱉ".hashCode();
 
@@ -1305,7 +1235,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static int saturateLong(long l) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l2 = 0L;
 
@@ -1329,7 +1258,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal abs(ShadedMathContext shadedMathContext) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal;
       if (this.signum() < 0) {
          shadedBigDecimal = this.negate(shadedMathContext);
@@ -1342,7 +1270,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal divideAndRound2(CustomBigInteger customBigInteger, long l, int n, int n2, int n3) {
       long l2 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       boolean flag = false;
       ShadedMutableBigInteger shadedMutableBigInteger = null;
@@ -1367,10 +1294,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                break;
             }
 
-            ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger2;
-            ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger;
-            ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger4;
-            l3 = shadedMutableBigInteger3.divide(l, shadedMutableBigInteger5);
+            l3 = shadedMutableBigInteger2.divide(l, shadedMutableBigInteger);
             l4 = l4 + -3235499263399373601L ^ -3506455832727824296L;
          } else {
             l3 = 0L;
@@ -1401,9 +1325,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       n4 = l < 0L ? -customBigInteger.signum : customBigInteger.signum;
       if (!flag) {
          if (needIncrement(l, n2, n4, shadedMutableBigInteger, l3)) {
-            ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger;
-            ShadedMutableBigInteger one = ShadedMutableBigInteger.ONE;
-            shadedMutableBigInteger6.add(one);
+            shadedMutableBigInteger.add(ShadedMutableBigInteger.ONE);
          }
 
          return shadedMutableBigInteger.toBigDecimal(n4, n);
@@ -1413,9 +1335,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             return createAndStripZerosToMatchScale2(l2, n, (long)n3);
          } else {
             obj = shadedMutableBigInteger.toBigInteger(n4);
-            CustomBigInteger customBigInteger2 = (CustomBigInteger)obj;
-            long l5 = (long)n3;
-            return createAndStripZerosToMatchScale(customBigInteger2, n, l5);
+            return createAndStripZerosToMatchScale((CustomBigInteger)obj, n, (long)n3);
          }
       } else {
          return shadedMutableBigInteger.toBigDecimal(n4, n);
@@ -1423,12 +1343,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal round(ShadedMathContext shadedMathContext) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (shadedMathContext.precision != 0) {
-         ShadedBigDecimal shadedBigDecimal = this;
-         ShadedMathContext shadedMathContext2 = shadedMathContext;
-         ShadedMathContext shadedMathContext3 = shadedMathContext2;
-         return doRound(shadedBigDecimal, shadedMathContext3);
+         return doRound(this, shadedMathContext);
       } else {
          return this;
       }
@@ -1447,7 +1363,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       ShadedBigDecimal shadedBigDecimal3 = null;
       ShadedBigDecimal shadedBigDecimal4 = null;
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 6;
       long l4 = 0L;
       l4 = 9079658772212658028L ^ (long)"럁\ueb6f\ueb96ꝍᤎ졸ཤ닝邺䌲ﾐ⏲ꡨ氎츚唙\uded6ћ키⏴쭴\ue5e2戞⅀\uee40尫⑂ד".hashCode();
@@ -1514,11 +1429,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      l2 = (long)shadedBigDecimal3.scale - (long)shadedBigDecimal3.precision() + 1L;
                      l4 = (l4 ^ -9162108048856141395L) - 5238089118081976695L;
                   } else {
-                     long l5 = (long)shadedBigDecimal3.signum();
-                     ShadedBigDecimal shadedBigDecimal5 = this;
-                     long l6 = Math.max((long)shadedBigDecimal4.scale, l3) + 3L;
-                     long l7 = l6;
-                     shadedBigDecimal3 = valueOf(l5, shadedBigDecimal5.checkScale(l7));
+                     shadedBigDecimal3 = valueOf((long)shadedBigDecimal3.signum(), this.checkScale(Math.max((long)shadedBigDecimal4.scale, l3) + 3L));
                      l4 = l4 - -2838718030777464927L ^ -1434109215312435920L;
                   }
                   continue outerLoop;
@@ -1555,7 +1466,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public byte byteValueExact() {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -8612098170026383189L ^ (long)"충ꍽ\ue07a뜑㍬Ꮸ쀩셅쬉周\u10c9歊鷚ぷ⾩뿫椁鳥愛왞숁ȍꛘ鵫崩❍".hashCode();
       l = this.longValueExact();
@@ -1571,7 +1481,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(char[] chars, int n, int n2, ShadedMathContext shadedMathContext) {
        super();
-       int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if ((chars.length | n2 | n) >= 0 && n2 <= chars.length - n) {
          int n3 = 0;
          int n4 = 0;
@@ -1654,8 +1563,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (l == -9223372036854775808L) {
                      for (int i = n3 - precision2; i > 0; i = n3 - precision2) {
                         n4 = checkScaleNonZero((long)n4 - (long)i);
-                        int oldMode = shadedMathContext.roundingMode.oldMode;
-                        customBigInteger = divideAndRoundByTenPow(customBigInteger, i, oldMode);
+                        customBigInteger = divideAndRoundByTenPow(customBigInteger, i, shadedMathContext.roundingMode.oldMode);
                         l = compactValFor(customBigInteger);
                         if (l != -9223372036854775808L) {
                            n3 = longDigitLength(l);
@@ -1780,7 +1688,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public int signum() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intCompact != -9223372036854775808L ? Long.signum(this.intCompact) : this.intVal.getSignum();
    }
 
@@ -1789,7 +1696,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiply3(long l, CustomBigInteger customBigInteger, int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = 5013777912008361554L ^ (long)"㰭\uf0e3潗ꇟᑉ獇쩅憄ꪟ橥쪅䊓褿ᢹ\ue0f1\uea28ࡽퟹ趢윓".hashCode();
       if (l != 0L) {
@@ -1803,7 +1709,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public static ShadedBigDecimal zeroValueOf(int n) {
       byte b = 1;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       while (1 < b) {
          if (b <= 2) {
@@ -1824,7 +1729,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal doRound(CustomBigInteger customBigInteger, int n, ShadedMathContext shadedMathContext) {
       int n2 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
@@ -1837,8 +1741,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       while (true) {
          if (6 <= b) {
             if (b <= 6) {
-               CustomBigInteger customBigInteger2 = customBigInteger;
-               customBigInteger = divideAndRoundByTenPow(customBigInteger2, n3, n2);
+               customBigInteger = divideAndRoundByTenPow(customBigInteger, n3, n2);
                l2 = l2 - 2934783053956238409L ^ -8605533072435150316L;
             } else if (9 <= b) {
                if (9 >= b) {
@@ -1868,14 +1771,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   continue;
                }
 
-               CustomBigInteger customBigInteger3 = customBigInteger;
-               n4 = bigDigitLength(customBigInteger3);
+               n4 = bigDigitLength(customBigInteger);
                l2 = (l2 ^ -3536622663149929804L) - 2402505920257319038L;
             }
          } else if (2 <= b) {
             if (2 >= b) {
-               CustomBigInteger customBigInteger4 = customBigInteger;
-               n4 = bigDigitLength(customBigInteger4);
+               n4 = bigDigitLength(customBigInteger);
                l2 = l2 + 6091101808015822862L ^ -4921852780064888058L;
             } else if (b >= 4) {
                if (b <= 4) {
@@ -1991,16 +1892,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public CustomBigInteger toBigIntegerExact() {
-      byte b = 7;
-      byte b2 = 0;
-      ShadedBigDecimal shadedBigDecimal = this.setScale2(b2, b);
-      return shadedBigDecimal.inflated();
+      return this.setScale2((byte)0, (byte)7).inflated();
    }
 
    public ShadedBigDecimal multiply(ShadedBigDecimal shadedBigDecimal) {
       int n = 0;
       byte b = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = 6767825000077350443L ^ (long)"ഃ믃\uedd5䄃䉮ᴱ꒸\ua633\uee27툉ڼ淗\uaacf\ue106潩熏`ۿ䷍ɋ횡⧼㠺㋁쓜".hashCode();
 
@@ -2017,10 +1914,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
          } else {
             if (6 < b) {
-               ShadedBigDecimal shadedBigDecimal2 = this;
-               long l2 = (long)this.scale + (long)shadedBigDecimal.scale;
-               long l3 = l2;
-               n = shadedBigDecimal2.checkScale(l3);
+               n = this.checkScale((long)this.scale + (long)shadedBigDecimal.scale);
                l = (l ^ 7981950784746683729L) - 9165182646861594029L;
                continue;
             }
@@ -2054,7 +1948,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(CustomBigInteger customBigInteger, int n, ShadedMathContext shadedMathContext) {
        super();
-      CustomBigInteger.getOpaqueStateTag();
       long l = compactValFor(customBigInteger);
       int precision2 = shadedMathContext.precision;
       int n2 = 0;
@@ -2097,7 +1990,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public static ShadedBigDecimal valueOf(CustomBigInteger customBigInteger, int n, int n2) {
       long l = 0L;
       byte b = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -7520263162877837347L ^ (long)"\ue459\ue99c蝪村\uf453隂滊燾蛡磙ⶏ橔댪⾨ꄧ잖᱈擐૾鎃飼﮷".hashCode();
 
@@ -2147,13 +2039,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public String toEngineeringString() {
-      boolean flag = false;
-      return this.layoutChars(flag);
+      return this.layoutChars(false);
    }
 
    public ShadedBigDecimal divideToIntegralValue(ShadedBigDecimal shadedBigDecimal) {
       ShadedBigDecimal shadedBigDecimal2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       int n = 0;
       int n2 = 0;
       byte b = 7;
@@ -2177,11 +2067,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   return shadedBigDecimal2;
                }
 
-               ShadedBigDecimal shadedBigDecimal3 = this;
-               ShadedBigDecimal shadedBigDecimal4 = shadedBigDecimal;
-               ShadedMathContext shadedMathContext = new ShadedMathContext(n2, CustomRoundingMode.DOWN);
-               ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal4;
-               shadedBigDecimal2 = shadedBigDecimal3.divide(shadedBigDecimal5, shadedMathContext);
+               shadedBigDecimal2 = this.divide(shadedBigDecimal, new ShadedMathContext(n2, CustomRoundingMode.DOWN));
             } else if (shadedBigDecimal2.scale >= n) {
                continue;
             }
@@ -2194,9 +2080,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          while (b > 6) {
             if (b < 10) {
                if (b < 8) {
-                  ShadedBigDecimal shadedBigDecimal6 = this;
-                  byte b2 = 7;
-                  return shadedBigDecimal6.setScale2(n, b2);
+                  return this.setScale2(n, (byte)7);
                }
 
                if (b > 8) {
@@ -2215,31 +2099,23 @@ public class ShadedBigDecimal extends Number implements Comparable {
                }
             } else if (b >= 12) {
                if (12 >= b) {
-                  ShadedBigDecimal shadedBigDecimal7 = shadedBigDecimal2;
-                  CustomRoundingMode down = CustomRoundingMode.DOWN;
-                  byte b3 = 0;
-                  shadedBigDecimal2 = shadedBigDecimal7.setScale(b3, down);
+                  shadedBigDecimal2 = shadedBigDecimal2.setScale((byte)0, CustomRoundingMode.DOWN);
                } else if (shadedBigDecimal.signum() == 0) {
                   continue outerLoop;
                }
             } else {
-               ShadedBigDecimal shadedBigDecimal8 = this;
-               ShadedBigDecimal shadedBigDecimal9 = shadedBigDecimal;
-               if (shadedBigDecimal8.compareMagnitude(shadedBigDecimal9) >= 0) {
+               if (this.compareMagnitude(shadedBigDecimal) >= 0) {
                   continue outerLoop;
                }
             }
          }
 
-         ShadedBigDecimal shadedBigDecimal10 = shadedBigDecimal2;
-         byte b4 = 7;
-         shadedBigDecimal2 = shadedBigDecimal10.setScale2(n, b4);
+         shadedBigDecimal2 = shadedBigDecimal2.setScale2(n, (byte)7);
       }
    }
 
    private static long compactValFor(CustomBigInteger customBigInteger) {
       int[] ints = null;
-      CustomBigInteger.getOpaqueStateTag();
       int n = 0;
       long l = 0L;
       int n2 = 0;
@@ -2311,7 +2187,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private boolean fractionOnly() {
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
 
       while (true) {
@@ -2350,7 +2225,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       long[] longs = null;
       boolean flag = false;
       long l4 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l5 = 0L;
       long l6 = (long)0;
       long l7 = 0L;
@@ -2612,9 +2486,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                         l17 = (l17 ^ -7626609657115510101L) + 1334465230068027074L;
                      } else if (14 <= b) {
                         if (b <= 14) {
-                           ShadedMutableBigInteger shadedMutableBigInteger2 = shadedMutableBigInteger;
-                           ShadedMutableBigInteger one = ShadedMutableBigInteger.ONE;
-                           shadedMutableBigInteger2.add(one);
+                           shadedMutableBigInteger.add(ShadedMutableBigInteger.ONE);
                            l17 = l17 + 7551701883204806992L ^ 5326132198078445637L;
                         } else {
                            if (b <= 15) {
@@ -2780,9 +2652,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             } else {
                if (19 <= b) {
                   if (19 < b) {
-                     CustomBigInteger customBigInteger2 = customBigInteger;
-                     long l19 = (long)n4;
-                     return createAndStripZerosToMatchScale(customBigInteger2, n2, l19);
+                     return createAndStripZerosToMatchScale(customBigInteger, n2, (long)n4);
                   }
 
                   l16 = longs[1];
@@ -2809,7 +2679,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       ShadedBigDecimal shadedBigDecimal3 = null;
       int n2 = 0;
       byte b = 10;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       outerLoop:
       while (true) {
@@ -2824,11 +2693,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                if (5 <= b) {
                   if (5 >= b) {
-                     ShadedBigDecimal shadedBigDecimal4 = this;
-                     ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal;
-                     ShadedMathContext shadedMathContext2 = new ShadedMathContext(shadedMathContext.precision, CustomRoundingMode.DOWN);
-                     ShadedBigDecimal shadedBigDecimal6 = shadedBigDecimal5;
-                     shadedBigDecimal2 = shadedBigDecimal4.divide(shadedBigDecimal6, shadedMathContext2);
+                     shadedBigDecimal2 = this.divide(shadedBigDecimal, new ShadedMathContext(shadedMathContext.precision, CustomRoundingMode.DOWN));
                      break;
                   }
 
@@ -2844,15 +2709,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
             if (1 <= b) {
                if (b <= 1) {
-                  ShadedBigDecimal shadedBigDecimal7 = shadedBigDecimal2;
-                  ShadedBigDecimal shadedBigDecimal8 = shadedBigDecimal;
-                  shadedBigDecimal3 = shadedBigDecimal7.multiply(shadedBigDecimal8);
+                  shadedBigDecimal3 = shadedBigDecimal2.multiply(shadedBigDecimal);
                }
             } else {
-               ShadedBigDecimal shadedBigDecimal9 = shadedBigDecimal2;
-               CustomRoundingMode down = CustomRoundingMode.DOWN;
-               byte b2 = 0;
-               shadedBigDecimal2 = shadedBigDecimal9.setScale(b2, down);
+               shadedBigDecimal2 = shadedBigDecimal2.setScale((byte)0, CustomRoundingMode.DOWN);
             }
             break;
          }
@@ -2865,8 +2725,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (13 > b) {
-                     int n3 = shadedBigDecimal2.getScale() + Math.min(n2, n - shadedBigDecimal2.scale);
-                     return shadedBigDecimal2.setScale(n3);
+                     return shadedBigDecimal2.setScale(shadedBigDecimal2.getScale() + Math.min(n2, n - shadedBigDecimal2.scale));
                   }
 
                   if (b <= 13) {
@@ -2876,9 +2735,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (b <= 14) {
-                     ShadedBigDecimal shadedBigDecimal10 = this;
-                     ShadedBigDecimal shadedBigDecimal11 = shadedBigDecimal;
-                     return shadedBigDecimal10.divideToIntegralValue(shadedBigDecimal11);
+                     return this.divideToIntegralValue(shadedBigDecimal);
                   }
 
                   if (n > shadedBigDecimal2.getScale()) {
@@ -2891,17 +2748,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      }
                   } else {
                      ShadedBigDecimal shadedBigDecimal12 = this;
-                     ShadedBigDecimal shadedBigDecimal13 = shadedBigDecimal3;
-                     shadedBigDecimal12 = shadedBigDecimal12.subtract(shadedBigDecimal13);
-                     ShadedBigDecimal shadedBigDecimal14 = shadedBigDecimal;
-                     if (shadedBigDecimal12.compareMagnitude(shadedBigDecimal14) < 0) {
+                     shadedBigDecimal12 = shadedBigDecimal12.subtract(shadedBigDecimal3);
+                     if (shadedBigDecimal12.compareMagnitude(shadedBigDecimal) < 0) {
                         continue outerLoop;
                      }
                   }
                } else {
-                  ShadedBigDecimal shadedBigDecimal15 = this;
-                  ShadedBigDecimal shadedBigDecimal16 = shadedBigDecimal;
-                  if (shadedBigDecimal15.compareMagnitude(shadedBigDecimal16) >= 0) {
+                  if (this.compareMagnitude(shadedBigDecimal) >= 0) {
                      continue outerLoop;
                   }
                }
@@ -2913,7 +2766,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static ShadedBigDecimal divide(long l, int n, CustomBigInteger customBigInteger, int n2, long l2, ShadedMathContext shadedMathContext) {
       int n3 = 0;
       int n4 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       CustomBigInteger customBigInteger2 = null;
       int n5 = 0;
       int n6 = 0;
@@ -2980,11 +2832,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      n7 = shadedMathContext.precision;
                      l3 = (l3 ^ 2722958758644619472L) - -8684202627526489155L;
                   } else {
-                     CustomBigInteger customBigInteger4 = CustomBigInteger.valueOf(l);
-                     CustomBigInteger customBigInteger5 = customBigInteger2;
-                     int n8 = checkScaleNonZero(l2);
-                     CustomBigInteger customBigInteger6 = customBigInteger5;
-                     shadedBigDecimal = divideAndRound3(customBigInteger4, customBigInteger6, n4, n6, n8);
+                     shadedBigDecimal = divideAndRound3(CustomBigInteger.valueOf(l), customBigInteger2, n4, n6, checkScaleNonZero(l2));
                      l3 = (l3 ^ 257146299311960218L) + 5286254154429967993L;
                   }
                } else {
@@ -3000,18 +2848,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
 
             if (5 > b) {
-               ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-               ShadedMathContext shadedMathContext2 = shadedMathContext;
-               ShadedMathContext shadedMathContext3 = shadedMathContext2;
-               return doRound(shadedBigDecimal2, shadedMathContext3);
+               return doRound(shadedBigDecimal, shadedMathContext);
             }
 
             if (5 >= b) {
-               CustomBigInteger customBigInteger7 = customBigInteger3;
-               CustomBigInteger customBigInteger8 = customBigInteger;
-               int n9 = checkScaleNonZero(l2);
-               CustomBigInteger customBigInteger9 = customBigInteger8;
-               shadedBigDecimal = divideAndRound3(customBigInteger7, customBigInteger9, n4, n6, n9);
+               shadedBigDecimal = divideAndRound3(customBigInteger3, customBigInteger, n4, n6, checkScaleNonZero(l2));
                l3 = l3 - -3430130445477629872L ^ -6246172486473955165L;
                break;
             }
@@ -3026,7 +2867,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       long l3 = 0L;
       long l4 = 0L;
       byte b = 8;
-      CustomBigInteger.getOpaqueStateTag();
       long l5 = 0L;
       l5 = 7400628866210122133L ^ (long)"給ꢀ俍큼㣪檞ﵨ꒾芺窪\udd62ꝡ鮣樓\uf3eeº\uf427뒳媌뒕䤼瘩ꬕ짞ᥐ".hashCode();
 
@@ -3138,7 +2978,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public static int longDigitLength(long l) {
       long[] longs = null;
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 3;
       long l2 = 0L;
       l2 = -1903056407078958400L ^ (long)"ﱡ胱\uf736杀ⷎ᠆\ue6d4梾䳗茗図儿\uf38a㧿邱\uf7c9㢩尵繟䬋\uebabL톙\uda11".hashCode();
@@ -3233,13 +3072,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private CustomBigInteger inflated() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.intVal != null ? this.intVal : CustomBigInteger.valueOf(this.intCompact);
    }
 
    private static int checkScaleNonZero(long l) {
       int n = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -2357409634226818925L ^ (long)"\udd40稅㦮\u2065㹽忷黝࿈빼ⶭ쉢ꮚ쳑\ufffeꊼ\ue374┘㢺㽃꙾杕˄灳ꓽƛ뜷".hashCode();
       n = (int)l;
@@ -3254,7 +3091,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean longLongCompareMagnitude(long l, long l2, long l3, long l4) {
-      CustomBigInteger.getOpaqueStateTag();
       long l5 = 0L;
       l5 = 9180932170353606573L ^ (long)"㒋⿶ᤏ뉛払匛ጩ贽주淪齆性뵮䬲\uf3bf鬤ࠅ᭔蕒杁⛕\ue7db覰꧱座貶\udfaa蠺".hashCode();
       if (l == l3) {
@@ -3277,7 +3113,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal subtract(ShadedBigDecimal shadedBigDecimal) {
       byte b = 3;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = 4647452255115752003L ^ (long)"觫⁴\u2d73ѷ\ue813\uf456﹎뙷쾴攅姺阧玜ᆀ戮\uf6ac揼響싁衛໒䯅㯇饪㶜".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -3297,11 +3132,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       }
 
       if (3 >= b) {
-         long intCompact2 = this.intCompact;
-         int scale2 = this.scale;
-         CustomBigInteger customBigInteger = shadedBigDecimal.intVal.negate();
-         int scale3 = shadedBigDecimal.scale;
-         return add2(intCompact2, scale2, customBigInteger, scale3);
+         return add2(this.intCompact, this.scale, shadedBigDecimal.intVal.negate(), shadedBigDecimal.scale);
       } else if (b >= 5) {
          if (b <= 5) {
             return add(this.intCompact, this.scale, -shadedBigDecimal.intCompact, shadedBigDecimal.scale);
@@ -3311,19 +3142,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
             return add2(l2, shadedBigDecimal.scale, this.intVal, scale4);
          }
       } else {
-         CustomBigInteger intVal2 = this.intVal;
-         int scale5 = this.scale;
-         CustomBigInteger customBigInteger2 = shadedBigDecimal.intVal.negate();
-         int scale6 = shadedBigDecimal.scale;
-         CustomBigInteger customBigInteger3 = customBigInteger2;
-         int n = scale5;
-         return add3(intVal2, n, customBigInteger3, scale6);
+         return add3(this.intVal, this.scale, shadedBigDecimal.intVal.negate(), shadedBigDecimal.scale);
       }
    }
 
    private static ShadedBigDecimal divide7(long l, int n, CustomBigInteger customBigInteger, int n2, int n3, int n4) {
       CustomBigInteger customBigInteger2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       int n5 = 0;
       int n6 = 0;
       byte b = 0;
@@ -3341,16 +3165,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
                }
 
                if (b > 7) {
-                  CustomBigInteger customBigInteger3 = customBigInteger2;
-                  CustomBigInteger customBigInteger4 = customBigInteger;
-                  return divideAndRound3(customBigInteger3, customBigInteger4, n3, n4, n3);
+                  return divideAndRound3(customBigInteger2, customBigInteger, n3, n4, n3);
                }
 
                customBigInteger2 = bigMultiplyPowerTen2(customBigInteger, n5);
                l2 = l2 - 2409384396812078296L ^ -3218704762426607353L;
             } else {
-               long l3 = (long)n3 + (long)n2;
-               if (checkScale2(l, l3) <= n) {
+               if (checkScale2(l, (long)n3 + (long)n2) <= n) {
                   l2 = l2 - -7685166708236824348L ^ 6551516857855008311L;
                } else {
                   l2 = (l2 ^ 3508927140718462025L) + 4170225617741909216L;
@@ -3363,9 +3184,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      n5 = n6 - n;
                      l2 = (l2 ^ -4374093931527562444L) - 2441921088159456483L;
                   } else {
-                     CustomBigInteger customBigInteger5 = customBigInteger;
-                     long l4 = (long)n - (long)n3;
-                     n6 = checkScale(customBigInteger5, l4);
+                     n6 = checkScale(customBigInteger, (long)n - (long)n3);
                      l2 = l2 + 9185713894140929583L ^ -2574834263530959713L;
                   }
                   continue outerLoop;
@@ -3375,9 +3194,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                l2 = (l2 ^ 7983919382797963127L) + -346587284261860357L;
             }
 
-            CustomBigInteger customBigInteger6 = CustomBigInteger.valueOf(l);
-            CustomBigInteger customBigInteger7 = customBigInteger2;
-            return divideAndRound3(customBigInteger6, customBigInteger7, n3, n4, n3);
+            return divideAndRound3(CustomBigInteger.valueOf(l), customBigInteger2, n3, n4, n3);
          }
 
          customBigInteger2 = bigMultiplyPowerTen(l, n5);
@@ -3387,7 +3204,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private int adjustScale(int n, long l) {
       long l2 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l3 = 0L;
       l3 = 1403928461590101987L ^ (long)"⚬⧖쭴ꬶ隰䪱\ueea6䳦벟ᢢ듉쿛톯猍禭첰⾖پ㘇0".hashCode();
@@ -3422,7 +3238,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal stripZerosToMatchScale(CustomBigInteger customBigInteger, long l, int n, int n2) {
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 3;
       long l2 = 0L;
       l2 = 1250597830845554370L ^ (long)"銷챉秽㋍屣롚\uf5f8穃瓙荞䌫䥩䇘兰懷賨\ue9f0秌䵥\uf493뇧薔ਛ䰅跥᧥".hashCode();
@@ -3452,16 +3267,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      long l3 = (long)n2;
-      CustomBigInteger customBigInteger3 = customBigInteger2;
-      return createAndStripZerosToMatchScale(customBigInteger3, n, l3);
+      return createAndStripZerosToMatchScale(customBigInteger2, n, (long)n2);
    }
 
    private String getValueString(int n, String str, int n2) {
       boolean flag = false;
       Object obj = null;
       int n3 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       n3 = str.length() - n2;
       if (n3 == 0) {
          StringBuilder sb = new StringBuilder();
@@ -3510,12 +3322,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal remainder(ShadedBigDecimal shadedBigDecimal) {
-      ShadedBigDecimal[] shadedBigDecimals = this.divideAndRemainder(shadedBigDecimal);
-      return shadedBigDecimals[1];
+      return this.divideAndRemainder(shadedBigDecimal)[1];
    }
 
    private static CustomBigInteger expandBigIntegerTenPowers(int n) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       synchronized (ShadedBigDecimal.class) {
          CustomBigInteger[] customBigIntegers = BIG_TEN_POWERS_TABLE;
          int length = customBigIntegers.length;
@@ -3529,9 +3339,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             customBigIntegers = Arrays.copyOf(customBigIntegers, n2);
 
             for (int i = length; i < n2; i++) {
-               CustomBigInteger customBigInteger = customBigIntegers[i - 1];
-               CustomBigInteger ten = CustomBigInteger.TEN;
-               customBigIntegers[i] = customBigInteger.multiply2(ten);
+               customBigIntegers[i] = customBigIntegers[i - 1].multiply2(CustomBigInteger.TEN);
             }
 
             BIG_TEN_POWERS_TABLE = customBigIntegers;
@@ -3544,7 +3352,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static ShadedBigDecimal createAndStripZerosToMatchScale2(long l, int n, long l2) {
       long l3 = 0L;
       byte b = 6;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = 2807821931743654037L ^ (long)"雅랓뭥뭦鿤뒃婗샶뚯誚緦偈倖ﱛ㟃\uecbf攭灐\uf52a\ue7d6\ufe75ቨ".hashCode();
 
@@ -3620,12 +3427,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal min(ShadedBigDecimal shadedBigDecimal) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return this.compareTo2(shadedBigDecimal) <= 0 ? this : shadedBigDecimal;
    }
 
    public ShadedBigDecimal abs() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal;
       if (this.signum() < 0) {
          shadedBigDecimal = this.negate();
@@ -3637,8 +3442,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal remainder(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      ShadedBigDecimal[] shadedBigDecimals = this.divideAndRemainder(shadedBigDecimal, shadedMathContext);
-      return shadedBigDecimals[1];
+      return this.divideAndRemainder(shadedBigDecimal, shadedMathContext)[1];
    }
 
    public ShadedBigDecimal(char[] chars, int n, int n2) {
@@ -3647,7 +3451,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private int compareMagnitude(ShadedBigDecimal shadedBigDecimal) {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       Object obj = null;
       long l3 = 0L;
@@ -3693,19 +3496,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      if (l3 > -2147483648L
                         && (l5 == -9223372036854775808L || (l5 = longMultiplyPowerTen(l5, (int)(-l3))) == -9223372036854775808L)
                         && l4 == -9223372036854775808L) {
-                        ShadedBigDecimal shadedBigDecimal2 = this;
-                        int n = (int)(-l3);
-                        obj = shadedBigDecimal2.bigMultiplyPowerTen(n);
-                        CustomBigInteger customBigInteger = (CustomBigInteger)obj;
-                        CustomBigInteger intVal2 = shadedBigDecimal.intVal;
-                        return customBigInteger.compareMagnitude(intVal2);
+                        obj = this.bigMultiplyPowerTen((int)(-l3));
+                        return ((CustomBigInteger)obj).compareMagnitude(shadedBigDecimal.intVal);
                      }
                   } else if (l3 <= 2147483647L
                      && (l4 == -9223372036854775808L || (l4 = longMultiplyPowerTen(l4, (int)l3)) == -9223372036854775808L)
                      && l5 == -9223372036854775808L) {
-                     ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-                     int n2 = (int)l3;
-                     obj = shadedBigDecimal3.bigMultiplyPowerTen(n2);
+                     obj = shadedBigDecimal.bigMultiplyPowerTen((int)l3);
                      CustomBigInteger customBigInteger2 = (CustomBigInteger)obj;
                      return this.intVal.compareMagnitude(customBigInteger2);
                   }
@@ -3739,7 +3536,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal roundedTenPower(int n, int n2, int n3, int n4) {
       int n5 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 5;
 
       while (b > 2) {
@@ -3763,7 +3559,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       boolean flag = false;
       int n2 = 0;
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       ShadedBigDecimal shadedBigDecimal = null;
       ShadedBigDecimal shadedBigDecimal2 = null;
@@ -3836,11 +3631,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                continue;
             }
 
-            ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-            ShadedBigDecimal shadedBigDecimal4 = shadedBigDecimal2;
-            ShadedMathContext shadedMathContext3 = shadedMathContext2;
-            ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal4;
-            shadedBigDecimal2 = shadedBigDecimal3.multiply(shadedBigDecimal5, shadedMathContext3);
+            shadedBigDecimal2 = shadedBigDecimal2.multiply(shadedBigDecimal2, shadedMathContext2);
          }
 
          while (true) {
@@ -3860,8 +3651,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   } else {
                      ShadedBigDecimal shadedBigDecimal6 = shadedBigDecimal2;
                      ShadedMathContext shadedMathContext4 = shadedMathContext2;
-                     ShadedBigDecimal shadedBigDecimal7 = shadedBigDecimal6;
-                     shadedBigDecimal2 = ONE.divide(shadedBigDecimal7, shadedMathContext4);
+                     shadedBigDecimal2 = ONE.divide(shadedBigDecimal6, shadedMathContext4);
                   }
                } else {
                   if (b >= 1) {
@@ -3875,11 +3665,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      continue outerLoop;
                   }
 
-                  ShadedBigDecimal shadedBigDecimal8 = shadedBigDecimal2;
-                  ShadedBigDecimal shadedBigDecimal9 = shadedBigDecimal;
-                  ShadedMathContext shadedMathContext5 = shadedMathContext2;
-                  ShadedBigDecimal shadedBigDecimal10 = shadedBigDecimal9;
-                  shadedBigDecimal2 = shadedBigDecimal8.multiply(shadedBigDecimal10, shadedMathContext5);
+                  shadedBigDecimal2 = shadedBigDecimal2.multiply(shadedBigDecimal, shadedMathContext2);
                }
             }
 
@@ -3888,10 +3674,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             } else if (b >= 11) {
                if (11 < b) {
                   if (b < 13) {
-                     ShadedBigDecimal shadedBigDecimal11 = shadedBigDecimal2;
-                     ShadedMathContext shadedMathContext6 = shadedMathContext;
-                     ShadedMathContext shadedMathContext7 = shadedMathContext6;
-                     return doRound(shadedBigDecimal11, shadedMathContext7);
+                     return doRound(shadedBigDecimal2, shadedMathContext);
                   }
 
                   if (13 >= b) {
@@ -3926,7 +3709,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal add3(CustomBigInteger customBigInteger, int n, CustomBigInteger customBigInteger2, int n2) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       CustomBigInteger customBigInteger3 = null;
       int n4 = 0;
@@ -3953,15 +3735,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                   l2 = l2 + 1221176020593916748L ^ 6905156481529047842L;
                } else {
-                  CustomBigInteger customBigInteger4 = customBigInteger;
-                  CustomBigInteger customBigInteger5 = customBigInteger2;
-                  customBigInteger3 = customBigInteger4.add2(customBigInteger5);
+                  customBigInteger3 = customBigInteger.add2(customBigInteger2);
                   l2 = (l2 ^ 8057294564616337645L) + 5724171319932592649L;
                }
             } else {
-               CustomBigInteger customBigInteger6 = customBigInteger;
-               long l3 = -l;
-               n3 = checkScale(customBigInteger6, l3);
+               n3 = checkScale(customBigInteger, -l);
                l2 = l2 - -903238912471015650L ^ 3257636709869840084L;
             }
          } else {
@@ -3985,9 +3763,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             if (4 > b) {
                if (customBigInteger.signum != customBigInteger2.signum) {
                   l2 = (l2 ^ 3743361531044656216L) - 4325305512716967362L;
-                  CustomBigInteger customBigInteger7 = customBigInteger3;
-                  byte b2 = 0;
-                  return valueOf(customBigInteger7, n4, b2);
+                  return valueOf(customBigInteger3, n4, (byte)0);
                }
 
                l2 = (l2 ^ 2392910111469400781L) - 5638592625443546167L;
@@ -4022,13 +3798,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal setScale(int n, CustomRoundingMode customRoundingMode) {
-      int oldMode = customRoundingMode.oldMode;
-      return this.setScale2(n, oldMode);
+      return this.setScale2(n, customRoundingMode.oldMode);
    }
 
    private static boolean needIncrement(long l, int n, int n2, ShadedMutableBigInteger shadedMutableBigInteger, long l2) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 3;
       long l3 = 0L;
       l3 = -5369572308623247908L ^ (long)"̛휦试බ\uf042ᶊ욑샜蓇嘚첵믚ᮅ㩤Ⱞ῝祪偊㮀⬒".hashCode();
@@ -4085,7 +3859,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static ShadedBigDecimal divideAndRound3(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2, int n, int n2, int n3) {
       ShadedMutableBigInteger shadedMutableBigInteger = null;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj = null;
       ShadedMutableBigInteger shadedMutableBigInteger2 = null;
       ShadedMutableBigInteger shadedMutableBigInteger3 = null;
@@ -4101,11 +3874,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             } else {
                shadedMutableBigInteger3 = new ShadedMutableBigInteger();
                shadedMutableBigInteger4 = new ShadedMutableBigInteger(customBigInteger2.mag);
-               ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger;
-               ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger4;
-               ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger3;
-               ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger6;
-               shadedMutableBigInteger2 = shadedMutableBigInteger5.divide2(shadedMutableBigInteger8, shadedMutableBigInteger7);
+               shadedMutableBigInteger2 = shadedMutableBigInteger.divide2(shadedMutableBigInteger4, shadedMutableBigInteger3);
             }
          } else {
             shadedMutableBigInteger = new ShadedMutableBigInteger(customBigInteger.mag);
@@ -4115,13 +3884,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
       n4 = customBigInteger.signum == customBigInteger2.signum ? 1 : -1;
       if (!flag) {
          ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger4;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger3;
-         ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger10;
-         if (needIncrement3(shadedMutableBigInteger9, n2, n4, shadedMutableBigInteger12, shadedMutableBigInteger11)) {
+         if (needIncrement3(shadedMutableBigInteger9, n2, n4, shadedMutableBigInteger3, shadedMutableBigInteger2)) {
             shadedMutableBigInteger9 = shadedMutableBigInteger3;
-            ShadedMutableBigInteger one = ShadedMutableBigInteger.ONE;
-            shadedMutableBigInteger9.add(one);
+            shadedMutableBigInteger9.add(ShadedMutableBigInteger.ONE);
          }
 
          return shadedMutableBigInteger3.toBigDecimal(n4, n);
@@ -4131,9 +3896,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             return createAndStripZerosToMatchScale2(l, n, (long)n3);
          } else {
             obj = shadedMutableBigInteger3.toBigInteger(n4);
-            CustomBigInteger customBigInteger3 = (CustomBigInteger)obj;
-            long l2 = (long)n3;
-            return createAndStripZerosToMatchScale(customBigInteger3, n, l2);
+            return createAndStripZerosToMatchScale((CustomBigInteger)obj, n, (long)n3);
          }
       } else {
          return shadedMutableBigInteger3.toBigDecimal(n4, n);
@@ -4142,7 +3905,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public static ShadedBigDecimal valueOf(long l, int n) {
       byte b = 1;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -1394462103306789671L ^ (long)"\u139b慝趐\u05cd栨❵鈜왍슧啐瑏Ჯ菥綱桑\ue1a2ꢱ靳\ueaf2ꥡ煓\ueacc翉釦ꥲ".hashCode();
 
@@ -4171,7 +3933,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal add(long l, int n, long l2, int n2) {
       CustomBigInteger customBigInteger = null;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       int n3 = 0;
       long l4 = 0L;
@@ -4228,9 +3989,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (b > 6) {
                      if ((l ^ l2) < 0L) {
                         l5 = (l5 ^ 7905268478800145589L) + -2100224214006657782L;
-                        CustomBigInteger customBigInteger2 = customBigInteger;
-                        byte b2 = 0;
-                        return valueOf(customBigInteger2, n2, b2);
+                        return valueOf(customBigInteger, n2, (byte)0);
                      }
 
                      l5 = l5 + -851362715415416460L ^ 3751006705692510263L;
@@ -4255,10 +4014,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                if ((l ^ l2) >= 0L) {
                   shadedBigDecimal = new ShadedBigDecimal(customBigInteger, -9223372036854775808L, n, 0);
                } else {
-                  CustomBigInteger customBigInteger3 = customBigInteger;
-                  byte b3 = 0;
-                  CustomBigInteger customBigInteger4 = customBigInteger3;
-                  shadedBigDecimal = valueOf(customBigInteger4, n, b3);
+                  shadedBigDecimal = valueOf(customBigInteger, n, (byte)0);
                }
 
                return shadedBigDecimal;
@@ -4270,14 +4026,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiplyAndRound2(long l, CustomBigInteger customBigInteger, int n, ShadedMathContext shadedMathContext) {
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -6369467045289444974L ^ (long)"둕뇸龶ﶋ껏쏈䋆荗螓\udcbc釦ꝣ麓姲쉹櫮Ⴕ\ue911\uf708䋞겭ᵆ奿".hashCode();
       if (l != 0L) {
          l2 = (l2 ^ 5241966705647205003L) + -891259281616430814L;
-         CustomBigInteger customBigInteger2 = customBigInteger.multiply(l);
-         ShadedMathContext shadedMathContext2 = shadedMathContext;
-         return doRound(customBigInteger2, n, shadedMathContext2);
+         return doRound(customBigInteger.multiply(l), n, shadedMathContext);
       } else {
          l2 = (l2 ^ -444668468252604089L) + 8151580594377682002L;
          return zeroValueOf(n);
@@ -4285,8 +4038,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide2(ShadedBigDecimal shadedBigDecimal, int n, CustomRoundingMode customRoundingMode) {
-      int oldMode = customRoundingMode.oldMode;
-      return this.divide(shadedBigDecimal, n, oldMode);
+      return this.divide(shadedBigDecimal, n, customRoundingMode.oldMode);
    }
 
    public ShadedBigDecimal(char[] chars, ShadedMathContext shadedMathContext) {
@@ -4295,7 +4047,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal setScale2(int n, int n2) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       Object obj = null;
       int n4 = 0;
       long l = 0L;
@@ -4317,26 +4068,18 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (this.intCompact == -9223372036854775808L) {
                      l2 = (l2 ^ 4502744561068914868L) - -7896168728513547301L;
                      if (n > n5) {
-                        ShadedBigDecimal shadedBigDecimal = this;
-                        long l3 = (long)n - (long)n5;
-                        long l4 = l3;
-                        n4 = shadedBigDecimal.checkScale(l4);
+                        n4 = this.checkScale((long)n - (long)n5);
                         obj = bigMultiplyPowerTen2(this.intVal, n4);
                         return new ShadedBigDecimal((CustomBigInteger)obj, -9223372036854775808L, n, this.precision > 0 ? this.precision + n4 : 0);
                      }
 
-                     ShadedBigDecimal shadedBigDecimal2 = this;
-                     long l5 = (long)n5 - (long)n;
-                     long l6 = l5;
-                     n4 = shadedBigDecimal2.checkScale(l6);
+                     n4 = this.checkScale((long)n5 - (long)n);
                      if (n4 < LONG_TEN_POWERS_TABLE.length) {
                         long l7 = LONG_TEN_POWERS_TABLE[n4];
                         return divideAndRound2(this.intVal, l7, n, n2, n);
                      }
 
-                     CustomBigInteger intVal2 = this.intVal;
-                     CustomBigInteger customBigInteger2 = bigTenToThe(n4);
-                     return divideAndRound3(intVal2, customBigInteger2, n, n2, n);
+                     return divideAndRound3(this.intVal, bigTenToThe(n4), n, n2, n);
                   }
 
                   l2 = (l2 ^ -5780563741668888099L) - -7632833676561787063L;
@@ -4367,17 +4110,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
                if (n <= n5) {
                   l2 = (l2 ^ 946489247171304627L) + -3858252754250296094L;
                   ShadedBigDecimal shadedBigDecimal3 = this;
-                  long l8 = (long)n5 - (long)n;
-                  long l9 = l8;
-                  n3 = shadedBigDecimal3.checkScale(l9);
+                  n3 = shadedBigDecimal3.checkScale((long)n5 - (long)n);
                   if (n3 < LONG_TEN_POWERS_TABLE.length) {
                      return divideAndRound(l, LONG_TEN_POWERS_TABLE[n3], n, n2, n);
                   }
 
                   shadedBigDecimal3 = this;
-                  CustomBigInteger customBigInteger3 = shadedBigDecimal3.inflated();
-                  CustomBigInteger customBigInteger4 = bigTenToThe(n3);
-                  return divideAndRound3(customBigInteger3, customBigInteger4, n, n2, n);
+                  return divideAndRound3(shadedBigDecimal3.inflated(), bigTenToThe(n3), n, n2, n);
                }
 
                l2 = l2 + 2248435727633453739L ^ -3762705831426019270L;
@@ -4418,10 +4157,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                }
 
                if (b <= 14) {
-                  ShadedBigDecimal shadedBigDecimal4 = this;
-                  long l10 = (long)n - (long)n5;
-                  long l11 = l10;
-                  n3 = shadedBigDecimal4.checkScale(l11);
+                  n3 = this.checkScale((long)n - (long)n5);
                   l2 = (l2 ^ 1322166060400511044L) + -6437605309920116872L;
                } else {
                   if ((l = longMultiplyPowerTen(l, n3)) != -9223372036854775808L) {
@@ -4442,7 +4178,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (shadedBigDecimal.signum() == 0) {
          if (this.signum() == 0) {
             throw new ArithmeticException("Division undefined");
@@ -4466,10 +4201,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
                throw new ArithmeticException("Non-terminating decimal expansion; no exact representable decimal result.");
             }
 
-            int scale2 = shadedBigDecimal2.getScale();
-            if (n > scale2) {
-               byte b = 7;
-               return shadedBigDecimal2.setScale2(n, b);
+            if (n > shadedBigDecimal2.getScale()) {
+               return shadedBigDecimal2.setScale2(n, (byte)7);
             } else {
                return shadedBigDecimal2;
             }
@@ -4480,7 +4213,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public ShadedBigDecimal[] divideAndRemainder(ShadedBigDecimal shadedBigDecimal) {
       ShadedBigDecimal[] shadedBigDecimals = null;
       byte b = 3;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       while (true) {
          while (1 < b) {
@@ -4489,24 +4221,15 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
 
             shadedBigDecimals = new ShadedBigDecimal[2];
-            ShadedBigDecimal[] shadedBigDecimals2 = shadedBigDecimals;
-            ShadedBigDecimal shadedBigDecimal2 = this;
-            ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-            shadedBigDecimals2[0] = shadedBigDecimal2.divideToIntegralValue(shadedBigDecimal3);
+            shadedBigDecimals[0] = this.divideToIntegralValue(shadedBigDecimal);
          }
 
-         ShadedBigDecimal[] shadedBigDecimals3 = shadedBigDecimals;
-         ShadedBigDecimal shadedBigDecimal4 = this;
-         ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimals[0];
-         ShadedBigDecimal shadedBigDecimal6 = shadedBigDecimal;
-         ShadedBigDecimal shadedBigDecimal7 = shadedBigDecimal5.multiply(shadedBigDecimal6);
-         shadedBigDecimals3[1] = shadedBigDecimal4.subtract(shadedBigDecimal7);
+         shadedBigDecimals[1] = this.subtract(shadedBigDecimals[0].multiply(shadedBigDecimal));
       }
    }
 
    private static void matchScale(ShadedBigDecimal[] shadedBigDecimals) {
       byte b = 2;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       outerLoop:
       while (true) {
@@ -4519,11 +4242,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                continue;
             }
          } else {
-            ShadedBigDecimal[] shadedBigDecimals2 = shadedBigDecimals;
-            ShadedBigDecimal shadedBigDecimal = shadedBigDecimals[1];
-            byte b2 = 7;
-            int scale2 = shadedBigDecimals[0].scale;
-            shadedBigDecimals2[1] = shadedBigDecimal.setScale2(scale2, b2);
+            shadedBigDecimals[1] = shadedBigDecimals[1].setScale2(shadedBigDecimals[0].scale, (byte)7);
          }
 
          while (3 < b) {
@@ -4538,11 +4257,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
                }
             } else {
-               ShadedBigDecimal[] shadedBigDecimals3 = shadedBigDecimals;
-               ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimals[0];
-               byte b3 = 7;
-               int scale3 = shadedBigDecimals[1].scale;
-               shadedBigDecimals3[0] = shadedBigDecimal2.setScale2(scale3, b3);
+               shadedBigDecimals[0] = shadedBigDecimals[0].setScale2(shadedBigDecimals[1].scale, (byte)7);
             }
          }
 
@@ -4556,16 +4271,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n6 = 0;
       CustomBigInteger customBigInteger2 = null;
       byte b = 9;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       l3 = 5144697223679082673L ^ (long)"꼙椛\uf7bd┰\uf6fe﮲⡃퇮ꕥ蟘൭㡨윥㪞\uecd6ﰂ첵鐡\ue366憌".hashCode();
 
       outerLoop:
       while (true) {
          if (b <= 6) {
-            CustomBigInteger customBigInteger3 = customBigInteger;
-            long l4 = (long)n3 + (long)n2;
-            if (checkScale(customBigInteger3, l4) > n) {
+            if (checkScale(customBigInteger, (long)n3 + (long)n2) > n) {
                l3 = (l3 ^ -8163156877800098360L) + 2247107104006246501L;
                continue;
             }
@@ -4580,9 +4292,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
             if (11 <= b) {
                if (11 >= b) {
-                  CustomBigInteger customBigInteger4 = customBigInteger;
-                  CustomBigInteger customBigInteger5 = customBigInteger2;
-                  return divideAndRound3(customBigInteger4, customBigInteger5, n3, n4, n3);
+                  return divideAndRound3(customBigInteger, customBigInteger2, n3, n4, n3);
                }
 
                customBigInteger2 = bigMultiplyPowerTen(l, n5);
@@ -4649,13 +4359,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean unsignedLongCompare(long l, long l2) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return l + -9223372036854775808L > l2 + -9223372036854775808L;
    }
 
    private static long longMultiplyPowerTen(long l, int n) {
       long[] longs = null;
-      CustomBigInteger.getOpaqueStateTag();
       long[] longs2 = null;
       long l2 = 0L;
       byte b = 2;
@@ -4739,7 +4447,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static CustomBigInteger bigMultiplyPowerTen2(CustomBigInteger customBigInteger, int n) {
       byte b = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       while (2 < b) {
          if (3 >= b) {
@@ -4751,18 +4458,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
       }
 
       if (n >= LONG_TEN_POWERS_TABLE.length) {
-         CustomBigInteger customBigInteger2 = customBigInteger;
-         CustomBigInteger customBigInteger3 = bigTenToThe(n);
-         return customBigInteger2.multiply2(customBigInteger3);
+         return customBigInteger.multiply2(bigTenToThe(n));
       } else {
-         CustomBigInteger customBigInteger4 = customBigInteger;
-         long l = LONG_TEN_POWERS_TABLE[n];
-         return customBigInteger4.multiply(l);
+         return customBigInteger.multiply(LONG_TEN_POWERS_TABLE[n]);
       }
    }
 
    public ShadedBigDecimal negate() {
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = 1769424986536934361L ^ (long)"郺ὡ鸵\ue655팎䰷\u09b1ᠯ\uf6b3镃䥂\ue604ꦃ䆵鐠儹궆녎㛠箨".hashCode();
       if (this.intCompact != -9223372036854775808L) {
@@ -4784,7 +4486,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static CustomBigInteger divideAndRound2(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2, int n) {
       ShadedMutableBigInteger shadedMutableBigInteger = null;
       ShadedMutableBigInteger shadedMutableBigInteger2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       ShadedMutableBigInteger shadedMutableBigInteger3 = null;
       boolean flag = false;
       ShadedMutableBigInteger shadedMutableBigInteger4 = null;
@@ -4799,13 +4500,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   n2 = customBigInteger.signum == customBigInteger2.signum ? 1 : -1;
                   if (!flag) {
                      ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger2;
-                     ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger;
-                     ShadedMutableBigInteger shadedMutableBigInteger7 = shadedMutableBigInteger3;
-                     ShadedMutableBigInteger shadedMutableBigInteger8 = shadedMutableBigInteger6;
-                     if (needIncrement3(shadedMutableBigInteger5, n, n2, shadedMutableBigInteger8, shadedMutableBigInteger7)) {
+                     if (needIncrement3(shadedMutableBigInteger5, n, n2, shadedMutableBigInteger, shadedMutableBigInteger3)) {
                         shadedMutableBigInteger5 = shadedMutableBigInteger;
-                        ShadedMutableBigInteger one = ShadedMutableBigInteger.ONE;
-                        shadedMutableBigInteger5.add(one);
+                        shadedMutableBigInteger5.add(ShadedMutableBigInteger.ONE);
                      }
                   }
 
@@ -4819,18 +4516,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
 
          shadedMutableBigInteger2 = new ShadedMutableBigInteger(customBigInteger2.mag);
-         ShadedMutableBigInteger shadedMutableBigInteger9 = shadedMutableBigInteger4;
-         ShadedMutableBigInteger shadedMutableBigInteger10 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger shadedMutableBigInteger11 = shadedMutableBigInteger;
-         ShadedMutableBigInteger shadedMutableBigInteger12 = shadedMutableBigInteger10;
-         shadedMutableBigInteger3 = shadedMutableBigInteger9.divide2(shadedMutableBigInteger12, shadedMutableBigInteger11);
+         shadedMutableBigInteger3 = shadedMutableBigInteger4.divide2(shadedMutableBigInteger2, shadedMutableBigInteger);
       }
    }
 
    private static boolean needIncrement2(long l, int n, int n2, long l2, long l3) {
       int n3 = 0;
       byte b = 4;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = 435466652532974022L ^ (long)"\ue951㲚蘻䏮㊄띋ￂ槥镵颛Ｇ纯䓒層ᆫ漣\uf398\uf512ﶒ㡬ઓ㳧ꍀ".hashCode();
 
@@ -4860,8 +4552,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          while (b > 4) {
             if (6 <= b) {
                if (b <= 6) {
-                  boolean flag = (l2 & 1L) != 0L;
-                  return commonNeedIncrement(n, n2, n3, flag);
+                  return commonNeedIncrement(n, n2, n3, (l2 & 1L) != 0L);
                }
 
                if (7 >= b) {
@@ -4894,7 +4585,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal multiply(long l, long l2, int n) {
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
       long l4 = 0L;
       l4 = 1814351322053215766L ^ (long)"⡀쓵擱鳻ƕ谎哄ր㫄☄鰰\ue788冇༕䝀\ud978⤤鍍힑왯쿌듻ￄ雟컌\uf070".hashCode();
@@ -4914,7 +4604,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal divide3(long l, int n, long l2, int n2, long l3, ShadedMathContext shadedMathContext) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       int n4 = 0;
       ShadedBigDecimal shadedBigDecimal = null;
       int n5 = 0;
@@ -4956,9 +4645,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      l6 = l6 - 9211712652103333032L ^ 8830814703314942347L;
                   }
                } else {
-                  CustomBigInteger customBigInteger3 = customBigInteger;
-                  int n8 = checkScaleNonZero(l3);
-                  shadedBigDecimal = divideAndRound2(customBigInteger3, l2, n4, n6, n8);
+                  shadedBigDecimal = divideAndRound2(customBigInteger, l2, n4, n6, checkScaleNonZero(l3));
                   l6 = l6 + -4576186228746204607L ^ -2632129147286724854L;
                }
             } else {
@@ -4999,11 +4686,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                   l6 = l6 - 2721189068575420447L ^ 4997948141732821037L;
                } else {
-                  CustomBigInteger customBigInteger4 = CustomBigInteger.valueOf(l);
-                  CustomBigInteger customBigInteger5 = customBigInteger2;
-                  int n9 = checkScaleNonZero(l3);
-                  CustomBigInteger customBigInteger6 = customBigInteger5;
-                  shadedBigDecimal = divideAndRound3(customBigInteger4, customBigInteger6, n4, n6, n9);
+                  shadedBigDecimal = divideAndRound3(CustomBigInteger.valueOf(l), customBigInteger2, n4, n6, checkScaleNonZero(l3));
                   l6 = (l6 ^ -5232976076871799553L) - 7880951872828491611L;
                }
             } else {
@@ -5014,8 +4697,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          while (13 < b) {
             if (20 <= b) {
                if (20 >= b) {
-                  ShadedMathContext shadedMathContext2 = shadedMathContext;
-                  return divideSmallFastPath(l, n, l2, n2, l3, shadedMathContext2);
+                  return divideSmallFastPath(l, n, l2, n2, l3, shadedMathContext);
                }
 
                if (b >= 24) {
@@ -5024,10 +4706,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      l6 = (l6 ^ -8329067787501752573L) + -6169946986744389047L;
                   } else {
                      if (26 > b) {
-                        ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-                        ShadedMathContext shadedMathContext3 = shadedMathContext;
-                        ShadedMathContext shadedMathContext4 = shadedMathContext3;
-                        return doRound(shadedBigDecimal2, shadedMathContext4);
+                        return doRound(shadedBigDecimal, shadedMathContext);
                      }
 
                      if (26 < b) {
@@ -5108,7 +4787,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal pow(int n) {
       int n2 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
 
       while (true) {
@@ -5118,12 +4796,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
          } else {
             if (b > 3) {
-               ShadedBigDecimal shadedBigDecimal = this;
-               long l = (long)this.scale * (long)n;
-               long l2 = l;
-               n2 = shadedBigDecimal.checkScale(l2);
-               ShadedBigDecimal shadedBigDecimal2 = this;
-               CustomBigInteger customBigInteger = shadedBigDecimal2.inflated();
+               n2 = this.checkScale((long)this.scale * (long)n);
+               CustomBigInteger customBigInteger = this.inflated();
                return new ShadedBigDecimal(customBigInteger.pow(n), n2);
             }
 
@@ -5141,7 +4815,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n3 = 0;
       int n4 = 0;
       byte b = 12;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       outerLoop:
       while (true) {
@@ -5213,7 +4886,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       ShadedBigDecimal shadedBigDecimal = null;
       int n6 = 0;
       byte b = 13;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = 8263046835475010110L ^ (long)"⅄郁䒮武䧦䵐\uf30a䰘㡙\ue2b2㸍쭍ꏧ섊욑練㼷麸\u20fe뉷趥".hashCode();
 
@@ -5260,14 +4932,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   continue;
                }
 
-               long l5 = (long)n3 + (long)n2;
-               if (checkScale2(l, l5) <= n) {
+               if (checkScale2(l, (long)n3 + (long)n2) <= n) {
                   l4 = (l4 ^ 2526196883764480285L) + -8647891126199924751L;
                   continue;
                }
 
-               long l6 = l4 ^ -1117246638916438219L;
-               l4 = l6 + -95310387046981185L;
+               l4 = (l4 ^ -1117246638916438219L) + -95310387046981185L;
             }
          } else if (n6 >= LONG_TEN_POWERS_TABLE.length) {
             l4 = (l4 ^ 8757931029230245808L) - 4401197353516313064L;
@@ -5283,9 +4953,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                if (b < 17) {
                   if (15 >= b) {
-                     CustomBigInteger customBigInteger2 = CustomBigInteger.valueOf(l);
-                     CustomBigInteger customBigInteger3 = customBigInteger;
-                     return divideAndRound3(customBigInteger2, customBigInteger3, n3, n4, n3);
+                     return divideAndRound3(CustomBigInteger.valueOf(l), customBigInteger, n3, n4, n3);
                   }
 
                   shadedBigDecimal = multiplyDivideAndRound(LONG_TEN_POWERS_TABLE[n6], l, l2, n3, n4, n3);
@@ -5336,8 +5004,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiplyAndRound3(CustomBigInteger customBigInteger, CustomBigInteger customBigInteger2, int n, ShadedMathContext shadedMathContext) {
-      CustomBigInteger customBigInteger3 = customBigInteger.multiply2(customBigInteger2);
-      return doRound(customBigInteger3, n, shadedMathContext);
+      return doRound(customBigInteger.multiply2(customBigInteger2), n, shadedMathContext);
    }
 
    public ShadedBigDecimal(double d) {
@@ -5347,19 +5014,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public ShadedBigDecimal movePointLeft(int n) {
       Object obj = null;
       int n2 = 0;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal = this;
-      long l = (long)this.scale + (long)n;
-      long l2 = l;
-      n2 = shadedBigDecimal.checkScale(l2);
+      n2 = shadedBigDecimal.checkScale((long)this.scale + (long)n);
       obj = new ShadedBigDecimal(this.intVal, this.intCompact, n2, 0);
       if (((ShadedBigDecimal)obj).scale >= 0) {
          shadedBigDecimal = (ShadedBigDecimal)obj;
       } else {
          shadedBigDecimal = (ShadedBigDecimal)obj;
-         byte b = 7;
-         byte b2 = 0;
-         shadedBigDecimal = shadedBigDecimal.setScale2(b2, b);
+         shadedBigDecimal = shadedBigDecimal.setScale2((byte)0, (byte)7);
       }
 
       return shadedBigDecimal;
@@ -5367,7 +5029,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public short shortValueExact() {
       long l = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -4345342428669542984L ^ (long)"콶䫾蛄宿뵥鐡캄끅㑬䦳얾ㄋ╀疕⭜䔿﹪濠㳸굂亥륰쇈唣".hashCode();
       l = this.longValueExact();
@@ -5382,7 +5043,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public static ShadedBigDecimal valueOf(long l) {
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 0;
       long l2 = 0L;
       l2 = 3122133252339760275L ^ (long)"\ue682瘈ꖇ㾄偪诲뽲\ue550\u085c\uf4efꘜ聠⏫∧솮쪲䟵鐇艨\ud843".hashCode();
@@ -5422,15 +5082,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n = 0;
       byte b = 4;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       l = -3244010881115267434L ^ (long)"霽用秉扉鍃덫릤ꄨ襎\uedeb㥌\ud8a4ヌﺓ鼕㞑৸\udab7ӄ\uf5d1ᐕ".hashCode();
 
       outerLoop:
       while (1 <= b) {
          if (b <= 1) {
-            ShadedBigDecimal shadedBigDecimal2 = this;
-            ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-            return shadedBigDecimal2.multiply(shadedBigDecimal3);
+            return this.multiply(shadedBigDecimal);
          }
 
          if (2 >= b) {
@@ -5446,9 +5103,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
                while (4 < b) {
                   if (7 > b) {
                      if (5 < b) {
-                        ShadedMathContext shadedMathContext2 = shadedMathContext;
                         CustomBigInteger intVal2 = shadedBigDecimal.intVal;
-                        return multiplyAndRound3(this.intVal, intVal2, n, shadedMathContext2);
+                        return multiplyAndRound3(this.intVal, intVal2, n, shadedMathContext);
                      }
 
                      if (shadedBigDecimal.intCompact == -9223372036854775808L) {
@@ -5460,15 +5116,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (b <= 7) {
-                     ShadedBigDecimal shadedBigDecimal4 = this;
-                     long l2 = (long)this.scale + (long)shadedBigDecimal.scale;
-                     long l3 = l2;
-                     n = shadedBigDecimal4.checkScale(l3);
+                     n = this.checkScale((long)this.scale + (long)shadedBigDecimal.scale);
                      l = l - 3299651899643313276L ^ 3791760262950748172L;
                   } else {
                      if (8 < b) {
-                        ShadedMathContext shadedMathContext3 = shadedMathContext;
-                        return multiplyAndRound2(shadedBigDecimal.intCompact, this.intVal, n, shadedMathContext3);
+                        return multiplyAndRound2(shadedBigDecimal.intCompact, this.intVal, n, shadedMathContext);
                      }
 
                      if (shadedBigDecimal.intCompact == -9223372036854775808L) {
@@ -5488,8 +5140,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      ShadedMathContext shadedMathContext4 = shadedMathContext;
-      return multiplyAndRound2(this.intCompact, shadedBigDecimal.intVal, n, shadedMathContext4);
+      return multiplyAndRound2(this.intCompact, shadedBigDecimal.intVal, n, shadedMathContext);
    }
 
    public ShadedBigDecimal(byte b, int n, int n2, long l) {
@@ -5501,13 +5152,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
    @Override
    public String toString() {
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       obj = this.stringCache;
       if ((String)obj == null) {
-         ShadedBigDecimal shadedBigDecimal = this;
-         ShadedBigDecimal shadedBigDecimal2 = this;
-         boolean flag = true;
-         shadedBigDecimal.stringCache = (String)(obj = shadedBigDecimal2.layoutChars(flag));
+         this.stringCache = (String)(obj = this.layoutChars(true));
       }
 
       return (String)obj;
@@ -5515,7 +5162,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static long add2(long l, long l2) {
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = -5971857921702148990L ^ (long)"\uec74\u177f\uf1ae乫ꮻ䷭\uec2d뗜⎩\uf577ᚹ쩉\u0dc8ൽ蠕甍ｑ겍熿\ud83c烞".hashCode();
       l3 = l + l2;
@@ -5531,7 +5177,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private ShadedBigDecimal audit() {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 12;
       long l2 = 0L;
       l2 = 1739495174312937262L ^ (long)"䎓뇏า\uea4b稗尓\uf1b5\ueadf惏\udacf를嚆螔嵉冷깰⽝띔\uf44d藡问砉缠\udd5b⣟༷\udad3왤攧".hashCode();
@@ -5540,8 +5185,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       while (true) {
          if (3 <= b) {
             if (b <= 3) {
-               ShadedBigDecimal shadedBigDecimal = this;
-               print("audit", shadedBigDecimal);
+               print("audit", this);
                l2 = l2 - 2576101945987823349L ^ 2579857851030508611L;
             } else if (b >= 5) {
                if (b > 5) {
@@ -5557,12 +5201,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   continue;
                }
 
-               ShadedBigDecimal shadedBigDecimal2 = this;
-               print("audit", shadedBigDecimal2);
+               print("audit", this);
                l2 = l2 + -2861892797379176474L ^ 2712027150393052027L;
             } else {
-               ShadedBigDecimal shadedBigDecimal3 = this;
-               print("audit", shadedBigDecimal3);
+               print("audit", this);
                l2 = l2 + -6832717714482445053L ^ -4463564468569040654L;
             }
          } else {
@@ -5619,8 +5261,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                      throw new AssertionError("Inconsistent state, intCompact=" + this.intCompact + "\t intVal=" + l);
                   }
 
-                  ShadedBigDecimal shadedBigDecimal4 = this;
-                  print("audit", shadedBigDecimal4);
+                  print("audit", this);
                   l2 = l2 - 2240355143490707280L ^ -3197376265625338493L;
                }
             } else {
@@ -5655,7 +5296,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static int checkScale(CustomBigInteger customBigInteger, long l) {
       int n = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
       long l2 = 0L;
       l2 = 8423862166123269846L ^ (long)"䕜妾㬞竇ﶸ떁ᩋ灰\uf32b㸩ほ埪ᢒ㉺「帝\ue480䏾\ufff6秿\ufddd\u0bdf".hashCode();
@@ -5702,14 +5342,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      ShadedBigDecimal shadedBigDecimal = (ShadedBigDecimal)other;
-      return this.compareTo2(shadedBigDecimal);
+      return this.compareTo2((ShadedBigDecimal)other);
    }
 
    public long longValueExact() {
       ShadedBigDecimal shadedBigDecimal = null;
       byte b = 4;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -556663372372270175L ^ (long)"䴚뱺ᝦ榭帬꾄檰⭊\uf528外ꪤ垢캶큋첏ธ퍆\ue9c8쭀둼ᅋɐ볥".hashCode();
 
@@ -5733,10 +5371,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                throw new ArithmeticException("Overflow");
             }
 
-            ShadedBigDecimal shadedBigDecimal2 = this;
-            byte b2 = 7;
-            byte b3 = 0;
-            shadedBigDecimal = shadedBigDecimal2.setScale2(b3, b2);
+            shadedBigDecimal = this.setScale2((byte)0, (byte)7);
             l = (l ^ -8346122342788295673L) + 7024251986122973741L;
          } else {
             if (b <= 7) {
@@ -5796,13 +5431,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-      return shadedBigDecimal3.inflated().longValue();
+      return shadedBigDecimal.inflated().longValue();
    }
 
    public static ShadedBigDecimal valueOf2(long l, int n, int n2) {
       byte b = 2;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -6289358028056125215L ^ (long)"侎\ued6c쵅礿䭢鲓蹱\uf8de铡㵯炄礓\u0b31깎蓝\ue1ff摺㚃凢\ue234َ煏ת蹶찇뒽ꡚ\udb37".hashCode();
 
@@ -5901,7 +5534,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public static ShadedBigDecimal scaledTenPow(int n, int n2, int n3) {
       CustomBigInteger customBigInteger = null;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
 
       while (2 < b) {
@@ -5935,7 +5567,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n2 = 0;
       boolean flag = false;
       boolean flag2 = false;
-      CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal2 = null;
       int n3 = 0;
       byte b = 4;
@@ -5943,10 +5574,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       boolean flag3;
       while (true) {
          if (b <= 2) {
-            ShadedBigDecimal shadedBigDecimal3 = this;
-            ShadedBigDecimal shadedBigDecimal4 = shadedBigDecimal;
-            ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal4;
-            return shadedBigDecimal3.add(shadedBigDecimal5);
+            return this.add(shadedBigDecimal);
          }
 
          if (3 < b) {
@@ -5968,26 +5596,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (!flag && !flag2) {
          l = (long)shadedBigDecimal2.scale - (long)shadedBigDecimal.scale;
          if (l != 0L) {
-            ShadedBigDecimal shadedBigDecimal6 = this;
-            ShadedBigDecimal shadedBigDecimal7 = shadedBigDecimal2;
-            ShadedBigDecimal shadedBigDecimal8 = shadedBigDecimal;
-            ShadedMathContext shadedMathContext2 = shadedMathContext;
-            ShadedBigDecimal shadedBigDecimal9 = shadedBigDecimal8;
-            ShadedBigDecimal shadedBigDecimal10 = shadedBigDecimal7;
-            obj2 = shadedBigDecimal6.preAlign(shadedBigDecimal10, shadedBigDecimal9, l, shadedMathContext2);
+            obj2 = this.preAlign(shadedBigDecimal2, shadedBigDecimal, l, shadedMathContext);
             matchScale((ShadedBigDecimal[])obj2);
             shadedBigDecimal2 = ((ShadedBigDecimal[])obj2)[0];
             shadedBigDecimal = ((ShadedBigDecimal[])obj2)[1];
          }
 
-         ShadedBigDecimal shadedBigDecimal11 = shadedBigDecimal2;
-         CustomBigInteger customBigInteger = shadedBigDecimal11.inflated();
-         ShadedBigDecimal shadedBigDecimal12 = shadedBigDecimal;
-         CustomBigInteger customBigInteger2 = shadedBigDecimal12.inflated();
-         CustomBigInteger customBigInteger3 = customBigInteger.add2(customBigInteger2);
-         ShadedMathContext shadedMathContext3 = shadedMathContext;
-         int scale2 = shadedBigDecimal2.scale;
-         return doRound(customBigInteger3, scale2, shadedMathContext3);
+         return doRound(shadedBigDecimal2.inflated().add2(shadedBigDecimal.inflated()), shadedBigDecimal2.scale, shadedMathContext);
       } else {
          n2 = Math.max(shadedBigDecimal2.getScale(), shadedBigDecimal.getScale());
          if (flag && flag2) {
@@ -5995,15 +5610,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
          } else {
             ShadedBigDecimal shadedBigDecimal13;
             if (flag) {
-               ShadedBigDecimal shadedBigDecimal14 = shadedBigDecimal;
-               ShadedMathContext shadedMathContext4 = shadedMathContext;
-               ShadedMathContext shadedMathContext5 = shadedMathContext4;
-               shadedBigDecimal13 = doRound(shadedBigDecimal14, shadedMathContext5);
+               shadedBigDecimal13 = doRound(shadedBigDecimal, shadedMathContext);
             } else {
-               ShadedBigDecimal shadedBigDecimal15 = shadedBigDecimal2;
-               ShadedMathContext shadedMathContext6 = shadedMathContext;
-               ShadedMathContext shadedMathContext7 = shadedMathContext6;
-               shadedBigDecimal13 = doRound(shadedBigDecimal15, shadedMathContext7);
+               shadedBigDecimal13 = doRound(shadedBigDecimal2, shadedMathContext);
             }
 
             obj = shadedBigDecimal13;
@@ -6033,7 +5642,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public long longValue() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = 4724744281663981809L ^ (long)"풍根▗幰\uab18\ud815\uef2d琌p≃Δ跪衐ᑠ䧎硈愆⸇ﮈዾ麘⓰煕݊༈햾匓".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -6058,8 +5666,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             l = (l ^ -1636015754355763303L) - -5887007974049913944L;
             if (this.scale > -64) {
                l = (l ^ 1309276307269642952L) - 6639343133441944445L;
-               ShadedBigDecimal shadedBigDecimal = this;
-               return shadedBigDecimal.toBigInteger().longValue();
+               return this.toBigInteger().longValue();
             }
 
             l = (l ^ 2035500519436649139L) - -6942787227137209013L;
@@ -6070,8 +5677,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal setScale(int n) {
-      byte b = 7;
-      return this.setScale2(n, b);
+      return this.setScale2(n, (byte)7);
    }
 
    public CustomBigInteger unscaledValue() {
@@ -6085,7 +5691,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public int compareTo2(ShadedBigDecimal shadedBigDecimal) {
       int n = 0;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       int n2 = 0;
       int n3 = 0;
@@ -6154,9 +5759,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             return 0;
          }
 
-         ShadedBigDecimal shadedBigDecimal2 = this;
-         ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-         n3 = shadedBigDecimal2.compareMagnitude(shadedBigDecimal3);
+         n3 = this.compareMagnitude(shadedBigDecimal);
          return n > 0 ? n3 : -n3;
       }
 
@@ -6165,7 +5768,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static CustomBigInteger divideAndRoundByTenPow(CustomBigInteger customBigInteger, int n, int n2) {
       byte b = 1;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       while (b > 0) {
          if (n < LONG_TEN_POWERS_TABLE.length) {
@@ -6173,15 +5775,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
 
          while (2 >= b) {
-            CustomBigInteger customBigInteger2 = customBigInteger;
-            long l = LONG_TEN_POWERS_TABLE[n];
-            customBigInteger = divideAndRound(customBigInteger2, l, n2);
+            customBigInteger = divideAndRound(customBigInteger, LONG_TEN_POWERS_TABLE[n], n2);
          }
 
          if (b > 3) {
-            CustomBigInteger customBigInteger3 = customBigInteger;
-            CustomBigInteger customBigInteger4 = bigTenToThe(n);
-            customBigInteger = divideAndRound2(customBigInteger3, customBigInteger4, n2);
+            customBigInteger = divideAndRound2(customBigInteger, bigTenToThe(n), n2);
          }
       }
 
@@ -6189,14 +5787,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal scaleByPowerOfTen(int n) {
-      long l = (long)this.scale - (long)n;
-      long l2 = l;
+      long l2 = (long)this.scale - (long)n;
       return new ShadedBigDecimal(this.intVal, this.intCompact, this.checkScale(l2), this.precision);
    }
 
    private static ShadedBigDecimal multiplyAndRound(long l, long l2, int n, ShadedMathContext shadedMathContext) {
       byte b = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       long l4 = 0L;
       long l5 = 0L;
@@ -6251,10 +5847,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (28 < b2) {
-                     ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-                     ShadedMathContext shadedMathContext2 = shadedMathContext;
-                     ShadedMathContext shadedMathContext3 = shadedMathContext2;
-                     return doRound(shadedBigDecimal2, shadedMathContext3);
+                     return doRound(shadedBigDecimal, shadedMathContext);
                   }
 
                   if (l2 >= 0L) {
@@ -6412,7 +6005,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n3 = 0;
       int n4 = 0;
       int n5 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       int n6 = 0;
       long l5 = 0L;
@@ -6512,9 +6104,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                if ((ShadedBigDecimal)obj == null) {
                   obj2 = bigMultiplyPowerTen(l5, n3 - 1);
-                  CustomBigInteger customBigInteger = (CustomBigInteger)obj2;
-                  int n10 = checkScaleNonZero(l3);
-                  obj = divideAndRound2(customBigInteger, l2, n9, n7, n10);
+                  obj = divideAndRound2((CustomBigInteger)obj2, l2, n9, n7, checkScaleNonZero(l3));
                }
             } else {
                obj = divideAndRound(l7, l2, n9, n7, checkScaleNonZero(l3));
@@ -6527,11 +6117,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                n4 = checkScaleNonZero((long)n8 - (long)n2);
                if ((l4 = longMultiplyPowerTen(l2, n4)) == -9223372036854775808L) {
                   obj4 = bigMultiplyPowerTen(l2, n4);
-                  CustomBigInteger customBigInteger2 = CustomBigInteger.valueOf(l);
-                  CustomBigInteger customBigInteger3 = (CustomBigInteger)obj4;
-                  int n11 = checkScaleNonZero(l3);
-                  CustomBigInteger customBigInteger4 = customBigInteger3;
-                  obj = divideAndRound3(customBigInteger2, customBigInteger4, n9, n7, n11);
+                  obj = divideAndRound3(CustomBigInteger.valueOf(l), (CustomBigInteger)obj4, n9, n7, checkScaleNonZero(l3));
                } else {
                   obj = divideAndRound(l, l4, n9, n7, checkScaleNonZero(l3));
                }
@@ -6549,24 +6135,18 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
             if ((ShadedBigDecimal)obj == null) {
                obj3 = bigMultiplyPowerTen(l5, n3);
-               CustomBigInteger customBigInteger5 = (CustomBigInteger)obj3;
-               int n12 = checkScaleNonZero(l3);
-               obj = divideAndRound2(customBigInteger5, l2, n9, n7, n12);
+               obj = divideAndRound2((CustomBigInteger)obj3, l2, n9, n7, checkScaleNonZero(l3));
             }
          } else {
             obj = divideAndRound(l6, l2, n9, n7, checkScaleNonZero(l3));
          }
       }
 
-      ShadedBigDecimal shadedBigDecimal = (ShadedBigDecimal)obj;
-      ShadedMathContext shadedMathContext2 = shadedMathContext;
-      ShadedMathContext shadedMathContext3 = shadedMathContext2;
-      return doRound(shadedBigDecimal, shadedMathContext3);
+      return doRound((ShadedBigDecimal)obj, shadedMathContext);
    }
 
    public int intValueExact() {
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = 1150341354913240200L ^ (long)"䙲㌛䶢\udfc6쁜㎜↺൰㳆疾\ue791옇㍟맕恹鬿ｐ\ue812੧嘐奢Ọ".hashCode();
       l = this.longValueExact();
@@ -6582,7 +6162,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal add(long l, long l2, int n) {
       long l3 = 0L;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = -3310096529464417276L ^ (long)"졇里ﰤᕈ坝絧唶몛祤뽚\ue033⛚甤ﮒោ\udcad㦯伧⥨襶퀉㬢쥬ﺊ\u05f6㹾".hashCode();
       l3 = add2(l, l2);
@@ -6606,7 +6185,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n5 = 0;
       long l = 0L;
       byte b = 5;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = 5076490793466362792L ^ (long)"컖Ɣ글馕淠\u2fe2缩紕쨷\uea39봀\uf10f\uf5fb䠴\uf489逓㽹ᱸ᱗䦙茶͋鴁캞".hashCode();
 
@@ -6724,8 +6302,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                         l = compactValFor(customBigInteger);
                         l2 = (l2 ^ 4352990907505343687L) + 7670549249251676445L;
                      } else {
-                        CustomBigInteger customBigInteger2 = customBigInteger;
-                        customBigInteger = divideAndRoundByTenPow(customBigInteger2, n3, n);
+                        customBigInteger = divideAndRoundByTenPow(customBigInteger, n3, n);
                         l2 = l2 - 599075738581133675L ^ -2628543551113555771L;
                      }
                   } else {
@@ -6793,8 +6370,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   flag = false;
                   l2 = l2 + 6161692360911097213L ^ -3380768985078674931L;
                } else {
-                  CustomBigInteger customBigInteger3 = customBigInteger;
-                  n2 = bigDigitLength(customBigInteger3);
+                  n2 = bigDigitLength(customBigInteger);
                   l2 = (l2 ^ 2283822359230761543L) + -6119700472971133919L;
                }
             } else {
@@ -6807,7 +6383,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public float floatValue() {
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -8064802883141762564L ^ (long)"ᚿﾣ剤䏆ꦂ\uee65깲⬋๘뷠죿\ue6dd쐯䈘臟炎ేఉ鶽蕧밠✊\u0ad9ﾡ".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -6855,7 +6430,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal divide6(CustomBigInteger customBigInteger, int n, CustomBigInteger customBigInteger2, int n2, long l, ShadedMathContext shadedMathContext) {
       CustomBigInteger customBigInteger3 = null;
-      CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal shadedBigDecimal = null;
       int n3 = 0;
       int n4 = 0;
@@ -6870,19 +6444,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
       outerLoop:
       while (true) {
          if (b <= 7) {
-            CustomBigInteger customBigInteger5 = customBigInteger4;
-            CustomBigInteger customBigInteger6 = customBigInteger2;
-            int n8 = checkScaleNonZero(l);
-            CustomBigInteger customBigInteger7 = customBigInteger6;
-            shadedBigDecimal = divideAndRound3(customBigInteger5, customBigInteger7, n7, n5, n8);
+            shadedBigDecimal = divideAndRound3(customBigInteger4, customBigInteger2, n7, n5, checkScaleNonZero(l));
             l2 = l2 + 5260359153895303655L ^ 6007148528073555874L;
          } else if (11 <= b) {
             if (11 < b) {
                if (13 > b) {
-                  ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-                  ShadedMathContext shadedMathContext2 = shadedMathContext;
-                  ShadedMathContext shadedMathContext3 = shadedMathContext2;
-                  return doRound(shadedBigDecimal2, shadedMathContext3);
+                  return doRound(shadedBigDecimal, shadedMathContext);
                }
 
                if (b <= 13) {
@@ -6895,9 +6462,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                continue;
             }
 
-            CustomBigInteger customBigInteger8 = customBigInteger;
-            CustomBigInteger customBigInteger9 = customBigInteger2;
-            if (compareMagnitudeNormalized2(customBigInteger8, n, customBigInteger9, n2) > 0) {
+            if (compareMagnitudeNormalized2(customBigInteger, n, customBigInteger2, n2) > 0) {
                l2 = l2 + 4118810767925832443L ^ 1889297368207199168L;
                continue;
             }
@@ -6905,11 +6470,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             l2 = (l2 ^ -894008434756880173L) + 4915230379831748837L;
          } else {
             if (9 > b) {
-               CustomBigInteger customBigInteger10 = customBigInteger;
-               CustomBigInteger customBigInteger11 = customBigInteger3;
-               int n9 = checkScaleNonZero(l);
-               CustomBigInteger customBigInteger12 = customBigInteger11;
-               shadedBigDecimal = divideAndRound3(customBigInteger10, customBigInteger12, n7, n5, n9);
+               shadedBigDecimal = divideAndRound3(customBigInteger, customBigInteger3, n7, n5, checkScaleNonZero(l));
                l2 = (l2 ^ 8398653235573638293L) - -8116658868709634606L;
                continue;
             }
@@ -6969,7 +6530,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public int hashCode() {
       int n = 0;
       long l = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = 8484146284776329336L ^ (long)"能빭隁偮ᇕ꡶脐铊觡峦\ue5ec过䝉\ue92e炷朝\udd50ⲕ\uf877㶕ꂣ쬍쐘㍃".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -6998,14 +6558,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean unsignedLongCompareEq(long l, long l2) {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       return l + -9223372036854775808L >= l2 + -9223372036854775808L;
    }
 
    private int checkScale(long l) {
       int n = 0;
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
       long l2 = 0L;
       l2 = 8418736344408709582L ^ (long)"菬䩛傂瘠ᴋଢ⩷拵\ue639髽\uf37f壂甙\uebf2䓆恖鯷沚ᝉ뼶ಏ鞉霿\uf088\u0a00".hashCode();
@@ -7052,13 +6610,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide3(ShadedBigDecimal shadedBigDecimal, int n) {
-      int scale2 = this.scale;
-      return this.divide(shadedBigDecimal, scale2, n);
+      return this.divide(shadedBigDecimal, this.scale, n);
    }
 
    private static int compareMagnitudeNormalized(long l, int n, CustomBigInteger customBigInteger, int n2) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
       long l2 = 0L;
       l2 = 557676334202136214L ^ (long)"Ἰ㨷쏂㙏騁氬킧꿽㌔숻㨙곾씮엇逧̥\ueaa5뺩ꦭ\ue1a4᧦﹢\u2d7a㘀ᐓ\ud918\uea6b\ue443".hashCode();
@@ -7099,9 +6655,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      CustomBigInteger customBigInteger2 = bigMultiplyPowerTen(l, -n3);
-      CustomBigInteger customBigInteger3 = customBigInteger;
-      return customBigInteger2.compareMagnitude(customBigInteger3);
+      return bigMultiplyPowerTen(l, -n3).compareMagnitude(customBigInteger);
    }
 
    private static void print(String str, ShadedBigDecimal shadedBigDecimal) {
@@ -7110,7 +6664,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public double doubleValue() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -7427641822093929465L ^ (long)"ዬ\udbcb闚⫺⫋㏒ꤵ囨돉縂뀲뎳ᥠ餇ⴡओ鳴꾕䛽龎쵳\uda64駀གྷ".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -7158,7 +6711,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private CustomBigInteger bigMultiplyPowerTen(int n) {
       byte b = 1;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -5869902278384555143L ^ (long)"၁琘趸呮ᦌꞼ歧㔤푲\udab0ﲐ䷯\ue41d펱︐쓘挓邒乵銤ꇆ".hashCode();
 
@@ -7167,9 +6719,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             l = (l ^ 6007411298034649307L) + -3543460446866585408L;
             if (this.intCompact != -9223372036854775808L) {
                l = (l ^ -7170374584901642061L) + -2294070485122013170L;
-               CustomBigInteger customBigInteger = bigTenToThe(n);
-               long intCompact2 = this.intCompact;
-               return customBigInteger.multiply(intCompact2);
+               return bigTenToThe(n).multiply(this.intCompact);
             }
 
             l = (l ^ 69201132513513616L) + 3106873899323444412L;
@@ -7179,12 +6729,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
       }
 
       if (3 >= b) {
-         CustomBigInteger intVal2 = this.intVal;
-         CustomBigInteger customBigInteger2 = bigTenToThe(n);
-         return intVal2.multiply2(customBigInteger2);
+         return this.intVal.multiply2(bigTenToThe(n));
       } else {
-         ShadedBigDecimal shadedBigDecimal = this;
-         return shadedBigDecimal.inflated();
+         return this.inflated();
       }
    }
 
@@ -7194,16 +6741,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal[] divideAndRemainder(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
       Object obj = null;
-      CustomBigInteger.getOpaqueStateTag();
       ShadedBigDecimal[] shadedBigDecimals = null;
       byte b = 0;
 
       while (true) {
          while (3 < b) {
             if (b < 5) {
-               ShadedBigDecimal shadedBigDecimal2 = this;
-               ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal;
-               return shadedBigDecimal2.divideAndRemainder(shadedBigDecimal3);
+               return this.divideAndRemainder(shadedBigDecimal);
             }
 
             if (5 >= b) {
@@ -7211,24 +6755,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                while (true) {
                   while (1 > b) {
-                     ShadedBigDecimal[] shadedBigDecimals2 = shadedBigDecimals;
-                     ShadedBigDecimal shadedBigDecimal4 = (ShadedBigDecimal)obj;
-                     ShadedBigDecimal shadedBigDecimal5 = shadedBigDecimal;
-                     ShadedMathContext shadedMathContext2 = shadedMathContext;
-                     ShadedBigDecimal shadedBigDecimal6 = shadedBigDecimal5;
-                     shadedBigDecimals2[0] = shadedBigDecimal4.divideToIntegralValue(shadedBigDecimal6, shadedMathContext2);
+                     shadedBigDecimals[0] = ((ShadedBigDecimal)obj).divideToIntegralValue(shadedBigDecimal, shadedMathContext);
                   }
 
                   if (b > 1) {
                      return shadedBigDecimals;
                   }
 
-                  ShadedBigDecimal[] shadedBigDecimals3 = shadedBigDecimals;
-                  ShadedBigDecimal shadedBigDecimal7 = (ShadedBigDecimal)obj;
-                  ShadedBigDecimal shadedBigDecimal8 = shadedBigDecimals[0];
-                  ShadedBigDecimal shadedBigDecimal9 = shadedBigDecimal;
-                  ShadedBigDecimal shadedBigDecimal10 = shadedBigDecimal8.multiply(shadedBigDecimal9);
-                  shadedBigDecimals3[1] = shadedBigDecimal7.subtract(shadedBigDecimal10);
+                  shadedBigDecimals[1] = ((ShadedBigDecimal)obj).subtract(shadedBigDecimals[0].multiply(shadedBigDecimal));
                }
             }
 
@@ -7245,7 +6779,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n = 0;
       long l = 0L;
       byte b = 2;
-      CustomBigInteger.getOpaqueStateTag();
       long l2 = 0L;
       l2 = -4888621487015650810L ^ (long)"弬Ặ틬烍铰㙜똦ୈ簂蚴雦싈삘ꪇ醤\uf6b7갱\ude81⊔㤂忐諤눫".hashCode();
 
@@ -7296,13 +6829,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal divide2(ShadedBigDecimal shadedBigDecimal, CustomRoundingMode customRoundingMode) {
       int oldMode = customRoundingMode.oldMode;
-      int scale2 = this.scale;
-      return this.divide(shadedBigDecimal, scale2, oldMode);
+      return this.divide(shadedBigDecimal, this.scale, oldMode);
    }
 
    public ShadedBigDecimal(double d, ShadedMathContext shadedMathContext) {
        super();
-       int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       if (!Double.isInfinite(d) && !Double.isNaN(d)) {
          long l = Double.doubleToLongBits(d);
          int n = l >> 63 == 0L ? 1 : -1;
@@ -7327,15 +6858,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
                customBigInteger = l3 == -9223372036854775808L ? INFLATED_BIGINT : null;
             } else {
                if (n2 < 0) {
-                  CustomBigInteger customBigInteger2 = CustomBigInteger.valueOf(5L);
-                  int n4 = -n2;
-                  int n5 = n4;
-                  customBigInteger = customBigInteger2.pow(n5).multiply(l3);
+                  customBigInteger = CustomBigInteger.valueOf(5L).pow(-n2).multiply(l3);
                   n3 = -n2;
                } else {
                   short s = 29601;
-                  CustomBigInteger customBigInteger3 = CustomBigInteger.valueOf(2L);
-                  customBigInteger = customBigInteger3.pow(n2).multiply(l3);
+                  customBigInteger = CustomBigInteger.valueOf(2L).pow(n2).multiply(l3);
                }
 
                l3 = compactValFor(customBigInteger);
@@ -7389,7 +6916,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static long multiply2(long l, long l2) {
       long l3 = 0L;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       long l5 = 0L;
       byte b = 1;
@@ -7445,7 +6971,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
       ShadedBigDecimal shadedBigDecimal2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       int n = 0;
       int n2 = 0;
@@ -7474,9 +6999,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (b > 18) {
-                     ShadedMathContext shadedMathContext2 = shadedMathContext;
                      CustomBigInteger intVal2 = shadedBigDecimal.intVal;
-                     return divide6(shadedBigDecimal2.intVal, n3, intVal2, n, l, shadedMathContext2);
+                     return divide6(shadedBigDecimal2.intVal, n3, intVal2, n, l, shadedMathContext);
                   }
 
                   n2 = shadedMathContext.precision;
@@ -7530,13 +7054,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
                if (b > 1) {
                   if (b <= 2) {
-                     ShadedMathContext shadedMathContext3 = shadedMathContext;
-                     return divide(shadedBigDecimal2.intCompact, n3, shadedBigDecimal.intVal, n, l, shadedMathContext3);
+                     return divide(shadedBigDecimal2.intCompact, n3, shadedBigDecimal.intVal, n, l, shadedMathContext);
                   }
 
-                  ShadedBigDecimal shadedBigDecimal3 = this;
-                  ShadedBigDecimal shadedBigDecimal4 = shadedBigDecimal;
-                  return shadedBigDecimal3.divide(shadedBigDecimal4);
+                  return this.divide(shadedBigDecimal);
                }
 
                if (shadedBigDecimal.intCompact != -9223372036854775808L) {
@@ -7548,9 +7069,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
 
             if (4 >= b) {
-               ShadedMathContext shadedMathContext4 = shadedMathContext;
                long intCompact2 = shadedBigDecimal.intCompact;
-               return divide8(shadedBigDecimal2.intVal, n3, intCompact2, n, l, shadedMathContext4);
+               return divide8(shadedBigDecimal2.intVal, n3, intCompact2, n, l, shadedMathContext);
             }
 
             if (b < 6) {
@@ -7582,7 +7102,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    private static boolean commonNeedIncrement(int n, int n2, int n3, boolean flag) {
       int n4 = 0;
       byte b = 4;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
 
       outerLoop:
       while (true) {
@@ -7696,7 +7215,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal add(ShadedBigDecimal shadedBigDecimal) {
       byte b = 4;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -7798792888791929766L ^ (long)"弄읊\udfa3껣磑♛⋆ᙶݜ稐ᑯ❬ꬰ㬏㫣᳧ŕꝅ淅\ueef4ಖ䥗".hashCode();
 
@@ -7755,7 +7273,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       CustomBigInteger customBigInteger3 = null;
       int n6 = 0;
       int n7 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       long l3 = 0L;
       byte b = 17;
       long l4 = 0L;
@@ -7781,9 +7298,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   l4 = l5 - 630293965433293903L;
                } else {
                   if (b > 19) {
-                     CustomBigInteger customBigInteger4 = customBigInteger;
-                     int n8 = checkScaleNonZero(l2);
-                     shadedBigDecimal = divideAndRound2(customBigInteger4, l3, n3, n5, n8);
+                     shadedBigDecimal = divideAndRound2(customBigInteger, l3, n3, n5, checkScaleNonZero(l2));
                      l4 = (l4 ^ 3600228780316918447L) - -3665097981159587185L;
                      continue;
                   }
@@ -7809,11 +7324,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
          } else if (12 <= b) {
             if (12 >= b) {
-               CustomBigInteger customBigInteger5 = customBigInteger;
-               CustomBigInteger customBigInteger6 = customBigInteger2;
-               int n9 = checkScaleNonZero(l2);
-               CustomBigInteger customBigInteger7 = customBigInteger6;
-               shadedBigDecimal = divideAndRound3(customBigInteger5, customBigInteger7, n3, n5, n9);
+               shadedBigDecimal = divideAndRound3(customBigInteger, customBigInteger2, n3, n5, checkScaleNonZero(l2));
                l4 = (l4 ^ 7764452476933360328L) + -2481511956487017319L;
                continue;
             }
@@ -7844,9 +7355,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (b > 2) {
-                     CustomBigInteger customBigInteger8 = customBigInteger3;
-                     int n10 = checkScaleNonZero(l2);
-                     shadedBigDecimal = divideAndRound2(customBigInteger8, l, n3, n5, n10);
+                     shadedBigDecimal = divideAndRound2(customBigInteger3, l, n3, n5, checkScaleNonZero(l2));
                      l4 = l4 + 2089479033118558807L ^ 230689758497535280L;
                      continue outerLoop;
                   }
@@ -7854,9 +7363,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   customBigInteger3 = bigMultiplyPowerTen2(customBigInteger, n7);
                   l4 = l4 - -1903662106629590545L ^ -4726899936627579046L;
                } else {
-                  CustomBigInteger customBigInteger9 = customBigInteger;
-                  int n11 = checkScaleNonZero(l2);
-                  shadedBigDecimal = divideAndRound2(customBigInteger9, l, n3, n5, n11);
+                  shadedBigDecimal = divideAndRound2(customBigInteger, l, n3, n5, checkScaleNonZero(l2));
                   l4 = l4 + -7838309556647293859L ^ 5456440390294581074L;
                }
             }
@@ -7894,10 +7401,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-      ShadedMathContext shadedMathContext2 = shadedMathContext;
-      ShadedMathContext shadedMathContext3 = shadedMathContext2;
-      return doRound(shadedBigDecimal2, shadedMathContext3);
+      return doRound(shadedBigDecimal, shadedMathContext);
    }
 
    public ShadedBigDecimal plus(ShadedMathContext shadedMathContext) {
@@ -7906,7 +7410,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public int intValue() {
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       l = -6731990366617168951L ^ (long)"ᒥ腯ℾ鉠쟫뵟涒㽹០䥖⣿䚁㛊㞭౻ᖹ蟰콓鿼骒\uf18cপ⩜檛".hashCode();
       if (this.intCompact == -9223372036854775808L) {
@@ -7930,7 +7433,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static int compareMagnitudeNormalized3(long l, int n, long l2, int n2) {
       int n3 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 2;
       long l3 = 0L;
       l3 = 4533571628604779388L ^ (long)"栣㛫攘鉮鼺哩怖Ị툝订믂\u0005ញឦ㜜䫔쐤䗯愮露ᖦ㪖㔎࣊뷏\ud92a靈".hashCode();
@@ -7998,7 +7500,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n2 = 0;
       boolean flag = false;
       ShadedMutableBigInteger shadedMutableBigInteger = null;
-      CustomBigInteger.getOpaqueStateTag();
       ShadedMutableBigInteger shadedMutableBigInteger2 = null;
       byte b = 3;
       long l3 = 0L;
@@ -8040,10 +7541,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                l3 = (l3 ^ -2164135794927010383L) + -6327941620756097959L;
             }
 
-            ShadedMutableBigInteger shadedMutableBigInteger3 = shadedMutableBigInteger;
-            ShadedMutableBigInteger shadedMutableBigInteger4 = shadedMutableBigInteger2;
-            ShadedMutableBigInteger shadedMutableBigInteger5 = shadedMutableBigInteger4;
-            l2 = shadedMutableBigInteger3.divide(l, shadedMutableBigInteger5);
+            l2 = shadedMutableBigInteger.divide(l, shadedMutableBigInteger2);
             l3 = l3 + -8060106705910046533L ^ -7999957544237883590L;
          }
       }
@@ -8051,9 +7549,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       flag = flag2;
       n2 = l < 0L ? -customBigInteger.signum : customBigInteger.signum;
       if (!flag && needIncrement(l, n, n2, shadedMutableBigInteger2, l2)) {
-         ShadedMutableBigInteger shadedMutableBigInteger6 = shadedMutableBigInteger2;
-         ShadedMutableBigInteger one = ShadedMutableBigInteger.ONE;
-         shadedMutableBigInteger6.add(one);
+         shadedMutableBigInteger2.add(ShadedMutableBigInteger.ONE);
       }
 
       return shadedMutableBigInteger2.toBigInteger(n2);
@@ -8063,7 +7559,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       ShadedBigDecimal shadedBigDecimal = null;
       int n3 = 0;
       int n4 = 0;
-      CustomBigInteger.getOpaqueStateTag();
       byte b = 1;
       long l3 = 0L;
       l3 = -490999574537811801L ^ (long)"칠羠\ue7e7켱ẞᎶ廳辏㚵晁倕Ὧ螾뗿暌셡\ue5de鬾崫ểࡇ".hashCode();
@@ -8115,16 +7610,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
          }
       }
 
-      ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal;
-      ShadedMathContext shadedMathContext2 = shadedMathContext;
-      ShadedMathContext shadedMathContext3 = shadedMathContext2;
-      return doRound(shadedBigDecimal2, shadedMathContext3);
+      return doRound(shadedBigDecimal, shadedMathContext);
    }
 
    @Override
    public boolean equals(Object obj) {
       Object obj2 = null;
-      CustomBigInteger.getOpaqueStateTag();
       long l = 0L;
       long l2 = 0L;
       long l3 = 0L;
@@ -8146,11 +7637,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (l != -9223372036854775808L) {
                      return l == compactValFor(this.intVal);
                   } else {
-                     ShadedBigDecimal shadedBigDecimal = this;
-                     CustomBigInteger customBigInteger = shadedBigDecimal.inflated();
-                     ShadedBigDecimal shadedBigDecimal2 = (ShadedBigDecimal)obj2;
-                     CustomBigInteger customBigInteger2 = shadedBigDecimal2.inflated();
-                     return customBigInteger.equals(customBigInteger2);
+                     return this.inflated().equals(((ShadedBigDecimal)obj2).inflated());
                   }
                } else {
                   l3 = l3 + -6727957025883883914L ^ -5392912268004256844L;
@@ -8195,7 +7682,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
       boolean flag = false;
       int n4 = 0;
       byte b = 1;
-      CustomBigInteger.getOpaqueStateTag();
       long l4 = 0L;
       l4 = 8498860236473603233L ^ (long)"뀇罛\ua9ce⌢钄櫺\ue919弚⢷&蜵ƙΪ뼮被ꝸእѤ얡\uddca⛠".hashCode();
 
@@ -8228,9 +7714,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          n3 = n2;
          l2 = longMultiplyPowerTen(l, n4);
          if (l2 == -9223372036854775808L) {
-            CustomBigInteger customBigInteger2 = customBigInteger;
-            CustomBigInteger customBigInteger3 = bigMultiplyPowerTen(l, n4);
-            obj = customBigInteger2.add2(customBigInteger3);
+            obj = customBigInteger.add2(bigMultiplyPowerTen(l, n4));
          } else {
             obj = customBigInteger.add(l2);
          }
@@ -8244,9 +7728,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (flag) {
          shadedBigDecimal = new ShadedBigDecimal((CustomBigInteger)obj, -9223372036854775808L, n3, 0);
       } else {
-         CustomBigInteger customBigInteger4 = (CustomBigInteger)obj;
-         byte b2 = 0;
-         shadedBigDecimal = valueOf(customBigInteger4, n3, b2);
+         shadedBigDecimal = valueOf((CustomBigInteger)obj, n3, (byte)0);
       }
 
       return shadedBigDecimal;
@@ -8254,7 +7736,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(long l, ShadedMathContext shadedMathContext) {
        super();
-      CustomBigInteger.getOpaqueStateTag();
       int precision2 = shadedMathContext.precision;
       int oldMode = shadedMathContext.roundingMode.oldMode;
       int n = 0;

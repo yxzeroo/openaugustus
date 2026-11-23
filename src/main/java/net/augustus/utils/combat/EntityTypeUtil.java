@@ -65,9 +65,7 @@ public class EntityTypeUtil {
 
    public static boolean isAlertTarget(Entity entity) {
       if (isPlayer(entity)) {
-         AlertCommand alertCommand = Augustus.getInstance().getCommandManager().alertCommand;
-         String name = entity.getName();
-         if (alertCommand.hasAlert(name)) {
+         if (Augustus.getInstance().getCommandManager().alertCommand.hasAlert(entity.getName())) {
             return true;
          }
       }

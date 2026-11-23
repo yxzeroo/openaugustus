@@ -39,16 +39,11 @@ public class KeyStrokeTile {
 
       this.wasKeyDown = this.keyBinding.isKeyDown();
       float easedProgress = (float)this.pressAnimation.getEasedProgress();
-      byte b = 0;
-      int colorInt = ClientManagers.moduleManager.keyStrokes.backgroundColorPressed.getColorInt(b);
-      byte b2 = 0;
-      int n3 = ColorUtil.lerpRgba(colorInt, ClientManagers.moduleManager.keyStrokes.backgroundColor.getColorInt(b2), easedProgress);
-      byte b3 = 0;
-      colorInt = ClientManagers.moduleManager.keyStrokes.keyColorPressed.getColorInt(b3);
-      byte b4 = 0;
-      int n4 = ColorUtil.lerpRgba(colorInt, ClientManagers.moduleManager.keyStrokes.keyColor.getColorInt(b4), easedProgress);
-      boolean isBlurActive = ClientManagers.moduleManager.keyStrokes.blurShadowSettings.isBlurActive();
-      BlurShadowManager.enableOneShotPass(isBlurActive, ClientManagers.moduleManager.keyStrokes.blurShadowSettings.isShadowActive());
+      int colorInt = ClientManagers.moduleManager.keyStrokes.backgroundColorPressed.getColorInt((byte)0);
+      int n3 = ColorUtil.lerpRgba(colorInt, ClientManagers.moduleManager.keyStrokes.backgroundColor.getColorInt((byte)0), easedProgress);
+      colorInt = ClientManagers.moduleManager.keyStrokes.keyColorPressed.getColorInt((byte)0);
+      int n4 = ColorUtil.lerpRgba(colorInt, ClientManagers.moduleManager.keyStrokes.keyColor.getColorInt((byte)0), easedProgress);
+      BlurShadowManager.enableOneShotPass(ClientManagers.moduleManager.keyStrokes.blurShadowSettings.isBlurActive(), ClientManagers.moduleManager.keyStrokes.blurShadowSettings.isShadowActive());
       BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderBackgroundPass(n, n2, n3, shaderRenderPass));
       this.fontRenderer
          .drawString2(
@@ -84,12 +79,6 @@ public class KeyStrokeTile {
    }
 
    private void renderBackgroundPass(int n, int n2, int n3, ShaderRenderPass shaderRenderPass) {
-      int n4 = n + this.offsetX;
-      int n5 = n2 + this.offsetY;
-      int n6 = n + this.offsetX + this.width;
-      int n7 = n2 + this.offsetY + this.height;
-      BlurShadowSettings blurShadowSettings = ClientManagers.moduleManager.keyStrokes.blurShadowSettings;
-      int n8 = ColorUtil.resolvePassColor(shaderRenderPass, n3);
-      RenderUtil.drawRect3(n4, n5, n6, n7, blurShadowSettings.resolvePassColor(shaderRenderPass, n8));
+      RenderUtil.drawRect3(n + this.offsetX, n2 + this.offsetY, n + this.offsetX + this.width, n2 + this.offsetY + this.height, ClientManagers.moduleManager.keyStrokes.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n3)));
    }
 }

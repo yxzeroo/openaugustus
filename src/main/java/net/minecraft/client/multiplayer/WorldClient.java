@@ -115,8 +115,7 @@ public class WorldClient extends World {
 
    private boolean isPlayerActing() {
       if (this.mc.playerController instanceof PlayerControllerOF) {
-         PlayerControllerOF playerController = (PlayerControllerOF)this.mc.playerController;
-         return playerController.isActing();
+         return ((PlayerControllerOF)this.mc.playerController).isActing();
       } else {
          return false;
       }
@@ -286,8 +285,7 @@ public class WorldClient extends World {
             int n2 = chunkCoordIntPair.chunkXPos * 16;
             int n3 = chunkCoordIntPair.chunkZPos * 16;
             this.theProfiler.startSection("getChunk");
-            Chunk chunkFromChunkCoords = this.getChunkFromChunkCoords(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos);
-            this.playMoodSoundAndCheckLight(n2, n3, chunkFromChunkCoords);
+            this.playMoodSoundAndCheckLight(n2, n3, this.getChunkFromChunkCoords(chunkCoordIntPair.chunkXPos, chunkCoordIntPair.chunkZPos));
             this.theProfiler.endSection();
             this.previousActiveChunkSet.add(chunkCoordIntPair);
             if (++n >= 10) {
@@ -373,9 +371,7 @@ public class WorldClient extends World {
       this.calculateInitialSkylight();
       this.calculateInitialWeather();
       if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class) {
-         Minecraft mc2 = this.mc;
-         PlayerControllerOF playerControllerOF = new PlayerControllerOF(this.mc, netHandlerPlayClient);
-         mc2.playerController = playerControllerOF;
+         this.mc.playerController = new PlayerControllerOF(this.mc, netHandlerPlayClient);
          CustomGuis.setPlayerControllerOF((PlayerControllerOF)this.mc.playerController);
       }
    }

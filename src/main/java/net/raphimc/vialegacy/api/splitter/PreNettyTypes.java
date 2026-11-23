@@ -27,8 +27,7 @@ public class PreNettyTypes {
    }
 
    public static void readItemStack1_3_1(ByteBuf buffer) {
-      short s = buffer.readShort();
-      if (s >= 0) {
+      if (buffer.readShort() >= 0) {
          buffer.readByte();
          buffer.readShort();
          readTag(buffer);
@@ -47,16 +46,14 @@ public class PreNettyTypes {
    }
 
    public static void readItemStackb1_2(ByteBuf buffer) {
-      short s = buffer.readShort();
-      if (s >= 0) {
+      if (buffer.readShort() >= 0) {
          buffer.readByte();
          buffer.readShort();
       }
    }
 
    public static void readItemStackb1_1(ByteBuf buffer) {
-      short s = buffer.readShort();
-      if (s >= 0) {
+      if (buffer.readShort() >= 0) {
          buffer.readByte();
          buffer.readByte();
       }
@@ -86,8 +83,7 @@ public class PreNettyTypes {
 
    public static void readEntityDataList1_4_4(ByteBuf buffer) {
       for (byte b = buffer.readByte(); b != 127; b = buffer.readByte()) {
-         int i = (b & 224) >> 5;
-         switch (i) {
+         switch ((b & 224) >> 5) {
             case 0:
                buffer.readByte();
                break;
@@ -116,8 +112,7 @@ public class PreNettyTypes {
 
    public static void readEntityDataList1_4_2(ByteBuf buffer) {
       for (byte b = buffer.readByte(); b != 127; b = buffer.readByte()) {
-         int i = (b & 224) >> 5;
-         switch (i) {
+         switch ((b & 224) >> 5) {
             case 0:
                buffer.readByte();
                break;
@@ -134,8 +129,7 @@ public class PreNettyTypes {
                readString(buffer);
                break;
             case 5:
-               short x = buffer.readShort();
-               if (x > -1) {
+               if (buffer.readShort() > -1) {
                   buffer.readByte();
                   buffer.readShort();
                }
@@ -150,8 +144,7 @@ public class PreNettyTypes {
 
    public static void readEntityDataListb1_5(ByteBuf buffer) {
       for (byte b = buffer.readByte(); b != 127; b = buffer.readByte()) {
-         int i = (b & 224) >> 5;
-         switch (i) {
+         switch ((b & 224) >> 5) {
             case 0:
                buffer.readByte();
                break;
@@ -182,8 +175,7 @@ public class PreNettyTypes {
 
    public static void readEntityDataListb1_3(ByteBuf buffer) {
       for (byte b = buffer.readByte(); b != 127; b = buffer.readByte()) {
-         int i = (b & 224) >> 5;
-         switch (i) {
+         switch ((b & 224) >> 5) {
             case 0:
                buffer.readByte();
                break;
@@ -214,8 +206,7 @@ public class PreNettyTypes {
 
    public static void readEntityDataListb1_2(ByteBuf buffer) {
       for (byte b = buffer.readByte(); b != 127; b = buffer.readByte()) {
-         int i = (b & 224) >> 5;
-         switch (i) {
+         switch ((b & 224) >> 5) {
             case 0:
                buffer.readByte();
                break;

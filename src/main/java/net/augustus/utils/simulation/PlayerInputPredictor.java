@@ -41,8 +41,7 @@ public class PlayerInputPredictor implements MC {
       if (EntityMovementPredictor.hasInvalidPositionHistory(clientPlayer)) {
          return null;
       } else {
-         float f = 0.2F;
-         HashMap map = computeCandidateVelocities(clientPlayer, f);
+         HashMap map = computeCandidateVelocities(clientPlayer, 0.2F);
          Vec3 vec = new Vec3(
             MathHelper.clamp_double(clientPlayer.realPosX - clientPlayer.predictedPosX, -20.0, 20.0),
             MathHelper.clamp_double(clientPlayer.posY - clientPlayer.lastTickPosY, -20.0, 20.0),
@@ -111,9 +110,7 @@ public class PlayerInputPredictor implements MC {
       for (int i = -1; i <= 1; i++) {
          for (int j = -1; j <= 1; j++) {
             Vec3 vec = new Vec3((double)i, 0.0, (double)j);
-            Vec3 vec2 = normalizeMoveInput(clientPlayer, vec);
-            float rotationYaw = clientPlayer.rotationYaw;
-            map.put(rotateInputVector(vec2, f, rotationYaw), vec);
+            map.put(rotateInputVector(normalizeMoveInput(clientPlayer, vec), f, clientPlayer.rotationYaw), vec);
          }
       }
 

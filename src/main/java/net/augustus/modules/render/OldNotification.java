@@ -11,54 +11,44 @@ import net.augustus.Augustus;
 import net.augustus.clickgui.ClickGuiScreen;
 import net.augustus.utils.SystemTrayNotifier;
 import net.augustus.settings.SettingVisibilityCondition;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 
 public class OldNotification extends Module {
-   public final BooleansSetting modes;
-   public final BooleansSetting side;
-   public final StringValue y;
-   public final StringValue animationTime;
-   public final StringValue animationDuration;
+   public final StringValue modes;
+   public final StringValue side;
+   public final DoubleValue y;
+   public final DoubleValue animationTime;
+   public final DoubleValue animationDuration;
    public final ColorSetting color2;
    public final BlurShadowSettings blurShadowSettings;
    public java.util.ArrayList activeNotifications;
 
    public OldNotification() {
        super("OldNotification", "AlteBenachrichtigung", new Color(126, 133, 222), Categorys.RENDER);
-      this.modes = new BooleansSetting(this, "Modes", "Windows", new String[]{"Windows", "Basic"});
-      BooleansSetting booleansSetting = new BooleansSetting(this, "Side", "Right", new String[]{"Left", "Right"});
-      SettingVisibilityCondition condition = () -> this.isSideVisible();
-      this.side = (BooleansSetting)booleansSetting.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "Y", 100.0, 0.0, 100.0, 2);
+      this.modes = new StringValue(this, "Modes", "Windows", new String[]{"Windows", "Basic"});
+      this.side = (StringValue)new StringValue(this, "Side", "Right", new String[]{"Left", "Right"}).withVisibility(() -> this.isSideVisible());
+      DoubleValue stringValue = new DoubleValue(this, "Y", 100.0, 0.0, 100.0, 2);
       SettingVisibilityCondition condition2 = () -> {
          return this.modes.getSelectedValue().equals("Basic");
       };
       this.y = stringValue.visibleWhen(condition2);
-      StringValue stringValue2 = new StringValue(this, "AnimationTime", 400.0, 0.0, 1000.0, 0);
-      SettingVisibilityCondition condition3 = () -> this.isAnimationTimeVisible();
-      this.animationTime = stringValue2.visibleWhen(condition3);
-      StringValue stringValue3 = new StringValue(this, "AnimationDuration", 2000.0, 0.0, 5000.0, 0);
-      SettingVisibilityCondition condition4 = () -> this.isAnimationDurationVisible();
-      this.animationDuration = stringValue3.visibleWhen(condition4);
+      this.animationTime = new DoubleValue(this, "AnimationTime", 400.0, 0.0, 1000.0, 0).visibleWhen(() -> this.isAnimationTimeVisible());
+      this.animationDuration = new DoubleValue(this, "AnimationDuration", 2000.0, 0.0, 5000.0, 0).visibleWhen(() -> this.isAnimationDurationVisible());
       ColorSetting colorSetting = new ColorSetting(this, "Color", Augustus.getInstance().getClientColor());
       SettingVisibilityCondition condition5 = () -> {
          return this.modes.getSelectedValue().equals("Basic");
       };
       this.color2 = (ColorSetting)colorSetting.withVisibility(condition5);
-      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
-      Color black = Color.black;
-      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.blurShadowSettings = new BlurShadowSettings(this).withCustomShadowColor(Color.black);
       this.activeNotifications = new java.util.ArrayList();
    }
 
    public void pushModuleToggleNotification(Module module) {
-      String selectedValue = this.modes.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.modes.getSelectedValue()) {
          case "Windows":
             String str = "Module (" + module.getName2() + ") Notification";
-            StringBuilder sb = new StringBuilder().append(module.getName2());
-            StringBuilder sb2 = sb.append(" toggled ");
+            StringBuilder sb2 = new StringBuilder().append(module.getName2()).append(" toggled ");
             String str2;
             if (module.isToggled()) {
                str2 = "on";
@@ -66,8 +56,7 @@ public class OldNotification extends Module {
                str2 = "off";
             }
 
-            String str3 = sb2.append(str2).toString();
-            SystemTrayNotifier.displayNotification(str, str3);
+            SystemTrayNotifier.displayNotification(str, sb2.append(str2).toString());
             break;
          case "Basic":
             if (!(mc.currentScreen instanceof ClickGuiScreen)) {
@@ -85,8 +74,7 @@ public class OldNotification extends Module {
                int n4 = (int)(FontManager.esp32.getStringWidth(str4) + 10.0F);
                int value = (int)this.animationTime.getValue();
                int value2 = (int)this.animationDuration.getValue();
-               byte b = 0;
-               activeNotifications2.add(0, new ToggleNotification(n2, n3, n4, 60, module, value, value2, this.color2.getColorInt(b)));
+               activeNotifications2.add(0, new ToggleNotification(n2, n3, n4, 60, module, value, value2, this.color2.getColorInt((byte)0)));
             }
       }
    }
@@ -102,8 +90,7 @@ public class OldNotification extends Module {
          if (Math.abs(System.currentTimeMillis() - toggleNotification.getCreatedTime()) > (long)toggleNotification.getDisplayDuration()) {
             this.activeNotifications.remove(toggleNotification);
          } else {
-            BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
-            toggleNotification.render(f, blurShadowSettings2);
+            toggleNotification.render(f, this.blurShadowSettings);
             flag = true;
          }
       }

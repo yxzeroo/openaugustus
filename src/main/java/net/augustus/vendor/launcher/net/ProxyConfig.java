@@ -10,7 +10,6 @@ public class ProxyConfig {
    public final String host;
    public final int port;
    public final ProxyType type;
-   private static int[] controlFlowMarker;
 
    public static ProxyConfig parseLine(long l, String str) {
       String[] strings = str.split(":");
@@ -100,15 +99,6 @@ public class ProxyConfig {
       return this.password != null && !this.password.isEmpty();
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(null);
-   }
 }

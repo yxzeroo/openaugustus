@@ -35,8 +35,7 @@ public class EventBlockChange extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      BlockChangeListener listener = (BlockChangeListener)obj;
-      this.call2(listener);
+      this.call2((BlockChangeListener)obj);
    }
 
    public void call2(BlockChangeListener listener) {

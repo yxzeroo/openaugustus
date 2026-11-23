@@ -61,17 +61,14 @@ public class ToggleUtil {
          if (n != 0) {
             if (module.getKeyCode() == n) {
                boolean flag3 = !flag && module.isToggled() && module.isToggledByKey() && ((double)(l - module.getLastToggleTimeMs()) > holdThresholdMs || module.isKeyHoldMode());
-               boolean flag4 = flag && !flag2;
-               if (flag4 || flag3) {
+               if ((flag && !flag2) || flag3) {
                   Queue queue = PENDING_TOGGLES;
                   module.getClass();
-                  Module module2 = module;
-                  queue.add((Runnable)() -> module2.toggle());
+                  queue.add((Runnable)() -> module.toggle());
                }
 
                if (!flag) {
-                  boolean flag5 = false;
-                  module.setToggledByKey(flag5);
+                  module.setToggledByKey(false);
                }
             }
          }

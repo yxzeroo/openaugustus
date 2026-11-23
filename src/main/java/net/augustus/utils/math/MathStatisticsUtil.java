@@ -65,8 +65,7 @@ public class MathStatisticsUtil {
       double maxX = box.maxX;
       double minZ = box.minZ;
       double minY = box.minY;
-      double minX = box.minX;
-      return sampleBoxSurfacePoints(hitVecCandidate, minX, minY, minZ, maxX, maxY, maxZ);
+      return sampleBoxSurfacePoints(hitVecCandidate, box.minX, minY, minZ, maxX, maxY, maxZ);
    }
 
    public static double modularDistance(double d, double d2) {
@@ -95,16 +94,14 @@ public class MathStatisticsUtil {
             }
 
             double percentile = descriptiveStatistics.getPercentile(25.0);
-            double percentile2 = descriptiveStatistics.getPercentile(75.0);
-            double d = percentile2 - percentile;
+            double d = descriptiveStatistics.getPercentile(75.0) - percentile;
             if (d <= 1.0E-9) {
                d = standardDeviation * 1.34;
             }
 
             double d2 = 1.06 * Math.min(standardDeviation, d / 1.34) * Math.pow((double)size, -0.2);
             double d3 = min - 3.0 * d2;
-            double d4 = max + 3.0 * d2;
-            double d5 = (d4 - d3) / (double)(n - 1);
+            double d5 = ((max + 3.0 * d2) - d3) / (double)(n - 1);
             ArrayList list2 = new ArrayList(n);
             NormalDistribution normalDistribution = new NormalDistribution(0.0, 1.0);
             int size2 = list.size();
@@ -180,10 +177,7 @@ public class MathStatisticsUtil {
    }
 
    public static double angleBetweenDegrees(Vec3 vec, Vec3 vec2) {
-      double d = vec.xCoord * vec2.xCoord + vec.yCoord * vec2.yCoord + vec.zCoord * vec2.zCoord;
-      double d2 = Math.sqrt(vec.xCoord * vec.xCoord + vec.yCoord * vec.yCoord + vec.zCoord * vec.zCoord);
-      double d3 = Math.sqrt(vec2.xCoord * vec2.xCoord + vec2.yCoord * vec2.yCoord + vec2.zCoord * vec2.zCoord);
-      return Math.toDegrees(Math.acos(d / (d2 * d3)));
+      return Math.toDegrees(Math.acos((vec.xCoord * vec2.xCoord + vec.yCoord * vec2.yCoord + vec.zCoord * vec2.zCoord) / (Math.sqrt(vec.xCoord * vec.xCoord + vec.yCoord * vec.yCoord + vec.zCoord * vec.zCoord) * Math.sqrt(vec2.xCoord * vec2.xCoord + vec2.yCoord * vec2.yCoord + vec2.zCoord * vec2.zCoord))));
    }
 
    public static List sampleBoxSurfacePoints(HitVecCandidate hitVecCandidate, double d, double d2, double d3, double d4, double d5, double d6) {
@@ -275,8 +269,7 @@ public class MathStatisticsUtil {
    }
 
    public static boolean isWithinTolerance(double d, double d2, double d3) {
-      double d4 = Math.abs(d - d2);
-      return !(d4 > d3);
+      return !(Math.abs(d - d2) > d3);
    }
 
    public static int minInt(List list) {
@@ -426,9 +419,8 @@ public class MathStatisticsUtil {
    }
 
    public static boolean removeSentinelMinusOne(ArrayList list, long l) {
-      Object obj = null;
       boolean flag = list.contains(-1);
-      if (obj == null) {
+      if (null == null) {
          if (flag) {
             list.remove(Integer.valueOf(-1));
             return true;

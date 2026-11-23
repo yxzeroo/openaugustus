@@ -14,20 +14,17 @@ public class JSONValue {
 
    /** @deprecated */
    public static Object parse(String str) {
-      StringReader stringReader = new StringReader(str);
-      return parse2(stringReader);
+      return parse2(new StringReader(str));
    }
 
    public static Object parseWithException2(Reader reader) throws IOException, ParseException {
-      JSONParser jsonParser = new JSONParser();
-      return jsonParser.parse(reader);
+      return new JSONParser().parse(reader);
    }
 
    /** @deprecated */
    public static Object parse2(Reader reader) {
       try {
-         JSONParser jsonParser = new JSONParser();
-         return jsonParser.parse(reader);
+         return new JSONParser().parse(reader);
       } catch (Exception e) {
          return null;
       }
@@ -101,8 +98,7 @@ public class JSONValue {
    }
 
    public static Object parseWithException(String str) throws ParseException {
-      JSONParser jsonParser = new JSONParser();
-      return jsonParser.parse2(str);
+      return new JSONParser().parse2(str);
    }
 
    public static void escape(String str, StringBuffer sb) {

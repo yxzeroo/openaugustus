@@ -159,8 +159,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
                }
 
                if (!(packet instanceof PacketFlushMarker)) {
-                  PacketStage sendnettydelay = PacketStage.SEND_NETTY_DELAY;
-                  PacketListener.onPacket(packet, sendnettydelay);
+                  PacketListener.onPacket(packet, PacketStage.SEND_NETTY_DELAY);
                   this.dispatchPacket(packet, NetworkManager.InboundHandlerTuplePacketListener.accessFutureListeners(listener));
                }
             }
@@ -267,22 +266,19 @@ public class NetworkManager extends SimpleChannelInboundHandler {
          }
 
          try {
-            EnumPacketDirection direction2 = this.direction;
-            ServerEntityPositionTracker.onPacket(msg, direction2);
+            ServerEntityPositionTracker.onPacket(msg, this.direction);
          } catch (Exception e) {
          }
 
          try {
-            PacketStage readnetty = PacketStage.READ_NETTY;
-            EventPacket event = PacketListener.onPacket(msg, readnetty);
+            EventPacket event = PacketListener.onPacket(msg, PacketStage.READ_NETTY);
             if (event.isCancelled()) {
                return;
             }
 
             if (ClientManagers.moduleManager.packetHandler.shouldDelayIncomingPacket(msg) && this.direction == EnumPacketDirection.CLIENTBOUND) {
                EnumPacketDirection direction3 = this.direction;
-               INetHandler packetListener2 = this.packetListener;
-               EventPacketDelay event2 = PacketDelayListener.onPacketDelay2(msg, packetListener2, direction3);
+               EventPacketDelay event2 = PacketDelayListener.onPacketDelay2(msg, this.packetListener, direction3);
                Packet packet = event2.getPacket();
                boolean flag = ClientManagers.moduleManager.packetHandler.shouldHoldTransactionInMacroDelay(packet);
                if (event2.isDelayed() || event2.hasIncomingDelay() && ClientManagers.moduleManager.packetHandler.isWorldAndPlayerReady() || flag) {
@@ -292,29 +288,24 @@ public class NetworkManager extends SimpleChannelInboundHandler {
                      && Minecraft.getMinecraft().thePlayer != null
                      && Minecraft.getMinecraft().thePlayer.ticksExisted > 5
                      && packet instanceof S00PacketKeepAlive) {
-                     boolean flag2 = true;
-                     ClientManagers.moduleManager.packetHandler.setFlushingPackets(flag2);
+                     ClientManagers.moduleManager.packetHandler.setFlushingPackets(true);
                   } else {
-                     boolean flag3 = false;
-                     ClientManagers.moduleManager.packetHandler.setFlushingPackets(flag3);
+                     ClientManagers.moduleManager.packetHandler.setFlushingPackets(false);
                   }
 
                   ClientManagers.moduleManager.packetHandler.enqueueIncomingPacket(event2);
                   if (event2.hasIncomingDelay() && !event2.isDelayed()) {
                      PacketHandler packetHandler = ClientManagers.moduleManager.packetHandler;
-                     int incomingDelayMs = event2.getIncomingDelayMs();
-                     packetHandler.flushExpiredIncomingPackets(incomingDelayMs);
+                     packetHandler.flushExpiredIncomingPackets(event2.getIncomingDelayMs());
                      packetHandler = ClientManagers.moduleManager.packetHandler;
                      EntityLivingBase targetEntity = event2.getTargetEntity();
-                     double maxTargetDistance = event2.getMaxTargetDistance();
-                     packetHandler.flushIncomingUntilTargetRange(maxTargetDistance, targetEntity);
+                     packetHandler.flushIncomingUntilTargetRange(event2.getMaxTargetDistance(), targetEntity);
                   }
 
                   if (event2.isDelayed() && !event2.hasIncomingDelay()) {
                      PacketHandler packetHandler2 = ClientManagers.moduleManager.packetHandler;
                      EntityLivingBase targetEntity2 = event2.getTargetEntity();
-                     double maxTargetDistance2 = event2.getMaxTargetDistance();
-                     packetHandler2.flushIncomingUntilTargetRange(maxTargetDistance2, targetEntity2);
+                     packetHandler2.flushIncomingUntilTargetRange(event2.getMaxTargetDistance(), targetEntity2);
                   }
 
                   return;
@@ -504,19 +495,14 @@ public class NetworkManager extends SimpleChannelInboundHandler {
    }
 
    public void sendPacket(Packet packet) {
-      PacketStage sendnetty = PacketStage.SEND_NETTY;
-      EventPacket event = PacketListener.onPacket(packet, sendnetty);
-      if (!event.isCancelled()) {
+      if (!PacketListener.onPacket(packet, PacketStage.SEND_NETTY).isCancelled()) {
          if (ClientManagers.moduleManager.packetHandler.shouldDelayOutgoingPacket(packet)) {
             ReentrantReadWriteLock readWriteLock2 = this.readWriteLock;
-            Queue outboundPacketsQueue2 = this.outboundPacketsQueue;
-            EventPacketDelay event2 = PacketDelayListener.onPacketDelay(packet, outboundPacketsQueue2, readWriteLock2);
+            EventPacketDelay event2 = PacketDelayListener.onPacketDelay(packet, this.outboundPacketsQueue, readWriteLock2);
             if (event2.isDelayed() || event2.hasOutgoingDelay() && ClientManagers.moduleManager.packetHandler.isWorldAndPlayerReady()) {
                ClientManagers.moduleManager.packetHandler.enqueueOutgoingPacket(event2);
                if (event2.hasOutgoingDelay() && !event2.isDelayed()) {
-                  PacketHandler packetHandler = ClientManagers.moduleManager.packetHandler;
-                  int outgoingDelayMs = event2.getOutgoingDelayMs();
-                  packetHandler.flushExpiredOutgoingPackets(event2, outgoingDelayMs);
+                  ClientManagers.moduleManager.packetHandler.flushExpiredOutgoingPackets(event2, event2.getOutgoingDelayMs());
                   this.flushOutboundQueue();
                }
 
@@ -545,8 +531,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
             }
 
             if (!(packet instanceof PacketFlushMarker)) {
-               PacketStage sendnettydelay = PacketStage.SEND_NETTY_DELAY;
-               PacketListener.onPacket(packet, sendnettydelay);
+               PacketListener.onPacket(packet, PacketStage.SEND_NETTY_DELAY);
                this.dispatchPacket(packet, (GenericFutureListener[])null);
             }
          } else {
@@ -646,8 +631,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
          }
 
          if (Augustus.getInstance().getProxy() != null && this.useProxy) {
-            ProxyEntry proxy = Augustus.getInstance().getProxy();
-            proxy.applyToChannel(channel);
+            Augustus.getInstance().getProxy().applyToChannel(channel);
          }
 
          channel.pipeline()

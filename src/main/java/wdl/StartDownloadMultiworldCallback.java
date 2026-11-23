@@ -10,23 +10,19 @@ import net.minecraft.client.resources.I18n;
 public final class StartDownloadMultiworldCallback implements MultiworldCallback {
 
    public void onCancel() {
-      Object obj = null;
-      MC.mc.displayGuiScreen((GuiScreen)obj);
+      MC.mc.displayGuiScreen((GuiScreen)null);
       WDL.cancelDownload();
    }
 
    public void onSelect(boolean flag) {
       WDL.isMultiworld = flag;
       if (WDL.isMultiworld) {
-         Minecraft mc = MC.mc;
-         GuiWDLMultiworldSelect guiWDLMultiworldSelect = new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.startDownload", new Object[0]), new StartDownloadSetupMultiworldSelectCallback(this));
-         mc.displayGuiScreen((GuiScreen)guiWDLMultiworldSelect);
+         MC.mc.displayGuiScreen((GuiScreen)new GuiWDLMultiworldSelect(I18n.format("wdl.gui.multiworldSelect.title.startDownload", new Object[0]), new StartDownloadSetupMultiworldSelectCallback(this)));
       } else {
          WDL.baseProps.setProperty("LinkedWorlds", "");
          WDL.saveProps();
          WDL.propsFound = true;
-         Object obj = null;
-         MC.mc.displayGuiScreen((GuiScreen)obj);
+         MC.mc.displayGuiScreen((GuiScreen)null);
          WDL.startDownload();
       }
    }

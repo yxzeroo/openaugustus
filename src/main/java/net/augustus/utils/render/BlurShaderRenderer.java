@@ -2,7 +2,6 @@ package net.augustus.utils.render;
 
 import net.augustus.ClientManagers;
 import net.augustus.render.FramebufferStack;
-import net.augustus.settings.Setting;
 import net.augustus.utils.shader.ShaderProgram;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.shader.Framebuffer;
@@ -45,25 +44,18 @@ public class BlurShaderRenderer {
          this.hudMaskFramebuffer.bindFramebuffer(flag);
       }
 
-      Setting.getControlFlowMarker();
    }
 
    public void renderBlurPass(boolean flag, int n) {
       if (Display.isActive()) {
          Framebuffer framebuffer = flag ? this.guiMaskFramebuffer : this.hudMaskFramebuffer;
-         String selectedValue = ClientManagers.moduleManager.blur.modesNew.getSelectedValue();
-         BlurMode blurMode = BlurMode.fromName(selectedValue);
+         BlurMode blurMode = BlurMode.fromName(ClientManagers.moduleManager.blur.modesNew.getSelectedValue());
          GL11.glPushMatrix();
-         boolean flag2 = false;
-         this.glStateSaver.setCull(flag2);
-         boolean flag3 = true;
-         this.glStateSaver.setTexture2D(flag3);
-         boolean flag4 = false;
-         this.glStateSaver.setBlend(flag4);
+         this.glStateSaver.setCull(false);
+         this.glStateSaver.setTexture2D(true);
+         this.glStateSaver.setBlend(false);
          if (blurMode == BlurMode.KAWASE) {
-            Framebuffer framebuffer2 = this.mc.getFramebuffer();
-            Framebuffer framebuffer3 = framebuffer2;
-            Framebuffer framebuffer4 = blurMode.applyBlurToFramebuffer(framebuffer3, n);
+            Framebuffer framebuffer4 = blurMode.applyBlurToFramebuffer(this.mc.getFramebuffer(), n);
             this.mc.getFramebuffer().bindFramebuffer(Minecraft.isRunningOnMac);
             this.cutoutShader.bind();
             String str = "shapes";
@@ -72,19 +64,16 @@ public class BlurShaderRenderer {
             this.cutoutShader.bindTextureUniform(str2, framebuffer4);
             float f = (float)framebuffer.framebufferTextureWidth;
             float f2 = (float)framebuffer.framebufferTextureHeight;
-            float f3 = f;
             String str3 = "resolution";
-            this.cutoutShader.setUniform2f(str3, f3, f2);
+            this.cutoutShader.setUniform2f(str3, f, f2);
             float f4 = (float)framebuffer.framebufferTextureWidth;
             float f5 = (float)framebuffer.framebufferTextureHeight;
-            float f6 = f4;
             float f7 = 0.0F;
             float f8 = 0.0F;
-            this.cutoutShader.drawQuad(f8, f7, f6, f5);
+            this.cutoutShader.drawQuad(f8, f7, f4, f5);
             this.cutoutShader.unbind();
          } else {
-            Framebuffer framebuffer5 = this.mc.getFramebuffer();
-            blurMode.applyMaskedBlur(framebuffer5, framebuffer, n);
+            blurMode.applyMaskedBlur(this.mc.getFramebuffer(), framebuffer, n);
          }
 
          this.guiMaskFramebuffer.framebufferClear();

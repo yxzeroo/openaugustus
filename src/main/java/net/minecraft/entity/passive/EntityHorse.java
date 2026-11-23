@@ -833,8 +833,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic {
       if (tag.hasKey("OwnerUUID", 8)) {
          str = tag.getString("OwnerUUID");
       } else {
-         String string = tag.getString("Owner");
-         str = PreYggdrasilConverter.getStringUUIDFromName(string);
+         str = PreYggdrasilConverter.getStringUUIDFromName(tag.getString("Owner"));
       }
 
       if (str.length() > 0) {
@@ -1383,8 +1382,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic {
       if (this.hasCustomName()) {
          return this.getCustomNameTag();
       } else {
-         int horseType = this.getHorseType();
-         switch (horseType) {
+         switch (this.getHorseType()) {
             case 0:
             default:
                return StatCollector.translateToLocal("entity.horse.name");

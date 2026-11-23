@@ -133,10 +133,7 @@ public class CustomBase64InputStream extends InputStream {
 
    @Override
    public int read() throws IOException {
-      byte b = 1;
-      byte b2 = 0;
-      byte[] sbBuf2 = this.sbBuf;
-      return this.read(sbBuf2, b2, b) == -1 ? -1 : this.sbBuf[0] & 0xFF;
+      return this.read(this.sbBuf, (byte)0, (byte)1) == -1 ? -1 : this.sbBuf[0] & 0xFF;
    }
 
    @Override

@@ -142,8 +142,7 @@ public class WorldGenBigMushroom extends WorldGenerator {
                }
 
                for (int i2 = 0; i2 < n; i2++) {
-                  Block block3 = world.getBlockState(pos.up(i2)).getBlock();
-                  if (!block3.isFullBlock()) {
+                  if (!world.getBlockState(pos.up(i2)).getBlock().isFullBlock()) {
                      this.setBlockAndNotifyAdequately(
                         world, pos.up(i2), this.mushroomType.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM)
                      );

@@ -12,7 +12,6 @@ public class PathBlockPos {
    private IBlockState blockState;
    public final int x;
    private String cachedKey = null;
-   private static int[] stateFlags;
 
    public IBlockState getBlockState() {
       return this.blockState;
@@ -20,7 +19,6 @@ public class PathBlockPos {
 
    @Override
    public boolean equals(Object obj) {
-      int[] stateFlags2 = getStateFlags();
       PathBlockPos pathBlockPos = (PathBlockPos)obj;
       return this.x == pathBlockPos.x && this.y == pathBlockPos.y && this.z == pathBlockPos.z;
    }
@@ -42,7 +40,6 @@ public class PathBlockPos {
 
    @Override
    public int hashCode() {
-      int[] stateFlags2 = getStateFlags();
       if (this.cachedHash == 0) {
          this.cachedHash = (this.x * 31 + this.y) * 31 + this.z;
       }
@@ -69,7 +66,6 @@ public class PathBlockPos {
    }
 
    public String toKeyString() {
-      int[] stateFlags2 = getStateFlags();
       return this.cachedKey == null ? (this.cachedKey = this.x + "_" + this.y + "_" + this.z) : this.cachedKey;
    }
 
@@ -78,7 +74,6 @@ public class PathBlockPos {
    }
 
    public Vec3 toVec3() {
-      int[] stateFlags2 = getStateFlags();
       if (this.cachedVec == null) {
          this.cachedVec = new Vec3((double)this.x, (double)this.y, (double)this.z);
       }
@@ -93,17 +88,6 @@ public class PathBlockPos {
       return d * d + d2 * d2 + d3 * d3;
    }
 
-   public static void setStateFlags(int[] ints) {
-      stateFlags = ints;
-   }
 
-   public static int[] getStateFlags() {
-      return stateFlags;
-   }
 
-   static {
-      if (getStateFlags() != null) {
-         setStateFlags(new int[1]);
-      }
-   }
 }

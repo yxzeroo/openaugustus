@@ -23,8 +23,8 @@ import net.augustus.settings.ActionSetting;
 import net.augustus.events.listeners.TickListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketThreadUtil;
@@ -35,15 +35,15 @@ import org.lwjgl.opengl.GL11;
 
 public class CombatRotationTracker extends Module implements TickListener, RenderListener {
    private static final int DATA_FORMAT_VERSION = 2;
-   private final StringValue radius;
+   private final DoubleValue radius;
    private final BooleanValue consoleDebug;
    private final BooleanValue chatDebug;
    private final ActionSetting openFolder;
    private final BooleanValue showAimPoints;
-   private final DoubleValue visualization;
+   private final SettingGroup visualization;
    private final ColorSetting midpointColor;
    private final ColorSetting bestHitColor;
-   private final StringValue dotSize;
+   private final DoubleValue dotSize;
    private double lastMidpointX;
    private double lastMidpointY;
    private double lastMidpointZ;
@@ -74,7 +74,7 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
 
    public CombatRotationTracker() {
        super("CombatRotationTracker", "KampfRotationsAufzeichner", new Color(80, 160, 220), Categorys.MISC);
-      this.radius = new StringValue(this, "Radius", 6.0, 3.0, 10.0, 1);
+      this.radius = new DoubleValue(this, "Radius", 6.0, 3.0, 10.0, 1);
       this.consoleDebug = new BooleanValue(this, "ConsoleDebug", false);
       this.chatDebug = new BooleanValue(this, "ChatDebug", false);
       this.openFolder = new ActionSetting(this, "OpenFolder", () -> {
@@ -92,14 +92,12 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
          }
       });
       this.showAimPoints = new BooleanValue(this, "ShowAimPoints", false);
-      DoubleValue doubleValue = new DoubleValue(this, "Visualization");
+      SettingGroup doubleValue = new SettingGroup(this, "Visualization");
       BooleanValue showAimPoints2 = this.showAimPoints;
       this.showAimPoints.getClass();
-      BooleanValue booleanValue = showAimPoints2;
-      SettingVisibilityCondition condition = () -> booleanValue.getValue();
-      this.visualization = doubleValue.visibleWhen(condition);
+      this.visualization = doubleValue.visibleWhen(() -> showAimPoints2.getValue());
       Color color2 = new Color(0, 255, 0);
-      DoubleValue visualization2 = this.visualization;
+      SettingGroup visualization2 = this.visualization;
       Color color3 = color2;
       String str = "MidpointColor";
       this.midpointColor = new ColorSetting(this, str, color3, visualization2);
@@ -108,16 +106,14 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
       color3 = color2;
       str = "BestHitColor";
       this.bestHitColor = new ColorSetting(this, str, color3, visualization2);
-      this.dotSize = new StringValue(this, "DotSize", 6.0, 2.0, 15.0, 1, this.visualization);
+      this.dotSize = new DoubleValue(this, "DotSize", 6.0, 2.0, 15.0, 1, this.visualization);
       this.markHidden();
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
    }
 
    @Override
@@ -146,15 +142,13 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
                this.startSession(player);
                list.add("TARGET_SWITCH");
                String str = "new: " + player.getName();
-               String str2 = "TARGET_SWITCH";
-               this.logEvent(str2, str);
+               this.logEvent("TARGET_SWITCH", str);
             } else if (player != this.currentTarget) {
                this.endAndSaveSession();
                this.startSession(player);
                list.add("TARGET_SWITCH");
                String str3 = "new: " + player.getName();
-               String str4 = "TARGET_SWITCH";
-               this.logEvent(str4, str3);
+               this.logEvent("TARGET_SWITCH", str3);
             }
 
             double posX = mc.thePlayer.posX;
@@ -172,16 +166,12 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
             if (onGround && !this.prevOnGround) {
                this.jumpPhase = "ground";
                list.add("LAND");
-               Object obj = null;
-               String str5 = "LAND";
-               this.logEvent(str5, (String)obj);
+               this.logEvent("LAND", (String)null);
             } else if (!onGround && this.prevOnGround && motionY > 0.0) {
                this.jumpPhase = "ascending";
                this.ticksSinceJumpStart = 0;
                list.add("JUMP_START");
-               Object obj2 = null;
-               String str6 = "JUMP_START";
-               this.logEvent(str6, (String)obj2);
+               this.logEvent("JUMP_START", (String)null);
             } else if (!onGround && motionY > 0.0) {
                short s = 6616;
                this.jumpPhase = "ascending";
@@ -206,8 +196,7 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
                String str7 = getKnockbackCardinalDirection(motionX, motionZ);
                list.add("MY_KNOCKBACK");
                String str8 = "source: " + str7;
-               String str9 = "MY_KNOCKBACK";
-               this.logEvent(str9, str8);
+               this.logEvent("MY_KNOCKBACK", str8);
             }
 
             double posX2 = player.posX;
@@ -227,8 +216,7 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
                this.totalHits++;
                list.add("TARGET_HIT");
                String str10 = "targetHurtTime: 10";
-               String str11 = "TARGET_HIT";
-               this.logEvent(str11, str10);
+               this.logEvent("TARGET_HIT", str10);
             }
 
             double d5 = posY + (double)mc.thePlayer.getEyeHeight();
@@ -429,10 +417,8 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
          double renderPosY = mc.getRenderManager().getRenderPosY();
          double renderPosZ = mc.getRenderManager().getRenderPosZ();
          float value = (float)this.dotSize.getValue();
-         byte b = 0;
-         int colorInt = this.midpointColor.getColorInt(b);
-         byte b2 = 0;
-         int colorInt2 = this.bestHitColor.getColorInt(b2);
+         int colorInt = this.midpointColor.getColorInt((byte)0);
+         int colorInt2 = this.bestHitColor.getColorInt((byte)0);
          GL11.glPushMatrix();
          GL11.glTranslated(-renderPosX, -renderPosY, -renderPosZ);
          GL11.glDisable(3553);
@@ -441,17 +427,9 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
          GL11.glPointSize(value);
          GL11.glBegin(0);
-         float f2 = (float)(colorInt >> 16 & 0xFF) / 255.0F;
-         float f3 = (float)(colorInt >> 8 & 0xFF) / 255.0F;
-         float f4 = (float)(colorInt & 0xFF) / 255.0F;
-         float f5 = (float)(colorInt >> 24 & 0xFF) / 255.0F;
-         GlStateManager.color(f2, f3, f4, f5);
+         GlStateManager.color((float)(colorInt >> 16 & 0xFF) / 255.0F, (float)(colorInt >> 8 & 0xFF) / 255.0F, (float)(colorInt & 0xFF) / 255.0F, (float)(colorInt >> 24 & 0xFF) / 255.0F);
          GL11.glVertex3d(this.lastMidpointX, this.lastMidpointY, this.lastMidpointZ);
-         float f6 = (float)(colorInt2 >> 16 & 0xFF) / 255.0F;
-         float f7 = (float)(colorInt2 >> 8 & 0xFF) / 255.0F;
-         float f8 = (float)(colorInt2 & 0xFF) / 255.0F;
-         float f9 = (float)(colorInt2 >> 24 & 0xFF) / 255.0F;
-         GlStateManager.color(f6, f7, f8, f9);
+         GlStateManager.color((float)(colorInt2 >> 16 & 0xFF) / 255.0F, (float)(colorInt2 >> 8 & 0xFF) / 255.0F, (float)(colorInt2 & 0xFF) / 255.0F, (float)(colorInt2 >> 24 & 0xFF) / 255.0F);
          GL11.glVertex3d(this.lastBestHitX, this.lastBestHitY, this.lastBestHitZ);
          GL11.glEnd();
          GL11.glEnable(2929);
@@ -562,8 +540,7 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
                }
 
                if (value2) {
-                  String str5 = str4;
-                  PacketThreadUtil.runOnMainThreadImmediate(() -> sendErrorChat(str5));
+                  PacketThreadUtil.runOnMainThreadImmediate(() -> sendErrorChat(str4));
                }
             }
          });
@@ -608,9 +585,7 @@ public class CombatRotationTracker extends Module implements TickListener, Rende
          d3 += 360.0;
       }
 
-      String[] strings = new String[]{"E", "SE", "S", "SW", "W", "NW", "N", "NE"};
-      int n = (int)Math.round(d3 / 45.0) % 8;
-      return strings[n];
+      return (new String[]{"E", "SE", "S", "SW", "W", "NW", "N", "NE"})[(int)Math.round(d3 / 45.0) % 8];
    }
 
    private void logEvent(String str, String str2) {

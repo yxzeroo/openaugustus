@@ -16,8 +16,7 @@ public class ShaderOptionSwitch extends ShaderOption {
       if (!matcher.matches()) {
          return false;
       } else {
-         String str2 = matcher.group(2);
-         return str2.matches(this.getName());
+         return matcher.group(2).matches(this.getName());
       }
    }
 
@@ -54,8 +53,7 @@ public class ShaderOptionSwitch extends ShaderOption {
    public boolean isUsedInLine(String str) {
       Matcher matcher = PATTERN_IFDEF.matcher(str);
       if (matcher.matches()) {
-         String str2 = matcher.group(2);
-         if (str2.equals(this.getName())) {
+         if (matcher.group(2).equals(this.getName())) {
             return true;
          }
       }
@@ -72,8 +70,7 @@ public class ShaderOptionSwitch extends ShaderOption {
          String str4 = matcher.group(2);
          String str5 = matcher.group(3);
          if (str4 != null && !str4.isEmpty()) {
-            boolean flag = Config.equals(str3, "//");
-            boolean flag2 = !flag;
+            boolean flag2 = !Config.equals(str3, "//");
             str2 = StrUtils.removePrefix(str2, "/shaders/");
             return new ShaderOptionSwitch(str4, str5, String.valueOf(flag2), str2);
          } else {

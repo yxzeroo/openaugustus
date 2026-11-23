@@ -187,10 +187,7 @@ public final class GetToBlockProcess extends BaritoneProcessHelper implements IG
    }
 
    private boolean areAdjacent(BlockPos pos, BlockPos pos2) {
-      int n = Math.abs(pos.getX() - pos2.getX());
-      int n2 = Math.abs(pos.getY() - pos2.getY());
-      int n3 = Math.abs(pos.getZ() - pos2.getZ());
-      return n + n2 + n3 == 1;
+      return Math.abs(pos.getX() - pos2.getX()) + Math.abs(pos.getY() - pos2.getY()) + Math.abs(pos.getZ() - pos2.getZ()) == 1;
    }
 
    @Override

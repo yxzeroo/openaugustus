@@ -167,8 +167,7 @@ public class BlockCrops extends BlockBush implements IGrowable {
    }
 
    static {
-      String str = "age";
-      AGE = PropertyInteger.create(str, 0, 7);
+      AGE = PropertyInteger.create("age", 0, 7);
    }
 
    @Override

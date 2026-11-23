@@ -85,8 +85,7 @@ public class EntityItemFrame extends EntityHanging {
    private void removeFrameFromMap(ItemStack stack) {
       if (stack != null) {
          if (stack.getItem() == Items.filled_map) {
-            MapData mapData = ((ItemMap)stack.getItem()).getMapData(stack, this.entityWorld);
-            mapData.mapDecorations.remove("frame-" + this.getEntityId());
+            ((ItemMap)stack.getItem()).getMapData(stack, this.entityWorld).mapDecorations.remove("frame-" + this.getEntityId());
          }
 
          stack.setItemFrame((EntityItemFrame)null);
@@ -150,8 +149,7 @@ public class EntityItemFrame extends EntityHanging {
       if (this.entityWorld.getGameRules().getBoolean("doEntityDrops")) {
          ItemStack displayedItem = this.getDisplayedItem();
          if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            if (player.capabilities.isCreativeMode) {
+            if (((EntityPlayer)entity).capabilities.isCreativeMode) {
                this.removeFrameFromMap(displayedItem);
                return;
             }

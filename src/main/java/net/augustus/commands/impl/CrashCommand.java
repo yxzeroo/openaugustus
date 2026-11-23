@@ -23,8 +23,7 @@ public class CrashCommand extends Command {
          try {
             n = Integer.parseInt(strings[1]);
          } catch (Exception e) {
-            String str2 = "§7" + this.getCommand() + " [§2Strength (default 850)§7]";
-            this.sendChat(str2);
+            this.sendChat("§7" + this.getCommand() + " [§2Strength (default 850)§7]");
             return;
          }
       }
@@ -66,13 +65,11 @@ public class CrashCommand extends Command {
 
       String str4 = str3;
       mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload(str4, buf));
-      String str5 = "XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD";
-      this.sendChat(str5);
+      this.sendChat("XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
    }
 
    public void helpMessage() {
-      String str = "§c" + this.getCommand() + "§7 (Crashes the server)";
-      this.sendChat(str);
+      this.sendChat("§c" + this.getCommand() + "§7 (Crashes the server)");
    }
 
 }

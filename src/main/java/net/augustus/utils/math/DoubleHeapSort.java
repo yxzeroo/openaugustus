@@ -13,8 +13,7 @@ public class DoubleHeapSort {
          double d = doubles[0];
          doubles[0] = doubles[j];
          doubles[j] = d;
-         byte b = 0;
-         heapify(doubles, j, b);
+         heapify(doubles, j, (byte)0);
       }
    }
 

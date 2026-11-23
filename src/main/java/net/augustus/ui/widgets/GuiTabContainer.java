@@ -74,8 +74,7 @@ public class GuiTabContainer {
    }
 
    public void drawTabs(int n, int n2) {
-      byte b = 0;
-      this.drawTabsAtX(n, n2, b);
+      this.drawTabsAtX(n, n2, (byte)0);
    }
 
    public GuiTabContainer(int n, int n2, long l, int n3, String[] strings) {
@@ -163,8 +162,7 @@ public class GuiTabContainer {
          RenderUtil.drawRect3(n5, n6 - 2, this.x + this.width - this.widthRemainder, n6 + guiTabPage.getContentHeight(), Integer.MIN_VALUE);
       }
 
-      int n7 = this.x;
-      guiTabPage.drawContent(n7, n6, n, n2);
+      guiTabPage.drawContent(this.x, n6, n, n2);
    }
 
    public void handleMouseClick(int n, short s, int n2, int n3, long l) {
@@ -197,7 +195,6 @@ public class GuiTabContainer {
    }
 
    public GuiTabContainer(int n, int n2, int n3, int n4, TabLayoutMode tabLayoutMode, boolean flag, GuiTabPage[] guiTabPages) {
-      ScrollBar.getControlFlowGuard();
       this.widthRemainder = 0;
       this.selectedTabIndex = 0;
       this.x = n;

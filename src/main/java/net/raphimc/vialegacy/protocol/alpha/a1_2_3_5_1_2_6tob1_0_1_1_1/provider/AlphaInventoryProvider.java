@@ -10,8 +10,7 @@ public abstract class AlphaInventoryProvider implements Provider {
 
    public Item getHandItem(UserConnection user) {
       InventoryStorage inventoryStorage = (InventoryStorage)user.get(InventoryStorage.class);
-      Item[] inventory = this.getMainInventoryItems(user);
-      return inventory[inventoryStorage.selectedHotbarSlot];
+      return this.getMainInventoryItems(user)[inventoryStorage.selectedHotbarSlot];
    }
 
    public abstract Item[] getMainInventoryItems(UserConnection userConnection);

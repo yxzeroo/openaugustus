@@ -8,7 +8,7 @@ import net.augustus.utils.player.InventoryUtil;
 import java.util.List;
 import net.augustus.modules.player.Stealer;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -20,18 +20,12 @@ public class StealerCubicMouseMode extends AbstractStealerMouseMode {
    private final RandomizedRangeSettings cubicSpeed;
    private final BooleanValue cubicIgnoreNeighbours;
 
-   public StealerCubicMouseMode(Stealer stealer, DoubleValue doubleValue) {
+   public StealerCubicMouseMode(Stealer stealer, SettingGroup doubleValue) {
        super(stealer, doubleValue, "Cubic");
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(this.parentModule, "CubicSpeed", 4.0, 5.0, 1.0, 20.0, 0, this.modeSetting)).withoutNotInARow();
-      String str = "Speed";
-      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.cubicSpeed = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
-      BooleanValue booleanValue = new BooleanValue(this.parentModule, "CubicIgnoreNeighbours", false, this.modeSetting);
-      String str2 = "IgnoreNeighbours";
-      BooleanValue booleanValue2 = (BooleanValue)booleanValue.withDisplayName(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.cubicIgnoreNeighbours = (BooleanValue)booleanValue2.withVisibility(condition2);
+      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("Speed");
+      this.cubicSpeed = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isSelected());
+      this.cubicIgnoreNeighbours = (BooleanValue)((BooleanValue)new BooleanValue(this.parentModule, "CubicIgnoreNeighbours", false, this.modeSetting).withDisplayName("IgnoreNeighbours")).withVisibility(() -> this.isSelected());
    }
 
    @Override
@@ -40,9 +34,7 @@ public class StealerCubicMouseMode extends AbstractStealerMouseMode {
       int slotCenterX = (int)ContainerUtil.getSlotCenterX(slot);
       int slotCenterY = (int)ContainerUtil.getSlotCenterY(container, slot);
       if (this.cubicIgnoreNeighbours.getValue()) {
-         Vec2d lastCursorPos = InventoryUtil.getLastCursorPos();
-         Vec2d vec2d = new Vec2d((double)slotCenterX, (double)slotCenterY);
-         if (lastCursorPos.subtract(vec2d).length() < 20.0) {
+         if (InventoryUtil.getLastCursorPos().subtract(new Vec2d((double)slotCenterX, (double)slotCenterY)).length() < 20.0) {
             this.cursorX = (double)slotCenterX;
             this.cursorY = (double)slotCenterY;
             return new Vec2d(this.cursorX, this.cursorY);

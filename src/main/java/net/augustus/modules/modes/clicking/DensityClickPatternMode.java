@@ -9,7 +9,7 @@ import net.augustus.utils.TuplePair;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import net.augustus.modules.Module;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class DensityClickPatternMode extends AbstractClickPatternMode {
    private long nextClickTimeMs;
@@ -22,13 +22,13 @@ public class DensityClickPatternMode extends AbstractClickPatternMode {
    private double[] accumulatedMouseDelta;
    private int[] appliedMouseDelta;
    private int tickDurationMs;
-   public DoubleValue pressedTimings;
-   public DoubleValue unpressedTimings;
+   public SettingGroup pressedTimings;
+   public SettingGroup unpressedTimings;
    private ArrayList pressedSpikes;
    private ArrayList unpressedSpikes;
    private SecureRandom secureRandom;
 
-   public DensityClickPatternMode(Module module, DoubleValue doubleValue) {
+   public DensityClickPatternMode(Module module, SettingGroup doubleValue) {
        super(module, doubleValue, "Density");
       this.nextClickTimeMs = 0L;
       this.releaseTimeMs = 0L;
@@ -43,12 +43,10 @@ public class DensityClickPatternMode extends AbstractClickPatternMode {
       this.pressedSpikes = new ArrayList();
       this.unpressedSpikes = new ArrayList();
       this.secureRandom = new SecureRandom();
-      DoubleValue doubleValue2 = new DoubleValue(module, "Pressed Timings");
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.pressedTimings = doubleValue2.visibleWhen(condition);
-      doubleValue2 = new DoubleValue(module, "Unpressed Timings");
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.unpressedTimings = doubleValue2.visibleWhen(condition2);
+      SettingGroup doubleValue2 = new SettingGroup(module, "Pressed Timings");
+      this.pressedTimings = doubleValue2.visibleWhen(() -> this.isSelected());
+      doubleValue2 = new SettingGroup(module, "Unpressed Timings");
+      this.unpressedTimings = doubleValue2.visibleWhen(() -> this.isSelected());
       byte b = 4;
 
       for (int i = 0; i < b; i++) {
@@ -73,9 +71,7 @@ public class DensityClickPatternMode extends AbstractClickPatternMode {
 
    @Override
    public void onDisable() {
-      ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-      boolean flag = false;
-      parentModule2.setHoldingAttack(flag);
+      ((ClickModuleContext)this.parentModule).setHoldingAttack(false);
    }
 
    @Override
@@ -93,14 +89,12 @@ public class DensityClickPatternMode extends AbstractClickPatternMode {
       }
 
       ClickModuleContext parentModule2 = (ClickModuleContext)this.parentModule;
-      boolean flag = this.releaseTimeMs > l;
-      parentModule2.setHoldingAttack(flag);
+      parentModule2.setHoldingAttack(this.releaseTimeMs > l);
       n = ((ClickModuleContext)this.parentModule).applyHitReduction(n);
       if (ClientManagers.moduleManager.smartClicking.isSuppressingClicks() || n != n) {
          n = 0;
          parentModule2 = (ClickModuleContext)this.parentModule;
-         boolean flag2 = false;
-         parentModule2.setHoldingAttack(flag2);
+         parentModule2.setHoldingAttack(false);
       }
 
       return n;
@@ -114,18 +108,14 @@ public class DensityClickPatternMode extends AbstractClickPatternMode {
    }
 
    public TuplePair sampleTotalAndPressedDelay() {
-      ArrayList pressedSpikes2 = this.pressedSpikes;
-      int n = this.sampleWeightedSpikeDelay(pressedSpikes2);
-      ArrayList unpressedSpikes2 = this.unpressedSpikes;
-      int n2 = this.sampleWeightedSpikeDelay(unpressedSpikes2);
+      int n = this.sampleWeightedSpikeDelay(this.pressedSpikes);
+      int n2 = this.sampleWeightedSpikeDelay(this.unpressedSpikes);
       return new TuplePair(n + n2, n);
    }
 
    public TuplePair sampleUnpressedAndPressedDelay() {
-      ArrayList pressedSpikes2 = this.pressedSpikes;
-      int n = this.sampleWeightedSpikeDelay(pressedSpikes2);
-      ArrayList unpressedSpikes2 = this.unpressedSpikes;
-      int n2 = this.sampleWeightedSpikeDelay(unpressedSpikes2);
+      int n = this.sampleWeightedSpikeDelay(this.pressedSpikes);
+      int n2 = this.sampleWeightedSpikeDelay(this.unpressedSpikes);
       return new TuplePair(n2, n);
    }
 

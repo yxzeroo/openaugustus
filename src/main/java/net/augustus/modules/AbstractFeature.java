@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.List;
 import net.augustus.settings.property.ConfigProperty;
-import net.augustus.settings.property.BooleanProperty;
 import net.augustus.settings.property.ConfigSerializerProvider;
 import net.augustus.utils.UnaryFunction;
 
@@ -14,10 +13,8 @@ public class AbstractFeature extends FeatureBase implements ConfigProperty {
    @Override
    public JsonObject serialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, UnaryFunction unaryFunction) {
       this.onBeforeSerialize();
-      BooleanProperty.getControlFlowState();
       JsonObject json2 = new JsonObject();
-      List properties2 = this.getProperties();
-      properties2.forEach(obj -> {
+      this.getProperties().forEach(obj -> {
          if ((Boolean)unaryFunction.apply(obj)) {
             ((ConfigProperty)obj).serialize(configSerializerProvider, json2, unaryFunction);
          }
@@ -38,7 +35,6 @@ public class AbstractFeature extends FeatureBase implements ConfigProperty {
 
    @Override
    public void deserialize(ConfigSerializerProvider configSerializerProvider, JsonObject json, boolean flag, UnaryFunction unaryFunction) {
-      int[] controlFlowState = BooleanProperty.getControlFlowState();
       JsonObject json2;
       if (this.getName() != null) {
          JsonElement elem = json.get(this.getName());
@@ -72,7 +68,6 @@ public class AbstractFeature extends FeatureBase implements ConfigProperty {
 
    public AbstractFeature(FeatureBase featureBase2, String str) {
       super(str);
-      BooleanProperty.getControlFlowState();
       this.featureBase = featureBase2;
       if (featureBase2 != null) {
          featureBase2.addProperty(this);

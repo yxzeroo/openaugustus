@@ -13,17 +13,13 @@ public class RotationPatternManager {
    }
 
    public void loadDefaultPatterns() {
-      String str = "heimgesuchtes";
-      this.loadPattern(str);
-      String str2 = "legitevening";
-      this.loadPattern(str2);
-      String str3 = "noisetest2.2dr";
-      this.loadPattern(str3);
+      this.loadPattern("heimgesuchtes");
+      this.loadPattern("legitevening");
+      this.loadPattern("noisetest2.2dr");
    }
 
    public void loadPattern(String str) {
       Scanner scanner = new Scanner(RotationPatternManager.class.getResourceAsStream("/assets/rotationpatterns/" + str));
-      RotationPatternData.getPatternStateFlags();
       ArrayList list = new ArrayList();
       ArrayList list2 = new ArrayList();
 

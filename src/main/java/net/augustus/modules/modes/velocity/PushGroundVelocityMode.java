@@ -5,25 +5,21 @@ import net.augustus.settings.RangeSetting;
 import net.augustus.settings.SettingVisibilityCondition;
 import java.util.function.BiFunction;
 import net.augustus.modules.combat.Velocity;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class PushGroundVelocityMode extends VelocityMode implements UpdateListener {
    private final RangeSetting endOnGroundPush;
 
-   public PushGroundVelocityMode(Velocity velocity, DoubleValue doubleValue) {
+   public PushGroundVelocityMode(Velocity velocity, SettingGroup doubleValue) {
        super(velocity, doubleValue, "PushGround");
       RangeSetting rangeSetting = (new RangeSetting(this.parentModule, "EndOnGroundPush", "StartOnGroundPush", 1.0, 10.0, 1.0, 10.0, 0, this.modeSetting)).withMaxFirst();
       String str = "EndHurtTime";
-      String str2 = "StartHurtTime";
-      RangeSetting rangeSetting2 = rangeSetting.withBoundNames(str2, str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.endOnGroundPush = rangeSetting2.visibleWhen(condition);
+      this.endOnGroundPush = rangeSetting.withBoundNames("StartHurtTime", str).visibleWhen(() -> this.isSelected());
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    @Override
@@ -35,15 +31,14 @@ public class PushGroundVelocityMode extends VelocityMode implements UpdateListen
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new PushGroundVelocityMode((Velocity)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new PushGroundVelocityMode((Velocity)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void onUpdate2() {
       if (this.canApplyVelocity()) {
          if ((double)mc.thePlayer.hurtTime >= this.endOnGroundPush.getMinValue()) {
-            double hurtTime = (double)mc.thePlayer.hurtTime;
-            if (hurtTime <= this.endOnGroundPush.getMaxValue()) {
+            if (((double)mc.thePlayer.hurtTime) <= this.endOnGroundPush.getMaxValue()) {
                mc.thePlayer.onGround = true;
             }
          }

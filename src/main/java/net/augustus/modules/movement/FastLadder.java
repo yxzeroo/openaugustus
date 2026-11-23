@@ -6,7 +6,6 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.utils.LicenseTimestampStore;
 import net.augustus.events.listeners.MotionListener;
-import net.augustus.settings.Setting;
 import net.augustus.settings.ModeSetting;
 import net.augustus.modules.modes.fastladder.PositionFastLadderMode;
 import net.augustus.modules.modes.fastladder.MotionFastLadderMode;
@@ -17,15 +16,15 @@ import net.augustus.events.listeners.UpdateListener;
 import net.augustus.settings.CustomSubModeFactory;
 import net.augustus.events.EventMotion;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 
 public class FastLadder extends Module implements UpdateListener, MotionListener {
    public final ModeSetting modes;
-   public final StringValue timer;
+   public final DoubleValue timer;
    public final BooleanValue stopOnEnd;
    public final BooleanValue vines;
    private boolean wasOnClimbable;
@@ -34,15 +33,12 @@ public class FastLadder extends Module implements UpdateListener, MotionListener
    public FastLadder() {
        super("FastLadder", "Schnellleiter", new Color(166, 168, 50), Categorys.MOVEMENT);
       BiFunction[] biFunctions = new BiFunction[4];
-      biFunctions[0] = (obj, obj2) -> new MotionFastLadderMode((FastLadder)obj, (DoubleValue)obj2);
-      biFunctions[1] = (obj3, obj4) -> new PositionFastLadderMode((FastLadder)obj3, (DoubleValue)obj4);
-      biFunctions[2] = (obj5, obj6) -> new VerusFastLadderMode((FastLadder)obj5, (DoubleValue)obj6);
-      biFunctions[3] = (obj7, obj8) -> new VulcanFastLadderMode((FastLadder)obj7, (DoubleValue)obj8);
-      BiFunction[] biFunctions2 = biFunctions;
-      ModeSetting modeSetting = new ModeSetting(this, "Modes", "Motion", biFunctions2);
-      CustomSubModeFactory customSubModeFactory = (obj9, obj10, obj11) -> new MotionModifierFastLadderMode((FastLadder)obj9, (DoubleValue)obj10, (String)obj11);
-      this.modes = modeSetting.enableCustomModes(customSubModeFactory);
-      this.timer = new StringValue(this, "Timer", 1.0, 0.1, 2.0, 2);
+      biFunctions[0] = (obj, obj2) -> new MotionFastLadderMode((FastLadder)obj, (SettingGroup)obj2);
+      biFunctions[1] = (obj3, obj4) -> new PositionFastLadderMode((FastLadder)obj3, (SettingGroup)obj4);
+      biFunctions[2] = (obj5, obj6) -> new VerusFastLadderMode((FastLadder)obj5, (SettingGroup)obj6);
+      biFunctions[3] = (obj7, obj8) -> new VulcanFastLadderMode((FastLadder)obj7, (SettingGroup)obj8);
+      this.modes = new ModeSetting(this, "Modes", "Motion", biFunctions).enableCustomModes((obj9, obj10, obj11) -> new MotionModifierFastLadderMode((FastLadder)obj9, (SettingGroup)obj10, (String)obj11));
+      this.timer = new DoubleValue(this, "Timer", 1.0, 0.1, 2.0, 2);
       this.stopOnEnd = new BooleanValue(this, "StopOnEnd", true);
       this.vines = new BooleanValue(this, "Vines", true);
    }
@@ -59,17 +55,13 @@ public class FastLadder extends Module implements UpdateListener, MotionListener
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
-      byte b2 = 18;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
    public void onUpdate2() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
-      String selectedValue = this.modes.getSelectedValue();
-      this.setSuffix(selectedValue);
+      this.setSuffix(this.modes.getSelectedValue());
       if (this.stopOnEnd.getValue() && !this.isOnClimbable() && this.wasOnClimbable) {
          mc.thePlayer.motionY = 0.2F;
       }
@@ -79,7 +71,6 @@ public class FastLadder extends Module implements UpdateListener, MotionListener
 
    @Override
    public void onMotion(EventMotion event) {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       if (this.isClimbing()) {
          this.timerModified = true;
          mc.getTimer().timerSpeed = (float)Math.max(0.1, this.timer.getValue());
@@ -90,13 +81,11 @@ public class FastLadder extends Module implements UpdateListener, MotionListener
    }
 
    public boolean isClimbing() {
-      Setting[] cachedSettings = Fly.getCachedSettings();
       return this.isOnClimbable() && this.isLicenseTimestampValid() && mc.thePlayer.isCollidedHorizontally;
    }
 
    public boolean isOnClimbable() {
       int n = MathHelper.floor_double(mc.thePlayer.posX);
-      Fly.getCachedSettings();
       int n2 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minY);
       int n3 = MathHelper.floor_double(mc.thePlayer.posZ);
       Block block = mc.theWorld.getBlockState2(n, n2, n3).getBlock();
@@ -105,7 +94,6 @@ public class FastLadder extends Module implements UpdateListener, MotionListener
 
    private boolean isLicenseTimestampValid() {
       byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
-      Fly.getCachedSettings();
       boolean flag = false;
       if (timestampBytes != null) {
          long l = 0L;

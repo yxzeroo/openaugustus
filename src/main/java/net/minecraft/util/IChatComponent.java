@@ -143,9 +143,8 @@ public interface IChatComponent extends Iterable {
       private void serializeChatStyle(ChatStyle chatStyle, JsonObject json, JsonSerializationContext jsonSerializationContext) {
          JsonElement elem = jsonSerializationContext.serialize(chatStyle);
          if (elem.isJsonObject()) {
-            JsonObject json2 = (JsonObject)elem;
 
-            for (Entry entry : json2.entrySet()) {
+            for (Entry entry : ((JsonObject)elem).entrySet()) {
                json.add((String)entry.getKey(), (JsonElement)entry.getValue());
             }
          }

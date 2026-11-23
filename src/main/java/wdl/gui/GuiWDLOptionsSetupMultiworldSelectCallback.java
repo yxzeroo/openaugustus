@@ -13,9 +13,7 @@ public class GuiWDLOptionsSetupMultiworldSelectCallback implements WorldSelectio
 
    @Override
    public void onCancel() {
-      Minecraft mc = GuiWDL.getMinecraftForSetupCancel(this.parentCallback.parentGui);
-      Object obj = null;
-      mc.displayGuiScreen((GuiScreen)obj);
+      GuiWDL.getMinecraftForSetupCancel(this.parentCallback.parentGui).displayGuiScreen((GuiScreen)null);
    }
 
    @Override
@@ -24,8 +22,6 @@ public class GuiWDLOptionsSetupMultiworldSelectCallback implements WorldSelectio
       WDL.isMultiworld = true;
       WDL.propsFound = true;
       WDL.worldProps = WDL.loadWorldProps(str);
-      Minecraft mc = GuiWDL.getMinecraftForSetupSelected(this.parentCallback.parentGui);
-      GuiWDL parentGui = this.parentCallback.parentGui;
-      mc.displayGuiScreen(parentGui);
+      GuiWDL.getMinecraftForSetupSelected(this.parentCallback.parentGui).displayGuiScreen(this.parentCallback.parentGui);
    }
 }

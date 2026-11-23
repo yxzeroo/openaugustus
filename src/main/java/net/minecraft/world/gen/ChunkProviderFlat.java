@@ -183,8 +183,7 @@ public class ChunkProviderFlat implements IChunkProvider {
 
    @Override
    public List getPossibleCreatures(EnumCreatureType enumCreatureType, BlockPos pos) {
-      BiomeGenBase biomeGenForCoords = this.worldObj.getBiomeGenForCoords(pos);
-      return biomeGenForCoords.getSpawnableList(enumCreatureType);
+      return this.worldObj.getBiomeGenForCoords(pos).getSpawnableList(enumCreatureType);
    }
 
    @Override

@@ -57,8 +57,7 @@ public abstract class AbstractChunkTracker implements StorableObject {
                   copyChunk.getSections()[i] = null;
                   DataPalette palette = section.palette(PaletteType.BLOCKS);
                   if (this.hasRemappableBlocks(palette)) {
-                     ChunkSection copySection = copyChunk.getSections()[i] = new ChunkSectionImpl(false);
-                     DataPalette copyPalette = copySection.palette(PaletteType.BLOCKS);
+                     DataPalette copyPalette = (copyChunk.getSections()[i] = new ChunkSectionImpl(false)).palette(PaletteType.BLOCKS);
                      copyPalette.addId(0);
 
                      for (int x = 0; x < 16; x++) {

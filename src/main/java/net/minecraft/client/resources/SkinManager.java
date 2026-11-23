@@ -34,8 +34,7 @@ public class SkinManager {
 
    public ResourceLocation loadSkin(MinecraftProfileTexture minecraftProfileTexture, Type type, SkinManager.SkinAvailableCallback skinAvailableCallback) {
       ResourceLocation location = new ResourceLocation("skins/" + minecraftProfileTexture.getHash());
-      ITextureObject texture = this.textureManager.getTexture(location);
-      if (texture != null) {
+      if (this.textureManager.getTexture(location) != null) {
          if (skinAvailableCallback != null) {
             skinAvailableCallback.skinAvailable(type, location, minecraftProfileTexture);
          }
@@ -154,9 +153,7 @@ public class SkinManager {
             map.putAll(SkinManager.accessSessionService(this.skinManager).getTextures(this.profile, false));
          }
 
-         Minecraft minecraft = Minecraft.getMinecraft();
-         SkinManager.WorkerTask.WorkerTask2 obj = new SkinManager.WorkerTask.WorkerTask2(this, map);
-         minecraft.addScheduledTask(obj);
+         Minecraft.getMinecraft().addScheduledTask(new SkinManager.WorkerTask.WorkerTask2(this, map));
       }
 
       public WorkerTask(SkinManager skinManager2, GameProfile profile2, boolean flag, SkinManager.SkinAvailableCallback skinAvailableCallback2) {

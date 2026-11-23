@@ -797,8 +797,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
          return false;
       } else {
          BlockPos pos2 = pos.offset(facing.getOpposite());
-         Block block = this.entityWorld.getBlockState(pos2).getBlock();
-         return stack.canPlaceOn(block) || stack.canEditBlocks();
+         return stack.canPlaceOn(this.entityWorld.getBlockState(pos2).getBlock()) || stack.canEditBlocks();
       }
    }
 
@@ -1129,8 +1128,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
       }
 
       for (ScoreObjective scoreObjective : (Iterable<ScoreObjective>)(objectivesFromCriteria)) {
-         Score valueFromObjective = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreObjective);
-         valueFromObjective.incrementScore();
+         this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreObjective).incrementScore();
       }
    }
 
@@ -1153,8 +1151,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
          int colorIndex = playersTeam.getChatFormat().getColorIndex();
          if (colorIndex >= 0 && colorIndex < IScoreObjectiveCriteria.KILLED_BY_TEAM.length) {
             for (ScoreObjective scoreObjective : (Iterable<ScoreObjective>)(this.getWorldScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.KILLED_BY_TEAM[colorIndex]))) {
-               Score valueFromObjective = this.getWorldScoreboard().getValueFromObjective(entity.getName(), scoreObjective);
-               valueFromObjective.incrementScore();
+               this.getWorldScoreboard().getValueFromObjective(entity.getName(), scoreObjective).incrementScore();
             }
          }
       }
@@ -1506,8 +1503,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
             double motionX2 = entity.motionX;
             double motionY2 = entity.motionY;
             double motionZ2 = entity.motionZ;
-            boolean flag3 = entity.attackEntityFrom(DamageSource.causePlayerDamage(this), attributeValue);
-            if (flag3) {
+            if (entity.attackEntityFrom(DamageSource.causePlayerDamage(this), attributeValue)) {
                if (n > 0) {
                   entity.addVelocity(
                      (double)(-MathHelper.sin(this.rotationYaw * 3.1415927F / 180.0F) * (float)n * 0.5F),

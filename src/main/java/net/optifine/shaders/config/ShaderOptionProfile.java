@@ -20,8 +20,7 @@ public class ShaderOptionProfile extends ShaderOption {
       ArrayList list = new ArrayList();
 
       for (int i = 0; i < shaderProfiles.length; i++) {
-         ShaderProfile shaderProfile = shaderProfiles[i];
-         list.add(shaderProfile.getName());
+         list.add(shaderProfiles[i].getName());
       }
 
       list.add("<custom>");
@@ -61,8 +60,7 @@ public class ShaderOptionProfile extends ShaderOption {
    public void updateProfile() {
       ShaderProfile profile = this.getProfile(this.getValue());
       if (profile == null || !ShaderUtils.matchProfile(profile, this.options, false)) {
-         String str = detectProfileName(this.profiles, this.options);
-         this.setValue(str);
+         this.setValue(detectProfileName(this.profiles, this.options));
       }
    }
 
@@ -116,8 +114,7 @@ public class ShaderOptionProfile extends ShaderOption {
             String str = options2[i];
             ShaderOption option = this.getOption(str);
             if (option != null) {
-               String value2 = profile.getValue(str);
-               option.setValue(value2);
+               option.setValue(profile.getValue(str));
             }
          }
       }

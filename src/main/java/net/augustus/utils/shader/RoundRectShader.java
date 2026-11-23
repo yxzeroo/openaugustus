@@ -30,9 +30,8 @@ public class RoundRectShader {
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 0;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)0);
       float f10 = 0.0F;
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f10);
@@ -44,8 +43,7 @@ public class RoundRectShader {
    public void drawRoundedRect(
       float f, float f2, float f3, float f4, float f5, boolean flag, boolean flag2, boolean flag3, boolean flag4, Color color
    ) {
-      int rgb = color.getRGB();
-      this.drawRoundedRect2(f, f2, f3, f4, f5, flag, flag2, flag3, flag4, rgb);
+      this.drawRoundedRect2(f, f2, f3, f4, f5, flag, flag2, flag3, flag4, color.getRGB());
    }
 
    private void pushGlState() {
@@ -74,9 +72,8 @@ public class RoundRectShader {
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 1;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)1);
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f5);
       this.drawQuad(f, f2, f3, f4);
@@ -98,17 +95,13 @@ public class RoundRectShader {
       float f9 = flag2 ? f5 : 0.0F;
       float f10 = flag3 ? f5 : 0.0F;
       float f11 = flag4 ? f5 : 0.0F;
-      float f12 = f10;
-      float f13 = f9;
-      float f14 = f8;
       String str3 = "cornerRadius";
-      this.shaderProgram.setUniform4f(str3, f14, f13, f12, f11);
+      this.shaderProgram.setUniform4f(str3, f8, f9, f10, f11);
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 1;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)1);
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f6);
       this.drawQuad(f, f2, f3, f4);
@@ -129,9 +122,8 @@ public class RoundRectShader {
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 0;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)0);
       float f10 = 0.0F;
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f10);
@@ -178,15 +170,13 @@ public class RoundRectShader {
    public void drawRoundedOutline(
       float f, float f2, float f3, float f4, float f5, float f6, boolean flag, boolean flag2, boolean flag3, boolean flag4, Color color
    ) {
-      int rgb = color.getRGB();
-      this.drawRoundedOutline2(f, f2, f3, f4, f5, f6, flag, flag2, flag3, flag4, rgb);
+      this.drawRoundedOutline2(f, f2, f3, f4, f5, f6, flag, flag2, flag3, flag4, color.getRGB());
    }
 
    public void drawRoundedRect(
       float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, Color color
    ) {
-      int rgb = color.getRGB();
-      this.drawRoundedRect2(f, f2, f3, f4, f5, f6, f7, f8, rgb);
+      this.drawRoundedRect2(f, f2, f3, f4, f5, f6, f7, f8, color.getRGB());
    }
 
    private void setColorUniform(int n) {
@@ -231,9 +221,8 @@ public class RoundRectShader {
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 1;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)1);
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f6);
       this.drawQuad(f, f2, f3, f4);
@@ -242,18 +231,15 @@ public class RoundRectShader {
    }
 
    public void drawRoundedOutline(float f, float f2, float f3, float f4, float f5, float f6, Color color) {
-      int rgb = color.getRGB();
-      this.drawRoundedOutline2(f, f2, f3, f4, f5, f6, rgb);
+      this.drawRoundedOutline2(f, f2, f3, f4, f5, f6, color.getRGB());
    }
 
    public void drawRoundedOutline2(float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, Color color) {
-      int rgb = color.getRGB();
-      this.drawRoundedOutline(f, f2, f3, f4, f5, f6, f7, f8, f9, rgb);
+      this.drawRoundedOutline(f, f2, f3, f4, f5, f6, f7, f8, f9, color.getRGB());
    }
 
    public void drawRoundedRect(float f, float f2, float f3, float f4, float f5, Color color) {
-      int rgb = color.getRGB();
-      this.drawRoundedRect2(f, f2, f3, f4, f5, rgb);
+      this.drawRoundedRect2(f, f2, f3, f4, f5, color.getRGB());
    }
 
    public void drawRoundedRect2(float f, float f2, float f3, float f4, float f5, boolean flag, boolean flag2, boolean flag3, boolean flag4, int n) {
@@ -268,17 +254,13 @@ public class RoundRectShader {
       float f8 = flag2 ? f5 : 0.0F;
       float f9 = flag3 ? f5 : 0.0F;
       float f10 = flag4 ? f5 : 0.0F;
-      float f11 = f9;
-      float f12 = f8;
-      float f13 = f7;
       String str3 = "cornerRadius";
-      this.shaderProgram.setUniform4f(str3, f13, f12, f11, f10);
+      this.shaderProgram.setUniform4f(str3, f7, f8, f9, f10);
       this.setColorUniform(n);
       String str4 = "position";
       this.shaderProgram.setUniform2f(str4, f, f2);
-      byte b = 0;
       String str5 = "outline";
-      this.shaderProgram.setUniform1i(str5, b);
+      this.shaderProgram.setUniform1i(str5, (byte)0);
       float f14 = 0.0F;
       String str6 = "lineWidth";
       this.shaderProgram.setUniform1f(str6, f14);

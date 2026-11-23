@@ -28,13 +28,11 @@ public class ResourceIndex {
 
          try {
             reader = Files.newReader(file3, Charsets.UTF_8);
-            JsonObject asJsonObject = new JsonParser().parse(reader).getAsJsonObject();
-            JsonObject jsonObject = JsonUtils.getJsonObject(asJsonObject, "objects", (JsonObject)null);
+            JsonObject jsonObject = JsonUtils.getJsonObject(new JsonParser().parse(reader).getAsJsonObject(), "objects", (JsonObject)null);
             if (jsonObject != null) {
                for (Entry entry : jsonObject.entrySet()) {
                   JsonObject value = (JsonObject)entry.getValue();
-                  String key = (String)entry.getKey();
-                  String[] strings = key.split("/", 2);
+                  String[] strings = ((String)entry.getKey()).split("/", 2);
                   String str2 = strings.length == 1 ? strings[0] : strings[0] + ":" + strings[1];
                   String string = JsonUtils.getString(value, "hash");
                   File file4 = new File(file2, string.substring(0, 2) + "/" + string);

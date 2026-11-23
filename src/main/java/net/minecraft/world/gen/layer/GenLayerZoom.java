@@ -2,8 +2,7 @@ package net.minecraft.world.gen.layer;
 
 public class GenLayerZoom extends GenLayer {
    public int selectRandom(int n, int n2) {
-      int n3 = this.nextInt(2);
-      return n3 == 0 ? n : n2;
+      return this.nextInt(2) == 0 ? n : n2;
    }
 
    @Override
@@ -14,8 +13,7 @@ public class GenLayerZoom extends GenLayer {
       int n8 = (n4 >> 1) + 2;
       int[] ints = this.parent.getInts(n5, n6, n7, n8);
       int n9 = n7 - 1 << 1;
-      int n10 = n8 - 1 << 1;
-      int[] intCache = IntCache.getIntCache(n9 * n10);
+      int[] intCache = IntCache.getIntCache(n9 * (n8 - 1 << 1));
 
       for (int i = 0; i < n8 - 1; i++) {
          int n11 = (i << 1) * n9;

@@ -92,8 +92,7 @@ public class EspRenderUtil {
       float green = entityEspBox.green;
       float blue = entityEspBox.blue;
       float alpha = entityEspBox.alpha;
-      float f3 = MathHelper.wrapAngleTo180_float(entityEspBox.getYawHead());
-      float f4 = (float)Math.toRadians((double)f3);
+      float f4 = (float)Math.toRadians((double)MathHelper.wrapAngleTo180_float(entityEspBox.getYawHead()));
       float f5 = (float)Math.cos((double)f4);
       float f6 = (float)Math.sin((double)f4);
       float f7 = entityEspBox.x + (expandedHalfWidth * f5 - expandedHalfWidth * f6);
@@ -203,8 +202,7 @@ public class EspRenderUtil {
       float green = entityEspBox.green;
       float blue = entityEspBox.blue;
       float alpha = entityEspBox.alpha;
-      float f3 = MathHelper.wrapAngleTo180_float(entityEspBox.getYawHead());
-      float f4 = (float)Math.toRadians((double)f3);
+      float f4 = (float)Math.toRadians((double)MathHelper.wrapAngleTo180_float(entityEspBox.getYawHead()));
       float f5 = (float)Math.cos((double)f4);
       float f6 = (float)Math.sin((double)f4);
       float f7 = entityEspBox.x + (expandedHalfWidth * f5 - expandedHalfWidth * f6);

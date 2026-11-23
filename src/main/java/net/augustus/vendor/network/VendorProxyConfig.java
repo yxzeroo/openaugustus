@@ -27,10 +27,9 @@ public class VendorProxyConfig {
             stream = stream.filter(obj -> {
                return !((String)obj).isEmpty();
             });
-            Optional optional = stream.filter(obj2 -> {
+            return stream.filter(obj2 -> {
                return !((String)obj2).startsWith("#");
-            }).findFirst();
-            return optional.map(obj3 -> parse((String)obj3));
+            }).findFirst().map(obj3 -> parse((String)obj3));
          } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();

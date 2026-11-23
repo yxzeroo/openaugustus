@@ -25,11 +25,9 @@ public class DojoSpeedMode extends SpeedMode {
       if (MoveUtil.isMoving()) {
          if (mc.thePlayer.onGround) {
             mc.thePlayer.jump();
-            float f = (float)(ClientManagers.moduleManager.speed.dojoSpeed.getValue() * MoveUtil.getSpeed());
-            MoveUtil.setSpeed2(f);
+            MoveUtil.setSpeed2((float)(ClientManagers.moduleManager.speed.dojoSpeed.getValue() * MoveUtil.getSpeed()));
          } else {
-            float speed2 = (float)MoveUtil.getSpeed();
-            MoveUtil.setSpeed2(speed2);
+            MoveUtil.setSpeed2((float)MoveUtil.getSpeed());
          }
       }
    }

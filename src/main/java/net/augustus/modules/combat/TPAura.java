@@ -25,8 +25,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.utils.pathfinding.PathBlockPos;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,15 +40,15 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 public class TPAura extends Module implements TickListener, RenderListener, MoveInputListener {
-   public final StringValue maxDistance;
-   public final StringValue maxTeleportDistance;
-   public final StringValue attacksPerSecond;
+   public final DoubleValue maxDistance;
+   public final DoubleValue maxTeleportDistance;
+   public final DoubleValue attacksPerSecond;
    public final BooleanValue noswing;
    public final BooleanValue fly;
-   public final DoubleValue target;
+   public final SettingGroup target;
    public final MultiOptionSetting targets;
-   public final StringValue maxTargets;
-   public final StringValue minhurttime;
+   public final DoubleValue maxTargets;
+   public final DoubleValue minhurttime;
    public final BooleanValue debuglines;
    public final BooleanValue legit;
    public final BooleanValue groundSpoof;
@@ -62,15 +62,15 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
 
    public TPAura() {
        super("TPAura", "Ferntötung mittels Teleportation", Color.RED, Categorys.COMBAT);
-      this.maxDistance = new StringValue(this, "MaxDistance", 50.0, 3.0, 150.0, 0);
-      this.maxTeleportDistance = new StringValue(this, "MaxTeleportDistance", 5.0, 2.0, 9.0, 0);
-      this.attacksPerSecond = new StringValue(this, "AttacksPerSecond", 2.0, 1.0, 20.0, 0);
+      this.maxDistance = new DoubleValue(this, "MaxDistance", 50.0, 3.0, 150.0, 0);
+      this.maxTeleportDistance = new DoubleValue(this, "MaxTeleportDistance", 5.0, 2.0, 9.0, 0);
+      this.attacksPerSecond = new DoubleValue(this, "AttacksPerSecond", 2.0, 1.0, 20.0, 0);
       this.noswing = new BooleanValue(this, "Noswing", false);
       this.fly = new BooleanValue(this, "Fly", true);
-      this.target = new DoubleValue(this, "Target");
+      this.target = new SettingGroup(this, "Target");
       this.targets = new MultiOptionSetting(this, "Targets", TPAuraTargetOption.values(), this.target);
-      this.maxTargets = new StringValue(this, "MaxTargets", 1.0, 1.0, 10.0, 0, this.target);
-      this.minhurttime = new StringValue(this, "Minhurttime", 3.0, 0.0, 10.0, 0, this.target);
+      this.maxTargets = new DoubleValue(this, "MaxTargets", 1.0, 1.0, 10.0, 0, this.target);
+      this.minhurttime = new DoubleValue(this, "Minhurttime", 3.0, 0.0, 10.0, 0, this.target);
       this.debuglines = new BooleanValue(this, "Debuglines", false);
       this.legit = new BooleanValue(this, "Legit", false);
       this.groundSpoof = new BooleanValue(this, "GroundSpoof", false);
@@ -91,20 +91,15 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 32;
-      this.toggleEventSubscription(b2);
-      byte b3 = 21;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)21);
    }
 
    @Override
    public void onTick() {
       this.currentRotation = ClientManagers.rotationController.getPreviousRotation();
-      TimeHelper timeHelper2 = this.timeHelper;
-      double d = 1000.0 / this.attacksPerSecond.getValue();
-      if (timeHelper2.reached(d)) {
+      if (this.timeHelper.reached(1000.0 / this.attacksPerSecond.getValue())) {
          this.timeHelper.reset();
          this.teleporting = true;
          double d2 = this.maxDistance.getValue() * this.maxDistance.getValue();
@@ -116,24 +111,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
                if (!(entity.getDistanceSqToEntity(mc.thePlayer) > d2) && !((double)entity2.hurtTime > this.minhurttime.getValue()) && !(entity instanceof EntityPlayerSP)
                   )
                 {
-                  boolean isSelected = TPAuraTargetOption.PLAYER.isSelected();
-                  boolean isSelected2 = TPAuraTargetOption.MOB.isSelected();
-                  boolean isSelected3 = TPAuraTargetOption.ANIMAL.isSelected();
-                  boolean isSelected4 = TPAuraTargetOption.VILLAGER.isSelected();
-                  boolean isSelected5 = TPAuraTargetOption.INVISIBLE.isSelected();
-                  boolean isSelected6 = TPAuraTargetOption.DEAD.isSelected();
-                  boolean flag = true;
-                  boolean flag2 = isSelected6;
-                  boolean flag3 = true;
-                  boolean flag4 = true;
-                  boolean flag5 = true;
-                  boolean flag6 = isSelected5;
-                  boolean flag7 = false;
-                  boolean flag8 = isSelected4;
-                  boolean flag9 = isSelected3;
-                  boolean flag10 = isSelected2;
-                  boolean flag11 = isSelected;
-                  if (CombatTargetUtil.isValidTarget(entity, flag11, flag10, flag9, flag8, flag7, flag6, flag5, flag4, flag3, flag2, flag)) {
+                  if (CombatTargetUtil.isValidTarget(entity, TPAuraTargetOption.PLAYER.isSelected(), TPAuraTargetOption.MOB.isSelected(), TPAuraTargetOption.ANIMAL.isSelected(), TPAuraTargetOption.VILLAGER.isSelected(), false, TPAuraTargetOption.INVISIBLE.isSelected(), true, true, true, TPAuraTargetOption.DEAD.isSelected(), true)) {
                      list.add(entity);
                   }
                }
@@ -168,8 +146,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
                   PathBlockPos pathBlockPos2 = new PathBlockPos((int)Math.floor(interpolatedPos3.xCoord), (int)Math.floor(interpolatedPos3.yCoord), (int)Math.floor(interpolatedPos3.zCoord));
                   AStarPathFinder aStarPathFinder = new AStarPathFinder(pathBlockPos, pathBlockPos2, false, false, value);
                   aStarPathFinder.allowDiagonals = false;
-                  boolean flag12 = true;
-                  ArrayList list4 = aStarPathFinder.computePath(flag12, l);
+                  ArrayList list4 = aStarPathFinder.computePath(true, l);
                   list3.add(entity3);
                   if (list4 != null && !list4.isEmpty()) {
                      Collections.reverse(list4);
@@ -178,10 +155,8 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
 
                      Vec3 vec;
                      do {
-                        int n4 = n3 + 1;
-                        n3 = this.findFarthestReachableNode(list4, interpolatedPos2, n4);
-                        PathBlockPos pos = ((PathNode)list4.get(n3)).getPos();
-                        vec = pos.toVec3().addVector(0.5, 0.0, 0.5);
+                        n3 = this.findFarthestReachableNode(list4, interpolatedPos2, n3 + 1);
+                        vec = ((PathNode)list4.get(n3)).getPos().toVec3().addVector(0.5, 0.0, 0.5);
                         if (n3 == list4.size() - 1) {
                            vec = interpolatedPos3;
                         }
@@ -236,14 +211,10 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.teleporting || this.aimingAtTarget) {
-         float f = this.aimingAtTarget ? 0.0F : 1.0F;
-         event.setMoveForward(f);
-         boolean flag = false;
-         event.setSneak(flag);
-         boolean isCollidedHorizontally = mc.thePlayer.isCollidedHorizontally;
-         event.setJump(isCollidedHorizontally);
-         float f2 = 0.0F;
-         event.setMoveStrafe(f2);
+         event.setMoveForward(this.aimingAtTarget ? 0.0F : 1.0F);
+         event.setSneak(false);
+         event.setJump(mc.thePlayer.isCollidedHorizontally);
+         event.setMoveStrafe(0.0F);
       }
    }
 
@@ -259,10 +230,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
          boolean flag;
          exitBlock: {
             if (!this.groundSpoof.getValue()) {
-               EntityPlayerSP thePlayer = mc.thePlayer;
-               boolean flag2 = false;
-               AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec, flag2);
-               if (!EntityMovementPredictor.isOnGroundAtBox(thePlayer, box)) {
+               if (!EntityMovementPredictor.isOnGroundAtBox(mc.thePlayer, EntityBoundsUtil.createPlayerBoundingBox(vec, false))) {
                   flag = false;
                   break exitBlock;
                }
@@ -289,10 +257,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
             boolean flag;
             exitBlock: {
                if (!this.groundSpoof.getValue()) {
-                  EntityPlayerSP thePlayer = mc.thePlayer;
-                  boolean flag2 = false;
-                  AxisAlignedBB box = EntityBoundsUtil.createPlayerBoundingBox(vec3, flag2);
-                  if (!EntityMovementPredictor.isOnGroundAtBox(thePlayer, box)) {
+                  if (!EntityMovementPredictor.isOnGroundAtBox(mc.thePlayer, EntityBoundsUtil.createPlayerBoundingBox(vec3, false))) {
                      flag = false;
                      break exitBlock;
                   }
@@ -326,9 +291,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
       double d = nearestPointOnEntity.xCoord - mc.thePlayer.posX;
       double d2 = nearestPointOnEntity.yCoord - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight());
       double d3 = nearestPointOnEntity.zCoord - mc.thePlayer.posZ;
-      float f = (float)(MathHelper.atan2(d3, d) * 180.0 / Math.PI - 90.0);
-      float f2 = (float)(-(MathHelper.atan2(d2, (double)MathHelper.sqrt_double(d * d + d3 * d3)) * 180.0 / Math.PI));
-      this.applySmoothedRotation(f, f2);
+      this.applySmoothedRotation((float)(MathHelper.atan2(d3, d) * 180.0 / Math.PI - 90.0), (float)(-(MathHelper.atan2(d2, (double)MathHelper.sqrt_double(d * d + d3 * d3)) * 180.0 / Math.PI)));
       mc.thePlayer.onUpdate();
       entity.onUpdate();
       this.teleporting = true;
@@ -341,10 +304,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
       while ((double)n < Math.max(10.0, 15.0 * this.maxTeleportDistance.getValue()) && mc.thePlayer.getDistanceToVec(vec) > 0.8) {
          n++;
          double d = vec.xCoord + 0.5 - mc.thePlayer.posX;
-         double d2 = vec.zCoord + 0.5 - mc.thePlayer.posZ;
-         float f = (float)(MathHelper.atan2(d2, d) * 180.0 / Math.PI - 90.0);
-         float f2 = (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0);
-         this.applySmoothedRotation(f, f2);
+         this.applySmoothedRotation((float)(MathHelper.atan2(vec.zCoord + 0.5 - mc.thePlayer.posZ, d) * 180.0 / Math.PI - 90.0), (float)ThreadLocalRandom.current().nextDouble(-1.0, 1.0));
          mc.thePlayer.onUpdate();
          this.teleportPositions.add(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
       }
@@ -365,9 +325,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
    private int findFarthestReachableNode(ArrayList list, Vec3 vec, int n) {
 
       for (int i = n; i < list.size(); i++) {
-         PathNode pathNode = (PathNode)list.get(i);
-         PathBlockPos pos = pathNode.getPos();
-         Vec3 vec2 = pos.toVec3().addVector(0.5, 0.0, 0.5);
+         Vec3 vec2 = ((PathNode)list.get(i)).getPos().toVec3().addVector(0.5, 0.0, 0.5);
          if ((vec2.squareDistanceTo(vec) > this.maxTeleportDistance.getValue() * this.maxTeleportDistance.getValue() || this.isPathBlocked(vec, vec2)) && this.isLicenseTimestampValid()) {
             if (n == i) {
                return n;
@@ -394,8 +352,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
          Vec3 vec4 = vecs[0];
          Vec3 vec5 = vecs[1];
          MovingObjectPosition hit = mc.theWorld.rayTraceBlocksCustom(vec4.xCoord, vec4.yCoord, vec4.zCoord, vec5.xCoord, vec5.yCoord, vec5.zCoord, false, false, false);
-         boolean flag = hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK;
-         if (flag) {
+         if (hit != null && hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             this.blockedRaySegments.add(vecsArr);
             return true;
          }
@@ -426,8 +383,7 @@ public class TPAura extends Module implements TickListener, RenderListener, Move
          GL11.glBegin(3);
 
          for (PathNode pathNode : (Iterable<PathNode>)(this.pathNodes)) {
-            PathBlockPos pos = pathNode.getPos();
-            Vec3 vec = pos.toVec3();
+            Vec3 vec = pathNode.getPos().toVec3();
             GL11.glVertex3d(vec.xCoord + 0.5, vec.yCoord + 0.01, vec.zCoord + 0.5);
          }
 

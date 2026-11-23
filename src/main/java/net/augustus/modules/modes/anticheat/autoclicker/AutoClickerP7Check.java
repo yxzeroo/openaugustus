@@ -72,8 +72,7 @@ public class AutoClickerP7Check extends ModuleMode {
       }
 
       if (packet instanceof C02PacketUseEntity) {
-         C02PacketUseEntity packet2 = (C02PacketUseEntity)packet;
-         if (packet2.getAction() == C02PacketUseEntity.Action.ATTACK) {
+         if (((C02PacketUseEntity)packet).getAction() == C02PacketUseEntity.Action.ATTACK) {
             this.attacksThisTick++;
          }
       }

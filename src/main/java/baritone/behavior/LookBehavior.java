@@ -63,9 +63,7 @@ public final class LookBehavior extends Behavior implements TickListener, ILookB
          RotationController rotationController = Augustus.getInstance().getRotationController();
          Rotation rotation = this.processor.peekRotation(this.target.rotation);
          net.augustus.utils.rotation.Rotation rotation2 = new net.augustus.utils.rotation.Rotation(MathHelper.wrapAngleTo180_float(rotation.getYaw()), rotation.getPitch());
-         net.augustus.modules.misc.Baritone baritone2 = Augustus.getInstance().getModuleManager().baritone;
-         byte b = 0;
-         rotationController.requestRotation(rotation2, b, (Module)baritone2);
+         rotationController.requestRotation(rotation2, (byte)0, (Module)Augustus.getInstance().getModuleManager().baritone);
          if (this.target.mode == LookTargetMode.CLIENT) {
             YawPitchHelper yawPitchHelper = Augustus.getInstance().getYawPitchHelper();
             yawPitchHelper.realLastYaw = yawPitchHelper.realYaw = rotation2.yaw;

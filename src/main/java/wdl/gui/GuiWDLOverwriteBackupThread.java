@@ -45,9 +45,7 @@ public class GuiWDLOverwriteBackupThread extends Thread {
       } finally {
          GuiWDLOverwriteChanges.setBackingUp(this.parentGui, false);
          WDL.overrideLastModifiedCheck = true;
-         Minecraft minecraft = GuiWDLOverwriteChanges.getMinecraft(this.parentGui);
-         Object obj = null;
-         minecraft.displayGuiScreen((GuiScreen)obj);
+         GuiWDLOverwriteChanges.getMinecraft(this.parentGui).displayGuiScreen((GuiScreen)null);
          WDL.startDownload();
       }
    }

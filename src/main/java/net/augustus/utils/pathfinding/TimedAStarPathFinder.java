@@ -12,7 +12,6 @@ public class TimedAStarPathFinder extends AStarPathFinder {
    }
 
    public ArrayList computePathWithTimeout(long l) {
-      int[] stateFlags = PathBlockPos.getStateFlags();
       if (AntiSamplerGuard.isGuardActive(6)) {
          return null;
       } else {
@@ -25,13 +24,7 @@ public class TimedAStarPathFinder extends AStarPathFinder {
             int n2 = this.startPos.y;
             int n3 = this.startPos.z;
             long l3 = AStarPathFinder.packBlockKey(this.startPos.x, this.startPos.y, this.startPos.z);
-            boolean flag = false;
-            long l4 = l3;
-            int n4 = n3;
-            int n5 = n2;
-            int n6 = n;
-            Object obj = null;
-            this.createAndQueueNode((PathNode)obj, n6, n5, n4, l4, flag);
+            this.createAndQueueNode((PathNode)null, n, n2, n3, l3, false);
 
             while (System.currentTimeMillis() - l2 <= l) {
                if (this.openSet.isEmpty()) {
@@ -49,8 +42,7 @@ public class TimedAStarPathFinder extends AStarPathFinder {
                   ArrayList list = this.reconstructPath(pathNode);
                   if (this.smoothPath) {
                      boolean walkOnWater2 = this.walkOnWater;
-                     boolean allowSwimming2 = this.allowSwimming;
-                     list = this.simplifyPath(list, allowSwimming2, walkOnWater2);
+                     list = this.simplifyPath(list, this.allowSwimming, walkOnWater2);
                   }
 
                   return list;

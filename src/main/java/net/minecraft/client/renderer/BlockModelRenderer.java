@@ -229,8 +229,7 @@ public class BlockModelRenderer {
    }
 
    public boolean renderModelAmbientOcclusion(IBlockAccess world, IBakedModel bakedModel, Block block, BlockPos pos, WorldRenderer worldRenderer, boolean flag) {
-      IBlockState blockState = world.getBlockState(pos);
-      return this.renderModelSmooth(world, bakedModel, blockState, pos, worldRenderer, flag);
+      return this.renderModelSmooth(world, bakedModel, world.getBlockState(pos), pos, worldRenderer, flag);
    }
 
    private void renderQuadsFlat(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing, int n, boolean flag, WorldRenderer worldRenderer, List list, RenderEnv renderEnv) {
@@ -241,9 +240,7 @@ public class BlockModelRenderer {
       double z = (double)pos.getZ();
       Block.EnumOffsetType offsetType = block.getOffsetType();
       if (offsetType != Block.EnumOffsetType.NONE) {
-         int x2 = pos.getX();
-         int z2 = pos.getZ();
-         long l = (long)(x2 * 3129871) ^ (long)z2 * 116129781L;
+         long l = (long)(pos.getX() * 3129871) ^ (long)pos.getZ() * 116129781L;
          l = l * l * 42317861L + l * 11L;
          x += ((double)((float)(l >> 16 & 15L) / 15.0F) - 0.5) * 0.5;
          z += ((double)((float)(l >> 24 & 15L) / 15.0F) - 0.5) * 0.5;
@@ -352,8 +349,7 @@ public class BlockModelRenderer {
    }
 
    public boolean renderModel(IBlockAccess world, IBakedModel bakedModel, IBlockState state, BlockPos pos, WorldRenderer worldRenderer) {
-      Block block = state.getBlock();
-      block.setBlockBoundsBasedOnState(world, pos.getX(), pos.getY(), pos.getZ());
+      state.getBlock().setBlockBoundsBasedOnState(world, pos.getX(), pos.getY(), pos.getZ());
       return this.renderModel(world, bakedModel, state, pos, worldRenderer, true);
    }
 
@@ -453,8 +449,7 @@ public class BlockModelRenderer {
    }
 
    public boolean renderModelStandard(IBlockAccess world, IBakedModel bakedModel, Block block, BlockPos pos, WorldRenderer worldRenderer, boolean flag) {
-      IBlockState blockState = world.getBlockState(pos);
-      return this.renderModelFlat(world, bakedModel, blockState, pos, worldRenderer, flag);
+      return this.renderModelFlat(world, bakedModel, world.getBlockState(pos), pos, worldRenderer, flag);
    }
 
    private void renderOverlayModels(
@@ -496,9 +491,7 @@ public class BlockModelRenderer {
       }
 
       if (Config.isBetterSnow() && !renderEnv.isBreakingAnimation() && BetterSnow.shouldRender(world, state, pos)) {
-         IBakedModel modelSnowLayer = BetterSnow.getModelSnowLayer();
-         IBlockState stateSnowLayer = BetterSnow.getStateSnowLayer();
-         this.renderModel(world, modelSnowLayer, stateSnowLayer, pos, worldRenderer, flag);
+         this.renderModel(world, BetterSnow.getModelSnowLayer(), BetterSnow.getStateSnowLayer(), pos, worldRenderer, flag);
       }
    }
 
@@ -1003,12 +996,10 @@ public class BlockModelRenderer {
       }
 
       private int getVertexBrightness(int n, int n2, int n3, int n4, float f, float f2, float f3, float f4) {
-         int n5 = (int)(
+         return ((int)(
                (float)(n >> 16 & 0xFF) * f + (float)(n2 >> 16 & 0xFF) * f2 + (float)(n3 >> 16 & 0xFF) * f3 + (float)(n4 >> 16 & 0xFF) * f4
             )
-            & 0xFF;
-         int n6 = (int)((float)(n & 0xFF) * f + (float)(n2 & 0xFF) * f2 + (float)(n3 & 0xFF) * f3 + (float)(n4 & 0xFF) * f4) & 0xFF;
-         return n5 << 16 | n6;
+            & 0xFF) << 16 | ((int)((float)(n & 0xFF) * f + (float)(n2 & 0xFF) * f2 + (float)(n3 & 0xFF) * f3 + (float)(n4 & 0xFF) * f4) & 0xFF);
       }
    }
 }

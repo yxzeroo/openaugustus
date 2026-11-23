@@ -12,8 +12,7 @@ public class EventAttackSlowdown extends AbstractEvent {
    private boolean applySecondStage = false;
 
    public void call(Object obj) {
-      AttackSlowdownListener listener = (AttackSlowdownListener)obj;
-      this.call2(listener);
+      this.call2((AttackSlowdownListener)obj);
    }
 
    public static void reset(EventAttackSlowdown event, AttackSlowdownStage attackSlowdownStage) {

@@ -160,9 +160,7 @@ public class Protocola1_2_3_5_1_2_6Tob1_0_1_1_1
                         String str = String.valueOf(block);
                         String str2 = String.valueOf(pos);
                         String str3 = String.valueOf(tag);
-                        String str4 = str2;
-                        String str5 = str;
-                        logger2.warning("Unhandled Complex Entity data: " + str5 + "@" + str4 + ": '" + str3 + "'");
+                        logger2.warning("Unhandled Complex Entity data: " + str + "@" + str2 + ": '" + str3 + "'");
                      } else {
                         Item[] furnaceItems = new Item[3];
                         this.readItemsFromTag(tag, furnaceItems);

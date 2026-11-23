@@ -24,8 +24,7 @@ public class HexEncoder {
 
    private static void appendHexByte(byte b, StringBuilder sb) {
       byte b2 = (byte)(b & 15);
-      byte b3 = (byte)(b >> 4 & 15);
-      sb.append(nibbleToHexChar(b3));
+      sb.append(nibbleToHexChar((byte)(b >> 4 & 15)));
       sb.append(nibbleToHexChar(b2));
    }
 

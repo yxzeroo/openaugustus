@@ -1,6 +1,5 @@
 package net.augustus.config;
 
-import net.augustus.settings.Setting;
 import net.augustus.utils.UnaryFunction;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,7 +19,6 @@ public class JsonFileStorageHandler {
    private final UnaryFunction decoder;
 
    public void ensureParentDirectory(File file) {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       Path path = file.getParentFile().toPath();
       if (!Files.exists(path)) {
          try {
@@ -33,13 +31,11 @@ public class JsonFileStorageHandler {
 
    public JsonElement read(File file, Gson gson, Class clazz, Supplier supplier) {
       this.ensureParentDirectory(file);
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       JsonElement elem;
       try {
          byte[] bytes = Files.readAllBytes(file.toPath());
          if (this.decoder != null) {
-            String str = (String)this.decoder.apply(bytes);
-            elem = (JsonElement)gson.fromJson(str, clazz);
+            elem = (JsonElement)gson.fromJson((String)this.decoder.apply(bytes), clazz);
          } else {
             elem = (JsonElement)gson.fromJson(new String(bytes), clazz);
          }
@@ -55,8 +51,7 @@ public class JsonFileStorageHandler {
    }
 
    public JsonElement read(File file, Gson gson, Class clazz) {
-      Object obj = null;
-      return this.read(file, gson, clazz, (Supplier)obj);
+      return this.read(file, gson, clazz, (Supplier)null);
    }
 
    public JsonFileStorageHandler() {
@@ -65,18 +60,15 @@ public class JsonFileStorageHandler {
    }
 
    public boolean isEmpty(JsonElement elem) {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       if (elem == null) {
          return true;
       } else {
          if (elem instanceof JsonObject) {
-            JsonObject json = (JsonObject)elem;
-            if (json.entrySet().isEmpty()) {
+            if (((JsonObject)elem).entrySet().isEmpty()) {
                return true;
             }
          } else if (elem instanceof JsonArray) {
-            JsonArray array = (JsonArray)elem;
-            if (array.isEmpty()) {
+            if (((JsonArray)elem).isEmpty()) {
                return true;
             }
          }
@@ -91,7 +83,6 @@ public class JsonFileStorageHandler {
    }
 
    public void write(File file, JsonElement elem, Gson gson) {
-      Setting[] cachedSettings = ConfigManager.getCachedSettings();
       this.ensureParentDirectory(file);
 
       try {

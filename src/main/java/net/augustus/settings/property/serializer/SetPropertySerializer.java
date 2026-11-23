@@ -30,22 +30,19 @@ public interface SetPropertySerializer extends JsonPropertyCodec {
 
    @Override
    default Object read(String str, Object obj, JsonObject json) {
-      Set set = (Set)obj;
-      return this.readSet(str, set, json);
+      return this.readSet(str, (Set)obj, json);
    }
 
    @Override
    default void write(String str, Object obj, JsonObject json) {
-      Set set = (Set)obj;
-      this.writeSet(str, set, json);
+      this.writeSet(str, (Set)obj, json);
    }
 
    default Set readSet(String str, Set set, JsonObject json) {
       JsonElement elem = json.get(str);
       if (elem != null && elem.isJsonArray()) {
          set.clear();
-         JsonArray asJsonArray = elem.getAsJsonArray();
-         List list = asJsonArray.asList();
+         List list = elem.getAsJsonArray().asList();
          list.forEach(obj -> this.collectElement(set, (JsonElement)obj));
          return set;
       } else {

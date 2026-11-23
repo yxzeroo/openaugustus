@@ -22,18 +22,12 @@ public abstract class TriMergeStep<I1 extends AbstractStep.StepResult<?>, I2 ext
       if (!result.isExpiredOrOutdated()) {
          return result;
       } else {
-         I1 prevResult1 = this.prevStep.refresh(logger, httpClient, result.prevResult());
-         I2 prevResult2 = this.prevStep2 != null ? this.prevStep2.refresh(logger, httpClient, result.prevResult2()) : null;
-         I3 prevResult3 = this.prevStep3 != null ? this.prevStep3.refresh(logger, httpClient, result.prevResult3()) : null;
-         return this.execute(logger, httpClient, prevResult1, prevResult2, prevResult3);
+         return this.execute(logger, httpClient, this.prevStep.refresh(logger, httpClient, result.prevResult()), this.prevStep2 != null ? this.prevStep2.refresh(logger, httpClient, result.prevResult2()) : null, this.prevStep3 != null ? this.prevStep3.refresh(logger, httpClient, result.prevResult3()) : null);
       }
    }
 
    public O getFromInput(ILogger logger, HttpClient httpClient, AbstractStep.InitialInput input) throws Exception {
-      I1 prevResult1 = this.prevStep.getFromInput(logger, httpClient, input);
-      I2 prevResult2 = this.prevStep2 != null ? this.prevStep2.getFromInput(logger, httpClient, input) : null;
-      I3 prevResult3 = this.prevStep3 != null ? this.prevStep3.getFromInput(logger, httpClient, input) : null;
-      return this.execute(logger, httpClient, prevResult1, prevResult2, prevResult3);
+      return this.execute(logger, httpClient, this.prevStep.getFromInput(logger, httpClient, input), this.prevStep2 != null ? this.prevStep2.getFromInput(logger, httpClient, input) : null, this.prevStep3 != null ? this.prevStep3.getFromInput(logger, httpClient, input) : null);
    }
 
    public abstract static class StepResult<P1 extends AbstractStep.StepResult<?>, P2 extends AbstractStep.StepResult<?>, P3 extends AbstractStep.StepResult<?>>

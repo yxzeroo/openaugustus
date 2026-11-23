@@ -25,16 +25,13 @@ public class AquaMessenger extends Module implements TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)40);
    }
 
    public void onTick() {
-      long l = 10000L;
-      if (this.timeHelper.reached2(l) && !Augustus.getInstance().getUsername().isEmpty()) {
+      if (this.timeHelper.reached2(10000L) && !Augustus.getInstance().getUsername().isEmpty()) {
          if (this.pendingConnectWarning) {
-            String str = "Attention: chat messages are unsecure!";
-            this.sendChatMessage2(str);
+            this.sendChatMessage2("Attention: chat messages are unsecure!");
             this.timeHelper.reset();
             this.pendingConnectWarning = false;
          }

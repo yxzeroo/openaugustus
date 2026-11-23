@@ -14,14 +14,11 @@ public class ShadedBigDecimalLongOverflow {
 
    public static void check(ShadedBigDecimal shadedBigDecimal) {
       Object obj = null;
-      int[] opaqueStateTag = CustomBigInteger.getOpaqueStateTag();
       obj = ShadedBigDecimal.accessInflated(shadedBigDecimal);
       CustomBigInteger customBigInteger = (CustomBigInteger)obj;
-      CustomBigInteger customBigInteger2 = LONGMIN;
-      if (customBigInteger.compareTo2(customBigInteger2) >= 0) {
+      if (customBigInteger.compareTo2(LONGMIN) >= 0) {
          customBigInteger = (CustomBigInteger)obj;
-         CustomBigInteger customBigInteger3 = LONGMAX;
-         if (customBigInteger.compareTo2(customBigInteger3) <= 0) {
+         if (customBigInteger.compareTo2(LONGMAX) <= 0) {
             return;
          }
       }

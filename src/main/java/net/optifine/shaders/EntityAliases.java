@@ -78,16 +78,14 @@ public class EntityAliases {
                if (!str2.startsWith(str3)) {
                   Config.warn("[Shaders] Invalid entity ID: " + str2);
                } else {
-                  String str4 = StrUtils.removePrefix(str2, str3);
-                  int n = Config.parseInt(str4, -1);
+                  int n = Config.parseInt(StrUtils.removePrefix(str2, str3), -1);
                   if (n < 0) {
                      Config.warn("[Shaders] Invalid entity alias ID: " + n);
                   } else {
                      int[] ints = connectedParser.parseEntities(property);
                      if (ints != null && ints.length >= 1) {
                         for (int i = 0; i < ints.length; i++) {
-                           int n2 = ints[i];
-                           addToList(list, n2, n);
+                           addToList(list, ints[i], n);
                         }
                      } else {
                         Config.warn("[Shaders] Invalid entity ID mapping: " + str2 + "=" + property);

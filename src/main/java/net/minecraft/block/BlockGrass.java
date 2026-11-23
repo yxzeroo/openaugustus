@@ -41,8 +41,7 @@ public class BlockGrass extends Block implements IGrowable {
                int n3 = pos.getZ() + rand.nextInt(3) - 1;
                IBlockState blockState2 = world.getBlockState2(n, n2, n3);
                if (blockState2.getBlock() == Blocks.dirt && blockState2.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.DIRT && world.getLight(n, n2 + 1, n3) >= 4) {
-                  Block block = world.getBlockState2(n, n2 + 1, n3).getBlock();
-                  if (block.getLightOpacity() <= 2) {
+                  if (world.getBlockState2(n, n2 + 1, n3).getBlock().getLightOpacity() <= 2) {
                      world.setBlockState(new BlockPos(n, n2, n3), Blocks.grass.getDefaultState());
                   }
                }
@@ -100,8 +99,7 @@ public class BlockGrass extends Block implements IGrowable {
    }
 
    static {
-      String str = "snowy";
-      SNOWY = PropertyBool.create(str);
+      SNOWY = PropertyBool.create("snowy");
    }
 
    @Override

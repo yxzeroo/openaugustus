@@ -14,8 +14,7 @@ import net.minecraft.world.World;
 public class ItemLead extends Item {
    @Override
    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float f, float f2, float f3) {
-      Block block = world.getBlockState(pos).getBlock();
-      if (block instanceof BlockFence) {
+      if (world.getBlockState(pos).getBlock() instanceof BlockFence) {
          if (world.isRemote) {
             return true;
          } else {

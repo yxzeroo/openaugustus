@@ -5,18 +5,16 @@ import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.utils.MoveUtil;
 import net.augustus.modules.movement.NoWeb;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.SettingGroup;
 
 public class Intave1473b2NoWebMode extends AbstractNoWebMode implements UpdateListener {
    private final BooleanValue intave1473b2StopOnHit;
 
-   public Intave1473b2NoWebMode(NoWeb noWeb, DoubleValue doubleValue) {
+   public Intave1473b2NoWebMode(NoWeb noWeb, SettingGroup doubleValue) {
        super(noWeb, doubleValue, "Intave 14.7.3-b2");
       BooleanValue booleanValue = new BooleanValue(this.parentModule, "Intave1473b2StopOnHit", false, this.modeSetting);
-      String str = "StopOnHit";
-      booleanValue = (BooleanValue)booleanValue.withDisplayName(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.intave1473b2StopOnHit = (BooleanValue)booleanValue.withVisibility(condition);
+      booleanValue = (BooleanValue)booleanValue.withDisplayName("StopOnHit");
+      this.intave1473b2StopOnHit = (BooleanValue)booleanValue.withVisibility(() -> this.isSelected());
    }
 
    @Override

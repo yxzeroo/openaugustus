@@ -28,9 +28,7 @@ public static UniformType parse(String str) {
    }
 
    private void updateUniformBool(IExpressionBool expressionBool, ShaderUniform1i shaderUniform1i) {
-      boolean flag = expressionBool.eval();
-      int n = flag ? 1 : 0;
-      shaderUniform1i.setValue(n);
+      shaderUniform1i.setValue(expressionBool.eval() ? 1 : 0);
    }
 
    public void updateUniform(IExpression expression, ShaderUniformBase shaderUniformBase) {
@@ -76,8 +74,7 @@ public static UniformType parse(String str) {
    }
 
    private void updateUniformInt(IExpressionFloat expressionFloat, ShaderUniform1i shaderUniform1i) {
-      int n = (int)expressionFloat.eval();
-      shaderUniform1i.setValue(n);
+      shaderUniform1i.setValue((int)expressionFloat.eval());
    }
 
    private void updateUniformFloat2(IExpressionFloatArray expressionFloatArray, ShaderUniform2f shaderUniform2f) {
@@ -99,8 +96,7 @@ public static UniformType parse(String str) {
    }
 
    private void updateUniformFloat(IExpressionFloat expressionFloat, ShaderUniform1f shaderUniform1f) {
-      float f = expressionFloat.eval();
-      shaderUniform1f.setValue(f);
+      shaderUniform1f.setValue(expressionFloat.eval());
    }
 
    public ShaderUniformBase makeShaderUniform(String str) {

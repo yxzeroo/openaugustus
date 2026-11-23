@@ -34,9 +34,7 @@ public class GuiMerchant extends GuiContainer {
    public void drawGuiContainerBackgroundLayer(float f, int n, int n2) {
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       this.mc.getTextureManager().bindTexture(MERCHANT_GUI_TEXTURE);
-      int n3 = (this.width - this.xSize) / 2;
-      int n4 = (this.height - this.ySize) / 2;
-      this.drawTexturedModalRect(n3, n4, 0, 0, this.xSize, this.ySize);
+      this.drawTexturedModalRect((this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, this.xSize, this.ySize);
       MerchantRecipeList recipes = this.merchant.getRecipes(this.mc.thePlayer);
       if (recipes != null && !recipes.isEmpty()) {
          int selectedMerchantRecipe2 = this.selectedMerchantRecipe;
@@ -44,8 +42,7 @@ public class GuiMerchant extends GuiContainer {
             return;
          }
 
-         MerchantRecipe merchantRecipe = (MerchantRecipe)recipes.get(selectedMerchantRecipe2);
-         if (merchantRecipe.isRecipeDisabled()) {
+         if (((MerchantRecipe)recipes.get(selectedMerchantRecipe2)).isRecipeDisabled()) {
             this.mc.getTextureManager().bindTexture(MERCHANT_GUI_TEXTURE);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.disableLighting();
@@ -80,8 +77,7 @@ public class GuiMerchant extends GuiContainer {
       if (recipes != null && !recipes.isEmpty()) {
          int n = (this.width - this.xSize) / 2;
          int n2 = (this.height - this.ySize) / 2;
-         int selectedMerchantRecipe2 = this.selectedMerchantRecipe;
-         MerchantRecipe merchantRecipe = (MerchantRecipe)recipes.get(selectedMerchantRecipe2);
+         MerchantRecipe merchantRecipe = (MerchantRecipe)recipes.get(this.selectedMerchantRecipe);
          ItemStack itemToBuy = merchantRecipe.getItemToBuy();
          ItemStack secondItemToBuy = merchantRecipe.getSecondItemToBuy();
          ItemStack itemToSell = merchantRecipe.getItemToSell();

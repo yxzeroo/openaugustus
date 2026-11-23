@@ -157,19 +157,13 @@ public class QuadBlockByteMixer {
          }
 
          QuadBlockByteMixer quadBlockByteMixer = this;
-         byte[] bytes2 = (byte[])obj;
-         obj = quadBlockByteMixer.applyInitialXorTableRound(bytes2);
+         obj = quadBlockByteMixer.applyInitialXorTableRound((byte[])obj);
          quadBlockByteMixer = this;
-         byte[] bytes3 = (byte[])obj;
-         byte[] bytes4 = bytes3;
-         obj = quadBlockByteMixer.applyQuadBlockRound(bytes4);
+         obj = quadBlockByteMixer.applyQuadBlockRound((byte[])obj);
          quadBlockByteMixer = this;
-         byte[] bytes5 = (byte[])obj;
-         obj = quadBlockByteMixer.applyAlternatingRotateRound(bytes5);
+         obj = quadBlockByteMixer.applyAlternatingRotateRound((byte[])obj);
          quadBlockByteMixer = this;
-         byte[] bytes6 = (byte[])obj;
-         byte[] bytes7 = bytes6;
-         obj = quadBlockByteMixer.applyNeighborDiffusionRound(bytes7);
+         obj = quadBlockByteMixer.applyNeighborDiffusionRound((byte[])obj);
          return (byte[])obj;
       }
    }

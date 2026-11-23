@@ -22,22 +22,16 @@ public class CustomClientColor extends Module implements TimerUpdateListener {
 
    @Override
    public void onDisable() {
-      Augustus instance = Augustus.getInstance();
-      int rgb = new Color(41, 146, 222).getRGB();
-      instance.setClientColor(rgb);
+      Augustus.getInstance().setClientColor(new Color(41, 146, 222).getRGB());
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 42;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)42);
    }
 
    @Override
    public void onTimerUpdate(EventTimerUpdate event) {
-      Augustus instance = Augustus.getInstance();
-      byte b = 0;
-      int colorInt = this.color2.getColorInt(b);
-      instance.setClientColor(colorInt);
+      Augustus.getInstance().setClientColor(this.color2.getColorInt((byte)0));
    }
 }

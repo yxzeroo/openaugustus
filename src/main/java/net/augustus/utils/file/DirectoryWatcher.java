@@ -37,8 +37,7 @@ public final class DirectoryWatcher {
       if (this.onDelete != null || this.onModify != null || this.onCreate != null) {
          try {
             ClientFileUtil.ensureDirectory(this.directoryPath);
-            Path path = Paths.get(this.directoryPath);
-            WatchKey watchKey = path.register(
+            WatchKey watchKey = Paths.get(this.directoryPath).register(
                DirectoryWatchService.getWatchService(), StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_CREATE
             );
             DirectoryWatchService.getWatchers().put(watchKey, this);

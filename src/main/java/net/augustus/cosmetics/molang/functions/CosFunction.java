@@ -15,7 +15,6 @@ public class CosFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.cos(this.getArg(b));
+      return Math.cos(this.getArg((byte)0));
    }
 }

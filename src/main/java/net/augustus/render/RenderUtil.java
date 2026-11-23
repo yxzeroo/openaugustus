@@ -49,12 +49,9 @@ public class RenderUtil implements MC {
 
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
-      boolean flag3 = false;
-      GL_STATE_SAVER.setAlpha(flag3);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
+      GL_STATE_SAVER.setAlpha(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 771);
       GlStateManager.color(f5, f6, f7, f8);
       worldRenderer.begin(7, DefaultVertexFormats.POSITION);
@@ -83,13 +80,7 @@ public class RenderUtil implements MC {
       int n3
    ) {
       if (ClientManagers.moduleManager.augustusServer.useAntialiasedRoundRects.getValue()) {
-         RoundRectShader instance = RoundRectShader.getInstance();
-         float f6 = f3 - f;
-         float f7 = f4 - f2;
-         float f8 = (float)n2;
-         float f9 = f7;
-         float f10 = f6;
-         instance.drawRoundedOutline2(f, f2, f10, f9, f5, f8, flag, flag2, flag4, flag3, n3);
+         RoundRectShader.getInstance().drawRoundedOutline2(f, f2, f3 - f, f4 - f2, f5, (float)n2, flag, flag2, flag4, flag3, n3);
       } else {
          drawRoundedRectOutlineGl(f, f2, f3, f4, f5, n, n2, flag, flag2, flag3, flag4, n3);
       }
@@ -135,29 +126,22 @@ public class RenderUtil implements MC {
       float f2 = (float)(d4 - mc.getRenderManager().getRenderPosX());
       float f3 = (float)(d2 - mc.getRenderManager().getRenderPosY());
       float f4 = (float)(d3 - mc.getRenderManager().getRenderPosZ());
-      byte b = 0;
-      int colorInt = colorSetting.getColorInt(b);
+      int colorInt = colorSetting.getColorInt((byte)0);
       setGlColor(colorInt);
       float f5 = ClientManagers.moduleManager.child.isToggled() && entity instanceof EntityPlayer ? entity.height / 1.7F : entity.height;
       double d5 = (double)(entity.width - 0.2F);
-      double d6 = (double)(f5 + 0.1F);
-      double d7 = d5;
-      drawRotatedEntityBox(entity, f2, f3, f4, d7, d6);
+      drawRotatedEntityBox(entity, f2, f3, f4, d5, (double)(f5 + 0.1F));
       if (f > 0.0F) {
          GL11.glLineWidth(f);
          setGlColorWithAlpha2(colorInt, n);
          d5 = (double)(entity.width - 0.2F);
-         double d8 = (double)(f5 + 0.1F);
-         double d9 = d5;
-         drawRotatedEntityBoxOutline(entity, f2, f3, f4, d9, d8);
+         drawRotatedEntityBoxOutline(entity, f2, f3, f4, d5, (double)(f5 + 0.1F));
       }
    }
 
    public static void drawLine4(double d, double d2, double d3, double d4, float f, int n) {
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       GL11.glLineWidth(f);
       setGlColor(n);
@@ -298,18 +282,7 @@ public class RenderUtil implements MC {
       if (flag) {
          drawFilledBox(d2 - 0.0625, y, d3 - 0.0625, d4 + 0.0625, d5 + 0.125, d6 + 0.0625);
       } else {
-         double d7 = d2 - d;
-         double d8 = y - d;
-         double d9 = d3 - d;
-         double d10 = d4 + d;
-         double d11 = d5 + d;
-         double d12 = d6 + d;
-         double d13 = d11;
-         double d14 = d10;
-         double d15 = d9;
-         double d16 = d8;
-         double d17 = d7;
-         drawFilledBox(d17, d16, d15, d14, d13, d12);
+         drawFilledBox(d2 - d, y - d, d3 - d, d4 + d, d5 + d, d6 + d);
       }
 
       if (f2 > 0.0F) {
@@ -333,10 +306,7 @@ public class RenderUtil implements MC {
 
    public static void drawRect2(float f, float f2, float f3, float f4, int n) {
       float f5 = (float)(n >> 24 & 0xFF) / 255.0F;
-      float f6 = (float)(n >> 16 & 0xFF) / 255.0F;
-      float f7 = (float)(n >> 8 & 0xFF) / 255.0F;
-      float f8 = (float)(n & 0xFF) / 255.0F;
-      drawRect2(f, f2, f3, f4, f6, f7, f8, f5);
+      drawRect2(f, f2, f3, f4, (float)(n >> 16 & 0xFF) / 255.0F, (float)(n >> 8 & 0xFF) / 255.0F, (float)(n & 0xFF) / 255.0F, f5);
    }
 
    public static void drawTopRightRoundedRect(float f, float f2, float f3, float f4, float f5, int n, Color color) {
@@ -365,10 +335,8 @@ public class RenderUtil implements MC {
       boolean flag4,
       int n3
    ) {
-      boolean flag5 = true;
-      GL_STATE_SAVER.setBlend(flag5);
-      boolean flag6 = false;
-      GL_STATE_SAVER.setTexture2D(flag6);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       setGlColor(n3);
       GL11.glLineWidth((float)n2);
@@ -434,10 +402,8 @@ public class RenderUtil implements MC {
    }
 
    public static void drawResizeCornerTriangle(float f, float f2, float f3, float f4, float f5, int n, int n2) {
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       setGlColor(n2);
       GL11.glBegin(9);
@@ -561,11 +527,7 @@ public class RenderUtil implements MC {
       int n2
    ) {
       if (ClientManagers.moduleManager.augustusServer.useAntialiasedRoundRects.getValue()) {
-         RoundRectShader instance = RoundRectShader.getInstance();
-         float f6 = f3 - f;
-         float f7 = f4 - f2;
-         float f8 = f6;
-         instance.drawRoundedRect2(f, f2, f8, f7, f5, flag, flag2, flag4, flag3, n2);
+         RoundRectShader.getInstance().drawRoundedRect2(f, f2, f3 - f, f4 - f2, f5, flag, flag2, flag4, flag3, n2);
       } else {
          drawRoundedRectGl(f, f2, f3, f4, f5, n, flag, flag2, flag3, flag4, n2);
       }
@@ -605,12 +567,9 @@ public class RenderUtil implements MC {
 
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
-      boolean flag3 = false;
-      GL_STATE_SAVER.setAlpha(flag3);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
+      GL_STATE_SAVER.setAlpha(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 771);
       GlStateManager.color(f, f2, f3, f4);
       worldRenderer.begin(7, DefaultVertexFormats.POSITION);
@@ -637,10 +596,8 @@ public class RenderUtil implements MC {
       boolean flag4,
       int n2
    ) {
-      boolean flag5 = true;
-      GL_STATE_SAVER.setBlend(flag5);
-      boolean flag6 = false;
-      GL_STATE_SAVER.setTexture2D(flag6);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       setGlColor(n2);
       GL11.glBegin(9);
@@ -749,17 +706,12 @@ public class RenderUtil implements MC {
 
    public static void drawRect(double d, double d2, double d3, double d4, int n) {
       float f = (float)(n >> 24 & 0xFF) / 255.0F;
-      float f2 = (float)(n >> 16 & 0xFF) / 255.0F;
-      float f3 = (float)(n >> 8 & 0xFF) / 255.0F;
-      float f4 = (float)(n & 0xFF) / 255.0F;
-      drawRect4(d, d2, d3, d4, f2, f3, f4, f);
+      drawRect4(d, d2, d3, d4, (float)(n >> 16 & 0xFF) / 255.0F, (float)(n >> 8 & 0xFF) / 255.0F, (float)(n & 0xFF) / 255.0F, f);
    }
 
    public static void drawLine2(int n, int n2, int n3, int n4, float f, int n5) {
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       GL11.glLineWidth(f);
       setGlColor(n5);
@@ -777,10 +729,7 @@ public class RenderUtil implements MC {
 
    public static void drawRect3(int n, int n2, int n3, int n4, int n5) {
       float f = (float)(n5 >> 24 & 0xFF) / 255.0F;
-      float f2 = (float)(n5 >> 16 & 0xFF) / 255.0F;
-      float f3 = (float)(n5 >> 8 & 0xFF) / 255.0F;
-      float f4 = (float)(n5 & 0xFF) / 255.0F;
-      drawRect(n, n2, n3, n4, f2, f3, f4, f);
+      drawRect(n, n2, n3, n4, (float)(n5 >> 16 & 0xFF) / 255.0F, (float)(n5 >> 8 & 0xFF) / 255.0F, (float)(n5 & 0xFF) / 255.0F, f);
    }
 
    public static void printGlStateDebug() {
@@ -900,12 +849,9 @@ public class RenderUtil implements MC {
 
       Tessellator instance = Tessellator.getInstance();
       WorldRenderer worldRenderer = instance.getWorldRenderer();
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
-      boolean flag3 = false;
-      GL_STATE_SAVER.setAlpha(flag3);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
+      GL_STATE_SAVER.setAlpha(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 771);
       GlStateManager.color(f, f2, f3, f4);
       worldRenderer.begin(7, DefaultVertexFormats.POSITION);
@@ -978,10 +924,8 @@ public class RenderUtil implements MC {
 
    public static void renderItemIntoGui(ItemStack stack, int n, int n2, boolean flag) {
       if (stack != null) {
-         boolean flag2 = false;
-         GL_STATE_SAVER.setBlend(flag2);
-         boolean flag3 = true;
-         GL_STATE_SAVER.setDepth(flag3);
+         GL_STATE_SAVER.setBlend(false);
+         GL_STATE_SAVER.setDepth(true);
          if (flag) {
             mc.getRenderItem().renderItemIntoGUI(stack, n, n2);
             mc.getRenderItem().renderItemOverlays(mc.fontRendererObj, stack, n, n2);
@@ -1016,10 +960,8 @@ public class RenderUtil implements MC {
    public static void drawCornerBrackets(double d, double d2, double d3, double d4, float f, double d5, double d6, int n) {
       double d7 = Math.abs(d - d3) / 2.0 / (100.0 / d5);
       double d8 = Math.abs(d2 - d4) / 2.0 / (100.0 / d6);
-      boolean flag = true;
-      GL_STATE_SAVER.setBlend(flag);
-      boolean flag2 = false;
-      GL_STATE_SAVER.setTexture2D(flag2);
+      GL_STATE_SAVER.setBlend(true);
+      GL_STATE_SAVER.setTexture2D(false);
       GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
       setGlColor(n);
       GL11.glLineWidth(f);
@@ -1176,12 +1118,9 @@ public class RenderUtil implements MC {
       WorldRenderer worldRenderer = instance.getWorldRenderer();
       if (!worldRenderer.isDrawing()) {
          worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-         boolean flag2 = true;
-         BATCH_GL_STATE_SAVER.setBlend(flag2);
-         boolean flag3 = false;
-         BATCH_GL_STATE_SAVER.setTexture2D(flag3);
-         boolean flag4 = false;
-         BATCH_GL_STATE_SAVER.setAlpha(flag4);
+         BATCH_GL_STATE_SAVER.setBlend(true);
+         BATCH_GL_STATE_SAVER.setTexture2D(false);
+         BATCH_GL_STATE_SAVER.setAlpha(false);
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 771);
       }
 
@@ -1218,10 +1157,8 @@ public class RenderUtil implements MC {
 
    public static void drawRectOutline(double d, double d2, double d3, double d4, float f, float f2, float f3, float f4, float f5) {
       if (f5 != 0.0F) {
-         boolean flag = true;
-         GL_STATE_SAVER.setBlend(flag);
-         boolean flag2 = false;
-         GL_STATE_SAVER.setTexture2D(flag2);
+         GL_STATE_SAVER.setBlend(true);
+         GL_STATE_SAVER.setTexture2D(false);
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
          GlStateManager.color(f2, f3, f4, f5);
          GL11.glLineWidth(f);
@@ -1271,8 +1208,7 @@ public class RenderUtil implements MC {
 
    public static void drawFilledBox2(float f, float f2, float f3, float f4, float f5, float f6) {
       Tessellator instance = Tessellator.getInstance();
-      WorldRenderer worldRenderer = instance.getWorldRenderer();
-      worldRenderer.begin(7, DefaultVertexFormats.POSITION);
+      instance.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION);
       addFilledBoxVertices(f, f2, f3, f4, f5, f6);
       instance.draw();
    }

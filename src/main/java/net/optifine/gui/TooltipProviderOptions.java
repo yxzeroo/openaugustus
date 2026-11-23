@@ -25,8 +25,7 @@ public class TooltipProviderOptions implements TooltipProvider {
       ArrayList list = new ArrayList();
 
       for (int i = 0; i < 10; i++) {
-         String str2 = str + ".tooltip." + (i + 1);
-         String str3 = Lang.get(str2, (String)null);
+         String str3 = Lang.get(str + ".tooltip." + (i + 1), (String)null);
          if (str3 == null) {
             break;
          }
@@ -42,9 +41,7 @@ public class TooltipProviderOptions implements TooltipProvider {
       if (!(button instanceof IOptionControl)) {
          return null;
       } else {
-         IOptionControl optionControl = (IOptionControl)button;
-         GameSettings.Options option = optionControl.getOption();
-         return getTooltipLines(option.getEnumString());
+         return getTooltipLines(((IOptionControl)button).getOption().getEnumString());
       }
    }
 

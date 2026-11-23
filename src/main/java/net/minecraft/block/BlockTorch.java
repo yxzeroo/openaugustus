@@ -113,13 +113,11 @@ public class BlockTorch extends Block {
 
    private boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing) {
       BlockPos pos2 = pos.offset(facing.getOpposite());
-      boolean isHorizontal = facing.getAxis().isHorizontal();
-      return isHorizontal && world.isBlockNormalCube(pos2, true) || facing.equals(EnumFacing.UP) && this.canPlaceOn(world, pos2);
+      return facing.getAxis().isHorizontal() && world.isBlockNormalCube(pos2, true) || facing.equals(EnumFacing.UP) && this.canPlaceOn(world, pos2);
    }
 
    static {
-      String str = "facing";
-      FACING = PropertyDirection.create(str, new BlockTorch.FilterPredicate());
+      FACING = PropertyDirection.create("facing", new BlockTorch.FilterPredicate());
    }
 
    public boolean checkForDrop(World world, BlockPos pos, IBlockState state) {

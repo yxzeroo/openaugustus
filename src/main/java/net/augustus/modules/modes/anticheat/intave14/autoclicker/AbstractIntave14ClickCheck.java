@@ -113,7 +113,6 @@ public abstract class AbstractIntave14ClickCheck extends ModuleMode {
    }
 
    public static int getControlFlowMarker() {
-      int controlFlowFlag2 = getControlFlowFlag();
-      return controlFlowFlag2 == 0 ? 42 : 0;
+      return getControlFlowFlag() == 0 ? 42 : 0;
    }
 }

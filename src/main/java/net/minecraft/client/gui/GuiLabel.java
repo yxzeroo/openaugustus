@@ -51,8 +51,7 @@ public class GuiLabel extends Gui {
          GlStateManager.enableBlend();
          GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
          this.drawLabelBackground(mc, n, n2);
-         int n3 = this.y + this.height / 2 + this.border / 2;
-         int n4 = n3 - this.labels.size() * 10 / 2;
+         int n4 = (this.y + this.height / 2 + this.border / 2) - this.labels.size() * 10 / 2;
 
          for (int i = 0; i < this.labels.size(); i++) {
             if (this.centered) {

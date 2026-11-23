@@ -21,8 +21,8 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.RenderBlockListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.modules.render.blocktrace.TraceBlockPos;
-import net.augustus.settings.BooleansSetting;
 import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,15 +30,15 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
 public class BlockTraceESP extends Module implements RenderListener, TickListener, RenderBlockListener, LoadWorldListener {
-   public final BooleansSetting block;
-   public final StringValue customID;
+   public final StringValue block;
+   public final DoubleValue customID;
    public final ColorSetting blockColor;
-   public final StringValue blockLineWidth;
-   public final StringValue blockDistance;
+   public final DoubleValue blockLineWidth;
+   public final DoubleValue blockDistance;
    public final BlurShadowSettings block2;
    public final ColorSetting pathColor;
    public final BlurShadowSettings path;
-   public final StringValue pathSearchRange;
+   public final DoubleValue pathSearchRange;
    private BlockTraceNode blockTraceNode;
    private final java.util.ArrayList pathBlockPositions;
    private static final Set TRACKED_BLOCK_POSITIONS = Sets.newConcurrentHashSet();
@@ -46,21 +46,15 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
 
    public BlockTraceESP() {
        super("BlockTraceESP", "BlockSpurESP", new Color(50, 168, 82), Categorys.RENDER);
-      this.block = new BooleansSetting(this, "Block", "Bed", new String[]{"Bed", "Cake", "Custom"});
-      StringValue stringValue = new StringValue(this, "CustomID", 26.0, 0.0, 400.0, 0);
-      SettingVisibilityCondition condition = () -> this.isCustomBlockIdVisible();
-      this.customID = stringValue.visibleWhen(condition);
+      this.block = new StringValue(this, "Block", "Bed", new String[]{"Bed", "Cake", "Custom"});
+      this.customID = new DoubleValue(this, "CustomID", 26.0, 0.0, 400.0, 0).visibleWhen(() -> this.isCustomBlockIdVisible());
       this.blockColor = new ColorSetting(this, "BlockColor", new Color(21, 121, 230, 65));
-      this.blockLineWidth = new StringValue(this, "BlockLineWidth", 6.0, 0.0, 15.0, 0);
-      this.blockDistance = new StringValue(this, "BlockDistance", 50.0, 1.0, 300.0, 0);
-      BlurShadowSettings blurShadowSettings = (new BlurShadowSettings(this, "Block")).disableBlurByDefault();
-      Color black = Color.black;
-      this.block2 = blurShadowSettings.withCustomShadowColor(black);
+      this.blockLineWidth = new DoubleValue(this, "BlockLineWidth", 6.0, 0.0, 15.0, 0);
+      this.blockDistance = new DoubleValue(this, "BlockDistance", 50.0, 1.0, 300.0, 0);
+      this.block2 = (new BlurShadowSettings(this, "Block")).disableBlurByDefault().withCustomShadowColor(Color.black);
       this.pathColor = new ColorSetting(this, "PathColor", new Color(21, 121, 230, 65));
-      BlurShadowSettings blurShadowSettings2 = (new BlurShadowSettings(this, "Path")).disableBlurByDefault();
-      Color black2 = Color.black;
-      this.path = blurShadowSettings2.withCustomShadowColor(black2);
-      this.pathSearchRange = new StringValue(this, "PathSearchRange", 10.0, 1.0, 10.0, 0);
+      this.path = (new BlurShadowSettings(this, "Path")).disableBlurByDefault().withCustomShadowColor(Color.black);
+      this.pathSearchRange = new DoubleValue(this, "PathSearchRange", 10.0, 1.0, 10.0, 0);
       this.blockTraceNode = null;
       this.pathBlockPositions = new java.util.ArrayList();
       this.currentTargetBlock = null;
@@ -80,14 +74,10 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 30;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)30);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
@@ -107,8 +97,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
    @Override
    public void onRenderBlock(EventRenderBlock event) {
       if (event.getBlockState() != null) {
-         Block block3 = event.getBlockState().getBlock();
-         if (block3.equals(Block.getBlockById(this.getTargetBlockId()))) {
+         if (event.getBlockState().getBlock().equals(Block.getBlockById(this.getTargetBlockId()))) {
             BlockPos immutableBlockPos = event.getImmutableBlockPos();
             if (immutableBlockPos == null) {
                return;
@@ -153,8 +142,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
          for (int j = -n; j <= n; j++) {
             for (int k = -n; k <= n; k++) {
                BlockPos pos2 = new BlockPos(mc.thePlayer.posX + (double)i, mc.thePlayer.posY + (double)j, mc.thePlayer.posZ + (double)k);
-               Block block3 = mc.theWorld.getBlockState(pos2).getBlock();
-               if (block3.equals(Block.getBlockById(this.getTargetBlockId()))) {
+               if (mc.theWorld.getBlockState(pos2).getBlock().equals(Block.getBlockById(this.getTargetBlockId()))) {
                   double d2 = Math.sqrt(mc.thePlayer.getDistanceSqToCenter(pos2));
                   if (d2 < d) {
                      pos = pos2;
@@ -169,12 +157,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
          this.blockTraceNode = null;
          return null;
       } else {
-         TraceBlockPos traceBlockPos = new TraceBlockPos(pos);
-         TraceBlockPos traceBlockPos2 = new TraceBlockPos(new BlockPos(mc.thePlayer.getPositionEyes(1.0F)));
-         int y = pos.getY();
-         TraceBlockPos traceBlockPos3 = traceBlockPos2;
-         TraceBlockPos traceBlockPos4 = traceBlockPos;
-         BlockTraceNode blockTraceNode2 = BlockTracePathFinder.findPath(traceBlockPos4, traceBlockPos3, y);
+         BlockTraceNode blockTraceNode2 = BlockTracePathFinder.findPath(new TraceBlockPos(pos), new TraceBlockPos(new BlockPos(mc.thePlayer.getPositionEyes(1.0F))), pos.getY());
          if (blockTraceNode2 != null) {
             this.blockTraceNode = blockTraceNode2;
          }
@@ -203,8 +186,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
    }
 
    private int getTargetBlockId() {
-      String selectedValue = this.block.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.block.getSelectedValue()) {
          case "Bed":
             return 26;
          case "Cake":
@@ -218,8 +200,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
 
       for (BlockPos pos : (Iterable<BlockPos>)(this.pathBlockPositions)) {
          if (pos != null) {
-            byte b = 0;
-            int colorInt = this.pathColor.getColorInt(b);
+            int colorInt = this.pathColor.getColorInt((byte)0);
             double d = (double)pos.getX() - mc.getRenderManager().getRenderPosX();
             double d2 = (double)pos.getY() - mc.getRenderManager().getRenderPosY();
             double d3 = (double)pos.getZ() - mc.getRenderManager().getRenderPosZ();
@@ -252,12 +233,7 @@ public class BlockTraceESP extends Module implements RenderListener, TickListene
                f = (float)((double)f * d);
             }
 
-            BlurShadowSettings block22 = this.block2;
-            int n3 = ColorUtil.resolvePassColor(shaderRenderPass, colorInt);
-            int n4 = block22.resolvePassColor(shaderRenderPass, n3, n);
-            float f2 = 1.0F;
-            int n5 = n4;
-            RenderUtil.drawBlockEspBox(pos, n5, f2, f);
+            RenderUtil.drawBlockEspBox(pos, this.block2.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, colorInt), n), 1.0F, f);
          }
       }
    }

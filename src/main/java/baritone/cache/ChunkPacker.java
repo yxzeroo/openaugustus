@@ -50,8 +50,7 @@ public final class ChunkPacker {
          ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
 
          for (int i = 0; i < 16; i++) {
-            ExtendedBlockStorage extendedBlockStorage = blockStorageArray[i];
-            if (extendedBlockStorage != null) {
+            if (blockStorageArray[i] != null) {
                int n = i << 4;
 
                for (int j = 0; j < 16; j++) {
@@ -66,8 +65,7 @@ public final class ChunkPacker {
                         bitSet.set(positionIndex + 1, bits[1]);
                         Block block = blockState.getBlock();
                         if (CachedChunk.BLOCKS_TO_KEEP_TRACK_OF.contains(block)) {
-                           String str = BlockUtils.blockToString(block);
-                           ((List)map.computeIfAbsent(str, obj -> new ArrayList<>())).add(new BlockPos(m, n2, k));
+                           ((List)map.computeIfAbsent(BlockUtils.blockToString(block), obj -> new ArrayList<>())).add(new BlockPos(m, n2, k));
                         }
                      }
                   }

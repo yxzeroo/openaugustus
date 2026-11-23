@@ -118,8 +118,7 @@ public abstract class LegacyItemRewriter<C extends ClientboundPacketType, S exte
          ObjectListIterator it = this.nonExistentItems.iterator();
 
          while (it.hasNext()) {
-            LegacyItemRewriter.NonExistentEntry nonExistentEntry = (LegacyItemRewriter.NonExistentEntry)it.next();
-            if (nonExistentEntry.rewrites(item)) {
+            if (((LegacyItemRewriter.NonExistentEntry)it.next()).rewrites(item)) {
                item.setIdentifier(1);
                item.setData((short)0);
                return item;
@@ -195,8 +194,7 @@ public abstract class LegacyItemRewriter<C extends ClientboundPacketType, S exte
 
          String protocolName2 = this.protocolName;
          int n = item.identifier();
-         String str = protocolName2;
-         lore.add(new StringTag("§r " + str + " Item ID: " + n + " (" + name + ")"));
+         lore.add(new StringTag("§r " + protocolName2 + " Item ID: " + n + " (" + name + ")"));
          viaLegacyTag.putBoolean("RemoveLastLore", true);
       } else {
          String protocolName3 = this.protocolName;

@@ -20,8 +20,7 @@ public class RenderIronGolem extends RenderLiving {
       super.rotateCorpse(entityIronGolem, f, f2, f3);
       if ((double)entityIronGolem.limbSwingAmount >= 0.01) {
          float f4 = 13.0F;
-         float f5 = entityIronGolem.limbSwing - entityIronGolem.limbSwingAmount * (1.0F - f3) + 6.0F;
-         float f6 = (Math.abs(f5 % f4 - f4 * 0.5F) - f4 * 0.25F) / (f4 * 0.25F);
+         float f6 = (Math.abs((entityIronGolem.limbSwing - entityIronGolem.limbSwingAmount * (1.0F - f3) + 6.0F) % f4 - f4 * 0.5F) - f4 * 0.25F) / (f4 * 0.25F);
          GlStateManager.rotate(6.5F * f6, 0.0F, 0.0F, 1.0F);
       }
    }

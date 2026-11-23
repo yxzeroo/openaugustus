@@ -6,31 +6,22 @@ import net.augustus.events.listeners.MotionListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import java.util.function.BiFunction;
 import net.augustus.modules.movement.Spider;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 
 public class PositionSpiderMode extends AbstractSpiderMode implements MotionListener {
-   public final StringValue positionSpeed;
-   public final StringValue tickDelayPosition;
+   public final DoubleValue positionSpeed;
+   public final DoubleValue tickDelayPosition;
 
-   public PositionSpiderMode(Spider spider, DoubleValue doubleValue) {
+   public PositionSpiderMode(Spider spider, SettingGroup doubleValue) {
        super(spider, doubleValue, "Position");
-      StringValue stringValue = new StringValue(this.parentModule, "PositionSpeed", 0.4, 0.2, 2.0, 3, this.modeSetting);
-      String str = "Speed";
-      StringValue stringValue2 = stringValue.named(str);
-      SettingVisibilityCondition condition = () -> this.isSelected();
-      this.positionSpeed = stringValue2.visibleWhen(condition);
-      StringValue stringValue3 = new StringValue(this.parentModule, "TickDelayPosition", 0.0, 0.0, 20.0, 0, this.modeSetting);
-      String str2 = "TickDelay";
-      StringValue stringValue4 = stringValue3.named(str2);
-      SettingVisibilityCondition condition2 = () -> this.isSelected();
-      this.tickDelayPosition = stringValue4.visibleWhen(condition2);
+      this.positionSpeed = new DoubleValue(this.parentModule, "PositionSpeed", 0.4, 0.2, 2.0, 3, this.modeSetting).named("Speed").visibleWhen(() -> this.isSelected());
+      this.tickDelayPosition = new DoubleValue(this.parentModule, "TickDelayPosition", 0.0, 0.0, 20.0, 0, this.modeSetting).named("TickDelay").visibleWhen(() -> this.isSelected());
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 18;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)18);
    }
 
    @Override
@@ -42,12 +33,11 @@ public class PositionSpiderMode extends AbstractSpiderMode implements MotionList
    }
 
    public static BiFunction factory() {
-      return (obj, obj2) -> new PositionSpiderMode((Spider)obj, (DoubleValue)obj2);
+      return (obj, obj2) -> new PositionSpiderMode((Spider)obj, (SettingGroup)obj2);
    }
 
    @Override
    public void onMotion(EventMotion event) {
-      int[] controlFlowState22 = AbstractSpiderMode.getControlFlowState2();
       if (this.canClimbWall()) {
          if ((double)mc.thePlayer.ticksExisted % (this.tickDelayPosition.getValue() + 1.0) == 0.0) {
             mc.thePlayer

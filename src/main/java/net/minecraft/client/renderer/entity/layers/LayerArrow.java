@@ -38,10 +38,7 @@ public class LayerArrow implements LayerRenderer {
             float f8 = rand.nextFloat();
             float f9 = rand.nextFloat();
             float f10 = rand.nextFloat();
-            float f11 = (modelBox.posX1 + (modelBox.posX2 - modelBox.posX1) * f8) / 16.0F;
-            float f12 = (modelBox.posY1 + (modelBox.posY2 - modelBox.posY1) * f9) / 16.0F;
-            float f13 = (modelBox.posZ1 + (modelBox.posZ2 - modelBox.posZ1) * f10) / 16.0F;
-            GlStateManager.translate(f11, f12, f13);
+            GlStateManager.translate((modelBox.posX1 + (modelBox.posX2 - modelBox.posX1) * f8) / 16.0F, (modelBox.posY1 + (modelBox.posY2 - modelBox.posY1) * f9) / 16.0F, (modelBox.posZ1 + (modelBox.posZ2 - modelBox.posZ1) * f10) / 16.0F);
             f8 = f8 * 2.0F - 1.0F;
             f9 = f9 * 2.0F - 1.0F;
             f10 = f10 * 2.0F - 1.0F;

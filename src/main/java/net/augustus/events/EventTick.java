@@ -16,8 +16,7 @@ public class EventTick extends AbstractEvent {
    }
 
    public void call(Object obj) {
-      TickListener listener = (TickListener)obj;
-      this.call2(listener);
+      this.call2((TickListener)obj);
    }
 
    public void call2(TickListener listener) {

@@ -371,10 +371,8 @@ public class MoveUtil implements MC {
 
    public static void setEventSpeed(double d, boolean flag, EventMoveEntity event) {
       double d2 = Math.toRadians((double)getDirectionDegrees(flag));
-      double d3 = -(Math.sin(d2) * d);
-      event.setX(d3);
-      double d4 = Math.cos(d2) * d;
-      event.setZ(d4);
+      event.setX(-(Math.sin(d2) * d));
+      event.setZ(Math.cos(d2) * d);
    }
 
    public static void setSpeed(float f, boolean flag) {
@@ -385,10 +383,8 @@ public class MoveUtil implements MC {
 
    public static void addEventMotion(double d, boolean flag, EventMoveEntity event) {
       float f = getDirectionDegrees(flag) * 0.017453292F;
-      double d2 = event.getX() - (double)MathHelper.sin(f) * d;
-      event.setX(d2);
-      double d3 = event.getZ() + (double)MathHelper.cos(f) * d;
-      event.setZ(d3);
+      event.setX(event.getX() - (double)MathHelper.sin(f) * d);
+      event.setZ(event.getZ() + (double)MathHelper.cos(f) * d);
    }
 
    public static boolean hasHorizontalMotion() {
@@ -402,10 +398,8 @@ public class MoveUtil implements MC {
          double d4 = event.getX() * d3;
          double d5 = event.getZ() * d3;
          double direction = getDirection();
-         double d6 = d4 - Math.sin(direction) * d2;
-         event.setX(d6);
-         double d7 = d5 + Math.cos(direction) * d2;
-         event.setZ(d7);
+         event.setX(d4 - Math.sin(direction) * d2);
+         event.setZ(d5 + Math.cos(direction) * d2);
       }
    }
 

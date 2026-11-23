@@ -27,13 +27,12 @@ public class TileEntitySkullRenderer extends TileEntitySpecialRenderer {
    public ModelSkeletonHead humanoidHead = new ModelHumanoidHead();
 
    public void renderTileEntityAt(TileEntitySkull tileEntitySkull, double d, double d2, double d3, float f, int n) {
-      EnumFacing front = EnumFacing.getFront(tileEntitySkull.getBlockMetadata() & 7);
       tileEntitySkull.setSkinLocation(
          this.renderSkull(
             (float)d,
             (float)d2,
             (float)d3,
-            front,
+            EnumFacing.getFront(tileEntitySkull.getBlockMetadata() & 7),
             (float)(tileEntitySkull.getSkullRotation() * 360) / 16.0F,
             tileEntitySkull.getSkullType(),
             tileEntitySkull.getPlayerProfile(),
@@ -86,8 +85,7 @@ public class TileEntitySkullRenderer extends TileEntitySpecialRenderer {
                            location2 = location;
                         }
                      } else {
-                        UUID uuid = EntityPlayer.getUUID(profile);
-                        location2 = DefaultPlayerSkin.getDefaultSkin(uuid);
+                        location2 = DefaultPlayerSkin.getDefaultSkin(EntityPlayer.getUUID(profile));
                      }
                   }
 

@@ -49,8 +49,7 @@ public class CustomGuis {
             if (list.size() > i) {
                List list2 = (List)list.get(i);
                if (list2 != null) {
-                  CustomGuiProperties[] customGuiPropertiesArr = (CustomGuiProperties[])list2.toArray(new CustomGuiProperties[list2.size()]);
-                  customGuiPropertiesArrs[i] = customGuiPropertiesArr;
+                  customGuiPropertiesArrs[i] = (CustomGuiProperties[])list2.toArray(new CustomGuiProperties[list2.size()]);
                }
             }
          }
@@ -169,8 +168,7 @@ public class CustomGuis {
          Config.dbg("CustomGuis: " + str);
 
          try {
-            ResourceLocation location = new ResourceLocation(str);
-            InputStream inputStream = resourcePack.getInputStream(location);
+            InputStream inputStream = resourcePack.getInputStream(new ResourceLocation(str));
             if (inputStream == null) {
                Config.warn("CustomGuis file not found: " + str);
             } else {
@@ -201,8 +199,7 @@ public class CustomGuis {
          IResourcePack[] resourcePacks = Config.getResourcePacks();
 
          for (int i = resourcePacks.length - 1; i >= 0; i--) {
-            IResourcePack resourcePack = resourcePacks[i];
-            update(resourcePack, list);
+            update(resourcePacks[i], list);
          }
 
          guiProperties = propertyListToArray(list);

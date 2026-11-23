@@ -5,17 +5,17 @@ import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.events.listeners.UpdateListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class AntiFire extends Module implements UpdateListener {
    public final BooleanValue onlyOnGround;
-   public final StringValue maxPacketsPerTick;
+   public final DoubleValue maxPacketsPerTick;
 
    public AntiFire() {
        super("AntiFire", "GegenFeuer", new Color(252, 186, 3), Categorys.PLAYER);
       this.onlyOnGround = new BooleanValue(this, "OnlyOnGround", false);
-      this.maxPacketsPerTick = new StringValue(this, "MaxPacketsPerTick", 20.0, 0.0, 100.0, 0);
+      this.maxPacketsPerTick = new DoubleValue(this, "MaxPacketsPerTick", 20.0, 0.0, 100.0, 0);
    }
 
    public void onEnable() {
@@ -25,8 +25,7 @@ public class AntiFire extends Module implements UpdateListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    public void onUpdate2() {

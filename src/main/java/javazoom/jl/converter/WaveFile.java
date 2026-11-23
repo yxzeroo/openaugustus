@@ -12,8 +12,7 @@ public class WaveFile extends RiffFile {
          this.wave_format.data.Config(n, s, s2);
          int n2 = this.Open(str, 1);
          if (n2 == 0) {
-            byte[] bytes = new byte[]{87, 65, 86, 69};
-            n2 = this.Write2(bytes, 4);
+            n2 = this.Write2(new byte[]{87, 65, 86, 69}, 4);
             if (n2 == 0) {
                n2 = this.Write(this.wave_format.header, 8);
                n2 = this.Write5(this.wave_format.data.wFormatTag, 2);

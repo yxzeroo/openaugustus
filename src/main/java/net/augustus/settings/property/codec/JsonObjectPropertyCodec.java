@@ -12,14 +12,12 @@ public final class JsonObjectPropertyCodec implements JsonPropertyCodec {
 
    @Override
    public Object read(String str, Object obj, JsonObject json) {
-      JsonObject json2 = (JsonObject)obj;
-      return this.readJsonObject(str, json2, json);
+      return this.readJsonObject(str, (JsonObject)obj, json);
    }
 
    @Override
    public void write(String str, Object obj, JsonObject json) {
-      JsonObject json2 = (JsonObject)obj;
-      this.writeJsonObject(str, json2, json);
+      this.writeJsonObject(str, (JsonObject)obj, json);
    }
 
    public JsonObject readJsonObject(String str, JsonObject json, JsonObject json2) {

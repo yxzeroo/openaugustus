@@ -41,9 +41,7 @@ public class EventPlayerView extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      PlayerViewListener listener = (PlayerViewListener)obj;
-      PlayerViewListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((PlayerViewListener)obj);
    }
 
    public void setPlayerViewY(float f) {

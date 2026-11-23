@@ -4,9 +4,7 @@ public class Sha3TypeSwitchMap {
    public static final int[] ORDINAL_MAP;
 
    static {
-      long l = 85769596696145L ^ 114852672393575L;
-      long l2 = l ^ 617402426584L;
-      ORDINAL_MAP = new int[Sha3Type.values(l2).length];
+      ORDINAL_MAP = new int[Sha3Type.values((85769596696145L ^ 114852672393575L) ^ 617402426584L).length];
 
       try {
          ORDINAL_MAP[Sha3Type.SHA3_224.ordinal()] = 1;

@@ -24,20 +24,16 @@ public class GuiSlotShaders extends GuiSlot {
       if (shaderPack == null) {
          return true;
       } else {
-         InputStream resourceAsStream = shaderPack.getResourceAsStream("/shaders/shaders.properties");
-         Properties properties = ResUtils.readProperties2(resourceAsStream, "Shaders");
+         Properties properties = ResUtils.readProperties2(shaderPack.getResourceAsStream("/shaders/shaders.properties"), "Shaders");
          if (properties == null) {
             return true;
          } else {
-            String str = "version.1.8.9";
-            String property = properties.getProperty(str);
+            String property = properties.getProperty("version.1.8.9");
             if (property == null) {
                return true;
             } else {
                property = property.trim();
-               String str2 = "M5";
-               int n2 = Config.compareRelease(str2, property);
-               if (n2 >= 0) {
+               if (Config.compareRelease("M5", property) >= 0) {
                   return true;
                } else {
                   String str3 = ("HD_U_" + property).replace('_', ' ');
@@ -101,9 +97,7 @@ public class GuiSlotShaders extends GuiSlot {
    @Override
    public void elementClicked(int n, boolean flag, int n2, int n3) {
       if (n != this.selectedIndex || this.lastClicked != this.lastClickedCached) {
-         String str = (String)this.shaderslist.get(n);
-         IShaderPack shaderPack = Shaders.getShaderPack(str);
-         if (this.checkCompatible(shaderPack, n)) {
+         if (this.checkCompatible(Shaders.getShaderPack((String)this.shaderslist.get(n)), n)) {
             this.selectIndex(n);
          }
       }

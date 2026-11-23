@@ -13,8 +13,7 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 public class BiomeGenSwamp extends BiomeGenBase {
    @Override
    public int getGrassColorAtPos(BlockPos pos) {
-      double value = GRASS_COLOR_NOISE.getValue((double)pos.getX() * 0.0225, (double)pos.getZ() * 0.0225);
-      return value < -0.1 ? 5011004 : 6975545;
+      return GRASS_COLOR_NOISE.getValue((double)pos.getX() * 0.0225, (double)pos.getZ() * 0.0225) < -0.1 ? 5011004 : 6975545;
    }
 
    @Override

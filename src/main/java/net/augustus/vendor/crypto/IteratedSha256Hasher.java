@@ -8,7 +8,6 @@ public class IteratedSha256Hasher {
    public static byte[] hashIterated(String str) {
       byte[] bytes = null;
       int n = (int)e;
-      int guardFlag = VendorAesHelper.getGuardFlag();
 
       outerLoop:
       while (true) {

@@ -119,8 +119,7 @@ public class BlockChest extends BlockContainer {
          } else {
             for (EnumFacing facing : (Iterable<EnumFacing>)(EnumFacing.Plane.HORIZONTAL)) {
                BlockPos pos2 = pos.offset(facing);
-               Block block = world.getBlockState(pos2).getBlock();
-               if (block == this) {
+               if (world.getBlockState(pos2).getBlock() == this) {
                   if (this.isBlocked(world, pos2)) {
                      return null;
                   }
@@ -222,8 +221,7 @@ public class BlockChest extends BlockContainer {
             (double)(pos.getZ() + 1)
          )
       ))) {
-         EntityOcelot entityOcelot = (EntityOcelot)entity;
-         if (entityOcelot.isSitting()) {
+         if (((EntityOcelot)entity).isSitting()) {
             return true;
          }
       }

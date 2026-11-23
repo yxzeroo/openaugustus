@@ -20,10 +20,8 @@ public class ChangelogMenuTab extends ClientMenuTab {
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       super.mouseClicked(mouseX, mouseY, mouseButton);
       double d = (double)mouseX;
-      double d2 = (double)mouseY;
-      double d3 = d2;
-      double d4 = d;
-      this.scrollBar.handleMouseClick(d4, d3);
+      double d3 = (double)mouseY;
+      this.scrollBar.handleMouseClick(d, d3);
    }
 
    public void handleMouseInput() throws IOException {
@@ -43,10 +41,7 @@ public class ChangelogMenuTab extends ClientMenuTab {
 
    public void initContent() {
       super.initContent();
-      CreditsSection.getControlFlowGuard();
-      ChangeLogLoader changeLogLoader = Augustus.getInstance().getChangeLogLoader();
-      double d = 296.0;
-      this.wrappedSections = changeLogLoader.getWrappedSections(d);
+      this.wrappedSections = Augustus.getInstance().getChangeLogLoader().getWrappedSections(296.0);
       int n = 0;
       float f = (float)(this.width + 102) / 2.0F;
 
@@ -59,10 +54,7 @@ public class ChangelogMenuTab extends ClientMenuTab {
       int n3 = (int)(f + 152.0F);
       int n4 = (int)(f + 155.0F);
       int height2 = this.height;
-      int n5 = n4;
-      byte b = 52;
-      int n6 = n3;
-      this.scrollBar.setBounds(n6, b, n5, height2);
+      this.scrollBar.setBounds(n3, (byte)52, n4, height2);
    }
 
    public ChangelogMenuTab() {
@@ -73,7 +65,6 @@ public class ChangelogMenuTab extends ClientMenuTab {
 
    public void drawContent(int n, int n2, float f) {
       super.drawContent(n, n2, f);
-      CreditsSection.getControlFlowGuard();
       this.scrollBar.updateAndDraw();
       GL11.glPushMatrix();
       GL11.glTranslatef(0.0F, 52.0F, 0.0F);
@@ -100,9 +91,7 @@ public class ChangelogMenuTab extends ClientMenuTab {
          String versionTitle = changeLogSection.getVersionTitle();
          float f5 = f2 - 148.0F;
          float f6 = f4 + 2.0F;
-         float f7 = f5;
-         String str = versionTitle;
-         ((AugustusGuiScreen)this).drawString(str, f7, f6);
+         ((AugustusGuiScreen)this).drawString(versionTitle, f5, f6);
          int n4 = 0;
 
          for (ChangelogEntry changelogEntry : (Iterable<ChangelogEntry>)(changeLogSection.getEntries())) {
@@ -112,9 +101,7 @@ public class ChangelogMenuTab extends ClientMenuTab {
                float f9 = f2 - 148.0F + (i > 0 ? 6.5F : 0.0F);
                float f10 = f8 + 2.0F;
                int rgb = changelogEntry.getType().getColor().getRGB();
-               float f11 = f10;
-               float f12 = f9;
-               ((AugustusGuiScreen)this).drawString(str2, f12, f11, rgb);
+               ((AugustusGuiScreen)this).drawString(str2, f9, f10, rgb);
                n4++;
             }
          }

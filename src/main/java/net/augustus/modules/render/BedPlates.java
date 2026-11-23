@@ -29,7 +29,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.RenderBlockListener;
 import net.augustus.events.listeners.BlockChangeListener;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
@@ -46,9 +46,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkCoordIntPair;
 
 public class BedPlates extends Module implements RenderListener, RenderBlockListener, TickListener, LoadWorldListener, ChunkUnloadListener, BlockChangeListener {
-   private final StringValue displayDistance;
-   private final StringValue scanRadius;
-   private final StringValue scale;
+   private final DoubleValue displayDistance;
+   private final DoubleValue scanRadius;
+   private final DoubleValue scale;
    private final BooleanValue showDistance;
    private final ColorSetting backgroundColor;
    private final BlurShadowSettings blurShadowSettings;
@@ -61,9 +61,9 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
 
    public BedPlates() {
        super("BedPlates", "BettVerteidigung", new Color(255, 85, 85), Categorys.RENDER);
-      this.displayDistance = new StringValue(this, "DisplayDistance", 40.0, 5.0, 100.0, 0);
-      this.scanRadius = new StringValue(this, "ScanRadius", 3.0, 1.0, 5.0, 0);
-      this.scale = new StringValue(this, "Scale", 1.0, 0.5, 3.0, 2);
+      this.displayDistance = new DoubleValue(this, "DisplayDistance", 40.0, 5.0, 100.0, 0);
+      this.scanRadius = new DoubleValue(this, "ScanRadius", 3.0, 1.0, 5.0, 0);
+      this.scale = new DoubleValue(this, "Scale", 1.0, 0.5, 3.0, 2);
       this.showDistance = new BooleanValue(this, "ShowDistance", true);
       this.backgroundColor = new ColorSetting(this, "Background", new Color(0, 0, 0, 140));
       this.blurShadowSettings = new BlurShadowSettings(this);
@@ -85,18 +85,12 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 32;
-      this.toggleEventSubscription(b);
-      byte b2 = 30;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 17;
-      this.toggleEventSubscription(b4);
-      byte b5 = 64;
-      this.toggleEventSubscription(b5);
-      byte b6 = 55;
-      this.toggleEventSubscription(b6);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)30);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)64);
+      this.toggleEventSubscription((byte)55);
    }
 
    @Override
@@ -197,10 +191,9 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
                double d = (double)pos.getX() + 0.5;
                double d2 = (double)pos.getY() + 1.4;
                double d3 = (double)pos.getZ() + 0.5;
-               Vec3 vec = ProjectionUtil.project3DTo2D(
+               map.put(pos, ProjectionUtil.project3DTo2D(
                   d - mc.getRenderManager().getRenderPosX(), d2 - mc.getRenderManager().getRenderPosY(), d3 - mc.getRenderManager().getRenderPosZ(), sr
-               );
-               map.put(pos, vec);
+               ));
             }
 
             this.projectedBedCoords.clear();
@@ -255,8 +248,7 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
          double d4 = (double)(fontheight + (str != null ? fontheight + 2 : 0) + b * 2);
          double d5 = d - d3 / 2.0;
          double d6 = d2 - d4 - 2.0;
-         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass -> this.renderUnprotectedBackground(d5, d6, d3, d4, shaderRenderPass));
          mc.fontRendererObj.drawStringWithShadow(str2, (float)(d - stringWidth / 2.0), (float)(d6 + (double)b), -1);
          if (str != null) {
@@ -269,8 +261,7 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
          double d8 = (double)(b + (str != null ? fontheight + 3 : 0) + b2 + b);
          double d9 = d - d7 / 2.0;
          double d10 = d2 - d8 - 2.0;
-         boolean isBlurActive2 = this.blurShadowSettings.isBlurActive();
-         BlurShadowManager.enableOneShotPass(isBlurActive2, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.enableOneShotPass(this.blurShadowSettings.isBlurActive(), this.blurShadowSettings.isShadowActive());
          BlurShadowManager.submitRenderTask(false, shaderRenderPass2 -> this.renderProtectedBackground(d9, d10, d7, d8, shaderRenderPass2));
          double d11 = d10 + (double)b;
          if (str != null) {
@@ -284,13 +275,8 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
          for (int i = 0; i < size; i++) {
             Block block = (Block)bedDefenseLayers.blocks.get(i);
             int n4 = n3 + i * (b2 + b3);
-            Item itemFromBlock = Item.getItemFromBlock(block);
-            if (itemFromBlock != null) {
-               ItemStack stack = new ItemStack(block);
-               int n5 = (int)d11;
-               boolean flag = false;
-               int n6 = n5;
-               RenderUtil.renderItemIntoGuiElevated(stack, n4, n6, flag);
+            if (Item.getItemFromBlock(block) != null) {
+               RenderUtil.renderItemIntoGuiElevated(new ItemStack(block), n4, (int)d11, false);
             }
          }
       }
@@ -301,8 +287,7 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
       if (blockState.getBlock() != Blocks.bed) {
          return new BedDefenseLayers(null);
       } else {
-         EnumFacing value = (EnumFacing)blockState.getValue(BlockBed.FACING);
-         BlockPos pos2 = pos.offset(value);
+         BlockPos pos2 = pos.offset((EnumFacing)blockState.getValue(BlockBed.FACING));
          int y = pos.getY();
          HashSet set = new HashSet();
          set.add(pos);
@@ -320,8 +305,7 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
                   if (facing != EnumFacing.DOWN || pos3.getY() > y) {
                      BlockPos pos4 = pos3.offset(facing);
                      if (set.add(pos4) && pos4.getY() >= y) {
-                        IBlockState blockState2 = mc.theWorld.getBlockState(pos4);
-                        Block block = blockState2.getBlock();
+                        Block block = mc.theWorld.getBlockState(pos4).getBlock();
                         if (block != Blocks.bed && block != Blocks.air) {
                            set3.add(block);
                            set4.add(pos4);
@@ -388,19 +372,11 @@ public class BedPlates extends Module implements RenderListener, RenderBlockList
    }
 
    private void renderProtectedBackground(double d, double d2, double d3, double d4, ShaderRenderPass shaderRenderPass) {
-      double d5 = d + d3;
-      double d6 = d2 + d4;
-      byte b = 0;
-      int colorInt = this.backgroundColor.getColorInt(b);
-      RenderUtil.drawRect(d, d2, d5, d6, ColorUtil.resolvePassColor(shaderRenderPass, colorInt));
+      RenderUtil.drawRect(d, d2, d + d3, d2 + d4, ColorUtil.resolvePassColor(shaderRenderPass, this.backgroundColor.getColorInt((byte)0)));
    }
 
    private void renderUnprotectedBackground(double d, double d2, double d3, double d4, ShaderRenderPass shaderRenderPass) {
-      double d5 = d + d3;
-      double d6 = d2 + d4;
-      byte b = 0;
-      int colorInt = this.backgroundColor.getColorInt(b);
-      RenderUtil.drawRect(d, d2, d5, d6, ColorUtil.resolvePassColor(shaderRenderPass, colorInt));
+      RenderUtil.drawRect(d, d2, d + d3, d2 + d4, ColorUtil.resolvePassColor(shaderRenderPass, this.backgroundColor.getColorInt((byte)0)));
    }
 
 }

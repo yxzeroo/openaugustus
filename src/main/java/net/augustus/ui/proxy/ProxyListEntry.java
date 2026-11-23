@@ -22,7 +22,6 @@ public class ProxyListEntry implements MC {
    private final ProxyEntry proxyEntry;
    private final AnimationUtil hoverAnimation = new AnimationUtil(0.0F, 0.0F, 0.0F, 0.0F);
    private int renderX;
-   private static int[] controlFlowGuard;
 
    public boolean isHovered() {
       return this.hovered;
@@ -32,7 +31,6 @@ public class ProxyListEntry implements MC {
       this.renderX = n3;
       this.renderY = n4;
       this.renderWidth = n5;
-      getControlFlowGuard();
       this.renderHeight = n6;
       this.selected = flag;
       FontRenderer fontRendererObj = mc.fontRendererObj;
@@ -54,23 +52,14 @@ public class ProxyListEntry implements MC {
          f3 /= f5;
          f4 /= f5;
          this.hovered = isHovered;
-         double d = (double)(f3 - f);
-         double d2 = (double)(f4 - f2);
-         double d3 = (double)(f3 + f);
-         double d4 = (double)(f4 + f2);
-         int rgb = new Color(0, 0, 0, flag ? 200 : 100).getRGB();
-         double d5 = d4;
-         double d6 = d3;
-         double d7 = d2;
-         RenderUtil.drawRect(d, d7, d6, d5, rgb);
+         RenderUtil.drawRect((double)(f3 - f), (double)(f4 - f2), (double)(f3 + f), (double)(f4 + f2), new Color(0, 0, 0, flag ? 200 : 100).getRGB());
          GL11.glScaled((double)(1.0F / f5), (double)(1.0F / f5), 0.0);
          ProxyEntry proxy = Augustus.getInstance().getProxy();
          StringBuilder sb2 = new StringBuilder();
          short s = 923;
          sb = sb2.append("§7IP: ");
          if (proxy != null) {
-            ProxyEntry proxyEntry2 = this.proxyEntry;
-            if (proxy.matches(proxyEntry2)) {
+            if (proxy.matches(this.proxyEntry)) {
                str = "§a";
                break exitBlock;
             }
@@ -134,16 +123,13 @@ public class ProxyListEntry implements MC {
    }
 
    public void mouseClicked(int n, int n2, int n3, ProxyManagerScreen proxyManagerScreen) {
-      int[] controlFlowGuard2 = getControlFlowGuard();
       if (n3 == 0 && RenderUtil.isHovered((float)this.renderX, (float)this.renderY, (float)this.renderWidth, (float)this.renderHeight, n, n2)) {
          if (KeyboardInputUtil.isKeyDown(157) || KeyboardInputUtil.isKeyDown(29)) {
-            boolean flag = !this.isFavorite();
-            this.setFavorite(flag);
+            this.setFavorite(!this.isFavorite());
             return;
          }
 
-         long l = 250L;
-         if (!this.timeHelper.reached2(l)) {
+         if (!this.timeHelper.reached2(250L)) {
             String str = this.proxyEntry.getHost()
                + ":"
                + this.proxyEntry.getPort()
@@ -152,9 +138,7 @@ public class ProxyListEntry implements MC {
                      ? ":" + this.proxyEntry.getUsername() + (!this.proxyEntry.getPassword().equals("") ? ":" + this.proxyEntry.getPassword() : "")
                      : ""
                );
-            boolean flag2 = true;
-            String str2 = str;
-            proxyManagerScreen.connectToProxy(str2, flag2);
+            proxyManagerScreen.connectToProxy(str, true);
          }
 
          this.timeHelper.reset();
@@ -181,16 +165,7 @@ public class ProxyListEntry implements MC {
       return this.hoverAnimation;
    }
 
-   public static void setControlFlowGuard(int[] ints) {
-      controlFlowGuard = ints;
-   }
 
-   public static int[] getControlFlowGuard() {
-      return controlFlowGuard;
-   }
 
-   static {
-      setControlFlowGuard((int[])null);
-   }
 
 }

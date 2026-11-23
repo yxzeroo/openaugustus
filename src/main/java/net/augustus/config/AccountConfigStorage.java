@@ -2,7 +2,6 @@ package net.augustus.config;
 
 import net.augustus.ui.account.AccountEntry;
 import net.augustus.ui.account.AccountManagerScreen;
-import net.augustus.utils.TextFormatUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,7 +33,6 @@ public class AccountConfigStorage extends JsonConfigFile {
 
    public JsonArray serializeAccounts() {
       JsonArray array = new JsonArray();
-      TextFormatUtil.getStateMarkers();
 
       for (AccountEntry accountEntry : (Iterable<AccountEntry>)(AccountManagerScreen.accounts)) {
          try {
@@ -53,8 +51,7 @@ public class AccountConfigStorage extends JsonConfigFile {
 
    @Override
    public void deserialize(JsonElement elem) {
-      JsonArray array = (JsonArray)elem;
-      this.deserializeAccounts(array);
+      this.deserializeAccounts((JsonArray)elem);
    }
 
    @Override

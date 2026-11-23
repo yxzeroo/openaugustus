@@ -101,13 +101,9 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback {
          } else if (button.id == 1) {
             this.selectWorld(this.selectedIndex);
          } else if (button.id == 3) {
-            Minecraft mc2 = this.mc;
-            GuiCreateWorld guiCreateWorld = new GuiCreateWorld(this);
-            mc2.displayGuiScreen(guiCreateWorld);
+            this.mc.displayGuiScreen(new GuiCreateWorld(this));
          } else if (button.id == 6) {
-            Minecraft mc3 = this.mc;
-            GuiRenameWorld guiRenameWorld = new GuiRenameWorld(this, this.getSaveFileName(this.selectedIndex));
-            mc3.displayGuiScreen(guiRenameWorld);
+            this.mc.displayGuiScreen(new GuiRenameWorld(this, this.getSaveFileName(this.selectedIndex)));
          } else if (button.id == 0) {
             GuiScreen parentScreen2 = this.parentScreen;
             this.mc.displayGuiScreen(parentScreen2);
@@ -132,9 +128,7 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback {
          this.loadLevelList();
       } catch (AnvilConverterException e) {
          LOGGER2.error("Couldn't load level list", e);
-         Minecraft mc2 = this.mc;
-         GuiErrorScreen guiErrorScreen = new GuiErrorScreen("Unable to load worlds", e.getMessage());
-         mc2.displayGuiScreen((GuiScreen)guiErrorScreen);
+         this.mc.displayGuiScreen((GuiScreen)new GuiErrorScreen("Unable to load worlds", e.getMessage()));
          return;
       }
 
@@ -174,8 +168,7 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback {
    }
 
    private void loadLevelList() throws AnvilConverterException {
-      ISaveFormat saveLoader = this.mc.getSaveLoader();
-      this.saveList = saveLoader.getSaveList();
+      this.saveList = this.mc.getSaveLoader().getSaveList();
       Collections.sort(this.saveList);
       this.selectedIndex = -1;
    }

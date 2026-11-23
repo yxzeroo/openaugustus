@@ -77,29 +77,25 @@ public class GlStateSnapshot {
       sb.append("\n====== State Difference Check [" + str + "] ======\n");
       boolean flag = false;
       float red = GlStateManager.colorState.red;
-      float colorRed2 = this.colorRed;
-      if (this.floatDiffers(colorRed2, red)) {
+      if (this.floatDiffers(this.colorRed, red)) {
          sb.append(String.format("  DIFF Color Red: Snapshot=%.2f, Current=%.2f\n", this.colorRed, GlStateManager.colorState.red));
          flag = true;
       }
 
       float green = GlStateManager.colorState.green;
-      float colorGreen2 = this.colorGreen;
-      if (this.floatDiffers(colorGreen2, green)) {
+      if (this.floatDiffers(this.colorGreen, green)) {
          sb.append(String.format("  DIFF Color Green: Snapshot=%.2f, Current=%.2f\n", this.colorGreen, GlStateManager.colorState.green));
          flag = true;
       }
 
       float blue = GlStateManager.colorState.blue;
-      float colorBlue2 = this.colorBlue;
-      if (this.floatDiffers(colorBlue2, blue)) {
+      if (this.floatDiffers(this.colorBlue, blue)) {
          sb.append(String.format("  DIFF Color Blue: Snapshot=%.2f, Current=%.2f\n", this.colorBlue, GlStateManager.colorState.blue));
          flag = true;
       }
 
       float alpha = GlStateManager.colorState.alpha;
-      float colorAlpha2 = this.colorAlpha;
-      if (this.floatDiffers(colorAlpha2, alpha)) {
+      if (this.floatDiffers(this.colorAlpha, alpha)) {
          sb.append(String.format("  DIFF Color Alpha: Snapshot=%.2f, Current=%.2f\n", this.colorAlpha, GlStateManager.colorState.alpha));
          flag = true;
       }
@@ -117,8 +113,7 @@ public class GlStateSnapshot {
       }
 
       float alphaRef2 = GlStateManager.getAlphaRef();
-      float alphaRef3 = this.alphaRef;
-      if (this.floatDiffers(alphaRef3, alphaRef2)) {
+      if (this.floatDiffers(this.alphaRef, alphaRef2)) {
          sb.append("  DIFF Alpha Ref: Snapshot=" + this.alphaRef + ", Current=" + alphaRef2 + "\n");
          flag = true;
       }
@@ -230,24 +225,21 @@ public class GlStateSnapshot {
       }
 
       float f = GL11.glGetFloat(2849);
-      float lineWidth2 = this.lineWidth;
-      if (this.floatDiffers(lineWidth2, f)) {
+      if (this.floatDiffers(this.lineWidth, f)) {
          sb.append("  DIFF Line Width: Snapshot=" + this.lineWidth + ", Current=" + f + "\n");
          flag = true;
       }
 
       FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(16);
       GL11.glGetFloat(2982, floatBuffer);
-      FloatBuffer modelViewMatrix2 = this.modelViewMatrix;
-      if (!this.matricesEqual(modelViewMatrix2, floatBuffer)) {
+      if (!this.matricesEqual(this.modelViewMatrix, floatBuffer)) {
          sb.append("  DIFF ModelView Matrix has changed.\n");
          flag = true;
       }
 
       FloatBuffer floatBuffer2 = BufferUtils.createFloatBuffer(16);
       GL11.glGetFloat(2983, floatBuffer2);
-      FloatBuffer projectionMatrix2 = this.projectionMatrix;
-      if (!this.matricesEqual(projectionMatrix2, floatBuffer2)) {
+      if (!this.matricesEqual(this.projectionMatrix, floatBuffer2)) {
          sb.append("  DIFF Projection Matrix has changed.\n");
          flag = true;
       }

@@ -25,8 +25,7 @@ public class XRayBlockOption implements SelectableOption {
 
    public void setSelected(boolean flag) {
       if (flag != this.selected && MC.mc.theWorld != null) {
-         boolean flag2 = true;
-         XRay.setReloadRenderersPending(this.xRay, flag2);
+         XRay.setReloadRenderersPending(this.xRay, true);
       }
 
       this.selected = flag;

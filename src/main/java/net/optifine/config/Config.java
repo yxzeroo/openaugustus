@@ -134,8 +134,7 @@ public class Config {
 
       for (int i = 0; i < displayModes2.length; i++) {
          DisplayMode displayMode = displayModes2[i];
-         String str = displayMode.getWidth() + "x" + displayMode.getHeight();
-         strings[i] = str;
+         strings[i] = displayMode.getWidth() + "x" + displayMode.getHeight();
       }
 
       return strings;
@@ -207,8 +206,7 @@ public class Config {
 
    public static GlVersion getGlVersion() {
       if (glVersion == null) {
-         String str = GL11.glGetString(7938);
-         glVersion = parseGlVersion(str, null);
+         glVersion = parseGlVersion(GL11.glGetString(7938), null);
          if (glVersion == null) {
             glVersion = getGlVersionLwjgl();
          }
@@ -250,8 +248,7 @@ public class Config {
 
       for (int i = 0; i < displayModes2.length; i++) {
          DisplayMode displayMode = displayModes2[i];
-         Dimension dimension = new Dimension(displayMode.getWidth(), displayMode.getHeight());
-         set.add(dimension);
+         set.add(new Dimension(displayMode.getWidth(), displayMode.getHeight()));
       }
 
       return set;
@@ -360,8 +357,7 @@ public class Config {
          List repositoryEntries = resourcePackRepository.repositoryEntries;
 
          for (int i = repositoryEntries.size() - 1; i >= 0; i--) {
-            ResourcePackRepository.Entry entry = (ResourcePackRepository.Entry)repositoryEntries.get(i);
-            IResourcePack resourcePack = entry.getResourcePack();
+            IResourcePack resourcePack = ((ResourcePackRepository.Entry)repositoryEntries.get(i)).getResourcePack();
             if (resourcePack.resourceExists(location)) {
                return resourcePack;
             }
@@ -431,8 +427,7 @@ public class Config {
    }
 
    public static boolean isUseAlphaFunc() {
-      float alphaFuncLevel = getAlphaFuncLevel();
-      return alphaFuncLevel > DEF_ALPHA_FUNC_LEVEL + 1.0E-5F;
+      return getAlphaFuncLevel() > DEF_ALPHA_FUNC_LEVEL + 1.0E-5F;
    }
 
    public static IResource getResource(ResourceLocation location) throws IOException {
@@ -501,8 +496,7 @@ public class Config {
       String[] strings = new String[]{"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
 
       for (int i = 0; i < strings.length; i++) {
-         String str = strings[i];
-         String property = System.getProperty(str);
+         String property = System.getProperty(strings[i]);
          if (property != null && property.contains("64")) {
             return 64;
          }
@@ -512,8 +506,7 @@ public class Config {
    }
 
    public static boolean isFromDefaultResourcePack(ResourceLocation location) {
-      IResourcePack definingResourcePack = getDefiningResourcePack(location);
-      return definingResourcePack == getDefaultResourcePack();
+      return getDefiningResourcePack(location) == getDefaultResourcePack();
    }
 
    public static void warn(String str) {
@@ -563,8 +556,7 @@ public class Config {
    }
 
    public static String[] readLines2(File file) throws IOException {
-      FileInputStream fileInputStream = new FileInputStream(file);
-      return readLines(fileInputStream);
+      return readLines(new FileInputStream(file));
    }
 
    public static int getAvailableProcessors() {
@@ -677,8 +669,7 @@ public class Config {
          return false;
       } else {
          for (int i = 0; i < array.length; i++) {
-            Object obj2 = array[i];
-            if (equals(obj, obj2)) {
+            if (equals(obj, array[i])) {
                return true;
             }
          }
@@ -761,8 +752,7 @@ public class Config {
       if (location == null) {
          return false;
       } else {
-         IResourcePack definingResourcePack = getDefiningResourcePack(location);
-         return definingResourcePack != null;
+         return getDefiningResourcePack(location) != null;
       }
    }
 
@@ -776,8 +766,7 @@ public class Config {
 
    public static void writeFile(File file, String str) throws IOException {
       FileOutputStream fileOutputStream = new FileOutputStream(file);
-      byte[] bytes = str.getBytes(StandardCharsets.US_ASCII);
-      fileOutputStream.write(bytes);
+      fileOutputStream.write(str.getBytes(StandardCharsets.US_ASCII));
       fileOutputStream.close();
    }
 
@@ -806,8 +795,7 @@ public class Config {
 
    public static DynamicTexture getMojangLogoTexture(DynamicTexture dynamicTexture) {
       try {
-         ResourceLocation location = new ResourceLocation("textures/gui/title/mojang.png");
-         InputStream resourceStream = getResourceStream(location);
+         InputStream resourceStream = getResourceStream(new ResourceLocation("textures/gui/title/mojang.png"));
          if (resourceStream == null) {
             return dynamicTexture;
          } else {
@@ -864,8 +852,7 @@ public class Config {
    }
 
    public static int getBitsOs() {
-      String str = System.getenv("ProgramFiles(X86)");
-      return str != null ? 64 : 32;
+      return System.getenv("ProgramFiles(X86)") != null ? 64 : 32;
    }
 
    public static TextureMap getTextureMap() {
@@ -880,8 +867,7 @@ public class Config {
       int n = GlStateManager.glGetError();
       if (n != 0 && GlErrors.isEnabled(n)) {
          String glErrorString = getGlErrorString(n);
-         String str2 = String.format("OpenGL error: %s (%s), at: %s", n, glErrorString, str);
-         error(str2);
+         error(String.format("OpenGL error: %s (%s), at: %s", n, glErrorString, str));
          if (isShowGlErrors() && TimedEvent.isActive("ShowGlError", 10000L)) {
             String str3 = I18n.format("of.message.openglError", new Object[]{n, glErrorString});
             mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(str3));
@@ -1090,8 +1076,7 @@ public class Config {
       } else if (clazz.isPrimitive()) {
          throw new IllegalArgumentException("Can not make arrays with primitive elements (int, double), element class: " + clazz);
       } else {
-         Object[] array = (Object[])Array.newInstance(clazz, items.size());
-         return items.toArray(array);
+         return items.toArray((Object[])Array.newInstance(clazz, items.size()));
       }
    }
 
@@ -1110,8 +1095,7 @@ public class Config {
    }
 
    private static void startVersionCheckThread() {
-      VersionCheckThread versionCheckThread = new VersionCheckThread();
-      versionCheckThread.start();
+      new VersionCheckThread().start();
    }
 
    public static IntBuffer createDirectIntBuffer(int n) {
@@ -1264,9 +1248,7 @@ public class Config {
          mc.entityRenderer.updateShaderGroupSize(mc.displayWidth, mc.displayHeight);
       }
 
-      Minecraft mc2 = mc;
-      LoadingScreenRenderer loadingScreenRenderer = new LoadingScreenRenderer(mc);
-      mc2.loadingScreen = loadingScreenRenderer;
+      mc.loadingScreen = new LoadingScreenRenderer(mc);
    }
 
    public static boolean isVoidParticles() {
@@ -1305,8 +1287,7 @@ public class Config {
 
    public static boolean hasResource(IResourceManager resourceManager, ResourceLocation location) {
       try {
-         IResource resource = resourceManager.getResource(location);
-         return resource != null;
+         return resourceManager.getResource(location) != null;
       } catch (IOException e) {
          return false;
       }
@@ -1329,8 +1310,7 @@ public class Config {
       ArrayList list = new ArrayList();
 
       while (stringTokenizer.hasMoreTokens()) {
-         String str3 = stringTokenizer.nextToken();
-         list.add(str3);
+         list.add(stringTokenizer.nextToken());
       }
 
       return (String[])list.toArray(new String[list.size()]);
@@ -1354,8 +1334,7 @@ public class Config {
 
    private static String[] splitRelease(String str) {
       if (str != null && str.length() > 0) {
-         Pattern pattern = Pattern.compile("([A-Z])([0-9]+)(.*)");
-         Matcher matcher = pattern.matcher(str);
+         Matcher matcher = Pattern.compile("([A-Z])([0-9]+)(.*)").matcher(str);
          if (!matcher.matches()) {
             return new String[]{"", "", ""};
          } else {
@@ -1372,8 +1351,7 @@ public class Config {
    public static Object[] addObjectToArray(Object[] array, Object obj, int n) {
       ArrayList list = new ArrayList<>(Arrays.asList(array));
       list.add(n, obj);
-      Object[] array2 = (Object[])Array.newInstance(array.getClass().getComponentType(), list.size());
-      return list.toArray(array2);
+      return list.toArray((Object[])Array.newInstance(array.getClass().getComponentType(), list.size()));
    }
 
    public static int getFpsMin() {
@@ -1393,8 +1371,7 @@ public class Config {
                debugFPS = 1;
             }
 
-            long l = (long)(1.0 / (double)debugFPS * 1.0E9);
-            long l2 = l;
+            long l2 = (long)(1.0 / (double)debugFPS * 1.0E9);
             long l3 = 0L;
 
             for (int i = MathHelper.normalizeAngle(index - 1, frames.length);
@@ -1471,8 +1448,7 @@ public class Config {
    public static int[] addIntsToArray(int[] ints, int[] ints2) {
       if (ints != null && ints2 != null) {
          int length = ints.length;
-         int n = length + ints2.length;
-         int[] ints3 = new int[n];
+         int[] ints3 = new int[length + ints2.length];
          System.arraycopy(ints, 0, ints3, 0, length);
          System.arraycopy(ints2, 0, ints3, 0 + length, ints2.length);
          return ints3;
@@ -1542,8 +1518,7 @@ public class Config {
             return;
          }
 
-         int n2 = (threadGroup.activeCount() + 10) * 2;
-         Thread[] threads = new Thread[n2];
+         Thread[] threads = new Thread[(threadGroup.activeCount() + 10) * 2];
          threadGroup.enumerate(threads, false);
 
          for (int i = 0; i < threads.length; i++) {
@@ -1621,8 +1596,7 @@ public class Config {
             ArrayList list = new ArrayList();
 
             for (Dimension dimension : (Iterable<Dimension>)(displayModeDimensions)) {
-               DisplayMode[] displayModes2 = getDisplayModes(availableDisplayModes, dimension);
-               DisplayMode displayMode = getDisplayMode(displayModes2, desktopDisplayMode);
+               DisplayMode displayMode = getDisplayMode(getDisplayModes(availableDisplayModes, dimension), desktopDisplayMode);
                if (displayMode != null) {
                   list.add(displayMode);
                }
@@ -1659,8 +1633,7 @@ public class Config {
          if (str == null) {
             return glVersion2;
          } else {
-            Pattern pattern = Pattern.compile("([0-9]+)\\.([0-9]+)(\\.([0-9]+))?(.+)?");
-            Matcher matcher = pattern.matcher(str);
+            Matcher matcher = Pattern.compile("([0-9]+)\\.([0-9]+)(\\.([0-9]+))?(.+)?").matcher(str);
             if (!matcher.matches()) {
                return glVersion2;
             } else {
@@ -1682,8 +1655,7 @@ public class Config {
          return false;
       } else {
          for (int i = 0; i < array.length; i++) {
-            Object obj2 = array[i];
-            if (obj == obj2) {
+            if (obj == array[i]) {
                return true;
             }
          }
@@ -1694,8 +1666,7 @@ public class Config {
 
    private static String[] detectOpenGlExtensions() {
       try {
-         GlVersion glVersion2 = getGlVersion();
-         if (glVersion2.getMajor() >= 3) {
+         if (getGlVersion().getMajor() >= 3) {
             int n = GL11.glGetInteger(33309);
             if (n > 0) {
                String[] strings = new String[n];
@@ -1712,8 +1683,7 @@ public class Config {
       }
 
       try {
-         String str = GL11.glGetString(7939);
-         return str.split(" ");
+         return GL11.glGetString(7939).split(" ");
       } catch (Exception e2) {
          e2.printStackTrace();
          return new String[0];
@@ -1918,8 +1888,7 @@ public class Config {
 
    public static GlVersion getGlslVersion() {
       if (glslVersion == null) {
-         String str = GL11.glGetString(35724);
-         glslVersion = parseGlVersion(str, null);
+         glslVersion = parseGlVersion(GL11.glGetString(35724), null);
          if (glslVersion == null) {
             glslVersion = new GlVersion(1, 10);
          }
@@ -1953,8 +1922,7 @@ public class Config {
    }
 
    public static String readFile(File file) throws IOException {
-      FileInputStream fileInputStream = new FileInputStream(file);
-      return readInputStream(fileInputStream, "ASCII");
+      return readInputStream(new FileInputStream(file), "ASCII");
    }
 
    public static boolean isFancyFogAvailable() {

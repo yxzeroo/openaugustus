@@ -5,9 +5,7 @@ public class ShadedRsaKeyTypeSwitchMap {
 
    static {
       long l = 139276311673812L ^ 119680822354719L;
-      long l2 = (l ^ 24902666645615L) >>> 32;
-      int n = (int)((l ^ 24902666645615L) << 32 >>> 32);
-      ORDINAL_MAP = new int[ShadedRsaKeyType.values(l2, n).length];
+      ORDINAL_MAP = new int[ShadedRsaKeyType.values((l ^ 24902666645615L) >>> 32, (int)((l ^ 24902666645615L) << 32 >>> 32)).length];
 
       try {
          ORDINAL_MAP[ShadedRsaKeyType.RSA.ordinal()] = 1;

@@ -18,8 +18,7 @@ public class TooltipRenderer implements MC {
    private static final int LINE_SPACING = 2;
 
    public static void drawTooltip(CustomFontUtil customFontUtil, String str, int n, int n2) {
-      int n3 = DEFAULT_MAX_WIDTH;
-      drawTooltip(customFontUtil, str, n, n2, n3);
+      drawTooltip(customFontUtil, str, n, n2, DEFAULT_MAX_WIDTH);
    }
 
    public static void drawTooltip(CustomFontUtil customFontUtil, String str, int n, int n2, int n3) {
@@ -62,12 +61,7 @@ public class TooltipRenderer implements MC {
                int n9 = n8 + 5;
 
                for (String str3 : (Iterable<String>)(list)) {
-                  double d = (double)(n7 + 5);
-                  double d2 = (double)n9;
-                  int rgb = Color.WHITE.getRGB();
-                  double d3 = d2;
-                  double d4 = d;
-                  customFontUtil.drawString(str3, d4, d3, rgb);
+                  customFontUtil.drawString(str3, (double)(n7 + 5), (double)n9, Color.WHITE.getRGB());
                   n9 += fontHeight + 2;
                }
             }

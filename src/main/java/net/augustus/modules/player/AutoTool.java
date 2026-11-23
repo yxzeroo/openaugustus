@@ -187,11 +187,7 @@ public class AutoTool extends Module implements SilentSlotListener, AttackEntity
       }
 
       if (this.selectedSlot > -1 && this.selectedSlot < 9) {
-         int selectedSlot2 = this.selectedSlot;
-         boolean value = this.silent.getValue();
-         int n2 = selectedSlot2;
-         byte b = 8;
-         SilentSlotManager.requestSlot(this, b, n2, value);
+         SilentSlotManager.requestSlot(this, (byte)8, this.selectedSlot, this.silent.getValue());
       }
 
       this.ticksSinceToolNeeded++;
@@ -208,10 +204,8 @@ public class AutoTool extends Module implements SilentSlotListener, AttackEntity
          }
 
          if (mc.gameSettings.keyBindAttack.getPressTime() <= 0 && !mc.gameSettings.keyBindAttack.isKeyDown()) {
-            long l = 650L;
-            if (this.lastAttackTimer.reached2(l)) {
-               long l2 = 250L;
-               if (this.lastClickTimer.reached2(l2)) {
+            if (this.lastAttackTimer.reached2(650L)) {
+               if (this.lastClickTimer.reached2(250L)) {
                   return false;
                }
             }

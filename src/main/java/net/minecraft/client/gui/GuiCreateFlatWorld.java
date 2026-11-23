@@ -102,9 +102,7 @@ public class GuiCreateFlatWorld extends GuiScreen {
          GuiCreateWorld createWorldGui3 = this.createWorldGui;
          this.mc.displayGuiScreen(createWorldGui3);
       } else if (button.id == 5) {
-         Minecraft mc2 = this.mc;
-         GuiFlatPresets guiFlatPresets = new GuiFlatPresets(this);
-         mc2.displayGuiScreen(guiFlatPresets);
+         this.mc.displayGuiScreen(new GuiFlatPresets(this));
       } else if (button.id == 4 && this.hasSelectedLayer()) {
          this.theFlatGeneratorInfo.getFlatLayers().remove(n);
          this.createFlatWorldListSlotGui.selectedLayer = Math.min(this.createFlatWorldListSlotGui.selectedLayer, this.theFlatGeneratorInfo.getFlatLayers().size() - 1);

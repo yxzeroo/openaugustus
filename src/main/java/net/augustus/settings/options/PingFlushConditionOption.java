@@ -1,7 +1,7 @@
 package net.augustus.settings.options;
 
 import net.augustus.settings.SelectableOption;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 
 public enum PingFlushConditionOption implements SelectableOption {
@@ -25,7 +25,7 @@ public enum PingFlushConditionOption implements SelectableOption {
 
 private final String name;
    private boolean selected = true;
-   private StringValue flushDurationSetting;
+   private DoubleValue flushDurationSetting;
    private final TimeHelper timeHelper = new TimeHelper();
 private PingFlushConditionOption(String str, boolean flag) {
       this.name = str;
@@ -47,7 +47,7 @@ private PingFlushConditionOption(String str, boolean flag) {
       this.selected = flag;
    }
 
-   public static StringValue setFlushDurationSetting(PingFlushConditionOption pingFlushConditionOption, StringValue stringValue) {
+   public static DoubleValue setFlushDurationSetting(PingFlushConditionOption pingFlushConditionOption, DoubleValue stringValue) {
       return pingFlushConditionOption.flushDurationSetting = stringValue;
    }
 
@@ -59,7 +59,7 @@ private PingFlushConditionOption(String str, boolean flag) {
       return pingFlushConditionOption.selected;
    }
 
-   public static StringValue getFlushDurationSetting(PingFlushConditionOption pingFlushConditionOption) {
+   public static DoubleValue getFlushDurationSetting(PingFlushConditionOption pingFlushConditionOption) {
       return pingFlushConditionOption.flushDurationSetting;
    }
 }

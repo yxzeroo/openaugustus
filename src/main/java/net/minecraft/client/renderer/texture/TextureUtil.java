@@ -90,14 +90,12 @@ public class TextureUtil {
       float f2 = (float)Math.pow((double)((float)(n2 >> n5 & 0xFF) / 255.0F), 2.2);
       float f3 = (float)Math.pow((double)((float)(n3 >> n5 & 0xFF) / 255.0F), 2.2);
       float f4 = (float)Math.pow((double)((float)(n4 >> n5 & 0xFF) / 255.0F), 2.2);
-      float f5 = (float)Math.pow((double)(f + f2 + f3 + f4) * 0.25, 0.45454545454545453);
-      return (int)((double)f5 * 255.0);
+      return (int)((double)((float)Math.pow((double)(f + f2 + f3 + f4) * 0.25, 0.45454545454545453)) * 255.0);
    }
 
    public static void uploadTextureMipmap(int[][] intsArr, int n, int n2, int n3, int n4, boolean flag, boolean flag2) {
       for (int i = 0; i < intsArr.length; i++) {
-         int[] ints = intsArr[i];
-         uploadTextureSub(i, ints, n >> i, n2 >> i, n3 >> i, n4 >> i, flag, flag2, intsArr.length > 1);
+         uploadTextureSub(i, intsArr[i], n >> i, n2 >> i, n3 >> i, n4 >> i, flag, flag2, intsArr.length > 1);
       }
    }
 
@@ -110,8 +108,7 @@ public class TextureUtil {
       while (n7 < n2 * n3) {
          int n8 = n7 / n2;
          int n9 = Math.min(n6, n3 - n8);
-         int n10 = n2 * n9;
-         copyToBufferPos(ints, n7, n10);
+         copyToBufferPos(ints, n7, n2 * n9);
          GL11.glTexSubImage2D(3553, n, n4, n5 + n8, n2, n9, 32993, 33639, dataBuffer);
          n7 += n2 * n9;
       }
@@ -127,8 +124,7 @@ public class TextureUtil {
    }
 
    public static void allocateTextureImpl(int n, int n2, int n3, int n4) {
-      Class<TextureUtil> clazz = TextureUtil.class;
-      synchronized (clazz) {
+      synchronized (TextureUtil.class) {
          deleteTexture(n);
          bindTexture(n);
       }
@@ -256,10 +252,7 @@ public class TextureUtil {
       int n3 = n >> 16 & 0xFF;
       int n4 = n >> 8 & 0xFF;
       int n5 = n & 0xFF;
-      int n6 = (n3 * 30 + n4 * 59 + n5 * 11) / 100;
-      int n7 = (n3 * 30 + n4 * 70) / 100;
-      int n8 = (n3 * 30 + n5 * 70) / 100;
-      return n2 << 24 | n6 << 16 | n7 << 8 | n8;
+      return n2 << 24 | ((n3 * 30 + n4 * 59 + n5 * 11) / 100) << 16 | ((n3 * 30 + n4 * 70) / 100) << 8 | ((n3 * 30 + n5 * 70) / 100);
    }
 
    public static void processPixelValues(int[] ints, int n, int n2) {

@@ -27,8 +27,7 @@ public class CommandWeather extends CommandBase {
             n = parseInt(strings[1], 1, 1000000) * 20;
          }
 
-         WorldServer world = MinecraftServer.getServer().worldServers[0];
-         WorldInfo worldInfo = world.getWorldInfo();
+         WorldInfo worldInfo = MinecraftServer.getServer().worldServers[0].getWorldInfo();
          if ("clear".equalsIgnoreCase(strings[0])) {
             worldInfo.setCleanWeatherTime(n);
             worldInfo.setRainTime(0);

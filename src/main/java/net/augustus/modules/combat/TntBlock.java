@@ -6,17 +6,17 @@ import net.augustus.modules.Module;
 import net.augustus.events.listeners.ClickListener;
 import net.augustus.events.EventClick;
 import net.augustus.Augustus;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.item.ItemSword;
 
 public class TntBlock extends Module implements ClickListener {
-   private final StringValue minDamageToBlock;
+   private final DoubleValue minDamageToBlock;
 
    public TntBlock() {
        super("TntBlock", "TntBlockierung", new Color(252, 147, 91), Categorys.COMBAT);
-      this.minDamageToBlock = new StringValue(this, "MinDamageToBlock", 0.0, 0.0, 20.0, 0);
+      this.minDamageToBlock = new DoubleValue(this, "MinDamageToBlock", 0.0, 0.0, 20.0, 0);
    }
 
    public void onEnable() {
@@ -26,8 +26,7 @@ public class TntBlock extends Module implements ClickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)7);
    }
 
    public void onClick(EventClick event) {
@@ -40,8 +39,7 @@ public class TntBlock extends Module implements ClickListener {
             EntityTNTPrimed entityTNTPrimed = (EntityTNTPrimed)entity;
             double d = Augustus.getInstance().getModuleManager().tntESP.calculateExplosionDamage(entityTNTPrimed);
             if (entityTNTPrimed.fuse < 4 && d >= this.minDamageToBlock.getValue()) {
-               boolean flag = true;
-               event.setRightMouseDown(flag);
+               event.setRightMouseDown(true);
                break;
             }
          }

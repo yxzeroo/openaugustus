@@ -27,8 +27,7 @@ public class ShaderLinkHelper {
       shaderManager.getFragmentShaderLoader().attachShader(shaderManager);
       shaderManager.getVertexShaderLoader().attachShader(shaderManager);
       OpenGlHelper.glLinkProgram(shaderManager.getProgram());
-      int n = OpenGlHelper.glGetProgrami(shaderManager.getProgram(), OpenGlHelper.GL_LINK_STATUS);
-      if (n == 0) {
+      if (OpenGlHelper.glGetProgrami(shaderManager.getProgram(), OpenGlHelper.GL_LINK_STATUS) == 0) {
          LOGGER.warn(
             "Error encountered when linking program containing VS "
                + shaderManager.getVertexShaderLoader().getShaderFilename()

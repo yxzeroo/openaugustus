@@ -128,8 +128,7 @@ public class GuiPageButtonList extends GuiListExtended {
                focusedControl2.textboxKeyTyped(ch, n);
             }
          } else {
-            String clipboardString = GuiScreen.getClipboardString();
-            String[] strings = clipboardString.split(";");
+            String[] strings = GuiScreen.getClipboardString().split(";");
             int n4 = this.editBoxes.indexOf(this.focusedControl);
             int n5 = n4;
 

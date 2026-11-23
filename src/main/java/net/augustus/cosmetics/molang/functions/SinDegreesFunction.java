@@ -6,8 +6,7 @@ public class SinDegreesFunction extends MolangFunction {
 
    @Override
    public double get() {
-      byte b = 0;
-      return Math.sin(this.getArg(b) / 180.0 * Math.PI);
+      return Math.sin(this.getArg((byte)0) / 180.0 * Math.PI);
    }
 
    @Override

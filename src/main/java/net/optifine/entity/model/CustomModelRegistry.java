@@ -23,8 +23,7 @@ public class CustomModelRegistry {
       String[] aliases = modelAdapter.getAliases();
       if (aliases != null) {
          for (int i = 0; i < aliases.length; i++) {
-            String str = aliases[i];
-            addModelAdapter(map, modelAdapter, str);
+            addModelAdapter(map, modelAdapter, aliases[i]);
          }
       }
 
@@ -33,8 +32,7 @@ public class CustomModelRegistry {
 
       for (int j = 0; j < modelRendererNames.length; j++) {
          String str2 = modelRendererNames[j];
-         ModelRenderer modelRenderer = modelAdapter.getModelRenderer(modelBase, str2);
-         if (modelRenderer == null) {
+         if (modelAdapter.getModelRenderer(modelBase, str2) == null) {
             Config.warn("Model renderer not found, model: " + modelAdapter.getName() + ", name: " + str2);
          }
       }

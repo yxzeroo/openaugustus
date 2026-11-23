@@ -28,7 +28,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.RayCastListener;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -51,8 +51,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class ChestAura extends Module implements MoveListener, ClickListener, TickListener, MoveInputListener, RayCastListener {
-   private final StringValue preRange;
-   private final StringValue range;
+   private final DoubleValue preRange;
+   private final DoubleValue range;
    private final RangeSetting yawSpeed;
    private final RangeSetting pitchSpeed;
    private final RangeSetting delay;
@@ -70,8 +70,8 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
 
    public ChestAura() {
        super("ChestAura", "TruhenAura", new Color(134, 227, 145), Categorys.PLAYER);
-      this.preRange = new StringValue(this, "PreRange", 6.0, 0.0, 10.0, 1);
-      this.range = new StringValue(this, "Range", 4.5, 4.5, 6.0, 2);
+      this.preRange = new DoubleValue(this, "PreRange", 6.0, 0.0, 10.0, 1);
+      this.range = new DoubleValue(this, "Range", 4.5, 4.5, 6.0, 2);
       this.yawSpeed = new RangeSetting(this, "YawSpeed", 30.0, 50.0, 0.0, 180.0, 0);
       this.pitchSpeed = new RangeSetting(this, "PitchSpeed", 30.0, 50.0, 0.0, 180.0, 0);
       this.delay = new RangeSetting(this, "Delay", 200.0, 500.0, 0.0, 1000.0, 0);
@@ -102,16 +102,11 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 28;
-      this.toggleEventSubscription(b);
-      byte b2 = 7;
-      this.toggleEventSubscription(b2);
-      byte b3 = 40;
-      this.toggleEventSubscription(b3);
-      byte b4 = 21;
-      this.toggleEventSubscription(b4);
-      byte b5 = 29;
-      this.toggleEventSubscription(b5);
+      this.toggleEventSubscription((byte)28);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)29);
    }
 
    @Override
@@ -127,8 +122,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
       }
 
       if (this.targetNearbyCheck.getValue()) {
-         Stream stream = mc.theWorld.loadedEntityList.stream();
-         Object[] array = stream.filter(
+         Object[] array = mc.theWorld.loadedEntityList.stream().filter(
                obj -> {
                   if (obj instanceof EntityPlayer
                      && obj != mc.thePlayer
@@ -156,8 +150,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
             boolean flag = true;
 
             for (int i = 9; i < mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
-               ItemStack stack = ((Slot)mc.thePlayer.inventoryContainer.inventorySlots.get(i)).getStack();
-               if (stack == null) {
+               if (((Slot)mc.thePlayer.inventoryContainer.inventorySlots.get(i)).getStack() == null) {
                   flag = false;
                   break;
                }
@@ -191,8 +184,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
                   this.targetChest = (TileEntity)array2[0];
                   vec2 = vec;
                } else {
-                  TileEntity targetChest2 = this.targetChest;
-                  if (this.canSeeChestPoint(vec, targetChest2)) {
+                  if (this.canSeeChestPoint(vec, this.targetChest)) {
                      this.targetChest = (TileEntity)array2[0];
                      vec2 = vec;
                      flag2 = true;
@@ -206,8 +198,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
                            for (double m = selectedBoundingBox.minZ; m <= selectedBoundingBox.maxZ; m += 0.07) {
                               for (double idx = selectedBoundingBox.minY; idx <= selectedBoundingBox.maxY; idx += 0.07) {
                                  Vec3 vec3 = new Vec3(k, idx, m);
-                                 TileEntity targetChest3 = this.targetChest;
-                                 if (this.canSeeChestPoint(vec3, targetChest3)) {
+                                 if (this.canSeeChestPoint(vec3, this.targetChest)) {
                                     Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
                                     double d2 = Math.sqrt(
                                        Math.pow(k - positionEyes.xCoord, 2.0) + Math.pow(idx - positionEyes.yCoord, 2.0) + Math.pow(m - positionEyes.zCoord, 2.0)
@@ -238,27 +229,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
                   RotationController rotationController = ClientManagers.rotationController;
                   double xCoord = vec2.xCoord;
                   double yCoord = vec2.yCoord;
-                  double zCoord = vec2.zCoord;
-                  Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-                  RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-                  double minValue = this.yawSpeed.getMinValue();
-                  double maxValue = this.yawSpeed.getMaxValue();
-                  double d3 = minValue;
-                  float f = instance.nextSecureFloat(d3, maxValue);
-                  RandomNumberGenerator instance2 = DefaultRandomGenerator.instance;
-                  double minValue2 = this.pitchSpeed.getMinValue();
-                  double maxValue2 = this.pitchSpeed.getMaxValue();
-                  double d4 = minValue2;
-                  float f2 = instance2.nextSecureFloat(d4, maxValue2);
-                  boolean flag3 = true;
-                  float f3 = f2;
-                  float f4 = f;
-                  Rotation rotationsToPos = RotationUtil.getRotationsToPos(xCoord, yCoord, zCoord, previousRotation, f4, f3, flag3);
-                  Rotation previousRotation2 = ClientManagers.rotationController.getPreviousRotation();
-                  Rotation rotation = RotationUtil.applyGcdFix(rotationsToPos, previousRotation2);
-                  byte b = 4;
-                  Rotation rotation2 = rotation;
-                  rotationController.requestRotation(rotation2, b, this);
+                  rotationController.requestRotation(RotationUtil.applyGcdFix(RotationUtil.getRotationsToPos(xCoord, yCoord, vec2.zCoord, ClientManagers.rotationController.getPreviousRotation(), DefaultRandomGenerator.instance.nextSecureFloat(this.yawSpeed.getMinValue(), this.yawSpeed.getMaxValue()), DefaultRandomGenerator.instance.nextSecureFloat(this.pitchSpeed.getMinValue(), this.pitchSpeed.getMaxValue()), true), ClientManagers.rotationController.getPreviousRotation()), (byte)4, this);
                }
             }
          }
@@ -274,15 +245,8 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
          && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
          && mc.objectMouseOver.getBlockPos() != null
          && mc.theWorld.getBlockState(mc.objectMouseOver.getBlockPos()).getBlock().equals(mc.theWorld.getBlockState(this.targetChest.getPos()).getBlock())) {
-         TimeHelper timeHelper2 = this.timeHelper;
-         RandomNumberGenerator instance = DefaultRandomGenerator.instance;
-         double minValue = this.delay.getMinValue();
-         double maxValue = this.delay.getMaxValue();
-         double d = minValue;
-         double d2 = instance.nextSecureIntAsDouble(d, maxValue);
-         if (timeHelper2.reached(d2)) {
-            byte b = 1;
-            event.addRightClicks(b);
+         if (this.timeHelper.reached(DefaultRandomGenerator.instance.nextSecureIntAsDouble(this.delay.getMinValue(), this.delay.getMaxValue()))) {
+            event.addRightClicks((byte)1);
             this.clickedChestPos = new Vec3((double)this.targetChest.getPos().getX() + 0.5, (double)this.targetChest.getPos().getY() + 0.5, (double)this.targetChest.getPos().getZ() + 0.5);
             this.timeHelper.reset();
          }
@@ -294,65 +258,49 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
    @Override
    public void onMoveInput3(EventMoveInput event) {
       if (this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         MoveFixMode moveFixMode = MoveFixMode.DEFAULT;
-         event.setMoveFixMode(moveFixMode);
+         event.setMoveFixMode(MoveFixMode.DEFAULT);
       }
    }
 
    @Override
    public void onMove(EventMove event) {
       if (!this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         float movementYaw = MoveUtil.getMovementYaw();
-         event.setYaw(movementYaw);
+         event.setYaw(MoveUtil.getMovementYaw());
       }
    }
 
    @Override
    public void onMove2(EventMove event) {
       if (!this.moveFix.getValue() && ClientManagers.rotationController.isOwnedBy(this)) {
-         float movementYaw = MoveUtil.getMovementYaw();
-         event.setYaw(movementYaw);
+         event.setYaw(MoveUtil.getMovementYaw());
       }
    }
 
    @Override
    public void onRayCast() {
       if (this.targetChest != null && ClientManagers.rotationController.isOwnedBy(this)) {
-         float f = 1.0F;
-         this.updateMouseOverChest(f);
+         this.updateMouseOverChest(1.0F);
       }
    }
 
    private void updateMouseOverChest(float f) {
       Entity renderViewEntity = mc.getRenderViewEntity();
       if (renderViewEntity != null && mc.theWorld != null) {
-         Object obj = null;
-         mc.pointedEntity = (Entity)obj;
+         mc.pointedEntity = (Entity)null;
          double blockReachDistance = (double)mc.playerController.getBlockReachDistance();
          blockReachDistance = Math.max(blockReachDistance, this.range.getValue());
          if (this.throughWalls.getValue()) {
             Minecraft mc2 = mc;
-            BlockPos pos = this.targetChest.getPos();
-            float rotationYaw = mc.thePlayer.rotationYaw;
-            float rotationPitch = mc.thePlayer.rotationPitch;
-            double value = this.range.getValue();
-            float f2 = rotationPitch;
-            float f3 = rotationYaw;
-            MovingObjectPosition hit = RayTraceUtil.rayTraceBlock(pos, f3, f2, value);
-            mc2.objectMouseOver = hit;
+            mc2.objectMouseOver = RayTraceUtil.rayTraceBlock(this.targetChest.getPos(), mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, this.range.getValue());
             if (mc.objectMouseOver != null) {
                mc2 = mc;
-               MovingObjectPosition hit2 = new MovingObjectPosition(mc.objectMouseOver.hitVec, mc.objectMouseOver.sideHit, this.targetChest.getPos());
-               mc2.objectMouseOver = hit2;
+               mc2.objectMouseOver = new MovingObjectPosition(mc.objectMouseOver.hitVec, mc.objectMouseOver.sideHit, this.targetChest.getPos());
             } else {
                mc2 = mc;
-               MovingObjectPosition hit3 = renderViewEntity.rayTrace(blockReachDistance, f);
-               mc2.objectMouseOver = hit3;
+               mc2.objectMouseOver = renderViewEntity.rayTrace(blockReachDistance, f);
             }
          } else {
-            Minecraft mc3 = mc;
-            MovingObjectPosition hit4 = renderViewEntity.rayTrace(blockReachDistance, f);
-            mc3.objectMouseOver = hit4;
+            mc.objectMouseOver = renderViewEntity.rayTrace(blockReachDistance, f);
          }
 
          double d = blockReachDistance;
@@ -399,8 +347,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
             } else if (hit5 != null) {
                double d3 = positionEyes.distanceTo(hit5.hitVec);
                if (d3 < d2 || d2 == 0.0) {
-                  boolean flag2 = false;
-                  if (entity != renderViewEntity.ridingEntity || flag2) {
+                  if (entity != renderViewEntity.ridingEntity || false) {
                      mc.entityRenderer.pointedEntity = entity;
                      vec2 = hit5.hitVec;
                      d2 = d3;
@@ -414,15 +361,11 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
 
          if (mc.entityRenderer.pointedEntity != null && flag && positionEyes.distanceTo(vec2) > 3.0) {
             mc.entityRenderer.pointedEntity = null;
-            Minecraft mc4 = mc;
-            MovingObjectPosition hit6 = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
-            mc4.objectMouseOver = hit6;
+            mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec2, (EnumFacing)null, new BlockPos(vec2));
          }
 
          if (mc.entityRenderer.pointedEntity != null && (d2 < d || mc.objectMouseOver == null)) {
-            Minecraft mc5 = mc;
-            MovingObjectPosition hit7 = new MovingObjectPosition(mc.entityRenderer.pointedEntity, vec2);
-            mc5.objectMouseOver = hit7;
+            mc.objectMouseOver = new MovingObjectPosition(mc.entityRenderer.pointedEntity, vec2);
             if (mc.entityRenderer.pointedEntity instanceof EntityLivingBase || mc.entityRenderer.pointedEntity instanceof EntityItemFrame) {
                Entity pointedEntity = mc.entityRenderer.pointedEntity;
                mc.pointedEntity = pointedEntity;
@@ -447,8 +390,7 @@ public class ChestAura extends Module implements MoveListener, ClickListener, Ti
                }
             }
 
-            Block block = mc.theWorld.getBlockState(tileEntity.getPos().up()).getBlock();
-            if (block.isFullBlock()) {
+            if (mc.theWorld.getBlockState(tileEntity.getPos().up()).getBlock().isFullBlock()) {
                return false;
             }
 

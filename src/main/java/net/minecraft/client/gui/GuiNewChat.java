@@ -64,8 +64,7 @@ public class GuiNewChat extends Gui {
       if (!this.getChatOpen()) {
          return null;
       } else {
-         ScaledResolution sr = new ScaledResolution(this.mc);
-         int scaleFactor = sr.getScaleFactor();
+         int scaleFactor = new ScaledResolution(this.mc).getScaleFactor();
          float chatScale = this.getChatScale();
          int n3 = n / scaleFactor - 3;
          int n4 = n2 / scaleFactor - 27;
@@ -123,15 +122,13 @@ public class GuiNewChat extends Gui {
    }
 
    public static int calculateChatboxHeight(float f) {
-      short s = 180;
       byte b = 20;
-      return MathHelper.floor_float(f * (float)(s - b) + (float)b);
+      return MathHelper.floor_float(f * (float)(((short)180) - b) + (float)b);
    }
 
    public static int calculateChatboxWidth(float f) {
-      short s = 320;
       byte b = 40;
-      return MathHelper.floor_float(f * (float)(s - b) + (float)b);
+      return MathHelper.floor_float(f * (float)(((short)320) - b) + (float)b);
    }
 
    public List getDrawnChatLines() {
@@ -168,8 +165,7 @@ public class GuiNewChat extends Gui {
       Iterator it = this.drawnChatLines.iterator();
 
       while (it.hasNext()) {
-         ChatLine chatLine = (ChatLine)it.next();
-         if (chatLine.getChatLineID() == n) {
+         if (((ChatLine)it.next()).getChatLineID() == n) {
             it.remove();
          }
       }
@@ -177,8 +173,7 @@ public class GuiNewChat extends Gui {
       it = this.chatLines.iterator();
 
       while (it.hasNext()) {
-         ChatLine chatLine2 = (ChatLine)it.next();
-         if (chatLine2.getChatLineID() == n) {
+         if (((ChatLine)it.next()).getChatLineID() == n) {
             it.remove();
             break;
          }
@@ -190,8 +185,7 @@ public class GuiNewChat extends Gui {
          this.deleteChatLine(n);
       }
 
-      int n3 = MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale());
-      List list = GuiUtilRenderComponents.splitText(component, n3, this.mc.fontRendererObj, false, false);
+      List list = GuiUtilRenderComponents.splitText(component, MathHelper.floor_float((float)this.getChatWidth() / this.getChatScale()), this.mc.fontRendererObj, false, false);
       boolean chatOpen = this.getChatOpen();
 
       for (IChatComponent component2 : (Iterable<IChatComponent>)(list)) {
@@ -242,8 +236,7 @@ public class GuiNewChat extends Gui {
             GlStateManager.translate(2.0F, 20.0F, 0.0F);
             GlStateManager.scale(chatScale, chatScale, 1.0F);
             if (flag2 && ClientManagers.moduleManager.chat.isToggled()) {
-               boolean isBlurActive = ClientManagers.moduleManager.chat.blurShadowSettings.isBlurActive();
-               BlurShadowManager.enableOneShotPass(isBlurActive, ClientManagers.moduleManager.chat.blurShadowSettings.isShadowActive());
+               BlurShadowManager.enableOneShotPass(ClientManagers.moduleManager.chat.blurShadowSettings.isBlurActive(), ClientManagers.moduleManager.chat.blurShadowSettings.isShadowActive());
                if (n2 == Integer.MIN_VALUE) {
                   n2 = 2130706432;
                }
@@ -251,10 +244,7 @@ public class GuiNewChat extends Gui {
                int n5 = n2;
                boolean flag4 = flag3;
                BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
-                  int updateCounter = this.mc.ingameGUI.getUpdateCounter();
-                  BlurShadowSettings blurShadowSettings = ClientManagers.moduleManager.chat.blurShadowSettings;
-                  int n6 = ColorUtil.resolvePassColor(shaderRenderPass, n5);
-                  this.drawChatBackground(flag4, updateCounter, f, lineCount, n4, blurShadowSettings.resolvePassColor(shaderRenderPass, n6));
+                  this.drawChatBackground(flag4, this.mc.ingameGUI.getUpdateCounter(), f, lineCount, n4, ClientManagers.moduleManager.chat.blurShadowSettings.resolvePassColor(shaderRenderPass, ColorUtil.resolvePassColor(shaderRenderPass, n5)));
                });
             } else if (flag2) {
                this.drawChatBackground(flag3, this.mc.ingameGUI.getUpdateCounter(), f, lineCount, n4, 2130706432);
@@ -267,8 +257,7 @@ public class GuiNewChat extends Gui {
                if (chatLine != null) {
                   n7++;
                   if (ClientManagers.moduleManager.antiStrike.shouldHideChat()) {
-                     String unformattedText = chatLine.getChatComponent().getUnformattedText();
-                     if (!unformattedText.startsWith("§6[§9" + Augustus.getInstance().getName() + "§6] ")) {
+                     if (!chatLine.getChatComponent().getUnformattedText().startsWith("§6[§9" + Augustus.getInstance().getName() + "§6] ")) {
                         n7--;
                         continue;
                      }
@@ -338,8 +327,7 @@ public class GuiNewChat extends Gui {
          if (chatLine != null) {
             n5++;
             if (ClientManagers.moduleManager.antiStrike.shouldHideChat()) {
-               String unformattedText = chatLine.getChatComponent().getUnformattedText();
-               if (!unformattedText.startsWith("§6[§9" + Augustus.getInstance().getName() + "§6] ")) {
+               if (!chatLine.getChatComponent().getUnformattedText().startsWith("§6[§9" + Augustus.getInstance().getName() + "§6] ")) {
                   n5--;
                   continue;
                }

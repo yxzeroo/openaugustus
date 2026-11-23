@@ -42,8 +42,7 @@ public class TokenObfuscationProcessor {
       for (int i = 0; i < 50; i++) {
          d2 = this.applyTrigStep(d2, i);
          d2 = this.quantizeValue(d2);
-         TokenObfuscationProcessor processor = this;
-         if (processor.shouldStopIteration(d2, i)) {
+         if (this.shouldStopIteration(d2, i)) {
             break;
          }
       }
@@ -97,8 +96,7 @@ public class TokenObfuscationProcessor {
       boolean flag = false;
 
       for (int i = 0; i < 1024; i++) {
-         TokenObfuscationProcessor processor = this;
-         this.tokenCache[i] = processor.createDefaultEntry(i);
+         this.tokenCache[i] = this.createDefaultEntry(i);
          String str = this.tokenCache[i];
          this.checksumCache[i] = this.computeEntryChecksum(str);
       }
@@ -106,8 +104,7 @@ public class TokenObfuscationProcessor {
       this.driftAccumulator = this.computeInitialDrift();
       this.initialized = this.isCacheAllocated();
       if (this.initialized) {
-         TokenObfuscationProcessor processor2 = this;
-         processor2.doubleReverseTokenCache();
+         this.doubleReverseTokenCache();
       }
    }
 
@@ -123,11 +120,7 @@ public class TokenObfuscationProcessor {
          obj4 = new String[((String[])strings).length];
 
          for (int i = 0; i < ((String[])strings).length; i++) {
-            String[] strings2 = (String[])obj4;
-            TokenObfuscationProcessor processor = this;
-            String str = strings[i];
-            String str2 = str;
-            strings2[i] = processor.appendIndexSuffix(str2, i);
+            ((String[])obj4)[i] = this.appendIndexSuffix(strings[i], i);
          }
 
          for (int j = 0; j < ((String[])obj4).length; j++) {
@@ -140,16 +133,11 @@ public class TokenObfuscationProcessor {
 
          obj3 = ((StringBuilder)obj5).toString();
          TokenObfuscationProcessor processor2 = this;
-         String str3 = (String)obj3;
-         obj = processor2.collapseDoubleUnderscores(str3);
+         obj = processor2.collapseDoubleUnderscores((String)obj3);
          processor2 = this;
-         String str4 = (String)obj;
-         obj2 = processor2.trimResult(str4);
+         obj2 = processor2.trimResult((String)obj);
          processor2 = this;
-         String str5 = (String)obj2;
-         String[] strings3 = strings;
-         String str6 = str5;
-         return processor2.joinRawTokens(str6, strings3);
+         return processor2.joinRawTokens((String)obj2, strings);
       } else {
          return "";
       }
@@ -163,9 +151,7 @@ public class TokenObfuscationProcessor {
       int n = 0;
       n = Math.abs(str.hashCode() % 1024);
       this.tokenCache[n] = str;
-      TokenObfuscationProcessor processor = this;
-      String str2 = str;
-      this.checksumCache[n] = processor.computeEntryChecksum(str2);
+      this.checksumCache[n] = this.computeEntryChecksum(str);
    }
 
    private boolean hasNonNegativeChecksums() {
@@ -264,22 +250,14 @@ public class TokenObfuscationProcessor {
       }
 
       for (int j = 0; j < n; j++) {
-         int[] ints = (int[])obj3;
-         TokenObfuscationProcessor processor = this;
-         int n2 = ((int[])obj2)[j];
-         ints[j] = processor.scaleElement(n2, j);
+         ((int[])obj3)[j] = this.scaleElement(((int[])obj2)[j], j);
       }
 
       for (int k = 0; k < n; k++) {
-         int[] ints2 = (int[])obj;
-         TokenObfuscationProcessor processor2 = this;
-         int n3 = ((int[])obj3)[k];
-         ints2[k] = processor2.alignToBucket(n3);
+         ((int[])obj)[k] = this.alignToBucket(((int[])obj3)[k]);
       }
 
-      TokenObfuscationProcessor processor3 = this;
-      int[] ints3 = (int[])obj;
-      processor3.consumeSequence(ints3);
+      this.consumeSequence((int[])obj);
       return (int[])obj2;
    }
 
@@ -290,20 +268,15 @@ public class TokenObfuscationProcessor {
       Object obj4 = null;
       if (str != null && !str.isEmpty()) {
          TokenObfuscationProcessor processor = this;
-         String str2 = str;
-         obj4 = processor.shiftCharsUp(str2);
+         obj4 = processor.shiftCharsUp(str);
          processor = this;
-         String str3 = (String)obj4;
-         obj3 = processor.truncateToLimit(str3);
+         obj3 = processor.truncateToLimit((String)obj4);
          processor = this;
-         String str4 = (String)obj3;
-         obj2 = processor.xorCharsByPosition(str4);
+         obj2 = processor.xorCharsByPosition((String)obj3);
          processor = this;
-         String str5 = (String)obj2;
-         obj = processor.shiftCharsDown(str5);
+         obj = processor.shiftCharsDown((String)obj2);
          processor = this;
-         String str6 = (String)obj;
-         processor.storeInCache(str6);
+         processor.storeInCache((String)obj);
          return (String)obj;
       } else {
          return "";
@@ -359,8 +332,7 @@ public class TokenObfuscationProcessor {
       }
 
       flag = this.hasNonNegativeChecksums();
-      TokenObfuscationProcessor processor = this;
-      flag3 = processor.isDriftWithinBounds();
+      flag3 = this.isDriftWithinBounds();
       flag2 = this.hasExpectedCacheSizes();
       return n > 0 && flag && flag3 && flag2;
    }

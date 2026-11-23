@@ -112,8 +112,7 @@ public class EventLiquidPhysics extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      LiquidPhysicsListener listener = (LiquidPhysicsListener)obj;
-      this.call2(listener);
+      this.call2((LiquidPhysicsListener)obj);
    }
 
    public void setWaterHorizontalFriction(float f) {

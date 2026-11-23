@@ -30,9 +30,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
 
 
    public void putGeneralString(String str) throws IOException {
-      String str2 = "ASCII";
-      byte b = 27;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)27, "ASCII");
    }
 
    public void putLength(int n) throws IOException {
@@ -61,16 +59,14 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
 
    public void write2(byte b, Asn1DerOutputStream asn1DerOutputStream) throws IOException {
       this.write(b);
-      int count2 = asn1DerOutputStream.count;
-      this.putLength(count2);
+      this.putLength(asn1DerOutputStream.count);
       this.write(asn1DerOutputStream.buf, 0, asn1DerOutputStream.count);
    }
 
    private void writeString(String str, byte b, String str2) throws IOException {
       byte[] bytes = str.getBytes(str2);
       this.write(b);
-      int length = bytes.length;
-      this.putLength(length);
+      this.putLength(bytes.length);
       this.write(bytes);
    }
 
@@ -105,8 +101,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
          asn1DerValues[i].encode(asn1DerOutputStream);
       }
 
-      byte b = 48;
-      this.write2(b, asn1DerOutputStream);
+      this.write2((byte)48, asn1DerOutputStream);
    }
 
    public Asn1DerOutputStream() {
@@ -117,9 +112,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putT61String(String str) throws IOException {
-      String str2 = "ISO-8859-1";
-      byte b = 20;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)20, "ISO-8859-1");
    }
 
    public void putDerValue(Asn1DerValue asn1DerValue) throws IOException {
@@ -127,9 +120,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putBMPString(String str) throws IOException {
-      String str2 = "UnicodeBigUnmarked";
-      byte b = 30;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)30, "UnicodeBigUnmarked");
    }
 
    private void putIntegerContents(int n) throws IOException {
@@ -149,8 +140,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
          }
       }
 
-      int n3 = 4 - n2;
-      this.putLength(n3);
+      this.putLength(4 - n2);
 
       for (int k = n2; k < 4; k++) {
          this.write(bytes[k]);
@@ -158,28 +148,23 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putOctetString(byte[] bytes) throws IOException {
-      byte[] bytes2 = bytes;
-      byte b = 4;
-      this.write(b, bytes2);
+      this.write((byte)4, bytes);
    }
 
    public void putBitString(byte[] bytes) throws IOException {
       this.write(3);
-      int n = bytes.length + 1;
-      this.putLength(n);
+      this.putLength(bytes.length + 1);
       this.write(0);
       this.write(bytes);
    }
 
    public void putOrderedSetOf(byte b, DerEncoder[] derEncoders) throws IOException {
-      ByteArrayLexOrder byteArrayLexOrder = lexOrder;
-      this.putOrderedSet(b, derEncoders, byteArrayLexOrder);
+      this.putOrderedSet(b, derEncoders, lexOrder);
    }
 
    public void write(byte b, byte[] bytes) throws IOException {
       this.write(b);
-      int length = bytes.length;
-      this.putLength(length);
+      this.putLength(bytes.length);
       this.write(bytes, 0, bytes.length);
    }
 
@@ -190,18 +175,15 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
          asn1DerValues[i].encode(asn1DerOutputStream);
       }
 
-      byte b = 49;
-      this.write2(b, asn1DerOutputStream);
+      this.write2((byte)49, asn1DerOutputStream);
    }
 
    public void putOrderedSet(byte b, DerEncoder[] derEncoders) throws IOException {
-      ByteArrayTagOrder byteArrayTagOrder = tagOrder;
-      this.putOrderedSet(b, derEncoders, byteArrayTagOrder);
+      this.putOrderedSet(b, derEncoders, tagOrder);
    }
 
    public void putUTCTime(Date date) throws IOException {
-      byte b = 23;
-      this.putTime(date, b);
+      this.putTime(date, (byte)23);
    }
 
    public void putTag(byte b, char ch, boolean flag, byte b2, long l) {
@@ -227,9 +209,7 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putTruncatedUnalignedBitString(BitArray bitArray) throws IOException {
-      BitArray bitArray2 = bitArray.truncate();
-      BitArray bitArray3 = bitArray2;
-      this.putUnalignedBitString(bitArray3);
+      this.putUnalignedBitString(bitArray.truncate());
    }
 
    private void putTime(Date date, byte b) throws IOException {
@@ -246,15 +226,12 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
       simpleDateFormat.setTimeZone(timeZone);
       byte[] bytes = simpleDateFormat.format(date).getBytes("ISO-8859-1");
       this.write(b);
-      int length = bytes.length;
-      this.putLength(length);
+      this.putLength(bytes.length);
       this.write(bytes);
    }
 
    public void putPrintableString(String str) throws IOException {
-      String str2 = "ASCII";
-      byte b = 19;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)19, "ASCII");
    }
 
    public void putEnumerated(int n) throws IOException {
@@ -263,29 +240,24 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putIA5String(String str) throws IOException {
-      String str2 = "ASCII";
-      byte b = 22;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)22, "ASCII");
    }
 
    public void putUnalignedBitString(BitArray bitArray) throws IOException {
       byte[] bytes = bitArray.toByteArray();
       this.write(3);
-      int n = bytes.length + 1;
-      this.putLength(n);
+      this.putLength(bytes.length + 1);
       this.write(bytes.length * 8 - bitArray.length());
       this.write(bytes);
    }
 
    public void putGeneralizedTime(Date date) throws IOException {
-      byte b = 24;
-      this.putTime(date, b);
+      this.putTime(date, (byte)24);
    }
 
    public void putBoolean(boolean flag) throws IOException {
       this.write(1);
-      byte b = 1;
-      this.putLength(b);
+      this.putLength((byte)1);
       if (flag) {
          this.write(255);
       } else {
@@ -294,23 +266,19 @@ public class Asn1DerOutputStream extends ByteArrayOutputStream implements DerEnc
    }
 
    public void putUTF8String(String str) throws IOException {
-      String str2 = "UTF8";
-      byte b = 12;
-      this.writeString(str, b, str2);
+      this.writeString(str, (byte)12, "UTF8");
    }
 
    public void putInteger3(ShadedBigInteger shadedBigInteger) throws IOException {
       this.write(2);
       byte[] bytes = shadedBigInteger.toByteArray();
-      int length = bytes.length;
-      this.putLength(length);
+      this.putLength(bytes.length);
       this.write(bytes, 0, bytes.length);
    }
 
    public void putNull() throws IOException {
       this.write(5);
-      byte b = 0;
-      this.putLength(b);
+      this.putLength((byte)0);
    }
 
 }

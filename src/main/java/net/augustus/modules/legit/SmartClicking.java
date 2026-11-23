@@ -17,8 +17,8 @@ import net.augustus.utils.combat.CombatTargetUtil;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.settings.DoubleValue;
-import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,18 +30,18 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
    private final RandomizedRangeSettings smartHurttimeStart;
    private final RandomizedRangeSettings smartHurttimeEnd;
    private final RandomizedRangeSettings maxDuration;
-   private final StringValue chance;
+   private final DoubleValue chance;
    private final BooleanValue smartHurttime;
    private final BooleanValue reduceClickingInAir;
    private final BooleanValue fakeAttacks;
    private final BooleanValue ratioBypass;
-   private final StringValue ratioStrength;
+   private final DoubleValue ratioStrength;
    private final BooleanValue extraClicksWithKnockbackEnchantmentBool;
-   private final DoubleValue extraClicksWithKnockbackEnchantment;
+   private final SettingGroup extraClicksWithKnockbackEnchantment;
    private final RandomizedRangeSettings extraClicksWithKnockbackEnchantment2;
    private final BooleanValue onlyIfClickExists;
    private final BooleanValue onlyWhileKnockback;
-   private final StringValue cpsLimiter;
+   private final DoubleValue cpsLimiter;
    private final TimeHelper lastClickTimer;
    private boolean shouldSuppressClick;
    private boolean wasSuppressingClick;
@@ -59,36 +59,27 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
    private boolean extraKnockbackClickPending;
    private DoubleSampleWindow clickRatioWindow;
    private long lastKnockbackTimeMs;
-   private static int[] internalStateTable;
 
    public SmartClicking() {
        super("SmartClicking", "IntelligentesKlicken", new Color(235, 125, 52), Categorys.LEGIT);
       this.smartHurttimeStart = new RandomizedRangeSettings(this, "Smart hurttime start", 2.0, 3.0, 0.0, 10.0, 0);
       this.smartHurttimeEnd = new RandomizedRangeSettings(this, "Smart hurttime end", 9.0, 10.0, 0.0, 10.0, 0);
       this.maxDuration = (new RandomizedRangeSettings(this, "MaxDuration", 10.0, 10.0, 0.0, 10.0, 0)).withoutNotInARow();
-      this.chance = new StringValue(this, "Chance", 100.0, 0.0, 100.0, 0);
+      this.chance = new DoubleValue(this, "Chance", 100.0, 0.0, 100.0, 0);
       this.smartHurttime = new BooleanValue(this, "SmartHurttime", false);
       this.reduceClickingInAir = new BooleanValue(this, "ReduceClickingInAir", false);
       this.fakeAttacks = new BooleanValue(this, "FakeAttacks", false);
-      BooleanValue booleanValue = new BooleanValue(this, "RatioBypass", false);
-      SettingVisibilityCondition condition = () -> this.isRatioBypassVisible();
-      this.ratioBypass = (BooleanValue)booleanValue.withVisibility(condition);
-      StringValue stringValue = new StringValue(this, "RatioStrength", 1.0, 0.0, 1.0, 2);
-      SettingVisibilityCondition condition2 = () -> this.isRatioStrengthVisible();
-      this.ratioStrength = stringValue.visibleWhen(condition2);
-      BooleanValue booleanValue2 = new BooleanValue(this, "ExtraClicksWithKnockbackEnchantmentBool", false);
-      String str = "ExtraClicksWithKnockbackEnchantment";
-      this.extraClicksWithKnockbackEnchantmentBool = (BooleanValue)booleanValue2.withDisplayName(str);
-      DoubleValue doubleValue = new DoubleValue(this, "Extra clicks with knockback enchantment");
+      this.ratioBypass = (BooleanValue)new BooleanValue(this, "RatioBypass", false).withVisibility(() -> this.isRatioBypassVisible());
+      this.ratioStrength = new DoubleValue(this, "RatioStrength", 1.0, 0.0, 1.0, 2).visibleWhen(() -> this.isRatioStrengthVisible());
+      this.extraClicksWithKnockbackEnchantmentBool = (BooleanValue)new BooleanValue(this, "ExtraClicksWithKnockbackEnchantmentBool", false).withDisplayName("ExtraClicksWithKnockbackEnchantment");
+      SettingGroup doubleValue = new SettingGroup(this, "Extra clicks with knockback enchantment");
       BooleanValue booleanValue3 = this.extraClicksWithKnockbackEnchantmentBool;
       this.extraClicksWithKnockbackEnchantmentBool.getClass();
-      BooleanValue booleanValue4 = booleanValue3;
-      SettingVisibilityCondition condition3 = () -> booleanValue4.getValue();
-      this.extraClicksWithKnockbackEnchantment = doubleValue.visibleWhen(condition3);
+      this.extraClicksWithKnockbackEnchantment = doubleValue.visibleWhen(() -> booleanValue3.getValue());
       this.extraClicksWithKnockbackEnchantment2 = new RandomizedRangeSettings(this, "ExtraClicksWithKnockbackEnchantment", 1.0, 1.0, 0.0, 3.0, 0, this.extraClicksWithKnockbackEnchantment);
       this.onlyIfClickExists = new BooleanValue(this, "OnlyIfClickExists", true, this.extraClicksWithKnockbackEnchantment);
       this.onlyWhileKnockback = new BooleanValue(this, "OnlyWhileKnockback", false, this.extraClicksWithKnockbackEnchantment);
-      this.cpsLimiter = new StringValue(this, "CPSLimiter", 20.0, 1.0, 40.0, 0, this.extraClicksWithKnockbackEnchantment);
+      this.cpsLimiter = new DoubleValue(this, "CPSLimiter", 20.0, 1.0, 40.0, 0, this.extraClicksWithKnockbackEnchantment);
       this.lastClickTimer = new TimeHelper();
       this.shouldSuppressClick = false;
       this.wasSuppressingClick = false;
@@ -116,15 +107,9 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
 
    @Override
    public void updateEventSubscriptions() {
-      int n = 100000;
-      byte b = 7;
-      this.toggleEventSubscription(b, n);
-      byte b2 = -1;
-      byte b3 = 34;
-      this.toggleEventSubscription(b3, b2);
-      byte b4 = 1;
-      byte b5 = 26;
-      this.toggleEventSubscription(b5, b4);
+      this.toggleEventSubscription((byte)7, 100000);
+      this.toggleEventSubscription((byte)34, (byte)-1);
+      this.toggleEventSubscription((byte)26, (byte)1);
    }
 
    @Override
@@ -137,8 +122,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
       if (this.extraKnockbackClickPending) {
          this.extraKnockbackClickPending = false;
          if ((n > 0 || !this.onlyIfClickExists.getValue()) && (!this.onlyWhileKnockback.getValue() || System.currentTimeMillis() - this.lastKnockbackTimeMs < 1000L)) {
-            boolean flag = true;
-            int n2 = this.extraClicksWithKnockbackEnchantment2.nextInt(flag) + (n == 0 ? 1 : 0);
+            int n2 = this.extraClicksWithKnockbackEnchantment2.nextInt(true) + (n == 0 ? 1 : 0);
             int n3 = (int)((double)(n + n2) + EventClick.recentClicksBuffer.sum());
             int n4 = (int)(this.cpsLimiter.getValue() - (double)n3);
             if (n4 < 0) {
@@ -153,8 +137,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
          n = event.getLeftClicks() + (event.isIgnoreVanillaClicks() ? 0 : mc.gameSettings.keyBindAttack.getPressTime());
          boolean flag2 = false;
          if (n <= 0 && !this.bypassMaxDuration && this.maxDuration.getLastIntValue() < 10 && this.ticksWithoutClick >= this.maxDuration.getLastIntValue() && (this.shouldSuppressClick || this.wasSuppressingClick)) {
-            byte b = 1;
-            event.addLeftClicks(b);
+            event.addLeftClicks((byte)1);
             flag2 = true;
             this.maxDuration.nextValue();
          }
@@ -175,14 +158,9 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
                event.clearLeftClicks();
             }
 
-            DoubleSampleWindow clickRatioWindow2 = this.clickRatioWindow;
-            boolean flag4 = true;
-            double d = 1.0 - this.ratioStrength.getValue(flag4);
-            clickRatioWindow2.add(d);
+            this.clickRatioWindow.add(1.0 - this.ratioStrength.getValue(true));
          } else {
-            DoubleSampleWindow clickRatioWindow3 = this.clickRatioWindow;
-            double leftClicks = (double)event.getLeftClicks();
-            clickRatioWindow3.add(leftClicks);
+            this.clickRatioWindow.add((double)event.getLeftClicks());
             if (this.ratioBypass.getValue() && !this.fakeAttacks.getValue()) {
                double d2 = this.clickRatioWindow.mean();
                if (Math.random() > d2) {
@@ -213,8 +191,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
    @Override
    public void onSilentSlot() {
       if (this.currentTarget != null) {
-         long l = 1500L;
-         if (this.targetTimeoutTimer.reached2(l)) {
+         if (this.targetTimeoutTimer.reached2(1500L)) {
             this.currentTarget = null;
          }
       }
@@ -247,8 +224,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
                float rotationYaw = mc.thePlayer.rotationYaw;
                boolean flag2 = CombatOptimizationUtil.shouldReduceSprintKnockback(this.currentTarget, rotationYaw);
                if (this.smartHurttime.getValue()) {
-                  long l2 = System.currentTimeMillis() - this.lastEntityAttackTimeMs;
-                  if (l2 > 600L && this.lastAttackedEntityHurtResistantTime > 4) {
+                  if ((System.currentTimeMillis() - this.lastEntityAttackTimeMs) > 600L && this.lastAttackedEntityHurtResistantTime > 4) {
                      this.smartHurtTimeArmed = true;
                   }
 
@@ -262,8 +238,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
                }
 
                if (!flag2 && this.hasKnockbackEnchantment() && this.extraClicksWithKnockbackEnchantmentBool.getValue()) {
-                  long l3 = 500L;
-                  if (!this.lastClickTimer.reached2(l3)) {
+                  if (!this.lastClickTimer.reached2(500L)) {
                      this.extraKnockbackClickPending = true;
                   }
                }
@@ -350,17 +325,7 @@ public class SmartClicking extends Module implements ClickListener, SilentSlotLi
       return flag;
    }
 
-   public static void setInternalStateTable(int[] ints) {
-      internalStateTable = ints;
-   }
 
-   public static int[] getInternalStateTable() {
-      return internalStateTable;
-   }
 
-   static {
-      int[] ints = new int[5];
-      setInternalStateTable(ints);
-   }
 
 }

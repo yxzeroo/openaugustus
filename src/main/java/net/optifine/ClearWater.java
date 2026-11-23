@@ -58,8 +58,7 @@ public class ClearWater {
 
                                  for (int idx = 0; idx < precipitationHeight.getY(); idx++) {
                                     blockPosM2.setXyz(k, idx, m);
-                                    IBlockState blockState = world.getBlockState(blockPosM2);
-                                    if (blockState.getBlock().getMaterial() == Material.water) {
+                                    if (world.getBlockState(blockPosM2).getBlock().getMaterial() == Material.water) {
                                        world.markBlocksDirtyVertical(k, m, blockPosM2.getY(), precipitationHeight.getY());
                                        n7++;
                                        break;

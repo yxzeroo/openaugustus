@@ -12,8 +12,6 @@ public class EventAsyncTick extends AbstractEvent {
 
    @Override
    public void call(Object obj) {
-      AsyncTickListener listener = (AsyncTickListener)obj;
-      AsyncTickListener listener2 = listener;
-      this.call2(listener2);
+      this.call2((AsyncTickListener)obj);
    }
 }

@@ -43,8 +43,7 @@ public class CloudRenderer {
       } else {
          Entity renderViewEntity = this.mc.getRenderViewEntity();
          boolean flag = this.updatePlayerY + (double)renderViewEntity.getEyeHeight() < 128.0 + (double)(this.mc.gameSettings.ofCloudsHeight * 128.0F);
-         boolean flag2 = renderViewEntity.prevPosY + (double)renderViewEntity.getEyeHeight() < 128.0 + (double)(this.mc.gameSettings.ofCloudsHeight * 128.0F);
-         return flag2 != flag;
+         return (renderViewEntity.prevPosY + (double)renderViewEntity.getEyeHeight() < 128.0 + (double)(this.mc.gameSettings.ofCloudsHeight * 128.0F)) != flag;
       }
    }
 

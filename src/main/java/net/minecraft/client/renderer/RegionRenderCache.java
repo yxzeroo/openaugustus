@@ -96,8 +96,7 @@ public class RegionRenderCache extends ChunkCache {
    private int getPositionIndex(int n, int n2, int n3) {
       int n4 = n - this.positionX;
       int n5 = n2 - this.positionY;
-      int n6 = n3 - this.positionZ;
-      return n4 * 400 + n6 * 20 + n5;
+      return n4 * 400 + (n3 - this.positionZ) * 20 + n5;
    }
 
    @Override
@@ -148,8 +147,7 @@ public class RegionRenderCache extends ChunkCache {
    private int getPositionIndex(BlockPos pos) {
       int n = pos.getX() - this.positionX;
       int n2 = pos.getY() - this.positionY;
-      int n3 = pos.getZ() - this.positionZ;
-      return n * 400 + n3 * 20 + n2;
+      return n * 400 + (pos.getZ() - this.positionZ) * 20 + n2;
    }
 
    private static IBlockState[] allocateStates(int n) {

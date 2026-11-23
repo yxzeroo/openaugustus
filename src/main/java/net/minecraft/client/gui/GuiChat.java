@@ -43,8 +43,7 @@ public class GuiChat extends GuiScreen {
          this.foundPlayerNames.clear();
          this.autocompleteIndex = 0;
          String str = this.inputField.getText().substring(nthWordFromPosWS).toLowerCase();
-         String str2 = this.inputField.getText().substring(0, this.inputField.getCursorPosition());
-         this.sendAutocompleteRequest(str2, str);
+         this.sendAutocompleteRequest(this.inputField.getText().substring(0, this.inputField.getCursorPosition()), str);
          if (this.foundPlayerNames.isEmpty()) {
             return;
          }
@@ -79,8 +78,7 @@ public class GuiChat extends GuiScreen {
    @Override
    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       if (mouseButton == 0) {
-         IChatComponent chatComponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
-         if (this.handleComponentClick(chatComponent)) {
+         if (this.handleComponentClick(this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY()))) {
             return;
          }
       }

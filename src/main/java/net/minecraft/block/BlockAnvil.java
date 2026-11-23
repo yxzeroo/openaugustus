@@ -51,8 +51,7 @@ public class BlockAnvil extends BlockFalling {
 
    @Override
    public void setBlockBoundsBasedOnState(IBlockAccess world, int n, int n2, int n3) {
-      EnumFacing value = (EnumFacing)world.getBlockState2(n, n2, n3).getValue(FACING);
-      if (value.getAxis() == EnumFacing.Axis.X) {
+      if (((EnumFacing)world.getBlockState2(n, n2, n3).getValue(FACING)).getAxis() == EnumFacing.Axis.X) {
          this.setBlockBounds(0.0F, 0.0F, 0.125F, 1.0F, 1.0F, 0.875F);
       } else {
          this.setBlockBounds(0.125F, 0.0F, 0.0F, 0.875F, 1.0F, 1.0F);

@@ -43,23 +43,19 @@ public class WeaponFilterSettings extends SettingComposite {
       }
    }
 
-   public WeaponFilterSettings(Module module, DoubleValue doubleValue) {
+   public WeaponFilterSettings(Module module, SettingGroup doubleValue) {
        super();
-      String str = "Weapons";
-      this.initOptions(module, str, doubleValue);
+      this.initOptions(module, "Weapons", doubleValue);
    }
 
    public WeaponFilterSettings(Module module) {
        super();
-      Object obj = null;
-      String str = "Weapons";
-      this.initOptions(module, str, (DoubleValue)obj);
+      this.initOptions(module, "Weapons", (SettingGroup)null);
    }
 
    public WeaponFilterSettings(Module module, String str) {
        super();
-      Object obj = null;
-      this.initOptions(module, str, (DoubleValue)obj);
+      this.initOptions(module, str, (SettingGroup)null);
    }
 
    public boolean isItemAllowed(ItemStack stack) {
@@ -80,16 +76,15 @@ public class WeaponFilterSettings extends SettingComposite {
    }
 
    public boolean isHeldItemAllowed() {
-      ItemStack currentEquippedItem = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
-      return this.isItemAllowed(currentEquippedItem);
+      return this.isItemAllowed(Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem());
    }
 
-   public WeaponFilterSettings(Module module, String str, DoubleValue doubleValue) {
+   public WeaponFilterSettings(Module module, String str, SettingGroup doubleValue) {
        super();
       this.initOptions(module, str, doubleValue);
    }
 
-   private void initOptions(Module module, String str, DoubleValue doubleValue) {
+   private void initOptions(Module module, String str, SettingGroup doubleValue) {
       ArrayList list = new ArrayList();
       list.add(this.swordsOption = new WeaponFilterOption("Swords"));
       list.add(this.axesOption = new WeaponFilterOption("Axes"));
@@ -100,15 +95,11 @@ public class WeaponFilterSettings extends SettingComposite {
       WeaponFilterOption[] weaponFilterOptions = (WeaponFilterOption[])list.toArray(new WeaponFilterOption[0]);
       Arrays.sort(weaponFilterOptions, Comparator.comparing(WeaponFilterOption::getName));
       if (doubleValue == null) {
-         MultiOptionSetting multiOptionSetting = (new MultiOptionSetting(module, str, weaponFilterOptions)).named(str);
-         MultiOptionSetting multiOptionSetting2 = multiOptionSetting;
-         String str2 = "";
-         this.registerNamedSetting(str2, multiOptionSetting2);
+         MultiOptionSetting multiOptionSetting2 = (new MultiOptionSetting(module, str, weaponFilterOptions)).named(str);
+         this.registerNamedSetting("", multiOptionSetting2);
       } else {
-         MultiOptionSetting multiOptionSetting3 = (new MultiOptionSetting(module, str, weaponFilterOptions, doubleValue)).named(str);
-         MultiOptionSetting multiOptionSetting4 = multiOptionSetting3;
-         String str3 = "";
-         this.registerNamedSetting(str3, multiOptionSetting4);
+         MultiOptionSetting multiOptionSetting4 = (new MultiOptionSetting(module, str, weaponFilterOptions, doubleValue)).named(str);
+         this.registerNamedSetting("", multiOptionSetting4);
       }
    }
 

@@ -5,7 +5,7 @@ import net.augustus.modules.Module;
 
 public abstract class AbstractNoiseSetting extends Setting {
    public ArrayList layers;
-   public DoubleValue noisegroup;
+   public SettingGroup noisegroup;
    private long lastUpdateTimeMs;
    public boolean normalized;
 
@@ -43,15 +43,14 @@ public abstract class AbstractNoiseSetting extends Setting {
          this.lastUpdateTimeMs = System.currentTimeMillis();
          this.stepLayers();
       } else {
-         long l = System.currentTimeMillis() - this.lastUpdateTimeMs;
-         this.advanceByMillis(l);
+         this.advanceByMillis(System.currentTimeMillis() - this.lastUpdateTimeMs);
          this.lastUpdateTimeMs = System.currentTimeMillis();
       }
    }
 
    public NoiseLayerBuilder newLayerBuilder() {
       Module parentModule = this.getParentModule();
-      DoubleValue noisegroup2 = this.noisegroup;
+      SettingGroup noisegroup2 = this.noisegroup;
       String name = this.getName();
       int n = this.layers.size() + 1;
       return new NoiseLayerBuilder(parentModule, noisegroup2, name, n, () -> {
@@ -59,17 +58,13 @@ public abstract class AbstractNoiseSetting extends Setting {
       });
    }
 
-   public AbstractNoiseSetting(Module module, String str, DoubleValue doubleValue, boolean flag) {
+   public AbstractNoiseSetting(Module module, String str, SettingGroup doubleValue, boolean flag) {
        super(module, doubleValue, str, false);
       this.layers = new ArrayList();
       if (doubleValue == null) {
-         DoubleValue doubleValue2 = new DoubleValue(module, str + "_noisegroup");
-         String displayName2 = this.getDisplayName();
-         this.noisegroup = (DoubleValue)doubleValue2.withDisplayName(displayName2);
+         this.noisegroup = (SettingGroup)new SettingGroup(module, str + "_noisegroup").withDisplayName(this.getDisplayName());
       } else {
-         DoubleValue doubleValue3 = new DoubleValue(module, str + "_noisegroup", doubleValue);
-         String displayName3 = this.getDisplayName();
-         this.noisegroup = (DoubleValue)doubleValue3.withDisplayName(displayName3);
+         this.noisegroup = (SettingGroup)new SettingGroup(module, str + "_noisegroup", doubleValue).withDisplayName(this.getDisplayName());
       }
 
       this.normalized = flag;

@@ -64,8 +64,7 @@ public class EntityAITasks {
       this.theProfiler.startSection("goalSetup");
       if (this.tickCount++ % this.tickRate == 0) {
          for (EntityAITasks.EntityAITaskEntry entityAITaskEntry : (Iterable<EntityAITasks.EntityAITaskEntry>)(this.taskEntries)) {
-            boolean flag = this.executingTaskEntries.contains(entityAITaskEntry);
-            if (flag) {
+            if (this.executingTaskEntries.contains(entityAITaskEntry)) {
                if (this.canUse(entityAITaskEntry) && this.canContinue(entityAITaskEntry)) {
                   continue;
                }

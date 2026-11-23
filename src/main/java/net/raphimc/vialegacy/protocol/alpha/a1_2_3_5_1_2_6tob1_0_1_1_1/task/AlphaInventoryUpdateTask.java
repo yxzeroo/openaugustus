@@ -37,10 +37,9 @@ public class AlphaInventoryUpdateTask implements Runnable {
                            Item[] armorInventory = Protocola1_2_3_5_1_2_6Tob1_0_1_1_1.fixItems(
                               ((AlphaInventoryProvider)Via.getManager().getProviders().get(AlphaInventoryProvider.class)).getArmorInventoryItems(info)
                            );
-                           Item handItem = Protocola1_2_3_5_1_2_6Tob1_0_1_1_1.fixItem(
+                           if (!Objects.equals(Protocola1_2_3_5_1_2_6Tob1_0_1_1_1.fixItem(
                               ((AlphaInventoryProvider)Via.getManager().getProviders().get(AlphaInventoryProvider.class)).getHandItem(info)
-                           );
-                           if (!Objects.equals(handItem, inventoryStorage.handItem)) {
+                           ), inventoryStorage.handItem)) {
                               PacketWrapper heldItemChange = PacketWrapper.create(ServerboundPacketsb1_1.SET_CARRIED_ITEM, info);
                               heldItemChange.write(Types.SHORT, inventoryStorage.selectedHotbarSlot);
                               heldItemChange.sendToServer(Protocola1_2_3_5_1_2_6Tob1_0_1_1_1.class, false);

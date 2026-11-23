@@ -29,8 +29,7 @@ public class JSONParser {
    }
 
    public Object parse2(String str, int n, short s, char ch) throws JsonParseException {
-      long l = ((long)n << 32 | (long)s << 48 >>> 32 | (long)ch << 48 >>> 48) ^ a;
-      long l2 = l ^ 100713264008964L;
+      long l2 = (((long)n << 32 | (long)s << 48 >>> 32 | (long)ch << 48 >>> 48) ^ a) ^ 100713264008964L;
       return this.parse4(str, (ContainerFactory)null, l2);
    }
 
@@ -41,7 +40,6 @@ public class JSONParser {
       int n2 = (int)((l ^ 17225097225919L) << 32 >>> 48);
       int n3 = (int)(l2 << 48 >>> 48);
       long l3 = l ^ 101311778410027L;
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       if (!flag) {
          this.reset(reader);
          long l4;
@@ -282,12 +280,10 @@ public class JSONParser {
 
    public Object parse(Reader reader, long l) throws IOException, JsonParseException {
       l = a ^ l;
-      long l2 = l ^ 88682274560119L;
-      return this.parse3(l2, reader, (ContainerFactory)null);
+      return this.parse3(l ^ 88682274560119L, reader, (ContainerFactory)null);
    }
 
    private List createArrayContainer(ContainerFactory containerFactory) {
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       if (containerFactory == null) {
          return new JSONArray();
       } else {
@@ -305,7 +301,6 @@ public class JSONParser {
       l2 = l ^ 63334836585455L;
       long l3 = l ^ 70456534905240L;
       this.reset(reader);
-      JsonParseException.getControlFlowTag();
       LinkedList list = new LinkedList();
       LinkedList list2 = new LinkedList();
 
@@ -356,8 +351,7 @@ public class JSONParser {
                         long l7;
                         int n7 = (l7 = l - 0L) == 0L ? 0 : (l7 < 0L ? -1 : 1);
                         if (this.token.value instanceof String) {
-                           String value = (String)this.token.value;
-                           list2.addFirst(value);
+                           list2.addFirst((String)this.token.value);
                            long l8;
                            int n8 = (l8 = l - 0L) == 0L ? 0 : (l8 < 0L ? -1 : 1);
                            this.status = 0;
@@ -387,8 +381,7 @@ public class JSONParser {
                case 3:
                   switch (this.token.type) {
                      case 0:
-                        List first = (List)list2.getFirst();
-                        first.add(this.token.value);
+                        ((List)list2.getFirst()).add(this.token.value);
                         long l11;
                         int n11 = (l11 = l - 0L) == 0L ? 0 : (l11 < 0L ? -1 : 1);
                         break exitBlock;
@@ -439,8 +432,7 @@ public class JSONParser {
                      case 0:
                         list.removeFirst();
                         String str = (String)list2.removeFirst();
-                        Map first4 = (Map)list2.getFirst();
-                        first4.put(str, this.token.value);
+                        ((Map)list2.getFirst()).put(str, this.token.value);
                         long l17;
                         int n17 = (l17 = l - 0L) == 0L ? 0 : (l17 < 0L ? -1 : 1);
                         this.status = this.peekStatus(list, l3);
@@ -496,14 +488,11 @@ public class JSONParser {
 
    public void parse2(String str, ContentHandler contentHandler, long l) throws JsonParseException {
       l = a ^ l;
-      long l2 = l ^ 53870302312720L;
-      this.parse3(l2, str, contentHandler, false);
+      this.parse3(l ^ 53870302312720L, str, contentHandler, false);
    }
 
    private void nextToken(int n, char ch, short s) throws JsonParseException, IOException {
-      long l = ((long)n << 32 | (long)ch << 48 >>> 32 | (long)s << 48 >>> 48) ^ a;
-      long l2 = l ^ 67659315671772L;
-      String controlFlowTag = JsonParseException.getControlFlowTag();
+      long l2 = (((long)n << 32 | (long)ch << 48 >>> 32 | (long)s << 48 >>> 48) ^ a) ^ 67659315671772L;
       this.token = this.lexer.yylex(l2);
       if (this.token == null) {
          this.token = new Yytoken(-1, null);
@@ -527,7 +516,6 @@ public class JSONParser {
    }
 
    private Map createObjectContainer(ContainerFactory containerFactory) {
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       if (containerFactory == null) {
          return new JSONObject();
       } else {
@@ -538,22 +526,19 @@ public class JSONParser {
 
    private int peekStatus(LinkedList list, long l) {
       l = a ^ l;
-      String controlFlowTag = JsonParseException.getControlFlowTag();
       int size = list.size();
       long l2;
       int n = (l2 = l - 0L) == 0L ? 0 : (l2 < 0L ? -1 : 1);
       if (size == 0) {
          return -1;
       } else {
-         Integer first = (Integer)list.getFirst();
-         return first;
+         return (Integer)list.getFirst();
       }
    }
 
    public void parse(Reader reader, ContentHandler contentHandler, long l) throws IOException, JsonParseException {
       l = a ^ l;
-      long l2 = l ^ 91064140169215L;
-      this.parse(reader, contentHandler, false, l2);
+      this.parse(reader, contentHandler, false, l ^ 91064140169215L);
    }
 
    public Object parse4(String str, ContainerFactory containerFactory, long l) throws JsonParseException {

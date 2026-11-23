@@ -9,8 +9,7 @@ public class KeyUtils {
       HashSet set = new HashSet();
 
       for (int i = 0; i < keyBindings2.length; i++) {
-         KeyBinding keyBinding = keyBindings2[i];
-         set.add(keyBinding.getKeyCode());
+         set.add(keyBindings2[i].getKeyCode());
       }
 
       HashSet set2 = new HashSet<>(Arrays.asList(keyBindings));

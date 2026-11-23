@@ -65,8 +65,7 @@ public class AccountAuthenticator implements MC {
       HttpClient httpClient = MinecraftAuth.createHttpClient();
 
       try {
-         StepFullJavaSession.FullJavaSession fullJavaSession = (StepFullJavaSession.FullJavaSession)step.fromJson(accountEntry.getAccountData());
-         StepFullJavaSession.FullJavaSession fullJavaSession2 = (StepFullJavaSession.FullJavaSession)step.refresh(httpClient, fullJavaSession);
+         StepFullJavaSession.FullJavaSession fullJavaSession2 = (StepFullJavaSession.FullJavaSession)step.refresh(httpClient, (StepFullJavaSession.FullJavaSession)step.fromJson(accountEntry.getAccountData()));
          accountEntry.setWorking(true);
          scheduleJavaSessionLogin(fullJavaSession2, accountEntry);
          accountEntry.updateAccountData(step.toJson(fullJavaSession2), fullJavaSession2.getMcProfile().getName());
@@ -81,8 +80,7 @@ public class AccountAuthenticator implements MC {
       EasyMcAuthenticator.restoreMojangSession(mc.getSession());
       AccountEntry accountEntry = null;
       if (flag) {
-         JsonObject json = createTokenJson(str);
-         accountEntry = findOrCreateAccountEntry(str, json, AccountLoginType.CRACKED);
+         accountEntry = findOrCreateAccountEntry(str, createTokenJson(str), AccountLoginType.CRACKED);
       }
 
       scheduleSessionUpdate(str, "", "", (StepPlayerCertificates.PlayerCertificates)null, accountEntry);
@@ -97,8 +95,7 @@ public class AccountAuthenticator implements MC {
          String asString3 = accountData.get("uuid").getAsString();
 
          try {
-            URL url = new URL("https://api.minecraftservices.com/minecraft/profile");
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection)new URL("https://api.minecraftservices.com/minecraft/profile").openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", "Bearer " + asString);
             conn.setConnectTimeout(5000);
@@ -138,10 +135,9 @@ public class AccountAuthenticator implements MC {
          StepFullJavaSession.FullJavaSession fromInput = (StepFullJavaSession.FullJavaSession)MinecraftAuth.JAVA_CREDENTIALS_LOGIN.getFromInput(
             httpClient, new StepCredentialsMsaCode.MsaCredentials(str, str2)
          );
-         AccountEntry accountEntry = findOrCreateAccountEntry(
+         scheduleJavaSessionLogin(fromInput, findOrCreateAccountEntry(
             fromInput.getMcProfile().getName(), MinecraftAuth.JAVA_CREDENTIALS_LOGIN.toJson(fromInput), AccountLoginType.MICROSOFT_CREDENTIALS
-         );
-         scheduleJavaSessionLogin(fromInput, accountEntry);
+         ));
       } catch (Exception e) {
          scheduleLoginFailure((AccountEntry)null);
       }
@@ -229,8 +225,7 @@ public class AccountAuthenticator implements MC {
          StepFullJavaSession.FullJavaSession fromInput = (StepFullJavaSession.FullJavaSession)EXTERNAL_BROWSER_LOGIN_STEP.getFromInput(
             httpClient, new StepLocalWebServer.LocalWebServerCallback(localWebServer -> openLocalWebServerAuthUrl(localWebServer))
          );
-         AccountEntry accountEntry = findOrCreateAccountEntry(fromInput.getMcProfile().getName(), EXTERNAL_BROWSER_LOGIN_STEP.toJson(fromInput), AccountLoginType.MICROSOFT_EXTERNAL_BROWSER);
-         scheduleJavaSessionLogin(fromInput, accountEntry);
+         scheduleJavaSessionLogin(fromInput, findOrCreateAccountEntry(fromInput.getMcProfile().getName(), EXTERNAL_BROWSER_LOGIN_STEP.toJson(fromInput), AccountLoginType.MICROSOFT_EXTERNAL_BROWSER));
       } catch (Exception e) {
          scheduleLoginFailure((AccountEntry)null);
       }
@@ -277,10 +272,9 @@ public class AccountAuthenticator implements MC {
          StepFullJavaSession.FullJavaSession fromInput = (StepFullJavaSession.FullJavaSession)MinecraftAuth.JAVA_DEVICE_CODE_LOGIN.getFromInput(
             httpClient, new StepMsaDeviceCode.MsaDeviceCodeCallback(msaDeviceCode -> openDeviceCodeVerificationUrl(msaDeviceCode))
          );
-         AccountEntry accountEntry = findOrCreateAccountEntry(
+         scheduleJavaSessionLogin(fromInput, findOrCreateAccountEntry(
             fromInput.getMcProfile().getName(), MinecraftAuth.JAVA_DEVICE_CODE_LOGIN.toJson(fromInput), AccountLoginType.MICROSOFT_DEVICE_CODE
-         );
-         scheduleJavaSessionLogin(fromInput, accountEntry);
+         ));
       } catch (Exception e) {
          scheduleLoginFailure((AccountEntry)null);
       }
@@ -345,8 +339,7 @@ public class AccountAuthenticator implements MC {
          httpGet.setHeader("Authorization", "Bearer " + str);
 
          try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet)) {
-            String str2 = EntityUtils.toString(closeableHttpResponse.getEntity(), StandardCharsets.UTF_8);
-            JsonObject asJsonObject = JsonParser.parseString(str2).getAsJsonObject();
+            JsonObject asJsonObject = JsonParser.parseString(EntityUtils.toString(closeableHttpResponse.getEntity(), StandardCharsets.UTF_8)).getAsJsonObject();
             String asString = asJsonObject.get("name").getAsString();
             String asString2 = asJsonObject.get("id").getAsString();
             JsonObject json = new JsonObject();
@@ -360,8 +353,7 @@ public class AccountAuthenticator implements MC {
 
    public static void loginSavedTheAlteningAccount(AccountEntry accountEntry) {
       switchAuthService(AlteningServiceType.THEALTENING);
-      YggdrasilAuthenticationService service = new YggdrasilAuthenticationService(Proxy.NO_PROXY, "");
-      YggdrasilUserAuthentication authentication = (YggdrasilUserAuthentication)service.createUserAuthentication(Agent.MINECRAFT);
+      YggdrasilUserAuthentication authentication = (YggdrasilUserAuthentication)new YggdrasilAuthenticationService(Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
       String str = extractToken(accountEntry.getAccountData());
       authentication.setUsername(str);
       authentication.setPassword("password1");
@@ -377,8 +369,7 @@ public class AccountAuthenticator implements MC {
    }
 
    public static void playSuccessSound() {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue()) {
          case "Vanilla":
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(ClientSounds.GUI_TEXTURE, 1.0F));
             break;
@@ -391,8 +382,7 @@ public class AccountAuthenticator implements MC {
    public static void loginSavedCrackedAccount(AccountEntry accountEntry) {
       switchAuthService(AlteningServiceType.MOJANG);
       EasyMcAuthenticator.restoreMojangSession(mc.getSession());
-      String str = extractToken(accountEntry.getAccountData());
-      scheduleSessionUpdate(str, "", "", (StepPlayerCertificates.PlayerCertificates)null, accountEntry);
+      scheduleSessionUpdate(extractToken(accountEntry.getAccountData()), "", "", (StepPlayerCertificates.PlayerCertificates)null, accountEntry);
    }
 
    public static void recordServerConnection(String str, String str2) {
@@ -403,8 +393,7 @@ public class AccountAuthenticator implements MC {
    }
 
    public static void playFailureSound() {
-      String selectedValue = Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue();
-      switch (selectedValue) {
+      switch (Augustus.getInstance().getModuleManager().augustusServer.mode.getSelectedValue()) {
          case "Vanilla":
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(ClientSounds.GUI_TEXTURE, 1.0F));
             break;
@@ -425,15 +414,13 @@ public class AccountAuthenticator implements MC {
 
    public static void loginTheAlteningToken(String str) {
       switchAuthService(AlteningServiceType.THEALTENING);
-      YggdrasilAuthenticationService service = new YggdrasilAuthenticationService(Proxy.NO_PROXY, "");
-      YggdrasilUserAuthentication authentication = (YggdrasilUserAuthentication)service.createUserAuthentication(Agent.MINECRAFT);
+      YggdrasilUserAuthentication authentication = (YggdrasilUserAuthentication)new YggdrasilAuthenticationService(Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
       authentication.setUsername(str);
       authentication.setPassword("password1");
 
       try {
          authentication.logIn();
-         AccountEntry accountEntry = findOrCreateAccountEntry(authentication.getSelectedProfile().getName(), createTokenJson(str), AccountLoginType.THE_ALTENING);
-         scheduleYggdrasilSessionLogin(authentication, accountEntry);
+         scheduleYggdrasilSessionLogin(authentication, findOrCreateAccountEntry(authentication.getSelectedProfile().getName(), createTokenJson(str), AccountLoginType.THE_ALTENING));
       } catch (AuthenticationException e) {
          scheduleLoginFailure((AccountEntry)null);
       }

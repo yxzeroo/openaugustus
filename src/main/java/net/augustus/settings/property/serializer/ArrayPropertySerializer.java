@@ -20,8 +20,7 @@ public interface ArrayPropertySerializer extends JsonPropertyCodec {
 
    @Override
    default Object read(String str, Object obj, JsonObject json) {
-      Object[] array = (Object[])obj;
-      return this.readArray(str, array, json);
+      return this.readArray(str, (Object[])obj, json);
    }
 
    void writeElement(JsonArray array, Object obj);
@@ -29,8 +28,7 @@ public interface ArrayPropertySerializer extends JsonPropertyCodec {
    default Object[] readArray(String str, Object[] array, JsonObject json) {
       JsonElement elem = json.get(str);
       if (elem != null && elem.isJsonArray()) {
-         JsonArray asJsonArray = elem.getAsJsonArray();
-         List list = asJsonArray.asList();
+         List list = elem.getAsJsonArray().asList();
          ArrayList list2 = Lists.newArrayList();
          list.forEach(obj -> this.collectElement(list2, (JsonElement)obj));
          return list.toArray();
@@ -45,8 +43,7 @@ public interface ArrayPropertySerializer extends JsonPropertyCodec {
 
    @Override
    default void write(String str, Object obj, JsonObject json) {
-      Object[] array = (Object[])obj;
-      this.writeArray(str, array, json);
+      this.writeArray(str, (Object[])obj, json);
    }
 
    void readElement(List list, JsonElement elem);

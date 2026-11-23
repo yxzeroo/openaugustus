@@ -72,8 +72,7 @@ public class BlockTripWireHook extends Block {
       IBlockState[] states = new IBlockState[42];
 
       for (int i = 1; i < 42; i++) {
-         BlockPos pos2 = pos.offset(value, i);
-         IBlockState blockState2 = world.getBlockState(pos2);
+         IBlockState blockState2 = world.getBlockState(pos.offset(value, i));
          if (blockState2.getBlock() == Blocks.tripwire_hook) {
             if (blockState2.getValue(FACING) == value.getOpposite()) {
                n2 = i;
@@ -292,8 +291,7 @@ public class BlockTripWireHook extends Block {
    @Override
    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
       if (block != this && this.checkForDrop(world, pos, state)) {
-         EnumFacing value = (EnumFacing)state.getValue(FACING);
-         if (!world.getBlockState(pos.offset(value.getOpposite())).getBlock().isNormalCube()) {
+         if (!world.getBlockState(pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite())).getBlock().isNormalCube()) {
             this.dropBlockAsItem(world, pos, state, 0);
             world.setBlockToAir(pos);
          }

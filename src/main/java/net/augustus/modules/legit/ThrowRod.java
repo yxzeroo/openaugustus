@@ -30,7 +30,7 @@ import net.augustus.utils.player.SilentSlotManager;
 import net.augustus.settings.TargetSelectionSettings;
 import net.augustus.utils.rotation.Rotation;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.StringValue;
+import net.augustus.settings.DoubleValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,9 +44,9 @@ import net.minecraft.util.Vec3;
 
 public class ThrowRod extends Module implements SilentSlotListener, ClickListener, LoadWorldListener {
    public final RangeSetting distanceToTarget;
-   private final StringValue maxTargetLookFovDiff;
-   public final StringValue fovYaw;
-   public final StringValue fovPitch;
+   private final DoubleValue maxTargetLookFovDiff;
+   public final DoubleValue fovYaw;
+   public final DoubleValue fovPitch;
    private final RandomizedRangeSettings reactionTickTimeWorld;
    private final RandomizedRangeSettings reactionTickTimeEntity;
    private final RandomizedRangeSettings rodExtendReactionTime;
@@ -75,9 +75,9 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
    public ThrowRod() {
        super("ThrowRod", "SchmeißeAngel", new Color(202, 242, 109), Categorys.LEGIT);
       this.distanceToTarget = new RangeSetting(this, "DistanceToTarget", 3.2, 15.0, 0.0, 20.0, 2);
-      this.maxTargetLookFovDiff = new StringValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
-      this.fovYaw = new StringValue(this, "FovYaw", 90.0, 0.0, 180.0, 0);
-      this.fovPitch = new StringValue(this, "FovPitch", 90.0, 0.0, 180.0, 0);
+      this.maxTargetLookFovDiff = new DoubleValue(this, "MaxTargetLookFovDiff", 180.0, 20.0, 180.0, 0);
+      this.fovYaw = new DoubleValue(this, "FovYaw", 90.0, 0.0, 180.0, 0);
+      this.fovPitch = new DoubleValue(this, "FovPitch", 90.0, 0.0, 180.0, 0);
       this.reactionTickTimeWorld = new RandomizedRangeSettings(this, "ReactionTickTimeWorld", 0.0, 0.0, 0.0, 5.0, 0);
       this.reactionTickTimeEntity = new RandomizedRangeSettings(this, "ReactionTickTimeEntity", 0.0, 0.0, 0.0, 5.0, 0);
       this.rodExtendReactionTime = new RandomizedRangeSettings(this, "RodExtendReactionTime", 0.0, 0.0, 0.0, 5.0, 0);
@@ -112,24 +112,19 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
    @Override
    public void onDisable() {
       this.target = null;
-      Object obj = null;
-      this.targetSelectionSettings.setCurrentTarget((Entity)obj);
+      this.targetSelectionSettings.setCurrentTarget((Entity)null);
    }
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 7;
-      this.toggleEventSubscription(b);
-      byte b2 = 34;
-      this.toggleEventSubscription(b2);
-      byte b3 = 17;
-      this.toggleEventSubscription(b3);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override
    public void onLoadWorld(EventLoadWorld event) {
-      Object obj = null;
-      this.targetSelectionSettings.setCurrentTarget((Entity)obj);
+      this.targetSelectionSettings.setCurrentTarget((Entity)null);
       this.target = null;
    }
 
@@ -147,11 +142,8 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
          boolean flag = this.hasActiveFishHook();
          if (this.isHoldingRod()) {
             if (!flag && !this.rodCast && this.target != null && mc.objectMouseOver != null && !this.isCrosshairOnEntity()) {
-               TickCounter rodHeldCounter2 = this.rodHeldCounter;
-               int lastIntValue = this.rodExtendReactionTime.getLastIntValue();
-               if (rodHeldCounter2.hasReached2(lastIntValue)) {
-                  byte b = 1;
-                  event.addRightClicks(b);
+               if (this.rodHeldCounter.hasReached2(this.rodExtendReactionTime.getLastIntValue())) {
+                  event.addRightClicks((byte)1);
                   this.rodCast = true;
                   this.trackingHook = true;
                   this.needsFallbackSlotUpdate = true;
@@ -180,8 +172,7 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
       }
 
       if (this.rodCast) {
-         long l = 150L;
-         if (this.timeHelper.reached2(l) && this.trackingHook) {
+         if (this.timeHelper.reached2(150L) && this.trackingHook) {
             EntityFishHook entityFishHook = this.findOwnFishHook();
             if (entityFishHook != null) {
                BlockPos pos = new BlockPos(entityFishHook.posX, entityFishHook.posY + 0.5, entityFishHook.posZ);
@@ -195,8 +186,7 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
                if (this.target != null) {
                   Vec3 positionEyes = mc.thePlayer.getPositionEyes(1.0F);
                   double distanceToEntityBox = (double)mc.thePlayer.getDistanceToEntityBox(this.target);
-                  double distanceToEntityBox2 = (double)mc.thePlayer.getDistanceToEntityBox(entityFishHook);
-                  if (!(distanceToEntityBox2 > distanceToEntityBox)) {
+                  if (!(((double)mc.thePlayer.getDistanceToEntityBox(entityFishHook)) > distanceToEntityBox)) {
                      double d = positionEyes.distanceTo(
                         new Vec3((double)((float)entityFishHook.serverPosX / 32.0F), (double)((float)entityFishHook.serverPosY / 32.0F), (double)((float)entityFishHook.serverPosZ / 32.0F))
                      );
@@ -216,11 +206,9 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
       exitBlock2:
       if (this.rodCast && !this.trackingHook) {
          TickCounter entityReactionCounter2 = this.entityReactionCounter;
-         int lastIntValue = this.reactionTickTimeEntity.getLastIntValue();
-         if (!entityReactionCounter2.hasReached2(lastIntValue) || this.hitWorld) {
+         if (!entityReactionCounter2.hasReached2(this.reactionTickTimeEntity.getLastIntValue()) || this.hitWorld) {
             entityReactionCounter2 = this.worldReactionCounter;
-            int lastIntValue2 = this.reactionTickTimeWorld.getLastIntValue();
-            if (!entityReactionCounter2.hasReached2(lastIntValue2) || !this.hitWorld) {
+            if (!entityReactionCounter2.hasReached2(this.reactionTickTimeWorld.getLastIntValue()) || !this.hitWorld) {
                break exitBlock2;
             }
          }
@@ -232,11 +220,7 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
       }
 
       if (this.selectedHotbarSlot != -1) {
-         int selectedHotbarSlot2 = this.selectedHotbarSlot;
-         boolean value = this.silentSlotSwitching.getValue();
-         int n = selectedHotbarSlot2;
-         byte b = 9;
-         SilentSlotManager.requestSlot(this, b, n, value);
+         SilentSlotManager.requestSlot(this, (byte)9, this.selectedHotbarSlot, this.silentSlotSwitching.getValue());
       }
    }
 
@@ -255,14 +239,12 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
             this.fallbackHotbarSlot = SilentSlotManager.realHotbarSlot;
          } else {
             ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-            byte b = 36;
-            OptionalInt optionalInt = containerSlotQuery.fromSlot(b).emptyOnly().findFirstSlotIndex();
+            OptionalInt optionalInt = containerSlotQuery.fromSlot((byte)36).emptyOnly().findFirstSlotIndex();
             if (optionalInt.isPresent()) {
                this.fallbackHotbarSlot = optionalInt.getAsInt() - 36;
             } else {
                containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-               byte b2 = 36;
-               containerSlotQuery = containerSlotQuery.fromSlot(b2);
+               containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
                Predicate predicate = obj -> {
                   return !(obj instanceof ItemFood) && !(obj instanceof ItemSkull);
                };
@@ -273,9 +255,7 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
                   int n2 = 0;
 
                   do {
-                     byte b3 = 8;
-                     byte b4 = 0;
-                     this.fallbackHotbarSlot = DefaultRandomGenerator.instance.nextInt2(b4, b3);
+                     this.fallbackHotbarSlot = DefaultRandomGenerator.instance.nextInt2((byte)0, (byte)8);
                   } while (this.fallbackHotbarSlot == n && ++n2 < 10);
                }
             }
@@ -287,10 +267,8 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
 
    public int findRodHotbarSlot() {
       ContainerSlotQuery containerSlotQuery = ContainerSlotQuery.of(mc.thePlayer.inventoryContainer);
-      byte b = 36;
-      containerSlotQuery = containerSlotQuery.fromSlot(b);
-      Predicate predicate = obj -> obj instanceof ItemFishingRod;
-      OptionalInt optionalInt = containerSlotQuery.filterItem(predicate).findFirstSlotIndex();
+      containerSlotQuery = containerSlotQuery.fromSlot((byte)36);
+      OptionalInt optionalInt = containerSlotQuery.filterItem(obj -> obj instanceof ItemFishingRod).findFirstSlotIndex();
       return optionalInt.isPresent() ? optionalInt.getAsInt() - 36 : -1;
    }
 
@@ -334,42 +312,25 @@ public class ThrowRod extends Module implements SilentSlotListener, ClickListene
       } else if (this.isCrosshairOnEntity()) {
          return null;
       } else {
-         byte b = 3;
-         if (this.ticksSinceLastClick.hasReached2(b) && this.onlyAtClicking.getValue()) {
+         if (this.ticksSinceLastClick.hasReached2((byte)3) && this.onlyAtClicking.getValue()) {
             return null;
          } else {
             EntityTargetSelector entityTargetSelector = EntityTargetSelector.of(mc.theWorld.loadedEntityList);
-            EntityTargetFilter targetFilter = this.targetSelectionSettings.getTargetFilter();
-            EntityTargetFilter entityTargetFilter = targetFilter;
-            entityTargetSelector = entityTargetSelector.withTargetFilter(entityTargetFilter);
-            boolean flag = false;
-            entityTargetSelector = entityTargetSelector.throughWalls(flag);
-            double maxValue = this.distanceToTarget.getMaxValue();
-            entityTargetSelector = entityTargetSelector.maxDistance(maxValue);
-            double minValue = this.distanceToTarget.getMinValue();
-            entityTargetSelector = entityTargetSelector.minDistance(minValue);
-            double value = this.fovYaw.getValue();
-            double value2 = this.fovPitch.getValue();
-            double d = value;
-            entityTargetSelector = entityTargetSelector.withinFov(d, value2).filterFocus();
-            Predicate predicate = obj -> this.isValidTargetState((Entity)obj);
-            entityTargetSelector = entityTargetSelector.filter(predicate);
+            entityTargetSelector = entityTargetSelector.withTargetFilter(this.targetSelectionSettings.getTargetFilter());
+            entityTargetSelector = entityTargetSelector.throughWalls(false);
+            entityTargetSelector = entityTargetSelector.maxDistance(this.distanceToTarget.getMaxValue());
+            entityTargetSelector = entityTargetSelector.minDistance(this.distanceToTarget.getMinValue());
+            entityTargetSelector = entityTargetSelector.withinFov(this.fovYaw.getValue(), this.fovPitch.getValue()).filterFocus();
+            entityTargetSelector = entityTargetSelector.filter(obj -> this.isValidTargetState((Entity)obj));
             Predicate predicate2 = obj2 -> {
                if (obj2 instanceof EntityLivingBase) {
-                  EntityLivingBase entity = (EntityLivingBase)obj2;
-                  double d2 = (double)RotationUtil.getEntityLookAngleToPlayer(entity);
-                  return !(d2 > this.maxTargetLookFovDiff.getValue());
+                  return !(((double)RotationUtil.getEntityLookAngleToPlayer((EntityLivingBase)obj2)) > this.maxTargetLookFovDiff.getValue());
                } else {
                   return false;
                }
             };
             entityTargetSelector = entityTargetSelector.filter(predicate2);
-            TargetSelectionSettings targetSelectionSettings2 = this.targetSelectionSettings;
-            Rotation previousRotation = ClientManagers.rotationController.getPreviousRotation();
-            double d3 = -1.0;
-            Rotation rotation = previousRotation;
-            ToDoubleFunction toDoubleFunction = targetSelectionSettings2.createTargetComparatorKey(rotation, d3);
-            Optional optional = entityTargetSelector.sortBy(toDoubleFunction).findBest();
+            Optional optional = entityTargetSelector.sortBy(this.targetSelectionSettings.createTargetComparatorKey(ClientManagers.rotationController.getPreviousRotation(), -1.0)).findBest();
             return optional.isPresent() && optional.get() instanceof EntityLivingBase ? (EntityLivingBase)optional.get() : null;
          }
       }

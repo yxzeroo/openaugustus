@@ -130,12 +130,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public int compareTo(Object other) {
-      ShadedBigDecimal shadedBigDecimal = (ShadedBigDecimal)other;
-      return this.compareTo2(shadedBigDecimal);
+      return this.compareTo2((ShadedBigDecimal)other);
    }
 
    private static ShadedBigDecimal divide7(ShadedBigInteger shadedBigInteger, int n, ShadedBigInteger shadedBigInteger2, int n2, long l, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (compareMagnitudeNormalized3(shadedBigInteger, n, shadedBigInteger2, n2) > 0) {
          n2--;
       }
@@ -145,16 +143,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n3 = checkScaleNonZero(l + (long)n2 - (long)n + (long)precision2);
       ShadedBigDecimal shadedBigDecimal;
       if (checkScaleNonZero((long)precision2 + (long)n2 - (long)n) > 0) {
-         int n4 = checkScaleNonZero((long)precision2 + (long)n2 - (long)n);
-         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, n4);
-         int n5 = checkScaleNonZero(l);
-         shadedBigDecimal = divideAndRound3(shadedBigInteger3, shadedBigInteger2, n3, oldMode, n5);
+         shadedBigDecimal = divideAndRound3(bigMultiplyPowerTen2(shadedBigInteger, checkScaleNonZero((long)precision2 + (long)n2 - (long)n)), shadedBigInteger2, n3, oldMode, checkScaleNonZero(l));
       } else {
-         int n6 = checkScaleNonZero((long)n - (long)precision2);
-         int n7 = checkScaleNonZero((long)n6 - (long)n2);
-         ShadedBigInteger shadedBigInteger4 = bigMultiplyPowerTen2(shadedBigInteger2, n7);
-         int n8 = checkScaleNonZero(l);
-         shadedBigDecimal = divideAndRound3(shadedBigInteger, shadedBigInteger4, n3, oldMode, n8);
+         shadedBigDecimal = divideAndRound3(shadedBigInteger, bigMultiplyPowerTen2(shadedBigInteger2, checkScaleNonZero((long)checkScaleNonZero((long)n - (long)precision2) - (long)n2)), n3, oldMode, checkScaleNonZero(l));
       }
 
       return doRound(shadedBigDecimal, shadedMathContext);
@@ -164,14 +155,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (shadedMathContext.precision == 0) {
          return this.subtract(shadedBigDecimal);
       } else {
-         ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimal.negate();
-         ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-         return this.add2(shadedBigDecimal3, shadedMathContext);
+         return this.add2(shadedBigDecimal.negate(), shadedMathContext);
       }
    }
 
    private static ShadedBigDecimal divide(ShadedBigInteger shadedBigInteger, int n, long l, int n2, long l2, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (-compareMagnitudeNormalized(l, n2, shadedBigInteger, n) > 0) {
          n2--;
       }
@@ -181,28 +169,18 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n3 = checkScaleNonZero(l2 + (long)n2 - (long)n + (long)precision2);
       ShadedBigDecimal shadedBigDecimal;
       if (checkScaleNonZero((long)precision2 + (long)n2 - (long)n) > 0) {
-         int n4 = checkScaleNonZero((long)precision2 + (long)n2 - (long)n);
-         ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen2(shadedBigInteger, n4);
-         int n5 = checkScaleNonZero(l2);
-         int n6 = n5;
-         shadedBigDecimal = divideAndRound(shadedBigInteger2, l, n3, oldMode, n6);
+         shadedBigDecimal = divideAndRound(bigMultiplyPowerTen2(shadedBigInteger, checkScaleNonZero((long)precision2 + (long)n2 - (long)n)), l, n3, oldMode, checkScaleNonZero(l2));
       } else {
          int n7 = checkScaleNonZero((long)n - (long)precision2);
          if (n7 == n2) {
-            int n8 = checkScaleNonZero(l2);
-            int n9 = n8;
-            shadedBigDecimal = divideAndRound(shadedBigInteger, l, n3, oldMode, n9);
+            shadedBigDecimal = divideAndRound(shadedBigInteger, l, n3, oldMode, checkScaleNonZero(l2));
          } else {
             int n10 = checkScaleNonZero((long)n7 - (long)n2);
             long l3;
             if ((l3 = longMultiplyPowerTen(l, n10)) == Long.MIN_VALUE) {
-               ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen(l, n10);
-               int n11 = checkScaleNonZero(l2);
-               shadedBigDecimal = divideAndRound3(shadedBigInteger, shadedBigInteger3, n3, oldMode, n11);
+               shadedBigDecimal = divideAndRound3(shadedBigInteger, bigMultiplyPowerTen(l, n10), n3, oldMode, checkScaleNonZero(l2));
             } else {
-               int n12 = checkScaleNonZero(l2);
-               int n13 = n12;
-               shadedBigDecimal = divideAndRound(shadedBigInteger, l3, n3, oldMode, n13);
+               shadedBigDecimal = divideAndRound(shadedBigInteger, l3, n3, oldMode, checkScaleNonZero(l2));
             }
          }
       }
@@ -216,7 +194,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(long l, ShadedMathContext shadedMathContext) {
       super();
-      ShadedNumber.getFlowState();
       int precision2 = shadedMathContext.precision;
       int oldMode = shadedMathContext.roundingMode.oldMode;
       int n = 0;
@@ -258,41 +235,30 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiply2(long l, long l2, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = multiply2(l, l2);
       return l3 != Long.MIN_VALUE ? valueOf(l3, n) : new ShadedBigDecimal(ShadedBigInteger.valueOf(l).multiply2(l2), Long.MIN_VALUE, n, 0);
    }
 
    private static ShadedBigDecimal add(long l, long l2, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = add(l, l2);
       return l3 != Long.MIN_VALUE ? valueOf(l3, n) : new ShadedBigDecimal(ShadedBigInteger.valueOf(l).add2(l2), n);
    }
 
    private static ShadedBigDecimal divide2(ShadedBigInteger shadedBigInteger, int n, long l, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
-      long l2 = (long)n3 + (long)n2;
-      long l3 = l2;
-      if (checkScale2(shadedBigInteger, l3) > n) {
-         int n5 = n3 + n2;
-         int n6 = n5 - n;
-         ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen2(shadedBigInteger, n6);
-         return divideAndRound(shadedBigInteger2, l, n3, n4, n3);
+      if (checkScale2(shadedBigInteger, (long)n3 + (long)n2) > n) {
+         return divideAndRound(bigMultiplyPowerTen2(shadedBigInteger, (n3 + n2) - n), l, n3, n4, n3);
       } else {
-         int n7 = checkScale(l, (long)n - (long)n3);
-         int n8 = n7 - n2;
+         int n8 = checkScale(l, (long)n - (long)n3) - n2;
          long l4;
          if (n8 < LONG_TEN_POWERS_TABLE.length && (l4 = longMultiplyPowerTen(l, n8)) != Long.MIN_VALUE) {
             return divideAndRound(shadedBigInteger, l4, n3, n4, n3);
          } else {
-            ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen(l, n8);
-            return divideAndRound3(shadedBigInteger, shadedBigInteger3, n3, n4, n3);
+            return divideAndRound3(shadedBigInteger, bigMultiplyPowerTen(l, n8), n3, n4, n3);
          }
       }
    }
 
    public byte byteValueExact() {
-      int[] flowState = ShadedNumber.getFlowState();
       long l = this.longValueExact();
       if ((long)((byte)((int)l)) != l) {
          throw new ArithmeticException("Overflow");
@@ -320,42 +286,27 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal subtract(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE) {
          if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
             return add3(this.intCompact, this.scale, -shadedBigDecimal.intCompact, shadedBigDecimal.scale);
          } else {
-            long intCompact2 = this.intCompact;
-            int scale2 = this.scale;
-            ShadedBigInteger shadedBigInteger = shadedBigDecimal.intVal.negate();
-            int scale3 = shadedBigDecimal.scale;
-            return add(intCompact2, scale2, shadedBigInteger, scale3);
+            return add(this.intCompact, this.scale, shadedBigDecimal.intVal.negate(), shadedBigDecimal.scale);
          }
       } else if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
          long l = -shadedBigDecimal.intCompact;
          int scale4 = this.scale;
          return add(l, shadedBigDecimal.scale, this.intVal, scale4);
       } else {
-         ShadedBigInteger intVal2 = this.intVal;
-         int scale5 = this.scale;
-         ShadedBigInteger shadedBigInteger2 = shadedBigDecimal.intVal.negate();
-         int scale6 = shadedBigDecimal.scale;
-         ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
-         int n = scale5;
-         return add2(intVal2, n, shadedBigInteger3, scale6);
+         return add2(this.intVal, this.scale, shadedBigDecimal.intVal.negate(), shadedBigDecimal.scale);
       }
    }
 
    public ShadedBigDecimal movePointLeft(int n) {
-      long l = (long)this.scale + (long)n;
-      int n2 = this.checkScale(l);
-      ShadedNumber.getFlowState();
+      int n2 = this.checkScale((long)this.scale + (long)n);
       ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.intVal, this.intCompact, n2, 0);
       ShadedBigDecimal shadedBigDecimal2;
       if (shadedBigDecimal.scale < 0) {
-         byte b = 7;
-         byte b2 = 0;
-         shadedBigDecimal2 = shadedBigDecimal.setScale(b2, b);
+         shadedBigDecimal2 = shadedBigDecimal.setScale((byte)0, (byte)7);
       } else {
          shadedBigDecimal2 = shadedBigDecimal;
       }
@@ -365,18 +316,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal add2(ShadedBigInteger shadedBigInteger, int n, ShadedBigInteger shadedBigInteger2, int n2) {
       int n3 = n;
-      ShadedNumber.getFlowState();
       long l = (long)n - (long)n2;
       if (l != 0L) {
          if (l < 0L) {
-            long l2 = -l;
-            long l3 = l2;
-            int n4 = checkScale2(shadedBigInteger, l3);
+            int n4 = checkScale2(shadedBigInteger, -l);
             n3 = n2;
             shadedBigInteger = bigMultiplyPowerTen2(shadedBigInteger, n4);
          } else {
-            int n5 = checkScale2(shadedBigInteger2, l);
-            shadedBigInteger2 = bigMultiplyPowerTen2(shadedBigInteger2, n5);
+            shadedBigInteger2 = bigMultiplyPowerTen2(shadedBigInteger2, checkScale2(shadedBigInteger2, l));
          }
       }
 
@@ -385,8 +332,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (shadedBigInteger.signum == shadedBigInteger2.signum) {
          shadedBigDecimal = new ShadedBigDecimal(shadedBigInteger3, Long.MIN_VALUE, n3, 0);
       } else {
-         byte b = 0;
-         shadedBigDecimal = valueOf(shadedBigInteger3, n3, b);
+         shadedBigDecimal = valueOf(shadedBigInteger3, n3, (byte)0);
       }
 
       return shadedBigDecimal;
@@ -395,7 +341,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public ShadedBigDecimal(ShadedBigInteger shadedBigInteger, int n, ShadedMathContext shadedMathContext) {
       super();
       long l = compactValFor(shadedBigInteger);
-      ShadedNumber.getFlowState();
       int precision2 = shadedMathContext.precision;
       int n2 = 0;
       if (precision2 > 0) {
@@ -435,7 +380,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public static ShadedBigDecimal zeroValueOf(int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       return n >= 0 && n < ZERO_SCALED_BY.length ? ZERO_SCALED_BY[n] : new ShadedBigDecimal(ShadedBigInteger.ZERO, 0L, n, 1);
    }
 
@@ -444,21 +388,16 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static int compareMagnitudeNormalized3(ShadedBigInteger shadedBigInteger, int n, ShadedBigInteger shadedBigInteger2, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n3 = n - n2;
       if (n3 < 0) {
-         int n4 = -n3;
-         return bigMultiplyPowerTen2(shadedBigInteger, n4).compareMagnitude(shadedBigInteger2);
+         return bigMultiplyPowerTen2(shadedBigInteger, -n3).compareMagnitude(shadedBigInteger2);
       } else {
-         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger2, n3);
-         return shadedBigInteger.compareMagnitude(shadedBigInteger3);
+         return shadedBigInteger.compareMagnitude(bigMultiplyPowerTen2(shadedBigInteger2, n3));
       }
    }
 
    public ShadedBigDecimal multiply(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
-      long l = (long)this.scale + (long)shadedBigDecimal.scale;
-      int n = this.checkScale(l);
+      int n = this.checkScale((long)this.scale + (long)shadedBigDecimal.scale);
       if (this.intCompact != Long.MIN_VALUE) {
          return shadedBigDecimal.intCompact != Long.MIN_VALUE ? multiply2(this.intCompact, shadedBigDecimal.intCompact, n) : multiply(this.intCompact, shadedBigDecimal.intVal, n);
       } else if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
@@ -538,7 +477,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal divideAndRound(ShadedBigInteger shadedBigInteger, long l, int n, int n2, int n3) {
       long l2 = 0L;
-      ShadedNumber.getFlowState();
       Object obj = null;
       MutableBigInt mutableBigInt = new MutableBigInt(shadedBigInteger.mag);
       obj = new MutableBigInt();
@@ -557,9 +495,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          if (l3 != Long.MIN_VALUE) {
             return createAndStripZerosToMatchScale(l3, n, (long)n3);
          } else {
-            ShadedBigInteger shadedBigInteger2 = ((MutableBigInt)obj).toBigInteger(n4);
-            long l4 = (long)n3;
-            return createAndStripZerosToMatchScale2(shadedBigInteger2, n, l4);
+            return createAndStripZerosToMatchScale2(((MutableBigInt)obj).toBigInteger(n4), n, (long)n3);
          }
       } else {
          return ((MutableBigInt)obj).toBigDecimal(n4, n);
@@ -568,7 +504,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal divideSmallFastPath(long l, int n, long l2, int n2, long l3, ShadedMathContext shadedMathContext) {
       int precision2 = shadedMathContext.precision;
-      ShadedNumber.getFlowState();
       int oldMode = shadedMathContext.roundingMode.oldMode;
       if (assertionsDisabled || n <= n2 && n2 < 18 && precision2 < 18) {
          int n3 = n2 - n;
@@ -588,10 +523,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (shadedBigDecimal == null) {
-                     ShadedBigInteger shadedBigInteger = bigMultiplyPowerTen(l4, precision2 - 1);
-                     int n7 = checkScaleNonZero(l3);
-                     int n8 = n7;
-                     shadedBigDecimal = divideAndRound(shadedBigInteger, l2, n5, oldMode, n8);
+                     shadedBigDecimal = divideAndRound(bigMultiplyPowerTen(l4, precision2 - 1), l2, n5, oldMode, checkScaleNonZero(l3));
                   }
                } else {
                   shadedBigDecimal = divideAndRound2(l5, l2, n5, oldMode, checkScaleNonZero(l3));
@@ -605,9 +537,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   long l6;
                   if ((l6 = longMultiplyPowerTen(l2, n10)) == Long.MIN_VALUE) {
                      ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen(l2, n10);
-                     ShadedBigInteger shadedBigInteger3 = ShadedBigInteger.valueOf(l);
-                     int n11 = checkScaleNonZero(l3);
-                     shadedBigDecimal = divideAndRound3(shadedBigInteger3, shadedBigInteger2, n5, oldMode, n11);
+                     shadedBigDecimal = divideAndRound3(ShadedBigInteger.valueOf(l), shadedBigInteger2, n5, oldMode, checkScaleNonZero(l3));
                   } else {
                      shadedBigDecimal = divideAndRound2(l, l6, n5, oldMode, checkScaleNonZero(l3));
                   }
@@ -616,10 +546,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          } else {
             int n12 = checkScaleNonZero(l3 + (long)n2 - (long)n + (long)precision2);
             if (n4 == 0) {
-               int n13 = l4 < 0L == l2 < 0L ? 1 : -1;
-               int n14 = checkScaleNonZero(l3);
-               int n15 = n13;
-               shadedBigDecimal = roundedTenPower(n15, precision2, n12, n14);
+               shadedBigDecimal = roundedTenPower(l4 < 0L == l2 < 0L ? 1 : -1, precision2, n12, checkScaleNonZero(l3));
             } else {
                long l7;
                if ((l7 = longMultiplyPowerTen(l4, precision2)) == Long.MIN_VALUE) {
@@ -629,10 +556,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   }
 
                   if (shadedBigDecimal == null) {
-                     ShadedBigInteger shadedBigInteger4 = bigMultiplyPowerTen(l4, precision2);
-                     int n16 = checkScaleNonZero(l3);
-                     int n17 = n16;
-                     shadedBigDecimal = divideAndRound(shadedBigInteger4, l2, n12, oldMode, n17);
+                     shadedBigDecimal = divideAndRound(bigMultiplyPowerTen(l4, precision2), l2, n12, oldMode, checkScaleNonZero(l3));
                   }
                } else {
                   shadedBigDecimal = divideAndRound2(l7, l2, n12, oldMode, checkScaleNonZero(l3));
@@ -647,7 +571,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal add3(long l, int n, long l2, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = (long)n - (long)n2;
       if (l3 == 0L) {
          return add(l, l2, n);
@@ -662,8 +585,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             if ((l ^ l2) >= 0L) {
                shadedBigDecimal = new ShadedBigDecimal(shadedBigInteger, Long.MIN_VALUE, n2, 0);
             } else {
-               byte b = 0;
-               shadedBigDecimal = valueOf(shadedBigInteger, n2, b);
+               shadedBigDecimal = valueOf(shadedBigInteger, n2, (byte)0);
             }
 
             return shadedBigDecimal;
@@ -679,8 +601,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             if ((l ^ l2) >= 0L) {
                shadedBigDecimal2 = new ShadedBigDecimal(shadedBigInteger2, Long.MIN_VALUE, n, 0);
             } else {
-               byte b2 = 0;
-               shadedBigDecimal2 = valueOf(shadedBigInteger2, n, b2);
+               shadedBigDecimal2 = valueOf(shadedBigInteger2, n, (byte)0);
             }
 
             return shadedBigDecimal2;
@@ -689,7 +610,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal abs() {
-      int[] flowState = ShadedNumber.getFlowState();
       ShadedBigDecimal shadedBigDecimal;
       if (this.signum() < 0) {
          shadedBigDecimal = this.negate();
@@ -701,15 +621,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal movePointRight(int n) {
-      long l = (long)this.scale - (long)n;
-      int n2 = this.checkScale(l);
-      ShadedNumber.getFlowState();
+      int n2 = this.checkScale((long)this.scale - (long)n);
       ShadedBigDecimal shadedBigDecimal = new ShadedBigDecimal(this.intVal, this.intCompact, n2, 0);
       ShadedBigDecimal shadedBigDecimal2;
       if (shadedBigDecimal.scale < 0) {
-         byte b = 7;
-         byte b2 = 0;
-         shadedBigDecimal2 = shadedBigDecimal.setScale(b2, b);
+         shadedBigDecimal2 = shadedBigDecimal.setScale((byte)0, (byte)7);
       } else {
          shadedBigDecimal2 = shadedBigDecimal;
       }
@@ -763,18 +679,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal setScale(int n) {
-      byte b = 7;
-      return this.setScale(n, b);
+      return this.setScale(n, (byte)7);
    }
 
    @Override
    public String toString() {
-      int[] flowState = ShadedNumber.getFlowState();
       String stringCache2 = this.stringCache;
       if (stringCache2 == null) {
-         boolean flag = true;
-         String str = stringCache2 = this.layoutChars(flag);
-         this.stringCache = str;
+         this.stringCache = stringCache2 = this.layoutChars(true);
       }
 
       return stringCache2;
@@ -786,7 +698,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal add(long l, int n, ShadedBigInteger shadedBigInteger, int n2) {
       int n3 = n;
-      ShadedNumber.getFlowState();
       long l2 = (long)n - (long)n2;
       boolean flag = Long.signum(l) == shadedBigInteger.signum;
       ShadedBigInteger shadedBigInteger2;
@@ -795,15 +706,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
          n3 = n2;
          long l3 = longMultiplyPowerTen(l, n4);
          if (l3 == Long.MIN_VALUE) {
-            ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen(l, n4);
-            ShadedBigInteger shadedBigInteger4 = shadedBigInteger3;
-            shadedBigInteger2 = shadedBigInteger.add(shadedBigInteger4);
+            shadedBigInteger2 = shadedBigInteger.add(bigMultiplyPowerTen(l, n4));
          } else {
             shadedBigInteger2 = shadedBigInteger.add2(l3);
          }
       } else {
-         int n5 = checkScale2(shadedBigInteger, l2);
-         shadedBigInteger = bigMultiplyPowerTen2(shadedBigInteger, n5);
+         shadedBigInteger = bigMultiplyPowerTen2(shadedBigInteger, checkScale2(shadedBigInteger, l2));
          shadedBigInteger2 = shadedBigInteger.add2(l);
       }
 
@@ -811,15 +719,13 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (flag) {
          shadedBigDecimal = new ShadedBigDecimal(shadedBigInteger2, Long.MIN_VALUE, n3, 0);
       } else {
-         byte b = 0;
-         shadedBigDecimal = valueOf(shadedBigInteger2, n3, b);
+         shadedBigDecimal = valueOf(shadedBigInteger2, n3, (byte)0);
       }
 
       return shadedBigDecimal;
    }
 
    private ShadedBigDecimal[] preAlign(ShadedBigDecimal shadedBigDecimal, ShadedBigDecimal shadedBigDecimal2, long l, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!assertionsDisabled && l == 0L) {
          throw new AssertionError();
       } else {
@@ -836,9 +742,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          long l2 = (long)shadedBigDecimal3.scale - (long)shadedBigDecimal3.precision() + (long)shadedMathContext.precision;
          long l3 = (long)shadedBigDecimal4.scale - (long)shadedBigDecimal4.precision() + 1L;
          if (l3 > (long)(shadedBigDecimal3.scale + 2) && l3 > l2 + 2L) {
-            long l4 = (long)shadedBigDecimal4.signum();
-            long l5 = Math.max((long)shadedBigDecimal3.scale, l2) + 3L;
-            shadedBigDecimal4 = valueOf(l4, this.checkScale(l5));
+            shadedBigDecimal4 = valueOf((long)shadedBigDecimal4.signum(), this.checkScale(Math.max((long)shadedBigDecimal3.scale, l2) + 3L));
          }
 
          return new ShadedBigDecimal[]{shadedBigDecimal3, shadedBigDecimal4};
@@ -849,13 +753,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
       if (!assertionsDisabled && mutableBigInt3.isZero()) {
          throw new AssertionError();
       } else {
-         int n3 = mutableBigInt3.compareHalf(mutableBigInt);
-         return commonNeedIncrement(n, n2, n3, mutableBigInt2.isOdd());
+         return commonNeedIncrement(n, n2, mutableBigInt3.compareHalf(mutableBigInt), mutableBigInt2.isOdd());
       }
    }
 
    public int signum() {
-      int[] flowState = ShadedNumber.getFlowState();
       int n;
       if (this.intCompact != Long.MIN_VALUE) {
          n = Long.signum(this.intCompact);
@@ -889,13 +791,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
       l8 = l4 * l6 + l11;
       l11 = l8 & 4294967295L;
       l12 = (l8 >>> 32) + l12 & 4294967295L;
-      long l13 = make64(l12, l11);
-      long l14 = make64(l10, l9);
-      return divideAndRound128(l13, l14, l3, n4, n, n2, n3);
+      return divideAndRound128(make64(l12, l11), make64(l10, l9), l3, n4, n, n2, n3);
    }
 
    private static ShadedBigDecimal divide4(long l, int n, long l2, int n2, long l3, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       int precision2 = shadedMathContext.precision;
       if (n <= n2 && n2 < 18 && precision2 < 18) {
          return divideSmallFastPath(l, n, l2, n2, l3, shadedMathContext);
@@ -911,10 +810,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             int n4 = checkScaleNonZero((long)precision2 + (long)n2 - (long)n);
             long l4;
             if ((l4 = longMultiplyPowerTen(l, n4)) == Long.MIN_VALUE) {
-               ShadedBigInteger shadedBigInteger = bigMultiplyPowerTen(l, n4);
-               int n5 = checkScaleNonZero(l3);
-               int n6 = n5;
-               shadedBigDecimal = divideAndRound(shadedBigInteger, l2, n3, oldMode, n6);
+               shadedBigDecimal = divideAndRound(bigMultiplyPowerTen(l, n4), l2, n3, oldMode, checkScaleNonZero(l3));
             } else {
                shadedBigDecimal = divideAndRound2(l4, l2, n3, oldMode, checkScaleNonZero(l3));
             }
@@ -927,9 +823,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                long l5;
                if ((l5 = longMultiplyPowerTen(l2, n8)) == Long.MIN_VALUE) {
                   ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen(l2, n8);
-                  ShadedBigInteger shadedBigInteger3 = ShadedBigInteger.valueOf(l);
-                  int n9 = checkScaleNonZero(l3);
-                  shadedBigDecimal = divideAndRound3(shadedBigInteger3, shadedBigInteger2, n3, oldMode, n9);
+                  shadedBigDecimal = divideAndRound3(ShadedBigInteger.valueOf(l), shadedBigInteger2, n3, oldMode, checkScaleNonZero(l3));
                } else {
                   shadedBigDecimal = divideAndRound2(l, l5, n3, oldMode, checkScaleNonZero(l3));
                }
@@ -945,12 +839,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiplyAndRound2(long l, ShadedBigInteger shadedBigInteger, int n, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       return l == 0L ? zeroValueOf(n) : doRound2(shadedBigInteger.multiply2(l), n, shadedMathContext);
    }
 
    private ShadedBigDecimal audit() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact == Long.MIN_VALUE) {
          if (this.intVal == null) {
             print("audit", this);
@@ -981,7 +873,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static long add(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = l + l2;
       if (((l3 ^ l) & (l3 ^ l2)) >= 0L) {
          return l3;
@@ -999,7 +890,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public int hashCode() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE) {
          long l = this.intCompact < 0L ? -this.intCompact : this.intCompact;
          int n = (int)((long)((int)(l >>> 32) * 31) + (l & 4294967295L));
@@ -1014,14 +904,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal[] divideAndRemainder(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedMathContext.precision == 0) {
          return this.divideAndRemainder(shadedBigDecimal);
       } else {
          ShadedBigDecimal[] shadedBigDecimals = new ShadedBigDecimal[]{this.divideToIntegralValue(shadedBigDecimal, shadedMathContext), null};
-         ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimals[0].multiply(shadedBigDecimal);
-         ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-         shadedBigDecimals[1] = this.subtract(shadedBigDecimal3);
+         shadedBigDecimals[1] = this.subtract(shadedBigDecimals[0].multiply(shadedBigDecimal));
          return shadedBigDecimals;
       }
    }
@@ -1031,7 +918,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal roundedTenPower(int n, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n3 > n4) {
          int n5 = n3 - n4;
          return n5 < n2 ? scaledTenPow(n2 - n5, n, n4) : valueOf((long)n, n3 - n2);
@@ -1041,7 +927,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal stripTrailingZeros() {
-      int[] flowState = ShadedNumber.getFlowState();
       exitBlock:
       if (this.intCompact != 0L) {
          if (this.intVal != null) {
@@ -1064,19 +949,15 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigInteger divideAndRoundByTenPow(ShadedBigInteger shadedBigInteger, int n, int n2) {
       if (n < LONG_TEN_POWERS_TABLE.length) {
-         long l = LONG_TEN_POWERS_TABLE[n];
-         long l2 = l;
-         shadedBigInteger = divideAndRound(shadedBigInteger, l2, n2);
+         shadedBigInteger = divideAndRound(shadedBigInteger, LONG_TEN_POWERS_TABLE[n], n2);
       } else {
-         ShadedBigInteger shadedBigInteger2 = bigTenToThe(n);
-         shadedBigInteger = divideAndRound2(shadedBigInteger, shadedBigInteger2, n2);
+         shadedBigInteger = divideAndRound2(shadedBigInteger, bigTenToThe(n), n2);
       }
 
       return shadedBigInteger;
    }
 
    private static int checkScale2(ShadedBigInteger shadedBigInteger, long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n = (int)l;
       if ((long)n != l) {
          n = l > 2147483647L ? Integer.MAX_VALUE : Integer.MIN_VALUE;
@@ -1089,10 +970,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal divide6(long l, int n, long l2, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (checkScale(l, (long)n3 + (long)n2) > n) {
-         int n5 = n3 + n2;
-         int n6 = n5 - n;
+         int n6 = (n3 + n2) - n;
          if (n6 < LONG_TEN_POWERS_TABLE.length) {
             long l3;
             if ((l3 = longMultiplyPowerTen(l, n6)) != Long.MIN_VALUE) {
@@ -1105,11 +984,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
          }
 
-         ShadedBigInteger shadedBigInteger = bigMultiplyPowerTen(l, n6);
-         return divideAndRound(shadedBigInteger, l2, n3, n4, n3);
+         return divideAndRound(bigMultiplyPowerTen(l, n6), l2, n3, n4, n3);
       } else {
-         int n7 = checkScale(l2, (long)n - (long)n3);
-         int n8 = n7 - n2;
+         int n8 = checkScale(l2, (long)n - (long)n3) - n2;
          long l4;
          if (n8 < LONG_TEN_POWERS_TABLE.length && (l4 = longMultiplyPowerTen(l2, n8)) != Long.MIN_VALUE) {
             return divideAndRound2(l, l4, n3, n4, n3);
@@ -1139,14 +1016,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
       MutableBigInt mutableBigInt = new MutableBigInt(shadedBigInteger.mag);
       MutableBigInt mutableBigInt2 = new MutableBigInt();
       MutableBigInt mutableBigInt3 = new MutableBigInt(shadedBigInteger2.mag);
-      ShadedNumber.getFlowState();
       MutableBigInt mutableBigInt4 = mutableBigInt.divide2(mutableBigInt3, mutableBigInt2);
       boolean isZero = mutableBigInt4.isZero();
       int n4 = shadedBigInteger.signum != shadedBigInteger2.signum ? -1 : 1;
       if (!isZero) {
          if (needIncrement2(mutableBigInt3, n2, n4, mutableBigInt2, mutableBigInt4)) {
-            MutableBigInt one = MutableBigInt.ONE;
-            mutableBigInt2.add(one);
+            mutableBigInt2.add(MutableBigInt.ONE);
          }
 
          return mutableBigInt2.toBigDecimal(n4, n);
@@ -1155,9 +1030,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          if (l != Long.MIN_VALUE) {
             return createAndStripZerosToMatchScale(l, n, (long)n3);
          } else {
-            ShadedBigInteger shadedBigInteger3 = mutableBigInt2.toBigInteger(n4);
-            long l2 = (long)n3;
-            return createAndStripZerosToMatchScale2(shadedBigInteger3, n, l2);
+            return createAndStripZerosToMatchScale2(mutableBigInt2.toBigInteger(n4), n, (long)n3);
          }
       } else {
          return mutableBigInt2.toBigDecimal(n4, n);
@@ -1165,30 +1038,23 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static int saturateLong(long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n = (int)l;
       return l == (long)n ? n : (l < 0L ? Integer.MIN_VALUE : Integer.MAX_VALUE);
    }
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal, int n, ShadedRoundingMode shadedRoundingMode) {
-      int oldMode = shadedRoundingMode.oldMode;
-      return this.divide2(shadedBigDecimal, n, oldMode);
+      return this.divide2(shadedBigDecimal, n, shadedRoundingMode.oldMode);
    }
 
    public ShadedBigDecimal abs(ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.signum() < 0 ? this.negate(shadedMathContext) : this.round(shadedMathContext);
    }
 
    public ShadedBigInteger toBigIntegerExact() {
-      byte b = 7;
-      byte b2 = 0;
-      ShadedBigDecimal shadedBigDecimal = this.setScale(b2, b);
-      return shadedBigDecimal.inflated();
+      return this.setScale((byte)0, (byte)7).inflated();
    }
 
    public ShadedBigDecimal setScale(int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n2 >= 0 && n2 <= 7) {
          int scale2 = this.scale;
          if (n == scale2) {
@@ -1198,8 +1064,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          } else if (this.intCompact != Long.MIN_VALUE) {
             long intCompact2 = this.intCompact;
             if (n > scale2) {
-               long l = (long)n - (long)scale2;
-               int n3 = this.checkScale(l);
+               int n3 = this.checkScale((long)n - (long)scale2);
                if ((intCompact2 = longMultiplyPowerTen(intCompact2, n3)) != Long.MIN_VALUE) {
                   return valueOf(intCompact2, n);
                } else {
@@ -1209,34 +1074,26 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   return new ShadedBigDecimal(shadedBigInteger, minvalue, n, n4);
                }
             } else {
-               long l2 = (long)scale2 - (long)n;
-               int n5 = this.checkScale(l2);
+               int n5 = this.checkScale((long)scale2 - (long)n);
                if (n5 < LONG_TEN_POWERS_TABLE.length) {
                   return divideAndRound2(intCompact2, LONG_TEN_POWERS_TABLE[n5], n, n2, n);
                } else {
-                  ShadedBigInteger shadedBigInteger2 = this.inflated();
-                  ShadedBigInteger shadedBigInteger3 = bigTenToThe(n5);
-                  return divideAndRound3(shadedBigInteger2, shadedBigInteger3, n, n2, n);
+                  return divideAndRound3(this.inflated(), bigTenToThe(n5), n, n2, n);
                }
             }
          } else if (n > scale2) {
-            long l3 = (long)n - (long)scale2;
-            int n6 = this.checkScale(l3);
+            int n6 = this.checkScale((long)n - (long)scale2);
             ShadedBigInteger shadedBigInteger4 = bigMultiplyPowerTen2(this.intVal, n6);
             int n7 = this.precision > 0 ? this.precision + n6 : 0;
             long minvalue2 = Long.MIN_VALUE;
             return new ShadedBigDecimal(shadedBigInteger4, minvalue2, n, n7);
          } else {
-            long l4 = (long)scale2 - (long)n;
-            int n8 = this.checkScale(l4);
+            int n8 = this.checkScale((long)scale2 - (long)n);
             if (n8 < LONG_TEN_POWERS_TABLE.length) {
-               long l5 = LONG_TEN_POWERS_TABLE[n8];
-               long l6 = l5;
+               long l6 = LONG_TEN_POWERS_TABLE[n8];
                return divideAndRound(this.intVal, l6, n, n2, n);
             } else {
-               ShadedBigInteger intVal2 = this.intVal;
-               ShadedBigInteger shadedBigInteger5 = bigTenToThe(n8);
-               return divideAndRound3(intVal2, shadedBigInteger5, n, n2, n);
+               return divideAndRound3(this.intVal, bigTenToThe(n8), n, n2, n);
             }
          }
       } else {
@@ -1245,7 +1102,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static long[] divRemNegativeLong(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!assertionsDisabled && l >= 0L) {
          throw new AssertionError("Non-negative numerator " + l);
       } else if (!assertionsDisabled && l2 == 1L) {
@@ -1281,12 +1137,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public int intValue() {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.intCompact != Long.MIN_VALUE && this.scale == 0 ? (int)this.intCompact : (int)this.longValue();
    }
 
    private static int checkScale(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n = (int)l2;
       if ((long)n != l2) {
          n = l2 > 2147483647L ? Integer.MAX_VALUE : Integer.MIN_VALUE;
@@ -1306,8 +1160,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       boolean isZero = mutableBigInt4.isZero();
       int n2 = shadedBigInteger.signum != shadedBigInteger2.signum ? -1 : 1;
       if (!isZero && needIncrement2(mutableBigInt3, n, n2, mutableBigInt2, mutableBigInt4)) {
-         MutableBigInt one = MutableBigInt.ONE;
-         mutableBigInt2.add(one);
+         mutableBigInt2.add(MutableBigInt.ONE);
       }
 
       return mutableBigInt2.toBigInteger(n2);
@@ -1396,8 +1249,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   if (l == Long.MIN_VALUE) {
                      for (int i = n3 - precision2; i > 0; i = n3 - precision2) {
                         n4 = checkScaleNonZero((long)n4 - (long)i);
-                        int oldMode = shadedMathContext.roundingMode.oldMode;
-                        shadedBigInteger = divideAndRoundByTenPow(shadedBigInteger, i, oldMode);
+                        shadedBigInteger = divideAndRoundByTenPow(shadedBigInteger, i, shadedMathContext.roundingMode.oldMode);
                         l = compactValFor(shadedBigInteger);
                         if (l != Long.MIN_VALUE) {
                            n3 = longDigitLength(l);
@@ -1522,12 +1374,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal min(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.compareTo2(shadedBigDecimal) <= 0 ? this : shadedBigDecimal;
    }
 
    private static ShadedBigDecimal divide3(long l, int n, ShadedBigInteger shadedBigInteger, int n2, long l2, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (compareMagnitudeNormalized(l, n, shadedBigInteger, n2) > 0) {
          n2--;
       }
@@ -1537,24 +1387,16 @@ public class ShadedBigDecimal extends Number implements Comparable {
       int n3 = checkScaleNonZero(l2 + (long)n2 - (long)n + (long)precision2);
       ShadedBigDecimal shadedBigDecimal;
       if (checkScaleNonZero((long)precision2 + (long)n2 - (long)n) > 0) {
-         int n4 = checkScaleNonZero((long)precision2 + (long)n2 - (long)n);
-         ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen(l, n4);
-         int n5 = checkScaleNonZero(l2);
-         shadedBigDecimal = divideAndRound3(shadedBigInteger2, shadedBigInteger, n3, oldMode, n5);
+         shadedBigDecimal = divideAndRound3(bigMultiplyPowerTen(l, checkScaleNonZero((long)precision2 + (long)n2 - (long)n)), shadedBigInteger, n3, oldMode, checkScaleNonZero(l2));
       } else {
-         int n6 = checkScaleNonZero((long)n - (long)precision2);
-         int n7 = checkScaleNonZero((long)n6 - (long)n2);
-         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, n7);
-         ShadedBigInteger shadedBigInteger4 = ShadedBigInteger.valueOf(l);
-         int n8 = checkScaleNonZero(l2);
-         shadedBigDecimal = divideAndRound3(shadedBigInteger4, shadedBigInteger3, n3, oldMode, n8);
+         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, checkScaleNonZero((long)checkScaleNonZero((long)n - (long)precision2) - (long)n2));
+         shadedBigDecimal = divideAndRound3(ShadedBigInteger.valueOf(l), shadedBigInteger3, n3, oldMode, checkScaleNonZero(l2));
       }
 
       return doRound(shadedBigDecimal, shadedMathContext);
    }
 
    public int compareTo2(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.scale == shadedBigDecimal.scale) {
          long intCompact2 = this.intCompact;
          long intCompact3 = shadedBigDecimal.intCompact;
@@ -1582,7 +1424,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public double doubleValue() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE) {
          if (this.scale == 0) {
             return (double)this.intCompact;
@@ -1603,7 +1444,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private int checkScale(long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n = (int)l;
       if ((long)n != l) {
          n = l > 2147483647L ? Integer.MAX_VALUE : Integer.MIN_VALUE;
@@ -1623,21 +1463,18 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal negate() {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.intCompact == Long.MIN_VALUE
          ? new ShadedBigDecimal(this.intVal.negate(), Long.MIN_VALUE, this.scale, this.precision)
          : valueOf2(-this.intCompact, this.scale, this.precision);
    }
 
    public ShadedBigDecimal pow(int n, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedMathContext.precision == 0) {
          return this.pow(n);
       } else if (n >= -999999999 && n <= 999999999) {
          if (n == 0) {
             return ONE;
          } else {
-            ShadedBigDecimal shadedBigDecimal = this;
             ShadedMathContext shadedMathContext2 = shadedMathContext;
             int n2 = Math.abs(n);
             if (shadedMathContext.precision > 0) {
@@ -1657,7 +1494,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                n2 += n2;
                if (n2 < 0) {
                   flag = true;
-                  shadedBigDecimal2 = shadedBigDecimal2.multiply(shadedBigDecimal, shadedMathContext2);
+                  shadedBigDecimal2 = shadedBigDecimal2.multiply(this, shadedMathContext2);
                }
 
                if (n4 == 31) {
@@ -1681,55 +1518,42 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intVal == null) {
-         ShadedBigInteger shadedBigInteger = ShadedBigInteger.valueOf(this.intCompact);
-         ShadedBigInteger shadedBigInteger2 = shadedBigInteger;
-         BigDecimalUnsafeHolder.setIntValVolatile(this, shadedBigInteger2);
+         BigDecimalUnsafeHolder.setIntValVolatile(this, ShadedBigInteger.valueOf(this.intCompact));
       }
 
       objectOutputStream.defaultWriteObject();
    }
 
    private static ShadedBigDecimal createAndStripZerosToMatchScale2(ShadedBigInteger shadedBigInteger, int n, long l) {
-      int[] flowState = ShadedNumber.getFlowState();
 
       while (true) {
-         ShadedBigInteger ten = ShadedBigInteger.TEN;
-         if (shadedBigInteger.compareMagnitude(ten) < 0 || (long)n <= l) {
+         if (shadedBigInteger.compareMagnitude(ShadedBigInteger.TEN) < 0 || (long)n <= l) {
             break;
          }
 
-         byte b = 0;
-         if (shadedBigInteger.testBit(b)) {
+         if (shadedBigInteger.testBit((byte)0)) {
             break;
          }
 
-         ShadedBigInteger ten2 = ShadedBigInteger.TEN;
-         ShadedBigInteger[] shadedBigIntegers = shadedBigInteger.divideAndRemainder(ten2);
-         ShadedBigInteger shadedBigInteger2 = shadedBigIntegers[1];
-         if (shadedBigInteger2.getSignum() != 0) {
+         ShadedBigInteger[] shadedBigIntegers = shadedBigInteger.divideAndRemainder(ShadedBigInteger.TEN);
+         if (shadedBigIntegers[1].getSignum() != 0) {
             break;
          }
 
          shadedBigInteger = shadedBigIntegers[0];
-         long l2 = (long)n - 1L;
-         long l3 = l2;
-         n = checkScale2(shadedBigInteger, l3);
+         n = checkScale2(shadedBigInteger, (long)n - 1L);
       }
 
-      byte b2 = 0;
-      return valueOf(shadedBigInteger, n, b2);
+      return valueOf(shadedBigInteger, n, (byte)0);
    }
 
    private static ShadedBigDecimal multiply(long l, ShadedBigInteger shadedBigInteger, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       return l == 0L ? zeroValueOf(n) : new ShadedBigDecimal(shadedBigInteger.multiply2(l), Long.MIN_VALUE, n, 0);
    }
 
    private int compareMagnitude(ShadedBigDecimal shadedBigDecimal) {
       long intCompact2 = shadedBigDecimal.intCompact;
-      ShadedNumber.getFlowState();
       long intCompact3 = this.intCompact;
       if (intCompact3 == 0L) {
          return intCompact2 == 0L ? 0 : -1;
@@ -1753,16 +1577,14 @@ public class ShadedBigDecimal extends Number implements Comparable {
                if (l > -2147483648L && (intCompact3 == Long.MIN_VALUE || (intCompact3 = longMultiplyPowerTen(intCompact3, (int)(-l))) == Long.MIN_VALUE) && intCompact2 == Long.MIN_VALUE
                   )
                 {
-                  int n = (int)(-l);
-                  obj = this.bigMultiplyPowerTen(n);
+                  obj = this.bigMultiplyPowerTen((int)(-l));
                   ShadedBigInteger intVal2 = shadedBigDecimal.intVal;
                   return ((ShadedBigInteger)obj).compareMagnitude(intVal2);
                }
             } else if (l <= 2147483647L
                && (intCompact2 == Long.MIN_VALUE || (intCompact2 = longMultiplyPowerTen(intCompact2, (int)l)) == Long.MIN_VALUE)
                && intCompact3 == Long.MIN_VALUE) {
-               int n2 = (int)l;
-               obj = shadedBigDecimal.bigMultiplyPowerTen(n2);
+               obj = shadedBigDecimal.bigMultiplyPowerTen((int)l);
                return this.intVal.compareMagnitude((ShadedBigInteger)obj);
             }
          }
@@ -1779,7 +1601,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal divideAndRound2(long l, long l2, int n, int n2, int n3) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = l / l2;
       if (n2 == 1 && n == n3) {
          return valueOf(l3, n);
@@ -1787,8 +1608,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          long l4 = l % l2;
          int n4 = l < 0L == l2 < 0L ? 1 : -1;
          if (l4 != 0L) {
-            boolean flag = needIncrement3(l2, n2, n4, l3, l4);
-            return valueOf(flag ? l3 + (long)n4 : l3, n);
+            return valueOf(needIncrement3(l2, n2, n4, l3, l4) ? l3 + (long)n4 : l3, n);
          } else {
             return n3 != n ? createAndStripZerosToMatchScale(l3, n, (long)n3) : valueOf(l3, n);
          }
@@ -1797,34 +1617,24 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal, ShadedRoundingMode shadedRoundingMode) {
       int oldMode = shadedRoundingMode.oldMode;
-      int scale2 = this.scale;
-      return this.divide2(shadedBigDecimal, scale2, oldMode);
+      return this.divide2(shadedBigDecimal, this.scale, oldMode);
    }
 
    private static ShadedBigInteger bigMultiplyPowerTen(long l, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       return n <= 0 ? ShadedBigInteger.valueOf(l) : bigTenToThe(n).multiply2(l);
    }
 
    private static void matchScale(ShadedBigDecimal[] shadedBigDecimals) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedBigDecimals[0].scale != shadedBigDecimals[1].scale) {
          if (shadedBigDecimals[0].scale < shadedBigDecimals[1].scale) {
-            ShadedBigDecimal shadedBigDecimal = shadedBigDecimals[0];
-            byte b = 7;
-            int scale2 = shadedBigDecimals[1].scale;
-            shadedBigDecimals[0] = shadedBigDecimal.setScale(scale2, b);
+            shadedBigDecimals[0] = shadedBigDecimals[0].setScale(shadedBigDecimals[1].scale, (byte)7);
          } else if (shadedBigDecimals[1].scale < shadedBigDecimals[0].scale) {
-            ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimals[1];
-            byte b2 = 7;
-            int scale3 = shadedBigDecimals[0].scale;
-            shadedBigDecimals[1] = shadedBigDecimal2.setScale(scale3, b2);
+            shadedBigDecimals[1] = shadedBigDecimals[1].setScale(shadedBigDecimals[0].scale, (byte)7);
          }
       }
    }
 
    private static int precision(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l == 0L) {
          if (l2 >= 0L) {
             return longDigitLength(l2);
@@ -1839,7 +1649,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private String getValueString(int n, String str, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n3 = str.length() - n2;
       if (n3 == 0) {
          StringBuilder sb = new StringBuilder();
@@ -1884,22 +1693,17 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigInteger bigMultiplyPowerTen2(ShadedBigInteger shadedBigInteger, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n <= 0) {
          return shadedBigInteger;
       } else if (n < LONG_TEN_POWERS_TABLE.length) {
-         long l = LONG_TEN_POWERS_TABLE[n];
-         return shadedBigInteger.multiply2(l);
+         return shadedBigInteger.multiply2(LONG_TEN_POWERS_TABLE[n]);
       } else {
-         ShadedBigInteger shadedBigInteger2 = bigTenToThe(n);
-         return shadedBigInteger.multiply(shadedBigInteger2);
+         return shadedBigInteger.multiply(bigTenToThe(n));
       }
    }
 
    public ShadedBigDecimal divide3(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
-      int precision2 = shadedMathContext.precision;
-      if (precision2 == 0) {
+      if (shadedMathContext.precision == 0) {
          return this.divide(shadedBigDecimal);
       } else {
          long l = (long)this.scale - (long)shadedBigDecimal.scale;
@@ -1931,21 +1735,18 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private String layoutChars(boolean flag) {
       long l;
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.scale == 0) {
          return this.intCompact != Long.MIN_VALUE ? Long.toString(this.intCompact) : this.intVal.toString();
       } else if (this.scale == 2 && this.intCompact >= 0L && this.intCompact < 2147483647L) {
          int n = (int)this.intCompact % 100;
-         int n2 = (int)this.intCompact / 100;
-         return Integer.toString(n2) + '.' + BigDecimalStringBuilderHelper.DIGIT_TENS[n] + BigDecimalStringBuilderHelper.DIGIT_ONES[n];
+         return Integer.toString((int)this.intCompact / 100) + '.' + BigDecimalStringBuilderHelper.DIGIT_TENS[n] + BigDecimalStringBuilderHelper.DIGIT_ONES[n];
       } else {
          BigDecimalStringBuilderHelper helper = threadLocalStringBuilderHelper.get();
          char[] chars;
          int n3;
          if (this.intCompact != Long.MIN_VALUE) {
             l = Math.abs(this.intCompact);
-            long l2 = l;
-            n3 = helper.putIntCompact(l2);
+            n3 = helper.putIntCompact(l);
             chars = helper.getCmpCharArray();
          } else {
             n3 = 0;
@@ -2048,9 +1849,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             shadedBigIntegers = Arrays.copyOf(shadedBigIntegers, n2);
 
             for (int i = length; i < n2; i++) {
-               ShadedBigInteger shadedBigInteger = shadedBigIntegers[i - 1];
-               ShadedBigInteger ten = ShadedBigInteger.TEN;
-               shadedBigIntegers[i] = shadedBigInteger.multiply(ten);
+               shadedBigIntegers[i] = shadedBigIntegers[i - 1].multiply(ShadedBigInteger.TEN);
             }
 
             BIG_TEN_POWERS_TABLE = shadedBigIntegers;
@@ -2062,7 +1861,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public boolean equals(Object obj) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!(obj instanceof ShadedBigDecimal)) {
          return false;
       } else {
@@ -2083,9 +1881,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             } else if (intCompact3 != Long.MIN_VALUE) {
                return intCompact3 == compactValFor(this.intVal);
             } else {
-               ShadedBigInteger shadedBigInteger = this.inflated();
-               ShadedBigInteger shadedBigInteger2 = shadedBigDecimal.inflated();
-               return shadedBigInteger.equals(shadedBigInteger2);
+               return this.inflated().equals(shadedBigDecimal.inflated());
             }
          }
       }
@@ -2110,7 +1906,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal doRound(long l, int n, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       int precision2 = shadedMathContext.precision;
       if (precision2 > 0 && precision2 < 19) {
          int n2 = longDigitLength(l);
@@ -2128,26 +1923,20 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divideToIntegralValue(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedMathContext.precision != 0 && this.compareMagnitude(shadedBigDecimal) >= 0) {
          int n = saturateLong((long)this.scale - (long)shadedBigDecimal.scale);
-         ShadedMathContext shadedMathContext2 = new ShadedMathContext(shadedMathContext.precision, ShadedRoundingMode.DOWN);
-         ShadedBigDecimal shadedBigDecimal2 = this.divide3(shadedBigDecimal, shadedMathContext2);
+         ShadedBigDecimal shadedBigDecimal2 = this.divide3(shadedBigDecimal, new ShadedMathContext(shadedMathContext.precision, ShadedRoundingMode.DOWN));
          if (shadedBigDecimal2.getScale() < 0) {
-            ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2.multiply(shadedBigDecimal);
-            if (this.subtract(shadedBigDecimal3).compareMagnitude(shadedBigDecimal) >= 0) {
+            if (this.subtract(shadedBigDecimal2.multiply(shadedBigDecimal)).compareMagnitude(shadedBigDecimal) >= 0) {
                throw new ArithmeticException("Division impossible");
             }
          } else if (shadedBigDecimal2.getScale() > 0) {
-            ShadedRoundingMode down = ShadedRoundingMode.DOWN;
-            byte b = 0;
-            shadedBigDecimal2 = shadedBigDecimal2.setScale2(b, down);
+            shadedBigDecimal2 = shadedBigDecimal2.setScale2((byte)0, ShadedRoundingMode.DOWN);
          }
 
          int n2;
          if (n > shadedBigDecimal2.getScale() && (n2 = shadedMathContext.precision - shadedBigDecimal2.precision()) > 0) {
-            int n3 = shadedBigDecimal2.getScale() + Math.min(n2, n - shadedBigDecimal2.scale);
-            return shadedBigDecimal2.setScale(n3);
+            return shadedBigDecimal2.setScale(shadedBigDecimal2.getScale() + Math.min(n2, n - shadedBigDecimal2.scale));
          } else {
             int scale2 = shadedBigDecimal2.scale;
             long intCompact2 = shadedBigDecimal2.intCompact;
@@ -2159,7 +1948,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private ShadedBigInteger inflated() {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.intVal == null ? ShadedBigInteger.valueOf(this.intCompact) : this.intVal;
    }
 
@@ -2171,7 +1959,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public long longValue() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE && this.scale == 0) {
          return this.intCompact;
       } else {
@@ -2181,7 +1968,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    public ShadedBigDecimal(double d, ShadedMathContext shadedMathContext) {
       super();
-      int[] flowState = ShadedNumber.getFlowState();
       if (!Double.isInfinite(d) && !Double.isNaN(d)) {
          long l = Double.doubleToLongBits(d);
          int n = l >> 63 == 0L ? 1 : -1;
@@ -2192,8 +1978,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             this.intVal = ShadedBigInteger.ZERO;
             this.scale = 0;
             this.intCompact = 0L;
-            byte b = 1;
-            this.precision = b;
+            this.precision = (byte)1;
          } else {
             while ((l2 & 1L) == 0L) {
                l2 >>= 1;
@@ -2214,9 +1999,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
                shadedBigInteger = shadedBigInteger2;
             } else {
                if (n2 < 0) {
-                  ShadedBigInteger shadedBigInteger3 = ShadedBigInteger.valueOf(5L);
-                  int n4 = -n2;
-                  shadedBigInteger = shadedBigInteger3.pow(n4).multiply2(l3);
+                  shadedBigInteger = ShadedBigInteger.valueOf(5L).pow(-n2).multiply2(l3);
                   n3 = -n2;
                } else {
                   short s = 206;
@@ -2333,7 +2116,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal multiplyAndRound(long l, long l2, int n, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l3 = multiply2(l, l2);
       if (l3 != Long.MIN_VALUE) {
          return doRound(l3, n, shadedMathContext);
@@ -2367,9 +2149,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          l3 = l4 * l6 + l10;
          l10 = l3 & 4294967295L;
          l11 = (l3 >>> 32) + l11 & 4294967295L;
-         long l12 = make64(l11, l10);
-         long l13 = make64(l9, l8);
-         ShadedBigDecimal shadedBigDecimal = doRound128(l12, l13, n2, n, shadedMathContext);
+         ShadedBigDecimal shadedBigDecimal = doRound128(make64(l11, l10), make64(l9, l8), n2, n, shadedMathContext);
          if (shadedBigDecimal != null) {
             return shadedBigDecimal;
          } else {
@@ -2386,34 +2166,26 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private ShadedBigInteger bigMultiplyPowerTen(int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n <= 0) {
          return this.inflated();
       } else if (this.intCompact != Long.MIN_VALUE) {
-         ShadedBigInteger shadedBigInteger = bigTenToThe(n);
-         long intCompact2 = this.intCompact;
-         return shadedBigInteger.multiply2(intCompact2);
+         return bigTenToThe(n).multiply2(this.intCompact);
       } else {
-         ShadedBigInteger intVal2 = this.intVal;
-         ShadedBigInteger shadedBigInteger2 = bigTenToThe(n);
-         return intVal2.multiply(shadedBigInteger2);
+         return this.intVal.multiply(bigTenToThe(n));
       }
    }
 
    public static ShadedBigDecimal valueOf2(long l, int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n == 0 && l >= 0L && l < (long)zeroThroughTen.length) {
          return zeroThroughTen[(int)l];
       } else if (l == 0L) {
          return zeroValueOf(n);
       } else {
-         Object obj = null;
-         return new ShadedBigDecimal((ShadedBigInteger)obj, l, n, n2);
+         return new ShadedBigDecimal((ShadedBigInteger)null, l, n, n2);
       }
    }
 
    private static ShadedBigDecimal divideAndRound128(long l, long l2, long l3, int n, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l >= l3) {
          return null;
       } else {
@@ -2479,15 +2251,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
                long l13 = mulsub(l7, l8, l4, l5, l12) >>> n5;
                if (l13 != 0L) {
                   if (needIncrement(l3 >>> n5, n3, n, mutableBigInt, l13)) {
-                     MutableBigInt one = MutableBigInt.ONE;
-                     mutableBigInt.add(one);
+                     mutableBigInt.add(MutableBigInt.ONE);
                   }
 
                   return mutableBigInt.toBigDecimal(n, n2);
                } else if (n4 != n2) {
-                  ShadedBigInteger shadedBigInteger = mutableBigInt.toBigInteger(n);
-                  long l14 = (long)n4;
-                  return createAndStripZerosToMatchScale2(shadedBigInteger, n2, l14);
+                  return createAndStripZerosToMatchScale2(mutableBigInt.toBigInteger(n), n2, (long)n4);
                } else {
                   return mutableBigInt.toBigDecimal(n, n2);
                }
@@ -2500,8 +2269,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             } else {
                long l16 = mulsub(l7, l8, l4, l5, l12) >>> n5;
                if (l16 != 0L) {
-                  boolean flag = needIncrement3(l3 >>> n5, n3, n, l15, l16);
-                  return valueOf(flag ? l15 + (long)n : l15, n2);
+                  return valueOf(needIncrement3(l3 >>> n5, n3, n, l15, l16) ? l15 + (long)n : l15, n2);
                } else {
                   return n4 != n2 ? createAndStripZerosToMatchScale(l15, n2, (long)n4) : valueOf(l15, n2);
                }
@@ -2511,27 +2279,22 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide2(ShadedBigDecimal shadedBigDecimal, int n) {
-      int scale2 = this.scale;
-      return this.divide2(shadedBigDecimal, scale2, n);
+      return this.divide2(shadedBigDecimal, this.scale, n);
    }
 
    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-      int[] flowState = ShadedNumber.getFlowState();
       objectInputStream.defaultReadObject();
       if (this.intVal == null) {
          String str = "BigDecimal: null intVal in stream";
          throw new StreamCorruptedException(str);
       } else {
-         long l = compactValFor(this.intVal);
-         BigDecimalUnsafeHolder.setIntCompactVolatile(this, l);
+         BigDecimalUnsafeHolder.setIntCompactVolatile(this, compactValFor(this.intVal));
       }
    }
 
    public ShadedBigDecimal pow(int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n >= 0 && n <= 999999999) {
-         long l = (long)this.scale * (long)n;
-         int n2 = this.checkScale(l);
+         int n2 = this.checkScale((long)this.scale * (long)n);
          return new ShadedBigDecimal(this.inflated().pow(n), n2);
       } else {
          throw new ArithmeticException("Invalid operation");
@@ -2539,26 +2302,16 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal divide5(ShadedBigInteger shadedBigInteger, int n, ShadedBigInteger shadedBigInteger2, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l = (long)n3 + (long)n2;
-      long l2 = l;
-      if (checkScale2(shadedBigInteger, l2) > n) {
-         int n5 = n3 + n2;
-         int n6 = n5 - n;
-         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, n6);
-         return divideAndRound3(shadedBigInteger3, shadedBigInteger2, n3, n4, n3);
+      if (checkScale2(shadedBigInteger, l) > n) {
+         return divideAndRound3(bigMultiplyPowerTen2(shadedBigInteger, (n3 + n2) - n), shadedBigInteger2, n3, n4, n3);
       } else {
          l = (long)n - (long)n3;
-         long l3 = l;
-         int n7 = checkScale2(shadedBigInteger2, l3);
-         int n8 = n7 - n2;
-         ShadedBigInteger shadedBigInteger4 = bigMultiplyPowerTen2(shadedBigInteger2, n8);
-         return divideAndRound3(shadedBigInteger, shadedBigInteger4, n3, n4, n3);
+         return divideAndRound3(shadedBigInteger, bigMultiplyPowerTen2(shadedBigInteger2, checkScale2(shadedBigInteger2, l) - n2), n3, n4, n3);
       }
    }
 
    public static ShadedBigDecimal valueOf2(long l) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l >= 0L && l < (long)zeroThroughTen.length) {
          return zeroThroughTen[(int)l];
       } else {
@@ -2567,8 +2320,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal remainder(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      ShadedBigDecimal[] shadedBigDecimals = this.divideAndRemainder(shadedBigDecimal, shadedMathContext);
-      return shadedBigDecimals[1];
+      return this.divideAndRemainder(shadedBigDecimal, shadedMathContext)[1];
    }
 
    private static int checkScaleNonZero(long l) {
@@ -2582,7 +2334,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal doRound128(long l, long l2, int n, int n2, ShadedMathContext shadedMathContext) {
       int precision2 = shadedMathContext.precision;
-      ShadedNumber.getFlowState();
       ShadedBigDecimal shadedBigDecimal = null;
       int n3;
       if ((n3 = precision(l, l2) - precision2) > 0 && n3 < LONG_TEN_POWERS_TABLE.length) {
@@ -2594,12 +2345,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean longLongCompareMagnitude(long l, long l2, long l3, long l4) {
-      int[] flowState = ShadedNumber.getFlowState();
       return l != l3 ? l < l3 : l2 + Long.MIN_VALUE < l4 + Long.MIN_VALUE;
    }
 
    private static long longMultiplyPowerTen(long l, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l != 0L && n > 0) {
          long[] longs = LONG_TEN_POWERS_TABLE;
          long[] longs2 = THRESHOLDS_TABLE;
@@ -2625,12 +2374,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal max(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       return this.compareTo2(shadedBigDecimal) >= 0 ? this : shadedBigDecimal;
    }
 
    public int precision() {
-      int[] flowState = ShadedNumber.getFlowState();
       int precision2 = this.precision;
       if (precision2 == 0) {
          long intCompact2 = this.intCompact;
@@ -2648,7 +2395,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    @Override
    public float floatValue() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE) {
          if (this.scale == 0) {
             return (float)this.intCompact;
@@ -2669,7 +2415,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public String toPlainString() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.scale == 0) {
          return this.intCompact != Long.MIN_VALUE ? Long.toString(this.intCompact) : this.intVal.toString();
       } else if (this.scale >= 0) {
@@ -2680,10 +2425,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
             str = this.intVal.abs().toString();
          }
 
-         int n = this.signum();
-         int scale2 = this.scale;
-         int n2 = n;
-         return this.getValueString(n2, str, scale2);
+         return this.getValueString(this.signum(), str, this.scale);
       } else if (this.signum() == 0) {
          return "0";
       } else {
@@ -2722,30 +2464,23 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal remainder(ShadedBigDecimal shadedBigDecimal) {
-      ShadedBigDecimal[] shadedBigDecimals = this.divideAndRemainder(shadedBigDecimal);
-      return shadedBigDecimals[1];
+      return this.divideAndRemainder(shadedBigDecimal)[1];
    }
 
    public static ShadedBigDecimal valueOf(long l, int n) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n == 0) {
          return valueOf2(l);
       } else if (l == 0L) {
          return zeroValueOf(n);
       } else {
          ShadedBigInteger shadedBigInteger = l == Long.MIN_VALUE ? INFLATED_BIGINT : null;
-         byte b = 0;
-         ShadedBigInteger shadedBigInteger2 = shadedBigInteger;
-         return new ShadedBigDecimal(shadedBigInteger2, l, n, b);
+         return new ShadedBigDecimal(shadedBigInteger, l, n, (byte)0);
       }
    }
 
    private static long multiply2(long l, long l2) {
       long l3 = l * l2;
-      ShadedNumber.getFlowState();
-      long l4 = Math.abs(l);
-      long l5 = Math.abs(l2);
-      if ((l4 | l5) >>> 31 != 0L && l2 != 0L && l3 / l2 != l) {
+      if ((Math.abs(l) | Math.abs(l2)) >>> 31 != 0L && l2 != 0L && l3 / l2 != l) {
          return Long.MIN_VALUE;
       } else {
          return l3;
@@ -2762,11 +2497,9 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal createAndStripZerosToMatchScale(long l, int n, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
 
       while (Math.abs(l) >= 10L && (long)n > l2 && (l & 1L) == 0L) {
-         long l3 = l % 10L;
-         if (l3 != 0L) {
+         if ((l % 10L) != 0L) {
             break;
          }
 
@@ -2779,7 +2512,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal doRound2(ShadedBigInteger shadedBigInteger, int n, ShadedMathContext shadedMathContext) {
       int precision2 = shadedMathContext.precision;
-      ShadedNumber.getFlowState();
       int n2 = 0;
       if (precision2 > 0) {
          long l = compactValFor(shadedBigInteger);
@@ -2816,7 +2548,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public int intValueExact() {
-      int[] flowState = ShadedNumber.getFlowState();
       long l = this.longValueExact();
       if ((long)((int)l) != l) {
          throw new ArithmeticException("Overflow");
@@ -2826,13 +2557,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal stripZerosToMatchScale(ShadedBigInteger shadedBigInteger, long l, int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l != Long.MIN_VALUE) {
          return createAndStripZerosToMatchScale(l, n, (long)n2);
       } else {
-         ShadedBigInteger shadedBigInteger2 = shadedBigInteger == null ? INFLATED_BIGINT : shadedBigInteger;
-         long l2 = (long)n2;
-         return createAndStripZerosToMatchScale2(shadedBigInteger2, n, l2);
+         return createAndStripZerosToMatchScale2(shadedBigInteger == null ? INFLATED_BIGINT : shadedBigInteger, n, (long)n2);
       }
    }
 
@@ -2841,7 +2569,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide2(ShadedBigDecimal shadedBigDecimal, int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n2 >= 0 && n2 <= 7) {
          if (this.intCompact != Long.MIN_VALUE) {
             if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
@@ -2867,10 +2594,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigInteger toBigInteger() {
-      byte b = 1;
-      byte b2 = 0;
-      ShadedBigDecimal shadedBigDecimal = this.setScale(b2, b);
-      return shadedBigDecimal.inflated();
+      return this.setScale((byte)0, (byte)1).inflated();
    }
 
    public static ShadedBigInteger getInflatedValue(ShadedBigDecimal shadedBigDecimal) {
@@ -2889,7 +2613,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    public ShadedBigDecimal(int n, ShadedMathContext shadedMathContext) {
       super();
       int precision2 = shadedMathContext.precision;
-      ShadedNumber.getFlowState();
       long l = (long)n;
       int n2 = 0;
       int n3 = 0;
@@ -2911,7 +2634,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
 
    private static ShadedBigDecimal doRound(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
       int precision2 = shadedMathContext.precision;
-      ShadedNumber.getFlowState();
       boolean flag = false;
       if (precision2 <= 0) {
          return shadedBigDecimal;
@@ -2955,7 +2677,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public static ShadedBigDecimal scaledTenPow(int n, int n2, int n3) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (n < LONG_TEN_POWERS_TABLE.length) {
          return valueOf((long)n2 * LONG_TEN_POWERS_TABLE[n], n3);
       } else {
@@ -2969,29 +2690,19 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static ShadedBigDecimal divide8(long l, int n, ShadedBigInteger shadedBigInteger, int n2, int n3, int n4) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (checkScale(l, (long)n3 + (long)n2) > n) {
-         int n5 = n3 + n2;
-         int n6 = n5 - n;
-         ShadedBigInteger shadedBigInteger2 = bigMultiplyPowerTen(l, n6);
-         return divideAndRound3(shadedBigInteger2, shadedBigInteger, n3, n4, n3);
+         return divideAndRound3(bigMultiplyPowerTen(l, (n3 + n2) - n), shadedBigInteger, n3, n4, n3);
       } else {
-         long l2 = (long)n - (long)n3;
-         long l3 = l2;
-         int n7 = checkScale2(shadedBigInteger, l3);
-         int n8 = n7 - n2;
-         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, n8);
+         ShadedBigInteger shadedBigInteger3 = bigMultiplyPowerTen2(shadedBigInteger, checkScale2(shadedBigInteger, (long)n - (long)n3) - n2);
          return divideAndRound3(ShadedBigInteger.valueOf(l), shadedBigInteger3, n3, n4, n3);
       }
    }
 
    public ShadedBigDecimal multiply(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedMathContext.precision == 0) {
          return this.multiply(shadedBigDecimal);
       } else {
-         long l = (long)this.scale + (long)shadedBigDecimal.scale;
-         int n = this.checkScale(l);
+         int n = this.checkScale((long)this.scale + (long)shadedBigDecimal.scale);
          if (this.intCompact != Long.MIN_VALUE) {
             return shadedBigDecimal.intCompact != Long.MIN_VALUE ? multiplyAndRound(this.intCompact, shadedBigDecimal.intCompact, n, shadedMathContext) : multiplyAndRound2(this.intCompact, shadedBigDecimal.intVal, n, shadedMathContext);
          } else if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
@@ -3017,8 +2728,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
          long l4 = l % l2;
          int n2 = l < 0L == l2 < 0L ? 1 : -1;
          if (l4 != 0L) {
-            boolean flag = needIncrement3(l2, n, n2, l3, l4);
-            return flag ? l3 + (long)n2 : l3;
+            return needIncrement3(l2, n, n2, l3, l4) ? l3 + (long)n2 : l3;
          } else {
             return l3;
          }
@@ -3026,7 +2736,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public static ShadedBigDecimal valueOf(ShadedBigInteger shadedBigInteger, int n, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       long l = compactValFor(shadedBigInteger);
       if (l == 0L) {
          return zeroValueOf(n);
@@ -3036,15 +2745,12 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal setScale2(int n, ShadedRoundingMode shadedRoundingMode) {
-      int oldMode = shadedRoundingMode.oldMode;
-      return this.setScale(n, oldMode);
+      return this.setScale(n, shadedRoundingMode.oldMode);
    }
 
    public ShadedBigDecimal[] divideAndRemainder(ShadedBigDecimal shadedBigDecimal) {
       ShadedBigDecimal[] shadedBigDecimals = new ShadedBigDecimal[]{this.divideToIntegralValue(shadedBigDecimal), null};
-      ShadedBigDecimal shadedBigDecimal2 = shadedBigDecimals[0].multiply(shadedBigDecimal);
-      ShadedBigDecimal shadedBigDecimal3 = shadedBigDecimal2;
-      shadedBigDecimals[1] = this.subtract(shadedBigDecimal3);
+      shadedBigDecimals[1] = this.subtract(shadedBigDecimals[0].multiply(shadedBigDecimal));
       return shadedBigDecimals;
    }
 
@@ -3053,7 +2759,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean unsignedLongCompare(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       return l + Long.MIN_VALUE > l2 + Long.MIN_VALUE;
    }
 
@@ -3070,7 +2775,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public short shortValueExact() {
-      int[] flowState = ShadedNumber.getFlowState();
       long l = this.longValueExact();
       if ((long)((short)((int)l)) != l) {
          throw new ArithmeticException("Overflow");
@@ -3080,7 +2784,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public long longValueExact() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE && this.scale == 0) {
          return this.intCompact;
       } else if (this.signum() == 0) {
@@ -3090,9 +2793,7 @@ public class ShadedBigDecimal extends Number implements Comparable {
       } else if (this.precision() - this.scale > 19) {
          throw new ArithmeticException("Overflow");
       } else {
-         byte b = 7;
-         byte b2 = 0;
-         ShadedBigDecimal shadedBigDecimal = this.setScale(b2, b);
+         ShadedBigDecimal shadedBigDecimal = this.setScale((byte)0, (byte)7);
          if (shadedBigDecimal.precision() >= 19) {
             BigDecimalLongOverflow.check(shadedBigDecimal);
          }
@@ -3102,12 +2803,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public String toEngineeringString() {
-      boolean flag = false;
-      return this.layoutChars(flag);
+      return this.layoutChars(false);
    }
 
    public ShadedBigDecimal add2(ShadedBigDecimal shadedBigDecimal, ShadedMathContext shadedMathContext) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedMathContext.precision == 0) {
          return this.add(shadedBigDecimal);
       } else {
@@ -3124,11 +2823,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
             }
 
             ShadedBigInteger shadedBigInteger = shadedBigDecimal2.inflated();
-            ShadedBigInteger shadedBigInteger2 = shadedBigDecimal.inflated();
-            ShadedBigInteger shadedBigInteger3 = shadedBigInteger2;
-            shadedBigInteger = shadedBigInteger.add(shadedBigInteger3);
-            int scale2 = shadedBigDecimal2.scale;
-            return doRound2(shadedBigInteger, scale2, shadedMathContext);
+            shadedBigInteger = shadedBigInteger.add(shadedBigDecimal.inflated());
+            return doRound2(shadedBigInteger, shadedBigDecimal2.scale, shadedMathContext);
          } else {
             int n = Math.max(this.getScale(), shadedBigDecimal.getScale());
             if (flag && flag2) {
@@ -3143,12 +2839,10 @@ public class ShadedBigDecimal extends Number implements Comparable {
                   return stripZerosToMatchScale(shadedBigDecimal3.intVal, intCompact2, scale3, n);
                } else {
                   int n2 = shadedMathContext.precision - shadedBigDecimal3.precision();
-                  int n3 = n - shadedBigDecimal3.getScale();
-                  if (n2 >= n3) {
+                  if (n2 >= (n - shadedBigDecimal3.getScale())) {
                      return shadedBigDecimal3.setScale(n);
                   } else {
-                     int n4 = shadedBigDecimal3.getScale() + n2;
-                     return shadedBigDecimal3.setScale(n4);
+                     return shadedBigDecimal3.setScale(shadedBigDecimal3.getScale() + n2);
                   }
                }
             }
@@ -3157,7 +2851,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal add(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (this.intCompact != Long.MIN_VALUE) {
          if (shadedBigDecimal.intCompact != Long.MIN_VALUE) {
             return add3(this.intCompact, this.scale, shadedBigDecimal.intCompact, shadedBigDecimal.scale);
@@ -3177,7 +2870,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divide(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (shadedBigDecimal.signum() == 0) {
          if (this.signum() == 0) {
             throw new ArithmeticException("Division undefined");
@@ -3200,10 +2892,8 @@ public class ShadedBigDecimal extends Number implements Comparable {
                throw new ArithmeticException("Non-terminating decimal expansion; no exact representable decimal result.");
             }
 
-            int scale2 = shadedBigDecimal2.getScale();
-            if (n > scale2) {
-               byte b = 7;
-               return shadedBigDecimal2.setScale(n, b);
+            if (n > shadedBigDecimal2.getScale()) {
+               return shadedBigDecimal2.setScale(n, (byte)7);
             } else {
                return shadedBigDecimal2;
             }
@@ -3216,7 +2906,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static boolean unsignedLongCompareEq(long l, long l2) {
-      int[] flowState = ShadedNumber.getFlowState();
       return l + Long.MIN_VALUE >= l2 + Long.MIN_VALUE;
    }
 
@@ -3225,13 +2914,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
          return 1;
       } else {
          int n = (int)(((long)shadedBigInteger.bitLength() + 1L) * 646456993L >>> 31);
-         ShadedBigInteger shadedBigInteger2 = bigTenToThe(n);
-         return shadedBigInteger.compareMagnitude(shadedBigInteger2) < 0 ? n : n + 1;
+         return shadedBigInteger.compareMagnitude(bigTenToThe(n)) < 0 ? n : n + 1;
       }
    }
 
    private static int compareMagnitudeNormalized2(long l, int n, long l2, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n3 = n - n2;
       if (n3 != 0) {
          if (n3 < 0) {
@@ -3249,13 +2936,11 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    public ShadedBigDecimal divideToIntegralValue(ShadedBigDecimal shadedBigDecimal) {
-      int[] flowState = ShadedNumber.getFlowState();
       int n = saturateLong((long)this.scale - (long)shadedBigDecimal.scale);
       if (this.compareMagnitude(shadedBigDecimal) < 0) {
          return zeroValueOf(n);
       } else if (this.signum() == 0 && shadedBigDecimal.signum() != 0) {
-         byte b = 7;
-         return this.setScale(n, b);
+         return this.setScale(n, (byte)7);
       } else {
          int n2 = (int)Math.min(
             (long)this.precision()
@@ -3264,20 +2949,16 @@ public class ShadedBigDecimal extends Number implements Comparable {
                + 2L,
             2147483647L
          );
-         ShadedMathContext shadedMathContext = new ShadedMathContext(n2, ShadedRoundingMode.DOWN);
-         ShadedBigDecimal shadedBigDecimal2 = this.divide3(shadedBigDecimal, shadedMathContext);
+         ShadedBigDecimal shadedBigDecimal2 = this.divide3(shadedBigDecimal, new ShadedMathContext(n2, ShadedRoundingMode.DOWN));
          if (shadedBigDecimal2.scale > 0) {
-            ShadedRoundingMode down = ShadedRoundingMode.DOWN;
-            byte b2 = 0;
-            shadedBigDecimal2 = shadedBigDecimal2.setScale2(b2, down);
+            shadedBigDecimal2 = shadedBigDecimal2.setScale2((byte)0, ShadedRoundingMode.DOWN);
             int scale2 = shadedBigDecimal2.scale;
             long intCompact2 = shadedBigDecimal2.intCompact;
             shadedBigDecimal2 = stripZerosToMatchScale(shadedBigDecimal2.intVal, intCompact2, scale2, n);
          }
 
          if (shadedBigDecimal2.scale < n) {
-            byte b3 = 7;
-            shadedBigDecimal2 = shadedBigDecimal2.setScale(n, b3);
+            shadedBigDecimal2 = shadedBigDecimal2.setScale(n, (byte)7);
          }
 
          return shadedBigDecimal2;
@@ -3285,7 +2966,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private static int compareMagnitudeNormalized(long l, int n, ShadedBigInteger shadedBigInteger, int n2) {
-      int[] flowState = ShadedNumber.getFlowState();
       if (l == 0L) {
          return -1;
       } else {
@@ -3322,7 +3002,6 @@ public class ShadedBigDecimal extends Number implements Comparable {
    }
 
    private boolean hasZeroIntegralPart() {
-      int[] flowState = ShadedNumber.getFlowState();
       if (!assertionsDisabled && this.signum() == 0) {
          throw new AssertionError();
       } else {

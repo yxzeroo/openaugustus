@@ -26,26 +26,15 @@ public class DirectoryWatchService {
 
       for (WatchEvent watchEvent : watchKey.pollEvents()) {
          Kind kind = watchEvent.kind();
-         Path path2 = (Path)watchEvent.context();
-         Path path3 = path.resolve(path2);
+         Path path3 = path.resolve((Path)watchEvent.context());
          if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
             if (Files.isRegularFile(path3)) {
-               Duration duration = Duration.ofMillis(300L);
-               Duration duration2 = Duration.ofMillis(100L);
-               Duration duration3 = Duration.ofSeconds(4L);
-               Duration duration4 = duration2;
-               Duration duration5 = duration;
-               ClientFileUtil.waitForFileStable(path, duration5, duration4, duration3);
+               ClientFileUtil.waitForFileStable(path, Duration.ofMillis(300L), Duration.ofMillis(100L), Duration.ofSeconds(4L));
                DirectoryWatcher.dispatchCreate(directoryWatcher, path3);
             }
          } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
             if (Files.isRegularFile(path3)) {
-               Duration duration6 = Duration.ofMillis(300L);
-               Duration duration7 = Duration.ofMillis(100L);
-               Duration duration8 = Duration.ofSeconds(4L);
-               Duration duration9 = duration7;
-               Duration duration10 = duration6;
-               ClientFileUtil.waitForFileStable(path, duration10, duration9, duration8);
+               ClientFileUtil.waitForFileStable(path, Duration.ofMillis(300L), Duration.ofMillis(100L), Duration.ofSeconds(4L));
                DirectoryWatcher.dispatchModify(directoryWatcher, path3);
             }
          } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
@@ -84,8 +73,7 @@ public class DirectoryWatchService {
          throw new RuntimeException(e);
       }
 
-      Thread thread = new Thread(null, () -> watchLoop(), str);
-      thread.start();
+      new Thread(null, () -> watchLoop(), str).start();
    }
 
    public static DirectoryWatcher watch(String str) {

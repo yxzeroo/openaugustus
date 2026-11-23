@@ -16,9 +16,7 @@ public class WaveyCapeSimulationManager {
 
    private void simulate(EntityPlayer player, StickSimulation stickSimulation) {
       if (!stickSimulation.points.isEmpty()) {
-         CapeVector2f prevPosition = ((StickPoint)stickSimulation.points.get(0)).prevPosition;
-         CapeVector2f position = ((StickPoint)stickSimulation.points.get(0)).position;
-         prevPosition.copy(position);
+         ((StickPoint)stickSimulation.points.get(0)).prevPosition.copy(((StickPoint)stickSimulation.points.get(0)).position);
          double d = player.prevPosX - player.posX;
          double d2 = player.prevPosZ - player.posZ;
          float f = player.prevRenderYawOffset + player.renderYawOffset - player.prevRenderYawOffset;
@@ -89,8 +87,7 @@ public class WaveyCapeSimulationManager {
    }
 
    public void tickPlayer(EntityPlayer player) {
-      StickSimulation orCreateSimulation = this.getOrCreateSimulation(player);
-      this.simulate(player, orCreateSimulation);
+      this.simulate(player, this.getOrCreateSimulation(player));
    }
 
    public StickSimulation getOrCreateSimulation(EntityPlayer player) {

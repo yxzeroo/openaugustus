@@ -79,12 +79,10 @@ public class WorldGenTrees extends WorldGenAbstractTree {
             Block block = world.getBlockState(pos.down()).getBlock();
             if ((block == Blocks.grass || block == Blocks.dirt || block == Blocks.farmland) && pos.getY() < 256 - n - 1) {
                this.setDirtAt(world, pos.down());
-               byte b2 = 3;
-               byte b3 = 0;
 
-               for (int m = pos.getY() - b2 + n; m <= pos.getY() + n; m++) {
+               for (int m = pos.getY() - ((byte)3) + n; m <= pos.getY() + n; m++) {
                   int n2 = m - (pos.getY() + n);
-                  int n3 = b3 + 1 - n2 / 2;
+                  int n3 = ((byte)0) + 1 - n2 / 2;
 
                   for (int idx = pos.getX() - n3; idx <= pos.getX() + n3; idx++) {
                      int n4 = idx - pos.getX();
@@ -128,8 +126,7 @@ public class WorldGenTrees extends WorldGenAbstractTree {
 
                if (this.vinesGrow) {
                   for (int i3 = pos.getY() - 3 + n; i3 <= pos.getY() + n; i3++) {
-                     int n6 = i3 - (pos.getY() + n);
-                     int n7 = 2 - n6 / 2;
+                     int n7 = 2 - (i3 - (pos.getY() + n)) / 2;
                      BlockPos.MutableBlockPos pos4 = new BlockPos.MutableBlockPos();
 
                      for (int i4 = pos.getX() - n7; i4 <= pos.getX() + n7; i4++) {

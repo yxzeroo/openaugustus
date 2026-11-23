@@ -4,14 +4,14 @@ import java.awt.Color;
 import net.augustus.modules.Categorys;
 import net.augustus.modules.Module;
 import net.augustus.events.listeners.UpdateListener;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 
 public class NoBob extends Module implements UpdateListener {
-   public final BooleansSetting mode;
+   public final StringValue mode;
 
    public NoBob() {
        super("NoBob", "KeinBob", new Color(121, 232, 163), Categorys.RENDER);
-      this.mode = new BooleansSetting(this, "Mode", "Normal", new String[]{"Normal", "NoScreenBobbing"});
+      this.mode = new StringValue(this, "Mode", "Normal", new String[]{"Normal", "NoScreenBobbing"});
    }
 
    public void onEnable() {
@@ -21,8 +21,7 @@ public class NoBob extends Module implements UpdateListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 43;
-      this.toggleEventSubscription(b);
+      this.toggleEventSubscription((byte)43);
    }
 
    public void onUpdate() {

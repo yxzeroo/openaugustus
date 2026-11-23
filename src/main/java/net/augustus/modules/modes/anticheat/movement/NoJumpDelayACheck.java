@@ -43,8 +43,7 @@ public class NoJumpDelayACheck extends ModuleMode {
 
    @Override
    public void onServerPacket(EventPacket event, char ch, int n, int n2) {
-      Object obj = null;
-      if (obj instanceof S08PacketPlayerPosLook) {
+      if (null instanceof S08PacketPlayerPosLook) {
          this.awaitingTeleportConfirm = true;
       }
    }

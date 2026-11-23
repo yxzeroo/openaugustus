@@ -21,8 +21,7 @@ public class PathNavigateGround extends PathNavigate {
          double d3 = (double)pos.getX() + 0.5 - vec.xCoord;
          double d4 = (double)pos.getZ() + 0.5 - vec.zCoord;
          if (d3 * d + d4 * d2 >= 0.0) {
-            Block block = this.worldObj.getBlockState(pos).getBlock();
-            if (!block.isPassable(this.worldObj, pos)) {
+            if (!this.worldObj.getBlockState(pos).getBlock().isPassable(this.worldObj, pos)) {
                return false;
             }
          }
@@ -194,8 +193,7 @@ public class PathNavigateGround extends PathNavigate {
                double d3 = (double)i + 0.5 - vec.xCoord;
                double d4 = (double)j + 0.5 - vec.zCoord;
                if (d3 * d + d4 * d2 >= 0.0) {
-                  Block block = this.worldObj.getBlockState(new BlockPos(i, n2 - 1, j)).getBlock();
-                  Material material = block.getMaterial();
+                  Material material = this.worldObj.getBlockState(new BlockPos(i, n2 - 1, j)).getBlock().getMaterial();
                   if (material == Material.air) {
                      return false;
                   }

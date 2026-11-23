@@ -5,7 +5,6 @@ import net.augustus.vendor.launcher.NettyPacketBuf;
 public class S2CHwidResetResponsePacket implements LauncherPacket {
    private int statusCode;
    private String message;
-   private static int[] controlFlowMarker;
 
    public String getMessage() {
       return this.message;
@@ -33,15 +32,6 @@ public class S2CHwidResetResponsePacket implements LauncherPacket {
       return this.statusCode;
    }
 
-   public static void setControlFlowMarker(int[] ints) {
-      controlFlowMarker = ints;
-   }
 
-   public static int[] getControlFlowMarker() {
-      return controlFlowMarker;
-   }
 
-   static {
-      setControlFlowMarker(null);
-   }
 }

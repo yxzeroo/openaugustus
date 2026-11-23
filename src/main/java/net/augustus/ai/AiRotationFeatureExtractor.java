@@ -21,8 +21,7 @@ public final class AiRotationFeatureExtractor {
       double d = player.posY + (double)player.getEyeHeight();
       double posZ = player.posZ;
       double posX2 = entity.posX;
-      double posY = entity.posY;
-      double d2 = posY + (double)entity.getEyeHeight();
+      double d2 = entity.posY + (double)entity.getEyeHeight();
       double posZ2 = entity.posZ;
       double d3 = posX2 - posX;
       double d4 = d2 - d;
@@ -31,10 +30,8 @@ public final class AiRotationFeatureExtractor {
       double d7 = Math.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
       float yaw = ClientManagers.rotationController.getPreviousRotation().yaw;
       float pitch = ClientManagers.rotationController.getPreviousRotation().pitch;
-      float f = (float)Math.toDegrees(-Math.atan2(d3, d5));
-      float f2 = MathHelper.wrapAngleTo180_float(f - yaw);
-      float f3 = (float)Math.toDegrees(-Math.atan2(d4, d6));
-      float f4 = f3 - pitch;
+      float f2 = MathHelper.wrapAngleTo180_float(((float)Math.toDegrees(-Math.atan2(d3, d5))) - yaw);
+      float f4 = ((float)Math.toDegrees(-Math.atan2(d4, d6))) - pitch;
       float f5 = (float)d7;
       float f6 = (float)(entity.posX - aiRotationFeatureState.getPrevTargetX());
       float f7 = (float)(entity.posY - aiRotationFeatureState.getPrevTargetY());

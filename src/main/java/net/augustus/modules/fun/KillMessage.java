@@ -13,7 +13,7 @@ import net.augustus.events.listeners.TickListener;
 import net.augustus.events.listeners.PacketListener;
 import net.augustus.settings.SettingVisibilityCondition;
 import net.augustus.settings.BooleanValue;
-import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -21,8 +21,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 
 public class KillMessage extends Module implements PacketListener, TickListener {
-   private final BooleansSetting sequence;
-   private final BooleansSetting killMessageMode;
+   private final StringValue sequence;
+   private final StringValue killMessageMode;
    private final RandomizedRangeSettings delay;
    private final BooleanValue inInv;
    public final DynamicSettingList customKillmessages;
@@ -32,15 +32,13 @@ public class KillMessage extends Module implements PacketListener, TickListener 
 
    public KillMessage() {
        super("KillMessage", "Tötungsnachricht", new Color(46, 77, 66), Categorys.FUN);
-      this.sequence = new BooleansSetting(this, "Sequence", "YourFirst", new String[]{"Irrelevant", "YourFirst", "OpponentFirst"});
-      this.killMessageMode = new BooleansSetting(
+      this.sequence = new StringValue(this, "Sequence", "YourFirst", new String[]{"Irrelevant", "YourFirst", "OpponentFirst"});
+      this.killMessageMode = new StringValue(
          this, "KillMessageMode", "Augustus", new String[]{"Augustus", "L", "GG", "GG AC", "Hahaha", "Spectate", "Random", "Custom"}
       );
       this.delay = (new RandomizedRangeSettings(this, "Delay", 500.0, 2000.0, 0.0, 4000.0, 0)).withoutNotInARow();
       this.inInv = new BooleanValue(this, "InInv", false);
-      DynamicSettingList dynamicSettingList = new DynamicSettingList(this, "CustomKillmessages", n -> this.createCustomMessageSetting(n), 1, 50);
-      byte b = 1;
-      DynamicSettingList dynamicSettingList2 = dynamicSettingList.withInitialCount(b);
+      DynamicSettingList dynamicSettingList2 = new DynamicSettingList(this, "CustomKillmessages", n -> this.createCustomMessageSetting(n), 1, 50).withInitialCount((byte)1);
       SettingVisibilityCondition condition = () -> {
          return this.killMessageMode.getSelectedValue().equals("Custom");
       };
@@ -61,18 +59,15 @@ public class KillMessage extends Module implements PacketListener, TickListener 
 
    @Override
    public void updateEventSubscriptions() {
-      byte b = 26;
-      this.toggleEventSubscription(b);
-      byte b2 = 40;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override
    public void onPacket(EventPacket event) {
       Packet packet = event.getPacket();
       if (packet instanceof S02PacketChat && mc.thePlayer != null && mc.theWorld != null) {
-         S02PacketChat packet2 = (S02PacketChat)packet;
-         String unformattedText = packet2.getChatComponent().getUnformattedText();
+         String unformattedText = ((S02PacketChat)packet).getChatComponent().getUnformattedText();
          String name2 = mc.thePlayer.getName();
          if (unformattedText.contains(name2)) {
             String[] strings = unformattedText.split(" ");
@@ -112,9 +107,7 @@ public class KillMessage extends Module implements PacketListener, TickListener 
       if (!this.inInv.getValue() || mc.currentScreen == null) {
          for (String str : (Iterable<String>)(this.pendingKillMessages.keySet())) {
             if ((Long)this.pendingKillMessages.get(str) > System.currentTimeMillis()) {
-               TimeHelper timeHelper2 = this.timeHelper;
-               long lastIntValue = (long)this.delay.getLastIntValue();
-               if (timeHelper2.reached2(lastIntValue)) {
+               if (this.timeHelper.reached2((long)this.delay.getLastIntValue())) {
                   this.sendKillMessage(str);
                   this.timeHelper.reset();
                   break;
@@ -125,8 +118,7 @@ public class KillMessage extends Module implements PacketListener, TickListener 
    }
 
    private void sendKillMessage(String str) {
-      String selectedValue = this.killMessageMode.getSelectedValue();
-      switch (selectedValue) {
+      switch (this.killMessageMode.getSelectedValue()) {
          case "Augustus":
             mc.thePlayer.sendChatMessage(str + " killed by " + Augustus.getInstance().getName() + "! Learn to cheat Autoclicker User");
             break;

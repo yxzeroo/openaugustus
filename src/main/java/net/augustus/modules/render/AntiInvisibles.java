@@ -13,9 +13,7 @@ public class AntiInvisibles extends Module {
 
    public AntiInvisibles() {
        super("AntiInvisibles", "GegenUnsichtbare", new Color(87, 247, 196), Categorys.RENDER);
-      TargetSelectionSettings targetSelectionSettings = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter());
-      String str = "Entities";
-      this.entities = targetSelectionSettings.withTargetsDisplayName(str);
+      this.entities = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter()).withTargetsDisplayName("Entities");
    }
 
    public void onEnable() {

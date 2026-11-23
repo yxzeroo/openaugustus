@@ -12,12 +12,10 @@ public class CosmeticPlayerProfile {
    private Map cosmetics;
 
    public boolean isCosmeticActive(Integer num) {
-      int[] flowState = CosmeticDataManager.getFlowState();
       return this.getCosmetics().containsKey(num) && ((ModelData)this.getCosmetics().get(num)).isActive();
    }
 
    public boolean hasCosmetics(long l) {
-      int[] flowState = CosmeticDataManager.getFlowState();
       return this.cosmetics != null && !this.cosmetics.isEmpty();
    }
 
@@ -30,7 +28,6 @@ public class CosmeticPlayerProfile {
    }
 
    public CosmeticPlayerProfile(long l, UUID uuid) {
-      CosmeticDataManager.getFlowState();
       this.cloakData = new CloakData();
       this.heightOffset = 0.0F;
       this.playerUuid = uuid;
@@ -57,7 +54,6 @@ public class CosmeticPlayerProfile {
    }
 
    public Map getCosmetics() {
-      int[] flowState = CosmeticDataManager.getFlowState();
       if (this.cosmetics == null) {
          this.cosmetics = new ConcurrentHashMap();
       }

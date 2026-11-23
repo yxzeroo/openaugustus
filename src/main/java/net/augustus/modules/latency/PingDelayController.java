@@ -6,15 +6,15 @@ import com.google.common.util.concurrent.AtomicDouble;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.augustus.modules.Module;
-import net.augustus.settings.BooleansSetting;
-import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.augustus.settings.SettingGroup;
 import net.augustus.utils.TimeHelper;
 import net.minecraft.util.MathHelper;
 
 public class PingDelayController {
    private final AtomicDouble decelerationStartDelay;
    private final TimeHelper accelerationApplyTimer;
-   private final BooleansSetting pingAccelerationMode;
+   private final StringValue pingAccelerationMode;
    private final TimeHelper recalculateTimer;
    private final RandomizedRangeSettings pingrecalculatedelayMs;
    private final RandomizedRangeSettings pingAccelerationPerSecond;
@@ -43,21 +43,18 @@ public class PingDelayController {
          this.currentDelayMs.set(d3);
       } else if (this.accelerating.get()) {
          TimeHelper timeHelper = this.accelerationRecalculateTimer;
-         long lastIntValue = (long)this.pingAccelerationRecalculateDelay.getLastIntValue();
-         if (timeHelper.reached2(lastIntValue)) {
+         if (timeHelper.reached2((long)this.pingAccelerationRecalculateDelay.getLastIntValue())) {
             this.accelerationRecalculateTimer.reset();
             this.pingAccelerationRecalculateDelay.nextValue();
             this.pingAccelerationPerSecond.nextValue();
          }
 
          timeHelper = this.accelerationApplyTimer;
-         long lastIntValue2 = (long)this.pingAccelerationApplyDelay.getLastIntValue();
-         if (timeHelper.reached2(lastIntValue2)) {
+         if (timeHelper.reached2((long)this.pingAccelerationApplyDelay.getLastIntValue())) {
             this.accelerationApplyTimer.reset();
             this.pingAccelerationApplyDelay.nextValue();
             double d4 = Math.max(this.pingAccelerationApplyDelay.getMidpoint(), 1.0);
-            double d5 = (double)this.pingAccelerationPerSecond.getLastIntValue() / 1000.0;
-            double d6 = d5 * d4;
+            double d6 = ((double)this.pingAccelerationPerSecond.getLastIntValue() / 1000.0) * d4;
             this.currentDelayMs.set(this.currentDelayMs.get() + d6);
          }
 
@@ -68,9 +65,7 @@ public class PingDelayController {
 
          this.decelerationTimer.reset();
       } else {
-         TimeHelper recalculateTimer2 = this.recalculateTimer;
-         long lastIntValue3 = (long)this.pingrecalculatedelayMs.getLastIntValue();
-         if (recalculateTimer2.reached2(lastIntValue3)) {
+         if (this.recalculateTimer.reached2((long)this.pingrecalculatedelayMs.getLastIntValue())) {
             this.recalculateTimer.reset();
             this.pingrecalculatedelayMs.nextValue();
             this.ping.nextValue();
@@ -112,7 +107,7 @@ public class PingDelayController {
       return this.ping.getMaxValue();
    }
 
-   public PingDelayController(Module module, String str, DoubleValue doubleValue) {
+   public PingDelayController(Module module, String str, SettingGroup doubleValue) {
        super();
       this.accelerationRecalculateTimer = new TimeHelper();
       this.recalculateTimer = new TimeHelper();
@@ -125,29 +120,19 @@ public class PingDelayController {
       this.cachedDelayMs = new AtomicInteger(0);
       this.ping = (new RandomizedRangeSettings(module, str + "Ping", 100.0, 200.0, 0.0, 2000.0, 0, doubleValue)).withoutNotInARow();
       RandomizedRangeSettings randomizedRangeSettings = (new RandomizedRangeSettings(module, str + "PingRecalculateDelay (ms)", 400.0, 600.0, 0.0, 2000.0, 0, doubleValue)).withoutNotInARow();
-      String str2 = "PingRecalculateDelay (ms)";
-      this.pingrecalculatedelayMs = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str2);
-      BooleansSetting booleansSetting = new BooleansSetting(module, str + "PingAccelerationMode", "Instant", new String[]{"Instant", "Smooth"}, doubleValue);
-      String str3 = "PingAccelerationMode";
-      this.pingAccelerationMode = (BooleansSetting)booleansSetting.withDisplayName(str3);
+      this.pingrecalculatedelayMs = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("PingRecalculateDelay (ms)");
+      this.pingAccelerationMode = (StringValue)new StringValue(module, str + "PingAccelerationMode", "Instant", new String[]{"Instant", "Smooth"}, doubleValue).withDisplayName("PingAccelerationMode");
       randomizedRangeSettings = (new RandomizedRangeSettings(module, str + "PingAccelerationPerSecond", 20.0, 200.0, 0.0, 2000.0, 0, doubleValue)).withoutNotInARow();
-      String str4 = "PingAccelerationPerSecond";
-      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str4);
-      SettingVisibilityCondition condition = () -> this.isAccelerationRateVisible();
-      this.pingAccelerationPerSecond = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition);
+      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("PingAccelerationPerSecond");
+      this.pingAccelerationPerSecond = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isAccelerationRateVisible());
       randomizedRangeSettings = (new RandomizedRangeSettings(module, str + "PingAccelerationApplyDelay", 5.0, 10.0, 0.0, 100.0, 0, doubleValue)).withoutNotInARow();
-      String str5 = "PingAccelerationApplyDelay";
-      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str5);
-      SettingVisibilityCondition condition2 = () -> this.isAccelerationApplyDelayVisible();
-      this.pingAccelerationApplyDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition2);
+      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("PingAccelerationApplyDelay");
+      this.pingAccelerationApplyDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isAccelerationApplyDelayVisible());
       randomizedRangeSettings = (new RandomizedRangeSettings(module, str + "PingAccelerationRecalculateDelay", 20.0, 200.0, 0.0, 2000.0, 0, doubleValue)).withoutNotInARow();
-      String str6 = "PingAccelerationRecalculateDelay";
-      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str6);
-      SettingVisibilityCondition condition3 = () -> this.isAccelerationRecalculateDelayVisible();
-      this.pingAccelerationRecalculateDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(condition3);
+      randomizedRangeSettings = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("PingAccelerationRecalculateDelay");
+      this.pingAccelerationRecalculateDelay = (RandomizedRangeSettings)randomizedRangeSettings.withVisibility(() -> this.isAccelerationRecalculateDelayVisible());
       randomizedRangeSettings = (new RandomizedRangeSettings(module, str + "PingDecelerationTime", 35.0, 45.0, 0.0, 100.0, 0, doubleValue)).withoutNotInARow();
-      String str7 = "PingDecelerationTime";
-      this.pingDecelerationTime = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix(str7);
+      this.pingDecelerationTime = (RandomizedRangeSettings)randomizedRangeSettings.withDisplayNamePrefix("PingDecelerationTime");
    }
 
    public int resumeAndGetDelay() {

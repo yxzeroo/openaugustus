@@ -30,8 +30,7 @@ public class KeccakPadder {
       int paddingStartBit = this.getPaddingStartBit(n);
       int n2 = this.computeZeroPaddingBits(n);
       this.setBit(bytes, paddingStartBit);
-      int n3 = paddingStartBit + 1 + n2;
-      this.setBit(bytes, n3);
+      this.setBit(bytes, paddingStartBit + 1 + n2);
    }
 
 

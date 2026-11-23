@@ -44,15 +44,12 @@ public class AutoReport extends Module implements PacketListener, TickListener {
    }
 
    public void updateEventSubscriptions() {
-      byte b = 40;
-      this.toggleEventSubscription(b);
-      byte b2 = 26;
-      this.toggleEventSubscription(b2);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)26);
    }
 
    public void onTick2() {
-      String str = "" + this.reportedCount;
-      this.setSuffix(str);
+      this.setSuffix("" + this.reportedCount);
       if (mc.thePlayer.ticksExisted > 50) {
          for (NetworkPlayerInfo networkPlayerInfo : (Iterable<NetworkPlayerInfo>)(mc.getNetHandler().getPlayerInfoMap())) {
             String playerName = networkPlayerInfo.getPlayerName();
@@ -61,9 +58,7 @@ public class AutoReport extends Module implements PacketListener, TickListener {
             }
          }
 
-         TimeHelper timeHelper2 = this.timeHelper;
-         long lastIntValue = (long)this.delay.getLastIntValue();
-         if (timeHelper2.reached2(lastIntValue)) {
+         if (this.timeHelper.reached2((long)this.delay.getLastIntValue())) {
             this.delay.nextValue();
             Iterator it = this.pendingPlayers.iterator();
 
@@ -77,8 +72,7 @@ public class AutoReport extends Module implements PacketListener, TickListener {
                   boolean flag = false;
 
                   for (NetworkPlayerInfo networkPlayerInfo2 : (Iterable<NetworkPlayerInfo>)(mc.getNetHandler().getPlayerInfoMap())) {
-                     String playerName2 = networkPlayerInfo2.getPlayerName();
-                     if (playerName2.equals(str2)) {
+                     if (networkPlayerInfo2.getPlayerName().equals(str2)) {
                         flag = true;
                         break;
                      }
@@ -110,9 +104,7 @@ public class AutoReport extends Module implements PacketListener, TickListener {
       if (this.hideMessages.getValue()) {
          Packet packet = event.getPacket();
          if (packet instanceof S02PacketChat) {
-            S02PacketChat packet2 = (S02PacketChat)packet;
-            String unformattedText = packet2.getChatComponent().getUnformattedText();
-            if (unformattedText.contains("[Guardian]")) {
+            if (((S02PacketChat)packet).getChatComponent().getUnformattedText().contains("[Guardian]")) {
                event.cancel();
             }
          }

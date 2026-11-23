@@ -16,9 +16,7 @@ public class RotationDeltaTracker {
 
    private void triggerCooldownReset() {
       this.tickCounter.reset();
-      byte b = 9;
-      byte b2 = 6;
-      this.cooldownTicks = DefaultRandomGenerator.instance.nextInt2(b2, b);
+      this.cooldownTicks = DefaultRandomGenerator.instance.nextInt2((byte)6, (byte)9);
    }
 
    private Rotation filterRotationDelta(Rotation rotation, Rotation rotation2, Rotation rotation3) {

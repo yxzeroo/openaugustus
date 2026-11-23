@@ -45,8 +45,7 @@ public abstract class CosmeticsMenuEntry extends CosmeticsMenuElement {
       }
 
       if (this.hovered && this.parentGui != null) {
-         boolean flag = mouseButton == 1;
-         boolean flag2 = flag;
+         boolean flag2 = mouseButton == 1;
          this.parentGui.setPopupOpen(flag2, this);
       }
    }

@@ -57,8 +57,7 @@ public class GenLayerEdge extends GenLayer {
                int n12 = ints[j + 1 - 1 + (i + 1) * n7];
                int n13 = ints[j + 1 + (i + 1 + 1) * n7];
                boolean flag = n10 == 2 || n11 == 2 || n12 == 2 || n13 == 2;
-               boolean flag2 = n10 == 1 || n11 == 1 || n12 == 1 || n13 == 1;
-               if (flag2 || flag) {
+               if ((n10 == 1 || n11 == 1 || n12 == 1 || n13 == 1) || flag) {
                   n9 = 3;
                }
             }

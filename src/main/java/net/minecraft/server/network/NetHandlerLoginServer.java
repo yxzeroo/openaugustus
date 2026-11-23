@@ -50,8 +50,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable 
       if (this.currentLoginState == NetHandlerLoginServer.LoginState.READY_TO_ACCEPT) {
          this.tryAcceptPlayer();
       } else if (this.currentLoginState == NetHandlerLoginServer.LoginState.DELAY_ACCEPT) {
-         EntityPlayerMP playerByUUID = this.server.getConfigurationManager().getPlayerByUUID(this.loginGameProfile.getId());
-         if (playerByUUID == null) {
+         if (this.server.getConfigurationManager().getPlayerByUUID(this.loginGameProfile.getId()) == null) {
             this.currentLoginState = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
             this.server.getConfigurationManager().initializeConnectionToPlayer(this.networkManager, this.player);
             this.player = null;
@@ -100,8 +99,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable 
          }
 
          this.networkManager.sendPacket(new S02PacketLoginSuccess(this.loginGameProfile));
-         EntityPlayerMP playerByUUID = this.server.getConfigurationManager().getPlayerByUUID(this.loginGameProfile.getId());
-         if (playerByUUID != null) {
+         if (this.server.getConfigurationManager().getPlayerByUUID(this.loginGameProfile.getId()) != null) {
             this.currentLoginState = NetHandlerLoginServer.LoginState.DELAY_ACCEPT;
             this.player = this.server.getConfigurationManager().createPlayerForUser(this.loginGameProfile);
          } else {

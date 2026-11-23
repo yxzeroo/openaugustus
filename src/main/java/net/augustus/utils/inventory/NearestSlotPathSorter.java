@@ -22,9 +22,7 @@ public class NearestSlotPathSorter {
 
          for (int k = 0; k < size; k++) {
             if (!flags[k]) {
-               InventorySlotPoint inventorySlotPoint = (InventorySlotPoint)list.get(n);
-               InventorySlotPoint inventorySlotPoint2 = (InventorySlotPoint)list.get(k);
-               double d2 = inventorySlotPoint.distanceTo(inventorySlotPoint2);
+               double d2 = ((InventorySlotPoint)list.get(n)).distanceTo((InventorySlotPoint)list.get(k));
                if (d2 < d) {
                   d = d2;
                   n2 = k;

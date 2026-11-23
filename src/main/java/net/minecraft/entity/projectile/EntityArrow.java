@@ -99,8 +99,7 @@ public class EntityArrow extends Entity implements IProjectile {
             Entity entity2 = (Entity)list.get(i);
             if (entity2.canBeCollidedWith() && (entity2 != this.shootingEntity || this.ticksInAir >= 5)) {
                float f2 = 0.3F;
-               AxisAlignedBB box = entity2.getEntityBoundingBox().expand((double)f2, (double)f2, (double)f2);
-               MovingObjectPosition hit2 = box.calculateIntercept(vec, vec2);
+               MovingObjectPosition hit2 = entity2.getEntityBoundingBox().expand((double)f2, (double)f2, (double)f2).calculateIntercept(vec, vec2);
                if (hit2 != null) {
                   double d2 = vec.squareDistanceTo(hit2.hitVec);
                   if (d2 < d || d == 0.0) {
@@ -124,8 +123,7 @@ public class EntityArrow extends Entity implements IProjectile {
 
          if (hit != null) {
             if (hit.entityHit != null) {
-               float f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-               int n = MathHelper.ceiling_double_int((double)f3 * this.damage);
+               int n = MathHelper.ceiling_double_int((double)MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ) * this.damage);
                if (this.getIsCritical()) {
                   n += this.rand.nextInt(n / 2 + 2);
                }
@@ -290,8 +288,7 @@ public class EntityArrow extends Entity implements IProjectile {
    }
 
    public boolean getIsCritical() {
-      byte watchableObjectByte = this.dataWatcher.getWatchableObjectByte(16);
-      return (watchableObjectByte & 1) != 0;
+      return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
    }
 
    @Override
@@ -337,8 +334,7 @@ public class EntityArrow extends Entity implements IProjectile {
          double d5 = d / d4;
          double d6 = d3 / d4;
          this.setLocationAndAngles(entity.posX + d5, this.posY, entity.posZ + d6, f3, f4);
-         float f5 = (float)(d4 * 0.2F);
-         this.setThrowableHeading(d, d2 + (double)f5, d3, f, f2);
+         this.setThrowableHeading(d, d2 + (double)((float)(d4 * 0.2F)), d3, f, f2);
       }
    }
 

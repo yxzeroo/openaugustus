@@ -89,8 +89,7 @@ public class NetworkSystem {
                   } catch (Exception e) {
                      if (networkManager.isLocalChannel()) {
                         CrashReport crashReport = CrashReport.makeCrashReport(e, "Ticking memory connection");
-                        CrashReportCategory crashReportCategory = crashReport.makeCategory("Ticking connection");
-                        crashReportCategory.addCrashSectionCallable("Connection", new NetworkSystem.ValueCallable(this, networkManager));
+                        crashReport.makeCategory("Ticking connection").addCrashSectionCallable("Connection", new NetworkSystem.ValueCallable(this, networkManager));
                         throw new ReportedException(crashReport);
                      }
 
