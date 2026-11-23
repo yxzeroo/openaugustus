@@ -1,0 +1,28 @@
+package net.optifine.entity.model.anim;
+
+
+public class ModelUpdater {
+   private ModelVariableUpdater[] modelVariableUpdaters;
+
+   public void update() {
+      for (int i = 0; i < this.modelVariableUpdaters.length; i++) {
+         ModelVariableUpdater modelVariableUpdater = this.modelVariableUpdaters[i];
+         modelVariableUpdater.update();
+      }
+   }
+
+   public boolean initialize(IModelResolver modelResolver) {
+      for (int i = 0; i < this.modelVariableUpdaters.length; i++) {
+         ModelVariableUpdater modelVariableUpdater = this.modelVariableUpdaters[i];
+         if (!modelVariableUpdater.initialize(modelResolver)) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   public ModelUpdater(ModelVariableUpdater[] modelVariableUpdaters2) {
+      this.modelVariableUpdaters = modelVariableUpdaters2;
+   }
+}
