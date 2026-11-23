@@ -1,0 +1,139 @@
+package net.augustus.modules.render;
+
+import net.minecraft.util.MovingObjectPosition;
+import java.awt.Color;
+import net.augustus.modules.Categorys;
+import net.augustus.modules.Module;
+import net.augustus.utils.render.ShaderRenderPass;
+import net.augustus.events.listeners.RenderListener;
+import net.augustus.settings.BlurShadowSettings;
+import net.augustus.settings.ColorSetting;
+import net.augustus.utils.math.NumberFormatUtil;
+import net.augustus.render.RenderUtil;
+import net.augustus.utils.render.ColorUtil;
+import net.augustus.utils.render.BlurShadowManager;
+import net.augustus.settings.SettingVisibilityCondition;
+import net.augustus.utils.animation.AnimationUtil;
+import net.augustus.settings.BooleanValue;
+import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+
+public class BreakIndicator extends Module implements RenderListener {
+   private final StringValue decimalPlaces;
+   private final StringValue scale;
+   private final StringValue posX;
+   private final StringValue posY;
+   private final ColorSetting color2;
+   private final BooleanValue backGround;
+   private final ColorSetting backgroundColor;
+   private final BlurShadowSettings blurShadowSettings;
+   private final BooleansSetting toggleAnimation2;
+   private final StringValue animationTime;
+   private final AnimationUtil toggleAnimation3;
+   private float lastBlockDamage;
+
+   public BreakIndicator() {
+       super("BreakIndicator", "BlockBrechAnzeige", new Color(50, 168, 123), Categorys.RENDER);
+      this.decimalPlaces = new StringValue(this, "DecimalPlaces", 1.0, 0.0, 4.0, 0);
+      this.scale = new StringValue(this, "Scale", 2.0, 1.0, 4.0, 2);
+      this.posX = new StringValue(this, "PosX", 52.0, 0.0, 100.0, 2);
+      this.posY = new StringValue(this, "PosY", 50.0, 0.0, 100.0, 2);
+      this.color2 = new ColorSetting(this, "Color", Color.white);
+      this.backGround = new BooleanValue(this, "BackGround", true);
+      ColorSetting colorSetting = new ColorSetting(this, "BackGroundColor", new Color(0, 0, 0, 100));
+      BooleanValue backGround2 = this.backGround;
+      this.backGround.getClass();
+      BooleanValue booleanValue = backGround2;
+      SettingVisibilityCondition condition = () -> booleanValue.getValue();
+      this.backgroundColor = (ColorSetting)colorSetting.withVisibility(condition);
+      BlurShadowSettings blurShadowSettings2 = new BlurShadowSettings(this);
+      Color black = Color.black;
+      this.blurShadowSettings = blurShadowSettings2.withCustomShadowColor(black);
+      this.toggleAnimation2 = new BooleansSetting(this, "ToggleAnimation", "easeInOutCubic", AnimationUtil.getEasingNames(true));
+      StringValue stringValue = new StringValue(this, "AnimationTime", 500.0, 0.0, 1000.0, 0);
+      SettingVisibilityCondition condition2 = () -> this.isAnimationTimeVisible();
+      this.animationTime = stringValue.visibleWhen(condition2);
+      this.toggleAnimation3 = new AnimationUtil(0.0F, 0.0F, 0.0F, 0.0F);
+   }
+
+   @Override
+   public void onEnable() {
+   }
+
+   @Override
+   public void onDisable() {
+   }
+
+   @Override
+   public void updateEventSubscriptions() {
+      byte b = 32;
+      this.toggleEventSubscription(b);
+   }
+
+   @Override
+   public void onRender(float f, ScaledResolution sr) {
+      float f2 = mc.objectMouseOver != null && mc.playerController.isHittingBlock && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
+         ? mc.playerController.getCurBlockDamageMP()
+         : 0.0F;
+      if (f2 > 0.0F && this.lastBlockDamage == 0.0F) {
+         this.toggleAnimation3.start((int)this.animationTime.getValue(), AnimationUtil.parseEasingType(this.toggleAnimation2.getSelectedValue()), 1, true);
+      } else if (f2 == 0.0F && this.lastBlockDamage > 0.0F) {
+         this.toggleAnimation3.start((int)this.animationTime.getValue(), AnimationUtil.parseEasingType(this.toggleAnimation2.getSelectedValue()), 0, true);
+      }
+
+      this.lastBlockDamage = f2;
+      if (this.toggleAnimation3.getLinearProgress() != 1.0 && !this.toggleAnimation2.getSelectedValue().equals("None") || f2 != 0.0F) {
+         GlStateManager.pushMatrix();
+         GlStateManager.scale(1.0F / (float)sr.getScaleFactor(), 1.0F / (float)sr.getScaleFactor(), 1.0F);
+         String str = NumberFormatUtil.formatDecimal((double)(mc.playerController.getCurBlockDamageMP() * 100.0F), Math.max((int)this.decimalPlaces.getValue(), 0)) + "%";
+         float f3 = (float)(mc.fontRendererObj.getStringWidth(str) + 4) / 2.0F;
+         GlStateManager.translate(
+            (double)f3 * this.scale.getValue()
+               + this.posX.getValue() / 100.0 * ((double)mc.displayWidth - (double)(f3 * 2.0F) * this.scale.getValue()),
+            6.0 * this.scale.getValue() + this.posY.getValue() / 100.0 * ((double)mc.displayHeight - 12.0 * this.scale.getValue()),
+            0.0
+         );
+         GlStateManager.scale(this.scale.getValue(), this.scale.getValue(), 1.0);
+         double easedProgress = this.toggleAnimation3.getEasedProgress();
+         if (this.toggleAnimation3.getLinearProgress() < 1.0) {
+            GlStateManager.scale(easedProgress, easedProgress, 1.0);
+         }
+
+         int n;
+         if (this.backGround.getValue()) {
+            byte b = 0;
+            n = this.backgroundColor.getColorInt(b);
+         } else {
+            n = 0;
+         }
+
+         int n2 = n;
+         byte b2 = 0;
+         int colorInt = this.color2.getColorInt(b2);
+         boolean isBlurActive = this.blurShadowSettings.isBlurActive();
+         BlurShadowManager.enableOneShotPass(isBlurActive, this.blurShadowSettings.isShadowActive());
+         BlurShadowManager.submitRenderTask(false, shaderRenderPass -> {
+            if (this.backGround.getValue()) {
+               double d = (double)(-f3);
+               double d2 = (double)f3;
+               BlurShadowSettings blurShadowSettings2 = this.blurShadowSettings;
+               int n3 = ColorUtil.resolvePassColor(shaderRenderPass, n2);
+               RenderUtil.drawRect(d, -6.0, d2, 6.0, blurShadowSettings2.resolvePassColor(shaderRenderPass, n3));
+            }
+
+            if (shaderRenderPass != ShaderRenderPass.BLUR) {
+               mc.fontRendererObj.drawStringUnfiltered(str, -f3 + 2.0F, -3.5F, colorInt);
+            }
+         });
+         GlStateManager.popMatrix();
+         RenderUtil.resetGlColorState();
+      }
+   }
+
+   private boolean isAnimationTimeVisible() {
+      return !this.toggleAnimation2.getSelectedValue().equals("None");
+   }
+
+}

@@ -1,0 +1,38 @@
+package net.augustus.commands.impl;
+
+import net.augustus.ClientManagers;
+import net.augustus.commands.Command;
+import net.augustus.modules.Module;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+public class BindsCommand extends Command {
+
+   public BindsCommand() {
+      super("binds");
+   }
+
+   public void helpMessage() {
+      String str = "§c" + this.getCommand() + "§7 (See all bound modules)";
+      this.sendChat(str);
+   }
+
+   public void commandAction(String[] strings, String str) {
+
+      for (Module module : (Iterable<Module>)(ClientManagers.moduleManager.getModules())) {
+         if (module.getKeyCode() > 0) {
+            StringBuilder sb = new StringBuilder().append("§c").append(module.getName2()).append("§7 bound to §2");
+            String str2;
+            if (module.getKeyCode() >= 10000) {
+               str2 = Mouse.getButtonName(module.getKeyCode() - 10000);
+            } else {
+               str2 = Keyboard.getKeyName(module.getKeyCode());
+            }
+
+            String str3 = sb.append(str2).toString();
+            this.sendChat(str3);
+         }
+      }
+   }
+
+}

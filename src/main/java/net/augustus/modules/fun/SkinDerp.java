@@ -1,0 +1,211 @@
+package net.augustus.modules.fun;
+
+import java.awt.Color;
+import java.io.File;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import javax.swing.JFileChooser;
+import net.augustus.modules.Categorys;
+import net.augustus.modules.Module;
+import net.augustus.modules.fun.skinderp.PngSkinFileFilter;
+import net.augustus.utils.file.ClientFileUtil;
+import net.augustus.utils.file.ClientPaths;
+import net.augustus.settings.ModeSetting;
+import net.augustus.settings.ActionSetting;
+import net.augustus.modules.fun.skinderp.MinecraftSkinUploader;
+import net.augustus.modules.modes.skinderp.SequentialSkinDerpMode;
+import net.augustus.modules.modes.skinderp.DiscoSkinDerpMode;
+import net.augustus.modules.modes.skinderp.RandomSkinDerpMode;
+import net.augustus.modules.modes.skinderp.GlitchSkinDerpMode;
+import net.augustus.modules.modes.skinderp.WaveSkinDerpMode;
+import net.augustus.modules.modes.skinderp.NormalSkinDerpMode;
+import net.augustus.Augustus;
+import net.augustus.events.listeners.TickListener;
+import net.augustus.settings.BooleanValue;
+import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.DoubleValue;
+import net.augustus.settings.StringValue;
+import net.minecraft.entity.player.EnumPlayerModelParts;
+
+public class SkinDerp extends Module implements TickListener {
+   private final String skinDirectoryPath;
+   public final ModeSetting mode;
+   private final StringValue delay;
+   private final BooleanValue showWarnings;
+   private final BooleanValue blinkCape;
+   private final BooleanValue blinkJacket;
+   private final BooleanValue blinkLeftSleeve;
+   private final BooleanValue blinkRightSleeve;
+   private final BooleanValue blinkLeftPants;
+   private final BooleanValue blinkRightPants;
+   private final BooleanValue blinkHat;
+   private final DoubleValue skinchange;
+   private final BooleansSetting skinModel;
+   private final ActionSetting selectAndUploadSkin;
+   private CompletableFuture uploadDialogFuture;
+
+   public SkinDerp() {
+       super("SkinDerp", "Skin Derp", new Color(255, 182, 193), Categorys.FUN);
+      this.skinDirectoryPath = ClientPaths.CLIENT_DIR + File.separator + "skinderp";
+      BiFunction[] biFunctions = new BiFunction[]{
+         NormalSkinDerpMode.factory(),
+         RandomSkinDerpMode.factory(),
+         WaveSkinDerpMode.factory(),
+         GlitchSkinDerpMode.factory(),
+         DiscoSkinDerpMode.factory(),
+         SequentialSkinDerpMode.factory()
+      };
+      this.mode = new ModeSetting(this, "Mode", "Normal", biFunctions);
+      this.delay = new StringValue(this, "Delay", 150.0, 0.0, 5000.0, 0);
+      this.showWarnings = new BooleanValue(this, "ShowWarnings", true);
+      this.blinkCape = new BooleanValue(this, "BlinkCape", true);
+      this.blinkJacket = new BooleanValue(this, "BlinkJacket", true);
+      this.blinkLeftSleeve = new BooleanValue(this, "BlinkLeftSleeve", true);
+      this.blinkRightSleeve = new BooleanValue(this, "BlinkRightSleeve", true);
+      this.blinkLeftPants = new BooleanValue(this, "BlinkLeftPants", true);
+      this.blinkRightPants = new BooleanValue(this, "BlinkRightPants", true);
+      this.blinkHat = new BooleanValue(this, "BlinkHat", true);
+      this.skinchange = new DoubleValue(this, "Skinchange", true);
+      this.skinModel = new BooleansSetting(this, "SkinModel", "Classic", new String[]{"Classic", "Slim"}, this.skinchange);
+      this.selectAndUploadSkin = new ActionSetting(this, "Select and upload skin", () -> this.openSkinUploadDialogAsync(), this.skinchange);
+      this.uploadDialogFuture = null;
+      String str = "Automatically switches skins or blinks skin layers";
+      this.setDescription(str);
+      ClientFileUtil.ensureDirectory(this.skinDirectoryPath);
+      String str2 = Augustus.getInstance().getName().toLowerCase() + File.separator + "skinderp";
+      boolean flag = true;
+      String str3 = str2;
+      ClientFileUtil.extractResource("assets/augustus/skinderp/Default.png", str3, flag);
+   }
+
+   @Override
+   public void onEnable() {
+      if (mc.thePlayer != null) {
+         if (this.showWarnings.getValue() && this.delay.getValue() < 200.0) {
+            String str = "§eWarning: Fast blinking may cause discomfort or trigger seizures!";
+            this.sendChatMessage2(str);
+         }
+      }
+   }
+
+   @Override
+   public void onDisable() {
+      if (mc.thePlayer != null) {
+         this.enableAllModelParts();
+      }
+   }
+
+   @Override
+   public void updateEventSubscriptions() {
+      byte b = 40;
+      this.toggleEventSubscription(b);
+   }
+
+   @Override
+   public void onTick3() {
+      String selectedValue = this.mode.getSelectedValue();
+      this.setSuffix(selectedValue);
+   }
+
+   private void enableAllModelParts() {
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.CAPE, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.JACKET, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.LEFT_SLEEVE, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.RIGHT_SLEEVE, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.LEFT_PANTS_LEG, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.RIGHT_PANTS_LEG, true);
+      mc.gameSettings.setModelPartEnabled(EnumPlayerModelParts.HAT, true);
+   }
+
+   public BooleanValue getBlinkCape() {
+      return this.blinkCape;
+   }
+
+   public BooleanValue getBlinkJacket() {
+      return this.blinkJacket;
+   }
+
+   public BooleanValue getBlinkLeftSleeve() {
+      return this.blinkLeftSleeve;
+   }
+
+   public BooleanValue getBlinkRightSleeve() {
+      return this.blinkRightSleeve;
+   }
+
+   public BooleanValue getBlinkLeftPants() {
+      return this.blinkLeftPants;
+   }
+
+   public BooleanValue getBlinkRightPants() {
+      return this.blinkRightPants;
+   }
+
+   public BooleanValue getBlinkHat() {
+      return this.blinkHat;
+   }
+
+   public StringValue getDelay() {
+      return this.delay;
+   }
+
+   private void openSkinUploadDialogAsync() {
+      if (this.uploadDialogFuture == null || this.uploadDialogFuture.isDone()) {
+         this.uploadDialogFuture = CompletableFuture.runAsync(() -> this.runSkinUploadDialog());
+      }
+   }
+
+   private void runSkinUploadDialog() {
+
+      try {
+         JFileChooser jFileChooser = new JFileChooser();
+         jFileChooser.setDialogTitle("Select Skin File");
+         jFileChooser.setFileFilter(new PngSkinFileFilter(this));
+         File file = new File(this.skinDirectoryPath);
+         if (file.exists() && file.isDirectory()) {
+            jFileChooser.setCurrentDirectory(file);
+         } else {
+            File file2 = new File("skins");
+            if (file2.exists() && file2.isDirectory()) {
+               jFileChooser.setCurrentDirectory(file2);
+            }
+         }
+
+         int n = jFileChooser.showOpenDialog(null);
+         if (n == 0) {
+            File selectedFile = jFileChooser.getSelectedFile();
+            String str = "§eUploading skin: " + selectedFile.getName() + "...";
+            this.sendChatMessage2(str);
+            String str2 = this.skinModel.getSelectedValue().toLowerCase();
+            boolean flag = MinecraftSkinUploader.uploadSkin(selectedFile, str2);
+            if (flag) {
+               String str3 = "§aSkin uploaded successfully to the mojang servers!";
+               this.sendChatMessage2(str3);
+               String str4 = "§aIt may take a few seconds to appear.";
+               this.sendChatMessage2(str4);
+               int remainingUploads = MinecraftSkinUploader.getRemainingUploads();
+               String str5 = "§7Remaining uploads this minute: " + remainingUploads;
+               this.sendChatMessage2(str5);
+            } else {
+               String str6 = "§cFailed to upload skin! Check console for details.";
+               this.sendChatMessage2(str6);
+               int remainingUploads2 = MinecraftSkinUploader.getRemainingUploads();
+               if (remainingUploads2 == 0) {
+                  long rateLimitResetMs = MinecraftSkinUploader.getRateLimitResetMs();
+                  String str7 = "§cRate limit reached! Wait " + rateLimitResetMs / 1000L + " seconds.";
+                  this.sendChatMessage2(str7);
+               }
+            }
+         } else {
+            String str8 = "§eSkin upload cancelled.";
+            this.sendChatMessage2(str8);
+         }
+      } catch (Exception e) {
+         System.err.println("[SkinDerp] Error in skin upload dialog: " + e.getMessage());
+         e.printStackTrace();
+         String str9 = "§cError opening file dialog: " + e.getMessage();
+         this.sendChatMessage2(str9);
+      }
+   }
+
+}

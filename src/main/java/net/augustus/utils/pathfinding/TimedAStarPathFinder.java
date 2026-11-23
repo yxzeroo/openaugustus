@@ -1,0 +1,66 @@
+package net.augustus.utils.pathfinding;
+
+import net.augustus.Augustus;
+import net.augustus.utils.AntiSamplerGuard;
+import java.util.ArrayList;
+
+public class TimedAStarPathFinder extends AStarPathFinder {
+   public int iterations;
+
+   public TimedAStarPathFinder(PathBlockPos pathBlockPos, PathBlockPos pathBlockPos2, boolean flag, boolean flag2, boolean flag3) {
+       super(pathBlockPos, pathBlockPos2, flag, flag2, flag3);
+   }
+
+   public ArrayList computePathWithTimeout(long l) {
+      int[] stateFlags = PathBlockPos.getStateFlags();
+      if (AntiSamplerGuard.isGuardActive(6)) {
+         return null;
+      } else {
+         this.iterations++;
+         if (!mc.theWorld.isChunkLoaded(this.goalPos.x >> 4, this.goalPos.z >> 4, false)) {
+            return new ArrayList();
+         } else {
+            long l2 = System.currentTimeMillis();
+            int n = this.startPos.x;
+            int n2 = this.startPos.y;
+            int n3 = this.startPos.z;
+            long l3 = AStarPathFinder.packBlockKey(this.startPos.x, this.startPos.y, this.startPos.z);
+            boolean flag = false;
+            long l4 = l3;
+            int n4 = n3;
+            int n5 = n2;
+            int n6 = n;
+            Object obj = null;
+            this.createAndQueueNode((PathNode)obj, n6, n5, n4, l4, flag);
+
+            while (System.currentTimeMillis() - l2 <= l) {
+               if (this.openSet.isEmpty()) {
+                  Augustus.getInstance().getClass();
+                  return new ArrayList();
+               }
+
+               PathNode pathNode = (PathNode)this.openSet.poll();
+               if (this.closestHeuristic > pathNode.getHCost()) {
+                  this.closestHeuristic = pathNode.getHCost();
+               }
+
+               if (pathNode.getHCost() < this.goalTolerance) {
+                  Augustus.getInstance().getClass();
+                  ArrayList list = this.reconstructPath(pathNode);
+                  if (this.smoothPath) {
+                     boolean walkOnWater2 = this.walkOnWater;
+                     boolean allowSwimming2 = this.allowSwimming;
+                     list = this.simplifyPath(list, allowSwimming2, walkOnWater2);
+                  }
+
+                  return list;
+               }
+
+               this.expandNode(pathNode);
+            }
+
+            return null;
+         }
+      }
+   }
+}

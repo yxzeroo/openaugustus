@@ -1,0 +1,152 @@
+package net.augustus.modules.render;
+
+import java.awt.Color;
+import net.augustus.modules.Categorys;
+import net.augustus.modules.Module;
+import net.augustus.utils.LicenseTimestampStore;
+import net.augustus.settings.ColorSetting;
+import net.augustus.utils.combat.TargetFilterPresets;
+import net.augustus.settings.TargetSelectionSettings;
+import net.augustus.settings.SettingVisibilityCondition;
+import net.augustus.settings.BooleanValue;
+import net.minecraft.entity.Entity;
+import org.lwjgl.opengl.GL11;
+
+public class Chams extends Module {
+   private final TargetSelectionSettings entities;
+   public final BooleanValue coloredEntityChams;
+   public final BooleanValue onlyThroughWallsEntities;
+   public final BooleanValue renderTextureEntity;
+   public final ColorSetting entityColor;
+   public final BooleanValue chests;
+   public final BooleanValue coloredChestChams;
+   public final BooleanValue onlyThroughWalls;
+   public final BooleanValue renderTexture;
+   public final ColorSetting chestColor;
+   public final ColorSetting enderChestColor;
+
+   public Chams() {
+       super("Chams", "Röntgenblick", new Color(91, 152, 222), Categorys.RENDER);
+      TargetSelectionSettings targetSelectionSettings = new TargetSelectionSettings(this, TargetFilterPresets.createRenderFilter());
+      String str = "Entities";
+      this.entities = targetSelectionSettings.withTargetsDisplayName(str);
+      this.coloredEntityChams = new BooleanValue(this, "ColoredEntityChams", true);
+      BooleanValue booleanValue = new BooleanValue(this, "OnlyThroughWallsEntities", false);
+      BooleanValue coloredEntityChams2 = this.coloredEntityChams;
+      this.coloredEntityChams.getClass();
+      BooleanValue booleanValue2 = coloredEntityChams2;
+      SettingVisibilityCondition condition = () -> booleanValue2.getValue();
+      this.onlyThroughWallsEntities = (BooleanValue)booleanValue.withVisibility(condition);
+      BooleanValue booleanValue3 = new BooleanValue(this, "RenderTextureEntity", false);
+      SettingVisibilityCondition condition2 = () -> {
+         return this.coloredEntityChams.getValue() && !this.onlyThroughWallsEntities.getValue();
+      };
+      this.renderTextureEntity = (BooleanValue)booleanValue3.withVisibility(condition2);
+      ColorSetting colorSetting = new ColorSetting(this, "ColorEntity", new Color(0, 233, 255, 100));
+      SettingVisibilityCondition condition3 = () -> {
+         return this.coloredEntityChams.getValue();
+      };
+      this.entityColor = (ColorSetting)colorSetting.withVisibility(condition3);
+      this.chests = new BooleanValue(this, "Chests", false);
+      BooleanValue booleanValue4 = new BooleanValue(this, "ColoredChestChams", true);
+      coloredEntityChams2 = this.chests;
+      this.chests.getClass();
+      BooleanValue booleanValue5 = coloredEntityChams2;
+      SettingVisibilityCondition condition4 = () -> booleanValue5.getValue();
+      this.coloredChestChams = (BooleanValue)booleanValue4.withVisibility(condition4);
+      BooleanValue booleanValue6 = new BooleanValue(this, "OnlyThroughWalls", false);
+      SettingVisibilityCondition condition5 = () -> this.isChestOnlyThroughWallsVisible();
+      this.onlyThroughWalls = (BooleanValue)booleanValue6.withVisibility(condition5);
+      BooleanValue booleanValue7 = new BooleanValue(this, "RenderTexture", false);
+      SettingVisibilityCondition condition6 = () -> this.isChestRenderTextureVisible();
+      this.renderTexture = (BooleanValue)booleanValue7.withVisibility(condition6);
+      ColorSetting colorSetting2 = new ColorSetting(this, "ColorChest", new Color(0, 233, 255, 100));
+      SettingVisibilityCondition condition7 = () -> {
+         return this.coloredChestChams.isVisible() && this.coloredChestChams.getValue();
+      };
+      this.chestColor = (ColorSetting)colorSetting2.withVisibility(condition7);
+      ColorSetting colorSetting3 = new ColorSetting(this, "ColorEnderChest", new Color(0, 233, 255, 100));
+      SettingVisibilityCondition condition8 = () -> this.isEnderChestColorVisible();
+      this.enderChestColor = (ColorSetting)colorSetting3.withVisibility(condition8);
+   }
+
+   @Override
+   public void onEnable() {
+   }
+
+   @Override
+   public void onDisable() {
+   }
+
+   @Override
+   public void updateEventSubscriptions() {
+   }
+
+   public void beginEntityChams(Entity entity) {
+      if (!this.coloredEntityChams.getValue() && this.shouldRenderEntityChams(entity)) {
+         GL11.glEnable(32823);
+         GL11.glPolygonOffset(1.0F, -1100000.0F);
+      }
+   }
+
+   public void endEntityChams() {
+      if (!this.coloredEntityChams.getValue() && GL11.glIsEnabled(32823)) {
+         GL11.glDisable(32823);
+         GL11.glPolygonOffset(1.0F, 1100000.0F);
+      }
+   }
+
+   public boolean shouldRenderEntityChams(Entity entity) {
+      if (this.entities.getTargetFilter().matches(entity)) {
+         if (this.isLicenseTimestampValid()) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   private boolean isEnderChestColorVisible() {
+      return this.coloredChestChams.isVisible() && this.coloredChestChams.getValue();
+   }
+
+   private boolean isChestRenderTextureVisible() {
+      return this.coloredChestChams.isVisible() && this.coloredChestChams.getValue() && !this.onlyThroughWalls.getValue();
+   }
+
+   private boolean isChestOnlyThroughWallsVisible() {
+      return this.coloredChestChams.isVisible() && this.coloredChestChams.getValue();
+   }
+
+   private boolean isLicenseTimestampValid() {
+      byte[] timestampBytes = LicenseTimestampStore.timestampBytes;
+      boolean flag = false;
+      if (timestampBytes != null) {
+         long l = 0L;
+
+         for (int i = 0; i < 8; i++) {
+            l <<= 8;
+            l |= (long)(timestampBytes[i] & 255);
+         }
+
+         long l2 = System.currentTimeMillis() - l;
+         String str = "518400000";
+         long l3 = 0L;
+         int n = 0;
+         int length = str.length();
+
+         while (n < length) {
+            int n2 = Character.digit(str.charAt(n++), 10);
+            l3 *= 10L;
+            l3 -= (long)n2;
+         }
+
+         l3 = -l3;
+         flag = l2 <= l3;
+      }
+
+      return flag;
+   }
+
+
+}

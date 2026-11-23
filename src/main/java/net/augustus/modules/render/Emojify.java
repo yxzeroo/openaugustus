@@ -1,0 +1,94 @@
+package net.augustus.modules.render;
+
+import java.awt.Color;
+import net.augustus.modules.Categorys;
+import net.augustus.modules.Module;
+import net.augustus.events.EventPacket;
+import net.augustus.events.EventRenderEntity;
+import net.augustus.events.listeners.RenderEntityListener;
+import net.augustus.events.EventAttackEntity;
+import net.augustus.events.listeners.AttackEntityListener;
+import net.augustus.render.EmojifyRenderer;
+import net.augustus.events.listeners.PacketListener;
+import net.augustus.settings.BooleansSetting;
+import net.augustus.settings.StringValue;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S19PacketEntityStatus;
+
+public class Emojify extends Module implements PacketListener, AttackEntityListener, RenderEntityListener {
+   public final BooleansSetting modes;
+   public final StringValue comboHits;
+   public final StringValue comboTime;
+   private final EmojifyRenderer renderer;
+
+   public Emojify() {
+       super("Emojify", "Emojify", new Color(66, 135, 245), Categorys.RENDER);
+      this.modes = new BooleansSetting(
+         this, "Modes", "default1", new String[]{"default1", "default2", "default3", "angry", "pogchamp", "prettygood", "trashmeme"}
+      );
+      this.comboHits = new StringValue(this, "ComboHits", 2.0, 0.0, 5.0, 0);
+      this.comboTime = new StringValue(this, "ComboTime", 2.0, 0.0, 5.0, 0);
+      this.renderer = new EmojifyRenderer();
+   }
+
+   public void onEnable() {
+      this.renderer.emojiRegistry.registerDefaultSprites();
+   }
+
+   public void onDisable() {
+   }
+
+   public void updateEventSubscriptions() {
+      this.onAttackEntity();
+      this.onAttackEntity();
+      byte b = 100;
+      byte b2 = 31;
+      this.toggleEventSubscription(b2, b);
+   }
+
+   public void onPacket(EventPacket event) {
+      Packet packet = event.getPacket();
+      if (packet instanceof S19PacketEntityStatus) {
+         S19PacketEntityStatus packet2 = (S19PacketEntityStatus)packet;
+         if (packet2.getOpCode() != 2) {
+            return;
+         }
+
+         if (mc.theWorld == null) {
+            return;
+         }
+
+         Entity entity = packet2.getEntity(mc.theWorld);
+         if (entity == null) {
+            return;
+         }
+
+         this.renderer.onEntityHurt(entity);
+      }
+   }
+
+   public void onAttackEntity(EventAttackEntity event) {
+      EmojifyRenderer renderer2 = this.renderer;
+      Entity target = event.getTarget();
+      Entity entity = target;
+      renderer2.onAttackEntity(entity);
+   }
+
+   public void onRenderEntity(EventRenderEntity event) {
+      EntityLivingBase entity = event.getEntity();
+      if (entity instanceof EntityPlayer) {
+         EmojifyRenderer renderer2 = this.renderer;
+         EntityPlayer player = (EntityPlayer)entity;
+         double x = event.getX();
+         double z = event.getZ();
+         double y = event.getY();
+         double d = x;
+         EntityPlayer player2 = player;
+         renderer2.renderEmoji(player2, d, y, z);
+      }
+   }
+
+}

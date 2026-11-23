@@ -1,7 +1,7 @@
-target/
-run/
-ViaVersion/
-augustus/
+/target/
+/run/
+/ViaVersion/
+/augustus/
 *.log
 .idea/
 *.iml

@@ -1,0 +1,22 @@
+package net.augustus.settings.property.serializer;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import java.util.List;
+
+public final class StringArrayPropertySerializer implements ArrayPropertySerializer {
+   public void writeStringElement(JsonArray array, String str) {
+      array.add(str);
+   }
+
+   @Override
+   public void readElement(List list, JsonElement elem) {
+      list.add(elem.getAsString());
+   }
+
+   @Override
+   public void writeElement(JsonArray array, Object obj) {
+      String str = (String)obj;
+      this.writeStringElement(array, str);
+   }
+}
