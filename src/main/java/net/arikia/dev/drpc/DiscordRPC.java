@@ -14,45 +14,92 @@ import java.nio.file.Path;
 public final class DiscordRPC {
    private static final String DLL_VERSION = "3.4.0";
    private static final String LIB_VERSION = "1.6.2";
+   private static volatile boolean nativeLoaded = false;
+
+   public static boolean isAvailable() {
+      return nativeLoaded;
+   }
+
+   private static DiscordRPC.DLL getDll() {
+      if (!nativeLoaded) {
+         return null;
+      }
+      try {
+         return DiscordRPC.DLL.INSTANCE;
+      } catch (Throwable t) {
+         nativeLoaded = false;
+         return null;
+      }
+   }
 
    public static void discordInitialize(String applicationId, DiscordEventHandlers handlers, boolean autoRegister) {
-      DiscordRPC.DLL.INSTANCE.Discord_Initialize(applicationId, handlers, autoRegister ? 1 : 0, null);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_Initialize(applicationId, handlers, autoRegister ? 1 : 0, null);
+      }
    }
 
    public static void discordRegister(String applicationId, String command) {
-      DiscordRPC.DLL.INSTANCE.Discord_Register(applicationId, command);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_Register(applicationId, command);
+      }
    }
 
    public static void discordInitialize(String applicationId, DiscordEventHandlers handlers, boolean autoRegister, String steamId) {
-      DiscordRPC.DLL.INSTANCE.Discord_Initialize(applicationId, handlers, autoRegister ? 1 : 0, steamId);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_Initialize(applicationId, handlers, autoRegister ? 1 : 0, steamId);
+      }
    }
 
    public static void discordRegisterSteam(String applicationId, String steamId) {
-      DiscordRPC.DLL.INSTANCE.Discord_RegisterSteamGame(applicationId, steamId);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_RegisterSteamGame(applicationId, steamId);
+      }
    }
 
    public static void discordUpdateEventHandlers(DiscordEventHandlers handlers) {
-      DiscordRPC.DLL.INSTANCE.Discord_UpdateHandlers(handlers);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_UpdateHandlers(handlers);
+      }
    }
 
    public static void discordShutdown() {
-      DiscordRPC.DLL.INSTANCE.Discord_Shutdown();
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_Shutdown();
+      }
    }
 
    public static void discordRunCallbacks() {
-      DiscordRPC.DLL.INSTANCE.Discord_RunCallbacks();
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_RunCallbacks();
+      }
    }
 
    public static void discordUpdatePresence(DiscordRichPresence presence) {
-      DiscordRPC.DLL.INSTANCE.Discord_UpdatePresence(presence);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_UpdatePresence(presence);
+      }
    }
 
    public static void discordClearPresence() {
-      DiscordRPC.DLL.INSTANCE.Discord_ClearPresence();
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_ClearPresence();
+      }
    }
 
    public static void discordRespond(String userId, DiscordRPC.DiscordReply reply) {
-      DiscordRPC.DLL.INSTANCE.Discord_Respond(userId, reply.reply);
+      DiscordRPC.DLL dll = getDll();
+      if (dll != null) {
+         dll.Discord_Respond(userId, reply.reply);
+      }
    }
 
    private static void loadDLL() {
@@ -81,14 +128,15 @@ public final class DiscordRPC {
                   copyFile(in, out);
                   f.deleteOnExit();
                   System.load(f.getAbsolutePath());
+                  nativeLoaded = true;
                   out.close();
                   in.close();
                }
 
                return;
-            } catch (IOException e) {
-               e.printStackTrace();
-               System.out.println("Fatal Discord RPC exception occurred. Discord RPC will be unavailable for this session.");
+            } catch (Throwable e) {
+               nativeLoaded = false;
+               System.out.println("Discord RPC native library unavailable on this platform (" + e.getMessage() + "); continuing without Discord RPC.");
                return;
             }
          }
@@ -108,18 +156,22 @@ public final class DiscordRPC {
             InputStream in = DiscordRPC.class.getResourceAsStream(finalPath);
             OutputStream out = openOutputStream(f);
          ) {
+            if (in == null) {
+               nativeLoaded = false;
+               return;
+            }
             copyFile(in, out);
             tempDirectoryPath.toFile().deleteOnExit();
             f.deleteOnExit();
             out.close();
             in.close();
-         } catch (IOException e2) {
-            e2.printStackTrace();
          }
 
          System.load(f.getAbsolutePath());
-      } catch (Exception e3) {
-         e3.printStackTrace();
+         nativeLoaded = true;
+      } catch (Throwable e3) {
+         nativeLoaded = false;
+         System.out.println("Discord RPC native library unavailable on this platform (" + e3.getMessage() + "); continuing without Discord RPC.");
       }
    }
 

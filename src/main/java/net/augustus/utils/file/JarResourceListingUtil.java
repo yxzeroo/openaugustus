@@ -1,12 +1,17 @@
 package net.augustus.utils.file;
 
 import net.augustus.Augustus;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
 public class JarResourceListingUtil {
 
@@ -15,20 +20,43 @@ public class JarResourceListingUtil {
       Augustus.getInstance().getClass();
 
       try {
-         String str2 = ClientFileUtil.WORKING_DIR + "resources.jar!/assets/augustus/" + str;
-         str2 = "file:/" + str2.replace('\\', '/');
-         String[] strings = str2.split("!/");
-         if (str2.contains(".jar") && strings.length == 2 && strings[0].startsWith("file:")) {
-            FileSystem fileSystem = FileSystems.newFileSystem(new URI("jar", strings[0], null), new HashMap<>());
-            Files.list(fileSystem.getPath(strings[1])).forEach(path -> {
-               String[] strings2 = path.toString().split("/");
-               list.add(strings2[strings2.length - 1]);
-            });
-            fileSystem.close();
-            return list;
-         } else {
-            throw new Exception("bad URI for jar resource");
+         String prefix = "assets/augustus/" + str.replace('\\', '/');
+         while (prefix.endsWith("/")) {
+            prefix = prefix.substring(0, prefix.length() - 1);
          }
+         URL loc = JarResourceListingUtil.class.getProtectionDomain().getCodeSource().getLocation();
+         if (loc == null) {
+            return list;
+         }
+         File codeFile = new File(loc.toURI());
+         if (codeFile.isDirectory()) {
+            Path dir = codeFile.toPath().resolve(prefix);
+            if (Files.isDirectory(dir)) {
+               try (Stream<Path> stream = Files.list(dir)) {
+                  stream.forEach(p -> list.add(p.getFileName().toString()));
+               }
+            }
+            return list;
+         }
+         if (codeFile.isFile()) {
+            try (JarFile jarFile = new JarFile(codeFile)) {
+               String dirPrefix = prefix + "/";
+               Set<String> seen = new LinkedHashSet<>();
+               Enumeration<JarEntry> entries = jarFile.entries();
+               while (entries.hasMoreElements()) {
+                  String name = entries.nextElement().getName();
+                  if (name.startsWith(dirPrefix) && name.length() > dirPrefix.length()) {
+                     String rest = name.substring(dirPrefix.length());
+                     int slash = rest.indexOf('/');
+                     String child = slash >= 0 ? rest.substring(0, slash) : rest;
+                     if (!child.isEmpty() && seen.add(child)) {
+                        list.add(child);
+                     }
+                  }
+               }
+            }
+         }
+         return list;
       } catch (Exception e) {
          e.printStackTrace();
          return list;

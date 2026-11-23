@@ -51,22 +51,32 @@ public class DiscordRpcManager {
       Object obj = null;
       Augustus.getInstance().getClass();
       this.started = true;
+      if (!DiscordRPC.isAvailable()) {
+         return;
+      }
       if (!this.connected) {
          if (this.callbackThread != null) {
             this.callbackThread.interrupt();
          }
 
          this.timeHelper.reset();
-         obj = new Builder().setReadyEventHandler(discordUser -> this.onReady(discordUser)).setErroredEventHandler((n, str) -> {
-            System.err.println("Failed to load");
+         try {
+            obj = new Builder().setReadyEventHandler(discordUser -> this.onReady(discordUser)).setErroredEventHandler((n, str) -> {
+               System.err.println("Failed to load");
+               this.connected = false;
+            }).setDisconnectedEventHandler((n2, str2) -> {
+               System.err.println("Disconnected!");
+               this.connected = false;
+            }).build();
+            DiscordRPC.discordInitialize("944603218623733780", (DiscordEventHandlers)obj, true);
+            if (!DiscordRPC.isAvailable()) {
+               return;
+            }
+            this.callbackThread = new DiscordRpcCallbackThread(this, "Discord RPC Callback", (DiscordEventHandlers)obj);
+            this.callbackThread.start();
+         } catch (Throwable t) {
             this.connected = false;
-         }).setDisconnectedEventHandler((n2, str2) -> {
-            System.err.println("Disconnected!");
-            this.connected = false;
-         }).build();
-         DiscordRPC.discordInitialize("944603218623733780", (DiscordEventHandlers)obj, true);
-         this.callbackThread = new DiscordRpcCallbackThread(this, "Discord RPC Callback", (DiscordEventHandlers)obj);
-         this.callbackThread.start();
+         }
       }
    }
 
