@@ -33,8 +33,8 @@ public class GommeMode extends Module implements AttackEntityListener, SilentSlo
    }
 
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)34);
    }
 
    public void onAttackEntity(EventAttackEntity event) {

@@ -162,7 +162,7 @@ public class CustomCape extends Module implements TickListener {
 
    @Override
    public void updateEventSubscriptions() {
-      this.loadCustomCapes();
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override

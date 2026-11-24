@@ -76,9 +76,9 @@ public class Range extends Module implements LoadWorldListener, TickListener, At
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

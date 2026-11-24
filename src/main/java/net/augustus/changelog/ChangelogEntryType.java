@@ -3,11 +3,10 @@ package net.augustus.changelog;
 import java.awt.Color;
 
 public enum ChangelogEntryType {
+   ADDED(Color.GREEN),
    IMPROVED(Color.YELLOW),
-
-   REMOVED(Color.RED),
    FIXED(Color.ORANGE),
-   ADDED(Color.GREEN);
+   REMOVED(Color.RED);
 
    private final Color color;
 

@@ -204,15 +204,15 @@ public class Ping extends Module implements PacketDelayListener, LoadWorldListen
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)31);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)61);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

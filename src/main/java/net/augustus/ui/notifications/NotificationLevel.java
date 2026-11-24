@@ -3,9 +3,8 @@ package net.augustus.ui.notifications;
 import java.awt.Color;
 
 public enum NotificationLevel {
-   WARNING(Color.YELLOW),
-
    INFO(Color.GREEN),
+   WARNING(Color.YELLOW),
    ERROR(Color.RED);
 
 private final Color color;

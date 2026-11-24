@@ -73,9 +73,9 @@ public class KillEffects extends Module implements LoadWorldListener, AttackEnti
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

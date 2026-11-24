@@ -5,12 +5,11 @@ import java.util.Date;
 
 public enum ClientHoliday {
    HALLOWEEN(0, "31.10"),
-   MINIMI(5, "09.04"),
-
    FIRST_APRIL(1, "01.04"),
    CHRISTMAS_24(2, "24.12"),
    CHRISTMAS_25(3, "25.12"),
-   CHRISTMAS_26(4, "26.12");
+   CHRISTMAS_26(4, "26.12"),
+   MINIMI(5, "09.04");
 
 public boolean active;
 

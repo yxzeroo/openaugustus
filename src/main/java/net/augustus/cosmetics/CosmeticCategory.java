@@ -1,13 +1,13 @@
 package net.augustus.cosmetics;
 
 public enum CosmeticCategory {
-   SHIELD(4, "Shield"),
    LOCAL(0, "Local"),
-   WINGS(5, "Wings"),
    HAT(1, "Hat"),
+   HEAD(2, "Head"),
    BODY(3, "Body"),
-   PETS(6, "Pets"),
-   HEAD(2, "Head");
+   SHIELD(4, "Shield"),
+   WINGS(5, "Wings"),
+   PETS(6, "Pets");
 
    private int id;
    private String displayName;

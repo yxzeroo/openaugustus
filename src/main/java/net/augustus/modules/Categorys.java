@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Categorys {
-   LEGIT,
-   MOVEMENT,
-   RENDER,
-   MISC,
-
    COMBAT,
+   LEGIT,
    LATENCY,
+   MOVEMENT,
    PLAYER,
+   RENDER,
    WORLD,
+   MISC,
    FUN;
 
 private final List modules = new ArrayList();

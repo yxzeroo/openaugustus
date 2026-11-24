@@ -47,9 +47,9 @@ public class SilentMurder extends Module implements AttackEntityListener, GameLo
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)16);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override

@@ -1,8 +1,8 @@
 package net.augustus.cosmetics.model;
 
 public enum GeoAnimationAxis {
-   Z,
+   X,
    Y,
-   X;
+   Z;
 
 }

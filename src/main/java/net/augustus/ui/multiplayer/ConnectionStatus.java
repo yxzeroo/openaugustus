@@ -1,16 +1,15 @@
 package net.augustus.ui.multiplayer;
 
 public enum ConnectionStatus {
+   RESOLVING_SRV("Resolving SRV..."),
+   STARTING_NETTY_CONNECTION("Starting Netty Connection..."),
+   RESOLVING_IP("Resolving IP..."),
+   CONNECTING("Connecting..."),
+   SENDING_LOGIN_PACKETS("Sending login packets..."),
    WAITING_FOR_RESPONSE("Waiting for response..."),
-
+   VERIFYING_SESSION("Verifying Session..."),
    ENCRYPTING("Encrypting..."),
    ENABLING_COMPRESSION("Enabling compression..."),
-   SENDING_LOGIN_PACKETS("Sending login packets..."),
-   VERIFYING_SESSION("Verifying Session..."),
-   CONNECTING("Connecting..."),
-   RESOLVING_SRV("Resolving SRV..."),
-   RESOLVING_IP("Resolving IP..."),
-   STARTING_NETTY_CONNECTION("Starting Netty Connection..."),
    SUCCESS("Success!");
 
 private final String message;

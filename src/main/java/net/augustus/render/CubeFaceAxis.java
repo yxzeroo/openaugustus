@@ -1,9 +1,8 @@
 package net.augustus.render;
 
 public enum CubeFaceAxis {
-   Z,
+   X,
    Y,
-
-   X;
+   Z;
 
 }

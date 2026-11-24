@@ -81,8 +81,8 @@ public class AutoTool extends Module implements SilentSlotListener, AttackEntity
    }
 
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)1);
    }
 
    public void onAttackEntity(EventAttackEntity event) {

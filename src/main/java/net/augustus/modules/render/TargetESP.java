@@ -96,8 +96,8 @@ public class TargetESP extends Module implements RenderListener, AttackEntityLis
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override

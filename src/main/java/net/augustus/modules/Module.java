@@ -84,7 +84,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       Consumer<Boolean> consumer2 = bool2 -> this.setLoadFromConfig(bool2);
       this.mC = (BooleanProperty)booleanProperty2.withOnValueChanged(consumer2);
       BooleanProperty booleanProperty3 = new BooleanProperty(this, "M_A", true);
-      Consumer<Boolean> consumer3 = bool3 -> this.onTogglePropertyChanged(bool3);
+      Consumer<Boolean> consumer3 = bool3 -> this.setShowInArrayList(bool3);
       this.mA = (BooleanProperty)booleanProperty3.withOnValueChanged(consumer3);
       BooleanProperty booleanProperty4 = new BooleanProperty(this, "M_S", true);
       Consumer<Boolean> consumer4 = bool4 -> this.setToggleSoundEnabled(bool4);
@@ -136,7 +136,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       Consumer<Boolean> consumer2 = bool2 -> this.setLoadFromConfig(bool2);
       this.mC = (BooleanProperty)booleanProperty2.withOnValueChanged(consumer2);
       BooleanProperty booleanProperty3 = new BooleanProperty(this, "M_A", true);
-      Consumer<Boolean> consumer3 = bool3 -> this.onTogglePropertyChanged(bool3);
+      Consumer<Boolean> consumer3 = bool3 -> this.setShowInArrayList(bool3);
       this.mA = (BooleanProperty)booleanProperty3.withOnValueChanged(consumer3);
       BooleanProperty booleanProperty4 = new BooleanProperty(this, "M_S", true);
       Consumer<Boolean> consumer4 = bool4 -> this.setToggleSoundEnabled(bool4);
@@ -190,7 +190,7 @@ public abstract class Module extends AbstractFeature implements MC, Comparable {
       Consumer<Boolean> consumer2 = bool2 -> this.setLoadFromConfig(bool2);
       this.mC = (BooleanProperty)booleanProperty2.withOnValueChanged(consumer2);
       booleanProperty2 = new BooleanProperty(this, "M_A", true);
-      Consumer<Boolean> consumer3 = bool3 -> this.onTogglePropertyChanged(bool3);
+      Consumer<Boolean> consumer3 = bool3 -> this.setShowInArrayList(bool3);
       this.mA = (BooleanProperty)booleanProperty2.withOnValueChanged(consumer3);
       BooleanProperty booleanProperty3 = new BooleanProperty(this, "M_S", true);
       Consumer<Boolean> consumer4 = bool4 -> this.setToggleSoundEnabled(bool4);

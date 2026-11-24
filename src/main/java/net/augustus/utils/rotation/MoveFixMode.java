@@ -1,9 +1,8 @@
 package net.augustus.utils.rotation;
 
 public enum MoveFixMode {
-   ADVANCED,
-
+   NONE,
    DEFAULT,
-   NONE;
+   ADVANCED;
 
 }

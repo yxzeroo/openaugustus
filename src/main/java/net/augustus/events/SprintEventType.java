@@ -1,9 +1,8 @@
 package net.augustus.events;
 
 public enum SprintEventType {
-   MOTION_SPRINT,
+   SPRINT,
    JUMP_SPRINT,
-
-   SPRINT;
+   MOTION_SPRINT;
 
 }

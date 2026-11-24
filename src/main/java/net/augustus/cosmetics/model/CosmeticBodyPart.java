@@ -1,13 +1,12 @@
 package net.augustus.cosmetics.model;
 
 public enum CosmeticBodyPart {
-   HEAD(1, 3),
-   ABOVE_HEAD(3),
-   LEFT_ARM(5, 2),
-
    FREE(0),
+   HEAD(1, 3),
    BODY(2, 2),
+   ABOVE_HEAD(3),
    RIGHT_ARM(4, 2),
+   LEFT_ARM(5, 2),
    RIGHT_LEG(6, 1),
    LEFT_LEG(7, 1);
 

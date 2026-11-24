@@ -3,9 +3,9 @@ package net.augustus.utils;
 import java.io.File;
 
 public enum OSUtil {
+   WINDOWS("AppData" + File.separator + "Roaming" + File.separator + ".minecraft"),
    MAC("Library" + File.separator + "Application Support" + File.separator + "minecraft"),
-   LINUX(".minecraft"),
-   WINDOWS("AppData" + File.separator + "Roaming" + File.separator + ".minecraft");
+   LINUX(".minecraft");
 
    private final String minecraftPathSuffix;
 

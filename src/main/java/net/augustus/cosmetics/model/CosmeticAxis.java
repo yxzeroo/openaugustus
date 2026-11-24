@@ -1,10 +1,9 @@
 package net.augustus.cosmetics.model;
 
 public enum CosmeticAxis {
-   Z(3, 0, 0, 1),
+   X(1, 1, 0, 0),
    Y(2, 0, 1, 0),
-
-   X(1, 1, 0, 0);
+   Z(3, 0, 0, 1);
 
 public final int x;
    public final int z;

@@ -2,14 +2,13 @@ package net.augustus.modules.modes.anticheat;
 
 public enum HitbugFlagType {
    HT_LIGHT("HitLight"),
+   HT_MEDIUM("HitMedium"),
+   DMG_MEDIUM("HitMedium"),
+   DM_LIGHT("DMGLight"),
+   GARBAGE_HIT("GarbageHit"),
    BLOCKING("BLOCKING"),
    CANCEL("cancel"),
-   HT_MEDIUM("HitMedium"),
-   GARBAGE_HIT("GarbageHit"),
-   CANCEL_FIRST("CancelFist"),
-
-   DMG_MEDIUM("HitMedium"),
-   DM_LIGHT("DMGLight");
+   CANCEL_FIRST("CancelFist");
 
    private final String label;
 

@@ -1,7 +1,7 @@
 package net.augustus.cosmetics.model;
 
 public enum GeoAnimationState {
-   Stopped,
+   Running,
    Transitioning,
-   Running;
+   Stopped;
 }

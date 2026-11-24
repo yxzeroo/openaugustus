@@ -119,11 +119,11 @@ public class KBDisplacement extends Module implements ClickListener, AttackEntit
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)32);
       this.toggleEventSubscription((byte)40, 100000);
       this.toggleEventSubscription((byte)7, 100010);
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)14);
    }
 
    @Override

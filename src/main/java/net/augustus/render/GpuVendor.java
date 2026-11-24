@@ -1,8 +1,8 @@
 package net.augustus.render;
 
 public enum GpuVendor {
+   NVIDIA,
    AMD,
-   UNKNOWN,
    INTEL,
-   NVIDIA;
+   UNKNOWN;
 }

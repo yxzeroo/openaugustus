@@ -342,16 +342,16 @@ public class NoSlow
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.toggleEventSubscription((byte)36, (byte)18);
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)7);
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)23);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)18);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)36, 18);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)40);
    }
 
    @Override

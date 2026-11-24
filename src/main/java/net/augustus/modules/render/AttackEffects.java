@@ -28,7 +28,7 @@ public class AttackEffects extends Module implements AttackEntityListener {
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
    }
 
    public AttackEffects() {

@@ -3,8 +3,8 @@ package net.augustus.proxy;
 import java.util.Arrays;
 
 public enum ProxyProtocolType {
-   SOCKS5("Socks 5"),
-   SOCKS4("Socks 4");
+   SOCKS4("Socks 4"),
+   SOCKS5("Socks 5");
    private final String displayName;
 
    public static ProxyProtocolType fromDisplayName(String str) {

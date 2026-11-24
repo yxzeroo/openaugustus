@@ -86,12 +86,12 @@ public class MLG extends Module implements LoadWorldListener, WorldColorListener
 
    @Override
    public void updateEventSubscriptions() {
-      this.toggleEventSubscription((byte)44, (byte)100);
-      this.toggleEventSubscription((byte)45, (byte)100);
-      this.toggleEventSubscription((byte)32, (byte)100);
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)44, 100);
+      this.toggleEventSubscription((byte)45, 100);
+      this.toggleEventSubscription((byte)32, 100);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

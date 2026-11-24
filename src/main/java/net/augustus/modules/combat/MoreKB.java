@@ -199,12 +199,12 @@ public class MoreKB extends Module implements LoadWorldListener, MoveInputListen
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)21);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)24);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override

@@ -27,7 +27,7 @@ public class CustomHitSound extends Module implements AttackEntityListener {
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override

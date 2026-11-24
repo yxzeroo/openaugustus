@@ -189,14 +189,14 @@ public class ClientAntiCheat extends Module implements LoadWorldListener, Attack
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.toggleEventSubscription((byte)28, (byte)20);
-      this.toggleEventSubscription((byte)21, (byte)20);
-      this.onAttackEntity();
-      this.toggleEventSubscription((byte)32, (byte)10);
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)28, 20);
+      this.toggleEventSubscription((byte)21, 20);
+      this.toggleEventSubscription((byte)43);
+      this.toggleEventSubscription((byte)32, 10);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
    }
 
    @Override

@@ -42,9 +42,9 @@ public class Emojify extends Module implements PacketListener, AttackEntityListe
    }
 
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.toggleEventSubscription((byte)31, (byte)100);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)31, 100);
    }
 
    public void onPacket(EventPacket event) {

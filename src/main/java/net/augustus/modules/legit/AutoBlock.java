@@ -85,8 +85,8 @@ public class AutoBlock extends Module implements ClickListener, PacketDelayListe
    @Override
    public void updateEventSubscriptions() {
       this.toggleEventSubscription((byte)7, 90000);
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)1);
    }
 
    @Override

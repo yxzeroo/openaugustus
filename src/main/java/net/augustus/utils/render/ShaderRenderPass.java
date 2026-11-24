@@ -2,9 +2,8 @@ package net.augustus.utils.render;
 
 public enum ShaderRenderPass {
    BLUR,
-   POST_BLUR,
-
    SHADOW,
+   POST_BLUR,
    NONE;
 
 

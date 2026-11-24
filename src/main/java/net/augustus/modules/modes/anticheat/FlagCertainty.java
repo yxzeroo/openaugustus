@@ -5,13 +5,13 @@ import java.util.List;
 import net.augustus.modules.ModuleMode;
 
 public enum FlagCertainty {
-   CERTAIN("certain", "!!", 960),
-   VERY_LIKELY("very likely", "?!", 160),
    LIKELY("likely", "?", 80),
-   PROBABLE("probable", "??", 40),
-   NONE("none", "-", 0),
+   CERTAIN("certain", "!!", 960),
+   MAYBE("maybe", "-", 10),
    ALMOST_CERTAIN("almost certain", "!", 320),
-   MAYBE("maybe", "-", 10);
+   NONE("none", "-", 0),
+   PROBABLE("probable", "??", 40),
+   VERY_LIKELY("very likely", "?!", 160);
 
    private final String label;
    private final String symbol;

@@ -374,14 +374,14 @@ public class Debug extends Module implements AttackEntityListener, PacketListene
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.toggleEventSubscription((byte)21, (short)2000);
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)26);
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)32);
+      this.toggleEventSubscription((byte)35);
+      this.toggleEventSubscription((byte)21, 2000);
+      this.toggleEventSubscription((byte)25);
+      this.toggleEventSubscription((byte)50);
    }
 
    @Override

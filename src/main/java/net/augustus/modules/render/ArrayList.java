@@ -183,8 +183,8 @@ public class ArrayList extends Module implements GuiScaleListener, RenderListene
 
    @Override
    public void updateEventSubscriptions() {
-      this.refreshFontOptions();
-      this.toggleEventSubscription((byte)32, (byte)1);
+      this.toggleEventSubscription((byte)11);
+      this.toggleEventSubscription((byte)32, 1);
    }
 
    @Override

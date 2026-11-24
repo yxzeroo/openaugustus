@@ -66,11 +66,11 @@ public class CombatPearl extends Module implements TickListener, AttackEntityLis
 
    @Override
    public void updateEventSubscriptions() {
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
-      this.onAttackEntity();
+      this.toggleEventSubscription((byte)40);
+      this.toggleEventSubscription((byte)17);
+      this.toggleEventSubscription((byte)1);
+      this.toggleEventSubscription((byte)34);
+      this.toggleEventSubscription((byte)7);
    }
 
    @Override
